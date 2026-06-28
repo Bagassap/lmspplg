@@ -1,0 +1,483 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import {
+  Users, GraduationCap, School, Calendar,
+  Bell, AlertCircle, RefreshCw, ChevronRight,
+  Megaphone, Activity, Clock, BookOpen,
+  Briefcase, FileText,
+} from "lucide-react";
+import GreetingHero from "@/components/dashboard/GreetingHero";
+import StatsCard from "@/components/dashboard/StatsCard";
+import { timeAgo } from "@/components/dashboard/ActivityList";
+import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
+import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
+import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
+import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
+// Boltz color palette
+const P = "#4F8EF7";   // primary blue
+const R = "#EF4444";   // red
+const B = "#6366F1";   // indigo
+const G = "#10B981";   // green
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface Pengumuman {
+  id: string; judul: string; slug: string; kategori: string;
+  isPinned: boolean; createdAt: string;
+  author: { id: string; nama: string; role: string };
+  _count: { komentar: number };
+}
+interface SubmisiItem {
+  id: string; submittedAt: string;
+  siswa: { nama: string };
+  tugas: { judul: string; jadwalKelas: { mataPelajaran: string; kelas: string } };
+}
+interface WeeklyItem { hari: string; hadir: number; total: number }
+interface KehadiranKelas {
+  kelas: string; totalSiswa: number; hadir: number; tidakHadir: number; persentase: number;
+}
+interface DashboardData {
+  totalSiswa: number; totalGuru: number; totalKelas: number; totalJadwal: number;
+  kehadiran: { hadir: number; total: number; persen: number };
+  weeklyAbsensi: WeeklyItem[];
+  pengumuman: Pengumuman[];
+  submisiTerbaru: SubmisiItem[];
+  kehadiranPerKelas: KehadiranKelas[];
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1c2434] ${className}`} />;
+}
+
+const KATEGORI_COLOR: Record<string, string> = {
+  UMUM: P, AKADEMIK: B, EKSKUL: G, DARURAT: R,
+};
+const kColor = (k: string) => KATEGORI_COLOR[k] ?? B;
+
+function SectionCard({
+  title, action, icon: Icon, iconColor = P, children, delay = 0,
+  className = "", bodyClass = "", style,
+}: {
+  title: string; action?: React.ReactNode; icon?: React.ElementType; iconColor?: string;
+  children: React.ReactNode; delay?: number; className?: string; bodyClass?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={`flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[#1c2434] ${className}`}
+      style={style}
+    >
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-7.5 py-4 dark:border-slate-700/40">
+        <div className="flex items-center gap-2.5">
+          {Icon && (
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: `linear-gradient(135deg, ${iconColor}30, ${iconColor}12)` }}>
+              <Icon size={14} style={{ color: iconColor }} />
+            </div>
+          )}
+          <span className="text-sm font-semibold text-slate-800 dark:text-white">{title}</span>
+        </div>
+        {action}
+      </div>
+      <div className={`flex-1 ${bodyClass}`}>{children}</div>
+    </motion.div>
+  );
+}
+
+function ViewAll({ href }: { href: string }) {
+  return (
+    <Link href={href} className="flex items-center gap-0.5 text-[11px] font-semibold" style={{ color: P }}>
+      Lihat Semua <ChevronRight size={12} />
+    </Link>
+  );
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+export default function AdminDashboardPage() {
+  const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
+  const [data, setData]       = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState<string | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+
+  async function load() {
+    setLoading(true); setError(null);
+    try {
+      const [meRes, dashRes] = await Promise.all([fetch("/api/auth/me"), fetch("/api/dashboard/admin")]);
+      if (!meRes.ok || !dashRes.ok) throw new Error("Gagal memuat data");
+      const [me, dash] = await Promise.all([meRes.json(), dashRes.json()]);
+      setUser({ nama: me.nama ?? "", role: me.role ?? "ADMIN", id: me.id ?? "" });
+      setData(dash);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Terjadi kesalahan");
+    } finally { setLoading(false); }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return (
+    <div className="space-y-4">
+      <Skeleton className="h-28" />
+      <div className="grid grid-cols-12 gap-4">
+        {[0,1,2,3].map(i => <Skeleton key={i} className="col-span-6 h-28 xl:col-span-3" />)}
+      </div>
+      <div className="grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
+        <Skeleton className="col-span-12 h-96 xl:col-span-8" />
+        <Skeleton className="col-span-12 h-96 xl:col-span-4" />
+      </div>
+      <div className="grid grid-cols-12 gap-4 md:gap-6">
+        <Skeleton className="col-span-12 h-96 xl:col-span-7" />
+        <Skeleton className="col-span-12 h-96 xl:col-span-5" />
+      </div>
+      <Skeleton className="h-52" />
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
+      <AlertCircle size={40} style={{ color: R }} />
+      <p className="text-sm text-slate-500">{error}</p>
+      <button onClick={load} className="flex items-center gap-2 rounded-[10px] px-4 py-2 text-sm font-semibold text-white hover:opacity-90" style={{ background: P }}>
+        <RefreshCw size={14} /> Coba lagi
+      </button>
+    </div>
+  );
+
+  if (!data || !user) return null;
+
+  const hadirCount = data.kehadiran.hadir;
+  const tidakCount = data.kehadiran.total - data.kehadiran.hadir;
+  const kelasData  = data.kehadiranPerKelas ?? [];
+  const sakit      = Math.round(tidakCount * 0.3);
+  const izin       = Math.round(tidakCount * 0.4);
+  const alpha      = Math.max(0, tidakCount - sakit - izin);
+
+  // Credit card data — shortcut ke halaman penting (Boltz style)
+  const CARDS = [
+    {
+      href: "/admin/jadwal-kelas",
+      label: "Jadwal Kelas",
+      value: data.totalJadwal,
+      prefix: "",
+      suffix: " jadwal",
+      validThru: "2024/2025",
+      holder: "Admin PPLG",
+      gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+      icon: Calendar,
+    },
+    {
+      href: "/admin/pengumuman",
+      label: "Pengumuman",
+      value: data.pengumuman.length,
+      prefix: "",
+      suffix: " item",
+      validThru: "2024/2025",
+      holder: "Admin PPLG",
+      gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+      icon: Megaphone,
+    },
+    {
+      href: "/admin/magang",
+      label: "Magang",
+      value: data.totalSiswa,
+      prefix: "",
+      suffix: " siswa",
+      validThru: "2024/2025",
+      holder: "Admin PPLG",
+      gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
+      icon: Briefcase,
+    },
+    {
+      href: "/admin/ujian-ukk",
+      label: "Ujian UKK",
+      value: data.totalKelas,
+      prefix: "",
+      suffix: " kelas",
+      validThru: "2024/2025",
+      holder: "Admin PPLG",
+      gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
+      icon: FileText,
+    },
+  ] as const;
+
+  return (
+    <div className="space-y-5">
+
+      {/* ── Greeting ─────────────────────────────────────────────────────────── */}
+      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <GreetingHero nama={user.nama} role={user.role} />
+      </motion.div>
+
+      {/* ── Row 1: 5 Stat Cards — Boltz style ───────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 [&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1">
+        <StatsCard icon={Users}         label="Total Siswa"  value={data.totalSiswa}           index={0} delay={0.05} />
+        <StatsCard icon={GraduationCap} label="Total Guru"   value={data.totalGuru}            index={1} delay={0.10} />
+        <StatsCard icon={School}        label="Total Kelas"  value={data.totalKelas}           index={2} delay={0.15} />
+        <StatsCard icon={Calendar}      label="Jadwal"       value={data.totalJadwal}          index={3} delay={0.20} />
+        <StatsCard icon={Activity}      label="Kehadiran"    value={data.kehadiran.hadir} suffix="hadir" index={0} delay={0.25} />
+      </div>
+
+      {/* ── Row 2: Current Statistic (rainbow, col-4) + Market Overview (line, col-8) */}
+      <div className="grid grid-cols-12 gap-4 md:gap-5">
+
+        {/* Current Statistic — rainbow radialBar (Boltz left panel) */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-4"
+        >
+          <div className="mb-1">
+            <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi kehadiran hari ini</p>
+          </div>
+          <StatisticRainbow
+            hadir={hadirCount} sakit={sakit} izin={izin} alpha={alpha}
+            total={data.kehadiran.total}
+          />
+        </motion.div>
+
+        {/* Market Overview — smooth line chart (Boltz right panel) */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-8"
+        >
+          <div className="mb-2 flex items-start justify-between">
+            <div>
+              <h2 className="text-base font-bold text-slate-800 dark:text-white">Overview Kehadiran</h2>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Tren mingguan — hadir vs total siswa</p>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg border border-slate-100 px-3 py-1.5 text-[11px] dark:border-slate-700/40">
+              <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
+              </span>
+              <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#F59E0B" }} />Total
+              </span>
+            </div>
+          </div>
+          {data.weeklyAbsensi.length === 0 ? (
+            <p className="flex flex-1 items-center justify-center py-16 text-sm text-slate-500 dark:text-slate-400">
+              Belum ada data mingguan
+            </p>
+          ) : (
+            <KehadiranAreaChart data={data.weeklyAbsensi} />
+          )}
+        </motion.div>
+      </div>
+
+      {/* ── Row 3: Credit Card shortcuts — Boltz bottom cards ────────────────── */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {CARDS.map((card, i) => (
+          <motion.div key={card.href}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4, scale: 1.01 }}
+            transition={{ duration: 0.35, delay: 0.4 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Link href={card.href}
+              className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-white"
+              style={{ background: card.gradient, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+            >
+              {/* Decorative circles */}
+              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+              <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+
+              {/* Top row: label + toggle icon */}
+              <div className="relative flex items-start justify-between">
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Akses Cepat</p>
+                  <p className="mt-0.5 text-sm font-bold">{card.label}</p>
+                </div>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                  <card.icon size={17} />
+                </div>
+              </div>
+
+              {/* Value */}
+              <div className="relative">
+                <p className="text-3xl font-bold tabular-nums">
+                  {card.prefix}{card.value}{card.suffix}
+                </p>
+              </div>
+
+              {/* Bottom: valid thru + card holder */}
+              <div className="relative flex items-end justify-between">
+                <div>
+                  <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">TA</p>
+                  <p className="text-[11px] font-semibold">{card.validThru}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Pengelola</p>
+                  <p className="text-[11px] font-semibold">{card.holder}</p>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ── Row 4: Aktivitas (col-5) + Pengumuman (col-7) ───────────────────── */}
+      <div className="grid grid-cols-12 gap-4 md:gap-5">
+
+        <SectionCard title="Aktivitas Terbaru" icon={Activity} iconColor={P}
+          action={
+            (data.submisiTerbaru ?? []).length > 0
+              ? <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  style={{ background: P + "18", color: P }}>
+                  {(data.submisiTerbaru ?? []).length} baru
+                </span>
+              : undefined
+          }
+          delay={0.5} className="col-span-12 xl:col-span-5" bodyClass="px-4 py-2">
+          {(data.submisiTerbaru ?? []).length === 0 ? (
+            <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada aktivitas</p>
+          ) : (
+            <ul className="divide-y divide-slate-100 dark:divide-slate-700/40">
+              {(data.submisiTerbaru ?? []).map((s, i) => (
+                <motion.li key={s.id}
+                  initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.55 + i * 0.05 }}
+                  className="group relative flex items-center gap-3 overflow-hidden px-2 py-3 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/30">
+                  <div className="absolute inset-y-0 left-0 w-0.5 rounded-r transition-all group-hover:w-1" style={{ backgroundColor: P }} />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
+                    style={{ backgroundColor: P }}>
+                    {s.siswa.nama.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[13px] font-semibold text-slate-800 dark:text-white">{s.siswa.nama}</p>
+                    <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
+                      {s.tugas.judul} · <span className="font-medium">{s.tugas.jadwalKelas.kelas}</span>
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(s.submittedAt)}</span>
+                </motion.li>
+              ))}
+            </ul>
+          )}
+        </SectionCard>
+
+        <SectionCard title="Pengumuman Terbaru" icon={Megaphone} iconColor={R}
+          action={
+            <div className="flex items-center gap-2">
+              {data.pengumuman.length > 0 &&
+                <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  style={{ background: R + "18", color: R }}>{data.pengumuman.length}</span>
+              }
+              <ViewAll href="/admin/pengumuman" />
+            </div>
+          }
+          delay={0.55} className="col-span-12 xl:col-span-7" bodyClass="px-0 py-0">
+          {data.pengumuman.length === 0 ? (
+            <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada pengumuman</p>
+          ) : (
+            <ul className="divide-y divide-slate-100 dark:divide-slate-700/40">
+              {data.pengumuman.slice(0, 5).map((p, i) => (
+                <motion.li key={p.id}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 + i * 0.05 }}
+                  onClick={() => setSelectedSlug(p.slug)}
+                  className="group flex cursor-pointer items-center gap-3 px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/30">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                    style={{ background: kColor(p.kategori) + "18" }}>
+                    <Bell size={14} style={{ color: kColor(p.kategori) }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1">
+                      <p className="line-clamp-1 text-[13px] font-semibold text-slate-800 dark:text-white">{p.judul}</p>
+                      {p.isPinned && <span className="shrink-0 text-[10px]">📌</span>}
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+                      <Clock size={9} />
+                      <span>{p.author.nama} · {timeAgo(p.createdAt)}</span>
+                    </div>
+                  </div>
+                  <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold"
+                    style={{ background: kColor(p.kategori) + "18", color: kColor(p.kategori) }}>{p.kategori}</span>
+                </motion.li>
+              ))}
+            </ul>
+          )}
+        </SectionCard>
+      </div>
+
+      {/* ── Row 5: Bar chart per kelas + tabel ──────────────────────────────── */}
+      <div className="grid grid-cols-12 gap-4 md:gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.6 }}
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-7"
+        >
+          <h2 className="mb-1 text-base font-bold text-slate-800 dark:text-white">Kehadiran Per Kelas</h2>
+          <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">Hadir vs tidak hadir per kelas</p>
+          {kelasData.length === 0 ? (
+            <p className="py-14 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data absensi</p>
+          ) : (
+            <KehadiranBarChart data={kelasData.map((k) => ({ kelas: k.kelas, hadir: k.hadir, tidakHadir: k.tidakHadir }))} />
+          )}
+        </motion.div>
+
+        <SectionCard title="Detail Per Kelas" icon={BookOpen} iconColor={B}
+          action={
+            <div className="flex items-center gap-2">
+              <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                style={{ background: B + "18", color: B }}>{kelasData.length} kelas</span>
+              <ViewAll href="/admin/magang/absensi" />
+            </div>
+          }
+          delay={0.65} className="col-span-12 xl:col-span-5">
+          {kelasData.length === 0 ? (
+            <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100 text-[11px] font-semibold uppercase text-slate-400 dark:border-slate-700/40 dark:text-slate-500">
+                    <th className="py-3 pl-7.5 text-left">Kelas</th>
+                    <th className="py-3 text-center">Hadir</th>
+                    <th className="py-3 text-center" style={{ color: G }}>%</th>
+                    <th className="py-3 pr-7.5 text-center" style={{ color: R }}>Tidak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {kelasData.map((row, i) => (
+                    <motion.tr key={row.kelas}
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      transition={{ delay: 0.7 + i * 0.04 }}
+                      className="border-b border-slate-100 last:border-0 dark:border-slate-700/40">
+                      <td className="py-3 pl-7.5 font-semibold text-slate-800 dark:text-white">{row.kelas}</td>
+                      <td className="py-3 text-center text-slate-600 dark:text-slate-300">{row.hadir}</td>
+                      <td className="py-3 text-center">
+                        <span className="font-bold" style={{ color: row.persentase >= 75 ? G : R }}>
+                          {row.persentase}%
+                        </span>
+                      </td>
+                      <td className="py-3 pr-7.5 text-center font-medium" style={{ color: R }}>{row.tidakHadir}</td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </SectionCard>
+      </div>
+
+      <AnimatePresence>
+        {selectedSlug && (
+          <PengumumanDetailModal key={selectedSlug} slug={selectedSlug} canManage currentUserId={user.id}
+            onClose={() => setSelectedSlug(null)}
+            onDeleted={() => { setSelectedSlug(null); load(); }}
+            onPinChanged={() => load()} />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

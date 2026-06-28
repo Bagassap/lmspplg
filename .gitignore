@@ -1,0 +1,19 @@
+# Claude AI session files
+.claude/
+
+# Temporary inspect/screenshot files at root
+*.mjs
+*.png
+*.jpg
+*.jpeg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
