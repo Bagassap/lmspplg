@@ -17,8 +17,7 @@ export function KehadiranDonutApex({ hadir, tidakHadir }: PropsType) {
       position: "bottom",
       itemMargin: { horizontal: 10, vertical: 5 },
       formatter: (legendName, opts) => {
-        const { seriesPercent } = opts.w.globals;
-        const pct = seriesPercent?.[opts.seriesIndex];
+        const pct = opts?.w?.globals?.seriesPercent?.[opts.seriesIndex];
         return `${legendName}: ${typeof pct === "number" ? pct.toFixed(1) : "0"}%`;
       },
     },

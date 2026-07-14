@@ -226,8 +226,8 @@ export function Sidebar({
             className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
             style={{
               background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})`,
-              ringColor: `${PRIMARY}40`,
-            }}
+              "--tw-ring-color": `${PRIMARY}40`,
+            } as React.CSSProperties}
           >
             {initial}
           </div>
