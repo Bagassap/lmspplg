@@ -93,7 +93,13 @@ echo "    NOTE: database masih KOSONG (belum ada user ADMIN/GURU/SISWA)."
 echo "    Lihat deploy/README.md bagian 'Seed data awal' untuk opsi mengisi data."
 
 # ── 6. Build ───────────────────────────────────────────────────────────────
+# rm -rf dist/.next dulu: build sebelumnya bisa meninggalkan cache basi
+# (terutama Turbopack persistent cache di .next/cache) kalau redeploy
+# dilakukan sebelum source tree lengkap ter-sync — hasilnya CSS Tailwind
+# jadi cuma beberapa KB (preflight doang, semua utility class hilang).
 echo "==> [6/8] Build backend (nest build) & frontend (next build)"
+rm -rf "$APP_DIR/backend/dist"
+rm -rf "$APP_DIR/frontend/.next"
 (cd "$APP_DIR/backend" && npm run build)
 (cd "$APP_DIR/frontend" && npm run build)
 

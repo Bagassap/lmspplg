@@ -173,6 +173,7 @@ Restart setelah ganti kode/env:
 ```bash
 cd ~/lms-pplg
 git pull   # atau rsync ulang
+rm -rf backend/dist frontend/.next   # WAJIB — lihat troubleshooting "CSS Tailwind cuma ~1KB"
 (cd backend && npm run build)
 (cd frontend && npm run build)
 pm2 restart lms-backend lms-frontend
@@ -185,3 +186,5 @@ pm2 restart lms-backend lms-frontend
 - **Nginx `502 Bad Gateway`**: backend/frontend belum jalan — cek `pm2 status`, lalu `pm2 logs`.
 - **Login gagal terus / redirect loop**: cek `FRONTEND_URL` di `backend/.env` dan `NEXT_PUBLIC_API_URL`/`BACKEND_URL` di `frontend/.env` sudah sesuai IP container, bukan `localhost` yang salah konteks (browser vs server-side).
 - **`prisma migrate deploy` error "database does not exist"**: pastikan langkah 2 (`install.sh`) sukses buat database — cek `sudo -u postgres psql -l`.
+- **CSS Tailwind ter-load tapi cuma ~1KB, styling berantakan**: sudah diverifikasi config Tailwind v4 (`postcss.config.mjs`, `app/globals.css`) di repo ini BENAR — build lokal bersih menghasilkan CSS ~115KB. Penyebab paling mungkin di production: Turbopack persistent cache (`frontend/.next/cache`) basi dari build sebelumnya yang sempat jalan saat source tree belum lengkap ter-sync (mis. rebuild ditrigger di tengah `rsync`/`git pull`). Fix: `rm -rf frontend/.next` lalu `npm run build` ulang (sudah otomatis di `install.sh` step 6 sejak commit ini). Kalau masih terjadi, pastikan `app/` dan `components/` benar-benar lengkap ter-sync ke container SEBELUM `npm run build` dijalankan.
+- **`/_next/image` 400 "isn't a valid image ... received null"**: gejala klasik self-hosted Next.js waktu package `sharp` tidak terpasang/salah platform. `sharp` cuma `optionalDependency` bawaan `next`, jadi instalasinya tidak dijamin (bisa ke-skip kalau ada `--omit=optional`, atau `node_modules` ke-copy dari OS lain). Sudah di-fix: `sharp` sekarang jadi `dependencies` langsung di `frontend/package.json`, jadi selalu ke-install fresh di `npm install` sesuai platform container. Kalau masih error setelah `npm install` ulang, cek `ls frontend/node_modules/@img/` — harus ada folder `sharp-linux-x64-*` (bukan `sharp-darwin-*`/`sharp-win32-*`, yang berarti `node_modules` pernah ke-copy dari mesin dev, bukan hasil install fresh di container).
