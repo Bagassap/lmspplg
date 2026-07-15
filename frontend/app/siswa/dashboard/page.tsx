@@ -5,28 +5,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   CheckCircle, XCircle, TrendingUp,
-  Bell, ClipboardList, AlertCircle, RefreshCw, ChevronRight,
-  FileQuestion, Calendar, Megaphone, Clock, BookOpen, Briefcase,
+  Bell, AlertCircle, RefreshCw, ChevronRight,
+  Thermometer, Calendar, Megaphone, Clock, ClipboardCheck, GraduationCap,
 } from "lucide-react";
 import GreetingHero from "@/components/dashboard/GreetingHero";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-import { DonutChart } from "@/components/dashboard/MiniChart";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 import { timeAgo } from "@/components/dashboard/ActivityList";
-import { accentFor } from "@/lib/jadwalColors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface JadwalItem {
-  id: string; mataPelajaran: string; kelas: string;
-  hari: string; jamMulai: string; jamSelesai: string;
-  guru: { user: { nama: string } };
-}
-interface TugasItem {
-  id: string; judul: string; deadline: string;
-  jadwalKelas: { mataPelajaran: string };
-}
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
   isPinned: boolean; createdAt: string;
@@ -35,10 +24,8 @@ interface Pengumuman {
 }
 interface DashboardData {
   kelas: string;
-  absensi: { hadir: number; izin: number; alpa: number; total: number; persentase: number };
-  jadwalHariIni: JadwalItem[];
-  tugasBelumDikumpulkan: TugasItem[];
-  tugasProgress: { total: number; dikumpulkan: number };
+  waliKelas: string | null;
+  absensi: { hadir: number; izin: number; sakit: number; alpa: number; total: number; persentase: number };
   pengumuman: Pengumuman[];
 }
 
@@ -50,11 +37,6 @@ const G = "#10B981";
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
-}
-
-function isLive(start: string, end: string) {
-  const now = new Date().toTimeString().slice(0, 5);
-  return now >= start && now <= end;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
@@ -128,19 +110,14 @@ export default function SiswaDashboardPage() {
   useEffect(() => { load(); }, []);
 
   if (loading) return (
-    <div className="flex flex-col lg:flex-row gap-5">
-      <div className="flex-1 min-w-0 space-y-5">
-        <Skeleton className="h-36 rounded-3xl" />
-        <div className="grid grid-cols-2 gap-4">{[0,1,2,3].map(i => <Skeleton key={i} className="h-44" />)}</div>
-        <Skeleton className="h-64" />
-        <Skeleton className="h-64" />
+    <div className="space-y-5">
+      <Skeleton className="h-28 rounded-3xl" />
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[0,1,2,3].map(i => <Skeleton key={i} className="h-28" />)}</div>
+      <div className="grid grid-cols-12 gap-4">
+        <Skeleton className="col-span-12 h-72 xl:col-span-4" />
+        <Skeleton className="col-span-12 h-72 xl:col-span-8" />
       </div>
-      <div className="lg:w-80 shrink-0 space-y-4">
-        <div className="grid grid-cols-2 gap-3">{[0,1,2,3,4].map(i => <Skeleton key={i} className="h-24" />)}</div>
-        <Skeleton className="h-40" />
-        <Skeleton className="h-52" />
-        <Skeleton className="h-52" />
-      </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[0,1,2,3].map(i => <Skeleton key={i} className="h-44" />)}</div>
     </div>
   );
 
@@ -157,28 +134,24 @@ export default function SiswaDashboardPage() {
 
   if (!data || !user) return null;
 
-  const { absensi, tugasProgress } = data;
-  const tugasPersen = tugasProgress.total > 0
-    ? Math.round((tugasProgress.dikumpulkan / tugasProgress.total) * 100)
-    : 0;
-  const tugasBelum = Math.max(0, tugasProgress.total - tugasProgress.dikumpulkan);
+  const { absensi } = data;
 
   const CARDS = [
     {
-      href: "/siswa/jadwal-kelas",
-      label: "Jadwal Kelas",
-      value: data.jadwalHariIni.length,
-      suffix: " hari ini",
+      href: "/siswa/absensi-harian",
+      label: "Absensi Harian",
+      value: absensi.persentase,
+      suffix: "% hadir",
       gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
-      icon: Calendar,
+      icon: ClipboardCheck,
     },
     {
-      href: "/siswa/tugas",
-      label: "Tugas",
-      value: tugasBelum,
-      suffix: " belum",
+      href: "/siswa/absensi-harian",
+      label: "Total Hadir",
+      value: absensi.hadir,
+      suffix: "x",
       gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
-      icon: ClipboardList,
+      icon: CheckCircle,
     },
     {
       href: "/siswa/pengumuman",
@@ -194,102 +167,53 @@ export default function SiswaDashboardPage() {
       value: absensi.hadir,
       suffix: "x hadir",
       gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
-      icon: Briefcase,
+      icon: GraduationCap,
     },
   ] as const;
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div className="space-y-5">
 
-        {/* ══ KOLOM KIRI — Hero + Shortcuts + Tugas + Pengumuman ══════════════ */}
-        <div className="flex-1 min-w-0 space-y-5">
+        {/* ── Greeting ─────────────────────────────────────────────────────────── */}
+        <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          <GreetingHero nama={user.nama} role={user.role} kelas={data.kelas} />
+        </motion.div>
 
-          {/* Hero Greeting */}
-          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-            <GreetingHero nama={user.nama} role={user.role} kelas={data.kelas} />
+        {/* ── Row 1: Stat Cards ────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatsCard icon={CheckCircle} label="Hadir"     value={absensi.hadir}      sub="Hari tercatat hadir" index={0} delay={0.05} />
+          <StatsCard icon={Thermometer} label="Sakit"     value={absensi.sakit}      sub="Hari izin sakit" index={1} delay={0.10} />
+          <StatsCard icon={XCircle}     label="Alpa"      value={absensi.alpa}       sub="Hari tanpa keterangan" index={2} delay={0.15} />
+          <StatsCard icon={TrendingUp}  label="Kehadiran" value={absensi.persentase} suffix="%" sub="Persentase keseluruhan" index={3} delay={0.20} />
+        </div>
+
+        {/* ── Row 2: Statistik (col-4) + Pengumuman (col-8) ───────────────────── */}
+        <div className="grid grid-cols-12 gap-4 md:gap-5">
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+            className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-4"
+          >
+            <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran semester ini</p>
+            <StatisticRainbow
+              hadir={absensi.hadir} sakit={absensi.sakit}
+              izin={absensi.izin} alpha={absensi.alpa}
+              total={absensi.total}
+            />
+            <div className="mt-4 flex items-center gap-2.5 border-t border-slate-100 pt-4 dark:border-slate-700/40">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${P}18` }}>
+                <Calendar size={16} style={{ color: P }} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 dark:text-white">{data.kelas}</p>
+                <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">Wali: {data.waliKelas ?? "—"}</p>
+              </div>
+            </div>
           </motion.div>
 
-          {/* 4 Credit Card shortcuts — 2 × 2 */}
-          <div className="grid grid-cols-2 gap-4">
-            {CARDS.map((card, i) => (
-              <motion.div key={card.href}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                transition={{ duration: 0.35, delay: 0.15 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <Link href={card.href}
-                  className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-white"
-                  style={{ background: card.gradient, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
-                >
-                  <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                  <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
-                  <div className="relative flex items-start justify-between">
-                    <div>
-                      <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Akses Cepat</p>
-                      <p className="mt-0.5 text-sm font-bold">{card.label}</p>
-                    </div>
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
-                      <card.icon size={17} />
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <p className="text-3xl font-bold tabular-nums">{card.value}{card.suffix}</p>
-                  </div>
-                  <div className="relative flex items-end justify-between">
-                    <div>
-                      <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Kelas</p>
-                      <p className="text-[11px] font-semibold">{data.kelas}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Siswa</p>
-                      <p className="max-w-25 truncate text-[11px] font-semibold">{user.nama}</p>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Tugas Belum Dikumpulkan */}
-          <SectionCard title="Tugas Belum Dikumpulkan" icon={ClipboardList} iconColor={R}
-            action={<ViewAll href="/siswa/tugas" />}
-            delay={0.3} bodyClass="px-4 py-2">
-            {data.tugasBelumDikumpulkan.length === 0 ? (
-              <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
-                Semua tugas sudah dikumpulkan 🎉
-              </p>
-            ) : (
-              <ul className="divide-y divide-slate-100 dark:divide-slate-700/40">
-                {data.tugasBelumDikumpulkan.slice(0, 6).map((t, i) => {
-                  const daysLeft = Math.ceil((new Date(t.deadline).getTime() - Date.now()) / 86400000);
-                  const urgent = daysLeft <= 2;
-                  const dc = urgent ? R : "#F59E0B";
-                  return (
-                    <motion.li key={t.id}
-                      initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.35 + i * 0.06 }}
-                      className="flex items-center gap-3 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/20 rounded-xl px-2">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: `${dc}18` }}>
-                        <ClipboardList size={14} style={{ color: dc }} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-semibold text-slate-800 dark:text-white">{t.judul}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.jadwalKelas.mataPelajaran}</p>
-                      </div>
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold text-white"
-                        style={{ backgroundColor: dc }}>
-                        {daysLeft <= 0 ? "Hari ini" : daysLeft === 1 ? "Besok" : `${daysLeft}h lagi`}
-                      </span>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            )}
-          </SectionCard>
-
-          {/* Pengumuman Terbaru */}
           <SectionCard title="Pengumuman Terbaru" icon={Megaphone} iconColor={P}
             action={
               <div className="flex items-center gap-2">
@@ -300,7 +224,7 @@ export default function SiswaDashboardPage() {
                 <ViewAll href="/siswa/pengumuman" />
               </div>
             }
-            delay={0.4} bodyClass="px-0 py-0">
+            delay={0.3} className="col-span-12 xl:col-span-8" bodyClass="px-0 py-0">
             {data.pengumuman.length === 0 ? (
               <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada pengumuman</p>
             ) : (
@@ -308,7 +232,7 @@ export default function SiswaDashboardPage() {
                 {data.pengumuman.slice(0, 5).map((p, i) => (
                   <motion.li key={p.id}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    transition={{ delay: 0.45 + i * 0.06 }}
+                    transition={{ delay: 0.35 + i * 0.06 }}
                     onClick={() => setSelectedSlug(p.slug)}
                     className="group relative flex cursor-pointer items-center gap-3 overflow-hidden px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/20">
                     <div className="absolute inset-y-0 left-0 w-0.5 rounded-r" style={{ backgroundColor: kColor(p.kategori) }} />
@@ -333,108 +257,48 @@ export default function SiswaDashboardPage() {
               </ul>
             )}
           </SectionCard>
+        </div>
 
-        </div>{/* end kolom kiri */}
-
-        {/* ══ KOLOM KANAN — Stats + Progress + Absensi Chart + Jadwal ═════════ */}
-        <div className="lg:w-80 shrink-0 space-y-4">
-
-          {/* 5 Stat Cards — 2 × 2 + 1 full */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="grid grid-cols-2 gap-3">
-            <StatsCard icon={CheckCircle}   label="Hadir"       value={absensi.hadir}      index={0} delay={0.05} />
-            <StatsCard icon={FileQuestion}  label="Izin"        value={absensi.izin}       index={1} delay={0.10} />
-            <StatsCard icon={XCircle}       label="Alpa"        value={absensi.alpa}       index={2} delay={0.15} />
-            <StatsCard icon={TrendingUp}    label="Kehadiran"   value={absensi.persentase} index={3} delay={0.20} suffix="%" />
-            <div className="col-span-2">
-              <StatsCard icon={ClipboardList} label="Tugas Belum" value={tugasBelum} index={2} delay={0.25} />
-            </div>
-          </motion.div>
-
-          {/* Progress Tugas — compact donut */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434]">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Progress Tugas</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">{tugasProgress.dikumpulkan}/{tugasProgress.total} dikumpulkan</p>
-              </div>
-              <ViewAll href="/siswa/tugas" />
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="shrink-0">
-                <DonutChart
-                  value={tugasPersen} color={P} trackColor="#EEF4FF"
-                  size={80} strokeWidth={9}
-                  label={`${tugasPersen}%`} sublabel="selesai"
-                  labelSize="17px" sublabelSize="10px"
-                />
-              </div>
-              <div className="flex-1 space-y-2">
-                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                  <motion.div className="h-full rounded-full" style={{ backgroundColor: P }}
-                    initial={{ width: 0 }} animate={{ width: `${tugasPersen}%` }}
-                    transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} />
+        {/* ── Row 3: 4 Credit Card shortcuts ───────────────────────────────────── */}
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {CARDS.map((card, i) => (
+            <motion.div key={card.label}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              transition={{ duration: 0.35, delay: 0.4 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Link href={card.href}
+                className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-white"
+                style={{ background: card.gradient, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+              >
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+                <div className="relative flex items-start justify-between">
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Akses Cepat</p>
+                    <p className="mt-0.5 text-sm font-bold">{card.label}</p>
+                  </div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                    <card.icon size={17} />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="flex items-center gap-1 text-slate-500"><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: P }}/> Selesai {tugasProgress.dikumpulkan}</span>
-                  <span className="flex items-center gap-1 text-slate-500"><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: R }}/> Belum {tugasBelum}</span>
+                <div className="relative">
+                  <p className="text-3xl font-bold tabular-nums">{card.value}{card.suffix}</p>
                 </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Statistik Absensi — radial chart */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.25 }}
-            className="rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434]">
-            <h2 className="text-sm font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
-            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">Rekap kehadiran semester ini</p>
-            <StatisticRainbow
-              hadir={absensi.hadir} sakit={0}
-              izin={absensi.izin} alpha={absensi.alpa}
-              total={absensi.total}
-            />
-          </motion.div>
-
-          {/* Jadwal Hari Ini */}
-          <SectionCard title="Jadwal Hari Ini" icon={Calendar} iconColor={R}
-            action={<ViewAll href="/siswa/jadwal-kelas" />}
-            delay={0.3} bodyClass="px-3 py-2">
-            {data.jadwalHariIni.length === 0 ? (
-              <p className="py-5 text-center text-sm text-slate-500 dark:text-slate-400">Tidak ada jadwal hari ini</p>
-            ) : (
-              <ul className="divide-y divide-slate-50 dark:divide-slate-700/30">
-                {data.jadwalHariIni.map((j, i) => {
-                  const live = isLive(j.jamMulai, j.jamSelesai);
-                  const ac = accentFor(j.mataPelajaran);
-                  return (
-                    <motion.li key={j.id}
-                      initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.35 + i * 0.06 }}
-                      className={`flex items-center gap-2.5 rounded-xl px-2 py-2 transition-colors ${live ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-slate-50 dark:hover:bg-slate-700/30"}`}>
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-                        style={{ background: `linear-gradient(135deg, ${ac.strip}, ${ac.strip}cc)` }}>
-                        {j.mataPelajaran.charAt(0)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[12px] font-semibold text-slate-800 dark:text-slate-100">{j.mataPelajaran}</p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{j.jamMulai}–{j.jamSelesai}</p>
-                      </div>
-                      {live && (
-                        <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white"
-                          style={{ backgroundColor: P }}>LIVE</span>
-                      )}
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            )}
-          </SectionCard>
-
-        </div>{/* end kolom kanan */}
+                <div className="relative flex items-end justify-between">
+                  <div>
+                    <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Kelas</p>
+                    <p className="text-[11px] font-semibold">{data.kelas}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Siswa</p>
+                    <p className="max-w-25 truncate text-[11px] font-semibold">{user.nama}</p>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
 
       </div>
 

@@ -30,21 +30,15 @@ interface Pengumuman {
   author: { id: string; nama: string; role: string };
   _count: { komentar: number };
 }
-interface SubmisiItem {
-  id: string; submittedAt: string;
-  siswa: { nama: string };
-  tugas: { judul: string; jadwalKelas: { mataPelajaran: string; kelas: string } };
-}
 interface WeeklyItem { hari: string; hadir: number; total: number }
 interface KehadiranKelas {
   kelas: string; totalSiswa: number; hadir: number; tidakHadir: number; persentase: number;
 }
 interface DashboardData {
-  totalSiswa: number; totalGuru: number; totalKelas: number; totalJadwal: number;
+  totalSiswa: number; totalGuru: number; totalKelas: number;
   kehadiran: { hadir: number; total: number; persen: number };
   weeklyAbsensi: WeeklyItem[];
   pengumuman: Pengumuman[];
-  submisiTerbaru: SubmisiItem[];
   kehadiranPerKelas: KehadiranKelas[];
 }
 
@@ -164,11 +158,11 @@ export default function AdminDashboardPage() {
   // Credit card data — shortcut ke halaman penting (Boltz style)
   const CARDS = [
     {
-      href: "/admin/jadwal-kelas",
-      label: "Jadwal Kelas",
-      value: data.totalJadwal,
+      href: "/admin/absensi-harian",
+      label: "Absensi Harian",
+      value: data.kehadiran.hadir,
       prefix: "",
-      suffix: " jadwal",
+      suffix: " hadir",
       validThru: "2024/2025",
       holder: "Admin PPLG",
       gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
@@ -219,11 +213,11 @@ export default function AdminDashboardPage() {
 
       {/* ── Row 1: 5 Stat Cards — Boltz style ───────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 [&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1">
-        <StatsCard icon={Users}         label="Total Siswa"  value={data.totalSiswa}           index={0} delay={0.05} />
-        <StatsCard icon={GraduationCap} label="Total Guru"   value={data.totalGuru}            index={1} delay={0.10} />
-        <StatsCard icon={School}        label="Total Kelas"  value={data.totalKelas}           index={2} delay={0.15} />
-        <StatsCard icon={Calendar}      label="Jadwal"       value={data.totalJadwal}          index={3} delay={0.20} />
-        <StatsCard icon={Activity}      label="Kehadiran"    value={data.kehadiran.hadir} suffix="hadir" index={0} delay={0.25} />
+        <StatsCard icon={Users}         label="Total Siswa"  value={data.totalSiswa}           sub="Siswa aktif terdaftar" index={0} delay={0.05} />
+        <StatsCard icon={GraduationCap} label="Total Guru"   value={data.totalGuru}            sub="Termasuk wali kelas" index={1} delay={0.10} />
+        <StatsCard icon={School}        label="Total Kelas"  value={data.totalKelas}           sub="X, XI, XII PPLG" index={2} delay={0.15} />
+        <StatsCard icon={Calendar}      label="% Hadir Hari Ini" value={data.kehadiran.persen} suffix="%" sub="Dari total siswa" index={3} delay={0.20} />
+        <StatsCard icon={Activity}      label="Kehadiran"    value={data.kehadiran.hadir} suffix="hadir" sub="Siswa tercatat hadir" index={0} delay={0.25} />
       </div>
 
       {/* ── Row 2: Current Statistic (rainbow, col-4) + Market Overview (line, col-8) */}
@@ -325,45 +319,8 @@ export default function AdminDashboardPage() {
         ))}
       </div>
 
-      {/* ── Row 4: Aktivitas (col-5) + Pengumuman (col-7) ───────────────────── */}
+      {/* ── Row 4: Pengumuman ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
-
-        <SectionCard title="Aktivitas Terbaru" icon={Activity} iconColor={P}
-          action={
-            (data.submisiTerbaru ?? []).length > 0
-              ? <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                  style={{ background: P + "18", color: P }}>
-                  {(data.submisiTerbaru ?? []).length} baru
-                </span>
-              : undefined
-          }
-          delay={0.5} className="col-span-12 xl:col-span-5" bodyClass="px-4 py-2">
-          {(data.submisiTerbaru ?? []).length === 0 ? (
-            <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada aktivitas</p>
-          ) : (
-            <ul className="divide-y divide-slate-100 dark:divide-slate-700/40">
-              {(data.submisiTerbaru ?? []).map((s, i) => (
-                <motion.li key={s.id}
-                  initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.55 + i * 0.05 }}
-                  className="group relative flex items-center gap-3 overflow-hidden px-2 py-3 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                  <div className="absolute inset-y-0 left-0 w-0.5 rounded-r transition-all group-hover:w-1" style={{ backgroundColor: P }} />
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                    style={{ backgroundColor: P }}>
-                    {s.siswa.nama.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13px] font-semibold text-slate-800 dark:text-white">{s.siswa.nama}</p>
-                    <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
-                      {s.tugas.judul} · <span className="font-medium">{s.tugas.jadwalKelas.kelas}</span>
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(s.submittedAt)}</span>
-                </motion.li>
-              ))}
-            </ul>
-          )}
-        </SectionCard>
 
         <SectionCard title="Pengumuman Terbaru" icon={Megaphone} iconColor={R}
           action={
@@ -375,7 +332,7 @@ export default function AdminDashboardPage() {
               <ViewAll href="/admin/pengumuman" />
             </div>
           }
-          delay={0.55} className="col-span-12 xl:col-span-7" bodyClass="px-0 py-0">
+          delay={0.55} className="col-span-12" bodyClass="px-0 py-0">
           {data.pengumuman.length === 0 ? (
             <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada pengumuman</p>
           ) : (

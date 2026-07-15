@@ -16,7 +16,7 @@ type SiswaProfil = {
   id: string;
   nis: string;
   nama: string | null;
-  kelas: string;
+  kelas: { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
   jurusan: string | null;
   angkatan: number;
   jenisKelamin: string | null;
@@ -28,17 +28,11 @@ type SiswaProfil = {
   user: { id: string; nama: string; email: string | null } | null;
 };
 
-// ─── Palette (dashboard colors) ──────────────────────────────────────────────
+// ─── Palette (samakan dengan Ujian UKK / Jadwal & Soal) ──────────────────────
 
-const KELAS_GRADIENT: Record<string, string> = {
-  "X Pengembangan Perangkat Lunak dan Gim 1": "linear-gradient(135deg,#a78bfa,#7c3aed)",
-  "X Pengembangan Perangkat Lunak dan Gim 2": "linear-gradient(135deg,#60a5fa,#3b82f6)",
-  "X Pengembangan Perangkat Lunak dan Gim 3": "linear-gradient(135deg,#818cf8,#4f46e5)",
-  "XI Pengembangan Gim 1":                    "linear-gradient(135deg,#34d399,#059669)",
-  "XI Rekayasa Perangkat Lunak 1":            "linear-gradient(135deg,#c084fc,#9333ea)",
-  "XI Rekayasa Perangkat Lunak 2":            "linear-gradient(135deg,#f472b6,#db2777)",
-};
-const DEFAULT_GRADIENT = "linear-gradient(135deg,#60a5fa,#3b82f6)";
+const HERO_GRADIENT = "linear-gradient(135deg,#6334F4 0%,#8B5CF6 40%,#EC4899 80%,#F97316 100%)";
+const ACCENT_VIOLET = "linear-gradient(135deg,#6366F1,#4F46E5)";
+const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#F97316)";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -77,6 +71,10 @@ function EditProfilModal({
   onSave: (updated: SiswaProfil) => void;
 }) {
   const toast = useToast();
+  const [jenisKelamin, setJenisKelamin] = useState(siswa.jenisKelamin ?? "");
+  const [tempatLahir, setTempatLahir] = useState(siswa.tempatLahir ?? "");
+  const [tanggalLahir, setTanggalLahir] = useState(siswa.tanggalLahir ? siswa.tanggalLahir.slice(0, 10) : "");
+  const [namaOrtu, setNamaOrtu] = useState(siswa.namaOrtu ?? "");
   const [noHp, setNoHp] = useState(siswa.noHp ?? "");
   const [alamat, setAlamat] = useState(siswa.alamat ?? "");
   const [saving, setSaving] = useState(false);
@@ -89,15 +87,26 @@ function EditProfilModal({
       const res = await fetch("/api/siswa/saya", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ noHp, alamat }),
+        body: JSON.stringify({
+          jenisKelamin: jenisKelamin || undefined,
+          tempatLahir: tempatLahir || undefined,
+          tanggalLahir: tanggalLahir || undefined,
+          namaOrtu: namaOrtu || undefined,
+          noHp: noHp || undefined,
+          alamat: alamat || undefined,
+        }),
       });
-      if (!res.ok) throw new Error();
-      const data: SiswaProfil = await res.json();
-      toast.success("Profil berhasil diperbarui!", "No. HP dan alamat kamu telah disimpan.");
-      onSave(data);
-    } catch {
-      setError("Gagal menyimpan. Coba lagi.");
-      toast.error("Gagal memperbarui profil", "Terjadi kesalahan saat menyimpan. Coba lagi.");
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        const msg = Array.isArray(data?.message) ? data.message.join(", ") : (data?.message ?? `Error ${res.status}`);
+        throw new Error(msg);
+      }
+      toast.success("Profil berhasil diperbarui!", "Data diri kamu telah disimpan.");
+      onSave(data as SiswaProfil);
+    } catch (e) {
+      const msg = e instanceof Error && e.message ? e.message : "Gagal menyimpan. Coba lagi.";
+      setError(msg);
+      toast.error("Gagal memperbarui profil", msg);
     } finally {
       setSaving(false);
     }
@@ -131,10 +140,34 @@ function EditProfilModal({
               <X size={15} />
             </button>
           </div>
-          <div className="space-y-4 px-6 py-5">
+          <div className="max-h-[60vh] space-y-4 overflow-y-auto px-6 py-5">
             <p className="rounded-xl bg-violet-50 px-3.5 py-2.5 text-xs text-violet-600 dark:bg-violet-900/20 dark:text-violet-300">
-              Kamu hanya dapat mengubah No. HP dan Alamat.
+              Lengkapi data diri kamu di bawah ini.
             </p>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Jenis Kelamin</label>
+              <select value={jenisKelamin} onChange={(e) => setJenisKelamin(e.target.value)} className={INPUT}>
+                <option value="">— pilih —</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tempat Lahir</label>
+                <input type="text" value={tempatLahir} onChange={(e) => setTempatLahir(e.target.value)}
+                  placeholder="Kota" className={INPUT} />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal Lahir</label>
+                <input type="date" value={tanggalLahir} onChange={(e) => setTanggalLahir(e.target.value)} className={INPUT} />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Nama Orang Tua</label>
+              <input type="text" value={namaOrtu} onChange={(e) => setNamaOrtu(e.target.value)}
+                placeholder="Nama orang tua/wali" className={INPUT} />
+            </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">No. HP</label>
               <input type="tel" value={noHp} onChange={(e) => setNoHp(e.target.value)}
@@ -276,9 +309,9 @@ export default function SiswaProfilPage() {
 
   const nama = toTitleCase(getNama(profil));
   const isP = profil.jenisKelamin === "Perempuan";
-  const kelasGrad = KELAS_GRADIENT[profil.kelas] ?? DEFAULT_GRADIENT;
+  const kelasGrad = ACCENT_VIOLET;
   const avatarGrad = isP
-    ? "linear-gradient(135deg,#f472b6,#db2777)"
+    ? "linear-gradient(135deg,#EC4899,#db2777)"
     : kelasGrad;
   const tglLahir = [profil.tempatLahir, formatTanggal(profil.tanggalLahir)].filter(Boolean).join(", ") || "—";
   const jurusanShort = (profil.jurusan ?? "—")
@@ -291,7 +324,7 @@ export default function SiswaProfilPage() {
       {/* ── Hero ── */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
-        style={{ background: "linear-gradient(135deg,#7c3aed 0%,#4f46e5 35%,#3b82f6 65%,#06b6d4 100%)" }}
+        style={{ background: HERO_GRADIENT }}
       >
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -bottom-14 left-24 h-44 w-44 rounded-full bg-white/5" />
@@ -317,7 +350,7 @@ export default function SiswaProfilPage() {
 
         <div className="relative mt-5 flex flex-wrap gap-2">
           {[
-            { label: kelasShort(profil.kelas), bg: "bg-white/15" },
+            { label: kelasShort(profil.kelas.nama), bg: "bg-white/15" },
             { label: profil.jurusan ?? "—", bg: "bg-white/10" },
             { label: `Angkatan ${profil.angkatan}`, bg: "bg-white/10" },
             { label: profil.jenisKelamin ?? "—", bg: isP ? "bg-pink-400/30" : "bg-sky-400/20" },
@@ -344,7 +377,7 @@ export default function SiswaProfilPage() {
               style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 60%)" }} />
             {/* kelas badge */}
             <span className="absolute right-3 top-3 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
-              {kelasShort(profil.kelas)}
+              {kelasShort(profil.kelas.nama)}
             </span>
           </div>
 
@@ -389,9 +422,9 @@ export default function SiswaProfilPage() {
             {/* Colorful stats */}
             <div className="grid w-full grid-cols-2 gap-2.5">
               <MiniStat label="Angkatan" value={String(profil.angkatan)}
-                gradient="linear-gradient(135deg,#a78bfa,#7c3aed)" />
+                gradient={ACCENT_VIOLET} />
               <MiniStat label="Jurusan" value={jurusanShort}
-                gradient="linear-gradient(135deg,#34d399,#059669)" />
+                gradient={ACCENT_ORANGE} />
             </div>
 
             {/* Edit button */}
@@ -410,18 +443,18 @@ export default function SiswaProfilPage() {
 
         {/* ── Right: Info Cards ── */}
         <div className="flex flex-col gap-5 lg:col-span-2">
-          {/* Informasi Pribadi — purple gradient header */}
+          {/* Informasi Pribadi — indigo gradient header */}
           <SectionCard
             title="Informasi Pribadi"
             icon={User}
-            gradient="linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%)"
+            gradient={ACCENT_VIOLET}
           >
             <div className="grid gap-2.5 sm:grid-cols-2">
               <InfoField icon={Users} label="Jenis Kelamin" value={profil.jenisKelamin}
                 iconBg={isP ? "#fdf2f8" : "#eff6ff"} iconColor={isP ? "#db2777" : "#3b82f6"} />
               <InfoField icon={Calendar} label="Tempat, Tgl Lahir" value={tglLahir}
                 iconBg="#fff7ed" iconColor="#ea580c" />
-              <InfoField icon={GraduationCap} label="Kelas" value={profil.kelas}
+              <InfoField icon={GraduationCap} label="Kelas" value={profil.kelas.nama}
                 iconBg="#f5f3ff" iconColor="#7c3aed" />
               <InfoField icon={BookOpen} label="Jurusan" value={profil.jurusan}
                 iconBg="#eef2ff" iconColor="#4f46e5" />
@@ -432,11 +465,11 @@ export default function SiswaProfilPage() {
             </div>
           </SectionCard>
 
-          {/* Kontak & Lokasi — teal gradient header */}
+          {/* Kontak & Lokasi — orange gradient header */}
           <SectionCard
             title="Kontak & Lokasi"
             icon={Phone}
-            gradient="linear-gradient(135deg,#34d399 0%,#059669 100%)"
+            gradient={ACCENT_ORANGE}
             action={
               <button
                 onClick={() => setShowEdit(true)}

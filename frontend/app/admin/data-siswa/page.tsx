@@ -14,11 +14,12 @@ import { useToast } from "@/components/shared/ToastSystem";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+type KelasRef = { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
 type Siswa = {
-  id: string; nis: string; nama: string | null; kelas: string;
+  id: string; nis: string; nama: string | null; kelas: KelasRef;
   jurusan: string | null; angkatan: number; jenisKelamin: string | null;
   noHp: string | null; alamat: string | null; tempatLahir: string | null;
-  tanggalLahir: string | null; namaOrtu: string | null; waliKelas: string | null;
+  tanggalLahir: string | null; namaOrtu: string | null;
   user: { id: string; nama: string; email: string | null } | null;
 };
 type KelasAc = { main: string; light: string; text: string; dark: string };
@@ -34,14 +35,6 @@ const KELAS_COLOR: Record<string, KelasAc> = {
   "XI Rekayasa Perangkat Lunak 2":             { main: "#EC4899", light: "#FDF2F8", text: "#9D174D", dark: "#DB2777" },
 };
 const DEFAULT_AC: KelasAc = { main: "#6EA7F9", light: "#F0EDFF", text: "#5B3FBD", dark: "#4F8EF7" };
-const KELAS_ORDER = [
-  "X Pengembangan Perangkat Lunak dan Gim 1",
-  "X Pengembangan Perangkat Lunak dan Gim 2",
-  "X Pengembangan Perangkat Lunak dan Gim 3",
-  "XI Pengembangan Gim 1",
-  "XI Rekayasa Perangkat Lunak 1",
-  "XI Rekayasa Perangkat Lunak 2",
-];
 const JURUSAN_OPTIONS = [
   "Pengembangan Perangkat Lunak dan Gim",
   "Pengembangan Gim",
@@ -99,12 +92,12 @@ function Field({ label, icon: Icon, required, optional, children }: {
 
 // ─── Edit Modal ───────────────────────────────────────────────────────────────
 
-function EditModal({ siswa, onClose, onSave }: {
-  siswa: Siswa; onClose: () => void; onSave: () => void;
+function EditModal({ siswa, kelasList, onClose, onSave }: {
+  siswa: Siswa; kelasList: KelasRef[]; onClose: () => void; onSave: () => void;
 }) {
   const toast = useToast();
   const [form, setForm] = useState({
-    nama: siswa.nama ?? "", kelas: siswa.kelas, jurusan: siswa.jurusan ?? "",
+    nama: siswa.nama ?? "", kelasId: siswa.kelas.id, jurusan: siswa.jurusan ?? "",
     angkatan: String(siswa.angkatan), jenisKelamin: siswa.jenisKelamin ?? "",
     noHp: siswa.noHp ?? "", alamat: siswa.alamat ?? "",
     tempatLahir: siswa.tempatLahir ?? "",
@@ -186,8 +179,8 @@ function EditModal({ siswa, onClose, onSave }: {
               </Field>
               <Field label="Kelas" required icon={GraduationCap}>
                 <div className="relative">
-                  <select value={form.kelas} onChange={(e) => set("kelas", e.target.value)} className={SELECT}>
-                    {KELAS_ORDER.map((k) => <option key={k}>{k}</option>)}
+                  <select value={form.kelasId} onChange={(e) => set("kelasId", e.target.value)} className={SELECT}>
+                    {kelasList.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
                   </select>
                   <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 </div>
@@ -301,7 +294,7 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, 
   siswa: Siswa; isFlat: boolean; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
   index: number; rowNumber: number; checked: boolean; onCheck: () => void;
 }) {
-  const ac = KELAS_COLOR[siswa.kelas] ?? DEFAULT_AC;
+  const ac = KELAS_COLOR[siswa.kelas.nama] ?? DEFAULT_AC;
   const displayNama = toTitleCase(getNama(siswa));
   const colTemplate = isFlat ? COL_FLAT : COL_GROUPED;
   const isP = siswa.jenisKelamin === "Perempuan";
@@ -343,7 +336,7 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, 
       {isFlat && (
         <div className="flex min-w-0 items-center px-4 py-3.5">
           <span className="truncate rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-            style={{ backgroundColor: ac.light, color: ac.text }}>{kelasShort(siswa.kelas)}</span>
+            style={{ backgroundColor: ac.light, color: ac.text }}>{kelasShort(siswa.kelas.nama)}</span>
         </div>
       )}
       <div className="flex min-w-0 items-center px-4 py-3.5">
@@ -442,7 +435,7 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, 
   const ac = KELAS_COLOR[kelas] ?? DEFAULT_AC;
   const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
   const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const waliKelas = siswas[0]?.waliKelas;
+  const waliKelas = siswas[0]?.kelas.waliKelasGuru?.user.nama;
   const pageIds = pageItems.map((s) => s.id);
   const allChecked = pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
   const selectedInPage = pageIds.filter((id) => selectedIds.has(id)).length;
@@ -525,6 +518,7 @@ function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAl
 
 export default function AdminDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<Siswa[]>([]);
+  const [kelasList, setKelasList] = useState<KelasRef[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterKelas, setFilterKelas] = useState("");
@@ -534,11 +528,15 @@ export default function AdminDataSiswaPage() {
   const [detailSiswa, setDetailSiswa] = useState<Siswa | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
+  useEffect(() => {
+    fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
+  }, []);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const qs = new URLSearchParams();
-      if (filterKelas)   qs.set("kelas",       filterKelas);
+      if (filterKelas)   qs.set("kelasId",      filterKelas);
       if (filterJurusan) qs.set("jurusan",      filterJurusan);
       if (filterGender)  qs.set("jenisKelamin", filterGender);
       const res = await fetch(`/api/siswa?${qs}`);
@@ -570,12 +568,13 @@ export default function AdminDataSiswaPage() {
   }
 
   const isFiltered = !!(search || filterKelas || filterJurusan || filterGender);
-  const groupedByKelas = KELAS_ORDER.reduce<Record<string, Siswa[]>>((acc, k) => {
-    acc[k] = displayed.filter((s) => s.kelas === k); return acc;
+  const kelasNamaOrder = kelasList.map((k) => k.nama).sort();
+  const groupedByKelas = kelasNamaOrder.reduce<Record<string, Siswa[]>>((acc, k) => {
+    acc[k] = displayed.filter((s) => s.kelas.nama === k); return acc;
   }, {});
   const totalL = siswaList.filter((s) => s.jenisKelamin === "Laki-laki").length;
   const totalP = siswaList.filter((s) => s.jenisKelamin === "Perempuan").length;
-  const kelasSet = new Set(siswaList.map((s) => s.kelas));
+  const kelasSet = new Set(siswaList.map((s) => s.kelas.nama));
 
   return (
     <div className="space-y-5">
@@ -641,7 +640,7 @@ export default function AdminDataSiswaPage() {
         <select value={filterKelas} onChange={(e) => setFilterKelas(e.target.value)}
           className="h-11 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
           <option value="">Semua Kelas</option>
-          {KELAS_ORDER.map((k) => <option key={k} value={k}>{kelasShort(k)}</option>)}
+          {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
         </select>
         <select value={filterGender} onChange={(e) => setFilterGender(e.target.value)}
           className="h-11 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
@@ -699,17 +698,17 @@ export default function AdminDataSiswaPage() {
           selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
       ) : (
         <div className="space-y-4">
-          {KELAS_ORDER.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
+          {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
             <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa}
               selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
           ))}
         </div>
       )}
 
-      {editTarget && <EditModal siswa={editTarget} onClose={() => setEditTarget(null)} onSave={handleSaved} />}
+      {editTarget && <EditModal siswa={editTarget} kelasList={kelasList} onClose={() => setEditTarget(null)} onSave={handleSaved} />}
 
       {detailSiswa && (
-        <SiswaDetailModal siswa={detailSiswa} ac={KELAS_COLOR[detailSiswa.kelas] ?? DEFAULT_AC}
+        <SiswaDetailModal siswa={detailSiswa} ac={KELAS_COLOR[detailSiswa.kelas.nama] ?? DEFAULT_AC}
           onClose={() => setDetailSiswa(null)}
           onEdit={() => { setDetailSiswa(null); setEditTarget(detailSiswa); }} />
       )}

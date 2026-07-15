@@ -544,80 +544,9 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
 
-      {/* ── Left: Calendar + Stats ───────────────────────────────────────────── */}
+      {/* ── Left: Calendar ────────────────────────────────────────────────────── */}
       <div className="space-y-4">
         <MiniCalendar announcementDates={announcementDates} />
-
-        {/* Stat cards 2×2 */}
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            {
-              label: "Pengumuman",
-              val: list.length,
-              icon: <Megaphone size={20} />,
-              gradient: "linear-gradient(135deg, #6334F4 0%, #977DFF 100%)",
-              sub: "total semua",
-              watermarkSize: 52,
-            },
-            {
-              label: "Komentar",
-              val: totalKomentar,
-              icon: <MessageCircle size={20} />,
-              gradient: "linear-gradient(135deg, #3B7CE8 0%, #4F8EF7 100%)",
-              sub: "dari semua post",
-              watermarkSize: 52,
-            },
-            {
-              label: "Disematkan",
-              val: pinnedCount,
-              icon: <Pin size={20} />,
-              gradient: "linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%)",
-              sub: "pengumuman pin",
-              watermarkSize: 52,
-            },
-            {
-              label: "Hari Ini",
-              val: todayCount,
-              icon: <Bell size={20} />,
-              gradient: "linear-gradient(135deg, #10B981 0%, #34D399 100%)",
-              sub: "baru ditambah",
-              watermarkSize: 52,
-            },
-          ].map(({ label, val, icon, gradient, sub }) => (
-            <motion.div
-              key={label}
-              whileHover={{ y: -3, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="relative overflow-hidden rounded-2xl p-4"
-              style={{ background: gradient }}
-            >
-              {/* Decorative circles */}
-              <div className="pointer-events-none absolute -right-3 -top-3 h-16 w-16 rounded-full bg-white/10" />
-              <div className="pointer-events-none absolute -bottom-5 -right-2 h-12 w-12 rounded-full bg-white/8" />
-
-              {/* Watermark icon */}
-              <div className="pointer-events-none absolute bottom-2 right-2 text-white/10">
-                {icon}
-              </div>
-
-              {/* Icon badge */}
-              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white backdrop-blur-sm">
-                {icon}
-              </div>
-
-              {/* Value */}
-              <p className="text-[28px] font-extrabold leading-none text-white">
-                {loading ? (
-                  <span className="inline-block h-7 w-8 animate-pulse rounded-lg bg-white/20" />
-                ) : val}
-              </p>
-
-              {/* Label + sub */}
-              <p className="mt-1 text-[11px] font-bold text-white">{label}</p>
-              <p className="text-[9px] text-white/60">{sub}</p>
-            </motion.div>
-          ))}
-        </div>
       </div>
 
       {/* ── Right: Accordion Cards ───────────────────────────────────────────── */}

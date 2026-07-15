@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, LayoutDashboard, Calendar, Bell, Users, Briefcase,
+  X, LayoutDashboard, Bell, Users, Briefcase,
   FileText, UserCircle, ChevronRight, ChevronDown,
   ChevronsLeft, ChevronsRight, Lock,
   Building2, ClipboardCheck, Activity, FileBarChart,
@@ -31,7 +31,7 @@ type MenuItem = {
 const MENUS: Record<string, MenuItem[]> = {
   ADMIN: [
     { key: "dashboard",    href: "/admin/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
-    { key: "jadwal-kelas", href: "/admin/jadwal-kelas", label: "Jadwal Kelas",icon: Calendar },
+    { key: "absensi-harian", href: "/admin/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
     {
@@ -53,7 +53,7 @@ const MENUS: Record<string, MenuItem[]> = {
   ],
   GURU: [
     { key: "dashboard",    href: "/guru/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
-    { key: "jadwal-kelas", href: "/guru/jadwal-kelas", label: "Jadwal Kelas",icon: Calendar },
+    { key: "absensi-harian", href: "/guru/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
     {
@@ -75,7 +75,7 @@ const MENUS: Record<string, MenuItem[]> = {
   ],
   SISWA: [
     { key: "dashboard",    href: "/siswa/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
-    { key: "jadwal-kelas", href: "/siswa/jadwal-kelas", label: "Jadwal Kelas",icon: Calendar },
+    { key: "absensi-harian", href: "/siswa/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/siswa/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "profil",       href: "/siswa/profil",       label: "Profil Saya", icon: UserCircle },
     {
@@ -87,7 +87,7 @@ const MENUS: Record<string, MenuItem[]> = {
       ],
     },
     {
-      key: "ujian-ukk", label: "Ujian UKK", icon: FileText,
+      key: "ujian-ukk", href: "/siswa/ujian-ukk", label: "Ujian UKK", icon: FileText, locked: true,
       submenu: [
         { href: "/siswa/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
         { href: "/siswa/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },

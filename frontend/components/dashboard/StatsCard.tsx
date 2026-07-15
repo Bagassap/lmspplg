@@ -1,24 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
-import { TrendingUp, TrendingDown } from "lucide-react";
 
 const THEMES = [
-  { icon: "#4F8EF7", iconBg: "#EEF4FF", trend: "+45%", up: true,  label: "This week" },
-  { icon: "#10B981", iconBg: "#ECFDF5", trend: "+45%", up: true,  label: "This week" },
-  { icon: "#EF4444", iconBg: "#FFF1F2", trend: "-45%", up: false, label: "This week" },
-  { icon: "#F59E0B", iconBg: "#FFFBEB", trend: "-45%", up: false, label: "This week" },
+  { icon: "#4F8EF7", iconBg: "#EEF4FF" },
+  { icon: "#10B981", iconBg: "#ECFDF5" },
+  { icon: "#EF4444", iconBg: "#FFF1F2" },
+  { icon: "#F59E0B", iconBg: "#FFFBEB" },
 ] as const;
 
 function useCountUp(target: number, duration = 1200) {
   const mv = useMotionValue(0);
   const rounded = useTransform(mv, (v) => Math.round(v));
-  const started = useRef(false);
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
     const ctrl = animate(mv, target, { duration: duration / 1000, ease: [0.16, 1, 0.3, 1] });
     return () => ctrl.stop();
   }, [mv, target, duration]);
@@ -43,6 +39,7 @@ export default function StatsCard({
   label,
   value,
   suffix = "",
+  sub,
   delay = 0,
   index = 0,
 }: StatsCardProps) {
@@ -74,17 +71,7 @@ export default function StatsCard({
           {suffix && <span className="text-base font-semibold text-slate-400">{suffix}</span>}
         </div>
         <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{label}</p>
-        {/* Trend — Boltz style */}
-        <div className="mt-1.5 flex items-center gap-1">
-          {theme.up
-            ? <TrendingUp size={12} strokeWidth={2.5} style={{ color: "#10B981" }} />
-            : <TrendingDown size={12} strokeWidth={2.5} style={{ color: "#EF4444" }} />
-          }
-          <span className="text-[11px] font-semibold" style={{ color: theme.up ? "#10B981" : "#EF4444" }}>
-            {theme.trend}
-          </span>
-          <span className="text-[11px] text-slate-400">{theme.label}</span>
-        </div>
+        {sub && <p className="mt-1.5 text-[11px] text-slate-400 dark:text-slate-500">{sub}</p>}
       </div>
     </motion.div>
   );

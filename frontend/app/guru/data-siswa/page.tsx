@@ -9,11 +9,12 @@ import {
 import { LiveClock } from "@/components/shared/LiveClock";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
 
+type KelasRef = { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
 type Siswa = {
-  id: string; nis: string; nama: string | null; kelas: string;
+  id: string; nis: string; nama: string | null; kelas: KelasRef;
   jurusan: string | null; angkatan: number; jenisKelamin: string | null;
   noHp: string | null; alamat: string | null; tempatLahir: string | null;
-  tanggalLahir: string | null; waliKelas: string | null;
+  tanggalLahir: string | null;
   user: { id: string; nama: string; email: string | null } | null;
 };
 type KelasAc = { main: string; light: string; text: string; dark: string };
@@ -28,14 +29,6 @@ const KELAS_COLOR: Record<string, KelasAc> = {
 };
 const DEFAULT_AC: KelasAc = { main: "#4F8EF7", light: "#EEF4FF", text: "#2563EB", dark: "#3B7CE8" };
 
-const KELAS_ORDER = [
-  "X Pengembangan Perangkat Lunak dan Gim 1",
-  "X Pengembangan Perangkat Lunak dan Gim 2",
-  "X Pengembangan Perangkat Lunak dan Gim 3",
-  "XI Pengembangan Gim 1",
-  "XI Rekayasa Perangkat Lunak 1",
-  "XI Rekayasa Perangkat Lunak 2",
-];
 const JURUSAN_OPTIONS = [
   "Pengembangan Perangkat Lunak dan Gim",
   "Pengembangan Gim",
@@ -102,7 +95,7 @@ function SiswaRow({
 }: {
   siswa: Siswa; isFlat: boolean; onDetail: (s: Siswa) => void; index: number;
 }) {
-  const ac = KELAS_COLOR[siswa.kelas] ?? DEFAULT_AC;
+  const ac = KELAS_COLOR[siswa.kelas.nama] ?? DEFAULT_AC;
   const displayNama = toTitleCase(getNama(siswa));
   const colTemplate = isFlat ? COL_FLAT : COL_GROUPED;
   const isP = siswa.jenisKelamin === "Perempuan";
@@ -152,7 +145,7 @@ function SiswaRow({
             className="truncate rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
             style={{ backgroundColor: ac.light, color: ac.text }}
           >
-            {kelasShort(siswa.kelas)}
+            {kelasShort(siswa.kelas.nama)}
           </span>
         </div>
       )}
@@ -277,7 +270,7 @@ function KelasSection({
   const ac = KELAS_COLOR[kelas] ?? DEFAULT_AC;
   const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
   const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const waliKelas = siswas[0]?.waliKelas;
+  const waliKelas = siswas[0]?.kelas.waliKelasGuru?.user.nama;
 
   return (
     <motion.div
@@ -348,6 +341,7 @@ function FlatTable({ siswas, onDetail }: { siswas: Siswa[]; onDetail: (s: Siswa)
 
 export default function GuruDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<Siswa[]>([]);
+  const [kelasList, setKelasList] = useState<KelasRef[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterKelas, setFilterKelas] = useState("");
@@ -355,11 +349,15 @@ export default function GuruDataSiswaPage() {
   const [filterGender, setFilterGender] = useState("");
   const [detailSiswa, setDetailSiswa] = useState<Siswa | null>(null);
 
+  useEffect(() => {
+    fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
+  }, []);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const qs = new URLSearchParams();
-      if (filterKelas)   qs.set("kelas",       filterKelas);
+      if (filterKelas)   qs.set("kelasId",      filterKelas);
       if (filterJurusan) qs.set("jurusan",      filterJurusan);
       if (filterGender)  qs.set("jenisKelamin", filterGender);
       const res = await fetch(`/api/siswa?${qs}`);
@@ -379,13 +377,14 @@ export default function GuruDataSiswaPage() {
     : siswaList;
 
   const isFiltered = !!(search || filterKelas || filterJurusan || filterGender);
-  const groupedByKelas = KELAS_ORDER.reduce<Record<string, Siswa[]>>((acc, k) => {
-    acc[k] = displayed.filter((s) => s.kelas === k);
+  const kelasNamaOrder = kelasList.map((k) => k.nama).sort();
+  const groupedByKelas = kelasNamaOrder.reduce<Record<string, Siswa[]>>((acc, k) => {
+    acc[k] = displayed.filter((s) => s.kelas.nama === k);
     return acc;
   }, {});
   const totalL = siswaList.filter((s) => s.jenisKelamin === "Laki-laki").length;
   const totalP = siswaList.filter((s) => s.jenisKelamin === "Perempuan").length;
-  const kelasSet = new Set(siswaList.map((s) => s.kelas));
+  const kelasSet = new Set(siswaList.map((s) => s.kelas.nama));
 
   return (
     <div className="space-y-5">
@@ -478,7 +477,7 @@ export default function GuruDataSiswaPage() {
             className="h-11 appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
           >
             <option value="">Semua Kelas</option>
-            {KELAS_ORDER.map((k) => <option key={k} value={k}>{kelasShort(k)}</option>)}
+            {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
           </select>
           <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </div>
@@ -543,7 +542,7 @@ export default function GuruDataSiswaPage() {
         <FlatTable siswas={displayed} onDetail={setDetailSiswa} />
       ) : (
         <div className="space-y-4">
-          {KELAS_ORDER.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
+          {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
             <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onDetail={setDetailSiswa} />
           ))}
         </div>
@@ -552,7 +551,7 @@ export default function GuruDataSiswaPage() {
       {detailSiswa && (
         <SiswaDetailModal
           siswa={detailSiswa}
-          ac={KELAS_COLOR[detailSiswa.kelas] ?? DEFAULT_AC}
+          ac={KELAS_COLOR[detailSiswa.kelas.nama] ?? DEFAULT_AC}
           onClose={() => setDetailSiswa(null)}
         />
       )}

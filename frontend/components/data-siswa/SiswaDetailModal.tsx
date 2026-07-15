@@ -14,7 +14,7 @@ export type SiswaDetail = {
   id: string;
   nis: string;
   nama: string | null;
-  kelas: string;
+  kelas: { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
   jurusan: string | null;
   angkatan: number;
   jenisKelamin: string | null;
@@ -22,7 +22,6 @@ export type SiswaDetail = {
   alamat: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
-  waliKelas: string | null;
   user: { id: string; nama: string; email: string | null } | null;
 };
 
@@ -137,7 +136,7 @@ export default function SiswaDetailModal({
                       className="rounded-full px-2 py-0.5 text-[10px] font-bold"
                       style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "white" }}
                     >
-                      {kelasShort(siswa.kelas)}
+                      {kelasShort(siswa.kelas.nama)}
                     </span>
                   </div>
                 </div>
@@ -176,7 +175,7 @@ export default function SiswaDetailModal({
                 <InfoItem
                   icon={GraduationCap}
                   label="Kelas"
-                  value={kelasShort(siswa.kelas)}
+                  value={kelasShort(siswa.kelas.nama)}
                 />
                 <InfoItem
                   icon={BookOpen}
@@ -191,7 +190,7 @@ export default function SiswaDetailModal({
                 <InfoItem
                   icon={UserCheck}
                   label="Wali Kelas"
-                  value={siswa.waliKelas ?? "—"}
+                  value={siswa.kelas.waliKelasGuru?.user.nama ?? "—"}
                 />
               </div>
 

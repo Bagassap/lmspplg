@@ -15,7 +15,7 @@ import type { UserPayload } from "@/lib/auth";
 
 const PAGE_TITLES: Record<string, [string, string]> = {
   dashboard:      ["Dashboard",          "Ringkasan aktivitas Anda"],
-  "jadwal-kelas": ["Jadwal Kelas",       "Jadwal pelajaran kelas"],
+  "absensi-harian": ["Absensi Harian",   "Presensi kehadiran harian siswa"],
   pengumuman:     ["Pengumuman",         "Informasi dan pengumuman terkini"],
   "data-siswa":   ["Data Siswa",         "Kelola data seluruh siswa"],
   profil:         ["Profil Saya",        "Informasi dan pengaturan akun"],
@@ -56,7 +56,7 @@ type SearchItem = {
 
 const SEARCH_ITEMS: SearchItem[] = [
   { href: "/admin/dashboard",            label: "Dashboard",          desc: "Ringkasan aktivitas",           icon: LayoutDashboard, roles: ["ADMIN"] },
-  { href: "/admin/jadwal-kelas",         label: "Jadwal Kelas",       desc: "Kelola jadwal pelajaran",       icon: Calendar,        roles: ["ADMIN"] },
+  { href: "/admin/absensi-harian",       label: "Absensi Harian",     desc: "Pantau absensi harian siswa",   icon: CheckCircle2,    roles: ["ADMIN"] },
   { href: "/admin/pengumuman",           label: "Pengumuman",         desc: "Kelola pengumuman sekolah",     icon: MessageSquare,   roles: ["ADMIN"] },
   { href: "/admin/data-siswa",           label: "Data Siswa",         desc: "Kelola data siswa",             icon: Users,           roles: ["ADMIN"] },
   { href: "/admin/magang/penempatan",    label: "Penempatan Magang",  desc: "Data penempatan magang",        icon: Briefcase,       roles: ["ADMIN"] },
@@ -67,13 +67,13 @@ const SEARCH_ITEMS: SearchItem[] = [
   { href: "/admin/ujian-ukk/soal",       label: "Soal UKK",           desc: "Berkas soal ujian",             icon: FileText,        roles: ["ADMIN"] },
   { href: "/admin/ujian-ukk/penilaian",  label: "Penilaian UKK",      desc: "Data nilai ujian",              icon: FileText,        roles: ["ADMIN"] },
   { href: "/guru/dashboard",             label: "Dashboard",          desc: "Ringkasan aktivitas",           icon: LayoutDashboard, roles: ["GURU"] },
-  { href: "/guru/jadwal-kelas",          label: "Jadwal Kelas",       desc: "Jadwal pelajaran kelas",        icon: Calendar,        roles: ["GURU"] },
+  { href: "/guru/absensi-harian",        label: "Absensi Harian",     desc: "Absensi kelas wali Anda",       icon: CheckCircle2,    roles: ["GURU"] },
   { href: "/guru/pengumuman",            label: "Pengumuman",         desc: "Pengumuman sekolah",            icon: MessageSquare,   roles: ["GURU"] },
   { href: "/guru/data-siswa",            label: "Data Siswa",         desc: "Data siswa",                    icon: Users,           roles: ["GURU"] },
   { href: "/guru/magang/absensi",        label: "Absensi Magang",     desc: "Data kehadiran magang",         icon: CheckCircle2,    roles: ["GURU"] },
   { href: "/guru/ujian-ukk/penilaian",   label: "Penilaian UKK",      desc: "Data nilai ujian",              icon: FileText,        roles: ["GURU"] },
   { href: "/siswa/dashboard",            label: "Dashboard",          desc: "Ringkasan aktivitas",           icon: LayoutDashboard, roles: ["SISWA"] },
-  { href: "/siswa/jadwal-kelas",         label: "Jadwal Kelas",       desc: "Jadwal pelajaran",              icon: Calendar,        roles: ["SISWA"] },
+  { href: "/siswa/absensi-harian",       label: "Absensi Harian",     desc: "Presensi kehadiran harian",     icon: CheckCircle2,    roles: ["SISWA"] },
   { href: "/siswa/pengumuman",           label: "Pengumuman",         desc: "Pengumuman sekolah",            icon: MessageSquare,   roles: ["SISWA"] },
   { href: "/siswa/profil",               label: "Profil Saya",        desc: "Informasi dan pengaturan akun", icon: UserCircle,      roles: ["SISWA"] },
   { href: "/siswa/magang/absensi",       label: "Absensi Magang",     desc: "Data kehadiran magang",         icon: CheckCircle2,    roles: ["SISWA"] },

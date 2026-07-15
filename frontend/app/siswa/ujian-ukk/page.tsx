@@ -1,6 +1,5 @@
-import { FileText } from "lucide-react";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import LockedFeature from "@/components/shared/LockedFeature";
 
 export default function SiswaUjianUKKPage() {
-  return <PlaceholderPage title="Ujian UKK" badge="Lihat" badgeVariant="lihat" icon={FileText} />;
+  return <LockedFeature role="siswa" type="ujian-ukk" />;
 }

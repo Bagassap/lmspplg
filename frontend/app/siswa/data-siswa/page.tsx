@@ -22,7 +22,7 @@ type SiswaProfil = {
   id: string;
   nis: string;
   nama: string | null;
-  kelas: string;
+  kelas: { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
   jurusan: string | null;
   angkatan: number;
   jenisKelamin: string | null;
@@ -250,7 +250,7 @@ export default function SiswaDataDiriPage() {
 
         <div className="relative mt-5 flex flex-wrap gap-2">
           {[
-            { label: kelasShort(profil.kelas), icon: BookOpen },
+            { label: kelasShort(profil.kelas.nama), icon: BookOpen },
             { label: profil.jurusan ?? "—", icon: Users },
             { label: String(profil.angkatan), icon: Calendar },
           ].map(({ label, icon: Icon }) => (
@@ -299,7 +299,7 @@ export default function SiswaDataDiriPage() {
           <InfoRow icon={Phone} label="No. HP" value={profil.noHp} />
           <InfoRow icon={Users} label="Nama Orang Tua" value={profil.namaOrtu} />
           <InfoRow icon={Calendar} label="Tempat, Tanggal Lahir" value={profil.tempatLahir ? `${profil.tempatLahir}, ${formatTanggal(profil.tanggalLahir)}` : formatTanggal(profil.tanggalLahir)} />
-          <InfoRow icon={BookOpen} label="Kelas" value={profil.kelas} />
+          <InfoRow icon={BookOpen} label="Kelas" value={profil.kelas.nama} />
           <div className="sm:col-span-2">
             <InfoRow icon={MapPin} label="Alamat" value={profil.alamat} />
           </div>
