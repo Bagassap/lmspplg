@@ -116,7 +116,45 @@ async function confirmWipe() {
   process.exit(1);
 }
 
+const WIPE_ORDER = [
+  'komentarPengumuman',
+  'pengumuman',
+  'diskusiUKK',
+  'submisiProjectUKK',
+  'berkasJawabanUKK',
+  'soalTahapanUKK',
+  'soalUKK',
+  'nilaiUKK',
+  'absensiUKK',
+  'pesertaUKK',
+  'tahapanUKK',
+  'absensiUjianUKK',
+  'jadwalUjianUKK',
+  'absensiHarian',
+  'absensiMagang',
+  'izinMagang',
+  'penempatanMagang',
+  'tempatMagang',
+  'siswa',
+  'kelas',
+  'guru',
+  'user',
+] as const satisfies readonly (keyof PrismaClient)[];
+
+function assertWipeDelegatesExist() {
+  const missing = WIPE_ORDER.filter(
+    (name) => typeof (prisma[name] as { deleteMany?: unknown } | undefined)?.deleteMany !== 'function',
+  );
+  if (missing.length > 0) {
+    console.error('!! Prisma Client tidak punya delegate untuk model berikut (client kemungkinan stale):');
+    console.error(`!!   ${missing.join(', ')}`);
+    console.error('!! Jalankan `rm -rf generated/prisma && npx prisma generate` lalu coba lagi.');
+    process.exit(1);
+  }
+}
+
 async function wipeAll() {
+  assertWipeDelegatesExist();
   console.log('── Menghapus seluruh data lama (User/Siswa/Guru/Kelas + relasi)...');
   await prisma.komentarPengumuman.deleteMany();
   await prisma.pengumuman.deleteMany();
