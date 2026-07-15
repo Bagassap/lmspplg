@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-const HARI_NAMES = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -30,16 +28,16 @@ export class DashboardService {
     const [
       totalSiswa,
       totalGuru,
-      totalJadwal,
+      totalKelas,
       pengumuman,
-      submisiTerbaru,
       absensiHariIni,
       absensiWeekRaw,
-      kelasDistinct,
+      siswaCountPerKelas,
+      kelasList,
     ] = await Promise.all([
       this.prisma.siswa.count(),
       this.prisma.guru.count(),
-      this.prisma.jadwalKelas.count(),
+      this.prisma.kelas.count(),
       this.prisma.pengumuman.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
@@ -48,31 +46,16 @@ export class DashboardService {
           _count: { select: { komentar: true } },
         },
       }),
-      this.prisma.submisiTugas.findMany({
-        take: 5,
-        orderBy: { submittedAt: 'desc' },
-        include: {
-          siswa: { select: { nama: true } },
-          tugas: {
-            select: {
-              judul: true,
-              jadwalKelas: { select: { mataPelajaran: true, kelas: true } },
-            },
-          },
-        },
-      }),
-      this.prisma.absensiKelas.findMany({
+      this.prisma.absensiHarian.findMany({
         where: { tanggal: today },
         select: { status: true },
       }),
-      this.prisma.absensiKelas.findMany({
+      this.prisma.absensiHarian.findMany({
         where: { tanggal: { in: dates } },
         select: { tanggal: true, status: true },
       }),
-      this.prisma.siswa.findMany({
-        distinct: ['kelas'],
-        select: { kelas: true },
-      }),
+      this.prisma.siswa.groupBy({ by: ['kelasId'], _count: { _all: true } }),
+      this.prisma.kelas.findMany({ select: { id: true, nama: true } }),
     ]);
 
     const hadirHariIni = absensiHariIni.filter((a) => a.status === 'HADIR').length;
@@ -85,36 +68,30 @@ export class DashboardService {
       total: absensiWeekRaw.filter((a) => a.tanggal === date).length,
     }));
 
-    const absensiPerKelasRaw = await this.prisma.absensiKelas.findMany({
+    const absensiPerKelasRaw = await this.prisma.absensiHarian.findMany({
       where: { tanggal: today },
-      select: {
-        status: true,
-        jadwalKelas: { select: { kelas: true } },
-      },
+      select: { status: true, kelasId: true },
     });
+
+    const kelasNameMap: Record<string, string> = Object.fromEntries(
+      kelasList.map((k) => [k.id, k.nama]),
+    );
+    const siswaMap: Record<string, number> = Object.fromEntries(
+      siswaCountPerKelas.map((s) => [s.kelasId, s._count._all]),
+    );
 
     const kelasGroups: Record<string, { hadir: number; total: number }> = {};
     absensiPerKelasRaw.forEach((a) => {
-      const k = (a as any).jadwalKelas?.kelas ?? '';
-      if (!k) return;
-      if (!kelasGroups[k]) kelasGroups[k] = { hadir: 0, total: 0 };
-      kelasGroups[k].total++;
-      if (a.status === 'HADIR') kelasGroups[k].hadir++;
+      if (!kelasGroups[a.kelasId]) kelasGroups[a.kelasId] = { hadir: 0, total: 0 };
+      kelasGroups[a.kelasId].total++;
+      if (a.status === 'HADIR') kelasGroups[a.kelasId].hadir++;
     });
-
-    const siswaCountPerKelas = await this.prisma.siswa.groupBy({
-      by: ['kelas'],
-      _count: { _all: true },
-    });
-    const siswaMap: Record<string, number> = Object.fromEntries(
-      siswaCountPerKelas.map((s) => [s.kelas, s._count._all]),
-    );
 
     const kehadiranPerKelas = Object.entries(kelasGroups)
-      .map(([kelas, { hadir, total }]) => {
-        const totalSiswa = siswaMap[kelas] ?? total;
+      .map(([kelasId, { hadir, total }]) => {
+        const totalSiswa = siswaMap[kelasId] ?? total;
         return {
-          kelas,
+          kelas: kelasNameMap[kelasId] ?? '-',
           totalSiswa,
           hadir,
           tidakHadir: total - hadir,
@@ -126,8 +103,7 @@ export class DashboardService {
     return {
       totalSiswa,
       totalGuru,
-      totalKelas: kelasDistinct.length,
-      totalJadwal,
+      totalKelas,
       kehadiran: {
         hadir: hadirHariIni,
         total: totalAbsensiHariIni,
@@ -135,7 +111,6 @@ export class DashboardService {
       },
       weeklyAbsensi,
       pengumuman,
-      submisiTerbaru,
       kehadiranPerKelas,
     };
   }
@@ -144,44 +119,11 @@ export class DashboardService {
     const guru = await this.prisma.guru.findUnique({ where: { userId } });
     if (!guru) return { error: 'Profil guru tidak ditemukan' };
 
-    const today = HARI_NAMES[new Date().getDay()];
-    const todayDate = todayStr();
+    const today = todayStr();
+    const dates = weekDates();
 
-    const [
-      jadwalTotal,
-      materiTotal,
-      tugasTotal,
-      jadwalHariIni,
-      semuaJadwalGuru,
-      submisiTerbaru,
-      pengumuman,
-      absensiHariIniPerJadwal,
-    ] = await Promise.all([
-      this.prisma.jadwalKelas.count({ where: { guruId: guru.id } }),
-      this.prisma.materiKelas.count({ where: { jadwalKelas: { guruId: guru.id } } }),
-      this.prisma.tugasKelas.count({ where: { jadwalKelas: { guruId: guru.id } } }),
-      this.prisma.jadwalKelas.findMany({
-        where: { guruId: guru.id, hari: today },
-        orderBy: { jamMulai: 'asc' },
-      }),
-      this.prisma.jadwalKelas.findMany({
-        where: { guruId: guru.id },
-        select: { id: true, slug: true, mataPelajaran: true, kelas: true },
-      }),
-      this.prisma.submisiTugas.findMany({
-        where: { tugas: { jadwalKelas: { guruId: guru.id } } },
-        include: {
-          siswa: { select: { nama: true } },
-          tugas: {
-            select: {
-              judul: true,
-              jadwalKelas: { select: { mataPelajaran: true, kelas: true } },
-            },
-          },
-        },
-        orderBy: { submittedAt: 'desc' },
-        take: 5,
-      }),
+    const [kelasWali, pengumuman] = await Promise.all([
+      this.prisma.kelas.findMany({ where: { waliKelasGuruId: guru.id } }),
       this.prisma.pengumuman.findMany({
         take: 3,
         orderBy: { createdAt: 'desc' },
@@ -190,108 +132,63 @@ export class DashboardService {
           _count: { select: { komentar: true } },
         },
       }),
-      this.prisma.absensiKelas.findMany({
-        where: { tanggal: todayDate, jadwalKelas: { guruId: guru.id } },
-        select: { jadwalKelasId: true, status: true },
-      }),
     ]);
 
-    // Siswa count per kelas
-    const uniqueKelas = [...new Set(semuaJadwalGuru.map((j) => j.kelas))];
-    const siswaKelasRaw = uniqueKelas.length > 0
-      ? await this.prisma.siswa.groupBy({
-          by: ['kelas'],
-          where: { kelas: { in: uniqueKelas } },
-          _count: { _all: true },
-        })
-      : [];
-    const siswaPerKelas: Record<string, number> = Object.fromEntries(
-      siswaKelasRaw.map((s) => [s.kelas, s._count._all]),
-    );
+    const kelasIds = kelasWali.map((k) => k.id);
 
-    // Kehadiran per jadwal hari ini
-    const kehadiranPerMapel = semuaJadwalGuru.map((jadwal) => {
-      const absensiJadwal = absensiHariIniPerJadwal.filter((a) => a.jadwalKelasId === jadwal.id);
-      const hadir = absensiJadwal.filter((a) => a.status === 'HADIR').length;
-      const totalAbsensi = absensiJadwal.length;
-      const totalSiswa = siswaPerKelas[jadwal.kelas] ?? 0;
-      return {
-        jadwalKelasId: jadwal.id,
-        slug: jadwal.slug,
-        mataPelajaran: jadwal.mataPelajaran,
-        kelas: jadwal.kelas,
-        totalSiswa,
-        hadir,
-        tidakHadir: totalAbsensi - hadir,
-        persentase: totalSiswa > 0 ? Math.round((hadir / totalSiswa) * 100) : 0,
-      };
-    });
+    const [siswaAmpu, absensiHariIni, absensiWeekRaw] = await Promise.all([
+      kelasIds.length > 0 ? this.prisma.siswa.count({ where: { kelasId: { in: kelasIds } } }) : Promise.resolve(0),
+      kelasIds.length > 0
+        ? this.prisma.absensiHarian.findMany({
+            where: { tanggal: today, kelasId: { in: kelasIds } },
+            select: { status: true },
+          })
+        : Promise.resolve([] as { status: string }[]),
+      kelasIds.length > 0
+        ? this.prisma.absensiHarian.findMany({
+            where: { tanggal: { in: dates }, kelasId: { in: kelasIds } },
+            select: { tanggal: true, status: true },
+          })
+        : Promise.resolve([] as { tanggal: string; status: string }[]),
+    ]);
 
-    // Aggregate untuk donut
-    const totalHadir = kehadiranPerMapel.reduce((s, k) => s + k.hadir, 0);
-    const totalSiswaAll = kehadiranPerMapel.reduce((s, k) => s + k.totalSiswa, 0);
+    const hadirHariIni = absensiHariIni.filter((a) => a.status === 'HADIR').length;
     const kehadiran = {
-      hadir: totalHadir,
-      total: totalSiswaAll,
-      persen: totalSiswaAll > 0 ? Math.round((totalHadir / totalSiswaAll) * 100) : 0,
+      hadir: hadirHariIni,
+      total: siswaAmpu,
+      persen: siswaAmpu > 0 ? Math.round((hadirHariIni / siswaAmpu) * 100) : 0,
     };
 
-    const siswaAmpu = Object.values(siswaPerKelas).reduce((s, c) => s + c, 0);
+    const weeklyAbsensi = dates.map((date, i) => ({
+      hari: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum'][i],
+      date,
+      hadir: absensiWeekRaw.filter((a) => a.tanggal === date && a.status === 'HADIR').length,
+      total: absensiWeekRaw.filter((a) => a.tanggal === date).length,
+    }));
 
     return {
+      kelasWali,
       siswaAmpu,
-      jadwalTotal,
-      materiTotal,
-      tugasTotal,
-      jadwalHariIni,
-      submisiTerbaru,
-      pengumuman,
       kehadiran,
-      kehadiranPerMapel,
+      weeklyAbsensi,
+      pengumuman,
     };
   }
 
   async getSiswaStats(userId: string) {
-    const siswaRecord = await this.prisma.siswa.findUnique({ where: { userId } });
+    const siswaRecord = await this.prisma.siswa.findUnique({
+      where: { userId },
+      include: {
+        kelas: { include: { waliKelasGuru: { include: { user: { select: { nama: true } } } } } },
+      },
+    });
     if (!siswaRecord) return { error: 'Profil siswa tidak ditemukan' };
 
-    const today = HARI_NAMES[new Date().getDay()];
-    const now = new Date();
-    const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const [
-      absensiList,
-      jadwalHariIni,
-      tugasBelumDikumpulkan,
-      tugasTotal,
-      tugasDikumpulkan,
-      pengumuman,
-    ] = await Promise.all([
-      this.prisma.absensiKelas.findMany({
-        where: { siswaId: userId },
+    const [absensiList, pengumuman] = await Promise.all([
+      this.prisma.absensiHarian.findMany({
+        where: { siswaId: siswaRecord.id },
         select: { status: true },
       }),
-      this.prisma.jadwalKelas.findMany({
-        where: { kelas: siswaRecord.kelas, hari: today },
-        include: {
-          guru: { include: { user: { select: { nama: true } } } },
-        },
-        orderBy: { jamMulai: 'asc' },
-      }),
-      this.prisma.tugasKelas.findMany({
-        where: {
-          jadwalKelas: { kelas: siswaRecord.kelas },
-          deadline: { gte: now, lte: sevenDays },
-          submisi: { none: { siswaId: userId } },
-        },
-        include: { jadwalKelas: { select: { mataPelajaran: true } } },
-        orderBy: { deadline: 'asc' },
-        take: 5,
-      }),
-      this.prisma.tugasKelas.count({
-        where: { jadwalKelas: { kelas: siswaRecord.kelas } },
-      }),
-      this.prisma.submisiTugas.count({ where: { siswaId: userId } }),
       this.prisma.pengumuman.findMany({
         take: 3,
         orderBy: { createdAt: 'desc' },
@@ -303,17 +200,16 @@ export class DashboardService {
     ]);
 
     const hadir = absensiList.filter((a) => a.status === 'HADIR').length;
-    const izin  = absensiList.filter((a) => a.status === 'IZIN').length;
-    const alpa  = absensiList.filter((a) => a.status === 'ALPA').length;
+    const izin = absensiList.filter((a) => a.status === 'IZIN').length;
+    const sakit = absensiList.filter((a) => a.status === 'SAKIT').length;
+    const alpa = absensiList.filter((a) => a.status === 'ALPA').length;
     const totalAbsensi = absensiList.length;
     const persentase = totalAbsensi > 0 ? Math.round((hadir / totalAbsensi) * 1000) / 10 : 0;
 
     return {
-      kelas: siswaRecord.kelas,
-      absensi: { hadir, izin, alpa, total: totalAbsensi, persentase },
-      jadwalHariIni,
-      tugasBelumDikumpulkan,
-      tugasProgress: { total: tugasTotal, dikumpulkan: tugasDikumpulkan },
+      kelas: siswaRecord.kelas.nama,
+      waliKelas: siswaRecord.kelas.waliKelasGuru?.user.nama ?? null,
+      absensi: { hadir, izin, sakit, alpa, total: totalAbsensi, persentase },
       pengumuman,
     };
   }

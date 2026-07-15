@@ -13,30 +13,40 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto) {
+    const profileInclude = {
+      siswa: { select: { id: true, nis: true, kelas: { select: { id: true, nama: true } }, angkatan: true } },
+      guru: { select: { id: true, nip: true } },
+    };
+
     // Cari user: coba by email dulu, lalu by NIS (untuk siswa)
     let user = await this.prisma.user.findUnique({
       where: { email: dto.login },
-      include: {
-        siswa: { select: { id: true, nis: true, kelas: true, angkatan: true } },
-        guru: { select: { id: true, nip: true } },
-      },
+      include: profileInclude,
     });
 
     // Jika tidak ketemu by email, coba cari siswa by NIS
     if (!user) {
       const siswa = await this.prisma.siswa.findUnique({
         where: { nis: dto.login },
-        include: {
-          user: {
-            include: {
-              siswa: { select: { id: true, nis: true, kelas: true, angkatan: true } },
-              guru: { select: { id: true, nip: true } },
-            },
-          },
-        },
+        include: { user: { include: profileInclude } },
       });
       if (siswa) {
         user = siswa.user;
+      }
+    }
+
+    // Jika masih belum ketemu, coba by loginId (kode guru/admin dari CSV).
+    // Kode ini tidak unik antar user, jadi cocokkan password di setiap kandidat.
+    if (!user) {
+      const candidates = await this.prisma.user.findMany({
+        where: { loginId: dto.login },
+        include: profileInclude,
+      });
+      for (const candidate of candidates) {
+        if (await bcrypt.compare(dto.password, candidate.password)) {
+          user = candidate;
+          break;
+        }
       }
     }
 
@@ -77,7 +87,7 @@ export class AuthService {
         email: true,
         role: true,
         isActive: true,
-        siswa: { select: { id: true, nis: true, kelas: true, angkatan: true } },
+        siswa: { select: { id: true, nis: true, kelas: { select: { id: true, nama: true } }, angkatan: true } },
         guru: { select: { id: true, nip: true } },
       },
     });

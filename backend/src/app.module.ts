@@ -4,10 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { JadwalKelasModule } from './jadwal-kelas/jadwal-kelas.module';
-import { MateriKelasModule } from './materi-kelas/materi-kelas.module';
-import { TugasKelasModule } from './tugas-kelas/tugas-kelas.module';
-import { AbsensiKelasModule } from './absensi-kelas/absensi-kelas.module';
+import { KelasModule } from './kelas/kelas.module';
+import { AbsensiHarianModule } from './absensi-harian/absensi-harian.module';
 import { PengumumanModule } from './pengumuman/pengumuman.module';
 import { SiswaModule } from './siswa/siswa.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -18,10 +16,8 @@ import { UjianUkkModule } from './ujian-ukk/ujian-ukk.module';
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     AuthModule,
-    JadwalKelasModule,
-    MateriKelasModule,
-    TugasKelasModule,
-    AbsensiKelasModule,
+    KelasModule,
+    AbsensiHarianModule,
     PengumumanModule,
     SiswaModule,
     DashboardModule,

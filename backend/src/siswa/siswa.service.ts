@@ -5,17 +5,41 @@ import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
 
 const INCLUDE_USER = {
   user: { select: { id: true, nama: true, email: true } },
+  kelas: {
+    include: {
+      waliKelasGuru: { include: { user: { select: { id: true, nama: true } } } },
+    },
+  },
 } as const;
 
 @Injectable()
 export class SiswaService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(query: { search?: string; kelas?: string; jurusan?: string; jenisKelamin?: string }) {
-    const { search, kelas, jurusan, jenisKelamin } = query;
+  private async kelasWaliIds(userId: string): Promise<string[]> {
+    const guru = await this.prisma.guru.findUnique({ where: { userId } });
+    if (!guru) return [];
+    const kelasWali = await this.prisma.kelas.findMany({ where: { waliKelasGuruId: guru.id }, select: { id: true } });
+    return kelasWali.map((k) => k.id);
+  }
+
+  async findAll(
+    query: { search?: string; kelasId?: string; jurusan?: string; jenisKelamin?: string },
+    actor: { id: string; role: string },
+  ) {
+    const { search, kelasId, jurusan, jenisKelamin } = query;
+
+    let kelasIdFilter: string | { in: string[] } | undefined = kelasId;
+    if (actor.role === 'GURU') {
+      const waliIds = await this.kelasWaliIds(actor.id);
+      kelasIdFilter = kelasId
+        ? (waliIds.includes(kelasId) ? kelasId : { in: [] })
+        : { in: waliIds };
+    }
+
     return this.prisma.siswa.findMany({
       where: {
-        ...(kelas ? { kelas } : {}),
+        ...(kelasIdFilter ? { kelasId: kelasIdFilter } : {}),
         ...(jurusan ? { jurusan } : {}),
         ...(jenisKelamin ? { jenisKelamin } : {}),
         ...(search
@@ -28,13 +52,17 @@ export class SiswaService {
           : {}),
       },
       include: INCLUDE_USER,
-      orderBy: [{ kelas: 'asc' }, { nama: 'asc' }],
+      orderBy: [{ kelas: { nama: 'asc' } }, { nama: 'asc' }],
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, actor: { id: string; role: string }) {
     const siswa = await this.prisma.siswa.findUnique({ where: { id }, include: INCLUDE_USER });
     if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
+    if (actor.role === 'GURU') {
+      const waliIds = await this.kelasWaliIds(actor.id);
+      if (!waliIds.includes(siswa.kelasId)) throw new NotFoundException('Siswa tidak ditemukan');
+    }
     return siswa;
   }
 
@@ -45,7 +73,8 @@ export class SiswaService {
   }
 
   async update(id: string, dto: UpdateSiswaDto) {
-    await this.findOne(id);
+    const exists = await this.prisma.siswa.findUnique({ where: { id } });
+    if (!exists) throw new NotFoundException('Siswa tidak ditemukan');
     const data: Record<string, unknown> = { ...dto };
     if (dto.tanggalLahir) data.tanggalLahir = new Date(dto.tanggalLahir);
     return this.prisma.siswa.update({ where: { id }, data, include: INCLUDE_USER });
@@ -54,9 +83,17 @@ export class SiswaService {
   async updateMine(userId: string, dto: UpdateProfilSiswaDto) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
+    const data: Record<string, unknown> = {
+      jenisKelamin: dto.jenisKelamin,
+      tempatLahir: dto.tempatLahir,
+      namaOrtu: dto.namaOrtu,
+      noHp: dto.noHp,
+      alamat: dto.alamat,
+    };
+    if (dto.tanggalLahir) data.tanggalLahir = new Date(dto.tanggalLahir);
     return this.prisma.siswa.update({
       where: { id: siswa.id },
-      data: { noHp: dto.noHp, alamat: dto.alamat },
+      data,
       include: INCLUDE_USER,
     });
   }

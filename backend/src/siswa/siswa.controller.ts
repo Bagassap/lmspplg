@@ -31,19 +31,20 @@ export class SiswaController {
   @Roles(Role.ADMIN, Role.GURU)
   @Get()
   findAll(
+    @Request() req: any,
     @Query('search') search?: string,
-    @Query('kelas') kelas?: string,
+    @Query('kelasId') kelasId?: string,
     @Query('jurusan') jurusan?: string,
     @Query('jenisKelamin') jenisKelamin?: string,
   ) {
-    return this.service.findAll({ search, kelas, jurusan, jenisKelamin });
+    return this.service.findAll({ search, kelasId, jurusan, jenisKelamin }, req.user);
   }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  findOne(@Param('id') id: string, @Request() req: any) {
+    return this.service.findOne(id, req.user);
   }
 
   @UseGuards(RolesGuard)

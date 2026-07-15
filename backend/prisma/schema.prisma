@@ -39,6 +39,7 @@ model User {
   id        String   @id @default(cuid())
   nama      String
   email     String?  @unique
+  loginId   String?
   password  String
   role      Role
   isActive  Boolean  @default(true)
@@ -49,10 +50,9 @@ model User {
   guru               Guru?
   pengumuman         Pengumuman[]
   komentarPengumuman KomentarPengumuman[]
-  submisiTugas       SubmisiTugas[]
-  absensiKelas       AbsensiKelas[]
   diskusiUkk         DiskusiUKK[]
 
+  @@index([loginId])
   @@map("users")
 }
 
@@ -62,7 +62,8 @@ model Siswa {
   user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   nis          String    @unique
   nama         String?
-  kelas        String
+  kelasId      String
+  kelas        Kelas     @relation(fields: [kelasId], references: [id])
   jurusan      String?
   angkatan     Int
   jenisKelamin String?
@@ -71,7 +72,6 @@ model Siswa {
   tempatLahir  String?
   tanggalLahir DateTime?
   namaOrtu     String?
-  waliKelas    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -85,6 +85,7 @@ model Siswa {
   submisiProjectUkk SubmisiProjectUKK[]
   pesertaUkk        PesertaUKK[]
   absensiTahapanUkk AbsensiUKK[] @relation("AbsensiTahapanUkk")
+  absensiHarian     AbsensiHarian[]
 
   @@map("siswa")
 }
@@ -99,7 +100,7 @@ model Guru {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  jadwalKelas    JadwalKelas[]
+  kelasWali      Kelas[]
   bimbingan      PenempatanMagang[]
   izinDisetujui  IzinMagang[]
   soalUkk        SoalUKK[]
@@ -109,87 +110,40 @@ model Guru {
   @@map("guru")
 }
 
-// ─── Jadwal Kelas ─────────────────────────────────────────────────────────────
+// ─── Kelas & Absensi Harian ───────────────────────────────────────────────────
 
-model JadwalKelas {
-  id            String  @id @default(cuid())
-  slug          String? @unique
-  guruId        String
-  guru          Guru    @relation(fields: [guruId], references: [id])
-  mataPelajaran String
-  kelas         String
-  hari          String
-  jamMulai      String
-  jamSelesai    String
-  ruangan       String?
+model Kelas {
+  id              String   @id @default(cuid())
+  nama            String   @unique
+  waliKelasGuruId String?
+  waliKelasGuru   Guru?    @relation(fields: [waliKelasGuruId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  siswa         Siswa[]
+  absensiHarian AbsensiHarian[]
 
-  materi       MateriKelas[]
-  tugas        TugasKelas[]
-  absensiKelas AbsensiKelas[]
-
-  @@map("jadwal_kelas")
+  @@map("kelas")
 }
 
-// ─── Materi & Tugas Kelas ─────────────────────────────────────────────────────
+model AbsensiHarian {
+  id         String   @id @default(cuid())
+  siswaId    String
+  siswa      Siswa    @relation(fields: [siswaId], references: [id])
+  kelasId    String
+  kelas      Kelas    @relation(fields: [kelasId], references: [id])
+  tanggal    String
+  status     String   @default("HADIR")
+  waktuAbsen String?
+  lokasi     String?
+  foto       String?
+  ttd        String?  @db.Text
+  catatan    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-model MateriKelas {
-  id            String      @id @default(cuid())
-  jadwalKelasId String
-  jadwalKelas   JadwalKelas @relation(fields: [jadwalKelasId], references: [id], onDelete: Cascade)
-  judul         String
-  deskripsi     String?
-  fileUrl       String?
-  createdAt     DateTime    @default(now())
-
-  @@map("materi_kelas")
-}
-
-model TugasKelas {
-  id            String      @id @default(cuid())
-  slug          String?     @unique
-  jadwalKelasId String
-  jadwalKelas   JadwalKelas @relation(fields: [jadwalKelasId], references: [id], onDelete: Cascade)
-  judul         String
-  deskripsi     String?
-  deadline      DateTime?
-  createdAt     DateTime    @default(now())
-
-  submisi SubmisiTugas[]
-
-  @@map("tugas_kelas")
-}
-
-model SubmisiTugas {
-  id          String     @id @default(cuid())
-  tugasId     String
-  tugas       TugasKelas @relation(fields: [tugasId], references: [id], onDelete: Cascade)
-  siswaId     String
-  siswa       User       @relation(fields: [siswaId], references: [id])
-  fileUrl     String?
-  submittedAt DateTime   @default(now())
-
-  @@unique([tugasId, siswaId])
-  @@map("submisi_tugas")
-}
-
-model AbsensiKelas {
-  id            String      @id @default(cuid())
-  jadwalKelasId String
-  jadwalKelas   JadwalKelas @relation(fields: [jadwalKelasId], references: [id], onDelete: Cascade)
-  siswaId       String
-  siswa         User        @relation(fields: [siswaId], references: [id])
-  tanggal       String
-  status        String
-  foto          String?
-  lokasi        String?
-  ttd           String?     @db.Text
-  waktuAbsen    String?
-
-  @@unique([jadwalKelasId, siswaId, tanggal])
-  @@map("absensi_kelas")
+  @@unique([siswaId, tanggal])
+  @@map("absensi_harian")
 }
 
 // ─── Pengumuman ───────────────────────────────────────────────────────────────

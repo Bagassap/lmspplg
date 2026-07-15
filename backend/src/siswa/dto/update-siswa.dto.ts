@@ -7,7 +7,7 @@ export class UpdateSiswaDto {
 
   @IsString()
   @IsOptional()
-  kelas?: string;
+  kelasId?: string;
 
   @IsString()
   @IsOptional()
