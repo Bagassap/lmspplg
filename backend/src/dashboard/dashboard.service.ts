@@ -59,6 +59,9 @@ export class DashboardService {
     ]);
 
     const hadirHariIni = absensiHariIni.filter((a) => a.status === 'HADIR').length;
+    const izinHariIni = absensiHariIni.filter((a) => a.status === 'IZIN').length;
+    const sakitHariIni = absensiHariIni.filter((a) => a.status === 'SAKIT').length;
+    const alpaHariIni = absensiHariIni.filter((a) => a.status === 'ALPA').length;
     const totalAbsensiHariIni = absensiHariIni.length;
 
     const weeklyAbsensi = dates.map((date, i) => ({
@@ -106,6 +109,9 @@ export class DashboardService {
       totalKelas,
       kehadiran: {
         hadir: hadirHariIni,
+        izin: izinHariIni,
+        sakit: sakitHariIni,
+        alpa: alpaHariIni,
         total: totalAbsensiHariIni,
         persen: totalAbsensiHariIni > 0 ? Math.round((hadirHariIni / totalAbsensiHariIni) * 100) : 0,
       },
@@ -153,8 +159,14 @@ export class DashboardService {
     ]);
 
     const hadirHariIni = absensiHariIni.filter((a) => a.status === 'HADIR').length;
+    const izinHariIni = absensiHariIni.filter((a) => a.status === 'IZIN').length;
+    const sakitHariIni = absensiHariIni.filter((a) => a.status === 'SAKIT').length;
+    const alpaHariIni = absensiHariIni.filter((a) => a.status === 'ALPA').length;
     const kehadiran = {
       hadir: hadirHariIni,
+      izin: izinHariIni,
+      sakit: sakitHariIni,
+      alpa: alpaHariIni,
       total: siswaAmpu,
       persen: siswaAmpu > 0 ? Math.round((hadirHariIni / siswaAmpu) * 100) : 0,
     };

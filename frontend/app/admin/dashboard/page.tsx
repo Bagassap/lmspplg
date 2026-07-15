@@ -36,7 +36,7 @@ interface KehadiranKelas {
 }
 interface DashboardData {
   totalSiswa: number; totalGuru: number; totalKelas: number;
-  kehadiran: { hadir: number; total: number; persen: number };
+  kehadiran: { hadir: number; izin: number; sakit: number; alpa: number; total: number; persen: number };
   weeklyAbsensi: WeeklyItem[];
   pengumuman: Pengumuman[];
   kehadiranPerKelas: KehadiranKelas[];
@@ -149,11 +149,10 @@ export default function AdminDashboardPage() {
   if (!data || !user) return null;
 
   const hadirCount = data.kehadiran.hadir;
-  const tidakCount = data.kehadiran.total - data.kehadiran.hadir;
   const kelasData  = data.kehadiranPerKelas ?? [];
-  const sakit      = Math.round(tidakCount * 0.3);
-  const izin       = Math.round(tidakCount * 0.4);
-  const alpha      = Math.max(0, tidakCount - sakit - izin);
+  const sakit      = data.kehadiran.sakit;
+  const izin       = data.kehadiran.izin;
+  const alpha      = data.kehadiran.alpa;
 
   // Credit card data — shortcut ke halaman penting (Boltz style)
   const CARDS = [

@@ -99,14 +99,6 @@ const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?:
   error:   AlertTriangle,
 };
 
-const INITIAL_NOTIFICATIONS: Notification[] = [
-  { id: "1", type: "info",    title: "Jadwal baru ditambahkan",  body: "Jadwal Algoritma & Pemrograman XII RPL 1 berhasil ditambahkan", time: "5 mnt lalu",  read: false },
-  { id: "2", type: "success", title: "Presensi tersimpan",       body: "Presensi kelas Informatika XII RPL 1 telah berhasil disimpan",  time: "1 jam lalu",  read: false },
-  { id: "3", type: "warning", title: "Pengumuman baru",          body: "Ada pengumuman baru yang belum dibaca siswa",                   time: "2 jam lalu",  read: false },
-  { id: "4", type: "info",    title: "Data siswa diperbarui",    body: "50 data siswa berhasil diimpor ke dalam sistem",                time: "Kemarin",     read: true  },
-  { id: "5", type: "success", title: "Laporan selesai",          body: "Rekap magang semester 2 sudah tersedia untuk diunduh",          time: "2 hari lalu", read: true  },
-];
-
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -187,7 +179,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
   // ── Notifications ──────────────────────────────────────────────────────────
   const [notifOpen,      setNotifOpen]      = useState(false);
-  const [notifications,  setNotifications]  = useState<Notification[]>(INITIAL_NOTIFICATIONS);
+  const [notifications,  setNotifications]  = useState<Notification[]>([]);
   const notifRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -338,7 +330,12 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
                   {/* List */}
                   <div className="max-h-80 overflow-y-auto">
-                    {notifications.map((n) => {
+                    {notifications.length === 0 ? (
+                      <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
+                        <Bell size={22} className="text-gray-300 dark:text-slate-600" />
+                        <p className="text-[12px] text-gray-400 dark:text-slate-500">Belum ada notifikasi</p>
+                      </div>
+                    ) : notifications.map((n) => {
                       const style = NOTIF_STYLE[n.type];
                       const NIcon = NOTIF_ICON[n.type];
                       return (
@@ -375,12 +372,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                     })}
                   </div>
 
-                  {/* Footer */}
-                  <div className="border-t border-gray-200 px-4 py-2.5 text-center dark:border-slate-700">
-                    <button className="text-[11px] font-medium text-primary hover:underline">
-                      Lihat semua notifikasi
-                    </button>
-                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
