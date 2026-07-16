@@ -27,7 +27,7 @@
   --color-brand: var(--color-brand);
   --color-brand-dark: var(--color-brand-dark);
   --color-accent: var(--color-accent);
-  --font-sans: var(--font-montserrat);
+  --font-sans: var(--font-google-sans);
 
   /* Login palette utilities */
   --color-lavender: var(--color-lavender);

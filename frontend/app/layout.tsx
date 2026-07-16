@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Google_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
 
-const montserrat = Montserrat({
+const googleSans = Google_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-montserrat",
+  weight: "variable",
+  variable: "--font-google-sans",
   display: "swap",
 });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${montserrat.variable} h-full antialiased`}>
+    <html lang="id" className={`${googleSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
           {children}
