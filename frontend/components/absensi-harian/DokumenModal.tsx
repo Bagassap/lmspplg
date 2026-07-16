@@ -29,7 +29,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
       <AnimatePresence>
         {imgOverlay && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-70 flex flex-col items-center justify-center bg-black/90 p-4"
+            className="fixed inset-0 z-110 flex flex-col items-center justify-center bg-black/90 p-4"
             onClick={() => setImgOverlay(null)}>
             <motion.div initial={{ scale: 0.88, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.88, opacity: 0 }}
               transition={{ type: "spring", damping: 24, stiffness: 320 }}
@@ -51,22 +51,22 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
         )}
       </AnimatePresence>
 
-      <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-        <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
+          onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }}
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
-          className="relative z-10 flex max-h-[90dvh] w-full max-w-3xl flex-col overflow-y-auto rounded-t-3xl shadow-2xl sm:flex-row sm:overflow-hidden sm:rounded-3xl">
+          className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-3xl flex-col overflow-y-auto rounded-3xl shadow-2xl sm:mx-0 sm:flex-row sm:overflow-hidden">
+
+          <button onClick={onClose}
+            className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-800/90 dark:text-slate-300 dark:hover:bg-slate-800">
+            <X size={15} />
+          </button>
 
           <div className="relative flex shrink-0 flex-col overflow-hidden sm:w-60"
             style={{ background: BRAND_GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10" />
-            <div className="relative flex justify-end p-4">
-              <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30">
-                <X size={15} />
-              </button>
-            </div>
-            <div className="relative flex flex-1 flex-col items-center justify-center px-5 pb-8 text-center">
+            <div className="relative flex flex-1 flex-col items-center justify-center px-5 pb-8 pt-10 text-center">
               <div className="relative flex h-20 w-20 items-center justify-center rounded-full text-xl font-extrabold text-white"
                 style={{ backgroundColor: ac, boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)" }}>
                 {getInitials(siswa.nama)}

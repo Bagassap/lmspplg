@@ -353,8 +353,8 @@ export default function AdminAbsensiHarianPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-          {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
             const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
             const Icon = cfg.icon;
             const count = key === "PULANG" ? pulangCount : rekap[key];
@@ -362,20 +362,21 @@ export default function AdminAbsensiHarianPage() {
             const active = activeFilter === key;
             return (
               <button key={key} type="button" onClick={() => toggleFilter(key)}
-                className="flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left shadow-sm transition-all"
+                className={`flex min-w-0 items-center gap-2 rounded-2xl px-3 py-3 text-left shadow-sm transition-all sm:gap-3 sm:px-4 sm:py-3.5 ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
                 style={{
                   backgroundColor: cfg.bg,
                   outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
                   outlineOffset: active ? "2px" : "0",
                 }}>
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: cfg.darkBg }}>
-                  <Icon size={20} style={{ color: cfg.clr }} />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11" style={{ backgroundColor: cfg.darkBg }}>
+                  <Icon size={18} className="sm:hidden" style={{ color: cfg.clr }} />
+                  <Icon size={20} className="hidden sm:block" style={{ color: cfg.clr }} />
                 </div>
-                <div className="flex min-w-0 flex-1 items-baseline gap-2">
-                  <span className="text-2xl font-black leading-none" style={{ color: cfg.clr }}>{count}</span>
-                  <span className="text-sm font-bold" style={{ color: cfg.clr }}>{cfg.label}</span>
+                <div className="flex min-w-0 flex-1 items-baseline gap-1.5 sm:gap-2">
+                  <span className="text-xl font-black leading-none sm:text-2xl" style={{ color: cfg.clr }}>{count}</span>
+                  <span className="truncate text-xs font-bold sm:text-sm" style={{ color: cfg.clr }}>{cfg.label}</span>
                 </div>
-                <div className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-extrabold" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
+                <div className="shrink-0 rounded-lg px-1.5 py-1 text-[9px] font-extrabold sm:px-2 sm:text-[10px]" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
                   {pct}%
                 </div>
               </button>
