@@ -156,7 +156,7 @@ export function Sidebar({
       {/* ── Top bar: logo + toggle ────────────────────────────────────────── */}
       <div
         className={[
-          "flex h-16 shrink-0 items-center",
+          "flex h-16 shrink-0 items-center border-b border-slate-100 dark:border-white/6",
           collapsed ? "justify-center" : "justify-between px-5",
         ].join(" ")}
       >
@@ -207,38 +207,40 @@ export function Sidebar({
       </div>
 
       {/* ── Profile block ─────────────────────────────────────────────────── */}
-      {collapsed ? (
-        /* Collapsed: avatar only */
-        <div className="mb-2 flex justify-center">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
-            style={{ background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})` }}
-            title={user.nama}
-          >
-            {initial}
+      <div className="border-b border-slate-100 dark:border-white/6">
+        {collapsed ? (
+          /* Collapsed: avatar only */
+          <div className="flex justify-center py-3">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
+              style={{ background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})` }}
+              title={user.nama}
+            >
+              {initial}
+            </div>
           </div>
-        </div>
-      ) : (
-        /* Expanded: centered avatar + greeting */
-        <div className="flex flex-col items-center px-5 pb-5 pt-1">
-          {/* Avatar ring */}
-          <div
-            className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
-            style={{
-              background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})`,
-              "--tw-ring-color": `${PRIMARY}40`,
-            } as React.CSSProperties}
-          >
-            {initial}
+        ) : (
+          /* Expanded: centered avatar + greeting */
+          <div className="flex flex-col items-center px-5 pb-5 pt-1">
+            {/* Avatar ring */}
+            <div
+              className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
+              style={{
+                background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})`,
+                "--tw-ring-color": `${PRIMARY}40`,
+              } as React.CSSProperties}
+            >
+              {initial}
+            </div>
+            <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+              Hello, {user.nama.split(" ")[0]}
+            </p>
+            <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
+              {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
+            </p>
           </div>
-          <p className="text-[15px] font-bold text-slate-800 dark:text-white">
-            Hello, {user.nama.split(" ")[0]}
-          </p>
-          <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
-            {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
-          </p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* ── Navigation ────────────────────────────────────────────────────── */}
       <nav className={["flex-1 overflow-y-auto", collapsed ? "px-2 py-1" : "px-3 py-1"].join(" ")}>
@@ -460,7 +462,7 @@ export function Sidebar({
 
       {/* ── Footer copyright (only expanded) ─────────────────────────────── */}
       {!collapsed && (
-        <div className="shrink-0 px-5 py-4">
+        <div className="shrink-0 border-t border-slate-100 px-5 py-4 dark:border-white/6">
           <p className="text-[10px] leading-relaxed text-slate-400 dark:text-slate-600">
             LMS PPLG — SMK Ma&apos;arif NU 01 Limpung
           </p>
