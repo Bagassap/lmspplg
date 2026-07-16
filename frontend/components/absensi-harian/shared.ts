@@ -1,4 +1,4 @@
-import { CheckCircle2, MinusCircle, AlertCircle, Thermometer } from "lucide-react";
+import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut } from "lucide-react";
 import type { StatusAbsensi } from "./types";
 
 export const STATUS_CFG: Record<StatusAbsensi, {
@@ -9,6 +9,14 @@ export const STATUS_CFG: Record<StatusAbsensi, {
   SAKIT: { label: "Sakit", bg: "#FFF5DC", clr: "#E6A800", darkBg: "#E6A80020", icon: Thermometer  },
   ALPA:  { label: "Alpa",  bg: "#FFE9EA", clr: "#FF3644", darkBg: "#FF364420", icon: MinusCircle  },
 };
+
+export const PULANG_CFG = {
+  label: "Pulang", bg: "#EAF1FF", clr: "#3B7CE8", darkBg: "#3B7CE820", icon: LogOut,
+};
+
+// Brand gradient shared with the Pengumuman module — used instead of a
+// status-color (e.g. green) wherever the UI needs a neutral "app" theme.
+export const BRAND_GRADIENT = "linear-gradient(135deg,#6334F4 0%,#8B5CF6 40%,#EC4899 80%,#F97316 100%)";
 
 export const CARD_GRADIENTS = [
   "linear-gradient(135deg,#3B7CE8,#4F8EF7)",

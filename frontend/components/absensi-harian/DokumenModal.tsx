@@ -6,17 +6,21 @@ import {
   X, MapPin, Download, Camera, PenTool, ExternalLink,
 } from "lucide-react";
 import type { SiswaAbsensi, StatusAbsensi } from "./types";
-import { STATUS_CFG, formatTgl, getInitials, avatarColor, parseLokasi, resolveMediaSrc } from "./shared";
+import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, getInitials, avatarColor, parseLokasi, resolveMediaSrc } from "./shared";
 
-export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
-  siswa: SiswaAbsensi; tanggal: string; kelas: string; onClose: () => void;
+export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" }: {
+  siswa: SiswaAbsensi; tanggal: string; kelas: string; onClose: () => void; source?: "hadir" | "pulang";
 }) {
   const [imgOverlay, setImgOverlay] = useState<string | null>(null);
-  const lokasi = parseLokasi(siswa.lokasi);
-  const fotoSrc = resolveMediaSrc(siswa.foto);
-  const ttdSrc = siswa.ttd ?? null;
+  const isPulang = source === "pulang";
+  const rawLokasi = isPulang ? siswa.lokasiPulang : siswa.lokasi;
+  const lokasi = parseLokasi(rawLokasi);
+  const fotoSrc = resolveMediaSrc(isPulang ? siswa.fotoPulang : siswa.foto);
+  const ttdSrc = (isPulang ? siswa.ttdPulang : siswa.ttd) ?? null;
+  const waktu = isPulang ? siswa.waktuPulang : siswa.waktuAbsen;
+  const catatan = isPulang ? siswa.catatanPulang : siswa.catatan;
   const status = (siswa.status ?? "HADIR") as StatusAbsensi;
-  const theme = STATUS_CFG[status];
+  const theme = isPulang ? PULANG_CFG : STATUS_CFG[status];
   const ThemeIcon = theme.icon;
   const ac = avatarColor(siswa.nama);
 
@@ -56,7 +60,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
           style={{ maxHeight: "88vh" }}>
 
           <div className="relative flex shrink-0 flex-col overflow-hidden sm:w-60"
-            style={{ background: `linear-gradient(135deg,${theme.clr}dd,${theme.clr})` }}>
+            style={{ background: BRAND_GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10" />
             <div className="relative flex justify-end p-4">
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30">
@@ -85,13 +89,13 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
                   <p className="mt-0.5 text-sm font-bold text-white">{formatTgl(tanggal)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/55">Waktu Absen</p>
-                  <p className="mt-0.5 font-mono text-2xl font-extrabold text-white">{siswa.waktuAbsen ?? "—"}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/55">{isPulang ? "Waktu Pulang" : "Waktu Absen"}</p>
+                  <p className="mt-0.5 font-mono text-2xl font-extrabold text-white">{waktu ?? "—"}</p>
                 </div>
-                {siswa.catatan && (
+                {catatan && (
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-white/55">Keterangan</p>
-                    <p className="mt-0.5 text-xs text-white/90 leading-relaxed">{siswa.catatan}</p>
+                    <p className="mt-0.5 text-xs text-white/90 leading-relaxed">{catatan}</p>
                   </div>
                 )}
               </div>
@@ -161,13 +165,13 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
                     </div>
                   </div>
                 )}
-                {siswa.lokasi && !lokasi && (
+                {rawLokasi && !lokasi && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm p-4">
                     <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Lokasi Absensi</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">{siswa.lokasi}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">{rawLokasi}</p>
                   </div>
                 )}
-                {!fotoSrc && !ttdSrc && !siswa.lokasi && (
+                {!fotoSrc && !ttdSrc && !rawLokasi && (
                   <div className="flex flex-col items-center gap-3 py-16 text-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
                       <PenTool size={22} className="text-slate-300 dark:text-slate-600" />
@@ -179,7 +183,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
             </div>
             <div className="shrink-0 border-t border-slate-100 dark:border-slate-700/40 bg-white dark:bg-[#141b2d] px-4 py-3">
               <button onClick={onClose} className="w-full rounded-xl py-2.5 text-sm font-bold text-white"
-                style={{ background: `linear-gradient(135deg,${theme.clr}dd,${theme.clr})` }}>
+                style={{ background: BRAND_GRADIENT }}>
                 Tutup
               </button>
             </div>

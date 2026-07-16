@@ -3,14 +3,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, Users, Eye, Camera, FileText, Save, GraduationCap,
+  ClipboardCheck, CalendarDays, Users, Eye, Camera, PenTool, FileText, Save, GraduationCap,
+  ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { printAbsensiPDF } from "@/components/absensi-harian/printAbsensiPDF";
-import { STATUS_CFG, CARD_GRADIENTS, getInitials, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
-import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi } from "@/components/absensi-harian/types";
+import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, getInitials, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
+import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
+
+const TABLE_PAGE_SIZE = 10;
 
 export default function GuruAbsensiHarianPage() {
   const toast = useToast();
@@ -22,6 +25,9 @@ export default function GuruAbsensiHarianPage() {
   const [saving, setSaving] = useState(false);
   const [draft, setDraft] = useState<Record<string, StatusAbsensi>>({});
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
+  const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
+  const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
+  const [tablePage, setTablePage] = useState(0);
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -81,13 +87,28 @@ export default function GuruAbsensiHarianPage() {
     setDraft(next);
   }
 
+  useEffect(() => { setTablePage(0); }, [selectedId, tanggal, activeFilter]);
+
   const selectedKelas = kelasList.find((k) => k.id === selectedId);
   const siswaList = data?.siswa ?? [];
   const rekap = data?.rekap ?? { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+  const pulangCount = data?.pulangCount ?? 0;
   const total = siswaList.length;
   const sudahAbsen = siswaList.filter((s) => s.status !== null).length;
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
   const terisi = Object.keys(draft).length;
+
+  const filteredSiswa = !activeFilter
+    ? siswaList
+    : activeFilter === "PULANG"
+      ? siswaList.filter((s) => !!s.waktuPulang)
+      : siswaList.filter((s) => s.status === activeFilter);
+  const tablePageCount = Math.max(1, Math.ceil(filteredSiswa.length / TABLE_PAGE_SIZE));
+  const pagedSiswa = filteredSiswa.slice(tablePage * TABLE_PAGE_SIZE, (tablePage + 1) * TABLE_PAGE_SIZE);
+
+  function toggleFilter(key: FilterAbsensi) {
+    setActiveFilter((prev) => (prev === key ? null : key));
+  }
 
   if (kelasList.length === 0) {
     return (
@@ -206,27 +227,47 @@ export default function GuruAbsensiHarianPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {(["HADIR", "IZIN", "SAKIT", "ALPA"] as StatusAbsensi[]).map((key) => {
-            const cfg = STATUS_CFG[key];
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
+            const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
             const Icon = cfg.icon;
-            const pct = total > 0 ? Math.round((rekap[key] / total) * 100) : 0;
+            const count = key === "PULANG" ? pulangCount : rekap[key];
+            const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+            const active = activeFilter === key;
             return (
-              <div key={key} className="flex items-center gap-3 rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: cfg.bg }}>
+              <button key={key} type="button" onClick={() => toggleFilter(key)}
+                className="flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left shadow-sm transition-all"
+                style={{
+                  backgroundColor: cfg.bg,
+                  outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
+                  outlineOffset: active ? "2px" : "0",
+                }}>
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: cfg.darkBg }}>
                   <Icon size={20} style={{ color: cfg.clr }} />
                 </div>
                 <div className="flex min-w-0 flex-1 items-baseline gap-2">
-                  <span className="text-2xl font-black leading-none" style={{ color: cfg.clr }}>{rekap[key]}</span>
+                  <span className="text-2xl font-black leading-none" style={{ color: cfg.clr }}>{count}</span>
                   <span className="text-sm font-bold" style={{ color: cfg.clr }}>{cfg.label}</span>
                 </div>
                 <div className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-extrabold" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
                   {pct}%
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
+        {activeFilter && (
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <span>Menampilkan siswa dengan status</span>
+            <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
+              style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).darkBg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
+              {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
+            </span>
+            <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              (tampilkan semua)
+            </button>
+          </div>
+        )}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
           {loading ? (
@@ -246,67 +287,109 @@ export default function GuruAbsensiHarianPage() {
               </div>
               <p className="text-sm font-medium text-slate-400 dark:text-slate-500">Belum ada siswa di kelas ini</p>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <div className="min-w-225 divide-y divide-slate-50 dark:divide-slate-700/30">
-                {siswaList.map((s, idx) => {
-                  const ac = avatarColor(s.nama);
-                  const hasDok = !!(s.ttd || s.lokasi || s.foto);
-                  const lokasiParsed = parseLokasi(s.lokasi);
-                  const cur = draft[s.siswaId] ?? s.status;
-                  return (
-                    <motion.div key={s.siswaId}
-                      initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
-                      className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
-                      style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 84px" }}>
-                      <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{idx + 1}</span>
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
-                        {getInitials(s.nama)}
-                      </div>
-                      <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
-                      <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
-                      <div className="flex gap-1">
-                        {(["HADIR", "IZIN", "SAKIT", "ALPA"] as StatusAbsensi[]).map((st) => {
-                          const cfg = STATUS_CFG[st];
-                          const active = cur === st;
-                          return (
-                            <button key={st} onClick={() => setDraft((p) => ({ ...p, [s.siswaId]: st }))}
-                              className="text-[10px] font-bold px-2 py-1 rounded-lg border transition-all hover:scale-105"
-                              style={{
-                                backgroundColor: active ? cfg.bg : "transparent",
-                                color: active ? cfg.clr : "#94a3b8",
-                                borderColor: active ? cfg.clr + "60" : "#e2e8f040",
-                              }}>
-                              {cfg.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      <span className="text-center text-sm font-mono text-slate-500">{s.waktuAbsen ?? "—"}</span>
-                      <div className="min-w-0">
-                        {lokasiParsed ? (
-                          <span className="text-[11px] font-mono text-blue-500 truncate block">{lokasiParsed.lat.slice(0, 8)}…</span>
-                        ) : (
-                          <span className="text-[11px] text-slate-300">—</span>
-                        )}
-                      </div>
-                      <div className="flex justify-center">
-                        {s.foto ? <Camera size={13} className="text-emerald-500" /> : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
-                      </div>
-                      <div className="flex justify-end">
-                        {hasDok ? (
-                          <button onClick={() => setDokumenSiswa(s)}
-                            className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                            style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
-                            <Eye size={11} /> Lihat
-                          </button>
-                        ) : <span />}
-                      </div>
-                    </motion.div>
-                  );
-                })}
+          ) : filteredSiswa.length === 0 ? (
+            <div className="flex flex-col items-center py-16 text-center">
+              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                <Users size={24} className="text-slate-300 dark:text-slate-600" />
               </div>
+              <p className="text-sm font-medium text-slate-400 dark:text-slate-500">Tidak ada siswa dengan status ini</p>
             </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <div className="min-w-225 divide-y divide-slate-50 dark:divide-slate-700/30">
+                  {pagedSiswa.map((s, idx) => {
+                    const ac = avatarColor(s.nama);
+                    const isPulangView = activeFilter === "PULANG";
+                    const waktu = isPulangView ? s.waktuPulang : s.waktuAbsen;
+                    const lokasiRaw = isPulangView ? s.lokasiPulang : s.lokasi;
+                    const fotoRaw = isPulangView ? s.fotoPulang : s.foto;
+                    const ttdRaw = isPulangView ? s.ttdPulang : s.ttd;
+                    const hasDok = !!(ttdRaw || lokasiRaw || fotoRaw);
+                    const lokasiParsed = parseLokasi(lokasiRaw);
+                    const cur = draft[s.siswaId] ?? s.status;
+                    return (
+                      <motion.div key={s.siswaId}
+                        initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
+                        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                        style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 84px" }}>
+                        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tablePage * TABLE_PAGE_SIZE + idx + 1}</span>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
+                          {getInitials(s.nama)}
+                        </div>
+                        <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
+                        <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
+                        {isPulangView ? (
+                          <span className="inline-flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                            style={{ backgroundColor: PULANG_CFG.bg, color: PULANG_CFG.clr }}>
+                            <PULANG_CFG.icon size={10} /> Pulang
+                          </span>
+                        ) : (
+                          <div className="flex gap-1">
+                            {(["HADIR", "IZIN", "SAKIT", "ALPA"] as StatusAbsensi[]).map((st) => {
+                              const cfg = STATUS_CFG[st];
+                              const active = cur === st;
+                              return (
+                                <button key={st} onClick={() => setDraft((p) => ({ ...p, [s.siswaId]: st }))}
+                                  className="text-[10px] font-bold px-2 py-1 rounded-lg border transition-all hover:scale-105"
+                                  style={{
+                                    backgroundColor: active ? cfg.bg : "transparent",
+                                    color: active ? cfg.clr : "#94a3b8",
+                                    borderColor: active ? cfg.clr + "60" : "#e2e8f040",
+                                  }}>
+                                  {cfg.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                        <span className="text-center text-sm font-mono text-slate-500">{waktu ?? "—"}</span>
+                        <div className="min-w-0">
+                          {lokasiParsed ? (
+                            <span className="text-[11px] font-mono text-blue-500 truncate block">{lokasiParsed.lat.slice(0, 8)}…</span>
+                          ) : (
+                            <span className="text-[11px] text-slate-300">—</span>
+                          )}
+                        </div>
+                        <div className="flex justify-center">
+                          {fotoRaw ? <Camera size={13} className="text-emerald-500" /> : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
+                        </div>
+                        <div className="flex justify-center">
+                          {ttdRaw ? <PenTool size={13} className="text-violet-500" /> : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
+                        </div>
+                        <div className="flex justify-end">
+                          {hasDok ? (
+                            <button onClick={() => { setDokumenSiswa(s); setDokumenSource(isPulangView ? "pulang" : "hadir"); }}
+                              className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
+                              style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
+                              <Eye size={11} /> Lihat
+                            </button>
+                          ) : <span />}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+              {filteredSiswa.length > TABLE_PAGE_SIZE && (
+                <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
+                  <span className="text-xs text-slate-400 dark:text-slate-500">
+                    {tablePage * TABLE_PAGE_SIZE + 1}–{Math.min((tablePage + 1) * TABLE_PAGE_SIZE, filteredSiswa.length)} dari {filteredSiswa.length}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                      <ChevronLeft size={14} />
+                    </button>
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{tablePage + 1}/{tablePageCount}</span>
+                    <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
@@ -320,7 +403,7 @@ export default function GuruAbsensiHarianPage() {
 
       <AnimatePresence>
         {dokumenSiswa && (
-          <DokumenModal siswa={dokumenSiswa} tanggal={tanggal} kelas={selectedKelas?.nama ?? ""} onClose={() => setDokumenSiswa(null)} />
+          <DokumenModal siswa={dokumenSiswa} tanggal={tanggal} kelas={selectedKelas?.nama ?? ""} source={dokumenSource} onClose={() => setDokumenSiswa(null)} />
         )}
       </AnimatePresence>
     </>

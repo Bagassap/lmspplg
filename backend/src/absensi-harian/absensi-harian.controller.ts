@@ -61,7 +61,7 @@ export class AbsensiHarianController {
     @UploadedFile() foto?: Express.Multer.File,
   ) {
     const fotoUrl = foto ? `/uploads/absensi-harian/${foto.filename}` : undefined;
-    return this.service.absenSendiri(req.user.id, {
+    return this.service.absenSendiri(req.user.id, dto.tipe ?? 'HADIR', {
       lokasi: dto.lokasi,
       waktuAbsen: dto.waktuAbsen,
       ttd: dto.ttd,

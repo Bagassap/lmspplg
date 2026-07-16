@@ -1,7 +1,12 @@
-import { IsString, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsIn, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class AbsenSendiriHarianDto {
+  @IsString()
+  @IsOptional()
+  @IsIn(['HADIR', 'PULANG'])
+  tipe?: 'HADIR' | 'PULANG';
+
   @IsString()
   @IsOptional()
   lokasi?: string;

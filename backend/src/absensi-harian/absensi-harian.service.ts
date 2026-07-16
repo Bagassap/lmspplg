@@ -8,6 +8,15 @@ function todayStr() {
   return new Date().toISOString().split('T')[0];
 }
 
+export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
+
+function currentWindow(): AbsenWindow {
+  const h = new Date().getHours();
+  if (h >= 6 && h < 12) return 'HADIR';
+  if (h >= 12 && h < 18) return 'PULANG';
+  return 'CLOSED';
+}
+
 @Injectable()
 export class AbsensiHarianService {
   constructor(
@@ -35,10 +44,12 @@ export class AbsensiHarianService {
     const docMap = new Map(existing.map((a) => [a.siswaId, a]));
 
     const rekap = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+    let pulangCount = 0;
     const siswa = siswaList.map((s) => {
       const doc = docMap.get(s.id) ?? null;
       const status = doc?.status ?? null;
       if (status && status in rekap) rekap[status as keyof typeof rekap]++;
+      if (doc?.waktuPulang) pulangCount++;
       return {
         siswaId: s.id,
         userId: s.userId,
@@ -50,10 +61,15 @@ export class AbsensiHarianService {
         foto: doc?.foto ?? null,
         ttd: doc?.ttd ?? null,
         catatan: doc?.catatan ?? null,
+        waktuPulang: doc?.waktuPulang ?? null,
+        lokasiPulang: doc?.lokasiPulang ?? null,
+        fotoPulang: doc?.fotoPulang ?? null,
+        ttdPulang: doc?.ttdPulang ?? null,
+        catatanPulang: doc?.catatanPulang ?? null,
       };
     });
 
-    return { kelasId, kelas, tanggal, rekap, siswa };
+    return { kelasId, kelas, tanggal, rekap, pulangCount, siswa };
   }
 
   async getAllRekap(tanggal: string, userId: string, role: string) {
@@ -86,33 +102,66 @@ export class AbsensiHarianService {
 
   async getStatusSaya(userId: string, tanggal?: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
-    if (!siswa) return { sudahAbsen: false, status: null };
+    const window = currentWindow();
+    if (!siswa) return { sudahAbsen: false, sudahPulang: false, status: null, window };
     const tgl = tanggal || todayStr();
     const record = await this.prisma.absensiHarian.findUnique({
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal: tgl } },
     });
-    return { sudahAbsen: !!record, status: record?.status ?? null, tanggal: tgl, record };
+    return {
+      sudahAbsen: !!record,
+      sudahPulang: !!record?.waktuPulang,
+      status: record?.status ?? null,
+      tanggal: tgl,
+      window,
+      record,
+    };
   }
 
   async absenSendiri(
     userId: string,
+    tipe: 'HADIR' | 'PULANG',
     extras: { lokasi?: string; waktuAbsen?: string; ttd?: string; fotoUrl?: string; catatan?: string } = {},
   ) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+
+    const window = currentWindow();
+    if (tipe === 'HADIR' && window !== 'HADIR') {
+      throw new ForbiddenException('Absen hadir hanya bisa dilakukan pukul 06:00–12:00');
+    }
+    if (tipe === 'PULANG' && window !== 'PULANG') {
+      throw new ForbiddenException('Absen pulang hanya bisa dilakukan pukul 12:00–18:00');
+    }
+
     const tanggal = todayStr();
-    const data = {
-      status: 'HADIR',
-      lokasi: extras.lokasi,
-      waktuAbsen: extras.waktuAbsen,
-      ttd: extras.ttd,
-      foto: extras.fotoUrl,
-      catatan: extras.catatan,
-    };
+    const data =
+      tipe === 'HADIR'
+        ? {
+            status: 'HADIR',
+            lokasi: extras.lokasi,
+            waktuAbsen: extras.waktuAbsen,
+            ttd: extras.ttd,
+            foto: extras.fotoUrl,
+            catatan: extras.catatan,
+          }
+        : {
+            lokasiPulang: extras.lokasi,
+            waktuPulang: extras.waktuAbsen,
+            ttdPulang: extras.ttd,
+            fotoPulang: extras.fotoUrl,
+            catatanPulang: extras.catatan,
+          };
+
     return this.prisma.absensiHarian.upsert({
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
       update: data,
-      create: { siswaId: siswa.id, kelasId: siswa.kelasId, tanggal, ...data },
+      create: {
+        siswaId: siswa.id,
+        kelasId: siswa.kelasId,
+        tanggal,
+        ...(tipe === 'HADIR' ? data : { status: 'HADIR', ...data }),
+      },
     });
   }
 
