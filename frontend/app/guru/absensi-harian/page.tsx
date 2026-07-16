@@ -297,7 +297,21 @@ export default function GuruAbsensiHarianPage() {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <div className="min-w-225 divide-y divide-slate-50 dark:divide-slate-700/30">
+                <div className="min-w-225">
+                  <div className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
+                    style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 84px" }}>
+                    <span />
+                    <span />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Nama</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIS</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Status</span>
+                    <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Waktu</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Lokasi</span>
+                    <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Foto</span>
+                    <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">TTD</span>
+                    <span className="text-right text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Aksi</span>
+                  </div>
+                  <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
                   {pagedSiswa.map((s, idx) => {
                     const ac = avatarColor(s.nama);
                     const isPulangView = activeFilter === "PULANG";
@@ -369,6 +383,7 @@ export default function GuruAbsensiHarianPage() {
                       </motion.div>
                     );
                   })}
+                  </div>
                 </div>
               </div>
               {filteredSiswa.length > TABLE_PAGE_SIZE && (
