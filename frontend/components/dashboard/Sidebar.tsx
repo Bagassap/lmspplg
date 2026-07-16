@@ -103,9 +103,23 @@ const ROLE_LABEL: Record<string, string> = {
   SISWA: "Pelajar",
 };
 
-// Primary palette — satu warna untuk semua role
-const PRIMARY = "#4F8EF7";
-const PRIMARY_ICON_BG = PRIMARY;   // active icon box bg (solid)
+// Accent per role — sama dengan gradient card "Pengumuman" di masing-masing dashboard
+const ROLE_ACCENT: Record<string, { from: string; to: string }> = {
+  ADMIN: { from: "#60a5fa", to: "#3b82f6" },
+  GURU:  { from: "#fb923c", to: "#ea580c" },
+  SISWA: { from: "#a78bfa", to: "#7c3aed" },
+};
+
+// Sapaan singkat yang berganti sesuai hari, biar sidebar tidak terlalu polos
+const GREETINGS = [
+  "Semoga harimu menyenangkan!",
+  "Tetap semangat belajar hari ini!",
+  "Sukses selalu untuk aktivitasmu!",
+  "Jangan lupa istirahat, ya!",
+  "Konsisten itu kunci keberhasilan.",
+  "Hari baru, semangat baru!",
+  "Terus berkarya dan berkembang!",
+];
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
@@ -121,6 +135,10 @@ export function Sidebar({
   const pathname = usePathname();
   const items    = MENUS[user.role] ?? [];
   const initial  = user.nama.charAt(0).toUpperCase();
+  const accent   = ROLE_ACCENT[user.role] ?? ROLE_ACCENT.ADMIN;
+  const PRIMARY  = accent.to;
+  const PRIMARY_ICON_BG = PRIMARY;
+  const greeting = GREETINGS[new Date().getDay() % GREETINGS.length];
 
   const [expanded, setExpanded] = useState<Set<string>>(() => {
     const s = new Set<string>();
@@ -151,6 +169,7 @@ export function Sidebar({
         collapsed ? "w-18" : "w-64",
         open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       ].join(" ")}
+      style={{ "--color-primary": PRIMARY } as React.CSSProperties}
     >
 
       {/* ── Top bar: logo + toggle ────────────────────────────────────────── */}
@@ -176,7 +195,7 @@ export function Sidebar({
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-                style={{ background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})` }}
+                style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
               >
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto" />
               </div>
@@ -213,7 +232,7 @@ export function Sidebar({
           <div className="flex justify-center py-3">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
-              style={{ background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})` }}
+              style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
               title={user.nama}
             >
               {initial}
@@ -226,7 +245,7 @@ export function Sidebar({
             <div
               className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
               style={{
-                background: `linear-gradient(135deg, #3B7CE8, ${PRIMARY})`,
+                background: `linear-gradient(135deg, ${accent.from}, ${accent.to})`,
                 "--tw-ring-color": `${PRIMARY}40`,
               } as React.CSSProperties}
             >
@@ -237,6 +256,10 @@ export function Sidebar({
             </p>
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
+            </p>
+            <p className="mt-2 rounded-full px-3 py-1 text-[10px] font-medium italic"
+              style={{ backgroundColor: `${PRIMARY}14`, color: PRIMARY }}>
+              &ldquo;{greeting}&rdquo;
             </p>
           </div>
         )}
