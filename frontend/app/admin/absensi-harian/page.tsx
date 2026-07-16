@@ -232,7 +232,7 @@ export default function AdminAbsensiHarianPage() {
                 <p className="mt-0.5 text-sm text-white/70">Pantau kehadiran seluruh siswa setiap kelas</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <button onClick={() => setShowKelola(true)}
                 className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-sm hover:bg-white/25">
                 <Settings2 size={14} /> Kelola Kelas
@@ -376,49 +376,51 @@ export default function AdminAbsensiHarianPage() {
               <p className="text-sm font-medium text-slate-400 dark:text-slate-500">Belum ada siswa di kelas ini</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
-              {siswaList.map((s, idx) => {
-                const ac = avatarColor(s.nama);
-                const hasDok = !!(s.ttd || s.lokasi || s.foto);
-                const lokasiParsed = parseLokasi(s.lokasi);
-                return (
-                  <motion.div key={s.siswaId}
-                    initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
-                    className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
-                    style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 1fr 1fr 1.4fr 60px 60px 72px" }}>
-                    <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{idx + 1}</span>
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
-                      {getInitials(s.nama)}
-                    </div>
-                    <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
-                    <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
-                    <StatusBadge status={s.status} />
-                    <span className="text-center text-sm font-mono text-slate-500">{s.waktuAbsen ?? "—"}</span>
-                    <div className="min-w-0">
-                      {lokasiParsed ? (
-                        <span className="text-[11px] font-mono text-blue-500 truncate block">{lokasiParsed.lat.slice(0, 8)}…</span>
-                      ) : (
-                        <span className="text-[11px] text-slate-300">—</span>
-                      )}
-                    </div>
-                    <div className="flex justify-center">
-                      {s.foto ? <Camera size={13} className="text-emerald-500" /> : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
-                    </div>
-                    <div className="flex justify-center">
-                      {s.ttd ? <PenTool size={13} className="text-violet-500" /> : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
-                    </div>
-                    <div className="flex justify-end">
-                      {hasDok ? (
-                        <button onClick={() => setDokumenSiswa(s)}
-                          className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                          style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
-                          <Eye size={11} /> Lihat
-                        </button>
-                      ) : <span />}
-                    </div>
-                  </motion.div>
-                );
-              })}
+            <div className="overflow-x-auto">
+              <div className="min-w-190 divide-y divide-slate-50 dark:divide-slate-700/30">
+                {siswaList.map((s, idx) => {
+                  const ac = avatarColor(s.nama);
+                  const hasDok = !!(s.ttd || s.lokasi || s.foto);
+                  const lokasiParsed = parseLokasi(s.lokasi);
+                  return (
+                    <motion.div key={s.siswaId}
+                      initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
+                      className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                      style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 1fr 1fr 1.4fr 60px 60px 72px" }}>
+                      <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{idx + 1}</span>
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
+                        {getInitials(s.nama)}
+                      </div>
+                      <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
+                      <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
+                      <StatusBadge status={s.status} />
+                      <span className="text-center text-sm font-mono text-slate-500">{s.waktuAbsen ?? "—"}</span>
+                      <div className="min-w-0">
+                        {lokasiParsed ? (
+                          <span className="text-[11px] font-mono text-blue-500 truncate block">{lokasiParsed.lat.slice(0, 8)}…</span>
+                        ) : (
+                          <span className="text-[11px] text-slate-300">—</span>
+                        )}
+                      </div>
+                      <div className="flex justify-center">
+                        {s.foto ? <Camera size={13} className="text-emerald-500" /> : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
+                      </div>
+                      <div className="flex justify-center">
+                        {s.ttd ? <PenTool size={13} className="text-violet-500" /> : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
+                      </div>
+                      <div className="flex justify-end">
+                        {hasDok ? (
+                          <button onClick={() => setDokumenSiswa(s)}
+                            className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
+                            style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
+                            <Eye size={11} /> Lihat
+                          </button>
+                        ) : <span />}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

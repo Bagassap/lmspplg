@@ -52,10 +52,10 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose }: {
           onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
         <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
-          className="relative z-10 flex w-full max-w-3xl overflow-hidden rounded-t-3xl shadow-2xl sm:rounded-3xl"
+          className="relative z-10 flex w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl shadow-2xl sm:flex-row sm:rounded-3xl"
           style={{ maxHeight: "88vh" }}>
 
-          <div className="relative flex w-60 shrink-0 flex-col overflow-hidden"
+          <div className="relative flex shrink-0 flex-col overflow-hidden sm:w-60"
             style={{ background: `linear-gradient(135deg,${theme.clr}dd,${theme.clr})` }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10" />
             <div className="relative flex justify-end p-4">
