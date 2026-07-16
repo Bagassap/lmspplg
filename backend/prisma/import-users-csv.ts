@@ -44,7 +44,7 @@ function parseCSV(content: string): Row[] {
   const lines = content.split('\n').map((l) => l.replace(/\r$/, '')).filter((l) => l.trim() !== '');
   const rows: Row[] = [];
   for (let i = 1; i < lines.length; i++) {
-    const lineNo = i + 1; // +1: header sudah di-skip, i mulai dari 1
+    const lineNo = i + 1; 
     const [nis, password, nama, kelas, role, waliKelas] = parseCSVLine(lines[i]);
     if (!nis || !nama || !role) {
       console.error(`  ! Skip baris ${lineNo}: kolom NIS/Nama/Role kosong`);
@@ -87,12 +87,6 @@ function kelasToAngkatan(kelas: string): number {
   return currentYear - 2;
 }
 
-/**
- * Script ini MENGHAPUS SELURUH data User/Siswa/Guru/Kelas + semua relasinya
- * (pengumuman, absensi, UKK, magang, dst) sebelum mengimpor ulang dari CSV.
- * Wajib flag --yes eksplisit supaya tidak ke-trigger tanpa sengaja terhadap
- * database yang sudah berisi data nyata (mis. production).
- */
 async function confirmWipe() {
   const confirmed = process.argv.includes('--yes') || process.argv.includes('-y');
   if (confirmed) return;
@@ -105,7 +99,7 @@ async function confirmWipe() {
   ]);
 
   if (userCount === 0 && siswaCount === 0 && guruCount === 0 && kelasCount === 0) {
-    return; // database kosong, aman jalan tanpa flag
+    return; 
   }
 
   console.error('!! DATABASE TIDAK KOSONG — script ini akan MENGHAPUS SEMUANYA:');
@@ -195,7 +189,6 @@ async function main() {
   await confirmWipe();
   await wipeAll();
 
-  // ── 1. Guru ────────────────────────────────────────────────────────────────
   console.log('── Import Guru...');
   const guruByNama = new Map<string, { userId: string; guruId: string }>();
   let guruCount = 0;
@@ -223,7 +216,6 @@ async function main() {
     }
   }
 
-  // ── 2. Admin ───────────────────────────────────────────────────────────────
   console.log('\n── Import Admin...');
   let adminCount = 0;
   let adminSkipped = 0;
@@ -231,8 +223,6 @@ async function main() {
     try {
       const hashed = await bcrypt.hash(row.password, SALT_ROUNDS);
 
-      // Nama admin yang juga menjadi wali kelas (mis. tidak ada entri GURU untuk nama ini)
-      // perlu profil Guru tambahan agar relasi Kelas.waliKelasGuru bisa terhubung.
       const key = stripGelar(row.nama).toLowerCase();
       const isAlsoWali = siswaRows.some(
         (s) => s.waliKelas && stripGelar(s.waliKelas).toLowerCase() === key,
@@ -260,7 +250,6 @@ async function main() {
     }
   }
 
-  // ── 3. Kelas ───────────────────────────────────────────────────────────────
   console.log('\n── Import Kelas...');
   const kelasIdByNama = new Map<string, string>();
   const kelasNames = [...new Set(siswaRows.map((r) => r.kelas))];
@@ -277,7 +266,6 @@ async function main() {
     console.log(`  + Kelas: ${nama}${sample?.waliKelas ? ` (wali: ${sample.waliKelas})` : ''}`);
   }
 
-  // ── 4. Siswa ───────────────────────────────────────────────────────────────
   console.log('\n── Import Siswa...');
   let siswaCount = 0;
   let siswaSkipped = 0;

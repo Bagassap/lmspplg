@@ -12,8 +12,6 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
 import { useToast } from "@/components/shared/ToastSystem";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type KelasRef = { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
 type Siswa = {
   id: string; nis: string; nama: string | null; kelas: KelasRef;
@@ -23,8 +21,6 @@ type Siswa = {
   user: { id: string; nama: string; email: string | null } | null;
 };
 type KelasAc = { main: string; light: string; text: string; dark: string };
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
 
 const KELAS_COLOR: Record<string, KelasAc> = {
   "X Pengembangan Perangkat Lunak dan Gim 1":  { main: "#6EA7F9", light: "#F0EDFF", text: "#5B3FBD", dark: "#4F8EF7" },
@@ -41,10 +37,7 @@ const JURUSAN_OPTIONS = [
   "Rekayasa Perangkat Lunak",
 ];
 
-// ─── Column templates ─────────────────────────────────────────────────────────
-// Grouped (9 cols): ☐ | # | Nama | NIS | JK | Tempat/Tgl | Alamat | No.HP | Aksi
 const COL_GROUPED = "36px 36px minmax(0,1.8fr) minmax(0,0.7fr) minmax(0,0.7fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.7fr) 116px";
-// Flat (10 cols):   ☐ | # | Nama | NIS | Kelas | JK | Tempat/Tgl | Alamat | No.HP | Aksi
 const COL_FLAT    = "36px 36px minmax(0,1.6fr) minmax(0,0.65fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.65fr) 116px";
 const PAGE_SIZE = 10;
 
@@ -52,8 +45,6 @@ const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 const SELECT =
   "w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-9 text-sm text-slate-800 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:focus:bg-slate-800";
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getNama(s: Siswa): string { return s.nama ?? s.user?.nama ?? "—"; }
 function getInitials(name: string): string { return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase(); }
@@ -72,8 +63,6 @@ function formatTglShort(iso: string | null): string {
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
-// ─── Field ────────────────────────────────────────────────────────────────────
-
 function Field({ label, icon: Icon, required, optional, children }: {
   label: string; icon: React.ElementType; required?: boolean; optional?: boolean; children: React.ReactNode;
 }) {
@@ -89,8 +78,6 @@ function Field({ label, icon: Icon, required, optional, children }: {
     </div>
   );
 }
-
-// ─── Edit Modal ───────────────────────────────────────────────────────────────
 
 function EditModal({ siswa, kelasList, onClose, onSave }: {
   siswa: Siswa; kelasList: KelasRef[]; onClose: () => void; onSave: () => void;
@@ -238,8 +225,6 @@ function EditModal({ siswa, kelasList, onClose, onSave }: {
   );
 }
 
-// ─── Checkbox ─────────────────────────────────────────────────────────────────
-
 function Checkbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
   return (
     <button onClick={(e) => { e.stopPropagation(); onChange(); }}
@@ -256,9 +241,6 @@ function Checkbox({ checked, onChange }: { checked: boolean; onChange: () => voi
     </button>
   );
 }
-
-
-// ─── Table Head ───────────────────────────────────────────────────────────────
 
 function TableHead({ isFlat, allChecked, onToggleAll }: {
   isFlat: boolean; allChecked: boolean; onToggleAll: () => void;
@@ -287,8 +269,6 @@ function TableHead({ isFlat, allChecked, onToggleAll }: {
     </div>
   );
 }
-
-// ─── Siswa Row ────────────────────────────────────────────────────────────────
 
 function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, onCheck }: {
   siswa: Siswa; isFlat: boolean; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
@@ -377,8 +357,6 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, 
   );
 }
 
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
 function PaginationBar({ page, pageCount, total, onPage }: {
   page: number; pageCount: number; total: number; onPage: (p: number) => void;
 }) {
@@ -424,8 +402,6 @@ function PaginationBar({ page, pageCount, total, onPage }: {
     </div>
   );
 }
-
-// ─── Kelas Section ────────────────────────────────────────────────────────────
 
 function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAll }: {
   kelas: string; siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
@@ -479,8 +455,6 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, 
   );
 }
 
-// ─── Flat Table ───────────────────────────────────────────────────────────────
-
 function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAll }: {
   siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
@@ -517,8 +491,6 @@ function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAl
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AdminDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<Siswa[]>([]);
@@ -582,7 +554,6 @@ export default function AdminDataSiswaPage() {
 
   return (
     <div className="space-y-5">
-      {/* Hero */}
       <div className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
         style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
         <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-white/5" />
@@ -621,7 +592,6 @@ export default function AdminDataSiswaPage() {
         </div>
       </div>
 
-      {/* Search + Filters */}
       <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="relative w-full sm:min-w-48 sm:flex-1">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -663,7 +633,6 @@ export default function AdminDataSiswaPage() {
         </AnimatePresence>
       </div>
 
-      {/* Count + selection */}
       <div className="flex items-center justify-between">
         {!loading && (
           <p className="text-xs text-gray-400 dark:text-gray-500">
@@ -684,7 +653,6 @@ export default function AdminDataSiswaPage() {
         </AnimatePresence>
       </div>
 
-      {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-24">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />

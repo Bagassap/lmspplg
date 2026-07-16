@@ -19,14 +19,10 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ),
 });
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface Submisi { id: string; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 interface DiskusiItem { id: string; konten: string; createdAt: string; user: { id: string; nama: string; role: string }; replies: DiskusiItem[]; }
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }); }
 
@@ -47,8 +43,6 @@ const BUBBLE_COLORS = [
   { bubble:"#ECFEFF", text:"#0E7490", avatar:"linear-gradient(135deg,#06B6D4,#3B82F6)" },
 ];
 function bubbleFor(id: string) { let h=0; for(const c of id) h=(h*31+c.charCodeAt(0))>>>0; return BUBBLE_COLORS[h % BUBBLE_COLORS.length]; }
-
-// ─── Diskusi ─────────────────────────────────────────────────────────────────
 
 function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
   const [list, setList] = useState<DiskusiItem[]>([]);
@@ -74,7 +68,6 @@ function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
 
   return (
     <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden" style={{minHeight:420}}>
-      {/* Header gradient */}
       <div className="relative px-5 py-4 overflow-hidden shrink-0"
         style={{background:"linear-gradient(135deg,#6334F4 0%,#8B5CF6 50%,#EC4899 100%)"}}>
         <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
@@ -92,7 +85,6 @@ function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         {list.flatMap(d=>[d,...d.replies]).length === 0 && (
           <div className="flex flex-col items-center justify-center py-10 text-center">
@@ -125,7 +117,6 @@ function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
         })}
       </div>
 
-      {/* Input */}
       <div className="shrink-0 px-4 py-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
         {replyTo && (
           <div className="flex items-center gap-2 text-xs bg-violet-50 dark:bg-violet-900/20 text-violet-600 px-3 py-1.5 rounded-lg">
@@ -146,8 +137,6 @@ function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function GuruJadwalSoalPage() {
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
@@ -204,10 +193,8 @@ export default function GuruJadwalSoalPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
       <div className="flex flex-col xl:flex-row gap-6">
 
-        {/* ── Left Column ── */}
         <div className="flex-1 min-w-0 space-y-6">
 
-          {/* Header Banner */}
           <div className="relative overflow-hidden rounded-2xl p-6"
             style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
@@ -243,7 +230,6 @@ export default function GuruJadwalSoalPage() {
             </div>
           </div>
 
-          {/* Jadwal Modal */}
           <AnimatePresence>
             {openJadwalModal && (()=>{
               const allSoal = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:"));
@@ -300,7 +286,6 @@ export default function GuruJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          {/* Soal Modal */}
           <AnimatePresence>
             {openSoalModal && (()=>{
               const allSoal = tahapanList.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:"));
@@ -357,16 +342,12 @@ export default function GuruJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          {/* ── Layout: kiri (2 card + My Task) | kanan (Diskusi) ── */}
           {(()=>{ const jadwalFiles = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:")); return (
           <div className="flex flex-col lg:flex-row gap-4 items-stretch">
 
-            {/* Kolom kiri */}
             <div className="flex-1 min-w-0 flex flex-col gap-4">
 
-              {/* 2 Card sejajar */}
               <div className="flex gap-3">
-                {/* Card Jadwal */}
                 <button onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
                   className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
                   style={{background:"linear-gradient(135deg,#F59E0B,#F97316)", boxShadow:"0 8px 28px rgba(245,158,11,0.45)"}}>
@@ -402,7 +383,6 @@ export default function GuruJadwalSoalPage() {
                   </div>
                 </button>
 
-                {/* Card Soal */}
                 <button onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                   className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
                   style={{background:"linear-gradient(135deg,#6366F1,#4F46E5)", boxShadow:"0 8px 28px rgba(99,102,241,0.45)"}}>
@@ -439,7 +419,6 @@ export default function GuruJadwalSoalPage() {
                 </button>
               </div>
 
-              {/* My Task */}
               <div className="flex-1 min-w-0 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col">
               <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(79,142,247,0.06) 0%,rgba(99,102,241,0.06) 50%,rgba(16,185,129,0.06) 100%)"}}>
                 <div className="flex items-center justify-between mb-4">
@@ -590,9 +569,8 @@ export default function GuruJadwalSoalPage() {
               </div>
             </div>
 
-            </div>{/* end kolom kiri */}
+            </div>
 
-            {/* Diskusi — merentang penuh */}
             <div className="w-full lg:w-80 shrink-0">
               <DiskusiActivity currentUserId=""/>
             </div>

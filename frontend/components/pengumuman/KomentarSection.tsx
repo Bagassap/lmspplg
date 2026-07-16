@@ -40,8 +40,6 @@ function timeAgo(iso: string): string {
   return `${Math.floor(diff/86400)} hari lalu`;
 }
 
-// ─── Single comment bubble ─────────────────────────────────────────────────────
-
 function KomentarBubble({
   k,
   pengumumanId,
@@ -102,7 +100,6 @@ function KomentarBubble({
         transition={{ duration: 0.2 }}
         className={`group flex gap-3 ${isReply ? "mt-2" : ""}`}
       >
-        {/* Avatar */}
         <div className="relative shrink-0">
           <div
             className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-extrabold text-white shadow-md ring-2 ring-white dark:ring-[#1c2434]"
@@ -110,21 +107,17 @@ function KomentarBubble({
           >
             {initials(k.author.nama)}
           </div>
-          {/* Role color dot */}
           <span
             className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1c2434]"
             style={{ backgroundColor: badge.dot }}
           />
         </div>
 
-        {/* Bubble */}
         <div className="min-w-0 flex-1">
           <div className="relative overflow-hidden rounded-2xl rounded-tl-sm border border-slate-100 bg-white shadow-sm dark:border-slate-700/40 dark:bg-slate-800/60">
-            {/* Colored top strip */}
             <div className="absolute left-0 right-0 top-0 h-0.5" style={{ background: avatarBg }} />
 
             <div className="px-4 py-3 pt-3.5">
-              {/* Header row */}
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
                 <span className="text-[13px] font-bold text-slate-900 dark:text-white">{k.author.nama}</span>
                 <span className={`rounded-full px-2 py-0.5 text-[9px] font-extrabold tracking-wide ${badge.cls}`}>
@@ -133,13 +126,11 @@ function KomentarBubble({
                 <span className="text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(k.createdAt)}</span>
               </div>
 
-              {/* Content */}
               <p className="text-[13px] leading-relaxed text-slate-700 dark:text-slate-200" style={{ whiteSpace: "pre-wrap" }}>
                 {k.konten}
               </p>
             </div>
 
-            {/* Action bar */}
             <div className="flex items-center gap-2 border-t border-slate-50 px-4 py-2 dark:border-slate-700/30">
               {!isReply && (
                 <button
@@ -160,7 +151,6 @@ function KomentarBubble({
             </div>
           </div>
 
-          {/* Reply form */}
           <AnimatePresence>
             {showReplyForm && (
               <motion.div
@@ -193,7 +183,6 @@ function KomentarBubble({
         </div>
       </motion.div>
 
-      {/* Replies */}
       {!isReply && k.replies && k.replies.length > 0 && (
         <div className="ml-12">
           <button
@@ -231,8 +220,6 @@ function KomentarBubble({
     </div>
   );
 }
-
-// ─── Section ──────────────────────────────────────────────────────────────────
 
 export function KomentarSection({
   initialKomentar,
@@ -305,13 +292,11 @@ export function KomentarSection({
   return (
     <div className="space-y-5">
 
-      {/* ── Input form ── */}
       <div className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 dark:bg-slate-800/50 ${
         focused
           ? "border-[#6334F4]/40 shadow-[0_0_0_4px_rgba(99,52,244,0.08)]"
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
-        {/* Gradient top strip when focused */}
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
           style={{ background: "linear-gradient(90deg,#6334F4,#977DFF)" }} />
 
@@ -342,7 +327,6 @@ export function KomentarSection({
         </div>
       </div>
 
-      {/* ── Comment list ── */}
       {komentar.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-gradient-to-br from-slate-50 to-white py-10 text-center dark:border-slate-700/40 dark:from-slate-800/30 dark:to-[#1c2434]">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6334F4]/10 to-[#977DFF]/10">

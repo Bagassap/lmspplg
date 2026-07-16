@@ -35,9 +35,7 @@ const JURUSAN_OPTIONS = [
   "Rekayasa Perangkat Lunak",
 ];
 
-// Grouped: Nama | NIS | JK | Tempat/Tgl | Alamat | No.HP | Detail
 const COL_GROUPED = "minmax(0,2fr) minmax(0,0.8fr) minmax(0,0.85fr) minmax(0,1.1fr) minmax(0,1.3fr) minmax(0,0.9fr) 72px";
-// Flat:    Nama | NIS | Kelas | JK | Tempat/Tgl | Alamat | No.HP | Detail
 const COL_FLAT = "minmax(0,1.8fr) minmax(0,0.75fr) minmax(0,0.8fr) minmax(0,0.75fr) minmax(0,1.1fr) minmax(0,1.3fr) minmax(0,0.85fr) 72px";
 const PAGE_SIZE = 10;
 
@@ -59,8 +57,6 @@ function formatTglShort(iso: string | null): string {
   const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
-
-// ─── Table Head ───────────────────────────────────────────────────────────────
 
 function TableHead({ isFlat }: { isFlat: boolean }) {
   const colTemplate = isFlat ? COL_FLAT : COL_GROUPED;
@@ -88,8 +84,6 @@ function TableHead({ isFlat }: { isFlat: boolean }) {
   );
 }
 
-// ─── Siswa Row (read-only card) ───────────────────────────────────────────────
-
 function SiswaRow({
   siswa, isFlat, onDetail, index,
 }: {
@@ -113,7 +107,6 @@ function SiswaRow({
       className="cursor-pointer rounded-lg border border-slate-100 bg-white shadow-sm transition-all duration-150 hover:border-primary/25 dark:border-slate-700/50 dark:bg-[#1c2434]"
       style={{ display: "grid", gridTemplateColumns: colTemplate }}
     >
-      {/* Nama */}
       <div className="flex min-w-0 items-center gap-3 px-4 py-3.5">
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-white dark:ring-slate-800"
@@ -131,14 +124,12 @@ function SiswaRow({
         </div>
       </div>
 
-      {/* NIS */}
       <div className="flex min-w-0 items-center px-4 py-3.5">
         <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-600 dark:bg-white/10 dark:text-slate-300">
           {siswa.nis}
         </span>
       </div>
 
-      {/* Kelas (flat only) */}
       {isFlat && (
         <div className="flex min-w-0 items-center px-4 py-3.5">
           <span
@@ -150,7 +141,6 @@ function SiswaRow({
         </div>
       )}
 
-      {/* JK */}
       <div className="flex min-w-0 items-center px-4 py-3.5">
         {isP ? (
           <span className="inline-flex items-center rounded-full bg-pink-50 px-2.5 py-0.5 text-[11px] font-semibold text-pink-600 dark:bg-pink-900/20 dark:text-pink-400">
@@ -165,14 +155,12 @@ function SiswaRow({
         )}
       </div>
 
-      {/* Tempat/Tgl */}
       <div className="flex min-w-0 items-center px-4 py-3.5">
         <span className="truncate text-sm text-slate-500 dark:text-slate-400" title={tglLahir}>
           {tglLahir}
         </span>
       </div>
 
-      {/* Alamat */}
       <div className="flex min-w-0 items-center px-4 py-3.5">
         <span
           className="truncate text-sm text-slate-500 dark:text-slate-400"
@@ -182,12 +170,10 @@ function SiswaRow({
         </span>
       </div>
 
-      {/* No.HP */}
       <div className="flex min-w-0 items-center px-4 py-3.5">
         <span className="text-sm text-slate-500 dark:text-slate-400">{siswa.noHp ?? "—"}</span>
       </div>
 
-      {/* Detail button */}
       <div className="flex items-center justify-center px-3 py-3.5">
         <button
           onClick={(e) => { e.stopPropagation(); onDetail(siswa); }}
@@ -200,8 +186,6 @@ function SiswaRow({
     </motion.div>
   );
 }
-
-// ─── Pagination ───────────────────────────────────────────────────────────────
 
 function PaginationBar({
   page, pageCount, total, onPage,
@@ -259,8 +243,6 @@ function PaginationBar({
   );
 }
 
-// ─── Kelas Section ────────────────────────────────────────────────────────────
-
 function KelasSection({
   kelas, siswas, onDetail,
 }: {
@@ -316,8 +298,6 @@ function KelasSection({
   );
 }
 
-// ─── Flat Table ───────────────────────────────────────────────────────────────
-
 function FlatTable({ siswas, onDetail }: { siswas: Siswa[]; onDetail: (s: Siswa) => void }) {
   const [page, setPage] = useState(0);
   const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
@@ -340,8 +320,6 @@ function FlatTable({ siswas, onDetail }: { siswas: Siswa[]; onDetail: (s: Siswa)
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function GuruDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<Siswa[]>([]);
@@ -392,7 +370,6 @@ export default function GuruDataSiswaPage() {
 
   return (
     <div className="space-y-5">
-      {/* Hero */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
         style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}
@@ -439,7 +416,6 @@ export default function GuruDataSiswaPage() {
         </div>
       </div>
 
-      {/* Search + Filters */}
       <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="relative w-full sm:min-w-48 sm:flex-1">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -528,7 +504,6 @@ export default function GuruDataSiswaPage() {
         </p>
       )}
 
-      {/* Content */}
       {loading ? (
         <div className="flex items-center justify-center py-24">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />

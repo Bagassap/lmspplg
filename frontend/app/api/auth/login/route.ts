@@ -43,7 +43,6 @@ export async function POST(request: Request) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    // No maxAge / expires → session cookie, dihapus saat browser ditutup
   });
 
   return NextResponse.json({ user: data.user }, { status: 200 });

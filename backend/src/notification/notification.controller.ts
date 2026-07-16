@@ -29,7 +29,6 @@ export class NotificationController {
     );
   }
 
-  // Static route — must be defined BEFORE :id to avoid capture
   @Get('unread-count')
   unreadCount(@Request() req: any) {
     return this.service.unreadCount(req.user.id);

@@ -8,7 +8,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Enums ────────────────────────────────────────────────────────────────────
 
 enum Role {
   ADMIN
@@ -42,7 +41,6 @@ enum NotificationType {
   SISTEM
 }
 
-// ─── User & Profil ────────────────────────────────────────────────────────────
 
 model User {
   id        String   @id @default(cuid())
@@ -120,7 +118,6 @@ model Guru {
   @@map("guru")
 }
 
-// ─── Kelas & Absensi Harian ───────────────────────────────────────────────────
 
 model Kelas {
   id              String   @id @default(cuid())
@@ -163,7 +160,6 @@ model AbsensiHarian {
   @@map("absensi_harian")
 }
 
-// ─── Pengumuman ───────────────────────────────────────────────────────────────
 
 model Pengumuman {
   id        String   @id @default(cuid())
@@ -198,7 +194,6 @@ model KomentarPengumuman {
   @@map("komentar_pengumuman")
 }
 
-// ─── Notifikasi ───────────────────────────────────────────────────────────────
 
 model Notification {
   id        String           @id @default(cuid())
@@ -215,7 +210,6 @@ model Notification {
   @@map("notifications")
 }
 
-// ─── Magang ───────────────────────────────────────────────────────────────────
 
 model TempatMagang {
   id          String  @id @default(cuid())
@@ -296,7 +290,6 @@ model IzinMagang {
   @@map("izin_magang")
 }
 
-// ─── UKK — Tahapan & Jadwal Soal (Fitur Baru) ────────────────────────────────
 
 enum TipeUKK {
   INTERNAL
@@ -408,7 +401,6 @@ model DiskusiUKK {
   @@map("diskusi_ukk")
 }
 
-// ─── UKK (Uji Kompetensi Keahlian) — Legacy ──────────────────────────────────
 
 model JadwalUjianUKK {
   id         String   @id @default(cuid())

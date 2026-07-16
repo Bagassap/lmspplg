@@ -117,7 +117,6 @@ export function PengumumanFormModal({
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
             className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800"
           >
-            {/* Header */}
             <div
               className="relative flex items-center gap-3 overflow-hidden px-6 py-5"
               style={{ background: "linear-gradient(135deg,#6334F4 0%,#977DFF 100%)" }}
@@ -140,7 +139,6 @@ export function PengumumanFormModal({
               </button>
             </div>
 
-            {/* Body */}
             <form onSubmit={handleSubmit} className="space-y-4 p-6">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">

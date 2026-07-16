@@ -53,10 +53,8 @@ export function LoginForm() {
         return;
       }
 
-      // Tandai sesi aktif — hilang otomatis saat browser ditutup
       sessionStorage.setItem("lms_session", "1");
       const role = (data.user?.role as string)?.toLowerCase() ?? "siswa";
-      // Hard redirect agar router cache bersih
       window.location.replace(`/${role}/dashboard`);
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");

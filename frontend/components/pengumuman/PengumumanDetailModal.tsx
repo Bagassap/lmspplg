@@ -12,11 +12,7 @@ import { KomentarSection }     from "./KomentarSection";
 import type { PengumumanItem } from "./PengumumanFormModal";
 import type { KomentarItem }   from "./KomentarSection";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
-
-// ─── Kategori style ───────────────────────────────────────────────────────────
 
 const KATEGORI_GRADIENT: Record<string, string> = {
   Umum:     "linear-gradient(135deg,#6334F4 0%,#977DFF 100%)",
@@ -30,8 +26,6 @@ const PRIORITAS_BADGE: Record<string, { cls: string; label: string }> = {
   PENTING:  { cls: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400",   label: "Penting"  },
   MENDESAK: { cls: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",           label: "Mendesak" },
 };
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", {
@@ -47,8 +41,6 @@ function timeAgo(iso: string) {
   if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
   return `${Math.floor(diff / 86400)} hari lalu`;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function PengumumanDetailModal({
   slug,
@@ -90,13 +82,11 @@ export default function PengumumanDetailModal({
 
   useEffect(() => { load(); }, [load]);
 
-  // Lock body scroll while open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
 
-  // Escape key closes
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
@@ -134,7 +124,6 @@ export default function PengumumanDetailModal({
     <>
       <div className="fixed inset-0 z-50 flex items-end justify-center p-3 sm:items-center sm:p-4">
 
-        {/* Backdrop */}
         <motion.div
           key="pengumuman-detail-backdrop"
           initial={{ opacity: 0 }}
@@ -145,7 +134,6 @@ export default function PengumumanDetailModal({
           onClick={onClose}
         />
 
-        {/* Panel */}
         <motion.div
           key="pengumuman-detail-panel"
           initial={{ opacity: 0, scale: 0.93, y: 24 }}
@@ -157,7 +145,6 @@ export default function PengumumanDetailModal({
           onClick={(e) => e.stopPropagation()}
         >
 
-          {/* ── Loading skeleton ── */}
           {loading && (
             <div className="space-y-3 p-5">
               <div className="h-32 animate-pulse rounded-xl bg-gray-200 dark:bg-slate-700" />
@@ -167,7 +154,6 @@ export default function PengumumanDetailModal({
             </div>
           )}
 
-          {/* ── Not found ── */}
           {!loading && notFound && (
             <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
               <Megaphone size={36} className="mb-4 text-gray-300 dark:text-slate-600" />
@@ -178,11 +164,9 @@ export default function PengumumanDetailModal({
             </div>
           )}
 
-          {/* ── Content ── */}
           {!loading && pengumuman && (
             <div className="flex flex-1 flex-col overflow-y-auto">
 
-              {/* ── Header gradient ── */}
               <div
                 className="relative shrink-0 overflow-hidden px-5 py-4 sm:px-6 sm:py-5"
                 style={{ background: grad }}
@@ -192,7 +176,6 @@ export default function PengumumanDetailModal({
                 <Megaphone size={160} strokeWidth={0.7} className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 text-white/[0.07]" />
 
                 <div className="relative">
-                  {/* Top row: breadcrumb + X */}
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-1.5 text-[10px] text-white/55">
                       <Megaphone size={10} />
@@ -208,7 +191,6 @@ export default function PengumumanDetailModal({
                     </button>
                   </div>
 
-                  {/* Badges */}
                   <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
                     {pengumuman.isPinned && (
                       <span className="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
@@ -225,12 +207,10 @@ export default function PengumumanDetailModal({
                     )}
                   </div>
 
-                  {/* Judul */}
                   <h2 className="text-lg font-extrabold leading-tight text-white sm:text-xl">
                     {pengumuman.judul}
                   </h2>
 
-                  {/* Author + meta */}
                   <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[11px] text-white/60">
                     <div className="flex items-center gap-1.5">
                       <div
@@ -250,7 +230,6 @@ export default function PengumumanDetailModal({
                     )}
                   </div>
 
-                  {/* Admin action buttons */}
                   {canManage && (
                     <div className="mt-4 flex flex-wrap items-center gap-2">
                       <motion.button
@@ -285,7 +264,6 @@ export default function PengumumanDetailModal({
                 </div>
               </div>
 
-              {/* ── Konten body ── */}
               <div className="border-b border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-slate-700">
                   <RotateCcw size={12} className="text-[#977DFF]" />
@@ -299,7 +277,6 @@ export default function PengumumanDetailModal({
                 </div>
               </div>
 
-              {/* ── Komentar section ── */}
               <div className="px-5 py-5">
                 <KomentarSection
                   initialKomentar={pengumuman.komentar}
@@ -313,7 +290,6 @@ export default function PengumumanDetailModal({
         </motion.div>
       </div>
 
-      {/* Edit form modal */}
       <PengumumanFormModal
         open={editOpen}
         pengumuman={pengumuman}

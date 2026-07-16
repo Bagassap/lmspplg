@@ -40,7 +40,6 @@ export class PengumumanController {
     return this.service.create(dto, req.user.id);
   }
 
-  // Static route — must be defined BEFORE :slug to avoid capture
   @Delete('komentar/:komentarId')
   deleteKomentar(@Param('komentarId') komentarId: string, @Request() req: any) {
     return this.service.deleteKomentar(komentarId, req.user.id, req.user.role);

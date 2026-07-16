@@ -31,7 +31,6 @@ export function LoginCard() {
       variants={cardVariants}
       className="relative z-10 flex w-full max-w-235 flex-col gap-3 rounded-[36px] bg-white p-4 shadow-[0_0_0_1px_rgba(151,125,255,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(6,0,175,0.12),0_40px_100px_rgba(0,51,255,0.07)] sm:flex-row-reverse sm:gap-4 sm:p-5"
     >
-      {/* ── Branding panel ── top on mobile, right on desktop via flex-row-reverse */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-5 sm:w-[320px] sm:shrink-0 sm:px-10 sm:py-12"
         style={{
@@ -39,7 +38,6 @@ export function LoginCard() {
             "radial-gradient(ellipse at 75% 10%, rgba(151,125,255,0.55), transparent 50%), linear-gradient(160deg, #977DFF 0%, #0033FF 45%, #0600AF 72%, #00003D 100%)",
         }}
       >
-        {/* dot-grid texture — slightly more visible */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.12]"
           style={{
@@ -48,24 +46,19 @@ export function LoginCard() {
           }}
         />
 
-        {/* ambient glow blobs */}
         <div className="pointer-events-none absolute -left-16 -top-16 hidden h-48 w-48 rounded-full bg-violet/50 blur-3xl sm:block" />
         <div className="pointer-events-none absolute -bottom-20 -right-16 hidden h-56 w-56 rounded-full bg-pink/30 blur-3xl sm:block" />
 
-        {/* ── Main content ── */}
         <div className="relative z-10 flex flex-row items-center gap-3 sm:flex-col sm:gap-0 sm:text-center">
-          {/* Logo with glow */}
           <motion.div
             variants={logoVariants}
             className="relative flex shrink-0 items-center justify-center"
           >
-            {/* outer pulsing glow */}
             <motion.div
               className="absolute h-24 w-24 rounded-full bg-violet/35 blur-2xl sm:h-48 sm:w-48"
               animate={{ scale: [1, 1.15, 1], opacity: [0.45, 0.85, 0.45] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
-            {/* inner sharp glow ring */}
             <div
               className="absolute hidden h-32 w-32 rounded-full blur-xl sm:block"
               style={{
@@ -87,14 +80,11 @@ export function LoginCard() {
             />
           </motion.div>
 
-          {/* Text block */}
           <div className="relative z-10 sm:mt-8">
-            {/* eyebrow label */}
             <p className="hidden text-[9.5px] font-semibold uppercase tracking-[0.22em] text-white/45 sm:block">
               Platform Pendidikan
             </p>
 
-            {/* Title — stacked with gradient on desktop, inline on mobile */}
             <h1 className="mt-0.5 hidden text-[1.75rem] font-bold leading-[1.2] tracking-wide text-white sm:block">
               Sistem
               <br />
@@ -113,7 +103,6 @@ export function LoginCard() {
               Sistem Pembelajaran
             </h1>
 
-            {/* gradient divider */}
             <div
               className="mx-auto mt-4 hidden h-px w-16 sm:block"
               style={{
@@ -122,14 +111,12 @@ export function LoginCard() {
               }}
             />
 
-            {/* subtitle */}
             <p className="mt-3 hidden text-[11.5px] font-light leading-relaxed text-white/60 sm:block">
               Pengembangan Perangkat Lunak
               <br />
               dan Gim
             </p>
 
-            {/* school badge */}
             <div className="mt-5 hidden sm:flex sm:justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/[0.07] px-3.5 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/75">
                 <span className="h-1 w-1 shrink-0 rounded-full bg-lavender/70" />
@@ -140,7 +127,6 @@ export function LoginCard() {
         </div>
       </div>
 
-      {/* ── Form panel ── bottom on mobile, left on desktop */}
       <div className="flex flex-1 flex-col justify-center rounded-3xl bg-[#ffffff] px-8 py-10 sm:px-12 sm:py-14">
         <h2 className="text-2xl font-semibold text-black">Selamat Datang</h2>
         <p className="mt-2 text-sm text-black/55">

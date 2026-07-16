@@ -10,7 +10,6 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 
-// ── Types ──────────────────────────────────────────────────────────────────────
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
 type Tahapan = {
@@ -34,7 +33,6 @@ type AbsensiData = {
   siswa: SiswaAbsensi[];
 };
 
-// ── Config ────────────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
 }> = {
@@ -51,7 +49,6 @@ const CARD_GRADIENTS = [
   "linear-gradient(135deg,#10B981,#34D399)",
 ];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
@@ -72,7 +69,6 @@ function parseLokasi(raw: string | null | undefined) {
   return null;
 }
 
-// ── StatusBadge ───────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: StatusAbsensi | null }) {
   if (!status) return (
     <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 dark:bg-slate-700 px-2.5 py-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
@@ -89,7 +85,6 @@ function StatusBadge({ status }: { status: StatusAbsensi | null }) {
   );
 }
 
-// ── DokumenModal ──────────────────────────────────────────────────────────────
 function DokumenModal({ siswa, tanggal, lab, onClose }: {
   siswa: SiswaAbsensi; tanggal: string; lab: string; onClose: () => void;
 }) {
@@ -140,7 +135,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
           className="relative z-10 flex w-full max-w-3xl overflow-hidden rounded-t-3xl shadow-2xl sm:rounded-3xl"
           style={{maxHeight:"88vh"}}>
 
-          {/* Panel kiri */}
           <div className="relative flex w-60 shrink-0 flex-col overflow-hidden"
             style={{background:`linear-gradient(135deg,${theme.clr}dd,${theme.clr})`}}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10"/>
@@ -184,7 +178,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
             </div>
           </div>
 
-          {/* Panel kanan */}
           <div className="flex min-w-0 flex-1 flex-col bg-slate-50 dark:bg-[#141b2d]">
             <div className="shrink-0 border-b border-slate-100 dark:border-slate-700/40 px-5 py-4">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Dokumen Kehadiran</p>
@@ -277,7 +270,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
   );
 }
 
-// ── Lab Card ──────────────────────────────────────────────────────────────────
 function LabCard({ tahapan, gradient, delay, hadir, total, selected, onClick }: {
   tahapan: Tahapan; gradient: string; delay: number;
   hadir: number; total: number; selected: boolean; onClick: () => void;
@@ -331,7 +323,6 @@ function LabCard({ tahapan, gradient, delay, hadir, total, selected, onClick }: 
   );
 }
 
-// ── PDF Print ─────────────────────────────────────────────────────────────────
 function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
   siswaList: SiswaAbsensi[]; tahapan: Tahapan | null; tanggal: string;
   rekap: Record<StatusAbsensi, number>; total: number; API: string;
@@ -396,7 +387,6 @@ function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
   w.onload = () => { w.focus(); w.print(); };
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function GuruUkkAbsensiPage() {
   const toast = useToast();
 
@@ -476,7 +466,6 @@ export default function GuruUkkAbsensiPage() {
     <>
       <div className="space-y-5 p-1">
 
-        {/* Hero Header */}
         <div className="relative overflow-hidden rounded-2xl p-6"
           style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10"/>
@@ -500,7 +489,6 @@ export default function GuruUkkAbsensiPage() {
           </div>
         </div>
 
-        {/* Lab Cards */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tahapanList.length === 0
             ? Array.from({length:4}).map((_,i) => (
@@ -515,7 +503,6 @@ export default function GuruUkkAbsensiPage() {
           }
         </div>
 
-        {/* Filter bar + actions */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 px-4 py-3 flex flex-wrap gap-3 items-center shadow-sm">
           <div className="flex items-center gap-2 shrink-0">
             <CalendarDays size={14} className="text-slate-400"/>
@@ -545,7 +532,6 @@ export default function GuruUkkAbsensiPage() {
           </button>
         </div>
 
-        {/* Info lab terpilih */}
         {selectedTahapan && (
           <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{background: CARD_GRADIENTS[selectedIdx % 4]}}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10"/>
@@ -594,7 +580,6 @@ export default function GuruUkkAbsensiPage() {
           </div>
         )}
 
-        {/* Rekap chips */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(["HADIR","IZIN","SAKIT","ALPA"] as StatusAbsensi[]).map(key => {
             const cfg  = STATUS_CFG[key];
@@ -620,7 +605,6 @@ export default function GuruUkkAbsensiPage() {
           })}
         </div>
 
-        {/* Tabel absensi dengan editable status */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
           {!loading && siswaList.length > 0 && (
             <div className="sticky top-0 z-10 border-b border-slate-100 dark:border-slate-700/40 bg-slate-50 dark:bg-slate-800/80 px-5 py-2.5">
@@ -684,7 +668,6 @@ export default function GuruUkkAbsensiPage() {
                     <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
                     <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
 
-                    {/* Editable status buttons */}
                     <div className="flex gap-1">
                       {(["HADIR","IZIN","SAKIT","ALPA"] as StatusAbsensi[]).map(st => {
                         const cfg = STATUS_CFG[st];

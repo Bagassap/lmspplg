@@ -14,7 +14,6 @@ export interface CreateNotificationInput {
 export class NotificationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Create a single notification. Called internally from other services. */
   create(input: CreateNotificationInput) {
     return this.prisma.notification.create({
       data: {
@@ -27,7 +26,6 @@ export class NotificationService {
     });
   }
 
-  /** Fan out the same notification to many users at once. */
   async createMany(userIds: string[], input: Omit<CreateNotificationInput, 'userId'>) {
     if (userIds.length === 0) return { count: 0 };
     return this.prisma.notification.createMany({

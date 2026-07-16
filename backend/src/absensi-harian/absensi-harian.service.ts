@@ -95,7 +95,6 @@ export class AbsensiHarianService {
       return Promise.all(myKelasIds.map((id) => this.getRekapKelas(id, tanggal)));
     }
 
-    // ADMIN
     if (kelasId) return [await this.getRekapKelas(kelasId, tanggal)];
     return this.getAllRekap(tanggal, userId, role);
   }

@@ -202,7 +202,6 @@ export default function AdminAbsensiHarianPage() {
     } finally {
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tanggal]);
 
   useEffect(() => { loadRekap(); }, [loadRekap]);

@@ -18,13 +18,11 @@ export class AuthService {
       guru: { select: { id: true, nip: true } },
     };
 
-    // Cari user: coba by email dulu, lalu by NIS (untuk siswa)
     let user = await this.prisma.user.findUnique({
       where: { email: dto.login },
       include: profileInclude,
     });
 
-    // Jika tidak ketemu by email, coba cari siswa by NIS
     if (!user) {
       const siswa = await this.prisma.siswa.findUnique({
         where: { nis: dto.login },
@@ -35,8 +33,6 @@ export class AuthService {
       }
     }
 
-    // Jika masih belum ketemu, coba by loginId (kode guru/admin dari CSV).
-    // Kode ini tidak unik antar user, jadi cocokkan password di setiap kandidat.
     if (!user) {
       const candidates = await this.prisma.user.findMany({
         where: { loginId: dto.login },

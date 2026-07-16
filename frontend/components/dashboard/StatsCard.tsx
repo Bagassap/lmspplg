@@ -54,7 +54,6 @@ export default function StatsCard({
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
       className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] cursor-default"
     >
-      {/* Icon circle — large, Boltz-style */}
       <div
         className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
         style={{ backgroundColor: theme.iconBg }}
@@ -62,7 +61,6 @@ export default function StatsCard({
         <Icon size={26} style={{ color: theme.icon }} strokeWidth={1.8} />
       </div>
 
-      {/* Value + label + trend */}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-1">
           <motion.span className="text-3xl font-bold text-slate-800 tabular-nums dark:text-white">

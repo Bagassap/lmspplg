@@ -16,13 +16,11 @@ import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal
 import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-// Boltz color palette
-const P = "#4F8EF7";   // primary blue
-const R = "#EF4444";   // red
-const B = "#6366F1";   // indigo
-const G = "#10B981";   // green
+const P = "#4F8EF7";   
+const R = "#EF4444";   
+const B = "#6366F1";   
+const G = "#10B981";   
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
@@ -42,7 +40,6 @@ interface DashboardData {
   kehadiranPerKelas: KehadiranKelas[];
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1c2434] ${className}`} />;
@@ -94,7 +91,6 @@ function ViewAll({ href }: { href: string }) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function AdminDashboardPage() {
   const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
@@ -154,7 +150,6 @@ export default function AdminDashboardPage() {
   const izin       = data.kehadiran.izin;
   const alpha      = data.kehadiran.alpa;
 
-  // Credit card data — shortcut ke halaman penting (Boltz style)
   const CARDS = [
     {
       href: "/admin/absensi-harian",
@@ -205,12 +200,10 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-5">
 
-      {/* ── Greeting ─────────────────────────────────────────────────────────── */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <GreetingHero nama={user.nama} role={user.role} />
       </motion.div>
 
-      {/* ── Row 1: 5 Stat Cards — Boltz style ───────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 [&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1">
         <StatsCard icon={Users}         label="Total Siswa"  value={data.totalSiswa}           sub="Siswa aktif terdaftar" index={0} delay={0.05} />
         <StatsCard icon={GraduationCap} label="Total Guru"   value={data.totalGuru}            sub="Termasuk wali kelas" index={1} delay={0.10} />
@@ -219,10 +212,8 @@ export default function AdminDashboardPage() {
         <StatsCard icon={Activity}      label="Kehadiran"    value={data.kehadiran.hadir} suffix="hadir" sub="Siswa tercatat hadir" index={0} delay={0.25} />
       </div>
 
-      {/* ── Row 2: Current Statistic (rainbow, col-4) + Market Overview (line, col-8) */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
 
-        {/* Current Statistic — rainbow radialBar (Boltz left panel) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
@@ -238,7 +229,6 @@ export default function AdminDashboardPage() {
           />
         </motion.div>
 
-        {/* Market Overview — smooth line chart (Boltz right panel) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
@@ -268,7 +258,6 @@ export default function AdminDashboardPage() {
         </motion.div>
       </div>
 
-      {/* ── Row 3: Credit Card shortcuts — Boltz bottom cards ────────────────── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {CARDS.map((card, i) => (
           <motion.div key={card.href}
@@ -280,11 +269,9 @@ export default function AdminDashboardPage() {
               className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-white"
               style={{ background: card.gradient, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
             >
-              {/* Decorative circles */}
               <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
               <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
 
-              {/* Top row: label + toggle icon */}
               <div className="relative flex items-start justify-between">
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Akses Cepat</p>
@@ -295,14 +282,12 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* Value */}
               <div className="relative">
                 <p className="text-3xl font-bold tabular-nums">
                   {card.prefix}{card.value}{card.suffix}
                 </p>
               </div>
 
-              {/* Bottom: valid thru + card holder */}
               <div className="relative flex items-end justify-between">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">TA</p>
@@ -318,7 +303,6 @@ export default function AdminDashboardPage() {
         ))}
       </div>
 
-      {/* ── Row 4: Pengumuman ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
 
         <SectionCard title="Pengumuman Terbaru" icon={Megaphone} iconColor={R}
@@ -365,7 +349,6 @@ export default function AdminDashboardPage() {
         </SectionCard>
       </div>
 
-      {/* ── Row 5: Bar chart per kelas + tabel ──────────────────────────────── */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}

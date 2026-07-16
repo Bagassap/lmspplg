@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 type SiswaProfil = {
   id: string;
@@ -34,7 +33,6 @@ type SiswaProfil = {
   user: { id: string; nama: string; email: string | null } | null;
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getNama(s: SiswaProfil): string {
   return s.nama ?? s.user?.nama ?? "—";
@@ -58,7 +56,6 @@ function kelasShort(kelas: string): string {
     .replace("Rekayasa Perangkat Lunak", "RPL");
 }
 
-// ─── Info Row ─────────────────────────────────────────────────────────────────
 
 function InfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) {
   return (
@@ -74,7 +71,6 @@ function InfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label:
   );
 }
 
-// ─── Edit Modal ───────────────────────────────────────────────────────────────
 
 function EditProfilModal({
   siswa,
@@ -183,7 +179,6 @@ function EditProfilModal({
   );
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function SiswaDataDiriPage() {
   const [profil, setProfil] = useState<SiswaProfil | null>(null);
@@ -220,7 +215,6 @@ export default function SiswaDataDiriPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* ── Hero ── */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
         style={{ background: "linear-gradient(135deg, #0033FF 0%, #2952FF 50%, #977DFF 100%)" }}
@@ -262,14 +256,12 @@ export default function SiswaDataDiriPage() {
         </div>
       </div>
 
-      {/* ── Profile card ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="mt-6"
       >
-        {/* Avatar + name */}
         <div className="mb-6 flex items-center gap-4">
           <div
             className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow-lg ${profil.jenisKelamin === "Perempuan" ? "bg-linear-to-br from-pink-400 to-rose-500" : "bg-linear-to-br from-violet-500 to-blue-600"}`}
@@ -294,7 +286,6 @@ export default function SiswaDataDiriPage() {
           </button>
         </div>
 
-        {/* Info grid */}
         <div className="grid gap-3 sm:grid-cols-2">
           <InfoRow icon={Phone} label="No. HP" value={profil.noHp} />
           <InfoRow icon={Users} label="Nama Orang Tua" value={profil.namaOrtu} />
@@ -306,7 +297,6 @@ export default function SiswaDataDiriPage() {
         </div>
       </motion.div>
 
-      {/* Edit modal */}
       {showEdit && (
         <EditProfilModal
           siswa={profil}

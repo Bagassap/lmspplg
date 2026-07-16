@@ -3,13 +3,11 @@
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 
-// ─── Donut Chart ──────────────────────────────────────────────────────────────
-
 interface DonutChartProps {
-  value: number;       // 0-100
+  value: number;       
   color: string;
   trackColor?: string;
-  size?: number;       // px
+  size?: number;       
   strokeWidth?: number;
   label?: string;
   sublabel?: string;
@@ -46,7 +44,6 @@ export function DonutChart({
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-        {/* Track */}
         <circle
           cx={cx} cy={cx} r={r}
           fill="none"
@@ -54,7 +51,6 @@ export function DonutChart({
           strokeWidth={strokeWidth}
           className="text-gray-100 dark:text-slate-700"
         />
-        {/* Fill */}
         <motion.circle
           cx={cx} cy={cx} r={r}
           fill="none"
@@ -65,7 +61,6 @@ export function DonutChart({
           style={{ strokeDasharray: dashArr }}
         />
       </svg>
-      {/* Center label */}
       {(label !== undefined) && (
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
           <span style={{ fontSize: labelSize }} className="font-extrabold tabular-nums text-gray-800 dark:text-white leading-none">
@@ -79,8 +74,6 @@ export function DonutChart({
     </div>
   );
 }
-
-// ─── Vertical Bar Chart ──────────────────────────────────────────────────────
 
 interface VBarItem {
   label: string;
@@ -99,11 +92,9 @@ export function VBarChart({ data, height = 120 }: { data: VBarItem[]; height?: n
         const pct   = d.total > 0 ? (d.hadir / d.total) * 100 : 0;
         return (
           <div key={d.label} className="flex flex-1 flex-col items-center gap-1">
-            {/* Value on top */}
             <span className="text-[10px] font-bold tabular-nums text-gray-600 dark:text-slate-300">
               {d.hadir}
             </span>
-            {/* Bar track + fill */}
             <div
               className="relative w-full overflow-hidden rounded-t-lg"
               style={{ height: barH, backgroundColor: d.color + "25" }}
@@ -116,7 +107,6 @@ export function VBarChart({ data, height = 120 }: { data: VBarItem[]; height?: n
                 transition={{ duration: 0.7, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
-            {/* Day label */}
             <span className="text-[10px] font-semibold text-gray-400 dark:text-slate-500">{d.label}</span>
           </div>
         );
@@ -124,8 +114,6 @@ export function VBarChart({ data, height = 120 }: { data: VBarItem[]; height?: n
     </div>
   );
 }
-
-// ─── Bar Chart ────────────────────────────────────────────────────────────────
 
 interface BarItem {
   label: string;
@@ -170,8 +158,6 @@ export function BarChart({ data, max, barHeight = 20 }: BarChartProps) {
   );
 }
 
-// ─── Area Line Chart ──────────────────────────────────────────────────────────
-
 interface AreaLineItem {
   label: string;
   hadir: number;
@@ -191,13 +177,11 @@ export function AreaLineChart({
 }) {
   const W = 560;
   const H = height;
-  // Extra left padding for Y-axis labels
   const PAD = { top: 32, right: 20, bottom: 40, left: 52 };
   const cW = W - PAD.left - PAD.right;
   const cH = H - PAD.top - PAD.bottom;
 
   const rawMax = Math.max(...data.map((d) => d.total), 1);
-  // Round max up to a nice number
   const maxVal = Math.ceil(rawMax / 10) * 10 || 10;
   const n = data.length;
 
@@ -232,7 +216,6 @@ export function AreaLineChart({
   const gradId = `areaGrad${color.replace("#", "")}`;
   const glowId = `glow${color.replace("#", "")}`;
 
-  // Y-axis ticks: 5 levels
   const yTicks = [0, 0.25, 0.5, 0.75, 1];
 
   return (
@@ -252,11 +235,9 @@ export function AreaLineChart({
         </filter>
       </defs>
 
-      {/* Y-axis vertical line */}
       <line x1={PAD.left} x2={PAD.left} y1={PAD.top} y2={PAD.top + cH}
         stroke="currentColor" strokeWidth={1} className="text-slate-200 dark:text-slate-700" />
 
-      {/* Grid lines + Y-axis labels */}
       {yTicks.map((f) => {
         const y = (PAD.top + cH * (1 - f)).toFixed(1);
         const val = Math.round(maxVal * f);
@@ -274,22 +255,18 @@ export function AreaLineChart({
         );
       })}
 
-      {/* Total dashed line */}
       {totalLine && (
         <path d={totalLine} fill="none" stroke="currentColor" strokeWidth={1.5} strokeDasharray="6 4"
           className="text-slate-300 dark:text-slate-600" />
       )}
 
-      {/* Hadir area fill */}
       {hadirLine && <path d={areaFill} fill={`url(#${gradId})`} />}
 
-      {/* Hadir line with glow */}
       {hadirLine && (
         <path d={hadirLine} fill="none" stroke={color} strokeWidth={3}
           strokeLinecap="round" strokeLinejoin="round" filter={`url(#${glowId})`} />
       )}
 
-      {/* Data points + value labels */}
       {hadirPts.map((p, i) => {
         const val = data[i].hadir;
         const cx = parseFloat(p.x.toFixed(1));
@@ -297,12 +274,9 @@ export function AreaLineChart({
         const labelY = cy - 16;
         return (
           <g key={i}>
-            {/* Outer glow ring */}
             <circle cx={cx} cy={cy} r={9} fill={color} opacity={0.14} />
-            {/* White inner dot */}
             <circle cx={cx} cy={cy} r={5} fill="white" stroke={color} strokeWidth={2.5}
               className="dark:fill-[#24303F]" />
-            {/* Value label pill */}
             {showValueLabels && (
               <g>
                 <rect x={cx - 17} y={labelY - 12} width={34} height={16} rx={5}
@@ -315,7 +289,6 @@ export function AreaLineChart({
         );
       })}
 
-      {/* X labels — bigger and bolder */}
       {data.map((d, i) => (
         <text key={i} x={xOf(i).toFixed(1)} y={H - 8}
           textAnchor="middle" fontSize={13} fontWeight="700" fill="currentColor"

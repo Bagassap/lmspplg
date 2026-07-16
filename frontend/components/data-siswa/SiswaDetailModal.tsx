@@ -6,7 +6,6 @@ import {
   Phone, MapPin, UserCheck, Sparkles,
 } from "lucide-react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 type KelasAc = { main: string; light: string; text: string; dark: string };
 
@@ -25,7 +24,6 @@ export type SiswaDetail = {
   user: { id: string; nama: string; email: string | null } | null;
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getNama(s: SiswaDetail): string {
   return s.nama ?? s.user?.nama ?? "—";
@@ -53,7 +51,6 @@ function formatTanggal(iso: string | null): string {
   });
 }
 
-// ─── InfoItem ─────────────────────────────────────────────────────────────────
 
 function InfoItem({
   icon: Icon, label, value, className = "",
@@ -71,7 +68,6 @@ function InfoItem({
   );
 }
 
-// ─── SiswaDetailModal ─────────────────────────────────────────────────────────
 
 export default function SiswaDetailModal({
   siswa, ac, onClose, onEdit,
@@ -105,7 +101,6 @@ export default function SiswaDetailModal({
           exit={{ scale: 0.95, opacity: 0, y: 24 }}
           transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* ── Header ── */}
           <div
             className="relative overflow-hidden px-6 py-5"
             style={{ background: `linear-gradient(135deg, ${ac.main} 0%, ${ac.dark} 100%)` }}
@@ -115,7 +110,6 @@ export default function SiswaDetailModal({
 
             <div className="relative flex items-start justify-between gap-3">
               <div className="flex items-center gap-3.5">
-                {/* Avatar besar */}
                 <div
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-base font-extrabold text-white ring-2 ring-white/20"
                   style={
@@ -151,10 +145,8 @@ export default function SiswaDetailModal({
             </div>
           </div>
 
-          {/* ── Body ── */}
           <div className="max-h-[60vh] overflow-y-auto">
             <div className="px-5 py-4">
-              {/* Grid 2-kolom info items */}
               <div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                 <InfoItem
                   icon={CalendarDays}
@@ -194,7 +186,6 @@ export default function SiswaDetailModal({
                 />
               </div>
 
-              {/* Alamat — full-width, di bawah grid */}
               <div className="mt-4 border-t border-gray-100 pt-4 dark:border-slate-800">
                 <InfoItem
                   icon={MapPin}
@@ -205,7 +196,6 @@ export default function SiswaDetailModal({
             </div>
           </div>
 
-          {/* ── Footer ── */}
           <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4 dark:border-slate-800">
             <div />
             <div className="flex items-center gap-2">

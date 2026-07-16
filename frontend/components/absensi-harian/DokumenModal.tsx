@@ -67,7 +67,6 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             style={{ background: BRAND_GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 hidden h-44 w-44 rounded-full bg-white/10 sm:block" />
 
-            {/* Compact header — mobile only */}
             <div className="flex items-center gap-3 px-4 pb-3 pt-10 sm:hidden">
               <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-white"
                 style={{ backgroundColor: ac, boxShadow: "0 0 0 3px rgba(255,255,255,0.25)" }}>
@@ -96,7 +95,6 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               </div>
             )}
 
-            {/* Rich sidebar — sm and up */}
             <div className="relative hidden flex-1 flex-col items-center justify-center px-5 pb-8 pt-10 text-center sm:flex">
               <div className="relative flex h-20 w-20 items-center justify-center rounded-full text-xl font-extrabold text-white"
                 style={{ backgroundColor: ac, boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)" }}>

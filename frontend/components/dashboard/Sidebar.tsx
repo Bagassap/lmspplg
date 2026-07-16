@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type SubItem  = { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> };
 type MenuItem = {
   key: string;
@@ -25,8 +23,6 @@ type MenuItem = {
   submenu?: SubItem[];
   locked?: boolean;
 };
-
-// ─── Menus ────────────────────────────────────────────────────────────────────
 
 const MENUS: Record<string, MenuItem[]> = {
   ADMIN: [
@@ -103,11 +99,9 @@ const ROLE_LABEL: Record<string, string> = {
   SISWA: "Pelajar",
 };
 
-// Gradient sidebar — sama dengan panel biru di halaman login
 const SIDEBAR_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 const SIDEBAR_ACCENT = "#0033FF";
 
-// Sapaan singkat yang berganti sesuai hari, biar sidebar tidak terlalu polos
 const GREETINGS = [
   "Semoga harimu menyenangkan!",
   "Tetap semangat belajar hari ini!",
@@ -117,8 +111,6 @@ const GREETINGS = [
   "Hari baru, semangat baru!",
   "Terus berkarya dan berkembang!",
 ];
-
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 export function Sidebar({
   user, open, collapsed, onClose, onToggleCollapse,
@@ -168,7 +160,6 @@ export function Sidebar({
       style={{ "--color-primary": PRIMARY } as React.CSSProperties}
     >
 
-      {/* ── Top bar: logo + toggle ────────────────────────────────────────── */}
       <div
         className={[
           "flex h-16 shrink-0 items-center border-b border-slate-100 dark:border-white/6",
@@ -176,7 +167,6 @@ export function Sidebar({
         ].join(" ")}
       >
         {collapsed ? (
-          /* ── Collapsed: hanya tombol expand di tengah ── */
           <button
             onClick={onToggleCollapse}
             title="Buka sidebar"
@@ -185,9 +175,7 @@ export function Sidebar({
             <ChevronsRight size={18} />
           </button>
         ) : (
-          /* ── Expanded: logo + dua tombol (mobile X | desktop collapse) ── */
           <>
-            {/* Logo */}
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
@@ -200,7 +188,6 @@ export function Sidebar({
               </span>
             </div>
 
-            {/* Mobile: tutup overlay */}
             <button
               onClick={onClose}
               title="Tutup sidebar"
@@ -209,7 +196,6 @@ export function Sidebar({
               <X size={16} />
             </button>
 
-            {/* Desktop: sembunyikan / collapse */}
             <button
               onClick={onToggleCollapse}
               title="Sembunyikan sidebar"
@@ -221,10 +207,8 @@ export function Sidebar({
         )}
       </div>
 
-      {/* ── Profile block ─────────────────────────────────────────────────── */}
       <div className="border-b border-slate-100 dark:border-white/6">
         {collapsed ? (
-          /* Collapsed: avatar only */
           <div className="flex justify-center py-3">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
@@ -235,9 +219,7 @@ export function Sidebar({
             </div>
           </div>
         ) : (
-          /* Expanded: centered avatar + greeting */
           <div className="flex flex-col items-center px-5 pb-5 pt-1">
-            {/* Avatar ring */}
             <div
               className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
               style={{
@@ -261,14 +243,12 @@ export function Sidebar({
         )}
       </div>
 
-      {/* ── Navigation ────────────────────────────────────────────────────── */}
       <nav className={["flex-1 overflow-y-auto", collapsed ? "px-2 py-1" : "px-3 py-1"].join(" ")}>
         <ul className="space-y-0.5">
           {items.map((item) => {
             const active = isItemActive(item);
             const isExp  = expanded.has(item.key);
 
-            /* ── COLLAPSED ── */
             if (collapsed) {
               return (
                 <li key={item.key}>
@@ -323,7 +303,6 @@ export function Sidebar({
               );
             }
 
-            /* ── EXPANDED: submenu parent ── */
             if (item.submenu) {
               const innerContent = (
                 <>
@@ -337,7 +316,6 @@ export function Sidebar({
                   {!active && (
                     <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-white/5" />
                   )}
-                  {/* Icon box */}
                   <span
                     className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                     style={{ backgroundColor: active ? PRIMARY_ICON_BG : undefined }}
@@ -431,7 +409,6 @@ export function Sidebar({
               );
             }
 
-            /* ── EXPANDED: leaf item ── */
             return (
               <li key={item.key}>
                 <Link
@@ -450,7 +427,6 @@ export function Sidebar({
                     <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-white/5" />
                   )}
 
-                  {/* Icon box */}
                   <span
                     className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                     style={{ backgroundColor: active ? PRIMARY_ICON_BG : undefined }}
@@ -466,7 +442,6 @@ export function Sidebar({
                     <span className={active ? "" : "text-slate-700 dark:text-slate-300"}>{item.label}</span>
                   </span>
 
-                  {/* Chevron for leaf — subtle direction indicator */}
                   <ChevronRight
                     size={13}
                     className="relative shrink-0"
@@ -479,7 +454,6 @@ export function Sidebar({
         </ul>
       </nav>
 
-      {/* ── Footer copyright (only expanded) ─────────────────────────────── */}
       {!collapsed && (
         <div className="shrink-0 border-t border-slate-100 px-5 py-4 dark:border-white/6">
           <p className="text-[10px] leading-relaxed text-slate-400 dark:text-slate-600">

@@ -3,8 +3,6 @@
 import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 export function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const m = Math.floor(diff / 60_000);
@@ -17,8 +15,6 @@ export function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface ActivityItem {
   id: string;
   icon: LucideIcon;
@@ -26,11 +22,9 @@ export interface ActivityItem {
   stripColor: string;
   title: string;
   description?: string;
-  time?: string;       // ISO string
+  time?: string;       
   badge?: string;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ActivityList({
   items,
@@ -57,7 +51,6 @@ export default function ActivityList({
             transition={{ duration: 0.35, delay: 0.05 + i * 0.06 }}
             className="group flex items-start gap-3 px-1 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/30 rounded-xl"
           >
-            {/* Strip + icon */}
             <div className="flex shrink-0 items-center self-stretch gap-2">
               <div
                 className="w-1 self-stretch rounded-full"
@@ -71,7 +64,6 @@ export default function ActivityList({
               </div>
             </div>
 
-            {/* Text */}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
                 <p className="truncate text-sm font-semibold text-gray-800 dark:text-slate-100">

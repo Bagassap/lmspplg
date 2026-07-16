@@ -10,7 +10,6 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 
-// ── Types ──────────────────────────────────────────────────────────────────────
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
 type Tahapan = {
@@ -28,7 +27,6 @@ type AbsensiStatus = {
   };
 };
 
-// ── Config ────────────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
 }> = {
@@ -46,13 +44,11 @@ const CARD_GRADIENTS_BY_STATUS: Record<string, string> = {
   BELUM: "linear-gradient(135deg,#64748B,#94A3B8)",
 };
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
-// ── Signature Pad ─────────────────────────────────────────────────────────────
 function SignaturePad({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing   = useRef(false);
@@ -128,7 +124,6 @@ function SignaturePad({ value, onChange }: { value: string; onChange: (v: string
   );
 }
 
-// ── Siswa Lab Card ────────────────────────────────────────────────────────────
 function SiswaLabCard({ tahapan, statusAbsensi, selected, onClick, delay, index }: {
   tahapan: Tahapan;
   statusAbsensi: AbsensiStatus | undefined;
@@ -194,7 +189,6 @@ function SiswaLabCard({ tahapan, statusAbsensi, selected, onClick, delay, index 
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function SiswaUkkAbsensiPage() {
   const toast = useToast();
 
@@ -205,7 +199,6 @@ export default function SiswaUkkAbsensiPage() {
   const [showForm,     setShowForm]     = useState(false);
   const [submitting,   setSubmitting]   = useState(false);
 
-  // Form fields
   const [catatan,      setCatatan]      = useState("");
   const [ttd,          setTtd]          = useState("");
   const [lokasi,       setLokasi]       = useState("");
@@ -238,7 +231,6 @@ export default function SiswaUkkAbsensiPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  // Auto-detect lokasi saat form terbuka
   useEffect(() => {
     if (!showForm || lokasi) return;
     if (!navigator.geolocation) return;
@@ -293,12 +285,10 @@ export default function SiswaUkkAbsensiPage() {
     }
   }
 
-  // ── Derived ───────────────────────────────────────────────────────────────
   const selectedTahapan = tahapanList.find(t => t.id === selectedId);
   const selectedStatus  = statusMap[selectedId];
   const sudahAbsen      = selectedStatus?.sudahAbsen ?? false;
 
-  // Rekap keseluruhan across all sessions
   const rekapTotal = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0, BELUM: 0 };
   tahapanList.forEach(t => {
     const s = statusMap[t.id];
@@ -307,7 +297,6 @@ export default function SiswaUkkAbsensiPage() {
     else rekapTotal.BELUM++;
   });
 
-  // ── Stats header pills ─────────────────────────────────────────────────────
   const headerStats = [
     { label: "Sesi",   val: tahapanList.length,    clr: "rgba(255,255,255,0.9)"  },
     { label: "Hadir",  val: rekapTotal.HADIR,       clr: "#86EFAC" },
@@ -325,7 +314,6 @@ export default function SiswaUkkAbsensiPage() {
   return (
     <div className="space-y-5 p-1">
 
-      {/* Hero Header */}
       <div className="relative overflow-hidden rounded-2xl p-6"
         style={{background:"linear-gradient(135deg,#059669 0%,#10B981 40%,#34D399 80%,#6EE7B7 100%)"}}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10"/>
@@ -368,7 +356,6 @@ export default function SiswaUkkAbsensiPage() {
         </div>
       ) : (
         <>
-          {/* Sesi cards */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {tahapanList.map((t, i) => (
               <SiswaLabCard key={t.id} tahapan={t} statusAbsensi={statusMap[t.id]}
@@ -377,7 +364,6 @@ export default function SiswaUkkAbsensiPage() {
             ))}
           </div>
 
-          {/* Rekap chips keseluruhan */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(["HADIR","IZIN","SAKIT","ALPA"] as StatusAbsensi[]).map(key => {
               const cfg  = STATUS_CFG[key];
@@ -404,10 +390,8 @@ export default function SiswaUkkAbsensiPage() {
             })}
           </div>
 
-          {/* Detail sesi terpilih */}
           {selectedTahapan && (
             <div className="space-y-4">
-              {/* Info sesi banner */}
               <div className="relative overflow-hidden rounded-2xl shadow-lg"
                 style={{background: CARD_GRADIENTS_BY_STATUS[selectedStatus?.status ?? "BELUM"]}}>
                 <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10"/>
@@ -454,7 +438,6 @@ export default function SiswaUkkAbsensiPage() {
                 </div>
               </div>
 
-              {/* Sudah absen → tampilkan rekap personal */}
               {sudahAbsen && selectedStatus?.record ? (
                 <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700"
@@ -530,7 +513,6 @@ export default function SiswaUkkAbsensiPage() {
                   </div>
                 </div>
               ) : !sudahAbsen ? (
-                /* Belum absen → tombol / form absen */
                 <AnimatePresence mode="wait">
                   {!showForm ? (
                     <motion.div key="prompt"
@@ -553,7 +535,6 @@ export default function SiswaUkkAbsensiPage() {
                       initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
                       className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
 
-                      {/* Form header */}
                       <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
                         style={{background:"linear-gradient(135deg,rgba(16,185,129,0.06),rgba(52,211,153,0.06))"}}>
                         <div className="flex items-center gap-2.5">
@@ -569,7 +550,6 @@ export default function SiswaUkkAbsensiPage() {
                       </div>
 
                       <div className="p-5 space-y-5">
-                        {/* Foto Selfie */}
                         <div>
                           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
                             Foto Selfie <span className="text-slate-300 font-normal normal-case">(opsional)</span>
@@ -593,7 +573,6 @@ export default function SiswaUkkAbsensiPage() {
                           )}
                         </div>
 
-                        {/* Lokasi */}
                         <div>
                           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
                             Lokasi <span className="text-slate-300 font-normal normal-case">(terisi otomatis)</span>
@@ -606,7 +585,6 @@ export default function SiswaUkkAbsensiPage() {
                           </div>
                         </div>
 
-                        {/* Keterangan */}
                         <div>
                           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
                             Keterangan <span className="text-slate-300 font-normal normal-case">(opsional)</span>
@@ -616,7 +594,6 @@ export default function SiswaUkkAbsensiPage() {
                             className="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"/>
                         </div>
 
-                        {/* Tanda Tangan */}
                         <div>
                           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
                             Tanda Tangan <span className="text-rose-400 font-bold">*</span>
@@ -624,7 +601,6 @@ export default function SiswaUkkAbsensiPage() {
                           <SignaturePad value={ttd} onChange={setTtd}/>
                         </div>
 
-                        {/* Submit */}
                         <button onClick={handleAbsen} disabled={submitting || !ttd}
                           className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
                           style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>

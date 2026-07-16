@@ -13,11 +13,7 @@ import { PengumumanFormModal } from "./PengumumanFormModal";
 import type { KomentarItem } from "./KomentarSection";
 import { KomentarSection } from "./KomentarSection";
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
-
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
-
-// ─── Constants ─────────────────────────────────────────────────────────────────
 
 const KATEGORI_GRADIENT: Record<string, string> = {
   Umum:     "linear-gradient(135deg, #6334F4 0%, #977DFF 100%)",
@@ -29,8 +25,6 @@ const KATEGORI_GRADIENT: Record<string, string> = {
 
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const DAY_ID   = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
-
-// ─── Mini Calendar ─────────────────────────────────────────────────────────────
 
 function MiniCalendar({ announcementDates }: { announcementDates: Set<string> }) {
   const today = new Date();
@@ -55,13 +49,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     return announcementDates.has(key);
   }
 
-  // Warna dot pengumuman berdasarkan posisi di bulan
   const DOT_COLORS = ["#6334F4","#3B7CE8","#10B981","#F97316","#EC4899","#F59E0B"];
   function dotColor(d: number) { return DOT_COLORS[d % DOT_COLORS.length]; }
 
   return (
     <div className="rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:shadow-none">
-      {/* Gradient header */}
       <div className="relative px-5 py-4 overflow-hidden"
         style={{ background: "linear-gradient(135deg,#6334F4 0%,#8B5CF6 50%,#EC4899 100%)" }}>
         <div className="pointer-events-none absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10"/>
@@ -84,9 +76,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
         </div>
       </div>
 
-      {/* Calendar body */}
       <div className="bg-white dark:bg-[#1c2434] px-4 pb-4 pt-3">
-        {/* Day headers */}
         <div className="grid grid-cols-7 mb-2">
           {DAY_ID.map((d, i) => (
             <div key={d} className="text-center text-[10px] font-bold"
@@ -94,7 +84,6 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
           ))}
         </div>
 
-        {/* Day cells */}
         <div className="grid grid-cols-7 gap-y-1">
           {cells.map((d, i) => {
             if (d === null) return <div key={i}/>;
@@ -107,12 +96,10 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
                   ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-pink-400 dark:text-pink-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
                   style={todayFlag ? { background: "linear-gradient(135deg,#6334F4,#8B5CF6)" } : {}}>
                   {d}
-                  {/* Announcement dot */}
                   {hasAnn && !todayFlag && (
                     <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
                       style={{ backgroundColor: dotColor(d) }}/>
                   )}
-                  {/* Today + announcement: white dot */}
                   {hasAnn && todayFlag && (
                     <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white/80"/>
                   )}
@@ -122,7 +109,6 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
           })}
         </div>
 
-        {/* Legend */}
         <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-4 rounded-full" style={{ background: "linear-gradient(135deg,#6334F4,#8B5CF6)" }}/>
@@ -137,8 +123,6 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     </div>
   );
 }
-
-// ─── Accordion Card ─────────────────────────────────────────────────────────────
 
 function AccordionCard({
   p,
@@ -182,13 +166,11 @@ function AccordionCard({
       isOpen ? "shadow-[0_4px_20px_rgba(0,0,0,0.12)]" : ""
     }`}>
 
-      {/* ── Header (always visible, click to toggle) ── */}
       <button
         type="button"
         onClick={onToggle}
         className="w-full text-left"
       >
-        {/* Gradient band */}
         <div className="relative overflow-hidden px-4 py-4" style={{ background: gradient }}>
           <div className="pointer-events-none absolute -right-5 -top-5 h-24 w-24 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 right-12 h-20 w-20 rounded-full bg-white/8" />
@@ -208,7 +190,6 @@ function AccordionCard({
             </div>
           </div>
 
-          {/* Badges */}
           <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
             <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold text-white">
               {p.kategori}
@@ -225,7 +206,6 @@ function AccordionCard({
           </div>
         </div>
 
-        {/* Author bar (collapsed only) */}
         {!isOpen && (
           <div className="flex items-center justify-between px-4 py-2.5">
             <div className="flex items-center gap-2">
@@ -245,7 +225,6 @@ function AccordionCard({
         )}
       </button>
 
-      {/* ── Expanded body ── */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -256,27 +235,21 @@ function AccordionCard({
             transition={{ duration: 0.32, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            {/* ── Content area ── */}
             <div className="relative overflow-hidden">
-              {/* Colored left strip */}
               <div className="absolute bottom-0 left-0 top-0 w-1 rounded-r" style={{ background: gradient }} />
 
-              {/* Subtle tinted bg */}
               <div
                 className="absolute inset-0 opacity-[0.035] dark:opacity-[0.06]"
                 style={{ background: gradient }}
               />
 
-              {/* Decorative large quote mark */}
               <div
                 className="pointer-events-none absolute right-4 top-0 select-none font-serif text-[96px] leading-none opacity-[0.06]"
                 style={{ color: "currentColor" }}
               >"</div>
 
               <div className="relative px-6 py-5">
-                {/* Author + admin actions */}
                 <div className="mb-4 flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                  {/* Avatar with ring */}
                   <div className="relative shrink-0">
                     <div
                       className="flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-lg ring-2 ring-white dark:ring-slate-700"
@@ -314,16 +287,13 @@ function AccordionCard({
                   )}
                 </div>
 
-                {/* Content text */}
                 <p className="text-[13.5px] leading-[1.85] text-slate-600 dark:text-slate-300" style={{ whiteSpace: "pre-wrap" }}>
                   {p.konten}
                 </p>
               </div>
             </div>
 
-            {/* ── Ruang Diskusi header band ── */}
             <div className="relative overflow-hidden">
-              {/* Gradient wash */}
               <div
                 className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
                 style={{ background: "linear-gradient(90deg, #6334F4 0%, #977DFF 60%, transparent 100%)" }}
@@ -340,7 +310,6 @@ function AccordionCard({
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}
-                {/* Decorative dots */}
                 <div className="ml-auto flex items-center gap-1 opacity-30">
                   {[0,1,2].map(i => (
                     <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#6334F4]" style={{ opacity: 1 - i * 0.25 }} />
@@ -349,7 +318,6 @@ function AccordionCard({
               </div>
             </div>
 
-            {/* ── Discussion content ── */}
             <div className="px-5 pb-6 pt-4">
               {detailLoading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
@@ -377,8 +345,6 @@ function AccordionCard({
   );
 }
 
-// ─── Main Component ─────────────────────────────────────────────────────────────
-
 export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const toast = useToast();
   const [list,          setList]          = useState<PengumumanItem[]>([]);
@@ -388,7 +354,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const [error,         setError]         = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
 
-  // Accordion state
   const [openSlug,    setOpenSlug]    = useState<string | null>(null);
   const [detailCache, setDetailCache] = useState<Record<string, PengumumanDetail>>({});
   const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
@@ -427,7 +392,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
     }
   }
 
-  // Load list + auto-open first card
   useEffect(() => {
     fetchList().then((arr) => {
       if (autoOpenDone.current || arr.length === 0) return;
@@ -440,7 +404,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
       setOpenSlug(first.slug);
       fetchDetail(first.slug);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -496,7 +459,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   return (
     <div className="space-y-5">
 
-      {/* ── Header Banner ── */}
       <div className="relative overflow-hidden rounded-2xl p-6"
         style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
@@ -544,14 +506,11 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
 
-      {/* ── Left: Calendar ────────────────────────────────────────────────────── */}
       <div className="space-y-4">
         <MiniCalendar announcementDates={announcementDates} />
       </div>
 
-      {/* ── Right: Accordion Cards ───────────────────────────────────────────── */}
       <div>
-        {/* Error */}
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -562,7 +521,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
           )}
         </AnimatePresence>
 
-        {/* Cards */}
         {loading ? (
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -614,9 +572,8 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         )}
       </div>
 
-      </div>{/* end inner grid */}
+      </div>
 
-      {/* ── Form Modal ───────────────────────────────────────────────────────── */}
       <PengumumanFormModal
         open={modalOpen}
         pengumuman={editItem}

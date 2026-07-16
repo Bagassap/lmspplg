@@ -14,7 +14,6 @@ import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
@@ -29,7 +28,6 @@ interface DashboardData {
   pengumuman: Pengumuman[];
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const P = "#4F8EF7";
 const R = "#EF4444";
@@ -84,7 +82,6 @@ function ViewAll({ href }: { href: string }) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function SiswaDashboardPage() {
   const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
@@ -175,12 +172,10 @@ export default function SiswaDashboardPage() {
     <>
       <div className="space-y-5">
 
-        {/* ── Greeting ─────────────────────────────────────────────────────────── */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <GreetingHero nama={user.nama} role={user.role} kelas={data.kelas} />
         </motion.div>
 
-        {/* ── Row 1: Stat Cards ────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatsCard icon={CheckCircle} label="Hadir"     value={absensi.hadir}      sub="Hari tercatat hadir" index={0} delay={0.05} />
           <StatsCard icon={Thermometer} label="Sakit"     value={absensi.sakit}      sub="Hari izin sakit" index={1} delay={0.10} />
@@ -188,7 +183,6 @@ export default function SiswaDashboardPage() {
           <StatsCard icon={TrendingUp}  label="Kehadiran" value={absensi.persentase} suffix="%" sub="Persentase keseluruhan" index={3} delay={0.20} />
         </div>
 
-        {/* ── Row 2: Statistik (col-4) + Pengumuman (col-8) ───────────────────── */}
         <div className="grid grid-cols-12 gap-4 md:gap-5">
 
           <motion.div
@@ -259,7 +253,6 @@ export default function SiswaDashboardPage() {
           </SectionCard>
         </div>
 
-        {/* ── Row 3: 4 Credit Card shortcuts ───────────────────────────────────── */}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {CARDS.map((card, i) => (
             <motion.div key={card.label}

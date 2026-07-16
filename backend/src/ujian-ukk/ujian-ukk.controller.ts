@@ -46,8 +46,6 @@ const submitStorage = diskStorage({
 export class UjianUkkController {
   constructor(private readonly service: UjianUkkService) {}
 
-  // ── Tahapan ────────────────────────────────────────────────────────────────
-
   @Get('tahapan')
   findAllTahapan() { return this.service.findAllTahapan(); }
 
@@ -71,8 +69,6 @@ export class UjianUkkController {
   @Delete('tahapan/:id')
   deleteTahapan(@Param('id') id: string) { return this.service.deleteTahapan(id); }
 
-  // ── Soal ───────────────────────────────────────────────────────────────────
-
   @Get('soal')
   findAllSoal() { return this.service.findAllSoal(); }
 
@@ -90,8 +86,6 @@ export class UjianUkkController {
   @Roles(Role.ADMIN, Role.GURU)
   @Delete('soal/:id')
   deleteSoal(@Param('id') id: string) { return this.service.deleteSoal(id); }
-
-  // ── Submisi Project ────────────────────────────────────────────────────────
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
@@ -123,8 +117,6 @@ export class UjianUkkController {
   updateStatus(@Param('id') id: string, @Body('status') status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', @Body('pesanRevisi') pesanRevisi?: string) {
     return this.service.updateStatusSubmisi(id, status, pesanRevisi);
   }
-
-  // ── Absensi UKK ───────────────────────────────────────────────────────────
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
@@ -161,8 +153,6 @@ export class UjianUkkController {
   upsertAbsensi(@Body() dto: UpsertAbsensiUkkDto) {
     return this.service.upsertAbsensiUkk(dto.tahapanId, dto.tanggal, dto.absensi);
   }
-
-  // ── Diskusi ────────────────────────────────────────────────────────────────
 
   @Get('diskusi')
   findAllDiskusi() { return this.service.findAllDiskusi(); }

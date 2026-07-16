@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function POST() {
   const cookieStore = await cookies();
 
-  // Set maxAge 0 untuk memaksa browser menghapus cookie segera
   cookieStore.set("token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

@@ -19,14 +19,10 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ),
 });
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface MySubmisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
 interface DiskusiItem { id: string; konten: string; createdAt: string; user: { id: string; nama: string; role: string }; replies: DiskusiItem[]; }
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric" }); }
 
@@ -53,8 +49,6 @@ const BUBBLE_COLORS = [
   { bubble:"#ECFEFF", text:"#0E7490", avatar:"linear-gradient(135deg,#06B6D4,#3B82F6)" },
 ];
 function bubbleFor(id: string) { let h=0; for(const c of id) h=(h*31+c.charCodeAt(0))>>>0; return BUBBLE_COLORS[h % BUBBLE_COLORS.length]; }
-
-// ─── Submit Modal ─────────────────────────────────────────────────────────────
 
 function isValidDriveUrl(url: string) {
   return url.startsWith("https://drive.google.com/") || url.startsWith("https://docs.google.com/");
@@ -94,7 +88,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             transition={{type:"spring",damping:26,stiffness:340}}
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={e=>e.stopPropagation()}>
-            {/* Header */}
             <div className="relative px-6 py-5 overflow-hidden"
               style={{background:"linear-gradient(135deg,#10B981 0%,#059669 100%)"}}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
@@ -113,9 +106,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </button>
               </div>
             </div>
-            {/* Form */}
             <form onSubmit={submit} className="p-6 space-y-4">
-              {/* Info Google Drive */}
               <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3.5">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background:"#4285F4"}}>
                   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
@@ -126,7 +117,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </div>
               </div>
 
-              {/* Link Input */}
               <div>
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">
                   Link Google Drive <span className="text-red-500">*</span>
@@ -147,7 +137,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 {urlError && <p className="mt-1 text-[11px] text-red-500">{urlError}</p>}
               </div>
 
-              {/* Preview link */}
               {driveUrl && isValidDriveUrl(driveUrl) && (
                 <a href={driveUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700">
@@ -155,7 +144,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </a>
               )}
 
-              {/* Catatan */}
               <div>
                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
                 <textarea value={catatan} onChange={e=>setCatatan(e.target.value)} rows={2}
@@ -181,8 +169,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
     </AnimatePresence>
   );
 }
-
-// ─── Diskusi ─────────────────────────────────────────────────────────────────
 
 function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
   const [list, setList] = useState<DiskusiItem[]>([]);
@@ -274,11 +260,9 @@ function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
-
 export default function SiswaJadwalSoalPage() {
-  const [tahapanList, setTahapanList] = useState<Tahapan[]>([]); // hanya task siswa (hariKe > 0)
-  const [filePool,    setFilePool]    = useState<Tahapan | null>(null); // global container (hariKe:0)
+  const [tahapanList, setTahapanList] = useState<Tahapan[]>([]); 
+  const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [mySubmisi,   setMySubmisi]   = useState<MySubmisi[]>([]);
   const [loading,     setLoading]     = useState(true);
   const [tab,          setTab]         = useState<"active"|"completed"|"all">("all");
@@ -299,7 +283,6 @@ export default function SiswaJadwalSoalPage() {
     ]);
     const all: Tahapan[]  = Array.isArray(t) ? t : [];
     setFilePool(all.find(x => x.hariKe === 0) ?? null);
-    // Sementara: tampilkan 1 task pertama saja untuk semua siswa
     const tasks = all.filter(x => x.hariKe !== 0);
     setTahapanList(tasks.length > 0 ? [tasks[0]] : []);
     setMySubmisi(Array.isArray(s) ? s : []);
@@ -324,7 +307,6 @@ export default function SiswaJadwalSoalPage() {
     else toast.error("Gagal mengirim", "Coba lagi");
   }
 
-
   const now      = new Date();
   const todayStr = now.toISOString().slice(0,10);
   const active   = tahapanList.filter(t => {
@@ -347,10 +329,8 @@ export default function SiswaJadwalSoalPage() {
     <div className="space-y-5">
       <div className="flex flex-col xl:flex-row gap-6">
 
-        {/* ── Left Column ── */}
         <div className="flex-1 min-w-0 space-y-6">
 
-          {/* Header Banner */}
           <div className="relative overflow-hidden rounded-2xl p-6"
             style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
@@ -387,7 +367,6 @@ export default function SiswaJadwalSoalPage() {
             </div>
           </div>
 
-          {/* Jadwal Modal */}
           <AnimatePresence>
             {openJadwalModal && (()=>{
               const allSoal = jadwalFiles;
@@ -436,7 +415,6 @@ export default function SiswaJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          {/* Soal Modal */}
           <AnimatePresence>
             {openSoalModal && (()=>{
               const allSoal = soalFiles;
@@ -485,15 +463,11 @@ export default function SiswaJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          {/* ── Layout: kiri (2 card + My Task) | kanan (Diskusi) ── */}
           <div className="flex flex-col lg:flex-row gap-4 items-stretch">
 
-            {/* Kolom kiri */}
             <div className="flex-1 min-w-0 flex flex-col gap-4">
 
-              {/* 2 Card sejajar */}
               <div className="flex gap-3">
-                {/* Card Jadwal */}
                 <button onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
                   className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
                   style={{background:"linear-gradient(135deg,#F59E0B,#F97316)", boxShadow:"0 8px 28px rgba(245,158,11,0.45)"}}>
@@ -522,7 +496,6 @@ export default function SiswaJadwalSoalPage() {
                   </div>
                 </button>
 
-                {/* Card Soal */}
                 <button onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                   className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
                   style={{background:"linear-gradient(135deg,#6366F1,#4F46E5)", boxShadow:"0 8px 28px rgba(99,102,241,0.45)"}}>
@@ -552,7 +525,6 @@ export default function SiswaJadwalSoalPage() {
                 </button>
               </div>
 
-              {/* My Task */}
               <div className="flex-1 min-w-0 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col">
               <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(16,185,129,0.06) 0%,rgba(99,102,241,0.06) 50%,rgba(245,158,11,0.06) 100%)"}}>
                 <div className="flex items-center gap-2 mb-4">
@@ -600,7 +572,6 @@ export default function SiswaJadwalSoalPage() {
                   const isTerkirim = myS?.status === "TERKIRIM";
                   const pct        = myS ? 100 : 0;
 
-                  // Konfigurasi tombol dinamis
                   const btn = isDiterima
                     ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#ECFDF5", clr:"#10B981", border:"#10B981", onClick:()=>setDetailTarget(myS!) }
                     : isRevisi
@@ -657,9 +628,8 @@ export default function SiswaJadwalSoalPage() {
               </div>
             </div>
 
-            </div>{/* end kolom kiri */}
+            </div>
 
-            {/* Diskusi — merentang penuh */}
             <div className="w-full lg:w-80 shrink-0">
               <DiskusiActivity currentUserId=""/>
             </div>
@@ -670,7 +640,6 @@ export default function SiswaJadwalSoalPage() {
 
       <SubmitModal open={!!submitSoal} onClose={()=>setSubmitSoal(null)} soal={submitSoal} onSubmit={doSubmit}/>
 
-      {/* ── Modal Detail Pengiriman (Terkirim / Diterima) ── */}
       <AnimatePresence>
         {detailTarget && (
           <motion.div key="detail-overlay"
@@ -681,7 +650,6 @@ export default function SiswaJadwalSoalPage() {
               transition={{type:"spring",damping:26,stiffness:340}}
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
-              {/* Header */}
               <div className="relative px-6 py-5 overflow-hidden"
                 style={{background: detailTarget.status==="DITERIMA"
                   ? "linear-gradient(135deg,#10B981,#059669)"
@@ -704,7 +672,6 @@ export default function SiswaJadwalSoalPage() {
                   </button>
                 </div>
               </div>
-              {/* Body */}
               <div className="p-6 space-y-4">
                 {detailTarget.status==="DITERIMA" && (
                   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20">
@@ -745,7 +712,6 @@ export default function SiswaJadwalSoalPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Modal Revisi ── */}
       <AnimatePresence>
         {revisiModal && (
           <motion.div key="revisi-siswa-overlay"
@@ -756,7 +722,6 @@ export default function SiswaJadwalSoalPage() {
               transition={{type:"spring",damping:26,stiffness:340}}
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
-              {/* Header */}
               <div className="relative px-6 py-5 overflow-hidden"
                 style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
@@ -775,9 +740,7 @@ export default function SiswaJadwalSoalPage() {
                   </button>
                 </div>
               </div>
-              {/* Body */}
               <div className="p-6 space-y-4">
-                {/* Pesan revisi dari penguji */}
                 <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-4 py-4">
                   <div className="flex items-start gap-2.5">
                     <AlertCircle size={15} className="text-amber-500 mt-0.5 shrink-0"/>
@@ -789,7 +752,6 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                   </div>
                 </div>
-                {/* Info pengiriman sebelumnya */}
                 <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
                   <span className="text-xs text-slate-500">Pengiriman sebelumnya</span>
                   <a href={revisiModal.fileUrl} target="_blank" rel="noopener noreferrer"
@@ -802,7 +764,6 @@ export default function SiswaJadwalSoalPage() {
                   Perbaiki project kamu sesuai catatan di atas, upload ke Google Drive, lalu kirim ulang link-nya.
                 </p>
               </div>
-              {/* Footer */}
               <div className="px-6 pb-6 flex gap-3">
                 <button onClick={()=>setRevisiModal(null)}
                   className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700">

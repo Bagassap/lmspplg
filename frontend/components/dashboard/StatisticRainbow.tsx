@@ -65,7 +65,6 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
       <div className="-mb-4">
         <Chart options={options} series={[hadirPct, sakitPct, izinPct, alphaPct]} type="radialBar" height={260} />
       </div>
-      {/* Legend */}
       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2.5 px-2">
         {LEGEND.map((l) => (
           <div key={l.label} className="flex items-center justify-between gap-2">

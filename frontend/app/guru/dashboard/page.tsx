@@ -15,7 +15,6 @@ import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
@@ -32,7 +31,6 @@ interface DashboardData {
   pengumuman: Pengumuman[];
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const P = "#4F8EF7";
 const R = "#EF4444";
@@ -87,7 +85,6 @@ function ViewAll({ href }: { href: string }) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function GuruDashboardPage() {
   const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
@@ -184,12 +181,10 @@ export default function GuruDashboardPage() {
   return (
     <div className="space-y-5">
 
-      {/* ── Greeting ─────────────────────────────────────────────────────────── */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <GreetingHero nama={user.nama} role={user.role} />
       </motion.div>
 
-      {/* ── Row 1: Stat Cards ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatsCard icon={Users}         label="Siswa Diampu" value={data.siswaAmpu}        sub="Di kelas yang Anda ampu" index={0} delay={0.05} />
         <StatsCard icon={GraduationCap} label="Kelas Wali"   value={kelasWali.length}      sub="Kelas dengan Anda sebagai wali" index={1} delay={0.10} />
@@ -197,7 +192,6 @@ export default function GuruDashboardPage() {
         <StatsCard icon={Calendar}      label="% Hadir Hari Ini" value={data.kehadiran.persen} suffix="%" sub="Dari siswa yang diampu" index={3} delay={0.20} />
       </div>
 
-      {/* ── Row 2: Statistik (col-4) + Grafik Mingguan (col-8) ───────────────── */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
 
         <motion.div
@@ -242,7 +236,6 @@ export default function GuruDashboardPage() {
         </motion.div>
       </div>
 
-      {/* ── Row 3: 4 Credit Card shortcuts ───────────────────────────────────── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {CARDS.map((card, i) => (
           <motion.div key={card.label}
@@ -283,7 +276,6 @@ export default function GuruDashboardPage() {
         ))}
       </div>
 
-      {/* ── Row 4: Kelas Wali (col-5) + Pengumuman (col-7) ────────────────────── */}
       <div className="grid grid-cols-12 gap-4 md:gap-5">
 
         <SectionCard title="Kelas Wali Saya" icon={GraduationCap} iconColor={P}

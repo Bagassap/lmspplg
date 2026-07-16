@@ -86,12 +86,10 @@ export default function SiswaAbsensiHarianPage() {
     } finally {
       if (!silent) setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [today]);
 
   useEffect(() => { loadStatus(); }, [loadStatus]);
 
-  // Re-check every minute so the Hadir/Pulang window flips automatically without a manual refresh.
   useEffect(() => {
     const id = setInterval(() => loadStatus(true), 60_000);
     return () => clearInterval(id);
@@ -101,7 +99,6 @@ export default function SiswaAbsensiHarianPage() {
   const needsAction =
     (window_ === "HADIR" && !data?.sudahAbsen) || (window_ === "PULANG" && !data?.sudahPulang);
 
-  // Reset the shared form fields whenever the active window/mode changes.
   useEffect(() => {
     setLokasi(null);
     setFotoFile(null);
@@ -167,7 +164,6 @@ export default function SiswaAbsensiHarianPage() {
   return (
     <div className="space-y-5">
 
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
         style={{ background: BRAND_GRADIENT }}>
@@ -202,7 +198,6 @@ export default function SiswaAbsensiHarianPage() {
           </div>
         </div>
 
-        {/* Ringkasan keterangan hari ini */}
         <div className="relative mt-5 flex flex-wrap gap-2">
           <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
             style={{ background: data?.sudahAbsen ? "rgba(16,185,129,0.35)" : "rgba(255,255,255,0.12)" }}>
@@ -227,7 +222,6 @@ export default function SiswaAbsensiHarianPage() {
         </div>
       ) : (
         <>
-          {/* ── Row: Absen utama + Statistik ────────────────────────────────── */}
           <div className="grid grid-cols-12 gap-4 md:gap-5">
 
             <div className="col-span-12 xl:col-span-7">

@@ -12,7 +12,6 @@ import { Role } from '../../generated/prisma/client';
 export class SiswaController {
   constructor(private readonly service: SiswaService) {}
 
-  // Static routes before :id to avoid conflicts
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Get('saya')

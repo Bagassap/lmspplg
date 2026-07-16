@@ -32,23 +32,18 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-xl"
       >
-        {/* Card */}
         <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
 
-          {/* Top accent bar */}
           <div className="h-1 w-full" style={{ background: "linear-gradient(90deg,#6334F4,#8B5CF6,#EC4899,#F97316)" }}/>
 
           <div className="px-6 sm:px-10 py-10 flex flex-col items-center text-center gap-6">
 
-            {/* ── Icon ── */}
             <div className="relative w-20 h-20">
-              {/* Orbit ring */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 rounded-full border border-dashed border-violet-300 dark:border-violet-500/40"
               />
-              {/* Orbit dot */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -56,7 +51,6 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               >
                 <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_6px_#8B5CF6]"/>
               </motion.div>
-              {/* Center */}
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -67,13 +61,11 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               </motion.div>
             </div>
 
-            {/* ── Badge ── */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
               <Lock size={10} className="text-red-500 dark:text-red-400"/>
               <span className="text-[11px] font-bold tracking-widest text-red-500 dark:text-red-400 uppercase">Belum Aktif</span>
             </div>
 
-            {/* ── Title & subtitle ── */}
             <div className="space-y-2">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 dark:text-white leading-tight">
                 Program{" "}
@@ -92,7 +84,6 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               </p>
             </div>
 
-            {/* ── Timeline ── */}
             <div className="flex items-center justify-center w-full gap-0">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-center">
@@ -138,7 +129,6 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               ))}
             </div>
 
-            {/* ── Feature preview ── */}
             <div className="grid grid-cols-4 gap-2 sm:gap-3 w-full">
               {features.map((f, i) => (
                 <motion.div
@@ -158,7 +148,6 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               ))}
             </div>
 
-            {/* ── Info box ── */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -180,7 +169,6 @@ export default function MagangComingSoon({ role = "siswa" }: Props) {
               </div>
             </motion.div>
 
-            {/* ── Footer hint ── */}
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2.5, repeat: Infinity }}

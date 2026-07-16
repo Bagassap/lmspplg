@@ -14,8 +14,6 @@ export const PULANG_CFG = {
   label: "Pulang", bg: "#EAF1FF", clr: "#3B7CE8", darkBg: "#3B7CE820", icon: LogOut,
 };
 
-// Brand gradient shared with the Pengumuman module — used instead of a
-// status-color (e.g. green) wherever the UI needs a neutral "app" theme.
 export const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 
 export const CARD_GRADIENTS = [

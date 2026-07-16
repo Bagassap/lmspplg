@@ -10,8 +10,6 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import { createPortal } from "react-dom";
 import { useToast } from "@/components/shared/ToastSystem";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type SiswaProfil = {
   id: string;
   nis: string;
@@ -28,13 +26,9 @@ type SiswaProfil = {
   user: { id: string; nama: string; email: string | null } | null;
 };
 
-// ─── Palette (samakan dengan Ujian UKK / Jadwal & Soal) ──────────────────────
-
 const HERO_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 const ACCENT_VIOLET = "linear-gradient(135deg,#6366F1,#4F46E5)";
 const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#F97316)";
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
 function getInitials(name: string): string {
@@ -55,12 +49,8 @@ function formatTanggal(iso: string | null): string {
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 }
 
-// ─── Input style ─────────────────────────────────────────────────────────────
-
 const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#7c3aed] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7c3aed]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
-
-// ─── Edit Modal ───────────────────────────────────────────────────────────────
 
 function EditProfilModal({
   siswa, kelasGradient, onClose, onSave,
@@ -206,8 +196,6 @@ function EditProfilModal({
   return typeof window !== "undefined" ? createPortal(modal, document.body) : null;
 }
 
-// ─── Colored Info Field ───────────────────────────────────────────────────────
-
 function InfoField({
   icon: Icon, label, value, iconBg, iconColor,
 }: {
@@ -229,8 +217,6 @@ function InfoField({
     </div>
   );
 }
-
-// ─── Section Card ─────────────────────────────────────────────────────────────
 
 function SectionCard({
   title, gradient, icon: Icon, children, action,
@@ -260,8 +246,6 @@ function SectionCard({
   );
 }
 
-// ─── Mini Stat Card ───────────────────────────────────────────────────────────
-
 function MiniStat({ label, value, gradient }: { label: string; value: string; gradient: string }) {
   return (
     <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient }}>
@@ -271,8 +255,6 @@ function MiniStat({ label, value, gradient }: { label: string; value: string; gr
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function SiswaProfilPage() {
   const [profil, setProfil] = useState<SiswaProfil | null>(null);
@@ -321,7 +303,6 @@ export default function SiswaProfilPage() {
 
   return (
     <div className="space-y-5">
-      {/* ── Hero ── */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
         style={{ background: HERO_GRADIENT }}
@@ -362,27 +343,22 @@ export default function SiswaProfilPage() {
         </div>
       </div>
 
-      {/* ── Layout: left profile + right info ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="grid gap-5 lg:grid-cols-3"
       >
-        {/* ── Left: Profile Card ── */}
         <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
-          {/* Gradient cover */}
           <div className="relative h-24" style={{ background: kelasGrad }}>
             <div className="pointer-events-none absolute inset-0 opacity-30"
               style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 60%)" }} />
-            {/* kelas badge */}
             <span className="absolute right-3 top-3 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
               {kelasShort(profil.kelas.nama)}
             </span>
           </div>
 
           <div className="flex flex-col items-center px-6 pb-6">
-            {/* Avatar overlapping cover */}
             <div className="relative -mt-12 mb-4">
               <div
                 className="flex h-24 w-24 items-center justify-center rounded-full text-2xl font-extrabold text-white shadow-xl ring-4 ring-white dark:ring-[#1c2434]"
@@ -392,7 +368,6 @@ export default function SiswaProfilPage() {
               </div>
             </div>
 
-            {/* Name & info */}
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
             <div className="mt-1 flex items-center gap-1.5">
               <Hash size={11} className="text-slate-400" />
@@ -405,7 +380,6 @@ export default function SiswaProfilPage() {
               </div>
             )}
 
-            {/* Gender chip */}
             {profil.jenisKelamin && (
               <span className={`mt-3 rounded-full px-3.5 py-1.5 text-[11px] font-bold ${
                 isP
@@ -416,10 +390,8 @@ export default function SiswaProfilPage() {
               </span>
             )}
 
-            {/* Divider */}
             <div className="my-5 w-full border-t border-slate-100 dark:border-slate-700/50" />
 
-            {/* Colorful stats */}
             <div className="grid w-full grid-cols-2 gap-2.5">
               <MiniStat label="Angkatan" value={String(profil.angkatan)}
                 gradient={ACCENT_VIOLET} />
@@ -427,7 +399,6 @@ export default function SiswaProfilPage() {
                 gradient={ACCENT_ORANGE} />
             </div>
 
-            {/* Edit button */}
             <motion.button
               onClick={() => setShowEdit(true)}
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(124,58,237,0.4)" }}
@@ -441,9 +412,7 @@ export default function SiswaProfilPage() {
           </div>
         </div>
 
-        {/* ── Right: Info Cards ── */}
         <div className="flex flex-col gap-5 lg:col-span-2">
-          {/* Informasi Pribadi — indigo gradient header */}
           <SectionCard
             title="Informasi Pribadi"
             icon={User}
@@ -465,7 +434,6 @@ export default function SiswaProfilPage() {
             </div>
           </SectionCard>
 
-          {/* Kontak & Lokasi — orange gradient header */}
           <SectionCard
             title="Kontak & Lokasi"
             icon={Phone}

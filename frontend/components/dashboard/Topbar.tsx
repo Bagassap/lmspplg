@@ -12,7 +12,6 @@ import {
 import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 
-// ─── Page titles ──────────────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, [string, string]> = {
   dashboard:      ["Dashboard",          "Ringkasan aktivitas Anda"],
@@ -45,7 +44,6 @@ function getPageInfo(pathname: string) {
       };
 }
 
-// ─── Search items ─────────────────────────────────────────────────────────────
 
 type SearchItem = {
   href: string;
@@ -81,7 +79,6 @@ const SEARCH_ITEMS: SearchItem[] = [
   { href: "/siswa/ujian-ukk/nilai-saya", label: "Nilai Saya",         desc: "Hasil ujian kompetensi",        icon: FileText,        roles: ["SISWA"] },
 ];
 
-// ─── Notifications ────────────────────────────────────────────────────────────
 
 type NotifType = "info" | "success" | "warning" | "error";
 type ApiNotifType = "PENGUMUMAN" | "ABSENSI" | "TUGAS" | "MAGANG" | "UKK" | "SISTEM";
@@ -120,14 +117,12 @@ const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?:
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: () => void }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
 
-  // ── Dark mode ──────────────────────────────────────────────────────────────
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
 
@@ -147,7 +142,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     localStorage.setItem("theme", next ? "dark" : "light");
   }
 
-  // ── Search ─────────────────────────────────────────────────────────────────
   const [searchOpen,  setSearchOpen]  = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -168,7 +162,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     else { setSearchQuery(""); setSelectedIdx(0); }
   }, [searchOpen]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -193,10 +186,8 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchOpen, filteredSearch, selectedIdx]);
 
-  // ── Notifications ──────────────────────────────────────────────────────────
   const [notifOpen,      setNotifOpen]      = useState(false);
   const [notifications,  setNotifications]  = useState<ApiNotification[]>([]);
   const [notifLoading,   setNotifLoading]   = useState(false);
@@ -209,7 +200,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
       if (!res.ok) return;
       const data = await res.json();
       setUnreadCount(data.count ?? 0);
-    } catch { /* silent — polling, retry next tick */ }
+    } catch {  }
   }
 
   async function fetchNotifications() {
@@ -258,7 +249,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     return () => document.removeEventListener("mousedown", handler);
   }, [notifOpen]);
 
-  // ── User dropdown ──────────────────────────────────────────────────────────
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -280,9 +270,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
   return (
     <>
-      {/* ── Topbar ─────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 flex items-center gap-3 bg-white px-4 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-colors duration-200 dark:bg-[#1c2434] md:px-5 2xl:px-10">
-        {/* Mobile hamburger */}
         <button
           onClick={onMenuClick}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 lg:hidden"
@@ -290,7 +278,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
           <Menu size={20} />
         </button>
 
-        {/* Page title */}
         <div className="hidden xl:block">
           <h1 className="mb-0.5 text-lg font-bold text-slate-800 dark:text-slate-200">{title}</h1>
           {subtitle && (
@@ -300,10 +287,8 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
         <div className="flex-1" />
 
-        {/* Right controls */}
         <div className="flex items-center gap-2">
 
-          {/* Search pill — desktop */}
           <button
             onClick={() => setSearchOpen(true)}
             className="hidden items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 md:flex"
@@ -315,7 +300,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             </span>
           </button>
 
-          {/* Search icon — mobile */}
           <button
             onClick={() => setSearchOpen(true)}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 md:hidden"
@@ -323,7 +307,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             <Search size={16} />
           </button>
 
-          {/* Light / Dark toggle */}
           <div className="flex items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700/50">
             <button
               onClick={toggleDark}
@@ -349,7 +332,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             </button>
           </div>
 
-          {/* Notification bell */}
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen((v) => !v)}
@@ -363,7 +345,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
               )}
             </button>
 
-            {/* Notification dropdown */}
             <AnimatePresence>
               {notifOpen && (
                 <motion.div
@@ -373,7 +354,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                   transition={{ duration: 0.15 }}
                   className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1c2434] dark:shadow-black/30"
                 >
-                  {/* Header */}
                   <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-slate-700">
                     <div>
                       <p className="text-sm font-bold text-gray-900 dark:text-white">Notifikasi</p>
@@ -392,7 +372,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                     )}
                   </div>
 
-                  {/* List */}
                   <div className="max-h-80 overflow-y-auto">
                     {notifLoading ? (
                       <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
@@ -445,7 +424,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             </AnimatePresence>
           </div>
 
-          {/* User dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
@@ -493,11 +471,9 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
         </div>
       </header>
 
-      {/* ── Search overlay ─────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {searchOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               key="search-backdrop"
               initial={{ opacity: 0 }}
@@ -508,7 +484,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
               onClick={() => setSearchOpen(false)}
             />
 
-            {/* Panel — mobile: inset-x-4 | desktop: centered max-w-lg */}
             <motion.div
               key="search-panel"
               initial={{ opacity: 0, y: -12, scale: 0.97 }}
@@ -517,7 +492,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
               transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
               className="fixed inset-x-4 top-20 z-50 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#1c2434] sm:left-1/2 sm:right-auto sm:top-24 sm:w-full sm:max-w-lg sm:-translate-x-1/2"
             >
-              {/* Input row */}
               <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3.5 dark:border-slate-700">
                 <Search size={17} className="shrink-0 text-gray-400 dark:text-slate-400" />
                 <input
@@ -542,7 +516,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                 )}
               </div>
 
-              {/* Results */}
               <div className="max-h-64 overflow-y-auto py-1.5">
                 {filteredSearch.length === 0 ? (
                   <div className="px-4 py-10 text-center text-sm text-gray-400 dark:text-slate-400">
@@ -559,7 +532,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                         className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50"
                         style={isSelected ? { backgroundColor: "rgba(79,142,247,0.1)" } : {}}
                       >
-                        {/* Icon box */}
                         <div
                           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
                             isSelected ? "bg-primary" : "bg-slate-100 dark:bg-slate-700"
@@ -571,7 +543,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                           />
                         </div>
 
-                        {/* Label + desc */}
                         <div className="min-w-0 flex-1">
                           <p
                             className="text-sm font-medium"
@@ -582,7 +553,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                           <p className="truncate text-[11px] text-gray-400 dark:text-slate-400">{item.desc}</p>
                         </div>
 
-                        {/* Enter hint */}
                         {isSelected && (
                           <kbd className="ml-auto shrink-0 rounded border border-gray-200 px-1.5 py-0.5 text-[9px] font-medium text-gray-400 dark:border-slate-700">
                             ↵
@@ -594,7 +564,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                 )}
               </div>
 
-              {/* Footer keyboard hints */}
               <div className="flex items-center gap-4 border-t border-gray-200 px-4 py-2.5 dark:border-slate-700">
                 <span className="text-[10px] text-gray-400 dark:text-slate-600">
                   <kbd className="mr-0.5 rounded border border-gray-200 px-1 py-0.5 text-[9px] dark:border-slate-700">↑</kbd>

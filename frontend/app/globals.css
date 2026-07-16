@@ -1,18 +1,15 @@
 @import "tailwindcss";
 
-/* Enable class-based dark mode (toggled via .dark on <html>) */
 @variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
   --foreground: #000000;
 
-  /* Splash/legacy palette — kept for Splash.tsx */
   --color-brand: #7d39eb;
   --color-brand-dark: #5e2bc0;
   --color-accent: #c6ff33;
 
-  /* Login palette */
   --color-lavender: #F2E6EE;
   --color-pink: #FFCCF2;
   --color-violet: #977DFF;
@@ -29,7 +26,6 @@
   --color-accent: var(--color-accent);
   --font-sans: var(--font-satoshi);
 
-  /* Login palette utilities */
   --color-lavender: var(--color-lavender);
   --color-pink: var(--color-pink);
   --color-violet: var(--color-violet);
@@ -37,18 +33,14 @@
   --color-navy: var(--color-navy);
   --color-deep: var(--color-deep);
 
-  /* ── Boltz Design Tokens ────────────────────────────────── */
 
-  /* Primary — Boltz blue */
   --color-primary: #4F8EF7;
   --color-primary-light: #EEF4FF;
   --color-primary-dark: #3B7CE8;
 
-  /* Surface */
   --color-surface: #F5F7FA;
 }
 
-/* Default border-color — cegah border hitam dari currentColor default */
 *,
 *::before,
 *::after {
@@ -60,7 +52,6 @@ html.dark *::after {
   border-color: #27303e;
 }
 
-/* Dark mode CSS variable overrides */
 .dark {
   --background: #0f172a;
   --foreground: #f1f5f9;
@@ -72,7 +63,6 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Toast notification progress bar animation */
 @keyframes toast-shrink {
   from { transform: scaleX(1); }
   to   { transform: scaleX(0); }

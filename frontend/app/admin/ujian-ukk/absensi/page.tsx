@@ -10,7 +10,6 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 
-// ── Types ──────────────────────────────────────────────────────────────────────
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
 type Tahapan = {
@@ -34,7 +33,6 @@ type AbsensiData = {
   siswa: SiswaAbsensi[];
 };
 
-// ── Config ────────────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string;
   icon: React.ElementType;
@@ -52,7 +50,6 @@ const CARD_GRADIENTS = [
   "linear-gradient(135deg,#10B981,#34D399)",
 ];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
@@ -76,7 +73,6 @@ function parseLokasi(raw: string | null | undefined) {
   return null;
 }
 
-// ── StatusBadge ───────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: StatusAbsensi | null }) {
   if (!status) return (
     <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 dark:bg-slate-700 px-2.5 py-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
@@ -93,7 +89,6 @@ function StatusBadge({ status }: { status: StatusAbsensi | null }) {
   );
 }
 
-// ── Detail Dokumen Modal ──────────────────────────────────────────────────────
 function DokumenModal({ siswa, tanggal, lab, onClose }: {
   siswa: SiswaAbsensi; tanggal: string; lab: string; onClose: () => void;
 }) {
@@ -111,7 +106,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
 
   return (
     <>
-      {/* Image overlay */}
       <AnimatePresence>
         {imgOverlay && (
           <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -146,7 +140,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
           className="relative z-10 flex w-full max-w-3xl overflow-hidden rounded-t-3xl shadow-2xl sm:rounded-3xl"
           style={{maxHeight:"88vh"}}>
 
-          {/* Panel kiri */}
           <div className="relative flex w-60 shrink-0 flex-col overflow-hidden"
             style={{background:`linear-gradient(135deg,${theme.clr}dd,${theme.clr})`}}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10"/>
@@ -198,7 +191,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
             </div>
           </div>
 
-          {/* Panel kanan */}
           <div className="flex min-w-0 flex-1 flex-col bg-slate-50 dark:bg-[#141b2d]">
             <div className="shrink-0 border-b border-slate-100 dark:border-slate-700/40 px-5 py-4">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Dokumen Kehadiran</p>
@@ -207,7 +199,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="space-y-3 p-4">
 
-                {/* Foto Selfie */}
                 {fotoSrc && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
@@ -223,7 +214,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
                   </div>
                 )}
 
-                {/* TTD */}
                 {ttdSrc && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
@@ -247,7 +237,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
                   </div>
                 )}
 
-                {/* Lokasi */}
                 {lokasi && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
@@ -272,7 +261,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
                   </div>
                 )}
 
-                {/* Lokasi teks biasa */}
                 {siswa.lokasi && !lokasi && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100 dark:border-slate-700/50">
@@ -287,7 +275,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
                   </div>
                 )}
 
-                {/* Empty */}
                 {!fotoSrc && !ttdSrc && !siswa.lokasi && (
                   <div className="flex flex-col items-center gap-3 py-16 text-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
@@ -313,7 +300,6 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
   );
 }
 
-// ── Lab Card ──────────────────────────────────────────────────────────────────
 function LabCard({ tahapan, gradient, delay, hadir, total, selected, onClick }: {
   tahapan: Tahapan; gradient: string; delay: number;
   hadir: number; total: number; selected: boolean; onClick: () => void;
@@ -371,7 +357,6 @@ function LabCard({ tahapan, gradient, delay, hadir, total, selected, onClick }: 
   );
 }
 
-// ── PDF Print ────────────────────────────────────────────────────────────────
 function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
   siswaList: SiswaAbsensi[];
   tahapan: Tahapan | null;
@@ -536,7 +521,6 @@ function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
   w.onload = () => { w.focus(); w.print(); };
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function AdminUkkAbsensiPage() {
   const toast = useToast();
 
@@ -586,7 +570,6 @@ export default function AdminUkkAbsensiPage() {
     <>
       <div className="space-y-5 p-1">
 
-        {/* Hero Header — pola sama dengan jadwal-soal */}
         <div className="relative overflow-hidden rounded-2xl p-6"
           style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10"/>
@@ -594,7 +577,6 @@ export default function AdminUkkAbsensiPage() {
           <div className="pointer-events-none absolute bottom-4 -left-6 h-24 w-24 rounded-full bg-white/6"/>
 
           <div className="relative flex flex-wrap items-center justify-between gap-4">
-            {/* Kiri: icon + judul */}
             <div className="flex items-center gap-4">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
                 <ClipboardCheck size={26} className="text-white"/>
@@ -609,12 +591,10 @@ export default function AdminUkkAbsensiPage() {
               </div>
             </div>
 
-            {/* Kanan: live clock */}
             <LiveClock />
           </div>
         </div>
 
-        {/* 4 Lab Cards */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tahapanList.length === 0
             ? Array.from({length:4}).map((_,i) => (
@@ -630,7 +610,6 @@ export default function AdminUkkAbsensiPage() {
           }
         </div>
 
-        {/* Filter tanggal + tombol PDF */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 px-4 py-3 flex flex-wrap gap-3 items-center shadow-sm">
           <div className="flex items-center gap-2 shrink-0">
             <CalendarDays size={14} className="text-slate-400"/>
@@ -652,16 +631,13 @@ export default function AdminUkkAbsensiPage() {
           </button>
         </div>
 
-        {/* Info lab terpilih + progress bar */}
         {selectedTahapan && (
           <div className="relative rounded-2xl overflow-hidden shadow-lg"
             style={{background: CARD_GRADIENTS[selectedIdx % 4]}}>
-            {/* Decorative — clipped oleh overflow-hidden parent relative */}
             <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/5"/>
 
             <div className="relative px-5 pt-5 pb-4">
-              {/* Top: icon + judul + badge persen */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/25 shadow-sm">
@@ -680,7 +656,6 @@ export default function AdminUkkAbsensiPage() {
                 </div>
               </div>
 
-              {/* Progress bar */}
               <div className="mb-4">
                 <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
                   <motion.div initial={{width:0}} animate={{width:`${hadirPct}%`}}
@@ -689,7 +664,6 @@ export default function AdminUkkAbsensiPage() {
                 </div>
               </div>
 
-              {/* Info cards grid */}
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {[
                   { Icon: CalendarDays, label: "Tanggal",  val: formatTgl(selectedTahapan.tanggal) },
@@ -712,7 +686,6 @@ export default function AdminUkkAbsensiPage() {
           </div>
         )}
 
-        {/* Rekap chips — true horizontal: icon | angka label | persen */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(["HADIR","IZIN","SAKIT","ALPA"] as StatusAbsensi[]).map(key => {
             const cfg  = STATUS_CFG[key];
@@ -738,10 +711,8 @@ export default function AdminUkkAbsensiPage() {
           })}
         </div>
 
-        {/* Tabel absensi */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
 
-          {/* Sticky header */}
           {!loading && siswaList.length > 0 && (
             <div className="sticky top-0 z-10 border-b border-slate-100 dark:border-slate-700/40 bg-slate-50 dark:bg-slate-800/80 px-5 py-2.5">
               <div className="grid items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500"
@@ -791,34 +762,27 @@ export default function AdminUkkAbsensiPage() {
                     className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
                     style={{gridTemplateColumns:"28px 40px 2fr 1.4fr 1.1fr 1fr 1.6fr 72px 72px 100px"}}>
 
-                    {/* # */}
                     <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{idx+1}</span>
 
-                    {/* Avatar */}
                     <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0"
                       style={{backgroundColor:ac}}>
                       {getInitials(s.nama)}
                     </div>
 
-                    {/* Nama */}
                     <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
 
-                    {/* NIS */}
                     <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
 
-                    {/* Status */}
                     <div className="flex justify-center">
                       <StatusBadge status={s.status}/>
                     </div>
 
-                    {/* Waktu */}
                     <div className="flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-300">
                       {s.waktuAbsen
                         ? <><Clock size={12} className="shrink-0 text-slate-400"/><span className="font-mono text-sm font-bold">{s.waktuAbsen}</span></>
                         : <span className="text-sm text-slate-300">—</span>}
                     </div>
 
-                    {/* Lokasi */}
                     <div className="min-w-0">
                       {lokasiParsed ? (
                         <a href={`https://maps.google.com/maps?q=${lokasiParsed.lat},${lokasiParsed.lng}`}
@@ -834,7 +798,6 @@ export default function AdminUkkAbsensiPage() {
                       )}
                     </div>
 
-                    {/* Foto thumbnail */}
                     <div className="flex justify-center">
                       {(() => {
                         const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
@@ -854,7 +817,6 @@ export default function AdminUkkAbsensiPage() {
                       })()}
                     </div>
 
-                    {/* TTD thumbnail */}
                     <div className="flex justify-center">
                       {s.ttd ? (
                         <button onClick={() => setDokumenSiswa(s)}
@@ -868,7 +830,6 @@ export default function AdminUkkAbsensiPage() {
                       )}
                     </div>
 
-                    {/* Lihat button */}
                     <div className="flex justify-end">
                       {hasDok ? (
                         <button onClick={() => setDokumenSiswa(s)}
@@ -885,7 +846,6 @@ export default function AdminUkkAbsensiPage() {
             </div>
           )}
 
-          {/* Footer */}
           <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
             <div className="text-xs text-slate-400 dark:text-slate-500">
               <span className="font-bold text-slate-600 dark:text-slate-300">{rekap.HADIR}</span>/{total} siswa hadir
@@ -902,7 +862,6 @@ export default function AdminUkkAbsensiPage() {
         </div>
       </div>
 
-      {/* Detail Dokumen Modal */}
       <AnimatePresence>
         {dokumenSiswa && (
           <DokumenModal

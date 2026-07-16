@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpen, GraduationCap } from "lucide-react";
 
-/* ─── animation keyframes injected once ─── */
 const STYLES = `
   @keyframes gradientShift {
     0%   { background-position: 20% 0%; }
@@ -15,7 +14,6 @@ const STYLES = `
   }
 `;
 
-/* ─── floating particles ─── */
 const PARTICLES: { x: string; y: string; size: number; color: string; delay: number; dur: number }[] = [
   { x: "11%",  y: "15%", size: 3,   color: "#977DFF", delay: 0,    dur: 6.2 },
   { x: "79%",  y: "10%", size: 2,   color: "#ffffff", delay: 1.3,  dur: 7.6 },
@@ -31,13 +29,11 @@ const PARTICLES: { x: string; y: string; size: number; color: string; delay: num
   { x: "18%",  y: "38%", size: 2,   color: "#0033FF", delay: 1.1,  dur: 6.8 },
 ];
 
-/* ─── variants ─── */
 const container: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.18, delayChildren: 0.25 } },
 };
 
-// Spring-like bounce for logo
 const logoReveal: Variants = {
   hidden: { opacity: 0, scale: 0.72 },
   visible: {
@@ -76,7 +72,6 @@ export function Splash() {
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
       <style>{STYLES}</style>
 
-      {/* ── animated gradient background ── */}
       <div
         className="absolute inset-0"
         style={{
@@ -89,7 +84,6 @@ export function Splash() {
         }}
       />
 
-      {/* ── blur blobs ── */}
       <motion.div
         className="pointer-events-none absolute left-[4%] top-[4%] h-100 w-100 rounded-full blur-[110px]"
         style={{ background: "rgba(151,125,255,0.22)" }}
@@ -115,7 +109,6 @@ export function Splash() {
         transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* ── floating particles ── */}
       {PARTICLES.map((p, i) => (
         <motion.span
           key={i}
@@ -133,7 +126,6 @@ export function Splash() {
         />
       ))}
 
-      {/* ── corner decorative icons ── */}
       <motion.div
         className="pointer-events-none absolute left-7 top-8 text-white"
         style={{ opacity: 0.1 }}
@@ -167,7 +159,6 @@ export function Splash() {
         <BookOpen size={22} />
       </motion.div>
 
-      {/* ── noise overlay ── */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
         style={{
@@ -176,16 +167,13 @@ export function Splash() {
         }}
       />
 
-      {/* ── main content ── */}
       <motion.div
         initial="hidden"
         animate="visible"
         variants={container}
         className="relative z-10 flex flex-col items-center text-center"
       >
-        {/* Logo with spring entrance + glow rings */}
         <motion.div variants={logoReveal} className="relative mb-10 flex items-center justify-center">
-          {/* outer pulsing glow */}
           <motion.div
             className="absolute rounded-full"
             style={{
@@ -198,7 +186,6 @@ export function Splash() {
             animate={{ scale: [1, 1.22, 1], opacity: [0.5, 0.9, 0.5] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* inner glow ring */}
           <motion.div
             className="absolute rounded-full"
             style={{
@@ -225,7 +212,6 @@ export function Splash() {
           />
         </motion.div>
 
-        {/* Title — "Sistem" from left · "Pembelajaran" from right */}
         <div className="flex flex-wrap items-baseline justify-center gap-x-3 overflow-hidden">
           <motion.span
             variants={slideLeft}
@@ -247,7 +233,6 @@ export function Splash() {
           </motion.span>
         </div>
 
-        {/* Subtitle */}
         <motion.p
           variants={fadeUp}
           className="mt-4 text-xs font-light text-white/68 sm:text-sm"
@@ -256,7 +241,6 @@ export function Splash() {
           Pengembangan Perangkat Lunak dan Gim
         </motion.p>
 
-        {/* School badge */}
         <motion.div variants={fadeUp} className="mt-5">
           <span
             className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 text-[9.5px] font-medium uppercase tracking-widest text-white/72"
@@ -270,7 +254,6 @@ export function Splash() {
           </span>
         </motion.div>
 
-        {/* Loading dots + label */}
         <motion.div variants={fadeUp} className="mt-14 flex flex-col items-center gap-3">
           <div className="flex items-center gap-3">
             {DOT_COLORS.map((color, i) => (

@@ -12,8 +12,6 @@ const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 export class UjianUkkService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ── Tahapan ───────────────────────────────────────────────────────────────
-
   findAllTahapan() {
     return this.prisma.tahapanUKK.findMany({
       orderBy: [{ tanggal: 'asc' }, { hariKe: 'asc' }],
@@ -24,13 +22,11 @@ export class UjianUkkService {
   async findTahapanSaya(userId: string) {
     const SOAL_SELECT = { select: { id: true, judul: true, deskripsi: true, fileName: true, fileUrl: true } };
 
-    // Global container selalu dikembalikan (jadwal & soal files)
     const globalContainer = await this.prisma.tahapanUKK.findFirst({
       where: { hariKe: 0 },
       include: { soal: SOAL_SELECT },
     });
 
-    // Cari siswa yang login
     const siswa = userId
       ? await this.prisma.siswa.findUnique({ where: { userId } })
       : null;
@@ -38,7 +34,6 @@ export class UjianUkkService {
     let taskList: any[] = [];
 
     if (siswa) {
-      // Ambil task yang di-assign ke siswa ini
       const peserta = await this.prisma.pesertaUKK.findMany({
         where: { siswaId: siswa.id },
         include: { tahapan: { include: { soal: SOAL_SELECT } } },
@@ -46,7 +41,6 @@ export class UjianUkkService {
       taskList = peserta.map(p => p.tahapan);
     }
 
-    // Fallback: jika belum ada assignment, tampilkan 1 task pertama sebagai dummy
     if (taskList.length === 0) {
       const firstTask = await this.prisma.tahapanUKK.findFirst({
         where: { hariKe: { gt: 0 } },
@@ -93,8 +87,6 @@ export class UjianUkkService {
     return t;
   }
 
-  // ── Soal ──────────────────────────────────────────────────────────────────
-
   findAllSoal() {
     return this.prisma.soalTahapanUKK.findMany({
       orderBy: { createdAt: 'desc' },
@@ -117,8 +109,6 @@ export class UjianUkkService {
     if (!soal) throw new NotFoundException('Soal tidak ditemukan');
     return this.prisma.soalTahapanUKK.delete({ where: { id } });
   }
-
-  // ── Submisi Project ───────────────────────────────────────────────────────
 
   findAllSubmisi() {
     return this.prisma.submisiProjectUKK.findMany({
@@ -166,8 +156,6 @@ export class UjianUkkService {
     });
   }
 
-  // ── Diskusi ───────────────────────────────────────────────────────────────
-
   findAllDiskusi() {
     return this.prisma.diskusiUKK.findMany({
       where: { parentId: null },
@@ -196,13 +184,10 @@ export class UjianUkkService {
     return this.prisma.diskusiUKK.delete({ where: { id } });
   }
 
-  // ── Absensi UKK ──────────────────────────────────────────────────────────
-
   async getAbsensiByTahapan(tahapanId: string, tanggal: string) {
     const tahapan = await this.prisma.tahapanUKK.findUnique({ where: { id: tahapanId } });
     if (!tahapan) throw new NotFoundException('Tahapan tidak ditemukan');
 
-    // Ambil semua siswa yang di-assign ke tahapan ini; fallback: semua siswa
     const peserta = await this.prisma.pesertaUKK.findMany({
       where: { tahapanId },
       include: { siswa: { include: { user: { select: { id: true, nama: true } } } } },

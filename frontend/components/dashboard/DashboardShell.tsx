@@ -15,7 +15,6 @@ export function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Paksa logout jika browser ditutup lalu dibuka ulang (sessionStorage kosong)
   useEffect(() => {
     if (!sessionStorage.getItem("lms_session")) {
       fetch("/api/auth/logout", { method: "POST" }).finally(() => {
@@ -26,7 +25,6 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <Sidebar
         user={user}
         open={sidebarOpen}
@@ -35,7 +33,6 @@ export function DashboardShell({
         onToggleCollapse={() => setSidebarCollapsed((v) => !v)}
       />
 
-      {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-20 bg-black/50 lg:hidden"

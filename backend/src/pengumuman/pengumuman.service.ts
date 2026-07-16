@@ -10,8 +10,6 @@ import { CreateKomentarDto } from './dto/create-komentar.dto';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 
-// ─── Slug helper ──────────────────────────────────────────────────────────────
-
 function toBaseSlug(judul: string): string {
   return judul
     .toLowerCase()
@@ -23,8 +21,6 @@ function toBaseSlug(judul: string): string {
     .replace(/-+/g, '-')
     .slice(0, 80);
 }
-
-// ─── Shared includes ──────────────────────────────────────────────────────────
 
 const AUTHOR_SELECT = { select: { id: true, nama: true, role: true } } as const;
 
@@ -47,8 +43,6 @@ const INCLUDE_DETAIL = {
     orderBy: { createdAt: 'asc' as const },
   },
 } as const;
-
-// ─── Service ──────────────────────────────────────────────────────────────────
 
 @Injectable()
 export class PengumumanService {
@@ -179,8 +173,6 @@ export class PengumumanService {
 
     return this.prisma.komentarPengumuman.delete({ where: { id: komentarId } });
   }
-
-  // ─── Private ────────────────────────────────────────────────────────────────
 
   private async ensureUniqueSlug(judul: string, excludeId?: string): Promise<string> {
     const base = toBaseSlug(judul);

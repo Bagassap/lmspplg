@@ -9,8 +9,6 @@ import {
 } from "lucide-react";
 import { createPortal } from "react-dom";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type ToastType = "success" | "error" | "warning" | "info";
 
 export interface ToastItem {
@@ -39,8 +37,6 @@ interface ToastContextValue {
   confirm: (message: string, description?: string, confirmLabel?: string) => Promise<boolean>;
 }
 
-// ─── Dark mode hook ───────────────────────────────────────────────────────────
-
 function useDarkMode() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
@@ -52,8 +48,6 @@ function useDarkMode() {
   }, []);
   return dark;
 }
-
-// ─── Theme ────────────────────────────────────────────────────────────────────
 
 const THEME = {
   success: {
@@ -122,8 +116,6 @@ const THEME = {
   },
 } as const;
 
-// ─── Floating dots ────────────────────────────────────────────────────────────
-
 function FloatingDot({ color, x, y, delay, size }: { color: string; x: number; y: number; delay: number; size: number }) {
   return (
     <motion.div
@@ -136,8 +128,6 @@ function FloatingDot({ color, x, y, delay, size }: { color: string; x: number; y
   );
 }
 
-// ─── Context ──────────────────────────────────────────────────────────────────
-
 const ToastCtx = createContext<ToastContextValue | null>(null);
 
 export function useToast(): ToastContextValue {
@@ -145,8 +135,6 @@ export function useToast(): ToastContextValue {
   if (!ctx) throw new Error("useToast must be used inside ToastProvider");
   return ctx;
 }
-
-// ─── Notification Card ────────────────────────────────────────────────────────
 
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
   const theme  = THEME[toast.type];
@@ -185,7 +173,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
       onHoverEnd={() => setPaused(false)}
       className="relative w-full max-w-sm select-none"
     >
-      {/* Outer glow */}
       <motion.div
         animate={{ opacity: [0.55, 0.18, 0.55], scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -193,7 +180,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
         style={{ background: theme.blob1 }}
       />
 
-      {/* Card */}
       <div
         className="relative overflow-hidden rounded-[1.75rem]"
         style={{
@@ -203,7 +189,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             : "0 28px 64px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05)",
         }}
       >
-        {/* Close */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -220,12 +205,10 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
           <X size={14} strokeWidth={2.5} />
         </motion.button>
 
-        {/* ── Header section ── */}
         <div
           className="relative flex flex-col items-center overflow-hidden pb-6 pt-10"
           style={{ background: isDark ? "rgba(255,255,255,0.03)" : headerBg }}
         >
-          {/* Decorative blobs */}
           <motion.div
             animate={{ scale: [1, 1.2, 1], opacity: [0.7, 0.3, 0.7] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -239,21 +222,17 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             style={{ width: 80, height: 80, background: theme.blob2 }}
           />
 
-          {/* Icon + rings */}
           <div className="relative flex items-center justify-center">
-            {/* Floating dots */}
             {dots.map((d, i) => (
               <FloatingDot key={i} color={theme.dotColor} x={d.x} y={d.y} delay={d.delay} size={d.size} />
             ))}
 
-            {/* Outer pulse ring */}
             <motion.div
               animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute rounded-full"
               style={{ width: 108, height: 108, background: theme.ring2 }}
             />
-            {/* Mid ring */}
             <motion.div
               animate={{ scale: [1, 1.35, 1], opacity: [0.6, 0.1, 0.6] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
@@ -261,7 +240,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
               style={{ width: 84, height: 84, background: theme.ring1 }}
             />
 
-            {/* Icon circle */}
             <motion.div
               initial={{ scale: 0, rotate: -25 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -269,7 +247,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
               className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
               style={{ background: theme.iconBg, boxShadow: theme.iconShadow }}
             >
-              {/* Shimmer */}
               <motion.div
                 initial={{ x: "-100%", opacity: 0 }}
                 animate={{ x: "200%", opacity: [0, 1, 0] }}
@@ -287,7 +264,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             </motion.div>
           </div>
 
-          {/* Label badge */}
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -302,10 +278,8 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
           </motion.div>
         </div>
 
-        {/* Divider */}
         <div style={{ height: 1, background: divider }} />
 
-        {/* ── Body section ── */}
         <div className="flex flex-col items-center px-6 pb-6 pt-5">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
@@ -329,7 +303,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             </motion.p>
           )}
 
-          {/* Close button */}
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -344,7 +317,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
           </motion.button>
         </div>
 
-        {/* Progress bar */}
         <div
           className="h-1 w-full overflow-hidden"
           style={{ background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" }}
@@ -363,8 +335,6 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
     </motion.div>
   );
 }
-
-// ─── Confirm Dialog ───────────────────────────────────────────────────────────
 
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
@@ -394,7 +364,6 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
       transition={{ type: "spring", damping: 18, stiffness: 260 }}
       className="relative w-full max-w-sm select-none"
     >
-      {/* Outer glow */}
       <motion.div
         animate={{ opacity: [0.5, 0.16, 0.5], scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -411,7 +380,6 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             : "0 28px 64px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05)",
         }}
       >
-        {/* Header */}
         <div
           className="relative flex flex-col items-center overflow-hidden pb-6 pt-10"
           style={{ background: headerBg }}
@@ -484,7 +452,6 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
 
         <div style={{ height: 1, background: divider }} />
 
-        {/* Body */}
         <div className="flex flex-col items-center px-6 pb-6 pt-5">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
@@ -542,8 +509,6 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
   );
 }
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
-
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts,   setToasts]   = useState<ToastItem[]>([]);
   const [confirms, setConfirms] = useState<ConfirmItem[]>([]);
@@ -594,7 +559,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {mounted && createPortal(
         <>
-          {/* Toast backdrop */}
           <AnimatePresence>
             {toasts.length > 0 && (
               <motion.div
@@ -607,7 +571,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             )}
           </AnimatePresence>
 
-          {/* Toast — centered */}
           <div
             aria-live="polite"
             className="pointer-events-none fixed inset-0 z-9999 flex items-center justify-center p-4"
@@ -621,7 +584,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             </AnimatePresence>
           </div>
 
-          {/* Confirm backdrop */}
           <AnimatePresence>
             {confirms.length > 0 && (
               <motion.div
@@ -634,7 +596,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             )}
           </AnimatePresence>
 
-          {/* Confirm — centered */}
           <div className="pointer-events-none fixed inset-0 z-9997 flex items-center justify-center p-4">
             <AnimatePresence mode="wait">
               {confirms.slice(-1).map((item) => (

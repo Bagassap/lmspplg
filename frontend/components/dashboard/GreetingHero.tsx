@@ -3,8 +3,6 @@
 import { motion } from "framer-motion";
 import { LiveClock } from "@/components/shared/LiveClock";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const MOTIVASI = [
   "Semangat mengajar hari ini!",
   "Hari yang baik untuk belajar hal baru.",
@@ -21,8 +19,6 @@ const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
   SISWA: { label: "Siswa",  cls: "bg-white/20 text-white" },
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function getGreeting(): { emoji: string; text: string } {
   const h = new Date().getHours();
   if (h < 5)  return { emoji: "🌙", text: "Selamat Malam" };
@@ -35,8 +31,6 @@ function getGreeting(): { emoji: string; text: string } {
 function getFirstName(nama: string) {
   return nama.trim().split(/\s+/)[0] ?? nama;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function GreetingHero({
   nama,
@@ -57,12 +51,10 @@ export default function GreetingHero({
       className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
       style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}
     >
-      {/* Dekorasi circles */}
       <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />
       <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />
       <div className="pointer-events-none absolute top-3 left-[45%] h-24 w-24 rounded-full bg-white/5" />
       <div className="pointer-events-none absolute -left-8 -bottom-8 h-36 w-36 rounded-full bg-white/5" />
-      {/* Subtle mesh overlay */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -73,7 +65,6 @@ export default function GreetingHero({
 
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1">
-          {/* Emoji + salam */}
           <div className="flex flex-wrap items-center gap-2">
             <motion.span
               initial={{ scale: 0, rotate: -20 }}
@@ -105,7 +96,6 @@ export default function GreetingHero({
             </motion.div>
           </div>
 
-          {/* Motivasi */}
           <motion.p
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -116,7 +106,6 @@ export default function GreetingHero({
           </motion.p>
         </div>
 
-        {/* LiveClock — di bawah greeting di mobile, pojok kanan di desktop */}
         <motion.div
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
