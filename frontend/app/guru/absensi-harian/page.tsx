@@ -257,7 +257,7 @@ export default function GuruAbsensiHarianPage() {
           })}
         </div>
         {activeFilter && (
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span>Menampilkan siswa dengan status</span>
             <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
               style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).darkBg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
@@ -322,6 +322,7 @@ export default function GuruAbsensiHarianPage() {
                     const hasDok = !!(ttdRaw || lokasiRaw || fotoRaw);
                     const lokasiParsed = parseLokasi(lokasiRaw);
                     const cur = draft[s.siswaId] ?? s.status;
+                    const openDokumen = () => { setDokumenSiswa(s); setDokumenSource(isPulangView ? "pulang" : "hadir"); };
                     return (
                       <motion.div key={s.siswaId}
                         initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
@@ -360,20 +361,33 @@ export default function GuruAbsensiHarianPage() {
                         <span className="text-center text-sm font-mono text-slate-500">{waktu ?? "—"}</span>
                         <div className="min-w-0">
                           {lokasiParsed ? (
-                            <span className="text-[11px] font-mono text-blue-500 truncate block">{lokasiParsed.lat.slice(0, 8)}…</span>
+                            <button onClick={openDokumen} title="Lihat lokasi absen"
+                              className="block max-w-full truncate text-left font-mono text-[11px] text-blue-500 hover:underline">
+                              {lokasiParsed.lat.slice(0, 8)}…
+                            </button>
                           ) : (
                             <span className="text-[11px] text-slate-300">—</span>
                           )}
                         </div>
                         <div className="flex justify-center">
-                          {fotoRaw ? <Camera size={13} className="text-emerald-500" /> : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
+                          {fotoRaw ? (
+                            <button onClick={openDokumen} title="Lihat foto selfie"
+                              className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
+                              <Camera size={13} className="text-emerald-500" />
+                            </button>
+                          ) : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
                         </div>
                         <div className="flex justify-center">
-                          {ttdRaw ? <PenTool size={13} className="text-violet-500" /> : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
+                          {ttdRaw ? (
+                            <button onClick={openDokumen} title="Lihat tanda tangan"
+                              className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/20">
+                              <PenTool size={13} className="text-violet-500" />
+                            </button>
+                          ) : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
                         </div>
                         <div className="flex justify-end">
                           {hasDok ? (
-                            <button onClick={() => { setDokumenSiswa(s); setDokumenSource(isPulangView ? "pulang" : "hadir"); }}
+                            <button onClick={openDokumen}
                               className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
                               style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
                               <Eye size={11} /> Lihat

@@ -56,8 +56,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
         <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
-          className="relative z-10 flex w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl shadow-2xl sm:flex-row sm:rounded-3xl"
-          style={{ maxHeight: "88vh" }}>
+          className="relative z-10 flex max-h-[90dvh] w-full max-w-3xl flex-col overflow-y-auto rounded-t-3xl shadow-2xl sm:flex-row sm:overflow-hidden sm:rounded-3xl">
 
           <div className="relative flex shrink-0 flex-col overflow-hidden sm:w-60"
             style={{ background: BRAND_GRADIENT }}>
@@ -103,10 +102,10 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col bg-slate-50 dark:bg-[#141b2d]">
-            <div className="shrink-0 border-b border-slate-100 dark:border-slate-700/40 px-5 py-4">
+            <div className="sticky top-0 z-10 shrink-0 border-b border-slate-100 bg-slate-50 px-5 py-4 dark:border-slate-700/40 dark:bg-[#141b2d]">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Dokumen Kehadiran</p>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="flex-1 sm:min-h-0 sm:overflow-y-auto">
               <div className="space-y-3 p-4">
                 {fotoSrc && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
@@ -181,7 +180,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                 )}
               </div>
             </div>
-            <div className="shrink-0 border-t border-slate-100 dark:border-slate-700/40 bg-white dark:bg-[#141b2d] px-4 py-3">
+            <div className="sticky bottom-0 z-10 shrink-0 border-t border-slate-100 bg-white px-4 py-3 dark:border-slate-700/40 dark:bg-[#141b2d]">
               <button onClick={onClose} className="w-full rounded-xl py-2.5 text-sm font-bold text-white"
                 style={{ background: BRAND_GRADIENT }}>
                 Tutup
