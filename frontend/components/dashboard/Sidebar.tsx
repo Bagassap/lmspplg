@@ -103,12 +103,9 @@ const ROLE_LABEL: Record<string, string> = {
   SISWA: "Pelajar",
 };
 
-// Accent per role — sama dengan gradient card "Pengumuman" di masing-masing dashboard
-const ROLE_ACCENT: Record<string, { from: string; to: string }> = {
-  ADMIN: { from: "#60a5fa", to: "#3b82f6" },
-  GURU:  { from: "#fb923c", to: "#ea580c" },
-  SISWA: { from: "#a78bfa", to: "#7c3aed" },
-};
+// Gradient sidebar — sama dengan panel biru di halaman login
+const SIDEBAR_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
+const SIDEBAR_ACCENT = "#0033FF";
 
 // Sapaan singkat yang berganti sesuai hari, biar sidebar tidak terlalu polos
 const GREETINGS = [
@@ -135,8 +132,7 @@ export function Sidebar({
   const pathname = usePathname();
   const items    = MENUS[user.role] ?? [];
   const initial  = user.nama.charAt(0).toUpperCase();
-  const accent   = ROLE_ACCENT[user.role] ?? ROLE_ACCENT.ADMIN;
-  const PRIMARY  = accent.to;
+  const PRIMARY  = SIDEBAR_ACCENT;
   const PRIMARY_ICON_BG = PRIMARY;
   const greeting = GREETINGS[new Date().getDay() % GREETINGS.length];
 
@@ -195,7 +191,7 @@ export function Sidebar({
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-                style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
+                style={{ background: SIDEBAR_GRADIENT }}
               >
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto" />
               </div>
@@ -232,7 +228,7 @@ export function Sidebar({
           <div className="flex justify-center py-3">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
-              style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
+              style={{ background: SIDEBAR_GRADIENT }}
               title={user.nama}
             >
               {initial}
@@ -245,7 +241,7 @@ export function Sidebar({
             <div
               className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
               style={{
-                background: `linear-gradient(135deg, ${accent.from}, ${accent.to})`,
+                background: SIDEBAR_GRADIENT,
                 "--tw-ring-color": `${PRIMARY}40`,
               } as React.CSSProperties}
             >
