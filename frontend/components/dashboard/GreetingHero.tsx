@@ -55,7 +55,7 @@ export default function GreetingHero({
   return (
     <div
       className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
-      style={{ background: "linear-gradient(135deg,#6334F4 0%,#8B5CF6 40%,#EC4899 80%,#F97316 100%)" }}
+      style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}
     >
       {/* Dekorasi circles */}
       <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />

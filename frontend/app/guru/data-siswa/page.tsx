@@ -395,7 +395,7 @@ export default function GuruDataSiswaPage() {
       {/* Hero */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
-        style={{ background: "linear-gradient(135deg,#6334F4 0%,#8B5CF6 40%,#EC4899 80%,#F97316 100%)" }}
+        style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}
       >
         <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -bottom-16 right-32 h-48 w-48 rounded-full bg-white/5" />

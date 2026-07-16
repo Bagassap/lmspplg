@@ -30,7 +30,7 @@ type SiswaProfil = {
 
 // ─── Palette (samakan dengan Ujian UKK / Jadwal & Soal) ──────────────────────
 
-const HERO_GRADIENT = "linear-gradient(135deg,#6334F4 0%,#8B5CF6 40%,#EC4899 80%,#F97316 100%)";
+const HERO_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 const ACCENT_VIOLET = "linear-gradient(135deg,#6366F1,#4F46E5)";
 const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#F97316)";
 
