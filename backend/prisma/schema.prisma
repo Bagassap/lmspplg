@@ -33,6 +33,15 @@ enum StatusIzin {
   DITOLAK
 }
 
+enum NotificationType {
+  PENGUMUMAN
+  ABSENSI
+  TUGAS
+  MAGANG
+  UKK
+  SISTEM
+}
+
 // ─── User & Profil ────────────────────────────────────────────────────────────
 
 model User {
@@ -51,6 +60,7 @@ model User {
   pengumuman         Pengumuman[]
   komentarPengumuman KomentarPengumuman[]
   diskusiUkk         DiskusiUKK[]
+  notifications      Notification[]
 
   @@index([loginId])
   @@map("users")
@@ -179,6 +189,23 @@ model KomentarPengumuman {
   createdAt    DateTime   @default(now())
 
   @@map("komentar_pengumuman")
+}
+
+// ─── Notifikasi ───────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String           @db.Text
+  type      NotificationType @default(SISTEM)
+  isRead    Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
 }
 
 // ─── Magang ───────────────────────────────────────────────────────────────────

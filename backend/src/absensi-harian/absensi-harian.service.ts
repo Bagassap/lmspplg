@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationType } from '../../generated/prisma/client';
 
 function todayStr() {
   return new Date().toISOString().split('T')[0];
@@ -11,6 +13,7 @@ export class AbsensiHarianService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly kelasService: KelasService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async getRekapKelas(kelasId: string, tanggal: string) {
@@ -144,6 +147,23 @@ export class AbsensiHarianService {
         create: { siswaId: item.siswaId, kelasId, tanggal, status: item.status },
       }),
     );
-    return this.prisma.$transaction(ops);
+    const result = await this.prisma.$transaction(ops);
+
+    const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId }, select: { nama: true } });
+    const siswaUsers = await this.prisma.siswa.findMany({
+      where: { id: { in: absensi.map((a) => a.siswaId) }, userId: { not: null } },
+      select: { userId: true },
+    });
+    await this.notificationService.createMany(
+      siswaUsers.map((s) => s.userId!),
+      {
+        title:   'Absensi diperbarui',
+        message: `Absensi harian kelas ${kelas?.nama ?? ''} tanggal ${tanggal} telah diisi`,
+        type:    NotificationType.ABSENSI,
+        link:    '/absensi-harian',
+      },
+    );
+
+    return result;
   }
 }

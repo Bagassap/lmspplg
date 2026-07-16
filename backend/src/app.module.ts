@@ -10,6 +10,7 @@ import { PengumumanModule } from './pengumuman/pengumuman.module';
 import { SiswaModule } from './siswa/siswa.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { UjianUkkModule } from './ujian-ukk/ujian-ukk.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UjianUkkModule } from './ujian-ukk/ujian-ukk.module';
     SiswaModule,
     DashboardModule,
     UjianUkkModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

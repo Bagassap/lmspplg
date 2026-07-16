@@ -7,6 +7,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePengumumanDto } from './dto/create-pengumuman.dto';
 import { UpdatePengumumanDto } from './dto/update-pengumuman.dto';
 import { CreateKomentarDto } from './dto/create-komentar.dto';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationType } from '../../generated/prisma/client';
 
 // ─── Slug helper ──────────────────────────────────────────────────────────────
 
@@ -50,7 +52,10 @@ const INCLUDE_DETAIL = {
 
 @Injectable()
 export class PengumumanService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   findAll(kategori?: string, search?: string, pinned?: string) {
     return this.prisma.pengumuman.findMany({
@@ -82,7 +87,7 @@ export class PengumumanService {
 
   async create(dto: CreatePengumumanDto, authorId: string) {
     const slug = await this.ensureUniqueSlug(dto.judul);
-    return this.prisma.pengumuman.create({
+    const p = await this.prisma.pengumuman.create({
       data: {
         slug,
         judul:    dto.judul,
@@ -94,6 +99,22 @@ export class PengumumanService {
       },
       include: INCLUDE_LIST,
     });
+
+    const recipients = await this.prisma.user.findMany({
+      where: { id: { not: authorId } },
+      select: { id: true },
+    });
+    await this.notificationService.createMany(
+      recipients.map((r) => r.id),
+      {
+        title:   'Pengumuman baru',
+        message: p.judul,
+        type:    NotificationType.PENGUMUMAN,
+        link:    '/pengumuman',
+      },
+    );
+
+    return p;
   }
 
   async update(id: string, dto: UpdatePengumumanDto) {
@@ -120,7 +141,7 @@ export class PengumumanService {
     });
     if (!p) throw new NotFoundException('Pengumuman tidak ditemukan');
 
-    return this.prisma.komentarPengumuman.create({
+    const komentar = await this.prisma.komentarPengumuman.create({
       data: {
         konten:      dto.konten,
         parentId:    dto.parentId ?? null,
@@ -132,6 +153,18 @@ export class PengumumanService {
         replies: { include: { author: AUTHOR_SELECT } },
       },
     });
+
+    if (p.authorId !== authorId) {
+      await this.notificationService.create({
+        userId:  p.authorId,
+        title:   'Komentar baru',
+        message: `${komentar.author.nama} mengomentari pengumuman "${p.judul}"`,
+        type:    NotificationType.PENGUMUMAN,
+        link:    '/pengumuman',
+      });
+    }
+
+    return komentar;
   }
 
   async deleteKomentar(komentarId: string, userId: string, userRole: string) {

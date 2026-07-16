@@ -10,6 +10,7 @@ import {
   CheckCheck, Clock,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
+import { timeAgo } from "@/components/dashboard/ActivityList";
 
 // ─── Page titles ──────────────────────────────────────────────────────────────
 
@@ -83,7 +84,25 @@ const SEARCH_ITEMS: SearchItem[] = [
 // ─── Notifications ────────────────────────────────────────────────────────────
 
 type NotifType = "info" | "success" | "warning" | "error";
-type Notification = { id: string; type: NotifType; title: string; body: string; time: string; read: boolean };
+type ApiNotifType = "PENGUMUMAN" | "ABSENSI" | "TUGAS" | "MAGANG" | "UKK" | "SISTEM";
+type ApiNotification = {
+  id: string;
+  title: string;
+  message: string;
+  type: ApiNotifType;
+  isRead: boolean;
+  link: string | null;
+  createdAt: string;
+};
+
+const NOTIF_TYPE_STYLE: Record<ApiNotifType, NotifType> = {
+  PENGUMUMAN: "info",
+  ABSENSI:    "success",
+  TUGAS:      "warning",
+  MAGANG:     "info",
+  UKK:        "warning",
+  SISTEM:     "error",
+};
 
 const NOTIF_STYLE: Record<NotifType, { bg: string; color: string }> = {
   info:    { bg: "#EFF6FF", color: "#3B82F6" },
@@ -179,12 +198,57 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
   // ── Notifications ──────────────────────────────────────────────────────────
   const [notifOpen,      setNotifOpen]      = useState(false);
-  const [notifications,  setNotifications]  = useState<Notification[]>([]);
+  const [notifications,  setNotifications]  = useState<ApiNotification[]>([]);
+  const [notifLoading,   setNotifLoading]   = useState(false);
+  const [unreadCount,    setUnreadCount]    = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
-  function markAllRead() { setNotifications((p) => p.map((n) => ({ ...n, read: true }))); }
-  function markRead(id: string) { setNotifications((p) => p.map((n) => n.id === id ? { ...n, read: true } : n)); }
+  async function fetchUnreadCount() {
+    try {
+      const res = await fetch("/api/notifications/unread-count", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      setUnreadCount(data.count ?? 0);
+    } catch { /* silent — polling, retry next tick */ }
+  }
+
+  async function fetchNotifications() {
+    setNotifLoading(true);
+    try {
+      const res = await fetch("/api/notifications?limit=10", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      setNotifications(data.items ?? []);
+    } finally { setNotifLoading(false); }
+  }
+
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (notifOpen) fetchNotifications();
+  }, [notifOpen]);
+
+  async function markAllRead() {
+    setNotifications((p) => p.map((n) => ({ ...n, isRead: true })));
+    setUnreadCount(0);
+    await fetch("/api/notifications/read-all", { method: "PATCH" });
+  }
+
+  async function handleNotifClick(n: ApiNotification) {
+    if (!n.isRead) {
+      setNotifications((p) => p.map((x) => x.id === n.id ? { ...x, isRead: true } : x));
+      setUnreadCount((c) => Math.max(0, c - 1));
+      fetch(`/api/notifications/${n.id}/read`, { method: "PATCH" }).catch(() => {});
+    }
+    if (n.link) {
+      setNotifOpen(false);
+      router.push(`/${user.role.toLowerCase()}${n.link}`);
+    }
+  }
 
   useEffect(() => {
     function handler(e: MouseEvent) {
@@ -330,20 +394,24 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
                   {/* List */}
                   <div className="max-h-80 overflow-y-auto">
-                    {notifications.length === 0 ? (
+                    {notifLoading ? (
+                      <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
+                        <p className="text-[12px] text-gray-400 dark:text-slate-500">Memuat...</p>
+                      </div>
+                    ) : notifications.length === 0 ? (
                       <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
                         <Bell size={22} className="text-gray-300 dark:text-slate-600" />
                         <p className="text-[12px] text-gray-400 dark:text-slate-500">Belum ada notifikasi</p>
                       </div>
                     ) : notifications.map((n) => {
-                      const style = NOTIF_STYLE[n.type];
-                      const NIcon = NOTIF_ICON[n.type];
+                      const style = NOTIF_STYLE[NOTIF_TYPE_STYLE[n.type]];
+                      const NIcon = NOTIF_ICON[NOTIF_TYPE_STYLE[n.type]];
                       return (
                         <button
                           key={n.id}
-                          onClick={() => markRead(n.id)}
+                          onClick={() => handleNotifClick(n)}
                           className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50 ${
-                            !n.read ? "bg-blue-50/40 dark:bg-blue-900/10" : ""
+                            !n.isRead ? "bg-blue-50/40 dark:bg-blue-900/10" : ""
                           }`}
                         >
                           <div
@@ -354,17 +422,17 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <p className={`text-[12px] font-semibold ${n.read ? "text-gray-600 dark:text-slate-500" : "text-gray-900 dark:text-white"}`}>
+                              <p className={`text-[12px] font-semibold ${n.isRead ? "text-gray-600 dark:text-slate-500" : "text-gray-900 dark:text-white"}`}>
                                 {n.title}
                               </p>
-                              {!n.read && (
+                              {!n.isRead && (
                                 <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: style.color }} />
                               )}
                             </div>
-                            <p className="mt-0.5 text-[11px] leading-snug text-gray-500 dark:text-slate-400">{n.body}</p>
+                            <p className="mt-0.5 text-[11px] leading-snug text-gray-500 dark:text-slate-400">{n.message}</p>
                             <div className="mt-1 flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-600">
                               <Clock size={9} />
-                              {n.time}
+                              {timeAgo(n.createdAt)}
                             </div>
                           </div>
                         </button>
