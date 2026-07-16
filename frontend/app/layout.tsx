@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
-import { Google_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
 
-const googleSans = Google_Sans({
-  subsets: ["latin"],
-  weight: "variable",
-  variable: "--font-google-sans",
+const satoshi = localFont({
+  src: [
+    {
+      path: "./fonts/Satoshi-Variable.woff2",
+      weight: "300 900",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Satoshi-VariableItalic.woff2",
+      weight: "300 900",
+      style: "italic",
+    },
+  ],
+  variable: "--font-satoshi",
   display: "swap",
 });
 
@@ -22,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${googleSans.variable} h-full antialiased`}>
+    <html lang="id" className={`${satoshi.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
           {children}
