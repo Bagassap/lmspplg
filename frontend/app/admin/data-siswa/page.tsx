@@ -158,7 +158,7 @@ function EditModal({ siswa, kelasList, onClose, onSave }: {
           </div>
           <div className="max-h-[52vh] overflow-y-auto">
             <div className="space-y-4 px-5 py-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field label="Nama Lengkap" required icon={User}>
                   <input type="text" value={form.nama} onChange={(e) => set("nama", e.target.value)}
                     placeholder="Nama siswa" className={INPUT} />
@@ -198,7 +198,7 @@ function EditModal({ siswa, kelasList, onClose, onSave }: {
                 <input type="tel" value={form.noHp} onChange={(e) => set("noHp", e.target.value)}
                   placeholder="08xxxxxxxxxx" className={INPUT} />
               </Field>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field label="Tempat Lahir" optional icon={MapPin}>
                   <input type="text" value={form.tempatLahir} onChange={(e) => set("tempatLahir", e.target.value)}
                     placeholder="Kota" className={INPUT} />
@@ -462,14 +462,16 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, 
             style={{ backgroundColor: ac.light, color: ac.text }}>{siswas.length} siswa</span>
         </div>
       </div>
-      <div className="px-3 pb-3">
-        <TableHead isFlat={false} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
-        <div className="flex flex-col gap-2">
-          {pageItems.map((s, i) => (
-            <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail}
-              index={i} rowNumber={page * PAGE_SIZE + i + 1}
-              checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
-          ))}
+      <div className="overflow-x-auto px-3 pb-3">
+        <div className="min-w-[860px]">
+          <TableHead isFlat={false} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
+          <div className="flex flex-col gap-2">
+            {pageItems.map((s, i) => (
+              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail}
+                index={i} rowNumber={page * PAGE_SIZE + i + 1}
+                checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
+            ))}
+          </div>
         </div>
       </div>
       {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
@@ -499,14 +501,16 @@ function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAl
           </button>
         </div>
       )}
-      <div className="px-3 pb-3">
-        <TableHead isFlat={true} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
-        <div className="flex flex-col gap-2">
-          {pageItems.map((s, i) => (
-            <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail}
-              index={i} rowNumber={page * PAGE_SIZE + i + 1}
-              checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
-          ))}
+      <div className="overflow-x-auto px-3 pb-3">
+        <div className="min-w-[940px]">
+          <TableHead isFlat={true} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
+          <div className="flex flex-col gap-2">
+            {pageItems.map((s, i) => (
+              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail}
+                index={i} rowNumber={page * PAGE_SIZE + i + 1}
+                checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
+            ))}
+          </div>
         </div>
       </div>
       {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
@@ -618,8 +622,8 @@ export default function AdminDataSiswaPage() {
       </div>
 
       {/* Search + Filters */}
-      <div className="flex flex-wrap items-center gap-2.5">
-        <div className="relative min-w-48 flex-1">
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="relative w-full sm:min-w-48 sm:flex-1">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama atau NIS\u2026"
             className="h-11 w-full rounded-full border border-slate-200 bg-slate-50 pl-10 pr-10 text-sm text-slate-700 placeholder:text-slate-400 shadow-sm transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/15 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500" />
@@ -633,17 +637,17 @@ export default function AdminDataSiswaPage() {
           </AnimatePresence>
         </div>
         <select value={filterJurusan} onChange={(e) => setFilterJurusan(e.target.value)}
-          className="h-11 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          className="h-11 w-full rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto">
           <option value="">Semua Jurusan</option>
           {JURUSAN_OPTIONS.map((j) => <option key={j}>{j}</option>)}
         </select>
         <select value={filterKelas} onChange={(e) => setFilterKelas(e.target.value)}
-          className="h-11 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          className="h-11 w-full rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto">
           <option value="">Semua Kelas</option>
           {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
         </select>
         <select value={filterGender} onChange={(e) => setFilterGender(e.target.value)}
-          className="h-11 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          className="h-11 w-full rounded-full border border-slate-200 bg-slate-50 px-4 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto">
           <option value="">Semua Gender</option>
           <option value="Laki-laki">Laki-laki</option>
           <option value="Perempuan">Perempuan</option>
@@ -652,7 +656,7 @@ export default function AdminDataSiswaPage() {
           {isFiltered && (
             <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
               onClick={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
-              className="flex h-11 items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-4 text-sm font-medium text-red-500 hover:bg-red-100">
+              className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-4 text-sm font-medium text-red-500 hover:bg-red-100 sm:w-auto">
               <X size={13} /> Reset
             </motion.button>
           )}

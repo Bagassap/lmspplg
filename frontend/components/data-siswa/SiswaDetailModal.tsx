@@ -155,12 +155,12 @@ export default function SiswaDetailModal({
           <div className="max-h-[60vh] overflow-y-auto">
             <div className="px-5 py-4">
               {/* Grid 2-kolom info items */}
-              <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+              <div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                 <InfoItem
                   icon={CalendarDays}
                   label="Tempat & Tanggal Lahir"
                   value={tempatTanggal || "—"}
-                  className="col-span-2"
+                  className="sm:col-span-2"
                 />
                 <InfoItem
                   icon={User}

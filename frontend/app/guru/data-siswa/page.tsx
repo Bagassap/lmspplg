@@ -299,12 +299,14 @@ function KelasSection({
           {siswas.length} siswa
         </span>
       </div>
-      <div className="px-3 pb-3">
-        <TableHead isFlat={false} />
-        <div className="flex flex-col gap-2">
-          {pageItems.map((s, i) => (
-            <SiswaRow key={s.id} siswa={s} isFlat={false} onDetail={onDetail} index={i} />
-          ))}
+      <div className="overflow-x-auto px-3 pb-3">
+        <div className="min-w-[760px]">
+          <TableHead isFlat={false} />
+          <div className="flex flex-col gap-2">
+            {pageItems.map((s, i) => (
+              <SiswaRow key={s.id} siswa={s} isFlat={false} onDetail={onDetail} index={i} />
+            ))}
+          </div>
         </div>
       </div>
       {pageCount > 1 && (
@@ -322,12 +324,14 @@ function FlatTable({ siswas, onDetail }: { siswas: Siswa[]; onDetail: (s: Siswa)
   const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   return (
     <div className="rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
-      <div className="px-3 pb-3">
-        <TableHead isFlat={true} />
-        <div className="flex flex-col gap-2">
-          {pageItems.map((s, i) => (
-            <SiswaRow key={s.id} siswa={s} isFlat={true} onDetail={onDetail} index={i} />
-          ))}
+      <div className="overflow-x-auto px-3 pb-3">
+        <div className="min-w-[840px]">
+          <TableHead isFlat={true} />
+          <div className="flex flex-col gap-2">
+            {pageItems.map((s, i) => (
+              <SiswaRow key={s.id} siswa={s} isFlat={true} onDetail={onDetail} index={i} />
+            ))}
+          </div>
         </div>
       </div>
       {pageCount > 1 && (
@@ -436,8 +440,8 @@ export default function GuruDataSiswaPage() {
       </div>
 
       {/* Search + Filters */}
-      <div className="flex flex-wrap items-center gap-2.5">
-        <div className="relative min-w-48 flex-1">
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="relative w-full sm:min-w-48 sm:flex-1">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             value={search}
@@ -458,11 +462,11 @@ export default function GuruDataSiswaPage() {
           </AnimatePresence>
         </div>
 
-        <div className="relative">
+        <div className="relative w-full sm:w-auto">
           <select
             value={filterJurusan}
             onChange={(e) => setFilterJurusan(e.target.value)}
-            className="h-11 appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            className="h-11 w-full appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto"
           >
             <option value="">Semua Jurusan</option>
             {JURUSAN_OPTIONS.map((j) => <option key={j}>{j}</option>)}
@@ -470,11 +474,11 @@ export default function GuruDataSiswaPage() {
           <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </div>
 
-        <div className="relative">
+        <div className="relative w-full sm:w-auto">
           <select
             value={filterKelas}
             onChange={(e) => setFilterKelas(e.target.value)}
-            className="h-11 appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            className="h-11 w-full appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto"
           >
             <option value="">Semua Kelas</option>
             {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
@@ -482,11 +486,11 @@ export default function GuruDataSiswaPage() {
           <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </div>
 
-        <div className="relative">
+        <div className="relative w-full sm:w-auto">
           <select
             value={filterGender}
             onChange={(e) => setFilterGender(e.target.value)}
-            className="h-11 appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            className="h-11 w-full appearance-none rounded-full border border-slate-200 bg-slate-50 pl-4 pr-8 text-sm text-slate-600 shadow-sm focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto"
           >
             <option value="">Semua Gender</option>
             <option value="Laki-laki">Laki-laki</option>
@@ -500,7 +504,7 @@ export default function GuruDataSiswaPage() {
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
               onClick={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
-              className="flex h-11 items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-4 text-sm font-medium text-red-500 hover:bg-red-100"
+              className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-4 text-sm font-medium text-red-500 hover:bg-red-100 sm:w-auto"
             >
               <X size={13} /> Reset
             </motion.button>
