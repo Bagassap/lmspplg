@@ -51,29 +51,24 @@ export function formatTglShort(iso: string | null): string {
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
-// Ungu, biru, hijau, merah muda, oranye, teal — dipilih berdasarkan hash nama/id agar konsisten per siswa.
-export const AVATAR_PALETTE: { from: string; to: string; light: string; text: string }[] = [
-  { from: "#8B5CF6", to: "#6D28D9", light: "#F5F0FF", text: "#6D28D9" }, // ungu
-  { from: "#4F8EF7", to: "#3B7CE8", light: "#EEF4FF", text: "#2563EB" }, // biru
-  { from: "#10B981", to: "#0D9488", light: "#F0FDFA", text: "#0F766E" }, // hijau
-  { from: "#EC4899", to: "#DB2777", light: "#FDF2F8", text: "#9D174D" }, // merah muda
-  { from: "#F59E0B", to: "#EA580C", light: "#FFF7ED", text: "#C2410C" }, // oranye
-  { from: "#14B8A6", to: "#0F766E", light: "#F0FDFA", text: "#0F766E" }, // teal
-];
+// Palet vivid/solid — dipilih berdasarkan hash nama/id (sum charCode % 8) agar konsisten per siswa.
+export const AVATAR_PALETTE = [
+  "#6366f1", // indigo
+  "#ec4899", // pink
+  "#f97316", // orange
+  "#10b981", // emerald
+  "#3b82f6", // blue
+  "#8b5cf6", // violet
+  "#ef4444", // red
+  "#14b8a6", // teal
+] as const;
 
-export function avatarPaletteFor(seed: string) {
-  let h = 0;
-  for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fffffff;
-  return AVATAR_PALETTE[h % AVATAR_PALETTE.length];
+export function avatarColorFor(seed: string): string {
+  let sum = 0;
+  for (const c of seed) sum += c.charCodeAt(0);
+  return AVATAR_PALETTE[sum % AVATAR_PALETTE.length];
 }
 
-export const KELAS_BADGE = { light: "#EEF4FF", text: "#2563EB" };
-export const JURUSAN_BADGE = { light: "#F0FDFA", text: "#0F766E" };
-export const GENDER_BADGE = {
-  Perempuan: { light: "#FDF2F8", text: "#DB2777" },
-  "Laki-laki": { light: "#EFF6FF", text: "#2563EB" },
-};
-export const STATUS_BADGE = {
-  aktif: { light: "#F0FDF4", text: "#16A34A" },
-  belumAktif: { light: "#FEF2F2", text: "#DC2626" },
-};
+export function hasGenderData(list: { jenisKelamin: string | null }[]): boolean {
+  return list.some((s) => !!s.jenisKelamin);
+}

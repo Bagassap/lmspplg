@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
-import { SiswaCard } from "./SiswaCard";
-import { type SiswaCardData, kelasShort } from "./shared";
+import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
+import { KelasGroupHeader } from "./KelasGroupHeader";
+import { type SiswaCardData } from "./shared";
 
-const PAGE_SIZE = 12;
-const GRID_CLASS = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+const PAGE_SIZE = 15;
+const TABLE_MIN_WIDTH = "min-w-[820px]";
 
 type ActionProps = {
   onDetail: (s: SiswaCardData) => void;
-  onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
   showStatus?: boolean;
@@ -33,7 +32,7 @@ function PaginationBar({ page, pageCount, total, onPage }: {
     pages.push(pageCount - 1);
   }
   return (
-    <div className="flex flex-col items-center justify-between gap-2 border-t border-slate-100 px-1 pt-3.5 dark:border-slate-700/40 sm:flex-row">
+    <div className="flex flex-col items-center justify-between gap-2 border-t border-slate-100 px-4 py-3 dark:border-slate-700/40 sm:flex-row">
       <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {total}</span>
       <div className="flex items-center gap-0.5">
         <button onClick={() => onPage(page - 1)} disabled={page === 0}
@@ -63,82 +62,74 @@ function PaginationBar({ page, pageCount, total, onPage }: {
   );
 }
 
+function RowList({ siswas, ...actions }: ActionProps & { siswas: SiswaCardData[] }) {
+  const [page, setPage] = useState(0);
+  const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
+  const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
+      <div className="overflow-x-auto">
+        <div className={TABLE_MIN_WIDTH}>
+          <SiswaTableHead />
+          {pageItems.map((s) => (
+            <SiswaTableRow key={s.id} siswa={s} {...actions} />
+          ))}
+        </div>
+      </div>
+      {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
+    </div>
+  );
+}
+
 function KelasSection({
-  kelas, siswas, ac, ...actions
-}: ActionProps & { kelas: string; siswas: SiswaCardData[]; ac: { main: string; light: string; text: string } }) {
+  kelas, siswas, ...actions
+}: ActionProps & { kelas: string; siswas: SiswaCardData[] }) {
+  const [collapsed, setCollapsed] = useState(false);
   const [page, setPage] = useState(0);
   const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
   const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const waliKelas = siswas[0]?.kelas.waliKelasGuru?.user.nama;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434] sm:p-5">
-      <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl px-1">
-        <div className="flex items-center gap-2.5">
-          <div className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ac.main }} />
-          <div>
-            <p className="text-sm font-bold text-slate-800 dark:text-white">{kelasShort(kelas)}</p>
-            {waliKelas && <p className="text-[11px] text-slate-400 dark:text-slate-500">Wali: {waliKelas}</p>}
+    <div className="space-y-2">
+      <KelasGroupHeader
+        kelas={kelas}
+        waliKelas={waliKelas}
+        count={siswas.length}
+        collapsed={collapsed}
+        onToggle={() => setCollapsed((v) => !v)}
+      />
+      {!collapsed && (
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
+          <div className="overflow-x-auto">
+            <div className={TABLE_MIN_WIDTH}>
+              <SiswaTableHead />
+              {pageItems.map((s) => (
+                <SiswaTableRow key={s.id} siswa={s} {...actions} />
+              ))}
+            </div>
           </div>
-        </div>
-        <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ backgroundColor: ac.light, color: ac.text }}>
-          {siswas.length} siswa
-        </span>
-      </div>
-
-      <div className={GRID_CLASS}>
-        {pageItems.map((s, i) => (
-          <SiswaCard key={s.id} siswa={s} index={i} {...actions} />
-        ))}
-      </div>
-
-      {pageCount > 1 && (
-        <div className="mt-4">
-          <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-function FlatGrid({ siswas, ...actions }: ActionProps & { siswas: SiswaCardData[] }) {
-  const [page, setPage] = useState(0);
-  const pageCount = Math.ceil(siswas.length / PAGE_SIZE);
-  const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-
-  return (
-    <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434] sm:p-5">
-      <div className={GRID_CLASS}>
-        {pageItems.map((s, i) => (
-          <SiswaCard key={s.id} siswa={s} index={i} {...actions} />
-        ))}
-      </div>
-      {pageCount > 1 && (
-        <div className="mt-4">
-          <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />
+          {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
         </div>
       )}
     </div>
   );
 }
 
-export function SiswaCardGrid({
-  loading, siswas, grouped, kelasNamaOrder, kelasColor, defaultAc, ...actions
+export function SiswaTable({
+  loading, siswas, grouped, kelasNamaOrder, ...actions
 }: ActionProps & {
   loading: boolean;
   siswas: SiswaCardData[];
   grouped: boolean;
   kelasNamaOrder: string[];
-  kelasColor: Record<string, { main: string; light: string; text: string }>;
-  defaultAc: { main: string; light: string; text: string };
 }) {
   if (loading) {
     return (
-      <div className={GRID_CLASS}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+      <div className="space-y-2.5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-14 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
         ))}
       </div>
     );
@@ -157,7 +148,7 @@ export function SiswaCardGrid({
   }
 
   if (!grouped) {
-    return <FlatGrid siswas={siswas} {...actions} />;
+    return <RowList siswas={siswas} {...actions} />;
   }
 
   const groupedByKelas = kelasNamaOrder.reduce<Record<string, SiswaCardData[]>>((acc, k) => {
@@ -168,7 +159,7 @@ export function SiswaCardGrid({
   return (
     <div className="space-y-4">
       {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-        <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} ac={kelasColor[k] ?? defaultAc} {...actions} />
+        <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} {...actions} />
       ))}
     </div>
   );

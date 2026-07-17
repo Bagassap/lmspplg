@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Users, User, GraduationCap } from "lucide-react";
+import { Users, User, School } from "lucide-react";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
-import { SiswaCardGrid } from "@/components/data-siswa/SiswaCardGrid";
+import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
-import { type SiswaCardData, type KelasRef, getNama, toTitleCase } from "@/components/data-siswa/shared";
+import { type SiswaCardData, type KelasRef, getNama, toTitleCase, hasGenderData } from "@/components/data-siswa/shared";
 
 type KelasAc = { main: string; light: string; text: string; dark: string };
 
@@ -89,6 +89,7 @@ export default function AdminDataSiswaPage() {
   const kelasNamaOrder = kelasList.map((k) => k.nama).sort();
   const totalL = siswaList.filter((s) => s.jenisKelamin === "Laki-laki").length;
   const totalP = siswaList.filter((s) => s.jenisKelamin === "Perempuan").length;
+  const genderKnown = hasGenderData(siswaList);
   const kelasSet = new Set(siswaList.map((s) => s.kelas.nama));
 
   return (
@@ -100,9 +101,9 @@ export default function AdminDataSiswaPage() {
         subtitle="Kelola data seluruh peserta didik"
         stats={[
           { icon: Users, label: `${loading ? "—" : siswaList.length} Total` },
-          { icon: User, label: `${loading ? "—" : totalL} Laki-laki` },
-          { icon: User, label: `${loading ? "—" : totalP} Perempuan` },
-          { icon: GraduationCap, label: `${loading ? "—" : kelasSet.size} Kelas` },
+          { icon: User, label: `${loading ? "—" : genderKnown ? totalL : "–"} Laki-laki` },
+          { icon: User, label: `${loading ? "—" : genderKnown ? totalP : "–"} Perempuan` },
+          { icon: School, label: `${loading ? "—" : kelasSet.size} Kelas` },
         ]}
       />
 
@@ -120,15 +121,12 @@ export default function AdminDataSiswaPage() {
         kelasCount={kelasSet.size}
       />
 
-      <SiswaCardGrid
+      <SiswaTable
         loading={loading}
         siswas={displayed}
         grouped={!isFiltered}
         kelasNamaOrder={kelasNamaOrder}
-        kelasColor={KELAS_COLOR}
-        defaultAc={DEFAULT_AC}
         onDetail={setDetailSiswa}
-        onEdit={setEditTarget}
         onResetPassword={isSuperAdmin ? setResetTarget : undefined}
         onImpersonate={isSuperAdmin ? handleImpersonate : undefined}
         showStatus
