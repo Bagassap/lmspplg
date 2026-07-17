@@ -7,13 +7,11 @@ import { KelasGroupHeader } from "./KelasGroupHeader";
 import { type SiswaCardData } from "./shared";
 
 const PAGE_SIZE = 15;
-const TABLE_MIN_WIDTH = "min-w-[820px]";
 
 type ActionProps = {
-  onDetail: (s: SiswaCardData) => void;
+  onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
-  showStatus?: boolean;
 };
 
 function PaginationBar({ page, pageCount, total, onPage }: {
@@ -68,9 +66,9 @@ function RowList({ siswas, ...actions }: ActionProps & { siswas: SiswaCardData[]
   const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
       <div className="overflow-x-auto">
-        <div className={TABLE_MIN_WIDTH}>
+        <div className="min-w-140">
           <SiswaTableHead />
           {pageItems.map((s) => (
             <SiswaTableRow key={s.id} siswa={s} {...actions} />
@@ -103,7 +101,7 @@ function KelasSection({
       {!collapsed && (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
           <div className="overflow-x-auto">
-            <div className={TABLE_MIN_WIDTH}>
+            <div className="min-w-140">
               <SiswaTableHead />
               {pageItems.map((s) => (
                 <SiswaTableRow key={s.id} siswa={s} {...actions} />
