@@ -7,27 +7,19 @@ import {
 } from "./shared";
 import { SiswaDetailPanel } from "./SiswaDetailPanel";
 
-const COL = {
-  nama: "min-w-[200px] flex-1",
-  nis: "w-[110px] shrink-0",
-  ttl: "w-[160px] shrink-0",
-  noHp: "w-[120px] shrink-0",
-  jurusan: "w-[100px] shrink-0",
-  aksi: "w-[80px] shrink-0",
-};
-
-const TEXT = "text-sm font-semibold text-slate-800 dark:text-white";
+const GRID = "grid grid-cols-6 w-full items-center px-4 py-3";
+const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
-  const LABEL = "text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500";
+  const LABEL = "text-xs font-semibold uppercase text-slate-400 dark:text-slate-500";
   return (
-    <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
-      <span className={`${COL.nama} ${LABEL}`}>Nama Siswa</span>
-      <span className={`${COL.nis} ${LABEL}`}>NIS</span>
-      <span className={`${COL.ttl} ${LABEL}`}>Tempat & Tgl Lahir</span>
-      <span className={`${COL.noHp} ${LABEL}`}>No. HP</span>
-      <span className={`${COL.jurusan} ${LABEL}`}>Jurusan</span>
-      <span className={`${COL.aksi} ${LABEL}`}>Aksi</span>
+    <div className={`${GRID} border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60`}>
+      <span className={LABEL}>Nama Siswa</span>
+      <span className={LABEL}>NIS</span>
+      <span className={LABEL}>Tempat & Tgl Lahir</span>
+      <span className={LABEL}>No. HP</span>
+      <span className={LABEL}>Jurusan</span>
+      <span className={LABEL}>Aksi</span>
     </div>
   );
 }
@@ -50,9 +42,9 @@ export function SiswaTableRow({
       <div
         onClick={() => setExpanded((v) => !v)}
         style={{ borderLeftColor: accent }}
-        className="flex cursor-pointer items-center gap-3 border-l-4 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
+        className={`${GRID} cursor-pointer border-l-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40`}
       >
-        <div className={`flex min-w-0 items-center gap-2.5 ${COL.nama}`}>
+        <div className="flex min-w-0 items-center gap-2.5">
           <div
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
             style={{ backgroundColor: accent }}
@@ -64,19 +56,19 @@ export function SiswaTableRow({
           </span>
         </div>
 
-        <span className={`truncate ${TEXT} ${COL.nis}`} title={`Password Default: ${siswa.nis}`}>
+        <span className={`truncate ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
           {siswa.nis}
         </span>
 
-        <span className={`truncate ${TEXT} ${COL.ttl}`} title={tempatTanggal}>
+        <span className={`truncate ${TEXT}`} title={tempatTanggal}>
           {tempatTanggal}
         </span>
 
-        <span className={`truncate ${TEXT} ${COL.noHp}`}>
+        <span className={`truncate ${TEXT}`}>
           {siswa.noHp || "—"}
         </span>
 
-        <span className={COL.jurusan}>
+        <span className="min-w-0">
           {siswa.jurusan && (
             <span className="block w-fit max-w-full truncate rounded-md bg-[#0d9488] px-2 py-0.5 text-[11px] font-semibold text-white">
               {siswa.jurusan}
@@ -84,7 +76,7 @@ export function SiswaTableRow({
           )}
         </span>
 
-        <div className={`flex items-center gap-1 ${COL.aksi}`}>
+        <div className="flex items-center gap-1">
           {onImpersonate && siswa.user && (
             <button
               onClick={(e) => { e.stopPropagation(); onImpersonate(siswa); }}

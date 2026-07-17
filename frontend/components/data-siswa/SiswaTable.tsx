@@ -67,14 +67,10 @@ function RowList({ siswas, ...actions }: ActionProps & { siswas: SiswaCardData[]
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
-      <div className="overflow-x-auto">
-        <div className="min-w-220">
-          <SiswaTableHead />
-          {pageItems.map((s) => (
-            <SiswaTableRow key={s.id} siswa={s} {...actions} />
-          ))}
-        </div>
-      </div>
+      <SiswaTableHead />
+      {pageItems.map((s) => (
+        <SiswaTableRow key={s.id} siswa={s} {...actions} />
+      ))}
       {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
     </div>
   );
@@ -100,14 +96,10 @@ function KelasSection({
       />
       {!collapsed && (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-[#1c2434]">
-          <div className="overflow-x-auto">
-            <div className="min-w-220">
-              <SiswaTableHead />
-              {pageItems.map((s) => (
-                <SiswaTableRow key={s.id} siswa={s} {...actions} />
-              ))}
-            </div>
-          </div>
+          <SiswaTableHead />
+          {pageItems.map((s) => (
+            <SiswaTableRow key={s.id} siswa={s} {...actions} />
+          ))}
           {pageCount > 1 && <PaginationBar page={page} pageCount={pageCount} total={siswas.length} onPage={setPage} />}
         </div>
       )}
