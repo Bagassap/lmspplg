@@ -79,6 +79,7 @@ export class AuthService {
       sub: user.id,
       role: user.role,
       nama: user.nama,
+      loginId: user.loginId,
       mustChangePassword: user.mustChangePassword,
     };
     const token = this.jwtService.sign(payload);
@@ -89,6 +90,7 @@ export class AuthService {
         id: user.id,
         nama: user.nama,
         email: user.email,
+        loginId: user.loginId,
         role: user.role,
         mustChangePassword: user.mustChangePassword,
         profil: this.getProfil(user),
@@ -103,6 +105,7 @@ export class AuthService {
         id: true,
         nama: true,
         email: true,
+        loginId: true,
         role: true,
         isActive: true,
         mustChangePassword: true,
@@ -154,6 +157,7 @@ export class AuthService {
       sub: updated.id,
       role: updated.role,
       nama: updated.nama,
+      loginId: updated.loginId,
       mustChangePassword: updated.mustChangePassword,
     };
     const token = this.jwtService.sign(payload);

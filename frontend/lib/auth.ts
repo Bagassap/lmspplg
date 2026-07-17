@@ -4,6 +4,7 @@ export type UserPayload = {
   sub: string;
   role: "ADMIN" | "GURU" | "SISWA";
   nama: string;
+  loginId?: string | null;
   mustChangePassword?: boolean;
 };
 

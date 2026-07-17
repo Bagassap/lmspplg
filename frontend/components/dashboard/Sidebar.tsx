@@ -13,6 +13,7 @@ import {
   CalendarDays, Trophy,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
+import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
 
 type SubItem  = { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> };
 type MenuItem = {
@@ -123,7 +124,10 @@ export function Sidebar({
   onToggleCollapse: () => void;
 }) {
   const pathname = usePathname();
-  const items    = MENUS[user.role] ?? [];
+  const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
+  const items = (MENUS[user.role] ?? []).filter(
+    (item) => item.key !== "manajemen-password" || isSuperAdmin,
+  );
   const initial  = user.nama.charAt(0).toUpperCase();
   const PRIMARY  = SIDEBAR_ACCENT;
   const PRIMARY_ICON_BG = PRIMARY;

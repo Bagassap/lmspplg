@@ -12,6 +12,7 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
+import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
 
 type KelasRef = { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
 type Siswa = {
@@ -271,9 +272,9 @@ function TableHead({ isFlat, allChecked, onToggleAll }: {
   );
 }
 
-function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, index, rowNumber, checked, onCheck }: {
+function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, canResetPassword, index, rowNumber, checked, onCheck }: {
   siswa: Siswa; isFlat: boolean; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
   index: number; rowNumber: number; checked: boolean; onCheck: () => void;
 }) {
   const ac = KELAS_COLOR[siswa.kelas.nama] ?? DEFAULT_AC;
@@ -345,7 +346,7 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, index, row
         >
           <Eye size={13} />
         </button>
-        {siswa.user && (
+        {siswa.user && canResetPassword && (
           <button
             onClick={(e) => { e.stopPropagation(); onResetPassword(siswa); }}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
@@ -414,9 +415,9 @@ function PaginationBar({ page, pageCount, total, onPage }: {
   );
 }
 
-function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, selectedIds, onToggle, onToggleAll }: {
+function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, canResetPassword, selectedIds, onToggle, onToggleAll }: {
   kelas: string; siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -455,7 +456,7 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, select
           <TableHead isFlat={false} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword}
+              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} canResetPassword={canResetPassword}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -467,9 +468,9 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, select
   );
 }
 
-function FlatTable({ siswas, onEdit, onDetail, onResetPassword, selectedIds, onToggle, onToggleAll }: {
+function FlatTable({ siswas, onEdit, onDetail, onResetPassword, canResetPassword, selectedIds, onToggle, onToggleAll }: {
   siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -493,7 +494,7 @@ function FlatTable({ siswas, onEdit, onDetail, onResetPassword, selectedIds, onT
           <TableHead isFlat={true} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword}
+              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} canResetPassword={canResetPassword}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -517,9 +518,17 @@ export default function AdminDataSiswaPage() {
   const [detailSiswa, setDetailSiswa] = useState<Siswa | null>(null);
   const [resetTarget, setResetTarget] = useState<Siswa | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [canResetPassword, setCanResetPassword] = useState(false);
 
   useEffect(() => {
     fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((me) => setCanResetPassword(me?.loginId === SUPER_ADMIN_LOGIN_ID))
+      .catch(() => {});
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -680,12 +689,12 @@ export default function AdminDataSiswaPage() {
           <p className="text-xs text-gray-400 dark:text-slate-500">Coba ubah filter atau kata kunci pencarian</p>
         </div>
       ) : isFiltered ? (
-        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget}
+        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} canResetPassword={canResetPassword}
           selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
       ) : (
         <div className="space-y-4">
           {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget}
+            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} canResetPassword={canResetPassword}
               selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
           ))}
         </div>
@@ -699,7 +708,7 @@ export default function AdminDataSiswaPage() {
           onEdit={() => { setDetailSiswa(null); setEditTarget(detailSiswa); }} />
       )}
 
-      {resetTarget?.user && (
+      {resetTarget?.user && canResetPassword && (
         <ResetPasswordModal
           userId={resetTarget.user.id}
           userName={toTitleCase(getNama(resetTarget))}
