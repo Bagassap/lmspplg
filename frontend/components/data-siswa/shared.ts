@@ -51,6 +51,21 @@ export function formatTglShort(iso: string | null): string {
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function formatTglPadded(iso: string | null): string | null {
+  if (!iso) return null;
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  const mon = new Date(y, m - 1, d).toLocaleDateString("id-ID", { month: "short" });
+  return `${String(d).padStart(2, "0")} ${mon} ${y}`;
+}
+
+export function formatTempatTanggalLahir(tempatLahir: string | null, tanggalLahir: string | null): string {
+  const tgl = formatTglPadded(tanggalLahir);
+  if (tempatLahir && tgl) return `${tempatLahir}, ${tgl}`;
+  if (tempatLahir) return tempatLahir;
+  if (tgl) return tgl;
+  return "—";
+}
+
 // Palet vivid/solid — dipilih berdasarkan hash nama/id (sum charCode % 8) agar konsisten per siswa.
 export const AVATAR_PALETTE = [
   "#6366f1", // indigo
