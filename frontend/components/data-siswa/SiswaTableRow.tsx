@@ -7,7 +7,7 @@ import {
 } from "./shared";
 import { SiswaDetailPanel } from "./SiswaDetailPanel";
 
-const GRID = "grid grid-cols-6 w-full items-center px-4 py-3";
+const GRID = "grid grid-cols-[250px_120px_160px_120px_140px_80px] w-full items-center px-4 py-3";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
@@ -56,15 +56,15 @@ export function SiswaTableRow({
           </span>
         </div>
 
-        <span className={`truncate ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
+        <span className={`min-w-0 truncate ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
           {siswa.nis}
         </span>
 
-        <span className={`truncate ${TEXT}`} title={tempatTanggal}>
+        <span className={`min-w-0 truncate ${TEXT}`} title={tempatTanggal}>
           {tempatTanggal}
         </span>
 
-        <span className={`truncate ${TEXT}`}>
+        <span className={`min-w-0 truncate ${TEXT}`}>
           {siswa.noHp || "—"}
         </span>
 
