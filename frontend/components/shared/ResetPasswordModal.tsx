@@ -10,18 +10,19 @@ const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 export function ResetPasswordModal({
-  userId, userName, onClose, onSuccess,
+  userId, userName, nis, onClose, onSuccess,
 }: {
-  userId: string; userName: string; onClose: () => void; onSuccess?: () => void;
+  userId: string; userName: string; nis?: string; onClose: () => void; onSuccess?: () => void;
 }) {
   const toast = useToast();
+  const resetToNis = !!nis;
   const [newPassword, setNewPassword] = useState("");
   const [show, setShow] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   async function handleReset() {
-    if (newPassword.length < 8) {
+    if (!resetToNis && newPassword.length < 8) {
       setError("Password baru minimal 8 karakter.");
       return;
     }
@@ -31,7 +32,7 @@ export function ResetPasswordModal({
       const res = await fetch(`/api/users/${userId}/reset-password`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newPassword }),
+        body: JSON.stringify(resetToNis ? {} : { newPassword }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.message ?? `Error ${res.status}`);
@@ -79,29 +80,43 @@ export function ResetPasswordModal({
             <div className="flex items-start gap-2.5 rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 dark:border-amber-900/30 dark:bg-amber-900/10">
               <ShieldAlert size={16} className="mt-0.5 shrink-0 text-amber-500" />
               <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-400">
-                Password akan diganti ke nilai baru di bawah ini. {userName} akan diwajibkan mengganti
-                password tersebut saat login berikutnya.
+                {resetToNis
+                  ? <>Password akan direset ke <strong>NIS siswa ({nis})</strong>. {userName} akan diwajibkan mengganti password tersebut saat login berikutnya.</>
+                  : <>Password akan diganti ke nilai baru di bawah ini. {userName} akan diwajibkan mengganti password tersebut saat login berikutnya.</>}
               </p>
             </div>
-            <div className="space-y-1.5">
-              <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
-                <KeyRound size={10} className="text-primary/70" />
-                Password Baru
-              </label>
-              <div className="relative">
-                <input
-                  type={show ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Minimal 8 karakter"
-                  className={INPUT}
-                />
-                <button type="button" onClick={() => setShow((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
-                  {show ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
+            {resetToNis ? (
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
+                  <KeyRound size={10} className="text-primary/70" />
+                  Password Default Baru
+                </label>
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
+                  <span className="font-mono text-sm font-semibold text-slate-700 dark:text-slate-200">{nis}</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">(NIS siswa)</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
+                  <KeyRound size={10} className="text-primary/70" />
+                  Password Baru
+                </label>
+                <div className="relative">
+                  <input
+                    type={show ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Minimal 8 karakter"
+                    className={INPUT}
+                  />
+                  <button type="button" onClick={() => setShow((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
+                    {show ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+            )}
             {error && <p className="text-xs text-red-500">{error}</p>}
           </div>
           <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">

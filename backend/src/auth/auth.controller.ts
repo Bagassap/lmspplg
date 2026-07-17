@@ -23,8 +23,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@Request() req: any) {
-    return this.authService.getMe(req.user.id);
+  async getMe(@Request() req: any) {
+    const me = await this.authService.getMe(req.user.id);
+    return { ...me, impersonatedBy: req.user.impersonatedBy ?? null };
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class ChangePasswordDto {
   @IsString()
-  @IsNotEmpty({ message: 'Password saat ini tidak boleh kosong' })
-  currentPassword: string;
+  @IsOptional()
+  currentPassword?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Password baru tidak boleh kosong' })

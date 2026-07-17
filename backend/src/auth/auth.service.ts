@@ -129,22 +129,26 @@ export class AuthService {
       throw new UnauthorizedException('Akun tidak ditemukan');
     }
 
-    const currentMatch = await bcrypt.compare(
-      dto.currentPassword,
-      user.password,
-    );
-    if (!currentMatch) {
-      throw new BadRequestException('Password saat ini salah');
+    if (!user.mustChangePassword) {
+      if (!dto.currentPassword) {
+        throw new BadRequestException('Password saat ini wajib diisi');
+      }
+      const currentMatch = await bcrypt.compare(
+        dto.currentPassword,
+        user.password,
+      );
+      if (!currentMatch) {
+        throw new BadRequestException('Password saat ini salah');
+      }
+      if (dto.newPassword === dto.currentPassword) {
+        throw new BadRequestException(
+          'Password baru tidak boleh sama dengan password lama',
+        );
+      }
     }
 
     if (dto.newPassword !== dto.confirmPassword) {
       throw new BadRequestException('Konfirmasi password baru tidak cocok');
-    }
-
-    if (dto.newPassword === dto.currentPassword) {
-      throw new BadRequestException(
-        'Password baru tidak boleh sama dengan password lama',
-      );
     }
 
     const hashed = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);

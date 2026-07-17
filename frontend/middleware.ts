@@ -50,15 +50,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  const impersonating = !!request.cookies.get("impersonation_token")?.value;
+
   if (pathname === "/change-password") {
-    if (!payload.mustChangePassword) {
+    if (impersonating || !payload.mustChangePassword) {
       const dest = ROLE_DASHBOARD[payload.role] ?? "/siswa/dashboard";
       return NextResponse.redirect(new URL(dest, request.url));
     }
     return NextResponse.next();
   }
 
-  if (payload.mustChangePassword) {
+  if (!impersonating && payload.mustChangePassword) {
     return NextResponse.redirect(new URL("/change-password", request.url));
   }
 

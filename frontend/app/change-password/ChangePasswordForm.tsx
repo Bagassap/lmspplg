@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Eye, EyeOff, Loader2, Lock, KeyRound } from "lucide-react";
+import { Eye, EyeOff, Loader2, KeyRound, Sparkles } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
@@ -18,22 +18,19 @@ const item: Variants = {
   },
 };
 
-type Field = "currentPassword" | "newPassword" | "confirmPassword";
+type Field = "newPassword" | "confirmPassword";
 
-const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: string; icon: typeof Lock }[] = [
-  { key: "currentPassword", label: "Password Saat Ini", placeholder: "Masukkan password lama", autoComplete: "current-password", icon: Lock },
+const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: string; icon: typeof KeyRound }[] = [
   { key: "newPassword", label: "Password Baru", placeholder: "Minimal 8 karakter", autoComplete: "new-password", icon: KeyRound },
   { key: "confirmPassword", label: "Konfirmasi Password Baru", placeholder: "Ulangi password baru", autoComplete: "new-password", icon: KeyRound },
 ];
 
 export function ChangePasswordForm() {
   const [values, setValues] = useState<Record<Field, string>>({
-    currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
   const [visible, setVisible] = useState<Record<Field, boolean>>({
-    currentPassword: false,
     newPassword: false,
     confirmPassword: false,
   });
@@ -48,14 +45,11 @@ export function ChangePasswordForm() {
   }
 
   function validate(): string | null {
-    if (!values.currentPassword || !values.newPassword || !values.confirmPassword) {
+    if (!values.newPassword || !values.confirmPassword) {
       return "Semua field wajib diisi.";
     }
     if (values.newPassword.length < 8) {
       return "Password baru minimal 8 karakter.";
-    }
-    if (values.newPassword === values.currentPassword) {
-      return "Password baru tidak boleh sama dengan password lama.";
     }
     if (values.newPassword !== values.confirmPassword) {
       return "Konfirmasi password baru tidak cocok.";
@@ -108,6 +102,17 @@ export function ChangePasswordForm() {
       variants={container}
       className="mt-8 flex flex-col gap-5"
     >
+      <motion.div
+        variants={item}
+        className="flex items-start gap-2.5 rounded-xl border border-blue/15 bg-blue/5 px-3.5 py-3"
+      >
+        <Sparkles size={16} className="mt-0.5 shrink-0 text-blue" />
+        <p className="text-xs leading-relaxed text-black/65">
+          Selamat datang! Untuk keamanan akun Anda, silakan buat password baru.
+          Password default Anda adalah NIS Anda.
+        </p>
+      </motion.div>
+
       {FIELDS.map(({ key, label, placeholder, autoComplete, icon: Icon }) => (
         <motion.div key={key} variants={item} className="flex flex-col gap-1.5">
           <label htmlFor={key} className="text-sm font-medium text-black/70">

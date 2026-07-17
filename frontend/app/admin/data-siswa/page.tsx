@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Users, Search, X, ChevronRight, ChevronLeft, ChevronDown,
   GraduationCap, User, Pencil, Sparkles,
-  BookOpen, Phone, MapPin, CalendarDays, Eye, KeyRound,
+  BookOpen, Phone, MapPin, CalendarDays, Eye, KeyRound, ScanEye,
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
@@ -20,7 +20,7 @@ type Siswa = {
   jurusan: string | null; angkatan: number; jenisKelamin: string | null;
   noHp: string | null; alamat: string | null; tempatLahir: string | null;
   tanggalLahir: string | null; namaOrtu: string | null;
-  user: { id: string; nama: string; email: string | null } | null;
+  user: { id: string; nama: string; email: string | null; mustChangePassword: boolean } | null;
 };
 type KelasAc = { main: string; light: string; text: string; dark: string };
 
@@ -39,8 +39,8 @@ const JURUSAN_OPTIONS = [
   "Rekayasa Perangkat Lunak",
 ];
 
-const COL_GROUPED = "36px 36px minmax(0,1.8fr) minmax(0,0.7fr) minmax(0,0.7fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.7fr) 148px";
-const COL_FLAT    = "36px 36px minmax(0,1.6fr) minmax(0,0.65fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.65fr) 148px";
+const COL_GROUPED = "36px 36px minmax(0,1.8fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.7fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.7fr) 180px";
+const COL_FLAT    = "36px 36px minmax(0,1.6fr) minmax(0,0.65fr) minmax(0,0.6fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.65fr) 180px";
 const PAGE_SIZE = 10;
 
 const INPUT =
@@ -248,8 +248,8 @@ function TableHead({ isFlat, allChecked, onToggleAll }: {
   isFlat: boolean; allChecked: boolean; onToggleAll: () => void;
 }) {
   const dataCols = isFlat
-    ? ["Nama Siswa", "NIS", "Kelas", "Jenis Kelamin", "Tempat, Tgl Lahir", "Alamat", "No. HP"]
-    : ["Nama Siswa", "NIS", "Jenis Kelamin", "Tempat, Tgl Lahir", "Alamat", "No. HP"];
+    ? ["Nama Siswa", "NIS", "Status", "Kelas", "Jenis Kelamin", "Tempat, Tgl Lahir", "Alamat", "No. HP"]
+    : ["Nama Siswa", "NIS", "Status", "Jenis Kelamin", "Tempat, Tgl Lahir", "Alamat", "No. HP"];
   const colTemplate = isFlat ? COL_FLAT : COL_GROUPED;
   return (
     <div className="border border-transparent pb-2 pt-3"
@@ -272,9 +272,9 @@ function TableHead({ isFlat, allChecked, onToggleAll }: {
   );
 }
 
-function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, canResetPassword, index, rowNumber, checked, onCheck }: {
+function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, onImpersonate, isSuperAdmin, index, rowNumber, checked, onCheck }: {
   siswa: Siswa; isFlat: boolean; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
+  onResetPassword: (s: Siswa) => void; onImpersonate: (s: Siswa) => void; isSuperAdmin: boolean;
   index: number; rowNumber: number; checked: boolean; onCheck: () => void;
 }) {
   const ac = KELAS_COLOR[siswa.kelas.nama] ?? DEFAULT_AC;
@@ -312,9 +312,17 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, canResetPa
         </div>
       </div>
       <div className="flex min-w-0 items-center px-4 py-3.5">
-        <span className="rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-600 dark:bg-white/10 dark:text-gray-300">
+        <span className="rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-600 dark:bg-white/10 dark:text-gray-300"
+          title={`Password Default: ${siswa.nis}`}>
           {siswa.nis}
         </span>
+      </div>
+      <div className="flex min-w-0 items-center px-4 py-3.5">
+        {siswa.user?.mustChangePassword ? (
+          <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-semibold text-red-600 dark:bg-red-900/20 dark:text-red-400">Belum Aktif</span>
+        ) : (
+          <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-0.5 text-[11px] font-semibold text-green-600 dark:bg-green-900/20 dark:text-green-400">Aktif</span>
+        )}
       </div>
       {isFlat && (
         <div className="flex min-w-0 items-center px-4 py-3.5">
@@ -346,7 +354,16 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, canResetPa
         >
           <Eye size={13} />
         </button>
-        {siswa.user && canResetPassword && (
+        {siswa.user && isSuperAdmin && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onImpersonate(siswa); }}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-amber-900/20"
+            title="Pantau (masuk sebagai siswa ini)"
+          >
+            <ScanEye size={13} />
+          </button>
+        )}
+        {siswa.user && isSuperAdmin && (
           <button
             onClick={(e) => { e.stopPropagation(); onResetPassword(siswa); }}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
@@ -415,9 +432,9 @@ function PaginationBar({ page, pageCount, total, onPage }: {
   );
 }
 
-function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, canResetPassword, selectedIds, onToggle, onToggleAll }: {
+function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, onImpersonate, isSuperAdmin, selectedIds, onToggle, onToggleAll }: {
   kelas: string; siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
+  onResetPassword: (s: Siswa) => void; onImpersonate: (s: Siswa) => void; isSuperAdmin: boolean;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -456,7 +473,7 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, canRes
           <TableHead isFlat={false} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} canResetPassword={canResetPassword}
+              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} onImpersonate={onImpersonate} isSuperAdmin={isSuperAdmin}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -468,9 +485,9 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, canRes
   );
 }
 
-function FlatTable({ siswas, onEdit, onDetail, onResetPassword, canResetPassword, selectedIds, onToggle, onToggleAll }: {
+function FlatTable({ siswas, onEdit, onDetail, onResetPassword, onImpersonate, isSuperAdmin, selectedIds, onToggle, onToggleAll }: {
   siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
-  onResetPassword: (s: Siswa) => void; canResetPassword: boolean;
+  onResetPassword: (s: Siswa) => void; onImpersonate: (s: Siswa) => void; isSuperAdmin: boolean;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -494,7 +511,7 @@ function FlatTable({ siswas, onEdit, onDetail, onResetPassword, canResetPassword
           <TableHead isFlat={true} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} canResetPassword={canResetPassword}
+              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword} onImpersonate={onImpersonate} isSuperAdmin={isSuperAdmin}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -518,7 +535,8 @@ export default function AdminDataSiswaPage() {
   const [detailSiswa, setDetailSiswa] = useState<Siswa | null>(null);
   const [resetTarget, setResetTarget] = useState<Siswa | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [canResetPassword, setCanResetPassword] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
@@ -527,7 +545,7 @@ export default function AdminDataSiswaPage() {
   useEffect(() => {
     fetch("/api/auth/me", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((me) => setCanResetPassword(me?.loginId === SUPER_ADMIN_LOGIN_ID))
+      .then((me) => setIsSuperAdmin(me?.loginId === SUPER_ADMIN_LOGIN_ID))
       .catch(() => {});
   }, []);
 
@@ -552,6 +570,19 @@ export default function AdminDataSiswaPage() {
   function handleSaved() {
     fetchData();
     setEditTarget(null);
+  }
+  async function handleImpersonate(s: Siswa) {
+    if (!s.user) return;
+    try {
+      const res = await fetch(`/api/users/${s.user.id}/impersonate`, { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.message ?? `Error ${res.status}`);
+      sessionStorage.setItem("lms_session", "1");
+      window.location.href = data.redirectTo || "/siswa/dashboard";
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Gagal memulai mode pemantauan.";
+      toast.error("Gagal memantau akun", msg);
+    }
   }
   function toggleId(id: string) {
     setSelectedIds((prev) => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); return next; });
@@ -689,12 +720,12 @@ export default function AdminDataSiswaPage() {
           <p className="text-xs text-gray-400 dark:text-slate-500">Coba ubah filter atau kata kunci pencarian</p>
         </div>
       ) : isFiltered ? (
-        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} canResetPassword={canResetPassword}
+        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} onImpersonate={handleImpersonate} isSuperAdmin={isSuperAdmin}
           selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
       ) : (
         <div className="space-y-4">
           {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} canResetPassword={canResetPassword}
+            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget} onImpersonate={handleImpersonate} isSuperAdmin={isSuperAdmin}
               selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
           ))}
         </div>
@@ -708,11 +739,13 @@ export default function AdminDataSiswaPage() {
           onEdit={() => { setDetailSiswa(null); setEditTarget(detailSiswa); }} />
       )}
 
-      {resetTarget?.user && canResetPassword && (
+      {resetTarget?.user && isSuperAdmin && (
         <ResetPasswordModal
           userId={resetTarget.user.id}
           userName={toTitleCase(getNama(resetTarget))}
+          nis={resetTarget.nis}
           onClose={() => setResetTarget(null)}
+          onSuccess={fetchData}
         />
       )}
     </div>

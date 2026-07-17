@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   X, CalendarDays, User, GraduationCap, BookOpen,
-  Phone, MapPin, UserCheck, Sparkles,
+  Phone, MapPin, UserCheck, Sparkles, KeyRound,
 } from "lucide-react";
 
 
@@ -21,7 +21,7 @@ export type SiswaDetail = {
   alamat: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
-  user: { id: string; nama: string; email: string | null } | null;
+  user: { id: string; nama: string; email: string | null; mustChangePassword?: boolean } | null;
 };
 
 
@@ -193,6 +193,23 @@ export default function SiswaDetailModal({
                   value={siswa.alamat ?? "Belum diisi"}
                 />
               </div>
+
+              {siswa.user && (
+                <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3.5 py-3 dark:border-slate-800 dark:bg-slate-800/40">
+                  <div className="flex items-center gap-2">
+                    <KeyRound size={13} className="text-gray-400 dark:text-slate-500" />
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">Password Default</p>
+                      <p className="font-mono text-sm font-semibold text-gray-700 dark:text-slate-200">{siswa.nis}</p>
+                    </div>
+                  </div>
+                  {siswa.user.mustChangePassword ? (
+                    <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-semibold text-red-600 dark:bg-red-900/20 dark:text-red-400">Belum Aktif</span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-0.5 text-[11px] font-semibold text-green-600 dark:bg-green-900/20 dark:text-green-400">Aktif</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

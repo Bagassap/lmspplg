@@ -1,26 +1,58 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Role } from '../../generated/prisma/client';
+import { SUPER_ADMIN_LOGIN_ID } from '../auth/guards/super-admin.guard';
 import * as bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10;
 
+const ROLE_DASHBOARD: Record<string, string> = {
+  ADMIN: '/admin/dashboard',
+  GURU: '/guru/dashboard',
+  SISWA: '/siswa/dashboard',
+};
+
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async resetPassword(id: string, dto: ResetPasswordDto) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: { siswa: true },
+    });
     if (!user) throw new NotFoundException('User tidak ditemukan');
 
-    const hashed = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
+    let newPassword: string;
+    if (user.role === Role.SISWA) {
+      if (!user.siswa) throw new NotFoundException('Data siswa tidak ditemukan');
+      newPassword = user.siswa.nis;
+    } else {
+      if (!dto.newPassword) {
+        throw new BadRequestException('Password baru wajib diisi');
+      }
+      newPassword = dto.newPassword;
+    }
+
+    const hashed = await bcrypt.hash(newPassword, SALT_ROUNDS);
     await this.prisma.user.update({
       where: { id },
       data: { password: hashed, mustChangePassword: true },
     });
 
-    return { message: `Password ${user.nama} berhasil direset` };
+    return {
+      message: `Password ${user.nama} berhasil direset${user.role === Role.SISWA ? ' ke NIS' : ''}`,
+    };
   }
 
   async findPendingPasswordChange() {
@@ -39,5 +71,46 @@ export class UsersService {
       },
       orderBy: [{ role: 'asc' }, { nama: 'asc' }],
     });
+  }
+
+  async impersonate(
+    admin: { id: string; nama: string; role: string; loginId?: string | null },
+    targetId: string,
+  ) {
+    if (admin.role !== Role.ADMIN || admin.loginId !== SUPER_ADMIN_LOGIN_ID) {
+      throw new ForbiddenException('Hanya super admin yang dapat menggunakan fitur ini');
+    }
+
+    const target = await this.prisma.user.findUnique({ where: { id: targetId } });
+    if (!target) throw new NotFoundException('User tidak ditemukan');
+    if (target.role === Role.ADMIN) {
+      throw new ForbiddenException('Tidak dapat memantau akun admin');
+    }
+
+    const payload = {
+      sub: target.id,
+      role: target.role,
+      nama: target.nama,
+      loginId: target.loginId,
+      mustChangePassword: target.mustChangePassword,
+      impersonatedBy: admin.id,
+    };
+    const token = this.jwtService.sign(payload);
+    const redirectTo = ROLE_DASHBOARD[target.role] ?? '/siswa/dashboard';
+
+    console.log(
+      `[IMPERSONATE] Admin ${admin.nama} masuk sebagai ${target.nama} pada ${new Date().toISOString()}`,
+    );
+
+    return { success: true, redirectTo, access_token: token };
+  }
+
+  stopImpersonate(user: { nama: string; impersonatedBy?: string | null }) {
+    if (user.impersonatedBy) {
+      console.log(
+        `[IMPERSONATE] Sesi pantau terhadap ${user.nama} diakhiri pada ${new Date().toISOString()}`,
+      );
+    }
+    return { success: true, redirectTo: '/admin/dashboard' };
   }
 }

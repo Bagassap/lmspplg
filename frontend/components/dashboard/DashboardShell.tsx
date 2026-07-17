@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import { ImpersonationBanner } from "./ImpersonationBanner";
 import type { UserPayload } from "@/lib/auth";
 
 export function DashboardShell({
@@ -46,6 +47,7 @@ export function DashboardShell({
           sidebarCollapsed ? "lg:pl-18" : "lg:pl-64",
         ].join(" ")}
       >
+        <ImpersonationBanner impersonatedBy={user.impersonatedBy} nama={user.nama} />
         <Topbar user={user} onMenuClick={() => setSidebarOpen(true)} />
         <main className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">{children}</main>
       </div>

@@ -8,6 +8,7 @@ export interface JwtPayload {
   sub: string;
   role: string;
   nama: string;
+  impersonatedBy?: string | null;
 }
 
 @Injectable()
@@ -33,6 +34,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Akun tidak ditemukan atau tidak aktif');
     }
 
-    return user;
+    return { ...user, impersonatedBy: payload.impersonatedBy ?? null };
   }
 }

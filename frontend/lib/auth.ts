@@ -6,6 +6,7 @@ export type UserPayload = {
   nama: string;
   loginId?: string | null;
   mustChangePassword?: boolean;
+  impersonatedBy?: string | null;
 };
 
 function decodeJWT(token: string): UserPayload | null {

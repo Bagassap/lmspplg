@@ -287,7 +287,7 @@ async function main() {
       continue;
     }
 
-    const hashed = await bcrypt.hash(row.password, SALT_ROUNDS);
+    const hashed = await bcrypt.hash(row.nis, SALT_ROUNDS);
     try {
       await prisma.user.create({
         data: {
@@ -319,7 +319,7 @@ async function main() {
   console.log(`  Guru   : ${guruCount} berhasil, ${guruSkipped} dilewati`);
   console.log(`  Admin  : ${adminCount} berhasil, ${adminSkipped} dilewati`);
   console.log(`  Siswa  : ${siswaCount} berhasil, ${siswaSkipped} dilewati`);
-  console.log('  Login siswa: NIS + password sesuai kolom Password di CSV');
+  console.log('  Login siswa: NIS + password default = NIS (wajib ganti saat login pertama)');
   console.log('  Login guru/admin: kode (kolom NIS di CSV) + password sesuai kolom Password di CSV');
   console.log('─────────────────────────────────────');
 }
