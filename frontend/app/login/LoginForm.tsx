@@ -54,6 +54,10 @@ export function LoginForm() {
       }
 
       sessionStorage.setItem("lms_session", "1");
+      if (data.user?.mustChangePassword) {
+        window.location.replace("/change-password");
+        return;
+      }
       const role = (data.user?.role as string)?.toLowerCase() ?? "siswa";
       window.location.replace(`/${role}/dashboard`);
     } catch {

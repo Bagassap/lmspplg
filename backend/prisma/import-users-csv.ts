@@ -203,6 +203,7 @@ async function main() {
           loginId: row.nis,
           password: hashed,
           role: Role.GURU,
+          mustChangePassword: true,
           guru: { create: {} },
         },
         include: { guru: true },
@@ -293,6 +294,7 @@ async function main() {
           nama: row.nama,
           password: hashed,
           role: Role.SISWA,
+          mustChangePassword: true,
           siswa: {
             create: {
               nis: row.nis,

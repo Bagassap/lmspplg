@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, LayoutDashboard, Bell, Users, Briefcase,
   FileText, UserCircle, ChevronRight, ChevronDown,
-  ChevronsLeft, ChevronsRight, Lock,
+  ChevronsLeft, ChevronsRight, Lock, KeyRound,
   Building2, ClipboardCheck, Activity, FileBarChart,
   CalendarDays, Trophy,
 } from "lucide-react";
@@ -30,6 +30,7 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "absensi-harian", href: "/admin/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
+    { key: "manajemen-password", href: "/admin/manajemen-password", label: "Manajemen Password", icon: KeyRound },
     {
       key: "magang", label: "Magang", icon: Briefcase,
       submenu: [

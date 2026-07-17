@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type JWTPayload = { sub: string; role: string; nama: string; exp?: number };
+type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; exp?: number };
 
 function decodeJWT(token: string): JWTPayload | null {
   try {
@@ -50,6 +50,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (pathname === "/change-password") {
+    if (!payload.mustChangePassword) {
+      const dest = ROLE_DASHBOARD[payload.role] ?? "/siswa/dashboard";
+      return NextResponse.redirect(new URL(dest, request.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (payload.mustChangePassword) {
+    return NextResponse.redirect(new URL("/change-password", request.url));
+  }
+
   const expected = ROLE_PREFIX[payload.role];
   if (expected && !pathname.startsWith(expected)) {
     const dest = ROLE_DASHBOARD[payload.role] ?? "/siswa/dashboard";
@@ -63,6 +75,7 @@ export const config = {
   matcher: [
     "/login",
     "/dashboard",
+    "/change-password",
     "/admin/:path*",
     "/guru/:path*",
     "/siswa/:path*",

@@ -1,9 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../../generated/prisma/client';
+
+const SALT_ROUNDS = 10;
 
 @Injectable()
 export class AuthService {
@@ -14,7 +21,14 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const profileInclude = {
-      siswa: { select: { id: true, nis: true, kelas: { select: { id: true, nama: true } }, angkatan: true } },
+      siswa: {
+        select: {
+          id: true,
+          nis: true,
+          kelas: { select: { id: true, nama: true } },
+          angkatan: true,
+        },
+      },
       guru: { select: { id: true, nip: true } },
     };
 
@@ -51,7 +65,9 @@ export class AuthService {
     }
 
     if (!user.isActive) {
-      throw new UnauthorizedException('Akun tidak aktif, hubungi administrator');
+      throw new UnauthorizedException(
+        'Akun tidak aktif, hubungi administrator',
+      );
     }
 
     const passwordMatch = await bcrypt.compare(dto.password, user.password);
@@ -59,7 +75,12 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
-    const payload = { sub: user.id, role: user.role, nama: user.nama };
+    const payload = {
+      sub: user.id,
+      role: user.role,
+      nama: user.nama,
+      mustChangePassword: user.mustChangePassword,
+    };
     const token = this.jwtService.sign(payload);
 
     return {
@@ -69,6 +90,7 @@ export class AuthService {
         nama: user.nama,
         email: user.email,
         role: user.role,
+        mustChangePassword: user.mustChangePassword,
         profil: this.getProfil(user),
       },
     };
@@ -83,11 +105,60 @@ export class AuthService {
         email: true,
         role: true,
         isActive: true,
-        siswa: { select: { id: true, nis: true, kelas: { select: { id: true, nama: true } }, angkatan: true } },
+        mustChangePassword: true,
+        siswa: {
+          select: {
+            id: true,
+            nis: true,
+            kelas: { select: { id: true, nama: true } },
+            angkatan: true,
+          },
+        },
         guru: { select: { id: true, nip: true } },
       },
     });
     return user;
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new UnauthorizedException('Akun tidak ditemukan');
+    }
+
+    const currentMatch = await bcrypt.compare(
+      dto.currentPassword,
+      user.password,
+    );
+    if (!currentMatch) {
+      throw new BadRequestException('Password saat ini salah');
+    }
+
+    if (dto.newPassword !== dto.confirmPassword) {
+      throw new BadRequestException('Konfirmasi password baru tidak cocok');
+    }
+
+    if (dto.newPassword === dto.currentPassword) {
+      throw new BadRequestException(
+        'Password baru tidak boleh sama dengan password lama',
+      );
+    }
+
+    const hashed = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashed, mustChangePassword: false },
+    });
+
+    const payload = {
+      sub: updated.id,
+      role: updated.role,
+      nama: updated.nama,
+      mustChangePassword: updated.mustChangePassword,
+    };
+    const token = this.jwtService.sign(payload);
+
+    return { access_token: token, message: 'Password berhasil diubah' };
   }
 
   private getProfil(user: any) {

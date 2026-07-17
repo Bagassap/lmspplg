@@ -11,6 +11,7 @@ import { SiswaModule } from './siswa/siswa.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { UjianUkkModule } from './ujian-ukk/ujian-ukk.module';
 import { NotificationModule } from './notification/notification.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { NotificationModule } from './notification/notification.module';
     DashboardModule,
     UjianUkkModule,
     NotificationModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

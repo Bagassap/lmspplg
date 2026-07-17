@@ -4,6 +4,7 @@ export type UserPayload = {
   sub: string;
   role: "ADMIN" | "GURU" | "SISWA";
   nama: string;
+  mustChangePassword?: boolean;
 };
 
 function decodeJWT(token: string): UserPayload | null {

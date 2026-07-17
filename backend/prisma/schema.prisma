@@ -43,15 +43,16 @@ enum NotificationType {
 
 
 model User {
-  id        String   @id @default(cuid())
-  nama      String
-  email     String?  @unique
-  loginId   String?
-  password  String
-  role      Role
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  nama               String
+  email              String?  @unique
+  loginId            String?
+  password           String
+  role               Role
+  isActive           Boolean  @default(true)
+  mustChangePassword Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   siswa              Siswa?
   guru               Guru?

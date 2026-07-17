@@ -6,11 +6,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Users, Search, X, ChevronRight, ChevronLeft, ChevronDown,
   GraduationCap, User, Pencil, Sparkles,
-  BookOpen, Phone, MapPin, CalendarDays, Eye,
+  BookOpen, Phone, MapPin, CalendarDays, Eye, KeyRound,
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import SiswaDetailModal from "@/components/data-siswa/SiswaDetailModal";
 import { useToast } from "@/components/shared/ToastSystem";
+import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 
 type KelasRef = { id: string; nama: string; waliKelasGuru?: { user: { id: string; nama: string } } | null };
 type Siswa = {
@@ -37,8 +38,8 @@ const JURUSAN_OPTIONS = [
   "Rekayasa Perangkat Lunak",
 ];
 
-const COL_GROUPED = "36px 36px minmax(0,1.8fr) minmax(0,0.7fr) minmax(0,0.7fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.7fr) 116px";
-const COL_FLAT    = "36px 36px minmax(0,1.6fr) minmax(0,0.65fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.65fr) 116px";
+const COL_GROUPED = "36px 36px minmax(0,1.8fr) minmax(0,0.7fr) minmax(0,0.7fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.7fr) 148px";
+const COL_FLAT    = "36px 36px minmax(0,1.6fr) minmax(0,0.65fr) minmax(0,0.7fr) minmax(0,0.65fr) minmax(0,0.9fr) minmax(0,1fr) minmax(0,0.65fr) 148px";
 const PAGE_SIZE = 10;
 
 const INPUT =
@@ -270,8 +271,9 @@ function TableHead({ isFlat, allChecked, onToggleAll }: {
   );
 }
 
-function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, onCheck }: {
+function SiswaRow({ siswa, isFlat, onEdit, onDetail, onResetPassword, index, rowNumber, checked, onCheck }: {
   siswa: Siswa; isFlat: boolean; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void;
   index: number; rowNumber: number; checked: boolean; onCheck: () => void;
 }) {
   const ac = KELAS_COLOR[siswa.kelas.nama] ?? DEFAULT_AC;
@@ -343,6 +345,15 @@ function SiswaRow({ siswa, isFlat, onEdit, onDetail, index, rowNumber, checked, 
         >
           <Eye size={13} />
         </button>
+        {siswa.user && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onResetPassword(siswa); }}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
+            title="Reset Password"
+          >
+            <KeyRound size={13} />
+          </button>
+        )}
         <motion.button
           onClick={(e) => { e.stopPropagation(); onEdit(siswa); }}
           whileHover={{ scale: 1.03, boxShadow: "0 4px 14px #4F8EF735" }}
@@ -403,8 +414,9 @@ function PaginationBar({ page, pageCount, total, onPage }: {
   );
 }
 
-function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAll }: {
+function KelasSection({ kelas, siswas, onEdit, onDetail, onResetPassword, selectedIds, onToggle, onToggleAll }: {
   kelas: string; siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -443,7 +455,7 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, 
           <TableHead isFlat={false} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail}
+              <SiswaRow key={s.id} siswa={s} isFlat={false} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -455,8 +467,9 @@ function KelasSection({ kelas, siswas, onEdit, onDetail, selectedIds, onToggle, 
   );
 }
 
-function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAll }: {
+function FlatTable({ siswas, onEdit, onDetail, onResetPassword, selectedIds, onToggle, onToggleAll }: {
   siswas: Siswa[]; onEdit: (s: Siswa) => void; onDetail: (s: Siswa) => void;
+  onResetPassword: (s: Siswa) => void;
   selectedIds: Set<string>; onToggle: (id: string) => void; onToggleAll: (ids: string[]) => void;
 }) {
   const [page, setPage] = useState(0);
@@ -480,7 +493,7 @@ function FlatTable({ siswas, onEdit, onDetail, selectedIds, onToggle, onToggleAl
           <TableHead isFlat={true} allChecked={allChecked} onToggleAll={() => onToggleAll(pageIds)} />
           <div className="flex flex-col gap-2">
             {pageItems.map((s, i) => (
-              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail}
+              <SiswaRow key={s.id} siswa={s} isFlat={true} onEdit={onEdit} onDetail={onDetail} onResetPassword={onResetPassword}
                 index={i} rowNumber={page * PAGE_SIZE + i + 1}
                 checked={selectedIds.has(s.id)} onCheck={() => onToggle(s.id)} />
             ))}
@@ -502,6 +515,7 @@ export default function AdminDataSiswaPage() {
   const [filterGender, setFilterGender] = useState("");
   const [editTarget, setEditTarget] = useState<Siswa | null>(null);
   const [detailSiswa, setDetailSiswa] = useState<Siswa | null>(null);
+  const [resetTarget, setResetTarget] = useState<Siswa | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -666,12 +680,12 @@ export default function AdminDataSiswaPage() {
           <p className="text-xs text-gray-400 dark:text-slate-500">Coba ubah filter atau kata kunci pencarian</p>
         </div>
       ) : isFiltered ? (
-        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa}
+        <FlatTable siswas={displayed} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget}
           selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
       ) : (
         <div className="space-y-4">
           {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa}
+            <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} onEdit={setEditTarget} onDetail={setDetailSiswa} onResetPassword={setResetTarget}
               selectedIds={selectedIds} onToggle={toggleId} onToggleAll={toggleAll} />
           ))}
         </div>
@@ -683,6 +697,14 @@ export default function AdminDataSiswaPage() {
         <SiswaDetailModal siswa={detailSiswa} ac={KELAS_COLOR[detailSiswa.kelas.nama] ?? DEFAULT_AC}
           onClose={() => setDetailSiswa(null)}
           onEdit={() => { setDetailSiswa(null); setEditTarget(detailSiswa); }} />
+      )}
+
+      {resetTarget?.user && (
+        <ResetPasswordModal
+          userId={resetTarget.user.id}
+          userName={toTitleCase(getNama(resetTarget))}
+          onClose={() => setResetTarget(null)}
+        />
       )}
     </div>
   );
