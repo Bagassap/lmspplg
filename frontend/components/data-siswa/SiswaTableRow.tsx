@@ -8,20 +8,20 @@ import {
 import { SiswaDetailPanel } from "./SiswaDetailPanel";
 
 const COL = {
-  nama: "flex-[2] min-w-0",
-  nis: "flex-1 min-w-0",
-  ttl: "flex-[1.5] min-w-0",
-  noHp: "flex-1 min-w-0",
-  jurusan: "flex-1 min-w-0",
+  nama: "min-w-[200px] flex-1",
+  nis: "w-[110px] shrink-0",
+  ttl: "w-[160px] shrink-0",
+  noHp: "w-[120px] shrink-0",
+  jurusan: "w-[100px] shrink-0",
   aksi: "w-[80px] shrink-0",
 };
 
-const TEXT = "text-[13px] font-semibold text-slate-800 dark:text-white";
+const TEXT = "text-sm font-semibold text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
-  const LABEL = "text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500";
+  const LABEL = "text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500";
   return (
-    <div className="flex items-center gap-4 border-b border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
+    <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
       <span className={`${COL.nama} ${LABEL}`}>Nama Siswa</span>
       <span className={`${COL.nis} ${LABEL}`}>NIS</span>
       <span className={`${COL.ttl} ${LABEL}`}>Tempat & Tgl Lahir</span>
@@ -50,7 +50,7 @@ export function SiswaTableRow({
       <div
         onClick={() => setExpanded((v) => !v)}
         style={{ borderLeftColor: accent }}
-        className="flex cursor-pointer items-center gap-4 border-l-4 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
+        className="flex cursor-pointer items-center gap-3 border-l-4 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
       >
         <div className={`flex min-w-0 items-center gap-2.5 ${COL.nama}`}>
           <div
