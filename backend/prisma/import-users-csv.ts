@@ -40,6 +40,16 @@ function parseCSVLine(line: string): string[] {
 
 const VALID_ROLES: Row['role'][] = ['SISWA', 'GURU', 'ADMIN'];
 
+// Mapping eksplisit nama admin (di-strip gelar, lowercase) → loginId unik + mustChangePassword.
+// Semua admin di CSV berbagi NIS "111111" (kolom NIS = kode akun bersama, bukan identitas unik),
+// jadi loginId tidak bisa diturunkan dari NIS — mapping ini di-keyed by nama sebagai gantinya.
+// Tambahkan entri baru di sini kalau ada admin baru yang perlu loginId unik.
+const ADMIN_LOGIN_OVERRIDES: Record<string, { loginId: string; mustChangePassword: boolean }> = {
+  'bagas saputra': { loginId: '111111', mustChangePassword: false }, // superadmin
+  'wahyu hidayat': { loginId: '212121', mustChangePassword: true },
+  'muhammad syukron': { loginId: '222222', mustChangePassword: true },
+};
+
 function parseCSV(content: string): Row[] {
   const lines = content.split('\n').map((l) => l.replace(/\r$/, '')).filter((l) => l.trim() !== '');
   const rows: Row[] = [];
@@ -229,12 +239,20 @@ async function main() {
         (s) => s.waliKelas && stripGelar(s.waliKelas).toLowerCase() === key,
       ) && !guruByNama.has(key);
 
+      const override = ADMIN_LOGIN_OVERRIDES[key];
+      if (!override) {
+        console.error(`  ! Peringatan: admin "${row.nama}" tidak ada di ADMIN_LOGIN_OVERRIDES — fallback ke NIS "${row.nis}" sebagai loginId dan mustChangePassword: true. Tambahkan entri di ADMIN_LOGIN_OVERRIDES.`);
+      }
+      const loginId = override?.loginId ?? row.nis;
+      const mustChangePassword = override?.mustChangePassword ?? true;
+
       const user = await prisma.user.create({
         data: {
           nama: row.nama,
-          loginId: row.nis,
+          loginId,
           password: hashed,
           role: Role.ADMIN,
+          mustChangePassword,
           isActive: true,
           ...(isAlsoWali ? { guru: { create: {} } } : {}),
         },
@@ -244,7 +262,7 @@ async function main() {
         guruByNama.set(key, { userId: user.id, guruId: user.guru.id });
       }
       adminCount++;
-      console.log(`  + Admin: ${row.nama} → login: ${row.nis}${isAlsoWali ? ' (juga wali kelas)' : ''}`);
+      console.log(`  + Admin: ${row.nama} → login: ${loginId}${isAlsoWali ? ' (juga wali kelas)' : ''}`);
     } catch (err) {
       console.error(`  ! Skip admin ${row.nis} (${row.nama}): ${String(err)}`);
       adminSkipped++;
