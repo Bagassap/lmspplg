@@ -92,6 +92,15 @@ Saya menemukan ada script seed `backend/prisma/import-users-csv.ts` +
 git** (masih untracked) — jadi saya tidak tahu apakah itu sudah final/teruji.
 Saya sengaja **tidak** memasukkannya ke `install.sh` otomatis.
 
+> ⚠️ **Keamanan — `backend/csv/*.csv` TIDAK PERNAH boleh masuk git.** File ini
+> berisi password plaintext + data pribadi siswa/guru. Sudah di-`.gitignore`
+> secara eksplisit (`backend/.gitignore`) dan riwayat lama yang pernah
+> memuatnya sudah dibersihkan dari git history. Kalau perlu memindahkan CSV
+> baru ke container, pakai `scp` langsung, jangan pernah commit/push:
+> ```bash
+> scp "data user.csv" user@192.168.111.151:~/lms-pplg/backend/csv/
+> ```
+
 Kalau kamu yakin file itu sudah benar, jalankan manual di container:
 
 ```bash
