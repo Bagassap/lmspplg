@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, ScanEye, KeyRound } from "lucide-react";
 import {
   type SiswaCardData, getInitials, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
 } from "./shared";
-import { SiswaDetailPanel } from "./SiswaDetailPanel";
 
 const GRID_TEMPLATE = "32px 40px 2fr 1fr 1.3fr 1fr 1fr 90px";
 const LABEL = "text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500";
@@ -31,23 +29,22 @@ export function SiswaTableHead() {
 }
 
 export function SiswaTableRow({
-  siswa, index, onEdit, onResetPassword, onImpersonate,
+  siswa, index, onEdit, onResetPassword, onImpersonate, onViewDetail,
 }: {
   siswa: SiswaCardData;
   index: number;
   onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
+  onViewDetail: (s: SiswaCardData) => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
   const displayNama = toTitleCase(getNama(siswa));
   const accent = avatarColorFor(siswa.id || displayNama);
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
 
   return (
-    <div>
-      <motion.div
-        initial={{ opacity: 0, x: -6 }}
+    <motion.div
+      initial={{ opacity: 0, x: -6 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: (index % 15) * 0.02 }}
         className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
@@ -94,7 +91,7 @@ export function SiswaTableRow({
 
         <div className="flex items-center justify-end gap-1">
           <button
-            onClick={() => setExpanded((v) => !v)}
+            onClick={() => onViewDetail(siswa)}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary dark:hover:bg-white/10"
             title="Lihat Detail"
           >
@@ -119,15 +116,6 @@ export function SiswaTableRow({
             </button>
           )}
         </div>
-      </motion.div>
-
-      {expanded && (
-        <SiswaDetailPanel
-          siswa={siswa}
-          onEdit={onEdit ? () => onEdit(siswa) : undefined}
-          onClose={() => setExpanded(false)}
-        />
-      )}
-    </div>
+    </motion.div>
   );
 }

@@ -141,7 +141,7 @@ model AbsensiHarian {
   kelasId    String
   kelas      Kelas    @relation(fields: [kelasId], references: [id])
   tanggal    String
-  status     String   @default("HADIR")
+  status     String?
   waktuAbsen String?
   lokasi     String?
   foto       String?

@@ -157,19 +157,19 @@ export class AbsensiHarianService {
       if (window !== 'PULANG') {
         throw new ForbiddenException('Absen pulang hanya bisa dilakukan pukul 12:00–23:59');
       }
-      // Pulang must only extend an existing Hadir row — it must never create/imply status HADIR by itself.
-      if (!existing || existing.status !== 'HADIR') {
-        throw new BadRequestException('Anda belum melakukan absen Hadir hari ini, tidak bisa absen Pulang');
-      }
-      return this.prisma.absensiHarian.update({
+      // Pulang is allowed even without a prior Hadir, but it must never set/imply status HADIR by itself —
+      // status stays whatever it already was (null/IZIN/SAKIT/ALPA/HADIR untouched).
+      const pulangData = {
+        lokasiPulang: extras.lokasi,
+        waktuPulang: extras.waktuAbsen,
+        ttdPulang: extras.ttd,
+        fotoPulang: extras.fotoUrl,
+        catatanPulang: extras.catatan,
+      };
+      return this.prisma.absensiHarian.upsert({
         where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
-        data: {
-          lokasiPulang: extras.lokasi,
-          waktuPulang: extras.waktuAbsen,
-          ttdPulang: extras.ttd,
-          fotoPulang: extras.fotoUrl,
-          catatanPulang: extras.catatan,
-        },
+        update: pulangData,
+        create: { siswaId: siswa.id, kelasId: siswa.kelasId, tanggal, ...pulangData },
       });
     }
 

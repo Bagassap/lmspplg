@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
 import { KelasGroupHeader } from "./KelasGroupHeader";
+import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData } from "./shared";
 
 const PAGE_SIZE = 15;
@@ -12,6 +13,7 @@ type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
+  onViewDetail: (s: SiswaCardData) => void;
 };
 
 function LoadingSkeleton() {
@@ -126,43 +128,61 @@ function KelasSection({
 }
 
 export function SiswaTable({
-  loading, siswas, grouped, kelasNamaOrder, ...actions
-}: ActionProps & {
+  loading, siswas, grouped, kelasNamaOrder, onEdit, onResetPassword, onImpersonate,
+}: Omit<ActionProps, "onViewDetail"> & {
   loading: boolean;
   siswas: SiswaCardData[];
   grouped: boolean;
   kelasNamaOrder: string[];
 }) {
-  if (loading) {
+  const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
+  const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa };
+
+  const content = (() => {
+    if (loading) {
+      return (
+        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <LoadingSkeleton />
+        </div>
+      );
+    }
+
+    if (siswas.length === 0) {
+      return (
+        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <EmptyState message="Tidak ada siswa yang ditemukan" />
+        </div>
+      );
+    }
+
+    if (!grouped) {
+      return <RowList siswas={siswas} {...actions} />;
+    }
+
+    const groupedByKelas = kelasNamaOrder.reduce<Record<string, SiswaCardData[]>>((acc, k) => {
+      acc[k] = siswas.filter((s) => s.kelas.nama === k);
+      return acc;
+    }, {});
+
     return (
-      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <LoadingSkeleton />
+      <div className="space-y-4">
+        {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
+          <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} {...actions} />
+        ))}
       </div>
     );
-  }
-
-  if (siswas.length === 0) {
-    return (
-      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <EmptyState message="Tidak ada siswa yang ditemukan" />
-      </div>
-    );
-  }
-
-  if (!grouped) {
-    return <RowList siswas={siswas} {...actions} />;
-  }
-
-  const groupedByKelas = kelasNamaOrder.reduce<Record<string, SiswaCardData[]>>((acc, k) => {
-    acc[k] = siswas.filter((s) => s.kelas.nama === k);
-    return acc;
-  }, {});
+  })();
 
   return (
-    <div className="space-y-4">
-      {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-        <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} {...actions} />
-      ))}
-    </div>
+    <>
+      {content}
+      {detailSiswa && (
+        <SiswaDetailModal
+          siswa={detailSiswa}
+          onEdit={onEdit ? () => { onEdit(detailSiswa); setDetailSiswa(null); } : undefined}
+          onClose={() => setDetailSiswa(null)}
+        />
+      )}
+    </>
   );
 }
