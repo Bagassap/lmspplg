@@ -3,19 +3,21 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { KeyRound, X, Eye, EyeOff, ShieldAlert } from "lucide-react";
+import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 export function ResetPasswordModal({
-  userId, userName, nis, onClose, onSuccess,
+  userId, userName, nis, mustChangePassword, onClose, onSuccess,
 }: {
-  userId: string; userName: string; nis?: string; onClose: () => void; onSuccess?: () => void;
+  userId: string; userName: string; nis?: string; mustChangePassword?: boolean; onClose: () => void; onSuccess?: () => void;
 }) {
   const toast = useToast();
   const resetToNis = !!nis;
+  // Kalau status password belum diketahui (undefined), anggap konservatif "belum ganti".
+  const alreadyChanged = resetToNis && mustChangePassword === false;
   const [newPassword, setNewPassword] = useState("");
   const [show, setShow] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -77,11 +79,31 @@ export function ResetPasswordModal({
             </div>
           </div>
           <div className="space-y-4 px-5 py-5">
+            {resetToNis && (
+              alreadyChanged ? (
+                <div className="flex items-start gap-2.5 rounded-xl border border-green-100 bg-green-50 px-3.5 py-3 dark:border-green-900/30 dark:bg-green-900/10">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-green-500" />
+                  <p className="text-xs leading-relaxed text-green-700 dark:text-green-400">
+                    <strong>Siswa ini sudah mengganti password sendiri.</strong>
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-start gap-2.5 rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 dark:border-amber-900/30 dark:bg-amber-900/10">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-amber-500" />
+                  <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-400">
+                    <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
+                  </p>
+                </div>
+              )
+            )}
+
             <div className="flex items-start gap-2.5 rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 dark:border-amber-900/30 dark:bg-amber-900/10">
               <ShieldAlert size={16} className="mt-0.5 shrink-0 text-amber-500" />
               <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-400">
                 {resetToNis
-                  ? <>Password akan direset ke <strong>NIS siswa ({nis})</strong>. {userName} akan diwajibkan mengganti password tersebut saat login berikutnya.</>
+                  ? (alreadyChanged
+                      ? <>Siswa sudah memiliki password sendiri. Reset akan mengembalikan password ke <strong>NIS siswa ({nis})</strong> dan siswa akan diminta membuat password baru lagi saat login berikutnya.</>
+                      : <>Password akan direset ke <strong>NIS siswa ({nis})</strong>. {userName} akan diwajibkan mengganti password tersebut saat login berikutnya.</>)
                   : <>Password akan diganti ke nilai baru di bawah ini. {userName} akan diwajibkan mengganti password tersebut saat login berikutnya.</>}
               </p>
             </div>

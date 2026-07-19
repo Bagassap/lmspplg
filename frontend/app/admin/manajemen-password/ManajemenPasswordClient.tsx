@@ -138,6 +138,8 @@ export default function ManajemenPasswordClient() {
         <ResetPasswordModal
           userId={resetTarget.id}
           userName={toTitleCase(resetTarget.nama)}
+          nis={resetTarget.role === "SISWA" ? resetTarget.siswa?.nis : undefined}
+          mustChangePassword={true}
           onClose={() => setResetTarget(null)}
           onSuccess={fetchData}
         />

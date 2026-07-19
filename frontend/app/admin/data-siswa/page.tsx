@@ -123,6 +123,7 @@ export default function AdminDataSiswaPage() {
           userId={resetTarget.user.id}
           userName={toTitleCase(getNama(resetTarget))}
           nis={resetTarget.nis}
+          mustChangePassword={resetTarget.user.mustChangePassword}
           onClose={() => setResetTarget(null)}
           onSuccess={fetchData}
         />

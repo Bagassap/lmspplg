@@ -56,11 +56,20 @@ export function SiswaTableRow({
       >
         <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
 
-        <div
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-          style={{ backgroundColor: accent }}
-        >
-          {getInitials(displayNama)}
+        <div className="relative shrink-0">
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
+            style={{ backgroundColor: accent }}
+          >
+            {getInitials(displayNama)}
+          </div>
+          {siswa.user && (
+            <span
+              className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-slate-800"
+              style={{ backgroundColor: siswa.user.mustChangePassword ? "#f59e0b" : "#10b981" }}
+              title={siswa.user.mustChangePassword ? "Belum ganti password (masih NIS)" : "Sudah ganti password sendiri"}
+            />
+          )}
         </div>
 
         <p className={`truncate ${TEXT}`} title={displayNama}>{displayNama}</p>
