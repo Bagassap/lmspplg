@@ -1,5 +1,5 @@
-import MagangComingSoon from "@/components/shared/MagangComingSoon";
+import LockedFeature from "@/components/shared/LockedFeature";
 
 export default function GuruMagangRekapPage() {
-  return <MagangComingSoon role="guru" />;
+  return <LockedFeature role="guru" type="magang" />;
 }

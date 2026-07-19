@@ -8,11 +8,12 @@ import {
 
 type FeatureType = "magang" | "ujian-ukk";
 
+const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
+
 const CONFIG: Record<FeatureType, {
   icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
   title: string;
-  features: { icon: React.ComponentType<{ size?: number; className?: string }>; label: string; desc: string }[];
-  steps: { label: string; active: boolean; done: boolean }[];
+  features: { icon: React.ComponentType<{ size?: number; className?: string }>; label: string }[];
   subtitle: (isGuru: boolean) => string;
   info: (isGuru: boolean) => string;
   footerHint: (isGuru: boolean) => string;
@@ -21,15 +22,10 @@ const CONFIG: Record<FeatureType, {
     icon: Briefcase,
     title: "Magang",
     features: [
-      { icon: MapPin,        label: "Penempatan",  desc: "Lokasi & data DU/DI" },
-      { icon: CalendarCheck, label: "Absensi",     desc: "Catatan kehadiran" },
-      { icon: BarChart3,     label: "Monitoring",  desc: "Progres harian" },
-      { icon: FileText,      label: "Rekap",       desc: "Laporan akhir" },
-    ],
-    steps: [
-      { label: "Persiapan",    active: false, done: true  },
-      { label: "Magang Aktif", active: true,  done: false },
-      { label: "Selesai",      active: false, done: false },
+      { icon: MapPin,        label: "Penempatan" },
+      { icon: CalendarCheck, label: "Absensi" },
+      { icon: BarChart3,     label: "Monitoring" },
+      { icon: FileText,      label: "Rekap" },
     ],
     subtitle: (isGuru) => isGuru
       ? "Menu ini akan aktif ketika program magang siswa resmi dimulai"
@@ -43,15 +39,10 @@ const CONFIG: Record<FeatureType, {
     icon: FileTextIcon,
     title: "Ujian UKK",
     features: [
-      { icon: CalendarCheck, label: "Jadwal",   desc: "Jadwal & soal ujian" },
-      { icon: FileText,      label: "Absensi",  desc: "Kehadiran ujian" },
-      { icon: Trophy,        label: "Nilai",    desc: "Hasil ujian kamu" },
-      { icon: BarChart3,     label: "Progres",  desc: "Tahapan ujian" },
-    ],
-    steps: [
-      { label: "Persiapan",   active: false, done: true  },
-      { label: "Ujian Aktif", active: true,  done: false },
-      { label: "Selesai",     active: false, done: false },
+      { icon: CalendarCheck, label: "Jadwal" },
+      { icon: FileText,      label: "Absensi" },
+      { icon: Trophy,        label: "Nilai" },
+      { icon: BarChart3,     label: "Progres" },
     ],
     subtitle: () => "Menu ini akan aktif ketika jadwal Ujian UKK kamu telah dimulai",
     info: () => "Fitur jadwal & soal, absensi ujian, dan nilai akan terbuka setelah periode Ujian UKK resmi dibuka oleh admin.",
@@ -66,123 +57,64 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
   const cfg = CONFIG[type];
 
   return (
-    <div className="w-full flex items-center justify-center py-8 px-4">
+    <div className="w-full flex items-center justify-center py-10 px-4">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-xl"
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-md"
       >
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
+        <div className="relative overflow-hidden rounded-3xl shadow-xl">
+          <div className="absolute inset-0" style={{ background: BRAND_GRADIENT }} />
+          <div className="pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full bg-white/10" />
+          <div className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 rounded-full bg-white/6" />
+          <div className="pointer-events-none absolute top-10 left-[55%] h-20 w-20 rounded-full bg-white/5" />
 
-          <div className="h-1 w-full" style={{ background: "linear-gradient(90deg,#6334F4,#8B5CF6,#EC4899,#F97316)" }}/>
+          <div className="relative flex flex-col items-center gap-5 px-7 py-10 text-center sm:px-9">
 
-          <div className="px-6 sm:px-10 py-10 flex flex-col items-center text-center gap-6">
-
-            <div className="relative w-20 h-20">
+            <div className="relative flex h-20 w-20 items-center justify-center">
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full border border-dashed border-violet-300 dark:border-violet-500/40"
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.15, 0.5] }}
+                transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-full bg-white/20"
               />
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0"
-              >
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_6px_#8B5CF6]"/>
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, -5, 0] }}
+                animate={{ y: [0, -4, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-3 rounded-2xl flex items-center justify-center shadow-lg"
-                style={{ background: "linear-gradient(135deg,#6334F4,#8B5CF6,#EC4899)" }}
+                className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm"
               >
-                <cfg.icon size={22} className="text-white" strokeWidth={1.8}/>
+                <cfg.icon size={24} className="text-white" strokeWidth={1.8} />
               </motion.div>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
-              <Lock size={10} className="text-red-500 dark:text-red-400"/>
-              <span className="text-[11px] font-bold tracking-widest text-red-500 dark:text-red-400 uppercase">Belum Aktif</span>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 backdrop-blur-sm"
+            >
+              <Lock size={10} className="text-white/90" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-white/90">Belum Aktif</span>
+            </motion.div>
 
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 dark:text-white leading-tight">
-                Program{" "}
-                <span style={{
-                  background: "linear-gradient(135deg,#8B5CF6,#EC4899,#F97316)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}>
-                  {cfg.title}
-                </span>
+            <div className="space-y-1.5">
+              <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl">
+                Program {cfg.title}
               </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {cfg.subtitle(isGuru)}
-              </p>
+              <p className="text-sm text-white/70">{cfg.subtitle(isGuru)}</p>
             </div>
 
-            <div className="flex items-center justify-center w-full gap-0">
-              {cfg.steps.map((step, i) => (
-                <div key={i} className="flex items-center">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.3 + i * 0.15 }}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center border-2 ${
-                        step.done
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/15"
-                          : step.active
-                          ? "border-violet-400 bg-violet-50 dark:bg-violet-500/10"
-                          : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/40"
-                      }`}
-                    >
-                      {step.done ? (
-                        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#10B981" strokeWidth="2.5">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                      ) : step.active ? (
-                        <Lock size={12} className="text-violet-500 dark:text-violet-400"/>
-                      ) : (
-                        <div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"/>
-                      )}
-                    </motion.div>
-                    <span className={`text-[11px] font-semibold ${
-                      step.done
-                        ? "text-emerald-500"
-                        : step.active
-                        ? "text-violet-600 dark:text-violet-400"
-                        : "text-slate-400"
-                    }`}>
-                      {step.label}
-                    </span>
-                  </div>
-                  {i < cfg.steps.length - 1 && (
-                    <div className={`w-12 sm:w-16 h-px mx-2 mb-4 ${
-                      step.done ? "bg-emerald-300 dark:bg-emerald-500/40" : "bg-slate-200 dark:bg-slate-700"
-                    }`}/>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-4 gap-2 sm:gap-3 w-full">
+            <div className="grid w-full grid-cols-4 gap-2">
               {cfg.features.map((f, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45 + i * 0.08 }}
-                  className="relative rounded-xl p-3 flex flex-col items-center gap-1.5 bg-slate-50 dark:bg-slate-700/40 border border-slate-100 dark:border-slate-700"
+                  transition={{ delay: 0.3 + i * 0.08 }}
+                  className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 px-2 py-3 backdrop-blur-sm"
                 >
-                  <Lock size={9} className="absolute top-1.5 right-1.5 text-slate-300 dark:text-slate-600"/>
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-violet-50 dark:bg-violet-500/10">
-                    <f.icon size={15} className="text-violet-400 dark:text-violet-400 opacity-70"/>
-                  </div>
-                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{f.label}</p>
-                  <p className="text-[9px] text-slate-400 dark:text-slate-500 text-center leading-tight hidden sm:block">{f.desc}</p>
+                  <f.icon size={16} className="text-white/85" />
+                  <p className="text-[10px] font-semibold text-white/80">{f.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -190,20 +122,11 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="flex items-start gap-3 px-4 py-4 rounded-xl text-left w-full bg-violet-50 dark:bg-violet-500/10 border border-violet-100 dark:border-violet-500/20"
+              transition={{ delay: 0.55 }}
+              className="flex items-start gap-2.5 rounded-xl bg-white/10 px-4 py-3.5 text-left backdrop-blur-sm"
             >
-              <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center bg-violet-100 dark:bg-violet-500/20 mt-0.5">
-                <Clock size={14} className="text-violet-600 dark:text-violet-400"/>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-0.5">
-                  {type === "magang" ? "Menunggu Jadwal Magang" : "Menunggu Jadwal Ujian UKK"}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  {cfg.info(isGuru)}
-                </p>
-              </div>
+              <Clock size={14} className="mt-0.5 shrink-0 text-white/80" />
+              <p className="text-xs leading-relaxed text-white/80">{cfg.info(isGuru)}</p>
             </motion.div>
 
             <motion.div
@@ -211,11 +134,8 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
               transition={{ duration: 2.5, repeat: Infinity }}
               className="flex items-center gap-2"
             >
-              <Sparkles size={12} className="text-violet-400"/>
-              <span className="text-xs text-slate-400 dark:text-slate-500">
-                {cfg.footerHint(isGuru)}
-              </span>
-              <Sparkles size={12} className="text-pink-400"/>
+              <Sparkles size={12} className="text-white/70" />
+              <span className="text-xs text-white/70">{cfg.footerHint(isGuru)}</span>
             </motion.div>
 
           </div>

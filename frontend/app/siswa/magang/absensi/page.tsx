@@ -1,5 +1,5 @@
-import MagangComingSoon from "@/components/shared/MagangComingSoon";
+import LockedFeature from "@/components/shared/LockedFeature";
 
 export default function SiswaMagangAbsensiPage() {
-  return <MagangComingSoon role="siswa" />;
+  return <LockedFeature role="siswa" type="magang" />;
 }
