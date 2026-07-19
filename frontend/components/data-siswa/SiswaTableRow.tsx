@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ScanEye, KeyRound } from "lucide-react";
+import { Eye, ScanEye, KeyRound } from "lucide-react";
 import {
   type SiswaCardData, getInitials, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
 } from "./shared";
@@ -50,8 +50,7 @@ export function SiswaTableRow({
         initial={{ opacity: 0, x: -6 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: (index % 15) * 0.02 }}
-        onClick={() => setExpanded((v) => !v)}
-        className="grid cursor-pointer items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
         style={{ gridTemplateColumns: GRID_TEMPLATE }}
       >
         <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
@@ -94,9 +93,16 @@ export function SiswaTableRow({
         </div>
 
         <div className="flex items-center justify-end gap-1">
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary dark:hover:bg-white/10"
+            title="Lihat Detail"
+          >
+            <Eye size={14} />
+          </button>
           {onImpersonate && siswa.user && (
             <button
-              onClick={(e) => { e.stopPropagation(); onImpersonate(siswa); }}
+              onClick={() => onImpersonate(siswa)}
               className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20"
               title="Pantau (masuk sebagai siswa ini)"
             >
@@ -105,7 +111,7 @@ export function SiswaTableRow({
           )}
           {onResetPassword && siswa.user && (
             <button
-              onClick={(e) => { e.stopPropagation(); onResetPassword(siswa); }}
+              onClick={() => onResetPassword(siswa)}
               className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
               title="Reset Password"
             >

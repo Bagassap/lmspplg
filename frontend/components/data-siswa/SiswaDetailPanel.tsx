@@ -19,14 +19,14 @@ const CATEGORY_STYLE: Record<Category, { border: string; iconBg: string; icon: s
   kontak:   { border: "#14b8a6", iconBg: "#14b8a61a", icon: "#0d9488", label: "#0d9488" }, // teal
 };
 
-function FieldCard({ icon: Icon, label, value, category }: {
+function FieldItem({ icon: Icon, label, value, category }: {
   icon: React.ElementType; label: string; value: string | null | undefined; category: Category;
 }) {
   const c = CATEGORY_STYLE[category];
   return (
     <div
-      className="rounded-xl border-l-[3px] bg-white px-3.5 py-3 shadow-sm dark:bg-slate-800/80"
-      style={{ borderLeftColor: c.border }}
+      className="border-r border-b border-slate-100 py-3 pl-3.5 pr-4 dark:border-slate-700/60"
+      style={{ borderLeftWidth: 3, borderLeftStyle: "solid", borderLeftColor: c.border }}
     >
       <div className="flex items-center gap-2">
         <div
@@ -62,17 +62,17 @@ export function SiswaDetailPanel({ siswa, onEdit, onClose }: {
         className="overflow-hidden border-b border-slate-100 bg-linear-to-br from-slate-50 to-white dark:border-slate-800 dark:from-slate-800/40 dark:to-slate-800/10"
       >
         <div className="px-4 py-4 sm:px-6">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <FieldCard icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} category="pribadi" />
-            <FieldCard icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} category="pribadi" />
-            <FieldCard icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} category="pribadi" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} category="pribadi" />
+            <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} category="pribadi" />
+            <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} category="pribadi" />
 
-            <FieldCard icon={CalendarDays} label="Angkatan" value={String(siswa.angkatan)} category="akademik" />
-            <FieldCard icon={GraduationCap} label="Kelas" value={kelasShort(siswa.kelas.nama)} category="akademik" />
-            <FieldCard icon={BookOpen} label="Jurusan" value={siswa.jurusan} category="akademik" />
-            <FieldCard icon={UserCheck} label="Wali Kelas" value={waliKelas} category="akademik" />
+            <FieldItem icon={CalendarDays} label="Angkatan" value={String(siswa.angkatan)} category="akademik" />
+            <FieldItem icon={GraduationCap} label="Kelas" value={kelasShort(siswa.kelas.nama)} category="akademik" />
+            <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} category="akademik" />
+            <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} category="akademik" />
 
-            <FieldCard icon={Phone} label="No. HP" value={siswa.noHp} category="kontak" />
+            <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} category="kontak" />
           </div>
 
           <div className="mt-4 flex items-center justify-end gap-2 border-t border-slate-200 pt-3.5 dark:border-slate-700/50">
