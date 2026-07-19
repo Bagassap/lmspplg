@@ -77,7 +77,8 @@ echo "==> [3/8] Tulis backend/.env & frontend/.env dari template (isi placeholde
 sed -e "s#__DB_PASSWORD__#${DB_PASSWORD}#g" \
     -e "s#__JWT_SECRET__#${JWT_SECRET}#g" \
     "$APP_DIR/deploy/backend.env.production" > "$APP_DIR/backend/.env"
-cp "$APP_DIR/deploy/frontend.env.production" "$APP_DIR/frontend/.env"
+sed -e "s#__JWT_SECRET__#${JWT_SECRET}#g" \
+    "$APP_DIR/deploy/frontend.env.production" > "$APP_DIR/frontend/.env"
 echo "    Selesai. Review isi backend/.env dan frontend/.env kalau IP/port beda."
 
 # ── 4. Install dependencies ───────────────────────────────────────────────

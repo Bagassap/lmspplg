@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 
 type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; exp?: number };
 
-function decodeJWT(token: string): JWTPayload | null {
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const raw = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const payload = JSON.parse(atob(raw)) as JWTPayload;
-    if (payload.exp && payload.exp * 1000 < Date.now()) return null;
-    return payload;
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload as unknown as JWTPayload;
   } catch {
     return null;
   }
@@ -27,10 +26,10 @@ const ROLE_PREFIX: Record<string, string> = {
   SISWA: "/siswa",
 };
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token   = request.cookies.get("token")?.value ?? null;
-  const payload = token ? decodeJWT(token) : null;
+  const payload = token ? await verifyJWT(token) : null;
 
   if (pathname === "/login") {
     if (payload) {
