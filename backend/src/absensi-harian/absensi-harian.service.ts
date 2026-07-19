@@ -1,19 +1,41 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 
+// new Date().getHours()/toISOString() read the server process's OS timezone (often UTC),
+// not WIB — extract Jakarta-local date/hour explicitly so the window check is correct
+// regardless of where the server runs.
+function jakartaParts() {
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    hour: Number(get('hour')),
+    minute: Number(get('minute')),
+  };
+}
+
 function todayStr() {
-  return new Date().toISOString().split('T')[0];
+  return jakartaParts().date;
 }
 
 export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
 
 function currentWindow(): AbsenWindow {
-  const h = new Date().getHours();
-  if (h >= 6 && h < 12) return 'HADIR';
-  if (h >= 12 && h < 18) return 'PULANG';
+  const { hour } = jakartaParts();
+  if (hour >= 6 && hour < 12) return 'HADIR';
+  if (hour >= 12 && hour <= 23) return 'PULANG';
   return 'CLOSED';
 }
 
@@ -119,48 +141,62 @@ export class AbsensiHarianService {
 
   async absenSendiri(
     userId: string,
-    tipe: 'HADIR' | 'PULANG',
+    tipe: 'HADIR' | 'PULANG' | 'IZIN' | 'SAKIT',
     extras: { lokasi?: string; waktuAbsen?: string; ttd?: string; fotoUrl?: string; catatan?: string } = {},
   ) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
 
     const window = currentWindow();
-    if (tipe === 'HADIR' && window !== 'HADIR') {
-      throw new ForbiddenException('Absen hadir hanya bisa dilakukan pukul 06:00–12:00');
-    }
-    if (tipe === 'PULANG' && window !== 'PULANG') {
-      throw new ForbiddenException('Absen pulang hanya bisa dilakukan pukul 12:00–18:00');
+    const tanggal = todayStr();
+    const existing = await this.prisma.absensiHarian.findUnique({
+      where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
+    });
+
+    if (tipe === 'PULANG') {
+      if (window !== 'PULANG') {
+        throw new ForbiddenException('Absen pulang hanya bisa dilakukan pukul 12:00–23:59');
+      }
+      // Pulang must only extend an existing Hadir row — it must never create/imply status HADIR by itself.
+      if (!existing || existing.status !== 'HADIR') {
+        throw new BadRequestException('Anda belum melakukan absen Hadir hari ini, tidak bisa absen Pulang');
+      }
+      return this.prisma.absensiHarian.update({
+        where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
+        data: {
+          lokasiPulang: extras.lokasi,
+          waktuPulang: extras.waktuAbsen,
+          ttdPulang: extras.ttd,
+          fotoPulang: extras.fotoUrl,
+          catatanPulang: extras.catatan,
+        },
+      });
     }
 
-    const tanggal = todayStr();
-    const data =
-      tipe === 'HADIR'
-        ? {
-            status: 'HADIR',
-            lokasi: extras.lokasi,
-            waktuAbsen: extras.waktuAbsen,
-            ttd: extras.ttd,
-            foto: extras.fotoUrl,
-            catatan: extras.catatan,
-          }
-        : {
-            lokasiPulang: extras.lokasi,
-            waktuPulang: extras.waktuAbsen,
-            ttdPulang: extras.ttd,
-            fotoPulang: extras.fotoUrl,
-            catatanPulang: extras.catatan,
-          };
+    // HADIR / IZIN / SAKIT — one submission per day
+    if (window !== 'HADIR') {
+      throw new ForbiddenException('Absen hadir/izin/sakit hanya bisa dilakukan pukul 06:00–12:00');
+    }
+    if (existing?.status) {
+      throw new BadRequestException('Anda sudah mengisi absensi hari ini');
+    }
+    if ((tipe === 'IZIN' || tipe === 'SAKIT') && !extras.catatan?.trim()) {
+      throw new BadRequestException('Keterangan wajib diisi untuk Izin/Sakit');
+    }
+
+    const data = {
+      status: tipe,
+      lokasi: extras.lokasi,
+      waktuAbsen: extras.waktuAbsen,
+      ttd: extras.ttd,
+      foto: extras.fotoUrl,
+      catatan: extras.catatan,
+    };
 
     return this.prisma.absensiHarian.upsert({
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
       update: data,
-      create: {
-        siswaId: siswa.id,
-        kelasId: siswa.kelasId,
-        tanggal,
-        ...(tipe === 'HADIR' ? data : { status: 'HADIR', ...data }),
-      },
+      create: { siswaId: siswa.id, kelasId: siswa.kelasId, tanggal, ...data },
     });
   }
 

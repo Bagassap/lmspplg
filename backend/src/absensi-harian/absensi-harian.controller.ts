@@ -25,7 +25,15 @@ const absensiHarianStorage = diskStorage({
 });
 
 function todayStr() {
-  return new Date().toISOString().split('T')[0];
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return `${get('year')}-${get('month')}-${get('day')}`;
 }
 
 @UseGuards(JwtAuthGuard)

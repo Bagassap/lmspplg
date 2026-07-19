@@ -4,8 +4,8 @@ import { Type } from 'class-transformer';
 export class AbsenSendiriHarianDto {
   @IsString()
   @IsOptional()
-  @IsIn(['HADIR', 'PULANG'])
-  tipe?: 'HADIR' | 'PULANG';
+  @IsIn(['HADIR', 'PULANG', 'IZIN', 'SAKIT'])
+  tipe?: 'HADIR' | 'PULANG' | 'IZIN' | 'SAKIT';
 
   @IsString()
   @IsOptional()

@@ -47,8 +47,8 @@ const MOTIVASI = [
 
 const WINDOW_INFO: Record<AbsenWindow, { label: string; range: string }> = {
   HADIR:  { label: "Jendela Absen Hadir",  range: "06:00 – 12:00" },
-  PULANG: { label: "Jendela Absen Pulang", range: "12:00 – 18:00" },
-  CLOSED: { label: "Di luar jam absensi",  range: "18:00 – 06:00" },
+  PULANG: { label: "Jendela Absen Pulang", range: "12:00 – 23:59" },
+  CLOSED: { label: "Di luar jam absensi",  range: "00:00 – 06:00" },
 };
 
 export default function SiswaAbsensiHarianPage() {
@@ -67,6 +67,7 @@ export default function SiswaAbsensiHarianPage() {
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
   const [ttd, setTtd] = useState<string | null>(null);
   const [catatan, setCatatan] = useState("");
+  const [statusPilihan, setStatusPilihan] = useState<"HADIR" | "IZIN" | "SAKIT">("HADIR");
 
   const loadStatus = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -96,8 +97,11 @@ export default function SiswaAbsensiHarianPage() {
   }, [loadStatus]);
 
   const window_ = data?.window ?? "CLOSED";
+  const pulangBlocked = window_ === "PULANG" && data?.status !== "HADIR";
   const needsAction =
-    (window_ === "HADIR" && !data?.sudahAbsen) || (window_ === "PULANG" && !data?.sudahPulang);
+    (window_ === "HADIR" && !data?.sudahAbsen) ||
+    (window_ === "PULANG" && data?.status === "HADIR" && !data?.sudahPulang);
+  const activeTipe = window_ === "PULANG" ? "PULANG" : statusPilihan;
 
   useEffect(() => {
     setLokasi(null);
@@ -105,6 +109,7 @@ export default function SiswaAbsensiHarianPage() {
     setFotoPreview(null);
     setTtd(null);
     setCatatan("");
+    setStatusPilihan("HADIR");
   }, [window_]);
 
   useEffect(() => {
@@ -132,20 +137,33 @@ export default function SiswaAbsensiHarianPage() {
 
   async function handleSubmit() {
     if (window_ !== "HADIR" && window_ !== "PULANG") return;
-    if (!ttd) { toast.error("Tanda tangan wajib diisi", ""); return; }
+    if (window_ === "PULANG" && pulangBlocked) return;
+    const tipe = activeTipe;
+    if ((tipe === "HADIR" || tipe === "PULANG") && !ttd) {
+      toast.error("Tanda tangan wajib diisi", "");
+      return;
+    }
+    if ((tipe === "IZIN" || tipe === "SAKIT") && !catatan.trim()) {
+      toast.error("Keterangan wajib diisi", "");
+      return;
+    }
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.set("tipe", window_);
+      formData.set("tipe", tipe);
       formData.set("waktuAbsen", new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
       if (lokasi) formData.set("lokasi", lokasi);
       if (catatan) formData.set("catatan", catatan);
-      formData.set("ttd", ttd);
+      if (ttd) formData.set("ttd", ttd);
       if (fotoFile) formData.set("foto", fotoFile);
 
       const res = await fetch("/api/absensi-harian/saya", { method: "POST", body: formData });
       if (res.ok) {
-        toast.success(window_ === "HADIR" ? "Absen hadir berhasil dicatat!" : "Absen pulang berhasil dicatat!", "");
+        const successMsg =
+          tipe === "HADIR" ? "Absen hadir berhasil dicatat!" :
+          tipe === "PULANG" ? "Absen pulang berhasil dicatat!" :
+          tipe === "IZIN" ? "Izin berhasil dicatat!" : "Sakit berhasil dicatat!";
+        toast.success(successMsg, "");
         loadStatus();
       } else {
         const d = await res.json().catch(() => null);
@@ -234,7 +252,18 @@ export default function SiswaAbsensiHarianPage() {
                     </div>
                     <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya Absen</h2>
                     <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-                      Absen hadir dibuka pukul <b>06:00–12:00</b> dan absen pulang pukul <b>12:00–18:00</b>. Silakan kembali lagi nanti.
+                      Absen hadir dibuka pukul <b>06:00–12:00</b> dan absen pulang pukul <b>12:00–23:59</b>. Silakan kembali lagi nanti.
+                    </p>
+                  </motion.div>
+                ) : pulangBlocked ? (
+                  <motion.div key="pulang-blocked" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+                      <LogOut size={26} className="text-red-500" />
+                    </div>
+                    <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Absen Hadir</h2>
+                    <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
+                      Anda belum melakukan absen Hadir hari ini, tidak bisa absen Pulang.
                     </p>
                   </motion.div>
                 ) : needsAction ? (
@@ -243,18 +272,38 @@ export default function SiswaAbsensiHarianPage() {
 
                     <div className="flex items-center gap-3 px-5 pt-5">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-md"
-                        style={{ background: window_ === "HADIR" ? BRAND_GRADIENT : `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` }}>
-                        {window_ === "HADIR" ? <LogIn size={18} /> : <LogOut size={18} />}
+                        style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+                        {activeTipe === "PULANG" ? <LogOut size={18} /> : activeTipe === "HADIR" ? <LogIn size={18} /> : (() => { const Icon = STATUS_CFG[activeTipe].icon; return <Icon size={18} />; })()}
                       </div>
                       <div className="min-w-0">
                         <h2 className="text-base font-extrabold text-slate-800 dark:text-white">
-                          {window_ === "HADIR" ? "Absen Hadir" : "Absen Pulang"}
+                          {activeTipe === "PULANG" ? "Absen Pulang" : `Absen ${STATUS_CFG[activeTipe].label}`}
                         </h2>
                         <p className="text-xs text-slate-400 dark:text-slate-500">
-                          {window_ === "HADIR" ? "Catat kehadiranmu untuk hari ini" : "Catat waktu pulangmu untuk hari ini"}
+                          {activeTipe === "PULANG" ? "Catat waktu pulangmu untuk hari ini" :
+                           activeTipe === "HADIR" ? "Catat kehadiranmu untuk hari ini" :
+                           `Laporkan ${STATUS_CFG[activeTipe].label.toLowerCase()} untuk hari ini`}
                         </p>
                       </div>
                     </div>
+
+                    {window_ === "HADIR" && (
+                      <div className="flex gap-2 px-5">
+                        {(["HADIR", "IZIN", "SAKIT"] as const).map((s) => {
+                          const c = STATUS_CFG[s];
+                          const active = statusPilihan === s;
+                          return (
+                            <button key={s} type="button" onClick={() => setStatusPilihan(s)}
+                              className="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-bold transition-colors"
+                              style={active
+                                ? { borderColor: c.clr, background: c.bg, color: c.clr }
+                                : { borderColor: "transparent", background: "transparent", color: "#94a3b8" }}>
+                              {c.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
 
                     <div className="space-y-4 px-5 pb-5">
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -299,25 +348,31 @@ export default function SiswaAbsensiHarianPage() {
 
                       <div>
                         <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                          <MessageSquareText size={12} /> Keterangan (opsional)
+                          <MessageSquareText size={12} />
+                          {activeTipe === "IZIN" || activeTipe === "SAKIT"
+                            ? <>Keterangan / Alasan <span className="text-red-400 normal-case">*wajib</span></>
+                            : "Keterangan (opsional)"}
                         </p>
                         <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
-                          placeholder="Tulis keterangan tambahan..."
+                          placeholder={activeTipe === "IZIN" || activeTipe === "SAKIT" ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
                           className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
                       </div>
 
-                      <div>
-                        <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                          <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
-                        </p>
-                        <SignaturePad onChange={setTtd} />
-                      </div>
+                      {(activeTipe === "HADIR" || activeTipe === "PULANG") && (
+                        <div>
+                          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+                            <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
+                          </p>
+                          <SignaturePad onChange={setTtd} />
+                        </div>
+                      )}
 
-                      <motion.button whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={submitting || !ttd}
+                      <motion.button whileTap={{ scale: 0.98 }} onClick={handleSubmit}
+                        disabled={submitting || ((activeTipe === "HADIR" || activeTipe === "PULANG") ? !ttd : !catatan.trim())}
                         className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md disabled:opacity-50"
-                        style={{ background: window_ === "HADIR" ? BRAND_GRADIENT : `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` }}>
-                        {submitting ? <Loader2 size={16} className="animate-spin" /> : (window_ === "HADIR" ? <LogIn size={16} /> : <LogOut size={16} />)}
-                        {submitting ? "Menyimpan..." : window_ === "HADIR" ? "Absen Hadir Sekarang" : "Absen Pulang Sekarang"}
+                        style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+                        {submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />)}
+                        {submitting ? "Menyimpan..." : activeTipe === "PULANG" ? "Absen Pulang Sekarang" : `Absen ${STATUS_CFG[activeTipe].label} Sekarang`}
                       </motion.button>
                     </div>
                   </motion.div>
@@ -332,7 +387,7 @@ export default function SiswaAbsensiHarianPage() {
                         <CheckCircle2 size={30} className="text-white" />
                       </motion.div>
                       <h2 className="mt-4 text-lg font-extrabold text-white">
-                        {window_ === "HADIR" ? "Kehadiran Tercatat" : "Kepulangan Tercatat"}
+                        {window_ === "HADIR" ? `${cfg.label} Tercatat` : "Kepulangan Tercatat"}
                       </h2>
                       <p className="mt-1 text-sm text-white/80">
                         {window_ === "HADIR"
