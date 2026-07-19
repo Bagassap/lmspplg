@@ -1,33 +1,40 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { ScanEye, KeyRound } from "lucide-react";
 import {
   type SiswaCardData, getInitials, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
 } from "./shared";
 import { SiswaDetailPanel } from "./SiswaDetailPanel";
 
-const GRID = "grid grid-cols-[250px_120px_160px_120px_140px_80px] w-full items-center px-4 py-3";
+const GRID_TEMPLATE = "32px 40px 2fr 1fr 1.3fr 1fr 1fr 90px";
+const LABEL = "text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
-  const LABEL = "text-xs font-semibold uppercase text-slate-400 dark:text-slate-500";
   return (
-    <div className={`${GRID} border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60`}>
+    <div
+      className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
+      style={{ gridTemplateColumns: GRID_TEMPLATE }}
+    >
+      <span />
+      <span />
       <span className={LABEL}>Nama Siswa</span>
       <span className={LABEL}>NIS</span>
       <span className={LABEL}>Tempat & Tgl Lahir</span>
       <span className={LABEL}>No. HP</span>
       <span className={LABEL}>Jurusan</span>
-      <span className={LABEL}>Aksi</span>
+      <span className={`text-right ${LABEL}`}>Aksi</span>
     </div>
   );
 }
 
 export function SiswaTableRow({
-  siswa, onEdit, onResetPassword, onImpersonate,
+  siswa, index, onEdit, onResetPassword, onImpersonate,
 }: {
   siswa: SiswaCardData;
+  index: number;
   onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
@@ -38,65 +45,66 @@ export function SiswaTableRow({
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
 
   return (
-    <div className="border-b border-slate-100 dark:border-slate-800">
-      <div
+    <div>
+      <motion.div
+        initial={{ opacity: 0, x: -6 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: (index % 15) * 0.02 }}
         onClick={() => setExpanded((v) => !v)}
-        style={{ borderLeftColor: accent }}
-        className={`${GRID} cursor-pointer border-l-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40`}
+        className="grid cursor-pointer items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+        style={{ gridTemplateColumns: GRID_TEMPLATE }}
       >
-        <div className="flex min-w-0 items-center gap-2.5">
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-            style={{ backgroundColor: accent }}
-          >
-            {getInitials(displayNama)}
-          </div>
-          <span className={`truncate ${TEXT}`} title={displayNama}>
-            {displayNama}
-          </span>
+        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
+
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
+          style={{ backgroundColor: accent }}
+        >
+          {getInitials(displayNama)}
         </div>
 
-        <span className={`min-w-0 truncate ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
+        <p className={`truncate ${TEXT}`} title={displayNama}>{displayNama}</p>
+
+        <p className={`truncate font-mono ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
           {siswa.nis}
-        </span>
+        </p>
 
-        <span className={`min-w-0 truncate ${TEXT}`} title={tempatTanggal}>
-          {tempatTanggal}
-        </span>
+        <p className={`truncate ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</p>
 
-        <span className={`min-w-0 truncate ${TEXT}`}>
-          {siswa.noHp || "—"}
-        </span>
+        <p className={`truncate ${TEXT}`}>{siswa.noHp || "—"}</p>
 
-        <span className="min-w-0">
+        <div className="min-w-0">
           {siswa.jurusan && (
-            <span className="block w-fit max-w-full truncate rounded-md bg-[#0d9488] px-2 py-0.5 text-[11px] font-semibold text-white">
+            <span
+              className="inline-block max-w-full truncate rounded-full px-2.5 py-1 text-[11px] font-bold text-white"
+              style={{ backgroundColor: "#0d9488" }}
+            >
               {siswa.jurusan}
             </span>
           )}
-        </span>
+        </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-end gap-1">
           {onImpersonate && siswa.user && (
             <button
               onClick={(e) => { e.stopPropagation(); onImpersonate(siswa); }}
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-600 dark:border-slate-700 dark:hover:bg-amber-900/20"
+              className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20"
               title="Pantau (masuk sebagai siswa ini)"
             >
-              <ScanEye size={13} />
+              <ScanEye size={14} className="text-amber-500" />
             </button>
           )}
           {onResetPassword && siswa.user && (
             <button
               onClick={(e) => { e.stopPropagation(); onResetPassword(siswa); }}
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:border-slate-700 dark:hover:bg-red-900/20"
+              className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
               title="Reset Password"
             >
-              <KeyRound size={13} />
+              <KeyRound size={14} className="text-red-500" />
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {expanded && (
         <SiswaDetailPanel
