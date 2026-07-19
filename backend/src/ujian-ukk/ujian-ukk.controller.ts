@@ -15,6 +15,7 @@ import { AbsenSendiriUkkDto, UpsertAbsensiUkkDto } from './dto/absensi-ukk.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { imageUploadOptions, documentUploadOptions } from '../common/upload/file-filters';
 import { Role } from '../../generated/prisma/client';
 
 const soalStorage = diskStorage({
@@ -75,7 +76,7 @@ export class UjianUkkController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Post('soal')
-  @UseInterceptors(FileInterceptor('file', { storage: soalStorage }))
+  @UseInterceptors(FileInterceptor('file', { storage: soalStorage, ...documentUploadOptions }))
   createSoal(@Body() dto: CreateSoalDto, @UploadedFile() file: Express.Multer.File) {
     const fileUrl  = `/uploads/ukk-soal/${file.filename}`;
     const fileName = file.originalname;
@@ -100,7 +101,7 @@ export class UjianUkkController {
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Post('submisi')
-  @UseInterceptors(FileInterceptor('file', { storage: submitStorage }))
+  @UseInterceptors(FileInterceptor('file', { storage: submitStorage, ...documentUploadOptions }))
   submitProject(
     @Request() req: any,
     @Body() dto: SubmitProjectDto,
@@ -139,7 +140,7 @@ export class UjianUkkController {
   @UseInterceptors(FileInterceptor('foto', { storage: diskStorage({
     destination: (_req: any, _file: any, cb: any) => { const dir = require('path').join(process.cwd(), 'uploads', 'absensi-ukk'); require('fs').mkdirSync(dir, { recursive: true }); cb(null, dir); },
     filename: (_req: any, file: any, cb: any) => { cb(null, Date.now() + '-' + Math.round(Math.random()*1e9) + require('path').extname(file.originalname)); },
-  }) }))
+  }), ...imageUploadOptions }))
   absenSendiriUkk(@Body() dto: AbsenSendiriUkkDto, @Request() req: any, @UploadedFile() foto?: Express.Multer.File) {
     const fotoUrl = foto ? `/uploads/absensi-ukk/${foto.filename}` : undefined;
     return this.service.absenSendiriUkk(req.user.sub, dto.tahapanId, {

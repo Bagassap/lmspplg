@@ -10,6 +10,7 @@ import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto } from './dto/absensi-har
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { imageUploadOptions } from '../common/upload/file-filters';
 import { Role } from '../../generated/prisma/client';
 
 const absensiHarianStorage = diskStorage({
@@ -62,7 +63,7 @@ export class AbsensiHarianController {
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Post('saya')
-  @UseInterceptors(FileInterceptor('foto', { storage: absensiHarianStorage }))
+  @UseInterceptors(FileInterceptor('foto', { storage: absensiHarianStorage, ...imageUploadOptions }))
   absenSendiri(
     @Body() dto: AbsenSendiriHarianDto,
     @Request() req: any,
