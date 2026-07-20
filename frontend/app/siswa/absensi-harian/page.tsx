@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, MapPin, Camera, CheckCircle2, Loader2, Clock, RefreshCw,
-  Sparkles, FileSignature, MessageSquareText, LogIn, LogOut, Moon,
+  Sparkles, FileSignature, MessageSquareText, LogIn, LogOut, Moon, AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -34,6 +34,7 @@ type StatusSaya = {
 };
 
 type AbsensiSummary = { hadir: number; izin: number; sakit: number; alpa: number; total: number; persentase: number };
+type Tab = "DATANG" | "PULANG";
 
 const MOTIVASI = [
   "Kehadiranmu hari ini adalah langkah kecil menuju kesuksesan besar!",
@@ -46,9 +47,9 @@ const MOTIVASI = [
 ];
 
 const WINDOW_INFO: Record<AbsenWindow, { label: string; range: string }> = {
-  HADIR:  { label: "Jendela Absen Hadir",  range: "06:00 – 12:00" },
-  PULANG: { label: "Jendela Absen Pulang", range: "12:00 – 23:59" },
-  CLOSED: { label: "Di luar jam absensi",  range: "00:00 – 06:00" },
+  HADIR:  { label: "Jendela Absen Datang", range: "06:00 – 11:00" },
+  PULANG: { label: "Jendela Absen Pulang", range: "11:00 – 23:00" },
+  CLOSED: { label: "Di luar jam absensi",  range: "23:00 – 06:00" },
 };
 
 export default function SiswaAbsensiHarianPage() {
@@ -60,6 +61,9 @@ export default function SiswaAbsensiHarianPage() {
   const [summary, setSummary] = useState<AbsensiSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<Tab>("DATANG");
+  const tabAutoSet = useRef(false);
 
   const [lokasi, setLokasi] = useState<string | null>(null);
   const [lokasiLoading, setLokasiLoading] = useState(false);
@@ -97,13 +101,21 @@ export default function SiswaAbsensiHarianPage() {
   }, [loadStatus]);
 
   const window_ = data?.window ?? "CLOSED";
-  // Pulang never requires a prior Hadir — a student who was IZIN/SAKIT, or who
-  // simply never marked Hadir, can still submit Pulang; the backend keeps
-  // status untouched either way, it never gets implied as HADIR by this.
-  const needsAction =
-    (window_ === "HADIR" && !data?.sudahAbsen) ||
-    (window_ === "PULANG" && !data?.sudahPulang);
-  const activeTipe = window_ === "PULANG" ? "PULANG" : statusPilihan;
+
+  // Default the visible tab to whichever one is actually actionable right now,
+  // but only once on first load — after that the student is free to switch
+  // tabs to review either side without it jumping back on them.
+  useEffect(() => {
+    if (!tabAutoSet.current && data) {
+      tabAutoSet.current = true;
+      if (data.window === "PULANG") setActiveTab("PULANG");
+    }
+  }, [data]);
+
+  const needsActionDatang = window_ === "HADIR" && !data?.sudahAbsen;
+  const needsActionPulang = window_ === "PULANG" && !data?.sudahPulang;
+  const needsAction = activeTab === "DATANG" ? needsActionDatang : needsActionPulang;
+  const activeTipe = activeTab === "PULANG" ? "PULANG" : statusPilihan;
 
   useEffect(() => {
     setLokasi(null);
@@ -112,7 +124,7 @@ export default function SiswaAbsensiHarianPage() {
     setTtd(null);
     setCatatan("");
     setStatusPilihan("HADIR");
-  }, [window_]);
+  }, [activeTab]);
 
   useEffect(() => {
     if (!needsAction) return;
@@ -138,7 +150,7 @@ export default function SiswaAbsensiHarianPage() {
   }
 
   async function handleSubmit() {
-    if (window_ !== "HADIR" && window_ !== "PULANG") return;
+    if (!needsAction) return;
     const tipe = activeTipe;
     if ((tipe === "HADIR" || tipe === "PULANG") && !ttd) {
       toast.error("Tanda tangan wajib diisi", "");
@@ -161,7 +173,7 @@ export default function SiswaAbsensiHarianPage() {
       const res = await fetch("/api/absensi-harian/saya", { method: "POST", body: formData });
       if (res.ok) {
         const successMsg =
-          tipe === "HADIR" ? "Absen hadir berhasil dicatat!" :
+          tipe === "HADIR" ? "Absen datang berhasil dicatat!" :
           tipe === "PULANG" ? "Absen pulang berhasil dicatat!" :
           tipe === "IZIN" ? "Izin berhasil dicatat!" : "Sakit berhasil dicatat!";
         toast.success(successMsg, "");
@@ -179,6 +191,11 @@ export default function SiswaAbsensiHarianPage() {
   const cfg = STATUS_CFG[status];
   const motivasi = MOTIVASI[new Date().getDay() % MOTIVASI.length];
   const winInfo = WINDOW_INFO[window_];
+
+  const TABS: { key: Tab; label: string; icon: typeof LogIn }[] = [
+    { key: "DATANG", label: "Absen Datang", icon: LogIn },
+    { key: "PULANG", label: "Absen Pulang", icon: LogOut },
+  ];
 
   return (
     <div className="space-y-5">
@@ -220,7 +237,7 @@ export default function SiswaAbsensiHarianPage() {
         <div className="relative mt-5 flex flex-wrap gap-2">
           <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
             style={{ background: data?.sudahAbsen ? "rgba(16,185,129,0.35)" : "rgba(255,255,255,0.12)" }}>
-            <LogIn size={11} /> Hadir {data?.sudahAbsen ? `· ${data.record?.waktuAbsen ?? ""}` : "· belum"}
+            <LogIn size={11} /> Datang {data?.sudahAbsen ? `· ${data.record?.waktuAbsen ?? ""}` : "· belum"}
           </span>
           <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
             style={{ background: data?.sudahPulang ? "rgba(59,124,232,0.35)" : "rgba(255,255,255,0.12)" }}>
@@ -244,202 +261,114 @@ export default function SiswaAbsensiHarianPage() {
           <div className="grid grid-cols-12 gap-4 md:gap-5">
 
             <div className="col-span-12 xl:col-span-7">
+
+              {/* Tab switcher — both tabs always visible/clickable regardless of the active time window */}
+              <div className="mb-4 flex gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+                {TABS.map((t) => {
+                  const active = activeTab === t.key;
+                  const Icon = t.icon;
+                  return (
+                    <button key={t.key} type="button" onClick={() => setActiveTab(t.key)}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all"
+                      style={active
+                        ? { background: t.key === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT, color: "#fff" }
+                        : { background: "transparent", color: "#94a3b8" }}>
+                      <Icon size={15} /> {t.label}
+                    </button>
+                  );
+                })}
+              </div>
+
               <AnimatePresence mode="wait">
-                {window_ === "CLOSED" ? (
-                  <motion.div key="closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ background: BRAND_GRADIENT }}>
-                      <Moon size={26} className="text-white" />
-                    </div>
-                    <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya Absen</h2>
-                    <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-                      Absen hadir dibuka pukul <b>06:00–12:00</b> dan absen pulang pukul <b>12:00–23:59</b>. Silakan kembali lagi nanti.
-                    </p>
-                  </motion.div>
-                ) : needsAction ? (
-                  <motion.div key={`form-${window_}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-
-                    <div className="flex items-center gap-3 px-5 pt-5">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-md"
-                        style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
-                        {activeTipe === "PULANG" ? <LogOut size={18} /> : activeTipe === "HADIR" ? <LogIn size={18} /> : (() => { const Icon = STATUS_CFG[activeTipe].icon; return <Icon size={18} />; })()}
+                {activeTab === "DATANG" ? (
+                  data?.sudahAbsen ? (
+                    <motion.div key="datang-sudah" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      className="overflow-hidden rounded-2xl shadow-lg" style={{ background: BRAND_GRADIENT }}>
+                      <RingkasanAbsen
+                        title={`${cfg.label} Tercatat`}
+                        desc={<>Anda tercatat <b>{cfg.label}</b> hari ini</>}
+                        waktu={data?.record?.waktuAbsen}
+                        foto={data?.record?.foto}
+                        ttd={data?.record?.ttd}
+                        lokasi={data?.record?.lokasi}
+                        catatan={data?.record?.catatan}
+                        footnote="Absen pulang tersedia mulai pukul 11:00"
+                        onReload={() => loadStatus()}
+                      />
+                    </motion.div>
+                  ) : needsActionDatang ? (
+                    <motion.div key="datang-form" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                      <FormAbsen
+                        activeTipe={activeTipe}
+                        statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
+                        showStatusPicker
+                        lokasi={lokasi} lokasiLoading={lokasiLoading}
+                        fotoPreview={fotoPreview} fileInputRef={fileInputRef}
+                        onFotoChange={handleFotoChange}
+                        onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
+                        catatan={catatan} setCatatan={setCatatan}
+                        ttd={ttd} setTtd={setTtd}
+                        submitting={submitting} onSubmit={handleSubmit}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="datang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ background: BRAND_GRADIENT }}>
+                        <Moon size={26} className="text-white" />
                       </div>
-                      <div className="min-w-0">
-                        <h2 className="text-base font-extrabold text-slate-800 dark:text-white">
-                          {activeTipe === "PULANG" ? "Absen Pulang" : `Absen ${STATUS_CFG[activeTipe].label}`}
-                        </h2>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">
-                          {activeTipe === "PULANG" ? "Catat waktu pulangmu untuk hari ini" :
-                           activeTipe === "HADIR" ? "Catat kehadiranmu untuk hari ini" :
-                           `Laporkan ${STATUS_CFG[activeTipe].label.toLowerCase()} untuk hari ini`}
-                        </p>
-                      </div>
-                    </div>
-
-                    {window_ === "HADIR" && (
-                      <div className="flex gap-2 px-5">
-                        {(["HADIR", "IZIN", "SAKIT"] as const).map((s) => {
-                          const c = STATUS_CFG[s];
-                          const active = statusPilihan === s;
-                          return (
-                            <button key={s} type="button" onClick={() => setStatusPilihan(s)}
-                              className="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-bold transition-colors"
-                              style={active
-                                ? { borderColor: c.clr, background: c.bg, color: c.clr }
-                                : { borderColor: "transparent", background: "transparent", color: "#94a3b8" }}>
-                              {c.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    <div className="space-y-4 px-5 pb-5">
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                            <MapPin size={12} /> Lokasi
-                          </p>
-                          <div className="flex h-18 items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 dark:border-slate-700 dark:bg-slate-900/40">
-                            <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-slate-300"} />
-                            {lokasiLoading ? (
-                              <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
-                            ) : lokasi ? (
-                              <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
-                            ) : (
-                              <span className="text-xs text-slate-400">Lokasi tidak tersedia (opsional)</span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div>
-                          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                            <Camera size={12} /> Foto Selfie (opsional)
-                          </p>
-                          {fotoPreview ? (
-                            <div className="relative flex h-18 items-center">
-                              <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
-                              <button onClick={() => { setFotoFile(null); setFotoPreview(null); }}
-                                className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md">
-                                ×
-                              </button>
-                            </div>
-                          ) : (
-                            <button onClick={() => fileInputRef.current?.click()}
-                              className="flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 dark:border-slate-600">
-                              <Camera size={18} />
-                              <span className="text-xs font-semibold">Ambil Foto</span>
-                            </button>
-                          )}
-                          <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={handleFotoChange} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                          <MessageSquareText size={12} />
-                          {activeTipe === "IZIN" || activeTipe === "SAKIT"
-                            ? <>Keterangan / Alasan <span className="text-red-400 normal-case">*wajib</span></>
-                            : "Keterangan (opsional)"}
-                        </p>
-                        <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
-                          placeholder={activeTipe === "IZIN" || activeTipe === "SAKIT" ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
-                          className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
-                      </div>
-
-                      {(activeTipe === "HADIR" || activeTipe === "PULANG") && (
-                        <div>
-                          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                            <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
-                          </p>
-                          <SignaturePad onChange={setTtd} />
-                        </div>
-                      )}
-
-                      <motion.button whileTap={{ scale: 0.98 }} onClick={handleSubmit}
-                        disabled={submitting || ((activeTipe === "HADIR" || activeTipe === "PULANG") ? !ttd : !catatan.trim())}
-                        className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md disabled:opacity-50"
-                        style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
-                        {submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />)}
-                        {submitting ? "Menyimpan..." : activeTipe === "PULANG" ? "Absen Pulang Sekarang" : `Absen ${STATUS_CFG[activeTipe].label} Sekarang`}
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div key={`sudah-${window_}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="overflow-hidden rounded-2xl shadow-lg" style={{ background: BRAND_GRADIENT }}>
-                    <div className="relative px-6 py-8 text-center">
-                      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
-                      <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-                        className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/25 shadow-lg">
-                        <CheckCircle2 size={30} className="text-white" />
-                      </motion.div>
-                      <h2 className="mt-4 text-lg font-extrabold text-white">
-                        {window_ === "HADIR" ? `${cfg.label} Tercatat` : "Kepulangan Tercatat"}
-                      </h2>
-                      <p className="mt-1 text-sm text-white/80">
-                        {window_ === "HADIR"
-                          ? <>Anda tercatat <b>{cfg.label}</b> hari ini</>
-                          : <>Anda tercatat <b>Pulang</b> hari ini</>}
+                      <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya</h2>
+                      <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
+                        Absen datang hanya tersedia jam 06.00-11.00 WIB.
                       </p>
-                      <div className="mx-auto mt-5 flex max-w-xs items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 backdrop-blur-sm">
-                        <Clock size={14} className="text-white/70" />
-                        <span className="font-mono text-xl font-extrabold text-white">
-                          {window_ === "HADIR" ? (data?.record?.waktuAbsen ?? "—") : (data?.record?.waktuPulang ?? "—")}
-                        </span>
+                    </motion.div>
+                  )
+                ) : (
+                  data?.sudahPulang ? (
+                    <motion.div key="pulang-sudah" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      className="overflow-hidden rounded-2xl shadow-lg" style={{ background: `linear-gradient(160deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` }}>
+                      <RingkasanAbsen
+                        title="Kepulangan Tercatat"
+                        desc={<>Anda tercatat <b>Pulang</b> hari ini</>}
+                        waktu={data?.record?.waktuPulang}
+                        foto={data?.record?.fotoPulang}
+                        ttd={data?.record?.ttdPulang}
+                        lokasi={data?.record?.lokasiPulang}
+                        catatan={data?.record?.catatanPulang}
+                        onReload={() => loadStatus()}
+                      />
+                    </motion.div>
+                  ) : needsActionPulang ? (
+                    <motion.div key="pulang-form" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                      <FormAbsen
+                        activeTipe="PULANG"
+                        statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
+                        showStatusPicker={false}
+                        lokasi={lokasi} lokasiLoading={lokasiLoading}
+                        fotoPreview={fotoPreview} fileInputRef={fileInputRef}
+                        onFotoChange={handleFotoChange}
+                        onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
+                        catatan={catatan} setCatatan={setCatatan}
+                        ttd={ttd} setTtd={setTtd}
+                        submitting={submitting} onSubmit={handleSubmit}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="pulang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
+                        {window_ === "HADIR" ? <Clock size={26} className="text-blue-500" /> : <AlertCircle size={26} className="text-red-500" />}
                       </div>
-
-                      <div className="relative mx-auto mt-6 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
-                        {(window_ === "HADIR" ? data?.record?.foto : data?.record?.fotoPulang) && (
-                          <div className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 p-3 backdrop-blur-sm">
-                            <img src={resolveMediaSrc(window_ === "HADIR" ? data?.record?.foto : data?.record?.fotoPulang) ?? undefined} alt="Selfie"
-                              className="h-24 w-24 rounded-xl border-2 border-white/30 object-cover shadow-md" />
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">Foto Selfie</span>
-                          </div>
-                        )}
-                        {(window_ === "HADIR" ? data?.record?.ttd : data?.record?.ttdPulang) && (
-                          <div className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 p-3 backdrop-blur-sm">
-                            <img src={resolveMediaSrc(window_ === "HADIR" ? data?.record?.ttd : data?.record?.ttdPulang) ?? undefined} alt="Tanda tangan"
-                              className="h-24 w-full rounded-xl border-2 border-white/30 bg-white object-contain shadow-md" />
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">Tanda Tangan</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {((window_ === "HADIR" ? data?.record?.lokasi : data?.record?.lokasiPulang) ||
-                        (window_ === "HADIR" ? data?.record?.catatan : data?.record?.catatanPulang)) && (
-                        <div className="relative mx-auto mt-4 max-w-md space-y-2 text-left">
-                          {(window_ === "HADIR" ? data?.record?.lokasi : data?.record?.lokasiPulang) && (
-                            <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 backdrop-blur-sm">
-                              <MapPin size={13} className="shrink-0 text-white/70" />
-                              <span className="truncate font-mono text-[11px] text-white/80">
-                                {window_ === "HADIR" ? data?.record?.lokasi : data?.record?.lokasiPulang}
-                              </span>
-                            </div>
-                          )}
-                          {(window_ === "HADIR" ? data?.record?.catatan : data?.record?.catatanPulang) && (
-                            <div className="flex items-start gap-2 rounded-xl bg-white/10 px-3 py-2 backdrop-blur-sm">
-                              <MessageSquareText size={13} className="mt-0.5 shrink-0 text-white/70" />
-                              <span className="text-[11px] text-white/80">
-                                {window_ === "HADIR" ? data?.record?.catatan : data?.record?.catatanPulang}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {window_ === "HADIR" && (
-                        <p className="relative mt-5 text-[11px] text-white/60">Absen pulang tersedia mulai pukul 12:00</p>
-                      )}
-                    </div>
-                    <div className="bg-white/10 px-6 py-3 text-center backdrop-blur-sm">
-                      <button onClick={() => loadStatus()} className="inline-flex items-center gap-1.5 text-xs font-bold text-white/80 hover:text-white">
-                        <RefreshCw size={12} /> Muat ulang
-                      </button>
-                    </div>
-                  </motion.div>
+                      <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">
+                        {window_ === "HADIR" ? "Belum Waktunya" : "Waktu Sudah Berakhir"}
+                      </h2>
+                      <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
+                        {window_ === "HADIR"
+                          ? "Absen pulang belum tersedia. Absen pulang dibuka mulai jam 11.00 WIB."
+                          : "Waktu absen pulang hari ini sudah berakhir."}
+                      </p>
+                    </motion.div>
+                  )
                 )}
               </AnimatePresence>
             </div>
@@ -460,6 +389,226 @@ export default function SiswaAbsensiHarianPage() {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+function RingkasanAbsen({
+  title, desc, waktu, foto, ttd, lokasi, catatan, footnote, onReload,
+}: {
+  title: string;
+  desc: React.ReactNode;
+  waktu?: string | null;
+  foto?: string | null;
+  ttd?: string | null;
+  lokasi?: string | null;
+  catatan?: string | null;
+  footnote?: string;
+  onReload: () => void;
+}) {
+  return (
+    <>
+      <div className="relative px-6 py-8 text-center">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
+          className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/25 shadow-lg">
+          <CheckCircle2 size={30} className="text-white" />
+        </motion.div>
+        <h2 className="mt-4 text-lg font-extrabold text-white">{title}</h2>
+        <p className="mt-1 text-sm text-white/80">{desc}</p>
+        <div className="mx-auto mt-5 flex max-w-xs items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 backdrop-blur-sm">
+          <Clock size={14} className="text-white/70" />
+          <span className="font-mono text-xl font-extrabold text-white">{waktu ?? "—"}</span>
+        </div>
+
+        <div className="relative mx-auto mt-6 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
+          {foto && (
+            <div className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 p-3 backdrop-blur-sm">
+              <img src={resolveMediaSrc(foto) ?? undefined} alt="Selfie"
+                className="h-24 w-24 rounded-xl border-2 border-white/30 object-cover shadow-md" />
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">Foto Selfie</span>
+            </div>
+          )}
+          {ttd && (
+            <div className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 p-3 backdrop-blur-sm">
+              <img src={resolveMediaSrc(ttd) ?? undefined} alt="Tanda tangan"
+                className="h-24 w-full rounded-xl border-2 border-white/30 bg-white object-contain shadow-md" />
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">Tanda Tangan</span>
+            </div>
+          )}
+        </div>
+
+        {(lokasi || catatan) && (
+          <div className="relative mx-auto mt-4 max-w-md space-y-2 text-left">
+            {lokasi && (
+              <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 backdrop-blur-sm">
+                <MapPin size={13} className="shrink-0 text-white/70" />
+                <span className="truncate font-mono text-[11px] text-white/80">{lokasi}</span>
+              </div>
+            )}
+            {catatan && (
+              <div className="flex items-start gap-2 rounded-xl bg-white/10 px-3 py-2 backdrop-blur-sm">
+                <MessageSquareText size={13} className="mt-0.5 shrink-0 text-white/70" />
+                <span className="text-[11px] text-white/80">{catatan}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {footnote && <p className="relative mt-5 text-[11px] text-white/60">{footnote}</p>}
+      </div>
+      <div className="bg-white/10 px-6 py-3 text-center backdrop-blur-sm">
+        <button onClick={onReload} className="inline-flex items-center gap-1.5 text-xs font-bold text-white/80 hover:text-white">
+          <RefreshCw size={12} /> Muat ulang
+        </button>
+      </div>
+    </>
+  );
+}
+
+function FormAbsen({
+  activeTipe, statusPilihan, setStatusPilihan, showStatusPicker,
+  lokasi, lokasiLoading, fotoPreview, fileInputRef, onFotoChange, onFotoClear,
+  catatan, setCatatan, ttd, setTtd, submitting, onSubmit,
+}: {
+  activeTipe: "HADIR" | "IZIN" | "SAKIT" | "PULANG";
+  statusPilihan: "HADIR" | "IZIN" | "SAKIT";
+  setStatusPilihan: (s: "HADIR" | "IZIN" | "SAKIT") => void;
+  showStatusPicker: boolean;
+  lokasi: string | null;
+  lokasiLoading: boolean;
+  fotoPreview: string | null;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  onFotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFotoClear: () => void;
+  catatan: string;
+  setCatatan: (v: string) => void;
+  ttd: string | null;
+  setTtd: (v: string | null) => void;
+  submitting: boolean;
+  onSubmit: () => void;
+}) {
+  const isIzinSakit = activeTipe === "IZIN" || activeTipe === "SAKIT";
+  const ttdMissing = !isIzinSakit && !ttd;
+  const catatanMissing = isIzinSakit && !catatan.trim();
+  const disabled = submitting || ttdMissing || catatanMissing;
+
+  return (
+    <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex items-center gap-3 px-5 pt-5">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-md"
+          style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+          {activeTipe === "PULANG" ? <LogOut size={18} /> : activeTipe === "HADIR" ? <LogIn size={18} /> : (() => { const Icon = STATUS_CFG[activeTipe].icon; return <Icon size={18} />; })()}
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-base font-extrabold text-slate-800 dark:text-white">
+            {activeTipe === "PULANG" ? "Absen Pulang" : `Absen ${STATUS_CFG[activeTipe].label}`}
+          </h2>
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            {activeTipe === "PULANG" ? "Catat waktu pulangmu untuk hari ini" :
+             activeTipe === "HADIR" ? "Catat kehadiranmu untuk hari ini" :
+             `Laporkan ${STATUS_CFG[activeTipe].label.toLowerCase()} untuk hari ini`}
+          </p>
+        </div>
+      </div>
+
+      {showStatusPicker && (
+        <div className="flex gap-2 px-5">
+          {(["HADIR", "IZIN", "SAKIT"] as const).map((s) => {
+            const c = STATUS_CFG[s];
+            const active = statusPilihan === s;
+            return (
+              <button key={s} type="button" onClick={() => setStatusPilihan(s)}
+                className="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-bold transition-colors"
+                style={active
+                  ? { borderColor: c.clr, background: c.bg, color: c.clr }
+                  : { borderColor: "transparent", background: "transparent", color: "#94a3b8" }}>
+                {c.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="space-y-4 px-5 pb-5">
+        {!isIzinSakit && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <MapPin size={12} /> Lokasi
+              </p>
+              <div className="flex h-18 items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 dark:border-slate-700 dark:bg-slate-900/40">
+                <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-slate-300"} />
+                {lokasiLoading ? (
+                  <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
+                ) : lokasi ? (
+                  <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
+                ) : (
+                  <span className="text-xs text-slate-400">Lokasi tidak tersedia (opsional)</span>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <Camera size={12} /> Foto Selfie (opsional)
+              </p>
+              {fotoPreview ? (
+                <div className="relative flex h-18 items-center">
+                  <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
+                  <button onClick={onFotoClear}
+                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md">
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => fileInputRef.current?.click()}
+                  className="flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 dark:border-slate-600">
+                  <Camera size={18} />
+                  <span className="text-xs font-semibold">Ambil Foto</span>
+                </button>
+              )}
+              <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={onFotoChange} />
+            </div>
+          </div>
+        )}
+
+        <div>
+          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <MessageSquareText size={12} />
+            {isIzinSakit
+              ? <>Keterangan / Alasan <span className="text-red-400 normal-case">*wajib</span></>
+              : "Keterangan (opsional)"}
+          </p>
+          <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
+            placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
+            className={`w-full resize-none rounded-xl border bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
+              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-violet-400 dark:border-slate-600"
+            }`} />
+          {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
+        </div>
+
+        {!isIzinSakit && (
+          <div>
+            <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+              <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
+            </p>
+            <div className={ttdMissing ? "rounded-xl ring-2 ring-red-300" : ""}>
+              <SignaturePad onChange={setTtd} />
+            </div>
+            {ttdMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Tanda tangan wajib diisi</p>}
+          </div>
+        )}
+
+        <motion.button whileTap={{ scale: 0.98 }} onClick={onSubmit}
+          disabled={disabled}
+          className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md disabled:opacity-50"
+          style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+          {submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />)}
+          {submitting ? "Menyimpan..." : activeTipe === "PULANG" ? "Absen Pulang Sekarang" : `Absen ${STATUS_CFG[activeTipe].label} Sekarang`}
+        </motion.button>
+      </div>
     </div>
   );
 }

@@ -34,8 +34,8 @@ export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
 
 function currentWindow(): AbsenWindow {
   const { hour } = jakartaParts();
-  if (hour >= 6 && hour < 12) return 'HADIR';
-  if (hour >= 12 && hour <= 23) return 'PULANG';
+  if (hour >= 6 && hour < 11) return 'HADIR';
+  if (hour >= 11 && hour < 23) return 'PULANG';
   return 'CLOSED';
 }
 
@@ -140,7 +140,10 @@ export class AbsensiHarianService {
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal: tgl } },
     });
     return {
-      sudahAbsen: !!record,
+      // "sudahAbsen" specifically means a Datang (HADIR/IZIN/SAKIT) submission
+      // exists — not just "some row exists for today", since a Pulang-only
+      // row (no prior Hadir) must not read as "already absen datang".
+      sudahAbsen: !!record?.waktuAbsen,
       sudahPulang: !!record?.waktuPulang,
       status: record?.status ?? null,
       tanggal: tgl,
@@ -165,7 +168,11 @@ export class AbsensiHarianService {
 
     if (tipe === 'PULANG') {
       if (window !== 'PULANG') {
-        throw new ForbiddenException('Absen pulang hanya bisa dilakukan pukul 12:00–23:59');
+        throw new ForbiddenException(
+          window === 'HADIR'
+            ? 'Absen pulang belum tersedia. Absen pulang dibuka mulai jam 11.00 WIB'
+            : 'Waktu absen pulang hari ini sudah berakhir',
+        );
       }
       // Pulang is allowed even without a prior Hadir, but it must never set/imply status HADIR by itself —
       // status stays whatever it already was (null/IZIN/SAKIT/ALPA/HADIR untouched).
@@ -185,7 +192,7 @@ export class AbsensiHarianService {
 
     // HADIR / IZIN / SAKIT — one submission per day
     if (window !== 'HADIR') {
-      throw new ForbiddenException('Absen hadir/izin/sakit hanya bisa dilakukan pukul 06:00–12:00');
+      throw new ForbiddenException('Absen datang hanya tersedia jam 06.00-11.00 WIB');
     }
     if (existing?.status) {
       throw new BadRequestException('Anda sudah mengisi absensi hari ini');
