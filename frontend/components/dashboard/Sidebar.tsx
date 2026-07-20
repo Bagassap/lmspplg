@@ -105,6 +105,9 @@ const ROLE_LABEL: Record<string, string> = {
 const SIDEBAR_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 const SIDEBAR_ACCENT = "#0033FF";
 
+const TOGGLE_BTN_CLASS =
+  "flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-white/15 dark:hover:text-white";
+
 const GREETINGS = [
   "Semoga harimu menyenangkan!",
   "Tetap semangat belajar hari ini!",
@@ -146,7 +149,6 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [isSuperAdmin]);
   const PRIMARY  = SIDEBAR_ACCENT;
-  const PRIMARY_ICON_BG = PRIMARY;
   const greeting = GREETINGS[new Date().getDay() % GREETINGS.length];
 
   const [expanded, setExpanded] = useState<Set<string>>(() => {
@@ -191,7 +193,7 @@ export function Sidebar({
           <button
             onClick={onToggleCollapse}
             title="Buka sidebar"
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition-all hover:bg-primary/10 hover:text-primary dark:hover:bg-white/10 dark:hover:text-white"
+            className={`h-9 w-9 ${TOGGLE_BTN_CLASS}`}
           >
             <ChevronsRight size={18} />
           </button>
@@ -199,20 +201,25 @@ export function Sidebar({
           <>
             <div className="flex items-center gap-2.5">
               <div
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-md shadow-blue-900/25 ring-1 ring-white/40 dark:shadow-black/40 dark:ring-white/10"
                 style={{ background: SIDEBAR_GRADIENT }}
               >
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto" />
               </div>
-              <span className="text-[14px] font-extrabold text-slate-800 dark:text-white">
-                LMS PPLG
+              <span className="flex items-baseline gap-1">
+                <span className="bg-gradient-to-br from-[#8b6bff] via-[#4f6bff] to-[#0033ff] bg-clip-text text-[17px] font-black tracking-tight text-transparent dark:from-[#b3a1ff] dark:via-[#7aa2fb] dark:to-[#60a5fa]">
+                  LMS
+                </span>
+                <span className="text-[11px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">
+                  PPLG
+                </span>
               </span>
             </div>
 
             <button
               onClick={onClose}
               title="Tutup sidebar"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-white/10 dark:hover:text-white lg:hidden"
+              className={`h-8 w-8 ${TOGGLE_BTN_CLASS} lg:hidden`}
             >
               <X size={16} />
             </button>
@@ -220,7 +227,7 @@ export function Sidebar({
             <button
               onClick={onToggleCollapse}
               title="Sembunyikan sidebar"
-              className="hidden h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-white/10 dark:hover:text-white lg:flex"
+              className={`hidden h-8 w-8 ${TOGGLE_BTN_CLASS} lg:flex`}
             >
               <ChevronsLeft size={18} />
             </button>
@@ -240,7 +247,7 @@ export function Sidebar({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center px-5 pb-5 pt-1">
+          <div className="flex flex-col items-center px-5 pb-5 pt-6">
             <div
               className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
               style={{
@@ -282,7 +289,7 @@ export function Sidebar({
                       {active && (
                         <motion.div
                           layoutId="c-pill"
-                          className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-primary/20"
+                          className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-[#3b82f6]/25 dark:shadow-[inset_3px_0_0_0_#3b82f6]"
                           transition={{ type: "spring", stiffness: 400, damping: 32 }}
                         />
                       )}
@@ -290,8 +297,10 @@ export function Sidebar({
                         <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-100 dark:hover:bg-white/[0.06]" />
                       )}
                       <span
-                        className="relative flex h-7 w-7 items-center justify-center rounded-lg"
-                        style={{ backgroundColor: active ? PRIMARY_ICON_BG : "transparent" }}
+                        className={[
+                          "relative flex h-7 w-7 items-center justify-center rounded-lg",
+                          active ? "bg-[#0033FF] dark:bg-[#3b82f6]" : "",
+                        ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
                         {item.key === "permintaan-password" && pendingResetCount > 0 && (
@@ -308,7 +317,7 @@ export function Sidebar({
                       {active && (
                         <motion.div
                           layoutId="c-pill"
-                          className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-primary/20"
+                          className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-[#3b82f6]/25 dark:shadow-[inset_3px_0_0_0_#3b82f6]"
                           transition={{ type: "spring", stiffness: 400, damping: 32 }}
                         />
                       )}
@@ -316,8 +325,10 @@ export function Sidebar({
                         <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-100 dark:hover:bg-white/[0.06]" />
                       )}
                       <span
-                        className="relative flex h-7 w-7 items-center justify-center rounded-lg"
-                        style={{ backgroundColor: active ? PRIMARY_ICON_BG : "transparent" }}
+                        className={[
+                          "relative flex h-7 w-7 items-center justify-center rounded-lg",
+                          active ? "bg-[#0033FF] dark:bg-[#3b82f6]" : "",
+                        ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
                       </span>
@@ -333,7 +344,7 @@ export function Sidebar({
                   {active && (
                     <motion.div
                       layoutId="e-pill"
-                      className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-primary/20"
+                      className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-[#3b82f6]/25 dark:shadow-[inset_3px_0_0_0_#3b82f6]"
                       transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     />
                   )}
@@ -341,25 +352,32 @@ export function Sidebar({
                     <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-white/5" />
                   )}
                   <span
-                    className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: active ? PRIMARY_ICON_BG : undefined }}
+                    className={[
+                      "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                      active ? "bg-[#0033FF] dark:bg-[#3b82f6]" : "",
+                    ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}
                     <item.icon size={16} className="relative" style={{ color: active ? "#fff" : "#64748b" }} />
                   </span>
                   <span
-                    className="relative flex-1 text-left text-[13px] font-semibold"
-                    style={{ color: active ? PRIMARY : undefined }}
+                    className={[
+                      "relative flex-1 text-left text-[13px] font-semibold",
+                      active ? "text-[#0033FF] dark:text-[#60a5fa]" : "text-slate-700 dark:text-slate-300",
+                    ].join(" ")}
                   >
-                    <span className={active ? "" : "text-slate-700 dark:text-slate-300"}>{item.label}</span>
+                    {item.label}
                   </span>
                   {item.locked ? (
                     <Lock size={12} className="relative shrink-0 text-slate-300 dark:text-slate-600" />
                   ) : (
                     <ChevronDown
                       size={14}
-                      className={["relative shrink-0 transition-transform duration-200", isExp ? "rotate-180" : ""].join(" ")}
-                      style={{ color: active ? PRIMARY : "#94a3b8" }}
+                      className={[
+                        "relative shrink-0 transition-transform duration-200",
+                        isExp ? "rotate-180" : "",
+                        active ? "text-[#0033FF] dark:text-[#60a5fa]" : "text-slate-400",
+                      ].join(" ")}
                     />
                   )}
                 </>
@@ -402,25 +420,25 @@ export function Sidebar({
                                 <Link
                                   href={sub.href}
                                   onClick={onClose}
-                                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[12.5px] transition-all duration-150"
-                                  style={{
-                                    color:           subActive ? PRIMARY : undefined,
-                                    fontWeight:      subActive ? 600 : 400,
-                                    backgroundColor: subActive ? `${PRIMARY}12` : undefined,
-                                  }}
+                                  className={[
+                                    "flex items-center gap-2 rounded-lg px-2 py-1.5 text-[12.5px] transition-all duration-150",
+                                    subActive
+                                      ? "bg-primary/10 font-semibold text-[#0033FF] dark:bg-[#3b82f6]/20 dark:text-[#60a5fa] dark:shadow-[inset_2px_0_0_0_#3b82f6]"
+                                      : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+                                  ].join(" ")}
                                 >
                                   <span
-                                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md"
-                                    style={{ backgroundColor: subActive ? `${PRIMARY}20` : "transparent" }}
+                                    className={[
+                                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-md",
+                                      subActive ? "bg-[#0033FF]/20 dark:bg-[#3b82f6]/30" : "",
+                                    ].join(" ")}
                                   >
                                     <sub.icon
                                       size={12}
-                                      style={{ color: subActive ? PRIMARY : "#94a3b8" }}
+                                      className={subActive ? "text-[#0033FF] dark:text-[#60a5fa]" : "text-slate-400"}
                                     />
                                   </span>
-                                  <span className={subActive ? "" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}>
-                                    {sub.label}
-                                  </span>
+                                  <span>{sub.label}</span>
                                 </Link>
                               </li>
                             );
@@ -443,7 +461,7 @@ export function Sidebar({
                   {active && (
                     <motion.div
                       layoutId="e-pill"
-                      className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-primary/20"
+                      className="absolute inset-0 rounded-xl bg-primary/10 dark:bg-[#3b82f6]/25 dark:shadow-[inset_3px_0_0_0_#3b82f6]"
                       transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     />
                   )}
@@ -452,18 +470,22 @@ export function Sidebar({
                   )}
 
                   <span
-                    className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: active ? PRIMARY_ICON_BG : undefined }}
+                    className={[
+                      "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                      active ? "bg-[#0033FF] dark:bg-[#3b82f6]" : "",
+                    ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}
                     <item.icon size={16} className="relative" style={{ color: active ? "#fff" : "#64748b" }} />
                   </span>
 
                   <span
-                    className="relative flex-1 text-[13px] font-semibold"
-                    style={{ color: active ? PRIMARY : undefined }}
+                    className={[
+                      "relative flex-1 text-[13px] font-semibold",
+                      active ? "text-[#0033FF] dark:text-[#60a5fa]" : "text-slate-700 dark:text-slate-300",
+                    ].join(" ")}
                   >
-                    <span className={active ? "" : "text-slate-700 dark:text-slate-300"}>{item.label}</span>
+                    {item.label}
                   </span>
 
                   {item.key === "permintaan-password" && pendingResetCount > 0 && (
@@ -474,8 +496,7 @@ export function Sidebar({
 
                   <ChevronRight
                     size={13}
-                    className="relative shrink-0"
-                    style={{ color: active ? PRIMARY : "#cbd5e1" }}
+                    className={active ? "relative shrink-0 text-[#0033FF] dark:text-[#60a5fa]" : "relative shrink-0 text-slate-300"}
                   />
                 </Link>
               </li>
