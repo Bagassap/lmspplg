@@ -2,28 +2,21 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Sparkles, X,
+  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X,
 } from "lucide-react";
 import { type SiswaCardData, getInitials, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir } from "./shared";
 
-const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
-
-function formatTanggal(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-}
+const HEADER_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
 
 function FieldItem({ icon: Icon, label, value }: {
   icon: React.ElementType; label: string; value: string | null | undefined;
 }) {
   return (
-    <div className="border-r border-b border-slate-100 py-3 pl-3.5 pr-4 dark:border-slate-700/60"
-      style={{ borderLeftWidth: 3, borderLeftStyle: "solid", borderLeftColor: "#4F8EF7" }}>
-      <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#4F8EF71a] text-[#0033FF]">
-          <Icon size={13} />
-        </div>
-        <p className="truncate text-[10px] font-bold uppercase tracking-wider text-[#3B5FE0]">{label}</p>
+    <div className="border-slate-100 py-3.5 pl-1 pr-4 dark:border-slate-700/60"
+      style={{ borderRightWidth: "0.5px", borderBottomWidth: "0.5px", borderRightStyle: "solid", borderBottomStyle: "solid" }}>
+      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+        <Icon size={12} />
+        <p className="truncate text-[10px] font-bold uppercase tracking-wider">{label}</p>
       </div>
       <p className="mt-1.5 truncate text-[15px] font-bold text-slate-800 dark:text-white" title={value || "—"}>
         {value || "—"}
@@ -48,7 +41,8 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
           className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl bg-white shadow-2xl dark:bg-slate-800 sm:mx-0">
 
-          <div className="relative shrink-0 overflow-hidden px-6 py-6" style={{ background: BRAND_GRADIENT }}>
+          {/* Bagian 1 — header profil (~30%) */}
+          <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: HEADER_GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
 
@@ -57,31 +51,34 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               <X size={15} />
             </button>
 
-            <div className="relative flex items-center gap-3.5">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-base font-extrabold text-white"
-                style={{ backgroundColor: "rgba(255,255,255,0.22)", boxShadow: "0 0 0 3px rgba(255,255,255,0.25)" }}>
+            <div className="relative flex items-center gap-4">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/40 text-lg font-extrabold text-white"
+                style={{ backgroundColor: "rgba(255,255,255,0.22)", boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
                 {getInitials(displayNama)}
               </div>
               <div className="min-w-0">
-                <h2 className="truncate text-lg font-extrabold leading-tight text-white">{displayNama}</h2>
-                <p className="mt-1 font-mono text-xs font-semibold text-white/75">NIS: {siswa.nis}</p>
+                <h2 className="truncate text-[19px] font-extrabold leading-tight text-white">{displayNama}</h2>
+                <p className="mt-1 font-mono text-xs text-white/70">NIS: {siswa.nis}</p>
+                <span className="mt-2 inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+                  {kelasShort(siswa.kelas.nama)}
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="px-4 py-4 sm:px-6">
+          {/* Bagian 2 — detail informasi (~70%) */}
+          <div className="px-4 py-5 sm:px-6">
             <div className="grid grid-cols-1 sm:grid-cols-2">
               <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} />
               <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} />
-              <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} />
-              <FieldItem icon={CalendarDays} label="Angkatan" value={String(siswa.angkatan)} />
-              <FieldItem icon={GraduationCap} label="Kelas" value={kelasShort(siswa.kelas.nama)} />
               <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} />
-              <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
+              <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
               <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} />
+              <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
+              <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} />
             </div>
 
-            <div className="mt-4 flex items-center justify-end gap-2 border-t border-slate-200 pt-3.5 dark:border-slate-700/50">
+            <div className="mt-5 flex items-center justify-end gap-2 border-t border-slate-200 pt-3.5 dark:border-slate-700/50">
               <button
                 type="button" onClick={onClose}
                 className="rounded-lg border-2 border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
@@ -91,12 +88,12 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               {onEdit && (
                 <motion.button
                   type="button" onClick={onEdit}
-                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(79,142,247,0.4)" }}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(37,99,235,0.4)" }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold text-white shadow-sm"
-                  style={{ background: BRAND_GRADIENT }}
+                  style={{ background: HEADER_GRADIENT }}
                 >
-                  <Sparkles size={12} /> Edit Data
+                  <Pencil size={12} /> Edit Data
                 </motion.button>
               )}
             </div>
