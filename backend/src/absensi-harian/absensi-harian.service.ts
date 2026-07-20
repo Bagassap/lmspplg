@@ -233,6 +233,10 @@ export class AbsensiHarianService {
             : 'Waktu absen pulang hari ini sudah berakhir',
         );
       }
+      if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen pulang');
+      if (!extras.lokasi) throw new BadRequestException('Lokasi (GPS) wajib diisi untuk absen pulang');
+      if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk absen pulang');
+
       // Pulang is allowed even without a prior Hadir, but it must never set/imply status HADIR by itself —
       // status stays whatever it already was (null/IZIN/SAKIT/ALPA/HADIR untouched).
       const pulangData = {
@@ -255,6 +259,11 @@ export class AbsensiHarianService {
     }
     if (existing?.status) {
       throw new BadRequestException('Anda sudah mengisi absensi hari ini');
+    }
+    if (tipe === 'HADIR') {
+      if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen hadir');
+      if (!extras.lokasi) throw new BadRequestException('Lokasi (GPS) wajib diisi untuk absen hadir');
+      if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk absen hadir');
     }
     if ((tipe === 'IZIN' || tipe === 'SAKIT') && !extras.catatan?.trim()) {
       throw new BadRequestException('Keterangan wajib diisi untuk Izin/Sakit');

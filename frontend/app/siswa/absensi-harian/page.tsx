@@ -46,6 +46,17 @@ const MOTIVASI = [
   "Jangan lewatkan harimu — catat kehadiranmu sekarang!",
 ];
 
+// getCurrentPosition is blocked outright by every browser on non-HTTPS,
+// non-localhost origins (this site is served over plain HTTP on a bare IP,
+// so it always fails here). GPS is still requested and still required to
+// *attempt*, but when the browser itself refuses to even try, we fall back
+// to this marker instead of leaving the field empty forever — otherwise
+// nobody could ever submit an absen on this deployment.
+const GPS_UNAVAILABLE = "GPS tidak tersedia (koneksi tidak aman)";
+function isGpsCoords(loc: string | null) {
+  return !!loc && loc !== GPS_UNAVAILABLE;
+}
+
 const WINDOW_INFO: Record<AbsenWindow, { label: string; range: string }> = {
   HADIR:  { label: "Jendela Absen Datang", range: "06:00 – 11:00" },
   PULANG: { label: "Jendela Absen Pulang", range: "11:00 – 23:00" },
@@ -126,19 +137,29 @@ export default function SiswaAbsensiHarianPage() {
     setStatusPilihan("HADIR");
   }, [activeTab]);
 
-  useEffect(() => {
-    if (!needsAction) return;
-    if (!navigator.geolocation) return;
+  const requestLokasi = useCallback(() => {
+    if (!navigator.geolocation) {
+      setLokasi(GPS_UNAVAILABLE);
+      return;
+    }
     setLokasiLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLokasi(`${pos.coords.latitude}, ${pos.coords.longitude}`);
         setLokasiLoading(false);
       },
-      () => setLokasiLoading(false),
+      () => {
+        setLokasi(GPS_UNAVAILABLE);
+        setLokasiLoading(false);
+      },
       { timeout: 8000 },
     );
-  }, [needsAction]);
+  }, []);
+
+  useEffect(() => {
+    if (!needsAction) return;
+    requestLokasi();
+  }, [needsAction, requestLokasi]);
 
   function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -152,9 +173,10 @@ export default function SiswaAbsensiHarianPage() {
   async function handleSubmit() {
     if (!needsAction) return;
     const tipe = activeTipe;
-    if ((tipe === "HADIR" || tipe === "PULANG") && !ttd) {
-      toast.error("Tanda tangan wajib diisi", "");
-      return;
+    if (tipe === "HADIR" || tipe === "PULANG") {
+      if (!fotoFile) { toast.error("Foto wajib diisi", ""); return; }
+      if (!lokasi) { toast.error("Lokasi (GPS) wajib diisi", ""); return; }
+      if (!ttd) { toast.error("Tanda tangan wajib diisi", ""); return; }
     }
     if ((tipe === "IZIN" || tipe === "SAKIT") && !catatan.trim()) {
       toast.error("Keterangan wajib diisi", "");
@@ -302,7 +324,7 @@ export default function SiswaAbsensiHarianPage() {
                         activeTipe={activeTipe}
                         statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
                         showStatusPicker
-                        lokasi={lokasi} lokasiLoading={lokasiLoading}
+                        lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
                         onFotoChange={handleFotoChange}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
@@ -344,7 +366,7 @@ export default function SiswaAbsensiHarianPage() {
                         activeTipe="PULANG"
                         statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
                         showStatusPicker={false}
-                        lokasi={lokasi} lokasiLoading={lokasiLoading}
+                        lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
                         onFotoChange={handleFotoChange}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
@@ -469,7 +491,7 @@ function RingkasanAbsen({
 
 function FormAbsen({
   activeTipe, statusPilihan, setStatusPilihan, showStatusPicker,
-  lokasi, lokasiLoading, fotoPreview, fileInputRef, onFotoChange, onFotoClear,
+  lokasi, lokasiLoading, onRetryLokasi, fotoPreview, fileInputRef, onFotoChange, onFotoClear,
   catatan, setCatatan, ttd, setTtd, submitting, onSubmit,
 }: {
   activeTipe: "HADIR" | "IZIN" | "SAKIT" | "PULANG";
@@ -478,6 +500,7 @@ function FormAbsen({
   showStatusPicker: boolean;
   lokasi: string | null;
   lokasiLoading: boolean;
+  onRetryLokasi: () => void;
   fotoPreview: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -490,9 +513,11 @@ function FormAbsen({
   onSubmit: () => void;
 }) {
   const isIzinSakit = activeTipe === "IZIN" || activeTipe === "SAKIT";
+  const fotoMissing = !isIzinSakit && !fotoPreview;
+  const lokasiMissing = !isIzinSakit && !lokasi;
   const ttdMissing = !isIzinSakit && !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
-  const disabled = submitting || ttdMissing || catatanMissing;
+  const disabled = submitting || fotoMissing || lokasiMissing || ttdMissing || catatanMissing;
 
   return (
     <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -536,23 +561,34 @@ function FormAbsen({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                <MapPin size={12} /> Lokasi
+                <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
               </p>
-              <div className="flex h-18 items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 dark:border-slate-700 dark:bg-slate-900/40">
-                <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-slate-300"} />
+              <div className={`flex h-18 items-center gap-2 rounded-xl border bg-slate-50 px-3 py-2.5 dark:bg-slate-900/40 ${
+                lokasiMissing ? "border-red-300 dark:border-red-800" : isGpsCoords(lokasi) ? "border-slate-100 dark:border-slate-700" : "border-amber-200 dark:border-amber-800"
+              }`}>
+                <MapPin size={15} className={isGpsCoords(lokasi) ? "text-emerald-500" : lokasi ? "text-amber-500" : "text-slate-300"} />
                 {lokasiLoading ? (
                   <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
-                ) : lokasi ? (
+                ) : isGpsCoords(lokasi) ? (
                   <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
                 ) : (
-                  <span className="text-xs text-slate-400">Lokasi tidak tersedia (opsional)</span>
+                  <div className="flex flex-1 items-center justify-between gap-2">
+                    <span className="text-xs text-amber-600 dark:text-amber-400">{lokasi ?? "Lokasi tidak tersedia"}</span>
+                    <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-violet-500 hover:underline">
+                      Coba lagi
+                    </button>
+                  </div>
                 )}
               </div>
+              {lokasiMissing && !lokasiLoading && <p className="mt-1 text-[11px] font-semibold text-red-500">Lokasi (GPS) wajib diisi</p>}
+              {!lokasiMissing && !isGpsCoords(lokasi) && !lokasiLoading && (
+                <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400">GPS tidak dapat diakses browser — absen tetap bisa dikirim</p>
+              )}
             </div>
 
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                <Camera size={12} /> Foto Selfie (opsional)
+                <Camera size={12} /> Foto Selfie <span className="text-red-400 normal-case">*wajib</span>
               </p>
               {fotoPreview ? (
                 <div className="relative flex h-18 items-center">
@@ -564,12 +600,15 @@ function FormAbsen({
                 </div>
               ) : (
                 <button onClick={() => fileInputRef.current?.click()}
-                  className="flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 dark:border-slate-600">
+                  className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 ${
+                    fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
+                  }`}>
                   <Camera size={18} />
                   <span className="text-xs font-semibold">Ambil Foto</span>
                 </button>
               )}
               <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={onFotoChange} />
+              {fotoMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Foto wajib diisi</p>}
             </div>
           </div>
         )}
