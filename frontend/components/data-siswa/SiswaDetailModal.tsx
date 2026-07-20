@@ -12,8 +12,7 @@ function FieldItem({ icon: Icon, label, value }: {
   icon: React.ElementType; label: string; value: string | null | undefined;
 }) {
   return (
-    <div className="border-slate-100 py-3.5 pl-1 pr-4 dark:border-slate-700/60"
-      style={{ borderRightWidth: "0.5px", borderBottomWidth: "0.5px", borderRightStyle: "solid", borderBottomStyle: "solid" }}>
+    <div>
       <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
         <Icon size={12} />
         <p className="truncate text-[10px] font-bold uppercase tracking-wider">{label}</p>
@@ -68,7 +67,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
 
           {/* Bagian 2 — detail informasi (~70%) */}
           <div className="px-4 py-5 sm:px-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
               <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} />
               <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} />
               <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} />
