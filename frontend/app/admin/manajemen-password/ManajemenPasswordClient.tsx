@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  KeyRound, Search, ChevronDown, Users, GraduationCap,
+  KeyRound, Search, ChevronDown, Users, GraduationCap, User,
   CheckCircle2, AlertTriangle, X,
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
+import { KelasGroupHeader } from "@/components/data-siswa/KelasGroupHeader";
 
 type AccountStatus = {
   id: string;
@@ -41,6 +42,90 @@ function belumGantiLabel(iso: string): string {
 
 const SELECT =
   "h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-600 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300";
+
+function AccountRow({ u, showKelas, onReset }: {
+  u: AccountStatus; showKelas: boolean; onReset: (u: AccountStatus) => void;
+}) {
+  const displayNama = toTitleCase(u.nama);
+  const kelasNama = u.role === "SISWA" ? u.siswa?.kelas?.nama : undefined;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
+      className="flex flex-col gap-3 px-4 py-3.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20 sm:flex-row sm:items-center"
+    >
+      {/* Kolom 1 — identitas: avatar + nama + role badge */}
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+          style={{ background: u.role === "SISWA" ? "linear-gradient(135deg,#4F8EF7,#3B7CE8)" : "linear-gradient(135deg,#8B5CF6,#6D28D9)" }}>
+          {getInitials(displayNama)}
+        </div>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="truncate text-[15px] font-semibold text-slate-800 dark:text-white">{displayNama}</p>
+            <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
+              style={{ backgroundColor: u.role === "SISWA" ? "#EEF4FF" : "#F5F0FF", color: u.role === "SISWA" ? "#3B7CE8" : "#6D28D9" }}>
+              {u.role === "SISWA" ? "Siswa" : "Guru"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Kolom 2 — identifier login, lebar tetap */}
+      <div className="shrink-0 sm:w-44">
+        <p className="font-mono text-[13px] text-slate-600 dark:text-slate-300">{loginIdentifier(u)}</p>
+        {showKelas && kelasNama && (
+          <p className="text-[12px] text-slate-400 dark:text-slate-500">{kelasNama}</p>
+        )}
+      </div>
+
+      {/* Kolom 3 — status + aksi, lebar tetap */}
+      <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 sm:w-64">
+        {u.mustChangePassword ? (
+          <div className="flex flex-col items-end gap-0.5">
+            <span className="flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+              <AlertTriangle size={11} /> Belum Ganti
+            </span>
+            <span className="text-[11px] text-slate-400 dark:text-slate-500">{belumGantiLabel(u.updatedAt)}</span>
+          </div>
+        ) : (
+          <span className="flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+            <CheckCircle2 size={11} /> Sudah Ganti
+          </span>
+        )}
+        <button onClick={() => onReset(u)}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white shadow-sm transition-all hover:brightness-95"
+          style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}>
+          <KeyRound size={13} /> Reset Password
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+function KelasSection({ kelas, accounts, onReset }: {
+  kelas: string; accounts: AccountStatus[]; onReset: (u: AccountStatus) => void;
+}) {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <div className="space-y-2">
+      <KelasGroupHeader
+        kelas={kelas}
+        count={accounts.length}
+        collapsed={collapsed}
+        onToggle={() => setCollapsed((v) => !v)}
+      />
+      {!collapsed && (
+        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
+          <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+            {accounts.map((u) => <AccountRow key={u.id} u={u} showKelas={false} onReset={onReset} />)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ManajemenPasswordClient() {
   const [list, setList] = useState<AccountStatus[]>([]);
@@ -82,6 +167,21 @@ export default function ManajemenPasswordClient() {
   }, [list, search, filterRole, filterStatus]);
 
   const isFiltered = !!(search || filterRole || filterStatus);
+
+  const guruList = filtered.filter((u) => u.role === "GURU");
+  const siswaList = filtered.filter((u) => u.role === "SISWA");
+  const kelasNamaOrder = useMemo(
+    () => Array.from(new Set(siswaList.map((u) => u.siswa!.kelas.nama))).sort(),
+    [siswaList],
+  );
+  const siswaByKelas = useMemo(() => {
+    const map: Record<string, AccountStatus[]> = {};
+    for (const u of siswaList) {
+      const k = u.siswa!.kelas.nama;
+      (map[k] ??= []).push(u);
+    }
+    return map;
+  }, [siswaList]);
 
   return (
     <div className="space-y-5">
@@ -199,59 +299,52 @@ export default function ManajemenPasswordClient() {
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
-          <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
-            {filtered.map((u, i) => {
-              const displayNama = toTitleCase(u.nama);
-              const sub = u.role === "SISWA" ? (u.siswa?.kelas?.nama ?? "") : (u.guru?.nip ? `NIP: ${u.guru.nip}` : "Guru");
-              return (
-                <motion.div key={u.id}
-                  initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: Math.min(i, 20) * 0.015 }}
-                  className="flex flex-col gap-3 px-4 py-3.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                      style={{ background: u.role === "SISWA" ? "linear-gradient(135deg,#4F8EF7,#3B7CE8)" : "linear-gradient(135deg,#8B5CF6,#6D28D9)" }}>
-                      {getInitials(displayNama)}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <p className="text-[15px] font-semibold text-slate-800 dark:text-white">{displayNama}</p>
-                        <span className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-                          style={{ backgroundColor: u.role === "SISWA" ? "#EEF4FF" : "#F5F0FF", color: u.role === "SISWA" ? "#3B7CE8" : "#6D28D9" }}>
-                          {u.role === "SISWA" ? "Siswa" : "Guru"}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-[13px] text-slate-500 dark:text-slate-400">
-                        <span className="font-mono">{loginIdentifier(u)}</span>
-                        {sub && <span className="ml-1.5">· {sub}</span>}
-                      </p>
-                    </div>
-                  </div>
+        <div className="space-y-5">
+          {guruList.length > 0 && (
+            <section className="space-y-2">
+              <div className="flex items-center gap-2 px-1">
+                <User size={16} className="text-violet-500" />
+                <h2 className="text-[15px] font-semibold text-slate-800 dark:text-white">Guru &amp; Staff</h2>
+                <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-[11px] font-bold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
+                  {guruList.length}
+                </span>
+              </div>
+              <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
+                <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+                  {guruList.map((u) => <AccountRow key={u.id} u={u} showKelas={false} onReset={setResetTarget} />)}
+                </div>
+              </div>
+            </section>
+          )}
 
-                  <div className="flex shrink-0 flex-wrap items-center gap-3 self-end sm:self-center">
-                    {u.mustChangePassword ? (
-                      <div className="flex flex-col items-end gap-0.5">
-                        <span className="flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-                          <AlertTriangle size={11} /> Belum Ganti
-                        </span>
-                        <span className="text-[11px] text-slate-400 dark:text-slate-500">{belumGantiLabel(u.updatedAt)}</span>
-                      </div>
-                    ) : (
-                      <span className="flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-                        <CheckCircle2 size={11} /> Sudah Ganti
-                      </span>
-                    )}
-                    <button onClick={() => setResetTarget(u)}
-                      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white shadow-sm transition-all hover:brightness-95"
-                      style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}>
-                      <KeyRound size={13} /> Reset Password
-                    </button>
+          {siswaList.length > 0 && (
+            !isFiltered ? (
+              <section className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <GraduationCap size={16} className="text-blue-500" />
+                  <h2 className="text-[15px] font-semibold text-slate-800 dark:text-white">Siswa per Kelas</h2>
+                </div>
+                {kelasNamaOrder.map((k) => (
+                  <KelasSection key={k} kelas={k} accounts={siswaByKelas[k]} onReset={setResetTarget} />
+                ))}
+              </section>
+            ) : (
+              <section className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <GraduationCap size={16} className="text-blue-500" />
+                  <h2 className="text-[15px] font-semibold text-slate-800 dark:text-white">Siswa</h2>
+                  <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-[11px] font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    {siswaList.length}
+                  </span>
+                </div>
+                <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1c2434]">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+                    {siswaList.map((u) => <AccountRow key={u.id} u={u} showKelas onReset={setResetTarget} />)}
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                </div>
+              </section>
+            )
+          )}
         </div>
       )}
 
