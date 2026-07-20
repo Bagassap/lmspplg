@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; exp?: number };
+type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; impersonatedBy?: string | null; exp?: number };
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -49,7 +49,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const impersonating = !!request.cookies.get("impersonation_token")?.value;
+  // Derived from the verified session token's own payload, not the
+  // impersonation_token cookie's mere presence — that cookie can be stale
+  // (e.g. left over from before a JWT_SECRET rotation) without meaning the
+  // current session is actually an active impersonation.
+  const impersonating = !!payload.impersonatedBy;
 
   if (pathname === "/change-password") {
     if (impersonating || !payload.mustChangePassword) {

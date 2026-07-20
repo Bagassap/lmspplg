@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { tokenCookieOptions } from "@/lib/authCookie";
+import { isValidJwt } from "@/lib/verifyToken";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
@@ -16,11 +17,17 @@ export async function POST(
     return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
   }
 
-  if (cookieStore.get("impersonation_token")?.value) {
-    return NextResponse.json(
-      { message: "Sudah dalam mode pemantauan, tidak dapat memantau bertingkat" },
-      { status: 400 },
-    );
+  const existingImpersonationToken = cookieStore.get("impersonation_token")?.value;
+  if (existingImpersonationToken) {
+    if (await isValidJwt(existingImpersonationToken)) {
+      return NextResponse.json(
+        { message: "Sudah dalam mode pemantauan, tidak dapat memantau bertingkat" },
+        { status: 400 },
+      );
+    }
+    // Stale cookie (e.g. left over from a JWT_SECRET rotation, or an
+    // interrupted stop-impersonate) — not an active session, clear it.
+    cookieStore.set("impersonation_token", "", { ...tokenCookieOptions(request), maxAge: 0 });
   }
 
   let backendRes: Response;
