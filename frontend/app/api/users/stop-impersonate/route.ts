@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { tokenCookieOptions } from "@/lib/authCookie";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
-export async function POST() {
+export async function POST(request: Request) {
   const cookieStore = await cookies();
   const impersonationToken = cookieStore.get("impersonation_token")?.value;
   const currentToken = cookieStore.get("token")?.value;
@@ -26,12 +27,7 @@ export async function POST() {
     }
   }
 
-  const cookieOpts = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-  };
+  const cookieOpts = tokenCookieOptions(request);
 
   cookieStore.set("token", impersonationToken, cookieOpts);
   cookieStore.set("impersonation_token", "", { ...cookieOpts, maxAge: 0 });

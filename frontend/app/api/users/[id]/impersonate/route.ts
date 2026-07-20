@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { tokenCookieOptions } from "@/lib/authCookie";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
@@ -44,12 +45,7 @@ export async function POST(
     );
   }
 
-  const cookieOpts = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-  };
+  const cookieOpts = tokenCookieOptions(request);
 
   cookieStore.set("impersonation_token", token, cookieOpts);
   cookieStore.set("token", data.access_token, cookieOpts);
