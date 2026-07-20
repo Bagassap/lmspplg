@@ -194,9 +194,18 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
   const [unreadCount,    setUnreadCount]    = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
 
+  // A 401 here means the session cookie is gone or no longer verifiable (expired,
+  // or signed under a JWT_SECRET that's since been rotated) — bounce to /login
+  // instead of leaving the badge/dropdown silently and permanently empty with
+  // nothing in the UI to explain why.
+  function handleSessionExpired() {
+    window.location.href = "/login";
+  }
+
   async function fetchUnreadCount() {
     try {
       const res = await fetch("/api/notifications/unread-count", { cache: "no-store" });
+      if (res.status === 401) { handleSessionExpired(); return; }
       if (!res.ok) return;
       const data = await res.json();
       setUnreadCount(data.count ?? 0);
@@ -207,6 +216,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     setNotifLoading(true);
     try {
       const res = await fetch("/api/notifications?limit=10", { cache: "no-store" });
+      if (res.status === 401) { handleSessionExpired(); return; }
       if (!res.ok) return;
       const data = await res.json();
       setNotifications(data.items ?? []);
