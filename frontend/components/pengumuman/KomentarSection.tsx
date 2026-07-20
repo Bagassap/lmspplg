@@ -135,7 +135,7 @@ function KomentarBubble({
               {!isReply && (
                 <button
                   onClick={() => setShowReplyForm((v) => !v)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-purple-50 hover:text-[#6334F4] dark:hover:bg-purple-900/20 dark:hover:text-purple-400"
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-blue-50 hover:text-[#2563eb] dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 >
                   <CornerDownRight size={11} /> Balas
                 </button>
@@ -159,7 +159,7 @@ function KomentarBubble({
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-2 overflow-hidden"
               >
-                <div className="flex items-end gap-2 rounded-xl border border-[#6334F4]/25 bg-gradient-to-br from-purple-50 to-white p-3 dark:border-purple-700/30 dark:from-purple-900/10 dark:to-[#1c2434]">
+                <div className="flex items-end gap-2 rounded-xl border border-[#2563eb]/25 bg-gradient-to-br from-blue-50 to-white p-3 dark:border-blue-700/30 dark:from-blue-900/10 dark:to-[#1c2434]">
                   <textarea
                     rows={2}
                     value={replyText}
@@ -171,8 +171,8 @@ function KomentarBubble({
                   <button
                     onClick={submitReply}
                     disabled={sending || !replyText.trim()}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(99,52,244,0.4)]"
-                    style={{ background: "linear-gradient(135deg,#6334F4,#977DFF)" }}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
+                    style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}
                   >
                     {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   </button>
@@ -187,7 +187,7 @@ function KomentarBubble({
         <div className="ml-12">
           <button
             onClick={() => setShowReplies((v) => !v)}
-            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#6334F4]/70 transition-all hover:bg-purple-50 hover:text-[#6334F4] dark:hover:bg-purple-900/20"
+            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#2563eb]/70 transition-all hover:bg-blue-50 hover:text-[#2563eb] dark:hover:bg-blue-900/20"
           >
             <ChevronDown size={12} className={`transition-transform duration-200 ${showReplies ? "rotate-180" : ""}`} />
             {k.replies.length} balasan
@@ -198,7 +198,7 @@ function KomentarBubble({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="space-y-2 border-l-2 border-[#6334F4]/15 pl-3 dark:border-purple-700/25"
+                className="space-y-2 border-l-2 border-[#2563eb]/15 pl-3 dark:border-blue-700/25"
               >
                 {k.replies.map((r) => (
                   <KomentarBubble
@@ -294,11 +294,11 @@ export function KomentarSection({
 
       <div className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 dark:bg-slate-800/50 ${
         focused
-          ? "border-[#6334F4]/40 shadow-[0_0_0_4px_rgba(99,52,244,0.08)]"
+          ? "border-[#2563eb]/40 shadow-[0_0_0_4px_rgba(37,99,235,0.08)]"
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: "linear-gradient(90deg,#6334F4,#977DFF)" }} />
+          style={{ background: "linear-gradient(90deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }} />
 
         <textarea
           rows={3}
@@ -318,8 +318,8 @@ export function KomentarSection({
           <button
             onClick={submitKomentar}
             disabled={sending || !teks.trim()}
-            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(99,52,244,0.45)] active:scale-95"
-            style={{ background: "linear-gradient(135deg,#6334F4,#977DFF)" }}
+            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(37,99,235,0.45)] active:scale-95"
+            style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}
           >
             {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             {sending ? "Mengirim…" : "Kirim"}
@@ -329,8 +329,8 @@ export function KomentarSection({
 
       {komentar.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-gradient-to-br from-slate-50 to-white py-10 text-center dark:border-slate-700/40 dark:from-slate-800/30 dark:to-[#1c2434]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6334F4]/10 to-[#977DFF]/10">
-            <Sparkles size={20} className="text-[#6334F4] dark:text-purple-400" />
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2563eb]/10 to-[#0ea5e9]/10">
+            <Sparkles size={20} className="text-[#2563eb] dark:text-blue-400" />
           </div>
           <p className="text-[13px] font-bold text-slate-500 dark:text-slate-400">Belum ada komentar</p>
           <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Jadilah yang pertama berkomentar!</p>
