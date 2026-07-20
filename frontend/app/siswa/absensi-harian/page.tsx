@@ -97,10 +97,12 @@ export default function SiswaAbsensiHarianPage() {
   }, [loadStatus]);
 
   const window_ = data?.window ?? "CLOSED";
-  const pulangBlocked = window_ === "PULANG" && data?.status !== "HADIR";
+  // Pulang never requires a prior Hadir — a student who was IZIN/SAKIT, or who
+  // simply never marked Hadir, can still submit Pulang; the backend keeps
+  // status untouched either way, it never gets implied as HADIR by this.
   const needsAction =
     (window_ === "HADIR" && !data?.sudahAbsen) ||
-    (window_ === "PULANG" && data?.status === "HADIR" && !data?.sudahPulang);
+    (window_ === "PULANG" && !data?.sudahPulang);
   const activeTipe = window_ === "PULANG" ? "PULANG" : statusPilihan;
 
   useEffect(() => {
@@ -137,7 +139,6 @@ export default function SiswaAbsensiHarianPage() {
 
   async function handleSubmit() {
     if (window_ !== "HADIR" && window_ !== "PULANG") return;
-    if (window_ === "PULANG" && pulangBlocked) return;
     const tipe = activeTipe;
     if ((tipe === "HADIR" || tipe === "PULANG") && !ttd) {
       toast.error("Tanda tangan wajib diisi", "");
@@ -253,17 +254,6 @@ export default function SiswaAbsensiHarianPage() {
                     <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya Absen</h2>
                     <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
                       Absen hadir dibuka pukul <b>06:00–12:00</b> dan absen pulang pukul <b>12:00–23:59</b>. Silakan kembali lagi nanti.
-                    </p>
-                  </motion.div>
-                ) : pulangBlocked ? (
-                  <motion.div key="pulang-blocked" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
-                      <LogOut size={26} className="text-red-500" />
-                    </div>
-                    <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Absen Hadir</h2>
-                    <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-                      Anda belum melakukan absen Hadir hari ini, tidak bisa absen Pulang.
                     </p>
                   </motion.div>
                 ) : needsAction ? (
