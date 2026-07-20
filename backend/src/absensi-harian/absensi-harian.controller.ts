@@ -1,17 +1,24 @@
 import {
-  Controller, Get, Post, Param, Query, Body, UseGuards, Request, UseInterceptors, UploadedFile,
+  Controller, Get, Post, Param, Query, Body, UseGuards, Request, Res, UseInterceptors, UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import * as fs from 'fs';
+import type { Response } from 'express';
 import { AbsensiHarianService } from './absensi-harian.service';
+import { AbsensiHarianPdfService } from './absensi-harian-pdf.service';
 import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto } from './dto/absensi-harian.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { imageUploadOptions } from '../common/upload/file-filters';
 import { Role } from '../../generated/prisma/client';
+
+function sanitizeFilenamePart(value: string): string {
+  return value.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'export';
+}
 
 const absensiHarianStorage = diskStorage({
   destination: (_req, _file, cb) => {
@@ -40,7 +47,41 @@ function todayStr() {
 @UseGuards(JwtAuthGuard)
 @Controller('absensi-harian')
 export class AbsensiHarianController {
-  constructor(private readonly service: AbsensiHarianService) {}
+  constructor(
+    private readonly service: AbsensiHarianService,
+    private readonly pdfService: AbsensiHarianPdfService,
+  ) {}
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-pdf')
+  async exportPdf(
+    @Query('kelasId') kelasId: string,
+    @Query('tanggal') tanggal: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    if (!kelasId) {
+      throw new BadRequestException('kelasId wajib diisi');
+    }
+    const rekap = await this.service.getRekapKelasForExport(
+      kelasId,
+      tanggal || todayStr(),
+      req.user.id,
+      req.user.role,
+    );
+    const buffer = await this.pdfService.build(rekap);
+    const kelasPart = sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas');
+    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
+    const filename = `Absensi_${kelasPart}_${tanggalPart}.pdf`;
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)

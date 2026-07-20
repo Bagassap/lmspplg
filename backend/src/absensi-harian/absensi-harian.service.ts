@@ -121,6 +121,16 @@ export class AbsensiHarianService {
     return this.getAllRekap(tanggal, userId, role);
   }
 
+  async getRekapKelasForExport(kelasId: string, tanggal: string, userId: string, role: string) {
+    if (role === 'GURU') {
+      const myKelasIds = await this.kelasService.getGuruKelasIds(userId);
+      if (!myKelasIds.includes(kelasId)) {
+        throw new ForbiddenException('Anda bukan wali kelas untuk kelas ini');
+      }
+    }
+    return this.getRekapKelas(kelasId, tanggal);
+  }
+
   async getStatusSaya(userId: string, tanggal?: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     const window = currentWindow();

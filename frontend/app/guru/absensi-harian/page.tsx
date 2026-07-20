@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, Users, Eye, Camera, PenTool, FileText, Save, GraduationCap,
+  ClipboardCheck, CalendarDays, Users, Eye, Camera, PenTool, FileText, Save, GraduationCap, Loader2,
   ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
-import { printAbsensiPDF } from "@/components/absensi-harian/printAbsensiPDF";
+import { downloadAbsensiPdf } from "@/components/absensi-harian/downloadAbsensiPdf";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, getInitials, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
@@ -28,6 +28,7 @@ export default function GuruAbsensiHarianPage() {
   const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -107,6 +108,19 @@ export default function GuruAbsensiHarianPage() {
 
   function toggleFilter(key: FilterAbsensi) {
     setActiveFilter((prev) => (prev === key ? null : key));
+  }
+
+  async function handleDownloadPdf() {
+    if (!selectedId) return;
+    setPdfLoading(true);
+    try {
+      const result = await downloadAbsensiPdf({
+        kelasId: selectedId, tanggal, kelasNama: selectedKelas?.nama ?? "Kelas",
+      });
+      if (!result.ok) toast.error("Gagal membuat PDF", result.message);
+    } finally {
+      setPdfLoading(false);
+    }
   }
 
   if (kelasList.length === 0) {
@@ -192,11 +206,12 @@ export default function GuruAbsensiHarianPage() {
             style={{ backgroundColor: "#E8F8F1", color: "#10B981", borderColor: "#10B98140" }}>
             Hadir Semua
           </button>
-          <button onClick={() => printAbsensiPDF({ siswaList, kelasNama: selectedKelas?.nama ?? "", tanggal, rekap, total })}
-            disabled={siswaList.length === 0}
+          <button onClick={handleDownloadPdf}
+            disabled={siswaList.length === 0 || pdfLoading}
             className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm font-bold text-white disabled:opacity-40 transition-all hover:brightness-95 shrink-0"
             style={{ background: "linear-gradient(135deg,#EF4444,#DC2626)" }}>
-            <FileText size={13} /> PDF
+            {pdfLoading ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
+            {pdfLoading ? "Membuat PDF..." : "PDF"}
           </button>
           <button onClick={handleSave} disabled={saving || terisi === 0}
             className="flex items-center gap-2 rounded-xl px-4 py-1.5 text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-95 shrink-0"
