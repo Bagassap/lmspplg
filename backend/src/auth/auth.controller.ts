@@ -7,10 +7,11 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginThrottlerGuard } from './guards/login-throttler.guard';
 
@@ -23,6 +24,13 @@ export class AuthController {
   @Post('login')
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 3, ttl: 60 * 60 * 1000 } })
+  @Post('request-password-reset')
+  requestPasswordReset(@Body() dto: RequestPasswordResetDto) {
+    return this.authService.requestPasswordReset(dto);
   }
 
   @UseGuards(JwtAuthGuard)

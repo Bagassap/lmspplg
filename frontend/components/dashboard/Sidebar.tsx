@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, LayoutDashboard, Bell, Users, Briefcase,
   FileText, UserCircle, ChevronRight, ChevronDown,
-  ChevronsLeft, ChevronsRight, Lock, KeyRound,
+  ChevronsLeft, ChevronsRight, Lock, KeyRound, Inbox,
   Building2, ClipboardCheck, Activity, FileBarChart,
   CalendarDays, Trophy,
 } from "lucide-react";
@@ -32,6 +32,7 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
     { key: "manajemen-password", href: "/admin/manajemen-password", label: "Manajemen Password", icon: KeyRound },
+    { key: "permintaan-password", href: "/admin/permintaan-password", label: "Permintaan Password", icon: Inbox },
     {
       key: "magang", label: "Magang", icon: Briefcase,
       submenu: [
@@ -126,9 +127,24 @@ export function Sidebar({
   const pathname = usePathname();
   const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
   const items = (MENUS[user.role] ?? []).filter(
-    (item) => item.key !== "manajemen-password" || isSuperAdmin,
+    (item) => (item.key !== "manajemen-password" && item.key !== "permintaan-password") || isSuperAdmin,
   );
   const initial  = user.nama.charAt(0).toUpperCase();
+
+  const [pendingResetCount, setPendingResetCount] = useState(0);
+  useEffect(() => {
+    if (!isSuperAdmin) return;
+    let cancelled = false;
+    fetch("/api/users/password-reset-requests", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: { status: string }[]) => {
+        if (!cancelled && Array.isArray(list)) {
+          setPendingResetCount(list.filter((r) => r.status === "PENDING").length);
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isSuperAdmin]);
   const PRIMARY  = SIDEBAR_ACCENT;
   const PRIMARY_ICON_BG = PRIMARY;
   const greeting = GREETINGS[new Date().getDay() % GREETINGS.length];
@@ -278,6 +294,9 @@ export function Sidebar({
                         style={{ backgroundColor: active ? PRIMARY_ICON_BG : "transparent" }}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
+                        {item.key === "permintaan-password" && pendingResetCount > 0 && (
+                          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#1c2434]" />
+                        )}
                       </span>
                     </Link>
                   ) : (
@@ -446,6 +465,12 @@ export function Sidebar({
                   >
                     <span className={active ? "" : "text-slate-700 dark:text-slate-300"}>{item.label}</span>
                   </span>
+
+                  {item.key === "permintaan-password" && pendingResetCount > 0 && (
+                    <span className="relative flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                      {pendingResetCount > 99 ? "99+" : pendingResetCount}
+                    </span>
+                  )}
 
                   <ChevronRight
                     size={13}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { Eye, EyeOff, Loader2, User, Lock } from "lucide-react";
 
@@ -159,13 +160,14 @@ export function LoginForm() {
         )}
       </motion.button>
 
-      <motion.a
-        variants={item}
-        href="#"
-        className="text-center text-sm text-black/40 transition-colors hover:text-black/70"
-      >
-        Lupa Password?
-      </motion.a>
+      <motion.div variants={item} className="text-center">
+        <Link
+          href="/lupa-password"
+          className="text-sm text-black/40 transition-colors hover:text-black/70"
+        >
+          Lupa Password?
+        </Link>
+      </motion.div>
     </motion.form>
   );
 }

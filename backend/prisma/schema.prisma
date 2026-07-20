@@ -41,6 +41,11 @@ enum NotificationType {
   SISTEM
 }
 
+enum StatusPasswordReset {
+  PENDING
+  SELESAI
+}
+
 
 model User {
   id                 String   @id @default(cuid())
@@ -61,8 +66,28 @@ model User {
   diskusiUkk         DiskusiUKK[]
   notifications      Notification[]
 
+  passwordResetRequests   PasswordResetRequest[] @relation("PasswordResetRequestUser")
+  processedPasswordResets PasswordResetRequest[] @relation("PasswordResetRequestProcessor")
+
   @@index([loginId])
   @@map("users")
+}
+
+model PasswordResetRequest {
+  id              String              @id @default(cuid())
+  userId          String?
+  user            User?               @relation("PasswordResetRequestUser", fields: [userId], references: [id], onDelete: SetNull)
+  namaPengaju     String
+  loginIdDiajukan String
+  keterangan      String?
+  status          StatusPasswordReset @default(PENDING)
+  createdAt       DateTime            @default(now())
+  processedAt     DateTime?
+  processedById   String?
+  processedBy     User?               @relation("PasswordResetRequestProcessor", fields: [processedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@map("password_reset_requests")
 }
 
 model Siswa {

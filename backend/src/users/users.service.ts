@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { Role } from '../../generated/prisma/client';
+import { Role, StatusPasswordReset } from '../../generated/prisma/client';
 import { SUPER_ADMIN_LOGIN_ID } from '../auth/guards/super-admin.guard';
 import * as bcrypt from 'bcrypt';
 
@@ -70,6 +70,40 @@ export class UsersService {
         guru: { select: { nip: true } },
       },
       orderBy: [{ role: 'asc' }, { nama: 'asc' }],
+    });
+  }
+
+  async findPasswordResetRequests() {
+    return this.prisma.passwordResetRequest.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            nama: true,
+            role: true,
+            siswa: { select: { nis: true, kelas: { select: { nama: true } } } },
+            guru: { select: { nip: true } },
+          },
+        },
+        processedBy: { select: { id: true, nama: true } },
+      },
+    });
+  }
+
+  async completePasswordResetRequest(id: string, adminId: string) {
+    const reqRow = await this.prisma.passwordResetRequest.findUnique({ where: { id } });
+    if (!reqRow) throw new NotFoundException('Permintaan tidak ditemukan');
+    if (reqRow.status === StatusPasswordReset.SELESAI) {
+      return reqRow;
+    }
+    return this.prisma.passwordResetRequest.update({
+      where: { id },
+      data: {
+        status: StatusPasswordReset.SELESAI,
+        processedAt: new Date(),
+        processedById: adminId,
+      },
     });
   }
 

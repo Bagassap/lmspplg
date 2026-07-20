@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,5 +21,15 @@ export class UsersController {
   @Patch(':id/reset-password')
   resetPassword(@Param('id') id: string, @Body() dto: ResetPasswordDto) {
     return this.service.resetPassword(id, dto);
+  }
+
+  @Get('password-reset-requests')
+  findPasswordResetRequests() {
+    return this.service.findPasswordResetRequests();
+  }
+
+  @Patch('password-reset-requests/:id/complete')
+  completePasswordResetRequest(@Param('id') id: string, @Request() req: any) {
+    return this.service.completePasswordResetRequest(id, req.user.id);
   }
 }

@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../../generated/prisma/client';
 
@@ -167,6 +168,29 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { access_token: token, message: 'Password berhasil diubah' };
+  }
+
+  async requestPasswordReset(dto: RequestPasswordResetDto) {
+    const loginId = dto.loginIdDiajukan.trim();
+
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { nis: loginId },
+      select: { userId: true },
+    });
+    const matchedUserId =
+      siswa?.userId ??
+      (await this.prisma.user.findFirst({ where: { loginId }, select: { id: true } }))?.id;
+
+    await this.prisma.passwordResetRequest.create({
+      data: {
+        userId: matchedUserId,
+        namaPengaju: dto.namaPengaju.trim(),
+        loginIdDiajukan: loginId,
+        keterangan: dto.keterangan?.trim() || undefined,
+      },
+    });
+
+    return { message: 'Permintaan reset password telah dikirim ke admin' };
   }
 
   private getProfil(user: any) {
