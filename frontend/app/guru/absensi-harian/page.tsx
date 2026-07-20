@@ -10,10 +10,9 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
+import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, getInitials, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
-
-const TABLE_PAGE_SIZE = 10;
 
 export default function GuruAbsensiHarianPage() {
   const toast = useToast();
@@ -28,6 +27,7 @@ export default function GuruAbsensiHarianPage() {
   const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
+  const [tablePageSize, setTablePageSize] = useState<number>(10);
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -86,7 +86,7 @@ export default function GuruAbsensiHarianPage() {
     setDraft(next);
   }
 
-  useEffect(() => { setTablePage(0); }, [selectedId, tanggal, activeFilter]);
+  useEffect(() => { setTablePage(0); }, [selectedId, tanggal, activeFilter, tablePageSize]);
 
   const selectedKelas = kelasList.find((k) => k.id === selectedId);
   const siswaList = data?.siswa ?? [];
@@ -102,8 +102,7 @@ export default function GuruAbsensiHarianPage() {
     : activeFilter === "PULANG"
       ? siswaList.filter((s) => !!s.waktuPulang)
       : siswaList.filter((s) => s.status === activeFilter);
-  const tablePageCount = Math.max(1, Math.ceil(filteredSiswa.length / TABLE_PAGE_SIZE));
-  const pagedSiswa = filteredSiswa.slice(tablePage * TABLE_PAGE_SIZE, (tablePage + 1) * TABLE_PAGE_SIZE);
+  const { pageItems: pagedSiswa, pageCount: tablePageCount, start: tableStart, end: tableEnd } = paginate(filteredSiswa, tablePage, tablePageSize);
 
   function toggleFilter(key: FilterAbsensi) {
     setActiveFilter((prev) => (prev === key ? null : key));
@@ -324,7 +323,7 @@ export default function GuruAbsensiHarianPage() {
                         initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
                         className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
                         style={{ gridTemplateColumns: "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 84px" }}>
-                        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tablePage * TABLE_PAGE_SIZE + idx + 1}</span>
+                        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tableStart + idx}</span>
                         <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
                           {getInitials(s.nama)}
                         </div>
@@ -396,21 +395,26 @@ export default function GuruAbsensiHarianPage() {
                   </div>
                 </div>
               </div>
-              {filteredSiswa.length > TABLE_PAGE_SIZE && (
-                <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
+              {filteredSiswa.length > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
                   <span className="text-xs text-slate-400 dark:text-slate-500">
-                    {tablePage * TABLE_PAGE_SIZE + 1}–{Math.min((tablePage + 1) * TABLE_PAGE_SIZE, filteredSiswa.length)} dari {filteredSiswa.length}
+                    {tableStart}–{tableEnd} dari {filteredSiswa.length}
                   </span>
-                  <div className="flex items-center gap-1.5">
-                    <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                      <ChevronLeft size={14} />
-                    </button>
-                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{tablePage + 1}/{tablePageCount}</span>
-                    <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                      <ChevronRight size={14} />
-                    </button>
+                  <div className="flex items-center gap-2.5">
+                    <PageSizeToggle value={tablePageSize} onChange={setTablePageSize} />
+                    {tablePageCount > 1 && (
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                          <ChevronLeft size={14} />
+                        </button>
+                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{tablePage + 1}/{tablePageCount}</span>
+                        <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

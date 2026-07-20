@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
 import { KelasGroupHeader } from "./KelasGroupHeader";
 import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData } from "./shared";
-
-const PAGE_SIZE = 15;
+import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 
 type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
@@ -62,13 +61,11 @@ function PaginationBar({ page, pageCount, start, end, total, onPage }: {
   );
 }
 
-function TableBody({ siswas, page, setPage, ...actions }: ActionProps & {
-  siswas: SiswaCardData[]; page: number; setPage: (p: number) => void;
+function TableBody({ siswas, page, setPage, pageSize, ...actions }: ActionProps & {
+  siswas: SiswaCardData[]; page: number; setPage: (p: number) => void; pageSize: number;
 }) {
-  const pageCount = Math.max(1, Math.ceil(siswas.length / PAGE_SIZE));
-  const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const start = page * PAGE_SIZE + 1;
-  const end = Math.min((page + 1) * PAGE_SIZE, siswas.length);
+  const { pageItems, pageCount, start, end } = paginate(siswas, page, pageSize);
+  const offset = Number.isFinite(pageSize) ? page * pageSize : 0;
 
   if (siswas.length === 0) {
     return <EmptyState message="Tidak ada siswa yang ditemukan" />;
@@ -81,7 +78,7 @@ function TableBody({ siswas, page, setPage, ...actions }: ActionProps & {
           <SiswaTableHead />
           <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
             {pageItems.map((s, i) => (
-              <SiswaTableRow key={s.id} siswa={s} index={page * PAGE_SIZE + i} {...actions} />
+              <SiswaTableRow key={s.id} siswa={s} index={offset + i} {...actions} />
             ))}
           </div>
         </div>
@@ -93,20 +90,22 @@ function TableBody({ siswas, page, setPage, ...actions }: ActionProps & {
   );
 }
 
-function RowList({ siswas, ...actions }: ActionProps & { siswas: SiswaCardData[] }) {
+function RowList({ siswas, pageSize, ...actions }: ActionProps & { siswas: SiswaCardData[]; pageSize: number }) {
   const [page, setPage] = useState(0);
+  useEffect(() => setPage(0), [pageSize]);
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <TableBody siswas={siswas} page={page} setPage={setPage} {...actions} />
+      <TableBody siswas={siswas} page={page} setPage={setPage} pageSize={pageSize} {...actions} />
     </div>
   );
 }
 
 function KelasSection({
-  kelas, siswas, ...actions
-}: ActionProps & { kelas: string; siswas: SiswaCardData[] }) {
+  kelas, siswas, pageSize, ...actions
+}: ActionProps & { kelas: string; siswas: SiswaCardData[]; pageSize: number }) {
   const [collapsed, setCollapsed] = useState(false);
   const [page, setPage] = useState(0);
+  useEffect(() => setPage(0), [pageSize]);
   const waliKelas = siswas[0]?.kelas.waliKelasGuru?.user.nama;
 
   return (
@@ -120,7 +119,7 @@ function KelasSection({
       />
       {!collapsed && (
         <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <TableBody siswas={siswas} page={page} setPage={setPage} {...actions} />
+          <TableBody siswas={siswas} page={page} setPage={setPage} pageSize={pageSize} {...actions} />
         </div>
       )}
     </div>
@@ -136,6 +135,7 @@ export function SiswaTable({
   kelasNamaOrder: string[];
 }) {
   const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
+  const [pageSize, setPageSize] = useState<number>(10);
   const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa };
 
   const content = (() => {
@@ -156,7 +156,7 @@ export function SiswaTable({
     }
 
     if (!grouped) {
-      return <RowList siswas={siswas} {...actions} />;
+      return <RowList siswas={siswas} pageSize={pageSize} {...actions} />;
     }
 
     const groupedByKelas = kelasNamaOrder.reduce<Record<string, SiswaCardData[]>>((acc, k) => {
@@ -167,7 +167,7 @@ export function SiswaTable({
     return (
       <div className="space-y-4">
         {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-          <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} {...actions} />
+          <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} pageSize={pageSize} {...actions} />
         ))}
       </div>
     );
@@ -175,6 +175,12 @@ export function SiswaTable({
 
   return (
     <>
+      {!loading && siswas.length > 0 && (
+        <div className="mb-3 flex items-center justify-end gap-2">
+          <span className="text-xs font-semibold text-slate-400">Tampilkan</span>
+          <PageSizeToggle value={pageSize} onChange={setPageSize} />
+        </div>
+      )}
       {content}
       {detailSiswa && (
         <SiswaDetailModal

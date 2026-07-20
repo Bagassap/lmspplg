@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
+import { PageSizeToggle } from "@/components/shared/PageSizeToggle";
 
 type KelasWithWali = {
   id: string;
@@ -43,8 +44,6 @@ type SiswaPageResponse = {
 };
 
 type ResetTarget = { id: string; nama: string; nis?: string; mustChangePassword: boolean };
-
-const PAGE_SIZE = 10;
 
 function toTitleCase(str: string): string {
   return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
@@ -84,6 +83,7 @@ export default function ManajemenPasswordClient() {
 
   const [selectedKelasId, setSelectedKelasId] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [siswaPage, setSiswaPage] = useState<SiswaPageResponse | null>(null);
   const [loadingRight, setLoadingRight] = useState(false);
 
@@ -116,11 +116,11 @@ export default function ManajemenPasswordClient() {
     }
   }, [waliKelasList, selectedKelasId]);
 
-  const fetchSiswaPage = useCallback(async (kelasId: string, page: number) => {
+  const fetchSiswaPage = useCallback(async (kelasId: string, page: number, limit: number) => {
     if (!kelasId) return;
     setLoadingRight(true);
     try {
-      const qs = new URLSearchParams({ kelasId, page: String(page), limit: String(PAGE_SIZE) });
+      const qs = new URLSearchParams({ kelasId, page: String(page), limit: String(Number.isFinite(limit) ? limit : 1000) });
       const res = await fetch(`/api/users/manajemen-password/siswa?${qs}`, { cache: "no-store" });
       if (res.ok) setSiswaPage(await res.json());
     } finally {
@@ -129,8 +129,8 @@ export default function ManajemenPasswordClient() {
   }, []);
 
   useEffect(() => {
-    if (selectedKelasId) fetchSiswaPage(selectedKelasId, currentPage);
-  }, [selectedKelasId, currentPage, fetchSiswaPage]);
+    if (selectedKelasId) fetchSiswaPage(selectedKelasId, currentPage, pageSize);
+  }, [selectedKelasId, currentPage, pageSize, fetchSiswaPage]);
 
   function selectKelas(kelasId: string) {
     if (kelasId === selectedKelasId) return;
@@ -138,9 +138,14 @@ export default function ManajemenPasswordClient() {
     setCurrentPage(1);
   }
 
+  function changePageSize(size: number) {
+    setPageSize(size);
+    setCurrentPage(1);
+  }
+
   function refetchAll() {
     fetchLeft();
-    if (selectedKelasId) fetchSiswaPage(selectedKelasId, currentPage);
+    if (selectedKelasId) fetchSiswaPage(selectedKelasId, currentPage, pageSize);
   }
 
   const totalCount = accountList.length;
@@ -351,26 +356,29 @@ export default function ManajemenPasswordClient() {
                 </div>
               </div>
 
-              {siswaPage.totalPages > 1 && (
-                <div className="flex items-center justify-between px-1 pt-3">
-                  <span className="text-[13px] text-slate-400 dark:text-slate-500">
-                    Halaman {siswaPage.page} dari {siswaPage.totalPages} &middot; {siswaPage.total} siswa
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage <= 1}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                      <ChevronLeft size={14} />
-                    </button>
-                    <span className="text-[13px] font-semibold text-slate-500 dark:text-slate-400">
-                      {currentPage}/{siswaPage.totalPages}
-                    </span>
-                    <button onClick={() => setCurrentPage((p) => Math.min(siswaPage.totalPages, p + 1))} disabled={currentPage >= siswaPage.totalPages}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                      <ChevronRight size={14} />
-                    </button>
-                  </div>
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-3">
+                <span className="text-[13px] text-slate-400 dark:text-slate-500">
+                  {siswaPage.total} siswa
+                </span>
+                <div className="flex items-center gap-2.5">
+                  <PageSizeToggle value={pageSize} onChange={changePageSize} />
+                  {siswaPage.totalPages > 1 && (
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage <= 1}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                        <ChevronLeft size={14} />
+                      </button>
+                      <span className="text-[13px] font-semibold text-slate-500 dark:text-slate-400">
+                        {currentPage}/{siswaPage.totalPages}
+                      </span>
+                      <button onClick={() => setCurrentPage((p) => Math.min(siswaPage.totalPages, p + 1))} disabled={currentPage >= siswaPage.totalPages}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                        <ChevronRight size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </>
           )}
         </section>
