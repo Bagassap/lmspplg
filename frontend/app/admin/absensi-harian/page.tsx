@@ -3,14 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, Users, Eye, Camera, PenTool, FileText, Loader2,
+  ClipboardCheck, CalendarDays, Users, Eye, Camera, PenTool,
   Settings2, X, Plus, Pencil, Trash2, GraduationCap, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
-import { downloadAbsensiPdf } from "@/components/absensi-harian/downloadAbsensiPdf";
+import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, getInitials, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
@@ -167,7 +167,6 @@ export default function AdminAbsensiHarianPage() {
   const [kelasPage, setKelasPage] = useState(0);
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
-  const [pdfLoading, setPdfLoading] = useState(false);
   const KELAS_PER_PAGE = 4;
   const TABLE_PAGE_SIZE = 10;
 
@@ -227,19 +226,6 @@ export default function AdminAbsensiHarianPage() {
 
   function toggleFilter(key: FilterAbsensi) {
     setActiveFilter((prev) => (prev === key ? null : key));
-  }
-
-  async function handleDownloadPdf() {
-    if (!selectedId) return;
-    setPdfLoading(true);
-    try {
-      const result = await downloadAbsensiPdf({
-        kelasId: selectedId, tanggal, kelasNama: selected?.kelas.nama ?? "Kelas",
-      });
-      if (!result.ok) toast.error("Gagal membuat PDF", result.message);
-    } finally {
-      setPdfLoading(false);
-    }
   }
 
   return (
@@ -356,14 +342,10 @@ export default function AdminAbsensiHarianPage() {
           <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
             className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
           <div className="flex-1" />
-          <span className="text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
-          <button onClick={handleDownloadPdf} disabled={siswaList.length === 0 || pdfLoading}
-            className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm font-bold text-white disabled:opacity-40 transition-all hover:brightness-95 shrink-0"
-            style={{ background: "linear-gradient(135deg,#EF4444,#DC2626)" }}>
-            {pdfLoading ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
-            {pdfLoading ? "Membuat PDF..." : "PDF"}
-          </button>
+          <span className="text-xs text-slate-400 shrink-0">{sudahAbsen}/{total} sudah absen</span>
         </div>
+
+        <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {

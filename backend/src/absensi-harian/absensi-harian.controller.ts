@@ -1,6 +1,6 @@
 import {
   Controller, Get, Post, Param, Query, Body, UseGuards, Request, Res, UseInterceptors, UploadedFile,
-  BadRequestException,
+  BadRequestException, NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import type { Response } from 'express';
 import { AbsensiHarianService } from './absensi-harian.service';
 import { AbsensiHarianPdfService } from './absensi-harian-pdf.service';
+import { AbsensiHarianExcelService } from './absensi-harian-excel.service';
 import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto } from './dto/absensi-harian.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -50,6 +51,7 @@ export class AbsensiHarianController {
   constructor(
     private readonly service: AbsensiHarianService,
     private readonly pdfService: AbsensiHarianPdfService,
+    private readonly excelService: AbsensiHarianExcelService,
   ) {}
 
   @UseGuards(RolesGuard)
@@ -81,6 +83,116 @@ export class AbsensiHarianController {
       'Content-Length': buffer.length,
     });
     res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-pdf-siswa')
+  async exportPdfSiswa(
+    @Query('siswaId') siswaId: string,
+    @Query('tanggal') tanggal: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
+    const rekap = await this.service.getSiswaAbsensiForExport(
+      siswaId,
+      tanggal || todayStr(),
+      req.user.id,
+      req.user.role,
+    );
+    const buffer = await this.pdfService.build(rekap);
+    const namaPart = sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa');
+    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
+    const filename = `Absensi_${namaPart}_${tanggalPart}.pdf`;
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-excel')
+  async exportExcel(
+    @Query('kelasId') kelasId: string,
+    @Query('tanggal') tanggal: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    if (!kelasId) throw new BadRequestException('kelasId wajib diisi');
+    const rekap = await this.service.getRekapKelasForExport(
+      kelasId,
+      tanggal || todayStr(),
+      req.user.id,
+      req.user.role,
+    );
+    const buffer = await this.excelService.build(rekap);
+    const kelasPart = sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas');
+    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
+    const filename = `Absensi_${kelasPart}_${tanggalPart}.xlsx`;
+
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-excel-siswa')
+  async exportExcelSiswa(
+    @Query('siswaId') siswaId: string,
+    @Query('tanggal') tanggal: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
+    const rekap = await this.service.getSiswaAbsensiForExport(
+      siswaId,
+      tanggal || todayStr(),
+      req.user.id,
+      req.user.role,
+    );
+    const buffer = await this.excelService.build(rekap);
+    const namaPart = sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa');
+    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
+    const filename = `Absensi_${namaPart}_${tanggalPart}.xlsx`;
+
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('ttd-image')
+  async ttdImage(
+    @Query('siswaId') siswaId: string,
+    @Query('tanggal') tanggal: string,
+    @Query('tipe') tipe: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    if (!siswaId || !tanggal) throw new BadRequestException('siswaId dan tanggal wajib diisi');
+    const result = await this.service.getTtdImage(
+      siswaId,
+      tanggal,
+      tipe === 'pulang' ? 'pulang' : 'hadir',
+      req.user.id,
+      req.user.role,
+    );
+    if (!result) throw new NotFoundException('Tanda tangan tidak tersedia');
+    res.set({ 'Content-Type': result.mime, 'Cache-Control': 'private, max-age=60' });
+    res.send(result.buffer);
   }
 
   @UseGuards(RolesGuard)

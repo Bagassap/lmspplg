@@ -131,6 +131,65 @@ export class AbsensiHarianService {
     return this.getRekapKelas(kelasId, tanggal);
   }
 
+  private async assertSiswaAccessible(siswaId: string, userId: string, role: string) {
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { id: siswaId },
+      include: { kelas: true, user: { select: { nama: true } } },
+    });
+    if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
+    if (role === 'GURU') {
+      const myKelasIds = await this.kelasService.getGuruKelasIds(userId);
+      if (!myKelasIds.includes(siswa.kelasId)) {
+        throw new ForbiddenException('Anda bukan wali kelas untuk siswa ini');
+      }
+    }
+    return siswa;
+  }
+
+  async getSiswaAbsensiForExport(siswaId: string, tanggal: string, userId: string, role: string) {
+    const siswa = await this.assertSiswaAccessible(siswaId, userId, role);
+    const doc = await this.prisma.absensiHarian.findUnique({
+      where: { siswaId_tanggal: { siswaId, tanggal } },
+    });
+    return {
+      kelas: siswa.kelas ? { nama: siswa.kelas.nama } : null,
+      tanggal,
+      siswa: [
+        {
+          siswaId: siswa.id,
+          nama: siswa.user?.nama ?? siswa.nama,
+          nis: siswa.nis,
+          status: doc?.status ?? null,
+          waktuAbsen: doc?.waktuAbsen ?? null,
+          lokasi: doc?.lokasi ?? null,
+          foto: doc?.foto ?? null,
+          ttd: doc?.ttd ?? null,
+          catatan: doc?.catatan ?? null,
+          waktuPulang: doc?.waktuPulang ?? null,
+          lokasiPulang: doc?.lokasiPulang ?? null,
+          fotoPulang: doc?.fotoPulang ?? null,
+          ttdPulang: doc?.ttdPulang ?? null,
+          catatanPulang: doc?.catatanPulang ?? null,
+        },
+      ],
+    };
+  }
+
+  async getTtdImage(siswaId: string, tanggal: string, tipe: 'hadir' | 'pulang', userId: string, role: string) {
+    await this.assertSiswaAccessible(siswaId, userId, role);
+    const doc = await this.prisma.absensiHarian.findUnique({
+      where: { siswaId_tanggal: { siswaId, tanggal } },
+    });
+    const raw = tipe === 'pulang' ? doc?.ttdPulang : doc?.ttd;
+    if (!raw) return null;
+    const match = /^data:image\/(png|jpe?g);base64,([a-zA-Z0-9+/=]+)$/.exec(raw.trim());
+    if (!match) return null;
+    return {
+      buffer: Buffer.from(match[2], 'base64'),
+      mime: `image/${match[1] === 'jpg' ? 'jpeg' : match[1]}`,
+    };
+  }
+
   async getStatusSaya(userId: string, tanggal?: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     const window = currentWindow();
