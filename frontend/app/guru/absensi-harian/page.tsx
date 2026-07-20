@@ -177,28 +177,32 @@ export default function GuruAbsensiHarianPage() {
           </div>
         )}
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 px-4 py-3 flex flex-wrap gap-3 items-center shadow-sm">
-          <div className="flex items-center gap-2 shrink-0">
-            <CalendarDays size={14} className="text-slate-400" />
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</span>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+          <div className="px-4 py-3 flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2 shrink-0">
+              <CalendarDays size={14} className="text-slate-400" />
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</span>
+            </div>
+            <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+              className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
+            <div className="flex-1" />
+            <span className="text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+            <button onClick={setAllHadir}
+              className="text-xs font-bold px-3 py-1.5 rounded-xl border transition-all hover:brightness-95 shrink-0"
+              style={{ backgroundColor: "#E8F8F1", color: "#10B981", borderColor: "#10B98140" }}>
+              Hadir Semua
+            </button>
+            <button onClick={handleSave} disabled={saving || terisi === 0}
+              className="flex items-center gap-2 rounded-xl px-4 py-1.5 text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-95 shrink-0"
+              style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+              <Save size={13} />{saving ? "Menyimpan..." : "Simpan"}
+            </button>
           </div>
-          <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-            className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
-          <div className="flex-1" />
-          <span className="text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
-          <button onClick={setAllHadir}
-            className="text-xs font-bold px-3 py-1.5 rounded-xl border transition-all hover:brightness-95 shrink-0"
-            style={{ backgroundColor: "#E8F8F1", color: "#10B981", borderColor: "#10B98140" }}>
-            Hadir Semua
-          </button>
-          <button onClick={handleSave} disabled={saving || terisi === 0}
-            className="flex items-center gap-2 rounded-xl px-4 py-1.5 text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-95 shrink-0"
-            style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
-            <Save size={13} />{saving ? "Menyimpan..." : "Simpan"}
-          </button>
+          <div className="border-t border-slate-100 dark:border-slate-700/40 px-4 py-3">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">Unduh Rekap Absensi:</p>
+            <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
+          </div>
         </div>
-
-        <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
 
         {selectedKelas && (
           <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ background: CARD_GRADIENTS[0] }}>
