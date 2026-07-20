@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   KeyRound, Inbox, Clock, History, CheckCircle2, XCircle,
-  MessageSquareText, ChevronDown, ChevronLeft, ChevronRight,
+  MessageSquareText, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
@@ -58,7 +58,6 @@ export default function PermintaanPasswordClient() {
   const [loading, setLoading] = useState(true);
   const [resetTarget, setResetTarget] = useState<PasswordResetRequest | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [riwayatOpen, setRiwayatOpen] = useState(false);
   const [riwayatPage, setRiwayatPage] = useState(0);
 
   const fetchData = useCallback(async () => {
@@ -146,8 +145,8 @@ export default function PermintaanPasswordClient() {
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
           </div>
         ) : (
-          <>
-            <section>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-start">
+            <section className="min-w-0">
               <div className="mb-3 flex items-center gap-2">
                 <Clock size={16} className="text-amber-500" />
                 <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Permintaan Pending</h2>
@@ -166,7 +165,7 @@ export default function PermintaanPasswordClient() {
                   <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Tidak ada permintaan pending saat ini</p>
                 </div>
               ) : (
-                <div className="space-y-2.5">
+                <div className="space-y-2.5 lg:max-h-[640px] lg:overflow-y-auto lg:pr-1">
                   {pending.map((r, i) => (
                     <motion.div key={r.id}
                       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
@@ -216,9 +215,8 @@ export default function PermintaanPasswordClient() {
               )}
             </section>
 
-            <section>
-              <button type="button" onClick={() => setRiwayatOpen((v) => !v)}
-                className="mb-3 flex w-full items-center gap-2 text-left">
+            <section className="min-w-0">
+              <div className="mb-3 flex items-center gap-2">
                 <History size={16} className="text-slate-400" />
                 <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Riwayat Permintaan</h2>
                 {riwayat.length > 0 && (
@@ -226,29 +224,19 @@ export default function PermintaanPasswordClient() {
                     {riwayat.length}
                   </span>
                 )}
-                <ChevronDown size={16}
-                  className={`ml-auto shrink-0 text-slate-400 transition-transform duration-200 ${riwayatOpen ? "rotate-180" : ""}`} />
-              </button>
+              </div>
 
-              <AnimatePresence initial={false}>
-                {riwayatOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22 }}
-                    className="overflow-hidden"
-                  >
-                    {riwayat.length === 0 ? (
-                      <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center dark:border-slate-700/50 dark:bg-slate-900/40">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                          <History size={22} className="text-slate-300 dark:text-slate-600" />
-                        </div>
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Belum ada permintaan yang diselesaikan</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-2.5 pb-1">
-                        {pagedRiwayat.map((r, i) => (
+              {riwayat.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center dark:border-slate-700/50 dark:bg-slate-900/40">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                    <History size={22} className="text-slate-300 dark:text-slate-600" />
+                  </div>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Belum ada permintaan yang diselesaikan</p>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2.5 lg:max-h-[640px] lg:overflow-y-auto lg:pr-1">
+                    {pagedRiwayat.map((r, i) => (
                           <motion.div key={r.id}
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.16, delay: i * 0.02 }}
@@ -275,33 +263,31 @@ export default function PermintaanPasswordClient() {
                               </div>
                             </div>
                           </motion.div>
-                        ))}
+                    ))}
+                  </div>
 
-                        {riwayatPageCount > 1 && (
-                          <div className="flex items-center justify-between px-1 pt-2">
-                            <span className="text-[13px] text-slate-400 dark:text-slate-500">
-                              {riwayatPage * RIWAYAT_PAGE_SIZE + 1}–{Math.min((riwayatPage + 1) * RIWAYAT_PAGE_SIZE, riwayat.length)} dari {riwayat.length}
-                            </span>
-                            <div className="flex items-center gap-1.5">
-                              <button onClick={() => setRiwayatPage((p) => Math.max(0, p - 1))} disabled={riwayatPage === 0}
-                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                                <ChevronLeft size={14} />
-                              </button>
-                              <span className="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{riwayatPage + 1}/{riwayatPageCount}</span>
-                              <button onClick={() => setRiwayatPage((p) => Math.min(riwayatPageCount - 1, p + 1))} disabled={riwayatPage >= riwayatPageCount - 1}
-                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                                <ChevronRight size={14} />
-                              </button>
-                            </div>
-                          </div>
-                        )}
+                  {riwayatPageCount > 1 && (
+                    <div className="flex items-center justify-between px-1 pt-2">
+                      <span className="text-[13px] text-slate-400 dark:text-slate-500">
+                        {riwayatPage * RIWAYAT_PAGE_SIZE + 1}–{Math.min((riwayatPage + 1) * RIWAYAT_PAGE_SIZE, riwayat.length)} dari {riwayat.length}
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => setRiwayatPage((p) => Math.max(0, p - 1))} disabled={riwayatPage === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                          <ChevronLeft size={14} />
+                        </button>
+                        <span className="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{riwayatPage + 1}/{riwayatPageCount}</span>
+                        <button onClick={() => setRiwayatPage((p) => Math.min(riwayatPageCount - 1, p + 1))} disabled={riwayatPage >= riwayatPageCount - 1}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                          <ChevronRight size={14} />
+                        </button>
                       </div>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    </div>
+                  )}
+                </>
+              )}
             </section>
-          </>
+          </div>
         )}
       </div>
 
