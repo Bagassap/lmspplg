@@ -14,11 +14,22 @@ export async function POST(request: Request) {
     );
   }
 
+  // Backend sees every login request as coming from this Next.js server (same
+  // host), so it can't rate-limit by real client IP unless we forward it —
+  // otherwise every visitor behind this proxy shares one throttle bucket.
+  const clientIp =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "";
+
   let backendRes: Response;
   try {
     backendRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(clientIp ? { "X-Forwarded-For": clientIp } : {}),
+      },
       body: JSON.stringify(body),
     });
   } catch {
