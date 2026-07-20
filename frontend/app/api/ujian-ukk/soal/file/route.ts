@@ -14,7 +14,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const fileRes = await fetch(`${BACKEND}${filePath}`, { cache: "no-store" });
+    const fileRes = await fetch(`${BACKEND}${filePath}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
     if (!fileRes.ok) return new NextResponse("File not found", { status: 404 });
 
     const fileBuffer = await fileRes.arrayBuffer();
