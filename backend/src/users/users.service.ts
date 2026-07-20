@@ -74,6 +74,37 @@ export class UsersService {
     });
   }
 
+  async findSiswaPasswordStatus(kelasId: string, page = 1, limit = 10) {
+    if (!kelasId) throw new BadRequestException('kelasId wajib diisi');
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.min(100, Math.max(1, limit));
+    const skip = (safePage - 1) * safeLimit;
+
+    const [items, total] = await Promise.all([
+      this.prisma.siswa.findMany({
+        where: { kelasId },
+        select: {
+          id: true,
+          nis: true,
+          nama: true,
+          user: { select: { id: true, mustChangePassword: true, updatedAt: true } },
+        },
+        orderBy: { nama: 'asc' },
+        skip,
+        take: safeLimit,
+      }),
+      this.prisma.siswa.count({ where: { kelasId } }),
+    ]);
+
+    return {
+      items,
+      total,
+      page: safePage,
+      limit: safeLimit,
+      totalPages: Math.max(1, Math.ceil(total / safeLimit)),
+    };
+  }
+
   async findPasswordResetRequests() {
     return this.prisma.passwordResetRequest.findMany({
       orderBy: { createdAt: 'desc' },

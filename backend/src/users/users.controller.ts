@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Patch, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -16,6 +16,19 @@ export class UsersController {
   @Get('password-status')
   findPasswordStatus() {
     return this.service.findPasswordStatus();
+  }
+
+  @Get('manajemen-password/siswa')
+  findSiswaPasswordStatus(
+    @Query('kelasId') kelasId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.service.findSiswaPasswordStatus(
+      kelasId,
+      page ? parseInt(page, 10) : 1,
+      limit ? parseInt(limit, 10) : 10,
+    );
   }
 
   @Patch(':id/reset-password')
