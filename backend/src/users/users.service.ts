@@ -55,16 +55,17 @@ export class UsersService {
     };
   }
 
-  async findPendingPasswordChange() {
+  async findPasswordStatus() {
     return this.prisma.user.findMany({
       where: {
-        mustChangePassword: true,
         role: { in: [Role.SISWA, Role.GURU] },
       },
       select: {
         id: true,
         nama: true,
         role: true,
+        loginId: true,
+        mustChangePassword: true,
         updatedAt: true,
         siswa: { select: { nis: true, kelas: { select: { nama: true } } } },
         guru: { select: { nip: true } },

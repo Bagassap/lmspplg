@@ -12,7 +12,7 @@ export async function GET() {
   }
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users/pending-password-change`, {
+    const res = await fetch(`${BACKEND_URL}/api/users/password-status`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });

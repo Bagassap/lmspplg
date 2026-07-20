@@ -13,9 +13,9 @@ import { Role } from '../../generated/prisma/client';
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
-  @Get('pending-password-change')
-  findPendingPasswordChange() {
-    return this.service.findPendingPasswordChange();
+  @Get('password-status')
+  findPasswordStatus() {
+    return this.service.findPasswordStatus();
   }
 
   @Patch(':id/reset-password')
