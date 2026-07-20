@@ -235,6 +235,11 @@ export default function ManajemenPasswordClient() {
           <div className="relative min-w-0 flex-1">
             <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
+              type="search"
+              name="manajemen-password-search"
+              autoComplete="off"
+              data-lpignore="true"
+              data-1p-ignore="true"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, NIS, atau kode login…"

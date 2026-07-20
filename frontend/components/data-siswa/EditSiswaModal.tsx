@@ -104,7 +104,8 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
             <div className="space-y-4 px-5 py-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field label="Nama Lengkap" required icon={User}>
-                  <input type="text" value={form.nama} onChange={(e) => set("nama", e.target.value)}
+                  <input type="text" name="edit-siswa-nama" autoComplete="off" data-lpignore="true" data-1p-ignore="true"
+                    value={form.nama} onChange={(e) => set("nama", e.target.value)}
                     placeholder="Nama siswa" className={INPUT} />
                 </Field>
                 <Field label="Jenis Kelamin" icon={User}>
@@ -139,20 +140,23 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                 </div>
               </Field>
               <Field label="No. HP" optional icon={Phone}>
-                <input type="tel" value={form.noHp} onChange={(e) => set("noHp", e.target.value)}
+                <input type="tel" name="edit-siswa-nohp" autoComplete="off" data-lpignore="true" data-1p-ignore="true"
+                  value={form.noHp} onChange={(e) => set("noHp", e.target.value)}
                   placeholder="08xxxxxxxxxx" className={INPUT} />
               </Field>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field label="Tempat Lahir" optional icon={MapPin}>
-                  <input type="text" value={form.tempatLahir} onChange={(e) => set("tempatLahir", e.target.value)}
+                  <input type="text" name="edit-siswa-tempat-lahir" autoComplete="off" data-lpignore="true" data-1p-ignore="true"
+                    value={form.tempatLahir} onChange={(e) => set("tempatLahir", e.target.value)}
                     placeholder="Kota" className={INPUT} />
                 </Field>
                 <Field label="Tanggal Lahir" optional icon={CalendarDays}>
-                  <input type="date" value={form.tanggalLahir} onChange={(e) => set("tanggalLahir", e.target.value)} className={INPUT} />
+                  <input type="date" autoComplete="off" value={form.tanggalLahir} onChange={(e) => set("tanggalLahir", e.target.value)} className={INPUT} />
                 </Field>
               </div>
               <Field label="Alamat" optional icon={MapPin}>
-                <textarea value={form.alamat} onChange={(e) => set("alamat", e.target.value)}
+                <textarea name="edit-siswa-alamat" autoComplete="off" data-lpignore="true" data-1p-ignore="true"
+                  value={form.alamat} onChange={(e) => set("alamat", e.target.value)}
                   rows={2} placeholder="Alamat lengkap..." className={INPUT + " resize-none"} />
               </Field>
               {error && <p className="text-xs text-red-500">{error}</p>}

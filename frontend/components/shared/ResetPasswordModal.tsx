@@ -127,6 +127,11 @@ export function ResetPasswordModal({
                 <div className="relative">
                   <input
                     type={show ? "text" : "password"}
+                    name="reset-target-new-password"
+                    id="reset-target-new-password"
+                    autoComplete="new-password"
+                    data-lpignore="true"
+                    data-1p-ignore="true"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Minimal 8 karakter"
