@@ -311,12 +311,11 @@ export default function SiswaProfilPage() {
     <div className="space-y-5">
       <motion.div
         initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
+        className="relative overflow-hidden rounded-2xl p-6"
         style={{ background: HERO_GRADIENT }}
       >
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/5" />
-        <div className="pointer-events-none absolute -bottom-14 left-24 h-44 w-44 rounded-full bg-white/5" />
-        <div className="pointer-events-none absolute bottom-3 right-1/3 h-28 w-28 rounded-full bg-white/5" />
+        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
 
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -328,7 +327,7 @@ export default function SiswaProfilPage() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
                 <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
               </div>
-              <h1 className="text-2xl font-extrabold leading-tight text-white md:text-3xl">Profil Saya</h1>
+              <h1 className="text-2xl font-extrabold leading-tight text-white">Profil Saya</h1>
               <p className="mt-0.5 text-sm text-white/70">Informasi data diri kamu</p>
             </div>
           </div>
