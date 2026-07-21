@@ -25,6 +25,7 @@ interface DashboardData {
   kelas: string;
   waliKelas: string | null;
   absensi: { hadir: number; izin: number; sakit: number; alpa: number; total: number; persentase: number };
+  magang: { status: "BELUM_MAGANG" | "AKTIF" | "SELESAI"; tempat?: string; hadir?: number };
   pengumuman: Pengumuman[];
 }
 
@@ -131,38 +132,39 @@ export default function SiswaDashboardPage() {
 
   if (!data || !user) return null;
 
-  const { absensi } = data;
+  const { absensi, magang } = data;
+  const belumMagang = magang.status === "BELUM_MAGANG";
 
   const CARDS = [
     {
       href: "/siswa/absensi-harian",
       label: "Absensi Harian",
-      value: absensi.persentase,
-      suffix: "% hadir",
+      display: `${absensi.persentase}% hadir`,
+      small: false,
       gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
       icon: ClipboardCheck,
     },
     {
       href: "/siswa/absensi-harian",
       label: "Total Hadir",
-      value: absensi.hadir,
-      suffix: "x",
+      display: `${absensi.hadir}x`,
+      small: false,
       gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
       icon: CheckCircle,
     },
     {
       href: "/siswa/pengumuman",
       label: "Pengumuman",
-      value: data.pengumuman.length,
-      suffix: " info",
+      display: `${data.pengumuman.length} info`,
+      small: false,
       gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
       icon: Megaphone,
     },
     {
       href: "/siswa/magang",
       label: "Magang / PKL",
-      value: absensi.hadir,
-      suffix: "x hadir",
+      display: belumMagang ? "Belum Magang" : `${magang.hadir ?? 0}x hadir`,
+      small: belumMagang,
       gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
       icon: GraduationCap,
     },
@@ -276,7 +278,7 @@ export default function SiswaDashboardPage() {
                   </div>
                 </div>
                 <div className="relative">
-                  <p className="text-3xl font-bold tabular-nums">{card.value}{card.suffix}</p>
+                  <p className={`font-bold tabular-nums ${card.small ? "text-xl" : "text-3xl"}`}>{card.display}</p>
                 </div>
                 <div className="relative flex items-end justify-between">
                   <div>

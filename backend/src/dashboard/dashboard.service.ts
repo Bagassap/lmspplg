@@ -196,7 +196,7 @@ export class DashboardService {
     });
     if (!siswaRecord) return { error: 'Profil siswa tidak ditemukan' };
 
-    const [absensiList, pengumuman] = await Promise.all([
+    const [absensiList, pengumuman, penempatanMagang] = await Promise.all([
       this.prisma.absensiHarian.findMany({
         where: { siswaId: siswaRecord.id },
         select: { status: true },
@@ -209,6 +209,14 @@ export class DashboardService {
           _count: { select: { komentar: true } },
         },
       }),
+      this.prisma.penempatanMagang.findFirst({
+        where: { siswaId: siswaRecord.id, status: { in: ['AKTIF', 'SELESAI'] } },
+        orderBy: { tanggalMulai: 'desc' },
+        include: {
+          tempatMagang: { select: { namaTempat: true } },
+          absensi: { select: { tipe: true } },
+        },
+      }),
     ]);
 
     const hadir = absensiList.filter((a) => a.status === 'HADIR').length;
@@ -218,10 +226,19 @@ export class DashboardService {
     const totalAbsensi = absensiList.length;
     const persentase = totalAbsensi > 0 ? Math.round((hadir / totalAbsensi) * 1000) / 10 : 0;
 
+    const magang = !penempatanMagang
+      ? { status: 'BELUM_MAGANG' as const }
+      : {
+          status: penempatanMagang.status,
+          tempat: penempatanMagang.tempatMagang.namaTempat,
+          hadir: penempatanMagang.absensi.filter((a) => a.tipe === 'MASUK').length,
+        };
+
     return {
       kelas: siswaRecord.kelas.nama,
       waliKelas: siswaRecord.kelas.waliKelasGuru?.user.nama ?? null,
       absensi: { hadir, izin, sakit, alpa, total: totalAbsensi, persentase },
+      magang,
       pengumuman,
     };
   }
