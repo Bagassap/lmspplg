@@ -56,6 +56,7 @@ model User {
   role               Role
   isActive           Boolean  @default(true)
   mustChangePassword Boolean  @default(false)
+  profileCompleted   Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -102,7 +103,12 @@ model Siswa {
   angkatan     Int
   jenisKelamin String?
   noHp         String?
-  alamat       String?
+  dukuh        String?
+  rt           String?
+  rw           String?
+  desa         String?
+  kecamatan    String?
+  kabupaten    String?
   tempatLahir  String?
   tanggalLahir DateTime?
   namaOrtu     String?

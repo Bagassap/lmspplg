@@ -88,7 +88,12 @@ export class SiswaService {
       tempatLahir: dto.tempatLahir,
       namaOrtu: dto.namaOrtu,
       noHp: dto.noHp,
-      alamat: dto.alamat,
+      dukuh: dto.dukuh,
+      rt: dto.rt,
+      rw: dto.rw,
+      desa: dto.desa,
+      kecamatan: dto.kecamatan,
+      kabupaten: dto.kabupaten,
     };
     if (dto.tanggalLahir) data.tanggalLahir = new Date(dto.tanggalLahir);
     return this.prisma.siswa.update({

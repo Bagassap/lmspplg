@@ -6,6 +6,7 @@ export type UserPayload = {
   nama: string;
   loginId?: string | null;
   mustChangePassword?: boolean;
+  profileCompleted?: boolean;
   impersonatedBy?: string | null;
 };
 

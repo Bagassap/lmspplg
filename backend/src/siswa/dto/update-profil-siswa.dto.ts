@@ -23,5 +23,25 @@ export class UpdateProfilSiswaDto {
 
   @IsString()
   @IsOptional()
-  alamat?: string;
+  dukuh?: string;
+
+  @IsString()
+  @IsOptional()
+  rt?: string;
+
+  @IsString()
+  @IsOptional()
+  rw?: string;
+
+  @IsString()
+  @IsOptional()
+  desa?: string;
+
+  @IsString()
+  @IsOptional()
+  kecamatan?: string;
+
+  @IsString()
+  @IsOptional()
+  kabupaten?: string;
 }

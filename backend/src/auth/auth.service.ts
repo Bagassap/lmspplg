@@ -82,6 +82,7 @@ export class AuthService {
       nama: user.nama,
       loginId: user.loginId,
       mustChangePassword: user.mustChangePassword,
+      profileCompleted: user.profileCompleted,
     };
     const token = this.jwtService.sign(payload);
 
@@ -94,6 +95,7 @@ export class AuthService {
         loginId: user.loginId,
         role: user.role,
         mustChangePassword: user.mustChangePassword,
+        profileCompleted: user.profileCompleted,
         profil: this.getProfil(user),
       },
     };
@@ -110,6 +112,7 @@ export class AuthService {
         role: true,
         isActive: true,
         mustChangePassword: true,
+        profileCompleted: true,
         siswa: {
           select: {
             id: true,
@@ -164,6 +167,7 @@ export class AuthService {
       nama: updated.nama,
       loginId: updated.loginId,
       mustChangePassword: updated.mustChangePassword,
+      profileCompleted: updated.profileCompleted,
     };
     const token = this.jwtService.sign(payload);
 
