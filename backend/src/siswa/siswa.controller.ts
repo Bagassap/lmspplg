@@ -1,5 +1,8 @@
-import { Controller, Get, Put, Patch, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Put, Patch, Body, Param, Query, UseGuards, Request, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { SiswaService } from './siswa.service';
+import { SiswaPdfService } from './siswa-pdf.service';
+import { SiswaExcelService } from './siswa-excel.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
 import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
 import { LengkapiProfilSiswaDto } from './dto/lengkapi-profil-siswa.dto';
@@ -8,10 +11,18 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
 
+function sanitizeFilenamePart(value: string): string {
+  return value.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'Data';
+}
+
 @UseGuards(JwtAuthGuard)
 @Controller('siswa')
 export class SiswaController {
-  constructor(private readonly service: SiswaService) {}
+  constructor(
+    private readonly service: SiswaService,
+    private readonly pdfService: SiswaPdfService,
+    private readonly excelService: SiswaExcelService,
+  ) {}
 
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
@@ -45,6 +56,44 @@ export class SiswaController {
     @Query('jenisKelamin') jenisKelamin?: string,
   ) {
     return this.service.findAll({ search, kelasId, jurusan, jenisKelamin }, req.user);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-pdf')
+  async exportPdf(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, req.user);
+    const buffer = await this.pdfService.build(groups);
+    const filename =
+      kelasId && groups[0]
+        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.pdf`
+        : 'Data_Siswa_Semua_Kelas.pdf';
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('export-excel')
+  async exportExcel(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, req.user);
+    const buffer = await this.excelService.build(groups);
+    const filename =
+      kelasId && groups[0]
+        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.xlsx`
+        : 'Data_Siswa_Semua_Kelas.xlsx';
+
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
   }
 
   @UseGuards(RolesGuard)

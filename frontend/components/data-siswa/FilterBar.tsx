@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, ChevronDown, Users, School, BookOpen, VenusAndMars } from "lucide-react";
 import { JURUSAN_OPTIONS, kelasShort, type KelasRef } from "./shared";
+import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
 export function FilterBar({
   search, onSearch,
@@ -112,6 +113,14 @@ export function FilterBar({
           )}
         </div>
       )}
+
+      <div className="mt-3.5 border-t border-slate-100 pt-3 dark:border-slate-700/40">
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">Unduh Data Siswa:</p>
+        <DataSiswaExportButtons
+          kelasId={filterKelas || undefined}
+          kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+        />
+      </div>
     </div>
   );
 }
