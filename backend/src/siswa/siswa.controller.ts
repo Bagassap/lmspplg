@@ -1,7 +1,8 @@
-import { Controller, Get, Put, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Put, Patch, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { SiswaService } from './siswa.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
 import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
+import { LengkapiProfilSiswaDto } from './dto/lengkapi-profil-siswa.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -24,6 +25,13 @@ export class SiswaController {
   @Put('saya')
   updateMine(@Request() req: any, @Body() dto: UpdateProfilSiswaDto) {
     return this.service.updateMine(req.user.id, dto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Patch('lengkapi-profil')
+  lengkapiProfil(@Request() req: any, @Body() dto: LengkapiProfilSiswaDto) {
+    return this.service.lengkapiProfil(req.user.id, dto);
   }
 
   @UseGuards(RolesGuard)

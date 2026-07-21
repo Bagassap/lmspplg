@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; impersonatedBy?: string | null; exp?: number };
+type JWTPayload = { sub: string; role: string; nama: string; mustChangePassword?: boolean; profileCompleted?: boolean; impersonatedBy?: string | null; exp?: number };
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -67,6 +67,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/change-password", request.url));
   }
 
+  if (pathname === "/lengkapi-profil") {
+    if (payload.role !== "SISWA" || impersonating || payload.profileCompleted) {
+      const dest = ROLE_DASHBOARD[payload.role] ?? "/siswa/dashboard";
+      return NextResponse.redirect(new URL(dest, request.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (!impersonating && payload.role === "SISWA" && !payload.profileCompleted) {
+    return NextResponse.redirect(new URL("/lengkapi-profil", request.url));
+  }
+
   const expected = ROLE_PREFIX[payload.role];
   if (expected && !pathname.startsWith(expected)) {
     const dest = ROLE_DASHBOARD[payload.role] ?? "/siswa/dashboard";
@@ -81,6 +93,7 @@ export const config = {
     "/login",
     "/dashboard",
     "/change-password",
+    "/lengkapi-profil",
     "/admin/:path*",
     "/guru/:path*",
     "/siswa/:path*",

@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
 import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
+import { LengkapiProfilSiswaDto } from './dto/lengkapi-profil-siswa.dto';
 
 const INCLUDE_USER = {
   user: { select: { id: true, nama: true, email: true, mustChangePassword: true } },
@@ -14,7 +16,10 @@ const INCLUDE_USER = {
 
 @Injectable()
 export class SiswaService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   private async kelasWaliIds(userId: string): Promise<string[]> {
     const guru = await this.prisma.guru.findUnique({ where: { userId } });
@@ -101,5 +106,44 @@ export class SiswaService {
       data,
       include: INCLUDE_USER,
     });
+  }
+
+  async lengkapiProfil(userId: string, dto: LengkapiProfilSiswaDto) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
+    if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
+
+    await this.prisma.siswa.update({
+      where: { id: siswa.id },
+      data: {
+        tempatLahir: dto.tempatLahir,
+        tanggalLahir: new Date(dto.tanggalLahir),
+        jenisKelamin: dto.jenisKelamin,
+        noHp: dto.noHp,
+        namaOrtu: dto.namaOrtu,
+        dukuh: dto.dukuh,
+        rt: dto.rt,
+        rw: dto.rw,
+        desa: dto.desa,
+        kecamatan: dto.kecamatan,
+        kabupaten: dto.kabupaten,
+      },
+    });
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: { profileCompleted: true },
+    });
+
+    const payload = {
+      sub: updatedUser.id,
+      role: updatedUser.role,
+      nama: updatedUser.nama,
+      loginId: updatedUser.loginId,
+      mustChangePassword: updatedUser.mustChangePassword,
+      profileCompleted: updatedUser.profileCompleted,
+    };
+    const token = this.jwtService.sign(payload);
+
+    return { access_token: token, message: 'Profil berhasil dilengkapi' };
   }
 }
