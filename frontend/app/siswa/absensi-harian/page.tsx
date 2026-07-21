@@ -12,6 +12,7 @@ import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
+import { compressImage } from "@/lib/compressImage";
 
 type StatusSaya = {
   sudahAbsen: boolean;
@@ -80,6 +81,7 @@ export default function SiswaAbsensiHarianPage() {
   const [lokasiLoading, setLokasiLoading] = useState(false);
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const [compressingFoto, setCompressingFoto] = useState(false);
   const [ttd, setTtd] = useState<string | null>(null);
   const [catatan, setCatatan] = useState("");
   const [statusPilihan, setStatusPilihan] = useState<"HADIR" | "IZIN" | "SAKIT">("HADIR");
@@ -161,13 +163,25 @@ export default function SiswaAbsensiHarianPage() {
     requestLokasi();
   }, [needsAction, requestLokasi]);
 
-  function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
-    setFotoFile(file);
-    const reader = new FileReader();
-    reader.onload = () => setFotoPreview(reader.result as string);
-    reader.readAsDataURL(file);
+    setCompressingFoto(true);
+    try {
+      const compressed = await compressImage(file);
+      setFotoFile(compressed);
+      const reader = new FileReader();
+      reader.onload = () => setFotoPreview(reader.result as string);
+      reader.readAsDataURL(compressed);
+    } catch {
+      toast.error(
+        "Foto gagal diproses",
+        "Perangkat mungkin kehabisan memori. Coba lagi, gunakan foto lain, atau tutup aplikasi lain lalu ulangi.",
+      );
+    } finally {
+      setCompressingFoto(false);
+    }
   }
 
   async function handleSubmit() {
@@ -326,7 +340,7 @@ export default function SiswaAbsensiHarianPage() {
                         showStatusPicker
                         lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
-                        onFotoChange={handleFotoChange}
+                        onFotoChange={handleFotoChange} compressingFoto={compressingFoto}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
                         catatan={catatan} setCatatan={setCatatan}
                         ttd={ttd} setTtd={setTtd}
@@ -368,7 +382,7 @@ export default function SiswaAbsensiHarianPage() {
                         showStatusPicker={false}
                         lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
-                        onFotoChange={handleFotoChange}
+                        onFotoChange={handleFotoChange} compressingFoto={compressingFoto}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
                         catatan={catatan} setCatatan={setCatatan}
                         ttd={ttd} setTtd={setTtd}
@@ -491,7 +505,7 @@ function RingkasanAbsen({
 
 function FormAbsen({
   activeTipe, statusPilihan, setStatusPilihan, showStatusPicker,
-  lokasi, lokasiLoading, onRetryLokasi, fotoPreview, fileInputRef, onFotoChange, onFotoClear,
+  lokasi, lokasiLoading, onRetryLokasi, fotoPreview, fileInputRef, onFotoChange, compressingFoto, onFotoClear,
   catatan, setCatatan, ttd, setTtd, submitting, onSubmit,
 }: {
   activeTipe: "HADIR" | "IZIN" | "SAKIT" | "PULANG";
@@ -504,6 +518,7 @@ function FormAbsen({
   fotoPreview: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  compressingFoto: boolean;
   onFotoClear: () => void;
   catatan: string;
   setCatatan: (v: string) => void;
@@ -517,7 +532,7 @@ function FormAbsen({
   const lokasiMissing = !isIzinSakit && !lokasi;
   const ttdMissing = !isIzinSakit && !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
-  const disabled = submitting || fotoMissing || lokasiMissing || ttdMissing || catatanMissing;
+  const disabled = submitting || compressingFoto || fotoMissing || lokasiMissing || ttdMissing || catatanMissing;
 
   return (
     <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -599,12 +614,21 @@ function FormAbsen({
                   </button>
                 </div>
               ) : (
-                <button onClick={() => fileInputRef.current?.click()}
-                  className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 ${
+                <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
+                  className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 disabled:cursor-wait disabled:opacity-70 ${
                     fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
                   }`}>
-                  <Camera size={18} />
-                  <span className="text-xs font-semibold">Ambil Foto</span>
+                  {compressingFoto ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span className="text-xs font-semibold">Memproses foto...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Camera size={18} />
+                      <span className="text-xs font-semibold">Ambil Foto</span>
+                    </>
+                  )}
                 </button>
               )}
               <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={onFotoChange} />

@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Clock, MapPin, User,
   CheckCircle2, MinusCircle, AlertCircle, Thermometer,
-  Camera, Pen, X, RotateCcw, Send, Download, Monitor,
+  Camera, Pen, X, RotateCcw, Send, Download, Monitor, Loader2,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
+import { compressImage } from "@/lib/compressImage";
 
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
@@ -204,6 +205,7 @@ export default function SiswaUkkAbsensiPage() {
   const [lokasi,       setLokasi]       = useState("");
   const [fotoFile,     setFotoFile]     = useState<File | null>(null);
   const [fotoPreview,  setFotoPreview]  = useState<string>("");
+  const [compressingFoto, setCompressingFoto] = useState(false);
   const fotoInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -240,13 +242,25 @@ export default function SiswaUkkAbsensiPage() {
     );
   }, [showForm]);
 
-  function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
-    setFotoFile(file);
-    const reader = new FileReader();
-    reader.onload = ev => setFotoPreview(ev.target?.result as string);
-    reader.readAsDataURL(file);
+    setCompressingFoto(true);
+    try {
+      const compressed = await compressImage(file);
+      setFotoFile(compressed);
+      const reader = new FileReader();
+      reader.onload = ev => setFotoPreview(ev.target?.result as string);
+      reader.readAsDataURL(compressed);
+    } catch {
+      toast.error(
+        "Foto gagal diproses",
+        "Perangkat mungkin kehabisan memori. Coba lagi, gunakan foto lain, atau tutup aplikasi lain lalu ulangi.",
+      );
+    } finally {
+      setCompressingFoto(false);
+    }
   }
 
   function resetForm() {
@@ -565,10 +579,19 @@ export default function SiswaUkkAbsensiPage() {
                               </button>
                             </div>
                           ) : (
-                            <button type="button" onClick={() => fotoInputRef.current?.click()}
-                              className="w-full rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/30 py-8 flex flex-col items-center gap-2 text-slate-400 hover:border-emerald-400 hover:text-emerald-500 transition-colors">
-                              <Camera size={28}/>
-                              <span className="text-xs font-medium">Ambil Foto / Upload Gambar</span>
+                            <button type="button" onClick={() => fotoInputRef.current?.click()} disabled={compressingFoto}
+                              className="w-full rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/30 py-8 flex flex-col items-center gap-2 text-slate-400 hover:border-emerald-400 hover:text-emerald-500 transition-colors disabled:cursor-wait disabled:opacity-70">
+                              {compressingFoto ? (
+                                <>
+                                  <Loader2 size={28} className="animate-spin" />
+                                  <span className="text-xs font-medium">Memproses foto...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Camera size={28}/>
+                                  <span className="text-xs font-medium">Ambil Foto / Upload Gambar</span>
+                                </>
+                              )}
                             </button>
                           )}
                         </div>
@@ -601,7 +624,7 @@ export default function SiswaUkkAbsensiPage() {
                           <SignaturePad value={ttd} onChange={setTtd}/>
                         </div>
 
-                        <button onClick={handleAbsen} disabled={submitting || !ttd}
+                        <button onClick={handleAbsen} disabled={submitting || !ttd || compressingFoto}
                           className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
                           style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
                           <Send size={15}/>{submitting ? "Menyimpan..." : "Konfirmasi Absen"}
