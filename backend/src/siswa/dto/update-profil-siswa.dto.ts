@@ -1,4 +1,12 @@
 import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { Transform } from 'class-transformer';
+
+// An empty-string date from a blank <input type="date"> must be treated as
+// "not provided", but @IsOptional() only skips validation for null/undefined
+// — without this, every save with an unset tanggalLahir fails IsDateString
+// and the whole request (every other field too) gets rejected.
+const emptyToUndefined = ({ value }: { value: unknown }) =>
+  value === '' ? undefined : value;
 
 export class UpdateProfilSiswaDto {
   @IsString()
@@ -9,6 +17,7 @@ export class UpdateProfilSiswaDto {
   @IsOptional()
   tempatLahir?: string;
 
+  @Transform(emptyToUndefined)
   @IsDateString()
   @IsOptional()
   tanggalLahir?: string;
