@@ -2,22 +2,25 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X,
+  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin,
 } from "lucide-react";
-import { type SiswaCardData, getInitials, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir } from "./shared";
+import { type SiswaCardData, getInitials, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap } from "./shared";
 
 const HEADER_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
 
-function FieldItem({ icon: Icon, label, value }: {
-  icon: React.ElementType; label: string; value: string | null | undefined;
+function FieldItem({ icon: Icon, label, value, full }: {
+  icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean;
 }) {
   return (
-    <div>
+    <div className={full ? "sm:col-span-2" : undefined}>
       <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
         <Icon size={12} />
         <p className="truncate text-[10px] font-bold uppercase tracking-wider">{label}</p>
       </div>
-      <p className="mt-1.5 truncate text-[15px] font-bold text-slate-800 dark:text-white" title={value || "—"}>
+      <p
+        className={`mt-1.5 text-[15px] font-bold text-slate-800 dark:text-white ${full ? "" : "truncate"}`}
+        title={value || "—"}
+      >
         {value || "—"}
       </p>
     </div>
@@ -30,6 +33,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
   const displayNama = toTitleCase(getNama(siswa));
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ?? null;
+  const alamatLengkap = formatAlamatLengkap(siswa);
 
   return (
     <AnimatePresence>
@@ -75,6 +79,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} />
               <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
               <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} />
+              <FieldItem icon={MapPin} label="Alamat" value={alamatLengkap} full />
             </div>
 
             <div className="mt-5 flex items-center justify-end gap-2 border-t border-slate-200 pt-3.5 dark:border-slate-700/50">

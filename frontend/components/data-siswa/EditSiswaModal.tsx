@@ -43,7 +43,9 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
   const [form, setForm] = useState({
     nama: siswa.nama ?? "", kelasId: siswa.kelas.id, jurusan: siswa.jurusan ?? "",
     angkatan: String(siswa.angkatan), jenisKelamin: siswa.jenisKelamin ?? "",
-    noHp: siswa.noHp ?? "", alamat: siswa.alamat ?? "",
+    noHp: siswa.noHp ?? "",
+    dukuh: siswa.dukuh ?? "", rt: siswa.rt ?? "", rw: siswa.rw ?? "",
+    desa: siswa.desa ?? "", kecamatan: siswa.kecamatan ?? "", kabupaten: siswa.kabupaten ?? "",
     tempatLahir: siswa.tempatLahir ?? "",
     tanggalLahir: siswa.tanggalLahir ? siswa.tanggalLahir.slice(0, 10) : "",
   });
@@ -154,11 +156,41 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                   <input type="date" autoComplete="off" value={form.tanggalLahir} onChange={(e) => set("tanggalLahir", e.target.value)} className={INPUT} />
                 </Field>
               </div>
-              <Field label="Alamat" optional icon={MapPin}>
-                <textarea name="edit-siswa-alamat" autoComplete="off" data-lpignore="true" data-1p-ignore="true"
-                  value={form.alamat} onChange={(e) => set("alamat", e.target.value)}
-                  rows={2} placeholder="Alamat lengkap..." className={INPUT + " resize-none"} />
-              </Field>
+              <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5 dark:border-slate-700/50 dark:bg-white/3">
+                <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
+                  <MapPin size={10} className="text-primary/70" />
+                  Alamat Lengkap
+                  <span className="font-normal normal-case text-gray-400">(opsional)</span>
+                </p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <Field label="Dukuh/Dusun" icon={MapPin}>
+                    <input type="text" value={form.dukuh} onChange={(e) => set("dukuh", e.target.value)}
+                      placeholder="Dukuh" className={INPUT} />
+                  </Field>
+                  <Field label="RT" icon={MapPin}>
+                    <input type="text" value={form.rt} onChange={(e) => set("rt", e.target.value)}
+                      placeholder="003" className={INPUT} />
+                  </Field>
+                  <Field label="RW" icon={MapPin}>
+                    <input type="text" value={form.rw} onChange={(e) => set("rw", e.target.value)}
+                      placeholder="005" className={INPUT} />
+                  </Field>
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <Field label="Desa/Kelurahan" icon={MapPin}>
+                    <input type="text" value={form.desa} onChange={(e) => set("desa", e.target.value)}
+                      placeholder="Desa" className={INPUT} />
+                  </Field>
+                  <Field label="Kecamatan" icon={MapPin}>
+                    <input type="text" value={form.kecamatan} onChange={(e) => set("kecamatan", e.target.value)}
+                      placeholder="Kecamatan" className={INPUT} />
+                  </Field>
+                  <Field label="Kabupaten/Kota" icon={MapPin}>
+                    <input type="text" value={form.kabupaten} onChange={(e) => set("kabupaten", e.target.value)}
+                      placeholder="Kabupaten" className={INPUT} />
+                  </Field>
+                </div>
+              </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
             </div>
           </div>

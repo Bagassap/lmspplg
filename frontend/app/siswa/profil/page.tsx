@@ -9,6 +9,7 @@ import {
 import { LiveClock } from "@/components/shared/LiveClock";
 import { createPortal } from "react-dom";
 import { useToast } from "@/components/shared/ToastSystem";
+import { formatAlamatLengkap } from "@/components/data-siswa/shared";
 
 type SiswaProfil = {
   id: string;
@@ -19,7 +20,12 @@ type SiswaProfil = {
   angkatan: number;
   jenisKelamin: string | null;
   noHp: string | null;
-  alamat: string | null;
+  dukuh: string | null;
+  rt: string | null;
+  rw: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
   namaOrtu: string | null;
@@ -67,7 +73,12 @@ function EditProfilModal({
   const [tanggalLahir, setTanggalLahir] = useState(siswa.tanggalLahir ? siswa.tanggalLahir.slice(0, 10) : "");
   const [namaOrtu, setNamaOrtu] = useState(siswa.namaOrtu ?? "");
   const [noHp, setNoHp] = useState(siswa.noHp ?? "");
-  const [alamat, setAlamat] = useState(siswa.alamat ?? "");
+  const [dukuh, setDukuh] = useState(siswa.dukuh ?? "");
+  const [rt, setRt] = useState(siswa.rt ?? "");
+  const [rw, setRw] = useState(siswa.rw ?? "");
+  const [desa, setDesa] = useState(siswa.desa ?? "");
+  const [kecamatan, setKecamatan] = useState(siswa.kecamatan ?? "");
+  const [kabupaten, setKabupaten] = useState(siswa.kabupaten ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -84,7 +95,12 @@ function EditProfilModal({
           tanggalLahir: tanggalLahir || undefined,
           namaOrtu: namaOrtu || undefined,
           noHp: noHp || undefined,
-          alamat: alamat || undefined,
+          dukuh: dukuh || undefined,
+          rt: rt || undefined,
+          rw: rw || undefined,
+          desa: desa || undefined,
+          kecamatan: kecamatan || undefined,
+          kabupaten: kabupaten || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -164,10 +180,42 @@ function EditProfilModal({
               <input type="tel" value={noHp} onChange={(e) => setNoHp(e.target.value)}
                 placeholder="Contoh: 08123456789" className={INPUT} />
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Alamat</label>
-              <textarea value={alamat} onChange={(e) => setAlamat(e.target.value)}
-                rows={3} placeholder="Alamat lengkap..." className={INPUT + " resize-none"} />
+            <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 dark:border-slate-700 dark:bg-white/4">
+              <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Alamat Lengkap</p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">Dukuh/Dusun</label>
+                  <input type="text" value={dukuh} onChange={(e) => setDukuh(e.target.value)}
+                    placeholder="Dukuh" className={INPUT} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">RT</label>
+                  <input type="text" value={rt} onChange={(e) => setRt(e.target.value)}
+                    placeholder="003" className={INPUT} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">RW</label>
+                  <input type="text" value={rw} onChange={(e) => setRw(e.target.value)}
+                    placeholder="005" className={INPUT} />
+                </div>
+              </div>
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">Desa/Kelurahan</label>
+                  <input type="text" value={desa} onChange={(e) => setDesa(e.target.value)}
+                    placeholder="Desa" className={INPUT} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">Kecamatan</label>
+                  <input type="text" value={kecamatan} onChange={(e) => setKecamatan(e.target.value)}
+                    placeholder="Kecamatan" className={INPUT} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-400 dark:text-slate-500">Kabupaten/Kota</label>
+                  <input type="text" value={kabupaten} onChange={(e) => setKabupaten(e.target.value)}
+                    placeholder="Kabupaten" className={INPUT} />
+                </div>
+              </div>
             </div>
             {error && <p className="text-xs text-red-500">{error}</p>}
           </div>
@@ -458,7 +506,7 @@ export default function SiswaProfilPage() {
             <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               <InfoField icon={Phone} label="No. HP" value={profil.noHp}
                 iconBg="#eff6ff" iconColor="#3b82f6" />
-              <InfoField icon={MapPin} label="Alamat" value={profil.alamat}
+              <InfoField icon={MapPin} label="Alamat Lengkap" value={formatAlamatLengkap(profil)}
                 iconBg="#fff7ed" iconColor="#f97316" />
             </div>
           </SectionCard>

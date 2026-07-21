@@ -13,7 +13,12 @@ export type SiswaCardData = {
   angkatan: number;
   jenisKelamin: string | null;
   noHp: string | null;
-  alamat: string | null;
+  dukuh: string | null;
+  rt: string | null;
+  rw: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
   namaOrtu?: string | null;
@@ -64,6 +69,26 @@ export function formatTempatTanggalLahir(tempatLahir: string | null, tanggalLahi
   if (tempatLahir) return tempatLahir;
   if (tgl) return tgl;
   return "—";
+}
+
+type AlamatFields = {
+  dukuh: string | null;
+  rt: string | null;
+  rw: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
+};
+
+// Format seragam: "Dukuh X, RT 003/RW 005, Desa Y, Kecamatan Z, Kabupaten W"
+export function formatAlamatLengkap(s: AlamatFields): string {
+  const parts: string[] = [];
+  if (s.dukuh) parts.push(`Dukuh ${s.dukuh}`);
+  if (s.rt || s.rw) parts.push(`RT ${s.rt || "-"}/RW ${s.rw || "-"}`);
+  if (s.desa) parts.push(`Desa ${s.desa}`);
+  if (s.kecamatan) parts.push(`Kecamatan ${s.kecamatan}`);
+  if (s.kabupaten) parts.push(`Kabupaten ${s.kabupaten}`);
+  return parts.length > 0 ? parts.join(", ") : "—";
 }
 
 // Palet vivid/solid — dipilih berdasarkan hash nama/id (sum charCode % 8) agar konsisten per siswa.
