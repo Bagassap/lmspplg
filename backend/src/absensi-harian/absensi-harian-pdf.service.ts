@@ -47,6 +47,19 @@ const STATUS_BG: Record<string, string> = {
 
 const UPLOADS_ROOT = join(process.cwd(), 'uploads');
 
+// lokasi is stored as "lat,lng" (see parseLokasi in frontend/shared.ts) — but
+// can also be the "GPS tidak tersedia" fallback string when geolocation was
+// blocked, so validate both parts are actually numeric before linking.
+function googleMapsUrl(lokasi?: string | null): string | null {
+  if (!lokasi) return null;
+  const parts = lokasi.split(',');
+  if (parts.length < 2) return null;
+  const lat = parts[0].trim();
+  const lng = parts[1].trim();
+  if (!lat || !lng || Number.isNaN(Number(lat)) || Number.isNaN(Number(lng))) return null;
+  return `https://www.google.com/maps?q=${lat},${lng}`;
+}
+
 async function readFotoBuffer(fotoUrl?: string | null): Promise<Buffer | null> {
   if (!fotoUrl || !fotoUrl.startsWith('/uploads/')) return null;
   const filePath = normalize(join(process.cwd(), fotoUrl));
@@ -164,17 +177,34 @@ export class AbsensiHarianPdfService {
 
     const rowH = 34;
     const colW = contentWidth / 2;
-    const detailRows: [string, string, string, string][] = [
-      ['Waktu Hadir', s.waktuAbsen || '-', 'Waktu Pulang', s.waktuPulang || '-'],
-      ['Lokasi Hadir', s.lokasi || '-', 'Lokasi Pulang', s.lokasiPulang || '-'],
-    ];
-    for (const [l1, v1, l2, v2] of detailRows) {
-      doc.fillColor('#94a3b8').fontSize(8).text(l1.toUpperCase(), margin, y, { width: colW - 10 });
-      doc.fillColor('#94a3b8').fontSize(8).text(l2.toUpperCase(), margin + colW, y, { width: colW - 10 });
-      doc.fillColor('#334155').fontSize(10).text(v1, margin, y + 11, { width: colW - 10 });
-      doc.fillColor('#334155').fontSize(10).text(v2, margin + colW, y + 11, { width: colW - 10 });
-      y += rowH;
-    }
+
+    doc.fillColor('#94a3b8').fontSize(8).text('WAKTU HADIR', margin, y, { width: colW - 10 });
+    doc.fillColor('#94a3b8').fontSize(8).text('WAKTU PULANG', margin + colW, y, { width: colW - 10 });
+    doc.fillColor('#334155').fontSize(10).text(s.waktuAbsen || '-', margin, y + 11, { width: colW - 10 });
+    doc.fillColor('#334155').fontSize(10).text(s.waktuPulang || '-', margin + colW, y + 11, { width: colW - 10 });
+    y += rowH;
+
+    const lokasiUrl = googleMapsUrl(s.lokasi);
+    const lokasiPulangUrl = googleMapsUrl(s.lokasiPulang);
+    doc.fillColor('#94a3b8').fontSize(8).text('LOKASI HADIR', margin, y, { width: colW - 10 });
+    doc.fillColor('#94a3b8').fontSize(8).text('LOKASI PULANG', margin + colW, y, { width: colW - 10 });
+    doc
+      .fillColor(lokasiUrl ? '#2563eb' : '#334155')
+      .fontSize(10)
+      .text(s.lokasi || '-', margin, y + 11, {
+        width: colW - 10,
+        underline: !!lokasiUrl,
+        link: lokasiUrl ?? undefined,
+      });
+    doc
+      .fillColor(lokasiPulangUrl ? '#2563eb' : '#334155')
+      .fontSize(10)
+      .text(s.lokasiPulang || '-', margin + colW, y + 11, {
+        width: colW - 10,
+        underline: !!lokasiPulangUrl,
+        link: lokasiPulangUrl ?? undefined,
+      });
+    y += rowH;
 
     if (s.catatan || s.catatanPulang) {
       doc.fillColor('#94a3b8').fontSize(8).text('CATATAN', margin, y, { width: contentWidth });

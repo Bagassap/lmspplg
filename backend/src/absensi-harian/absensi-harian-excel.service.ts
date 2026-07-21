@@ -34,8 +34,22 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const NA_FONT = { color: { argb: 'FFCBD5E1' }, italic: true };
+const LINK_FONT = { color: { argb: 'FF2563EB' }, underline: true };
 
 const UPLOADS_ROOT = join(process.cwd(), 'uploads');
+
+// lokasi is stored as "lat,lng" (see parseLokasi in frontend/shared.ts) — but
+// can also be the "GPS tidak tersedia" fallback string when geolocation was
+// blocked, so validate both parts are actually numeric before linking.
+function googleMapsUrl(lokasi?: string | null): string | null {
+  if (!lokasi) return null;
+  const parts = lokasi.split(',');
+  if (parts.length < 2) return null;
+  const lat = parts[0].trim();
+  const lng = parts[1].trim();
+  if (!lat || !lng || Number.isNaN(Number(lat)) || Number.isNaN(Number(lng))) return null;
+  return `https://www.google.com/maps?q=${lat},${lng}`;
+}
 
 const FOTO_SIZE = { width: 80, height: 80 };
 const TTD_SIZE = { width: 100, height: 50 };
@@ -118,6 +132,19 @@ export class AbsensiHarianExcelService {
         catatan: [s.catatan, s.catatanPulang].filter(Boolean).join(' | ') || '-',
       });
       row.alignment = { vertical: 'middle', wrapText: false };
+
+      const lokasiUrl = googleMapsUrl(s.lokasi);
+      if (lokasiUrl) {
+        const cell = row.getCell('lokasi');
+        cell.value = { text: s.lokasi as string, hyperlink: lokasiUrl };
+        cell.font = LINK_FONT;
+      }
+      const lokasiPulangUrl = googleMapsUrl(s.lokasiPulang);
+      if (lokasiPulangUrl) {
+        const cell = row.getCell('lokasiPulang');
+        cell.value = { text: s.lokasiPulang as string, hyperlink: lokasiPulangUrl };
+        cell.font = LINK_FONT;
+      }
 
       const [fotoBuf, fotoPulangBuf] = await Promise.all([
         readFotoBuffer(s.foto),
