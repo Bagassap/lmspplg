@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { Users, User, School } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
-import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
@@ -21,18 +20,10 @@ export default function AdminDataSiswaPage() {
   const [filterGender, setFilterGender] = useState("");
   const [editTarget, setEditTarget] = useState<SiswaCardData | null>(null);
   const [resetTarget, setResetTarget] = useState<SiswaCardData | null>(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/auth/me", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((me) => setIsSuperAdmin(me?.loginId === SUPER_ADMIN_LOGIN_ID))
-      .catch(() => {});
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -112,13 +103,13 @@ export default function AdminDataSiswaPage() {
         grouped={!isFiltered}
         kelasNamaOrder={kelasNamaOrder}
         onEdit={setEditTarget}
-        onResetPassword={isSuperAdmin ? setResetTarget : undefined}
-        onImpersonate={isSuperAdmin ? handleImpersonate : undefined}
+        onResetPassword={setResetTarget}
+        onImpersonate={handleImpersonate}
       />
 
       {editTarget && <EditSiswaModal siswa={editTarget} kelasList={kelasList} onClose={() => setEditTarget(null)} onSave={handleSaved} />}
 
-      {resetTarget?.user && isSuperAdmin && (
+      {resetTarget?.user && (
         <ResetPasswordModal
           userId={resetTarget.user.id}
           userName={toTitleCase(getNama(resetTarget))}

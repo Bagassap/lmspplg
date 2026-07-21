@@ -26,12 +26,23 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async resetPassword(id: string, dto: ResetPasswordDto) {
+  async resetPassword(
+    admin: { loginId?: string | null },
+    id: string,
+    dto: ResetPasswordDto,
+  ) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: { siswa: true },
     });
     if (!user) throw new NotFoundException('User tidak ditemukan');
+
+    // Regular admins may only reset student accounts (the only targets
+    // admin/data-siswa ever exposes) — resetting guru/admin accounts,
+    // including the super admin itself, stays super-admin-only.
+    if (user.role !== Role.SISWA && admin.loginId !== SUPER_ADMIN_LOGIN_ID) {
+      throw new ForbiddenException('Hanya super admin yang dapat mereset password akun ini');
+    }
 
     let newPassword: string;
     if (user.role === Role.SISWA) {
@@ -143,12 +154,10 @@ export class UsersService {
     admin: { id: string; nama: string; role: string; loginId?: string | null },
     targetId: string,
   ) {
-    if (admin.role !== Role.ADMIN || admin.loginId !== SUPER_ADMIN_LOGIN_ID) {
-      throw new ForbiddenException('Hanya super admin yang dapat menggunakan fitur ini');
-    }
-
     const target = await this.prisma.user.findUnique({ where: { id: targetId } });
     if (!target) throw new NotFoundException('User tidak ditemukan');
+    // Blocks impersonating any admin account, which already covers the
+    // super admin — no separate check needed to protect it specifically.
     if (target.role === Role.ADMIN) {
       throw new ForbiddenException('Tidak dapat memantau akun admin');
     }

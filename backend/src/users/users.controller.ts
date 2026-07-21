@@ -1,6 +1,5 @@
-import { Controller, Get, Patch, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
@@ -29,11 +28,6 @@ export class UsersController {
       page ? parseInt(page, 10) : 1,
       limit ? parseInt(limit, 10) : 10,
     );
-  }
-
-  @Patch(':id/reset-password')
-  resetPassword(@Param('id') id: string, @Body() dto: ResetPasswordDto) {
-    return this.service.resetPassword(id, dto);
   }
 
   @Get('password-reset-requests')
