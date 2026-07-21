@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed:users": "tsx prisma/import-users-csv.ts"
+    "seed:users": "tsx prisma/import-users-csv.ts",
+    "storage:report": "tsx scripts/storage-report.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -47,7 +48,8 @@
     "pg": "^8.21.0",
     "prisma": "^7.8.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

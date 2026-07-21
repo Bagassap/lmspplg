@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { imageUploadOptions } from '../common/upload/file-filters';
+import { compressUploadedImageInPlace } from '../common/upload/compress-image.util';
 import { Role } from '../../generated/prisma/client';
 
 function sanitizeFilenamePart(value: string): string {
@@ -217,11 +218,12 @@ export class AbsensiHarianController {
   @Roles(Role.SISWA)
   @Post('saya')
   @UseInterceptors(FileInterceptor('foto', { storage: absensiHarianStorage, ...imageUploadOptions }))
-  absenSendiri(
+  async absenSendiri(
     @Body() dto: AbsenSendiriHarianDto,
     @Request() req: any,
     @UploadedFile() foto?: Express.Multer.File,
   ) {
+    if (foto) await compressUploadedImageInPlace(foto.path);
     const fotoUrl = foto ? `/uploads/absensi-harian/${foto.filename}` : undefined;
     return this.service.absenSendiri(req.user.id, dto.tipe ?? 'HADIR', {
       lokasi: dto.lokasi,

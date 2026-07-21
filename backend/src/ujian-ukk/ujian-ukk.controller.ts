@@ -16,6 +16,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { imageUploadOptions, documentUploadOptions } from '../common/upload/file-filters';
+import { compressUploadedImageInPlace } from '../common/upload/compress-image.util';
 import { Role } from '../../generated/prisma/client';
 
 const soalStorage = diskStorage({
@@ -141,7 +142,8 @@ export class UjianUkkController {
     destination: (_req: any, _file: any, cb: any) => { const dir = require('path').join(process.cwd(), 'uploads', 'absensi-ukk'); require('fs').mkdirSync(dir, { recursive: true }); cb(null, dir); },
     filename: (_req: any, file: any, cb: any) => { cb(null, Date.now() + '-' + Math.round(Math.random()*1e9) + require('path').extname(file.originalname)); },
   }), ...imageUploadOptions }))
-  absenSendiriUkk(@Body() dto: AbsenSendiriUkkDto, @Request() req: any, @UploadedFile() foto?: Express.Multer.File) {
+  async absenSendiriUkk(@Body() dto: AbsenSendiriUkkDto, @Request() req: any, @UploadedFile() foto?: Express.Multer.File) {
+    if (foto) await compressUploadedImageInPlace(foto.path);
     const fotoUrl = foto ? `/uploads/absensi-ukk/${foto.filename}` : undefined;
     return this.service.absenSendiriUkk(req.user.sub, dto.tahapanId, {
       lokasi: dto.lokasi, waktuAbsen: dto.waktuAbsen, ttd: dto.ttd, catatan: dto.catatan, fotoUrl,
