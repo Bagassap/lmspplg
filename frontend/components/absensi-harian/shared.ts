@@ -25,6 +25,23 @@ export const CARD_GRADIENTS = [
   "linear-gradient(135deg,#0EA5E9,#38BDF8)",
 ];
 
+// Date.prototype.toISOString() always renders the UTC calendar date, not the
+// browser's local one — during the ~7h/day window where WIB has already
+// crossed into a new date but UTC hasn't (UTC 17:00-23:59 = WIB 00:00-06:59),
+// `new Date().toISOString().slice(0, 10)` silently returns yesterday. Mirrors
+// the backend's jakartaParts()/todayStr() in absensi-harian.service.ts.
+export function todayJakarta(): string {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
 export function formatTgl(tgl?: string) {
   if (!tgl) return "-";
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });

@@ -9,7 +9,7 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
-import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { compressImage } from "@/lib/compressImage";
@@ -77,7 +77,7 @@ function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {
 export default function SiswaAbsensiHarianPage() {
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayJakarta();
 
   const [data, setData] = useState<StatusSaya | null>(null);
   const [summary, setSummary] = useState<AbsensiSummary | null>(null);

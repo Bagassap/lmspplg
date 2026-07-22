@@ -1,21 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-
-function todayStr() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function weekDates() {
-  const now = new Date();
-  const dow = now.getDay();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - (dow === 0 ? 6 : dow - 1));
-  return Array.from({ length: 5 }, (_, i) => {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    return d.toISOString().slice(0, 10);
-  });
-}
+import { todayJakarta as todayStr, weekDatesJakarta as weekDates } from '../common/utils/jakarta-date.util';
 
 @Injectable()
 export class DashboardService {

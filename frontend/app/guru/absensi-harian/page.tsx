@@ -11,14 +11,14 @@ import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, todayJakarta } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 export default function GuruAbsensiHarianPage() {
   const toast = useToast();
   const [kelasList, setKelasList] = useState<Kelas[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
-  const [tanggal, setTanggal] = useState(() => new Date().toISOString().slice(0, 10));
+  const [tanggal, setTanggal] = useState(() => todayJakarta());
   const [data, setData] = useState<RekapKelas | null>(null);
   const [loading, setLoading] = useState(false);
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);

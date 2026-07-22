@@ -17,6 +17,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { imageUploadOptions } from '../common/upload/file-filters';
 import { compressUploadedImageInPlace } from '../common/upload/compress-image.util';
 import { Role } from '../../generated/prisma/client';
+import { todayJakarta as todayStr } from '../common/utils/jakarta-date.util';
 
 function sanitizeFilenamePart(value: string): string {
   return value.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'export';
@@ -33,18 +34,6 @@ const absensiHarianStorage = diskStorage({
     cb(null, unique + extname(file.originalname));
   },
 });
-
-function todayStr() {
-  const fmt = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Jakarta',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-  const parts = fmt.formatToParts(new Date());
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
-  return `${get('year')}-${get('month')}-${get('day')}`;
-}
 
 @UseGuards(JwtAuthGuard)
 @Controller('absensi-harian')

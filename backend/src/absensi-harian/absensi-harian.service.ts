@@ -3,35 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
-
-// new Date().getHours()/toISOString() read the server process's OS timezone (often UTC),
-// not WIB — extract Jakarta-local date/hour/weekday explicitly so the window check is
-// correct regardless of where the server runs.
-function jakartaParts() {
-  const fmt = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Jakarta',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-    weekday: 'short',
-  });
-  const parts = fmt.formatToParts(new Date());
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
-  const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  return {
-    date: `${get('year')}-${get('month')}-${get('day')}`,
-    hour: Number(get('hour')),
-    minute: Number(get('minute')),
-    dayOfWeek: WEEKDAY_NUM[get('weekday')] ?? 0,
-  };
-}
-
-function todayStr() {
-  return jakartaParts().date;
-}
+import { jakartaParts, todayJakarta as todayStr } from '../common/utils/jakarta-date.util';
 
 export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
 
