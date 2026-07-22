@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, Save, GraduationCap, Download,
+  ClipboardCheck, CalendarDays, GraduationCap, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -12,7 +12,7 @@ import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS } from "@/components/absensi-harian/shared";
-import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
+import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 export default function GuruAbsensiHarianPage() {
   const toast = useToast();
@@ -21,8 +21,6 @@ export default function GuruAbsensiHarianPage() {
   const [tanggal, setTanggal] = useState(() => new Date().toISOString().slice(0, 10));
   const [data, setData] = useState<RekapKelas | null>(null);
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [draft, setDraft] = useState<Record<string, StatusAbsensi>>({});
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
   const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
@@ -47,9 +45,6 @@ export default function GuruAbsensiHarianPage() {
       const list = await res.json().catch(() => []);
       const d: RekapKelas | undefined = Array.isArray(list) ? list[0] : undefined;
       setData(d ?? null);
-      const init: Record<string, StatusAbsensi> = {};
-      d?.siswa.forEach((s) => { if (s.status) init[s.siswaId] = s.status; });
-      setDraft(init);
     } catch {
       toast.error("Gagal memuat data absensi", "");
     } finally {
@@ -58,33 +53,6 @@ export default function GuruAbsensiHarianPage() {
   }, [selectedId, tanggal]);
 
   useEffect(() => { loadRekap(); }, [loadRekap]);
-
-  async function handleSave() {
-    if (!data) return;
-    setSaving(true);
-    const absensi = Object.entries(draft).map(([siswaId, status]) => ({ siswaId, status }));
-    try {
-      const r = await fetch("/api/absensi-harian", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kelasId: selectedId, tanggal, absensi }),
-      });
-      if (r.ok) { toast.success("Absensi disimpan!", ""); loadRekap(); }
-      else {
-        const d = await r.json().catch(() => null);
-        toast.error(d?.message ?? "Gagal menyimpan absensi", "");
-      }
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  function setAllHadir() {
-    if (!data) return;
-    const next: Record<string, StatusAbsensi> = {};
-    data.siswa.forEach((s) => { next[s.siswaId] = "HADIR"; });
-    setDraft(next);
-  }
 
   useEffect(() => { setTablePage(0); }, [selectedId, tanggal, activeFilter, tablePageSize]);
 
@@ -95,7 +63,6 @@ export default function GuruAbsensiHarianPage() {
   const total = siswaList.length;
   const sudahAbsen = siswaList.filter((s) => s.status !== null).length;
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
-  const terisi = Object.keys(draft).length;
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -197,24 +164,6 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-100 bg-violet-50/60 px-4 py-3 dark:border-violet-800/40 dark:bg-violet-900/10">
-          <p className="text-xs font-semibold text-violet-600 dark:text-violet-300">
-            Pilih status kehadiran siswa pada tabel, lalu simpan perubahan
-          </p>
-          <div className="flex items-center gap-2">
-            <button onClick={setAllHadir}
-              className="text-xs font-bold px-3 py-1.5 rounded-xl border transition-all hover:brightness-95 shrink-0"
-              style={{ backgroundColor: "#E8F8F1", color: "#10B981", borderColor: "#10B98140" }}>
-              Hadir Semua
-            </button>
-            <button onClick={handleSave} disabled={saving || terisi === 0}
-              className="flex items-center gap-2 rounded-xl px-4 py-1.5 text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-95 shrink-0"
-              style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
-              <Save size={13} />{saving ? "Menyimpan..." : terisi > 0 ? `Simpan (${terisi})` : "Simpan"}
-            </button>
-          </div>
-        </div>
-
         {selectedKelas && (
           <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ background: CARD_GRADIENTS[0] }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10" />
@@ -294,17 +243,7 @@ export default function GuruAbsensiHarianPage() {
             tablePageSize={tablePageSize}
             setTablePageSize={setTablePageSize}
             onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-            editable
-            draft={draft}
-            onStatusChange={(siswaId, status) => setDraft((p) => ({ ...p, [siswaId]: status }))}
           />
-
-          <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/40 px-5 py-3">
-            <div className="text-xs text-slate-400 dark:text-slate-500">
-              <span className="font-bold text-slate-600 dark:text-slate-300">{rekap.HADIR}</span>/{total} siswa hadir
-              {terisi > 0 && <span className="ml-3 text-violet-500 font-semibold">{terisi} status siap disimpan</span>}
-            </div>
-          </div>
         </div>
       </div>
 
