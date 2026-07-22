@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 
-export const SUPER_ADMIN_LOGIN_ID = '111111';
+export const SUPER_ADMIN_LOGIN_ID = '02082021080';
 
 @Injectable()
 export class SuperAdminGuard implements CanActivate {
