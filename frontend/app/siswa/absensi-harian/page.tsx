@@ -58,11 +58,21 @@ function isGpsCoords(loc: string | null) {
   return !!loc && loc !== GPS_UNAVAILABLE;
 }
 
-const WINDOW_INFO: Record<AbsenWindow, { label: string; range: string }> = {
-  HADIR:  { label: "Jendela Absen Datang", range: "06:00 – 11:00" },
-  PULANG: { label: "Jendela Absen Pulang", range: "11:00 – 23:00" },
-  CLOSED: { label: "Di luar jam absensi",  range: "23:00 – 06:00" },
-};
+// Absen pulang closes at a different time on Friday (11:00-12:00) vs
+// Senin-Kamis (14:00-17:00) — keep the displayed range in sync with the
+// day-aware window enforced server-side (currentWindow() in
+// absensi-harian.service.ts).
+function isJakartaFriday(): boolean {
+  return new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date()) === "Fri";
+}
+function pulangRange(): string {
+  return isJakartaFriday() ? "11:00 – 12:00 (Jumat)" : "14:00 – 17:00 (Sen-Kam)";
+}
+function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {
+  if (window_ === "HADIR") return { label: "Jendela Absen Datang", range: "06:00 – 09:00 (Sen-Jum)" };
+  if (window_ === "PULANG") return { label: "Jendela Absen Pulang", range: pulangRange() };
+  return { label: "Di luar jam absensi", range: "Tidak ada jendela aktif" };
+}
 
 export default function SiswaAbsensiHarianPage() {
   const toast = useToast();
@@ -226,7 +236,7 @@ export default function SiswaAbsensiHarianPage() {
   const status = (data?.status ?? "HADIR") as StatusAbsensi;
   const cfg = STATUS_CFG[status];
   const motivasi = MOTIVASI[new Date().getDay() % MOTIVASI.length];
-  const winInfo = WINDOW_INFO[window_];
+  const winInfo = getWindowInfo(window_);
 
   const TABS: { key: Tab; label: string; icon: typeof LogIn }[] = [
     { key: "DATANG", label: "Absen Datang", icon: LogIn },
@@ -328,7 +338,7 @@ export default function SiswaAbsensiHarianPage() {
                         ttd={data?.record?.ttd}
                         lokasi={data?.record?.lokasi}
                         catatan={data?.record?.catatan}
-                        footnote="Absen pulang tersedia mulai pukul 11:00"
+                        footnote={`Absen pulang tersedia jam ${pulangRange()}`}
                         onReload={() => loadStatus()}
                       />
                     </motion.div>
@@ -355,7 +365,7 @@ export default function SiswaAbsensiHarianPage() {
                       </div>
                       <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya</h2>
                       <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-                        Absen datang hanya tersedia jam 06.00-11.00 WIB.
+                        Absen datang hanya tersedia jam 06.00-09.00 WIB, Senin-Jumat.
                       </p>
                     </motion.div>
                   )
@@ -400,8 +410,8 @@ export default function SiswaAbsensiHarianPage() {
                       </h2>
                       <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
                         {window_ === "HADIR"
-                          ? "Absen pulang belum tersedia. Absen pulang dibuka mulai jam 11.00 WIB."
-                          : "Waktu absen pulang hari ini sudah berakhir."}
+                          ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangRange()}.`
+                          : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangRange()}.`}
                       </p>
                     </motion.div>
                   )

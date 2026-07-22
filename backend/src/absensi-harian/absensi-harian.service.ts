@@ -5,8 +5,8 @@ import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 
 // new Date().getHours()/toISOString() read the server process's OS timezone (often UTC),
-// not WIB — extract Jakarta-local date/hour explicitly so the window check is correct
-// regardless of where the server runs.
+// not WIB — extract Jakarta-local date/hour/weekday explicitly so the window check is
+// correct regardless of where the server runs.
 function jakartaParts() {
   const fmt = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Jakarta',
@@ -16,13 +16,16 @@ function jakartaParts() {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
+    weekday: 'short',
   });
   const parts = fmt.formatToParts(new Date());
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
   return {
     date: `${get('year')}-${get('month')}-${get('day')}`,
     hour: Number(get('hour')),
     minute: Number(get('minute')),
+    dayOfWeek: WEEKDAY_NUM[get('weekday')] ?? 0,
   };
 }
 
@@ -32,11 +35,25 @@ function todayStr() {
 
 export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
 
+// Absen datang: 06.00-09.00 WIB, Senin-Jumat.
+// Absen pulang: 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
+// Sabtu-Minggu tidak ada jendela absen sama sekali.
 function currentWindow(): AbsenWindow {
-  const { hour } = jakartaParts();
-  if (hour >= 6 && hour < 11) return 'HADIR';
-  if (hour >= 11 && hour < 23) return 'PULANG';
+  const { hour, minute, dayOfWeek } = jakartaParts();
+  const minutesNow = hour * 60 + minute;
+  const isMonFri = dayOfWeek >= 1 && dayOfWeek <= 5;
+  const isMonThu = dayOfWeek >= 1 && dayOfWeek <= 4;
+  const isFriday = dayOfWeek === 5;
+
+  if (isMonFri && minutesNow >= 6 * 60 && minutesNow < 9 * 60) return 'HADIR';
+  if (isMonThu && minutesNow >= 14 * 60 && minutesNow < 17 * 60) return 'PULANG';
+  if (isFriday && minutesNow >= 11 * 60 && minutesNow < 12 * 60) return 'PULANG';
   return 'CLOSED';
+}
+
+function pulangWindowLabel(): string {
+  const { dayOfWeek } = jakartaParts();
+  return dayOfWeek === 5 ? '11.00-12.00 WIB (Jumat)' : '14.00-17.00 WIB (Senin-Kamis)';
 }
 
 @Injectable()
@@ -229,8 +246,8 @@ export class AbsensiHarianService {
       if (window !== 'PULANG') {
         throw new ForbiddenException(
           window === 'HADIR'
-            ? 'Absen pulang belum tersedia. Absen pulang dibuka mulai jam 11.00 WIB'
-            : 'Waktu absen pulang hari ini sudah berakhir',
+            ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangWindowLabel()}`
+            : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangWindowLabel()}`,
         );
       }
       if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen pulang');
@@ -255,7 +272,7 @@ export class AbsensiHarianService {
 
     // HADIR / IZIN / SAKIT — one submission per day
     if (window !== 'HADIR') {
-      throw new ForbiddenException('Absen datang hanya tersedia jam 06.00-11.00 WIB');
+      throw new ForbiddenException('Absen datang hanya tersedia jam 06.00-09.00 WIB (Senin-Jumat)');
     }
     if (existing?.status) {
       throw new BadRequestException('Anda sudah mengisi absensi hari ini');
