@@ -29,7 +29,7 @@ export function DataSiswaExportButtons({ kelasId, kelasNama }: { kelasId?: strin
   const EXCEL_STYLE = { backgroundColor: "#E8F8F1", color: "#0F9D58", borderColor: "#0F9D5830" };
 
   return (
-    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+    <div className="flex flex-wrap items-center gap-2">
       <button type="button" onClick={() => run("pdf")} disabled={!!loadingKind}
         className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
         style={PDF_STYLE}>

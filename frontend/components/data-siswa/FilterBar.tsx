@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, ChevronDown, Users, School, BookOpen, VenusAndMars } from "lucide-react";
+import { Search, X, ChevronDown, Users, School, BookOpen, VenusAndMars, Download } from "lucide-react";
 import { JURUSAN_OPTIONS, kelasShort, type KelasRef } from "./shared";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
@@ -23,12 +23,13 @@ export function FilterBar({
   loading: boolean; totalCount: number; displayedCount: number; kelasCount: number;
 }) {
   const SELECT =
-    "h-10.5 w-full min-w-35 appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-600 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300";
+    "h-10.5 w-full min-w-32 appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-600 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300";
+  const DIVIDER = "hidden h-7 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:block";
 
   return (
     <div className="rounded-xl border border-slate-200 bg-linear-to-br from-slate-50 to-white px-4 py-3.5 shadow-md dark:border-slate-700 dark:from-slate-800/60 dark:to-slate-800/30">
-      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
-        <div className="relative min-w-0 flex-1">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <div className="relative w-full min-w-0 sm:w-auto sm:flex-1 sm:min-w-40">
           <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="search"
@@ -54,7 +55,7 @@ export function FilterBar({
           </AnimatePresence>
         </div>
 
-        <div className="relative shrink-0 sm:w-44">
+        <div className="relative shrink-0 sm:w-38">
           <BookOpen size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <select value={filterJurusan} onChange={(e) => onFilterJurusan(e.target.value)} className={SELECT}>
             <option value="">Semua Jurusan</option>
@@ -63,7 +64,7 @@ export function FilterBar({
           <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </div>
 
-        <div className="relative shrink-0 sm:w-44">
+        <div className="relative shrink-0 sm:w-38">
           <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <select value={filterKelas} onChange={(e) => onFilterKelas(e.target.value)} className={SELECT}>
             <option value="">Semua Kelas</option>
@@ -72,7 +73,7 @@ export function FilterBar({
           <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </div>
 
-        <div className="relative shrink-0 sm:w-44">
+        <div className="relative shrink-0 sm:w-34">
           <VenusAndMars size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <select value={filterGender} onChange={(e) => onFilterGender(e.target.value)} className={SELECT}>
             <option value="">Semua Gender</option>
@@ -93,33 +94,39 @@ export function FilterBar({
             </motion.button>
           )}
         </AnimatePresence>
-      </div>
 
-      {!loading && (
-        <div className="mt-3.5 flex flex-wrap gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/40">
-          {isFiltered ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-              <Search size={11} /> {displayedCount} siswa ditemukan
-            </span>
-          ) : (
-            <>
+        <div className={DIVIDER} />
+
+        {!loading && (
+          <div className="flex flex-wrap items-center gap-2">
+            {isFiltered ? (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                <Users size={11} /> {totalCount} Siswa
+                <Search size={11} /> {displayedCount} siswa ditemukan
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-100 px-3 py-1.5 text-xs font-bold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
-                <School size={11} /> {kelasCount} Kelas
-              </span>
-            </>
-          )}
-        </div>
-      )}
+            ) : (
+              <>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                  <Users size={11} /> {totalCount} Siswa
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-100 px-3 py-1.5 text-xs font-bold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
+                  <School size={11} /> {kelasCount} Kelas
+                </span>
+              </>
+            )}
+          </div>
+        )}
 
-      <div className="mt-3.5 border-t border-slate-100 pt-3 dark:border-slate-700/40">
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">Unduh Data Siswa:</p>
-        <DataSiswaExportButtons
-          kelasId={filterKelas || undefined}
-          kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
-        />
+        <div className={DIVIDER} />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span title="Unduh Data Siswa" className="shrink-0">
+            <Download size={14} className="text-slate-300 dark:text-slate-600" />
+          </span>
+          <DataSiswaExportButtons
+            kelasId={filterKelas || undefined}
+            kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+          />
+        </div>
       </div>
     </div>
   );
