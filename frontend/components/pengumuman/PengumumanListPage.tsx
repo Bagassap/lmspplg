@@ -49,13 +49,14 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     return announcementDates.has(key);
   }
 
-  const DOT_COLORS = ["#6334F4","#3B7CE8","#10B981","#F97316","#EC4899","#F59E0B"];
-  function dotColor(d: number) { return DOT_COLORS[d % DOT_COLORS.length]; }
+  const CALENDAR_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
+  const DOT_COLOR = "#2563eb";
+  function dotColor(_d: number) { return DOT_COLOR; }
 
   return (
     <div className="rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:shadow-none">
       <div className="relative px-5 py-4 overflow-hidden"
-        style={{ background: "linear-gradient(135deg,#6334F4 0%,#8B5CF6 50%,#EC4899 100%)" }}>
+        style={{ background: CALENDAR_GRADIENT }}>
         <div className="pointer-events-none absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-4 right-16 w-20 h-20 rounded-full bg-white/8"/>
         <div className="relative flex items-center justify-between">
@@ -80,7 +81,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
         <div className="grid grid-cols-7 mb-2">
           {DAY_ID.map((d, i) => (
             <div key={d} className="text-center text-[10px] font-bold"
-              style={{ color: i >= 5 ? "#EC4899" : "#94a3b8" }}>{d}</div>
+              style={{ color: i >= 5 ? "#0ea5e9" : "#94a3b8" }}>{d}</div>
           ))}
         </div>
 
@@ -93,8 +94,8 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-pink-400 dark:text-pink-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
-                  style={todayFlag ? { background: "linear-gradient(135deg,#6334F4,#8B5CF6)" } : {}}>
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-sky-500 dark:text-sky-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
                     <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
@@ -111,11 +112,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
 
         <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-4 h-4 rounded-full" style={{ background: "linear-gradient(135deg,#6334F4,#8B5CF6)" }}/>
+            <div className="w-4 h-4 rounded-full" style={{ background: CALENDAR_GRADIENT }}/>
             <span className="text-[10px] text-slate-400">Hari ini</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-violet-500"/>
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DOT_COLOR }}/>
             <span className="text-[10px] text-slate-400">Ada pengumuman</span>
           </div>
         </div>
