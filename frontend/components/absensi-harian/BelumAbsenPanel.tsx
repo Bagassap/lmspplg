@@ -7,7 +7,7 @@ import { STATUS_CFG, PULANG_CFG, getInitials } from "./shared";
 import type { SiswaAbsensi } from "./types";
 
 function CollapsibleList({
-  title, icon: Icon, iconBg, iconColor, badgeBg, emptyMessage, items, open, onToggle,
+  title, icon: Icon, iconBg, iconColor, badgeBg, emptyMessage, items, total, open, onToggle,
 }: {
   title: string;
   icon: React.ElementType;
@@ -16,9 +16,11 @@ function CollapsibleList({
   badgeBg: string;
   emptyMessage: string;
   items: SiswaAbsensi[];
+  total: number;
   open: boolean;
   onToggle: () => void;
 }) {
+  const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <button type="button" onClick={onToggle}
@@ -28,12 +30,20 @@ function CollapsibleList({
             <Icon size={16} style={{ color: iconColor }} />
           </span>
           <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{title}</span>
-          <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-extrabold text-white" style={{ backgroundColor: badgeBg }}>
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <span className="rounded-full px-2 py-0.5 text-[11px] font-extrabold text-white" style={{ backgroundColor: badgeBg }}>
             {items.length}
           </span>
+          <span className="rounded-lg px-1.5 py-0.5 text-[10px] font-extrabold" style={{ backgroundColor: iconBg, color: iconColor }}>
+            {pct}%
+          </span>
+          <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
         </span>
-        <ChevronDown size={16} className={`shrink-0 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
+      <div className="h-1 w-full bg-slate-100 dark:bg-slate-700/40">
+        <div className="h-full rounded-r-full transition-[width] duration-300" style={{ width: `${pct}%`, backgroundColor: iconColor }} />
+      </div>
       {open && (
         <div className="border-t border-slate-50 dark:border-slate-700/40">
           {items.length === 0 ? (
@@ -81,6 +91,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
         badgeBg={STATUS_CFG.ALPA.clr}
         emptyMessage="Semua siswa sudah absen hadir!"
         items={belumHadir}
+        total={siswaList.length}
         open={expandedHadir}
         onToggle={() => setExpandedHadir((v) => !v)}
       />
@@ -92,6 +103,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
         badgeBg={PULANG_CFG.clr}
         emptyMessage="Semua siswa sudah absen pulang!"
         items={belumPulang}
+        total={siswaList.length}
         open={expandedPulang}
         onToggle={() => setExpandedPulang((v) => !v)}
       />
