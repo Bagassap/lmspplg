@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
+import { Avatar } from "@/components/shared/Avatar";
 
 
 const PAGE_TITLES: Record<string, [string, string]> = {
@@ -276,7 +277,6 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
     window.location.replace("/login");
   }
 
-  const initials = user.nama.split(" ").slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
 
   return (
     <>
@@ -439,12 +439,13 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
               onClick={() => setDropdownOpen((v) => !v)}
               className="flex items-center gap-2 rounded-full bg-slate-100 py-1.5 pl-1.5 pr-3 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
             >
-              <div
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #8099EC, #4F8EF7)" }}
-              >
-                {initials}
-              </div>
+              <Avatar
+                src={user.fotoProfil}
+                nama={user.nama}
+                sizePx={28}
+                fallbackBg="linear-gradient(135deg, #8099EC, #4F8EF7)"
+                textClassName="text-[11px] font-bold"
+              />
               <span className="hidden text-sm font-medium text-gray-700 dark:text-slate-200 sm:block">
                 {user.nama.split(" ")[0]}
               </span>

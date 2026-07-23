@@ -22,7 +22,7 @@ export type SiswaCardData = {
   tempatLahir: string | null;
   tanggalLahir: string | null;
   namaOrtu?: string | null;
-  user: { id: string; nama: string; email: string | null; mustChangePassword?: boolean } | null;
+  user: { id: string; nama: string; email: string | null; mustChangePassword?: boolean; fotoProfil?: string | null } | null;
 };
 
 export const JURUSAN_OPTIONS = [

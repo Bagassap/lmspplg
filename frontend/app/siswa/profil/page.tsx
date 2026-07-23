@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Phone, MapPin, BookOpen, Calendar,
-  Users, Pencil, Check, X, GraduationCap, Mail, Hash, IdCard,
+  Users, Pencil, Check, X, GraduationCap, Mail, Hash, IdCard, Camera,
 } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { createPortal } from "react-dom";
 import { useToast } from "@/components/shared/ToastSystem";
 import { formatAlamatLengkap } from "@/components/data-siswa/shared";
+import { Avatar } from "@/components/shared/Avatar";
+import { ChangeFotoProfilModal } from "@/components/shared/ChangeFotoProfilModal";
 
 type SiswaProfil = {
   id: string;
@@ -29,7 +31,7 @@ type SiswaProfil = {
   tempatLahir: string | null;
   tanggalLahir: string | null;
   namaOrtu: string | null;
-  user: { id: string; nama: string; email: string | null } | null;
+  user: { id: string; nama: string; email: string | null; fotoProfil?: string | null } | null;
 };
 
 const HERO_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
@@ -38,9 +40,6 @@ const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#F97316)";
 const PROFILE_CARD_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
-function getInitials(name: string): string {
-  return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-}
 function toTitleCase(str: string): string {
   return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 }
@@ -314,6 +313,7 @@ export default function SiswaProfilPage() {
   const [profil, setProfil] = useState<SiswaProfil | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
+  const [showChangeFoto, setShowChangeFoto] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -413,12 +413,24 @@ export default function SiswaProfilPage() {
 
           <div className="flex flex-col items-center px-6 pb-6">
             <div className="relative -mt-12 mb-4">
-              <div
-                className="flex h-24 w-24 items-center justify-center rounded-full text-2xl font-extrabold text-white shadow-xl ring-4 ring-white dark:ring-[#1c2434]"
-                style={{ background: avatarGrad }}
-              >
-                {getInitials(nama)}
+              <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1c2434]">
+                <Avatar
+                  src={profil.user?.fotoProfil}
+                  nama={nama}
+                  sizePx={96}
+                  fallbackBg={avatarGrad}
+                  textClassName="text-2xl font-extrabold"
+                />
               </div>
+              <button
+                type="button"
+                onClick={() => setShowChangeFoto(true)}
+                title="Ganti foto profil"
+                className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-white shadow-md transition hover:brightness-90 dark:border-[#1c2434]"
+                style={{ background: kelasGrad }}
+              >
+                <Camera size={13} />
+              </button>
             </div>
 
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
@@ -520,6 +532,10 @@ export default function SiswaProfilPage() {
           onClose={() => setShowEdit(false)}
           onSave={(updated) => { setProfil(updated); setShowEdit(false); }}
         />
+      )}
+
+      {showChangeFoto && (
+        <ChangeFotoProfilModal gradient={kelasGrad} onClose={() => setShowChangeFoto(false)} />
       )}
     </div>
   );

@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { Eye, ScanEye, KeyRound } from "lucide-react";
 import {
-  type SiswaCardData, getInitials, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
+  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
 } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 
 const GRID_TEMPLATE = "32px 40px 2fr 1fr 1.3fr 1fr 1fr 90px";
 const LABEL = "text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500";
@@ -53,12 +54,13 @@ export function SiswaTableRow({
         <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
 
         <div className="relative shrink-0">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-            style={{ backgroundColor: accent }}
-          >
-            {getInitials(displayNama)}
-          </div>
+          <Avatar
+            src={siswa.user?.fotoProfil}
+            nama={displayNama}
+            sizePx={36}
+            fallbackBg={accent}
+            textClassName="text-[10px] font-extrabold"
+          />
           {siswa.user && (
             <span
               className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-slate-800"

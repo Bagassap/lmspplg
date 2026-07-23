@@ -6,7 +6,7 @@ import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
 import { LengkapiProfilSiswaDto } from './dto/lengkapi-profil-siswa.dto';
 
 const INCLUDE_USER = {
-  user: { select: { id: true, nama: true, email: true, mustChangePassword: true } },
+  user: { select: { id: true, nama: true, email: true, mustChangePassword: true, fotoProfil: true } },
   kelas: {
     include: {
       waliKelasGuru: { include: { user: { select: { id: true, nama: true } } } },

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
+import { Avatar } from "@/components/shared/Avatar";
 
 type SubItem  = { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> };
 type MenuItem = {
@@ -132,7 +133,6 @@ export function Sidebar({
   const items = (MENUS[user.role] ?? []).filter(
     (item) => (item.key !== "manajemen-password" && item.key !== "permintaan-password") || isSuperAdmin,
   );
-  const initial  = user.nama.charAt(0).toUpperCase();
 
   const [pendingResetCount, setPendingResetCount] = useState(0);
   useEffect(() => {
@@ -237,25 +237,28 @@ export function Sidebar({
 
       <div className="border-b border-slate-100 dark:border-white/6">
         {collapsed ? (
-          <div className="flex justify-center py-3">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-extrabold text-white"
-              style={{ background: SIDEBAR_GRADIENT }}
-              title={user.nama}
-            >
-              {initial}
-            </div>
+          <div className="flex justify-center py-3" title={user.nama}>
+            <Avatar
+              src={user.fotoProfil}
+              nama={user.nama}
+              sizePx={40}
+              fallbackBg={SIDEBAR_GRADIENT}
+              textClassName="text-sm font-extrabold"
+            />
           </div>
         ) : (
           <div className="flex flex-col items-center px-5 pb-5 pt-6">
             <div
-              className="mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold text-white ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
-              style={{
-                background: SIDEBAR_GRADIENT,
-                "--tw-ring-color": `${PRIMARY}40`,
-              } as React.CSSProperties}
+              className="mb-3 rounded-full ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
+              style={{ "--tw-ring-color": `${PRIMARY}40` } as React.CSSProperties}
             >
-              {initial}
+              <Avatar
+                src={user.fotoProfil}
+                nama={user.nama}
+                sizePx={64}
+                fallbackBg={SIDEBAR_GRADIENT}
+                textClassName="text-2xl font-extrabold"
+              />
             </div>
             <p className="text-[15px] font-bold text-slate-800 dark:text-white">
               Hello, {user.nama.split(" ")[0]}

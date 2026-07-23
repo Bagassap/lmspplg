@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin,
 } from "lucide-react";
-import { type SiswaCardData, getInitials, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap } from "./shared";
+import { type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 
 const HEADER_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
 
@@ -55,9 +56,14 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
             </button>
 
             <div className="relative flex items-center gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/40 text-lg font-extrabold text-white"
-                style={{ backgroundColor: "rgba(255,255,255,0.22)", boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
-                {getInitials(displayNama)}
+              <div className="rounded-full border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
+                <Avatar
+                  src={siswa.user?.fotoProfil}
+                  nama={displayNama}
+                  sizePx={64}
+                  fallbackBg="rgba(255,255,255,0.22)"
+                  textClassName="text-lg font-extrabold"
+                />
               </div>
               <div className="min-w-0">
                 <h2 className="truncate text-[19px] font-extrabold leading-tight text-white">{displayNama}</h2>
