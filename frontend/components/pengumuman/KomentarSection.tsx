@@ -237,6 +237,7 @@ export function KomentarSection({
   const [teks,     setTeks]     = useState("");
   const [sending,  setSending]  = useState(false);
   const [focused,  setFocused]  = useState(false);
+  const [showAll,  setShowAll]  = useState(false);
 
   async function submitKomentar() {
     if (!teks.trim()) return;
@@ -287,7 +288,12 @@ export function KomentarSection({
     );
   }
 
-  const totalCount = komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0);
+  const PREVIEW_COUNT = 3;
+  // Show the 3 most recent top-level comments by default (komentar arrives
+  // oldest-first from the backend, and new ones are appended to the end) —
+  // full thread, oldest-first, only after "Lihat Semua Komentar" is clicked.
+  const hasMore = komentar.length > PREVIEW_COUNT;
+  const visibleKomentar = showAll || !hasMore ? komentar : komentar.slice(-PREVIEW_COUNT);
 
   return (
     <div className="space-y-5">
@@ -337,7 +343,7 @@ export function KomentarSection({
         </div>
       ) : (
         <div className="space-y-4">
-          {komentar.map((k) => (
+          {visibleKomentar.map((k) => (
             <KomentarBubble
               key={k.id}
               k={k}
@@ -348,6 +354,19 @@ export function KomentarSection({
               onReplyAdded={(reply) => handleReplyAdded(k.id, reply)}
             />
           ))}
+          {hasMore && (
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className={`flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed py-2 text-[12px] font-bold transition-all ${
+                showAll
+                  ? "border-slate-200 text-slate-400 hover:bg-slate-50 dark:border-slate-700/50 dark:hover:bg-slate-800/40"
+                  : "border-slate-200 text-[#2563eb] hover:bg-blue-50 dark:border-slate-700/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              <ChevronDown size={13} className={showAll ? "rotate-180" : ""} />
+              {showAll ? "Sembunyikan" : `Lihat Semua Komentar (${komentar.length})`}
+            </button>
+          )}
         </div>
       )}
     </div>
