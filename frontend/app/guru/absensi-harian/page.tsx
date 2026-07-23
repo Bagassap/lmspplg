@@ -154,14 +154,16 @@ export default function GuruAbsensiHarianPage() {
                 className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
-              <span title="Unduh Rekap Absensi" className="shrink-0">
-                <Download size={14} className="text-slate-300 dark:text-slate-600" />
-              </span>
-            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
+                <span title="Unduh Rekap Absensi" className="shrink-0">
+                  <Download size={14} className="text-slate-300 dark:text-slate-600" />
+                </span>
+              </div>
 
-            <span className="shrink-0 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+              <span className="shrink-0 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+            </div>
           </div>
         </div>
 
