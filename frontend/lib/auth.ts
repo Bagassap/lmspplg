@@ -7,6 +7,8 @@ export type UserPayload = {
   loginId?: string | null;
   mustChangePassword?: boolean;
   profileCompleted?: boolean;
+  fotoProfil?: string | null;
+  hasFotoProfil?: boolean;
   impersonatedBy?: string | null;
 };
 

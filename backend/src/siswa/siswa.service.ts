@@ -141,6 +141,9 @@ export class SiswaService {
       loginId: updatedUser.loginId,
       mustChangePassword: updatedUser.mustChangePassword,
       profileCompleted: updatedUser.profileCompleted,
+      bypassIdentityVerification: updatedUser.bypassIdentityVerification,
+      fotoProfil: updatedUser.fotoProfil,
+      hasFotoProfil: !!updatedUser.fotoProfil,
     };
     const token = this.jwtService.sign(payload);
 

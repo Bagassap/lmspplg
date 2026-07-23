@@ -36,7 +36,7 @@ export function createUploadAuthMiddleware(
 
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, role: true, isActive: true },
+      select: { id: true, role: true, isActive: true, fotoProfil: true },
     });
     if (!user || !user.isActive) {
       res.status(401).json({ message: 'Akun tidak ditemukan atau tidak aktif' });
@@ -67,7 +67,12 @@ export function createUploadAuthMiddleware(
     const requestedUrl = req.originalUrl.split('?')[0];
     let owned = false;
 
-    if (req.path.startsWith('/absensi-harian/')) {
+    if (req.path.startsWith('/foto-profil/')) {
+      // Every siswa needs to see their own photo (topbar, sidebar, profil
+      // saya) but not classmates' — data-siswa's cross-student photo view is
+      // ADMIN/GURU-only and already short-circuits above.
+      owned = user.fotoProfil === requestedUrl;
+    } else if (req.path.startsWith('/absensi-harian/')) {
       const row = await prisma.absensiHarian.findFirst({
         where: {
           siswaId: siswa.id,

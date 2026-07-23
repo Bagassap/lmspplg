@@ -9,9 +9,22 @@ import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import { join } from 'path';
 import { Role } from '../../generated/prisma/client';
 
 const SALT_ROUNDS = 10;
+
+type TokenUser = {
+  id: string;
+  role: Role;
+  nama: string;
+  loginId: string | null;
+  mustChangePassword: boolean;
+  profileCompleted: boolean;
+  bypassIdentityVerification: boolean;
+  fotoProfil: string | null;
+};
 
 @Injectable()
 export class AuthService {
@@ -19,6 +32,25 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
+
+  // Single source of truth for what goes into a session JWT — every field
+  // the middleware or a page needs to make a routing decision without a DB
+  // round-trip (mustChangePassword, profileCompleted, hasFotoProfil, ...)
+  // has to flow through here so a new onboarding-gate field can't be added
+  // in one JWT-issuing call site and silently missed in the other three.
+  private signToken(user: TokenUser): string {
+    return this.jwtService.sign({
+      sub: user.id,
+      role: user.role,
+      nama: user.nama,
+      loginId: user.loginId,
+      mustChangePassword: user.mustChangePassword,
+      profileCompleted: user.profileCompleted,
+      bypassIdentityVerification: user.bypassIdentityVerification,
+      fotoProfil: user.fotoProfil,
+      hasFotoProfil: !!user.fotoProfil,
+    });
+  }
 
   async login(dto: LoginDto) {
     const profileInclude = {
@@ -76,16 +108,7 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
-    const payload = {
-      sub: user.id,
-      role: user.role,
-      nama: user.nama,
-      loginId: user.loginId,
-      mustChangePassword: user.mustChangePassword,
-      profileCompleted: user.profileCompleted,
-      bypassIdentityVerification: user.bypassIdentityVerification,
-    };
-    const token = this.jwtService.sign(payload);
+    const token = this.signToken(user);
 
     return {
       access_token: token,
@@ -97,6 +120,7 @@ export class AuthService {
         role: user.role,
         mustChangePassword: user.mustChangePassword,
         profileCompleted: user.profileCompleted,
+        fotoProfil: user.fotoProfil,
         profil: this.getProfil(user),
       },
     };
@@ -114,6 +138,7 @@ export class AuthService {
         isActive: true,
         mustChangePassword: true,
         profileCompleted: true,
+        fotoProfil: true,
         siswa: {
           select: {
             id: true,
@@ -209,18 +234,32 @@ export class AuthService {
       data: { password: hashed, mustChangePassword: false, bypassIdentityVerification: false },
     });
 
-    const payload = {
-      sub: updated.id,
-      role: updated.role,
-      nama: updated.nama,
-      loginId: updated.loginId,
-      mustChangePassword: updated.mustChangePassword,
-      profileCompleted: updated.profileCompleted,
-      bypassIdentityVerification: updated.bypassIdentityVerification,
-    };
-    const token = this.jwtService.sign(payload);
+    const token = this.signToken(updated);
 
     return { access_token: token, message: 'Password berhasil diubah' };
+  }
+
+  async setFotoProfil(userId: string, fotoUrl: string) {
+    const existing = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { fotoProfil: true },
+    });
+
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { fotoProfil: fotoUrl },
+    });
+
+    // Best-effort cleanup of the previous photo file (if any) — never block
+    // the response over a stale file staying on disk.
+    if (existing?.fotoProfil && existing.fotoProfil !== fotoUrl) {
+      const oldPath = join(process.cwd(), existing.fotoProfil);
+      fs.unlink(oldPath, () => {});
+    }
+
+    const token = this.signToken(updated);
+
+    return { access_token: token, message: 'Foto profil berhasil disimpan', fotoProfil: updated.fotoProfil };
   }
 
   async requestPasswordReset(dto: RequestPasswordResetDto) {

@@ -42,3 +42,30 @@ export async function compressUploadedImageInPlace(filePath: string): Promise<vo
     // image, unsupported format) — never block the request over this.
   }
 }
+
+const PROFILE_PHOTO_DIM = 500;
+const PROFILE_PHOTO_QUALITY = 80;
+
+/**
+ * Profile photos always land on disk as a fixed 500x500 JPEG, regardless of
+ * what the client uploaded — the frontend crop tool already sends a square
+ * image, but `fit: 'cover'` here is a server-side backstop against a
+ * non-square upload reaching this endpoint some other way (a stale client,
+ * a direct API call). The caller always saves with a .jpg filename, so
+ * there's no extension/content mismatch from normalizing the format here
+ * (unlike compressUploadedImageInPlace, which must preserve the original
+ * format since its callers keep the original extension).
+ */
+export async function compressProfilePhotoInPlace(filePath: string): Promise<void> {
+  const buffer = await sharp(filePath)
+    .rotate()
+    .resize({
+      width: PROFILE_PHOTO_DIM,
+      height: PROFILE_PHOTO_DIM,
+      fit: 'cover',
+      position: 'attention',
+    })
+    .jpeg({ quality: PROFILE_PHOTO_QUALITY, mozjpeg: true })
+    .toBuffer();
+  await fs.writeFile(filePath, buffer);
+}
