@@ -148,23 +148,17 @@ export default function GuruAbsensiHarianPage() {
         )}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
-          <div className="absensi-filter-row">
-            <div className="af-tanggal flex shrink-0 items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <div className="flex shrink-0 items-center gap-2">
               <CalendarDays size={14} className="text-slate-400" />
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</span>
               <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
                 className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
             </div>
 
-            <div className="af-toggle">
-              <RangeModeToggle {...exportRange} />
-            </div>
+            <RangeModeToggle {...exportRange} />
 
-            <div className="af-buttons">
-              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
-            </div>
-
-            <span className="af-info shrink-0 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+            <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
           </div>
         </div>
 

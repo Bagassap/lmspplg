@@ -18,9 +18,9 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "bulanan", label: "Per Bulan" },
 ];
 
-const selectCls = "rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-2 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
+const selectCls = "rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
 
-/** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker. Rendered next to the download buttons (or next to Tanggal, when the card wraps to 2 rows) — kept separate from ExportButtons so callers can place the two independently in the filter card's layout. */
+/** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker — same row height in every mode (harian has no extra picker at all; mingguan/bulanan pickers share selectCls with the tabs' py-1.5). Rendered right after the main Tanggal picker, before the download buttons. */
 export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
   const currentYear = new Date().getFullYear();
   const yearOptions = [currentYear - 1, currentYear, currentYear + 1];
@@ -41,12 +41,8 @@ export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAn
       </div>
 
       {rangeMode === "mingguan" && (
-        <div className="flex flex-wrap items-center gap-1.5">
-          <input type="date" value={weekAnchor} onChange={(e) => setWeekAnchor(e.target.value)} className={selectCls} />
-          <span className="text-[11px] text-slate-400">
-            {formatTgl(weekRange.start)} – {formatTgl(weekRange.end)}
-          </span>
-        </div>
+        <input type="date" value={weekAnchor} onChange={(e) => setWeekAnchor(e.target.value)} className={selectCls}
+          title={`Minggu: ${formatTgl(weekRange.start)} – ${formatTgl(weekRange.end)}`} />
       )}
 
       {rangeMode === "bulanan" && (
