@@ -11,6 +11,7 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
+import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, todayJakarta } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
@@ -384,6 +385,9 @@ export default function AdminAbsensiHarianPage() {
             );
           })}
         </div>
+
+        <BelumAbsenPanel siswaList={siswaList} />
+
         {activeFilter && (
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span>Menampilkan siswa dengan status</span>
