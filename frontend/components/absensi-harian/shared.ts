@@ -47,6 +47,34 @@ export function formatTgl(tgl?: string) {
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
+export type ExportRangeMode = "harian" | "mingguan" | "bulanan";
+export type ExportRange =
+  | { mode: "harian"; tanggal: string }
+  | { mode: "mingguan"; tanggalMulai: string; tanggalSelesai: string }
+  | { mode: "bulanan"; bulan: number; tahun: number };
+
+// Monday-Friday of the week containing `anchor` (yyyy-mm-dd) — hari efektif
+// sekolah, mirrors effectiveWeekdaysInRange()/currentWindow() on the backend
+// (Sabtu-Minggu never has an absen window). UTC-anchored arithmetic so the
+// browser's local timezone can't shift which calendar day "anchor" lands on.
+export function weekRangeFor(anchor: string): { start: string; end: string } {
+  const [y, m, d] = anchor.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  const dow = date.getUTCDay();
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const monday = new Date(date);
+  monday.setUTCDate(date.getUTCDate() + mondayOffset);
+  const friday = new Date(monday);
+  friday.setUTCDate(monday.getUTCDate() + 4);
+  const fmt = (dt: Date) => `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}-${String(dt.getUTCDate()).padStart(2, "0")}`;
+  return { start: fmt(monday), end: fmt(friday) };
+}
+
+export const MONTH_NAMES = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
 export function getInitials(name: string) {
   return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }

@@ -44,28 +44,46 @@ export class AbsensiHarianController {
     private readonly excelService: AbsensiHarianExcelService,
   ) {}
 
+  private parseExportMode(mode?: string): 'harian' | 'mingguan' | 'bulanan' {
+    if (mode === 'mingguan' || mode === 'bulanan') return mode;
+    return 'harian';
+  }
+
+  private rangeFilenamePart(mode: 'mingguan' | 'bulanan', rekap: { tanggalMulai: string; tanggalSelesai: string }): string {
+    return mode === 'bulanan'
+      ? sanitizeFilenamePart(rekap.tanggalMulai.slice(0, 7))
+      : `${sanitizeFilenamePart(rekap.tanggalMulai)}_${sanitizeFilenamePart(rekap.tanggalSelesai)}`;
+  }
+
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('export-pdf')
   async exportPdf(
     @Query('kelasId') kelasId: string,
     @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
     if (!kelasId) {
       throw new BadRequestException('kelasId wajib diisi');
     }
-    const rekap = await this.service.getRekapKelasForExport(
-      kelasId,
-      tanggal || todayStr(),
-      req.user.id,
-      req.user.role,
-    );
-    const buffer = await this.pdfService.build(rekap);
-    const kelasPart = sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas');
-    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
-    const filename = `Absensi_${kelasPart}_${tanggalPart}.pdf`;
+    const mode = this.parseExportMode(modeQ);
+    let buffer: Buffer;
+    let filename: string;
+    if (mode === 'harian') {
+      const rekap = await this.service.getRekapKelasForExport(kelasId, tanggal || todayStr(), req.user.id, req.user.role);
+      buffer = await this.pdfService.build(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas')}_${sanitizeFilenamePart(rekap.tanggal)}.pdf`;
+    } else {
+      const rekap = await this.service.getRekapKelasRangeForExport(kelasId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
+      buffer = await this.pdfService.buildRange(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas')}_${mode === 'bulanan' ? 'Bulanan' : 'Mingguan'}_${this.rangeFilenamePart(mode, rekap)}.pdf`;
+    }
 
     res.set({
       'Content-Type': 'application/pdf',
@@ -81,20 +99,27 @@ export class AbsensiHarianController {
   async exportPdfSiswa(
     @Query('siswaId') siswaId: string,
     @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
     if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
-    const rekap = await this.service.getSiswaAbsensiForExport(
-      siswaId,
-      tanggal || todayStr(),
-      req.user.id,
-      req.user.role,
-    );
-    const buffer = await this.pdfService.build(rekap);
-    const namaPart = sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa');
-    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
-    const filename = `Absensi_${namaPart}_${tanggalPart}.pdf`;
+    const mode = this.parseExportMode(modeQ);
+    let buffer: Buffer;
+    let filename: string;
+    if (mode === 'harian') {
+      const rekap = await this.service.getSiswaAbsensiForExport(siswaId, tanggal || todayStr(), req.user.id, req.user.role);
+      buffer = await this.pdfService.build(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa')}_${sanitizeFilenamePart(rekap.tanggal)}.pdf`;
+    } else {
+      const rekap = await this.service.getSiswaAbsensiRangeForExport(siswaId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
+      buffer = await this.pdfService.buildRange(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa')}_${mode === 'bulanan' ? 'Bulanan' : 'Mingguan'}_${this.rangeFilenamePart(mode, rekap)}.pdf`;
+    }
 
     res.set({
       'Content-Type': 'application/pdf',
@@ -110,20 +135,27 @@ export class AbsensiHarianController {
   async exportExcel(
     @Query('kelasId') kelasId: string,
     @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
     if (!kelasId) throw new BadRequestException('kelasId wajib diisi');
-    const rekap = await this.service.getRekapKelasForExport(
-      kelasId,
-      tanggal || todayStr(),
-      req.user.id,
-      req.user.role,
-    );
-    const buffer = await this.excelService.build(rekap);
-    const kelasPart = sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas');
-    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
-    const filename = `Absensi_${kelasPart}_${tanggalPart}.xlsx`;
+    const mode = this.parseExportMode(modeQ);
+    let buffer: Buffer;
+    let filename: string;
+    if (mode === 'harian') {
+      const rekap = await this.service.getRekapKelasForExport(kelasId, tanggal || todayStr(), req.user.id, req.user.role);
+      buffer = await this.excelService.build(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas')}_${sanitizeFilenamePart(rekap.tanggal)}.xlsx`;
+    } else {
+      const rekap = await this.service.getRekapKelasRangeForExport(kelasId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
+      buffer = await this.excelService.buildRange(rekap, 'kelas');
+      filename = `Absensi_${sanitizeFilenamePart(rekap.kelas?.nama ?? 'Kelas')}_${mode === 'bulanan' ? 'Bulanan' : 'Mingguan'}_${this.rangeFilenamePart(mode, rekap)}.xlsx`;
+    }
 
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -139,20 +171,27 @@ export class AbsensiHarianController {
   async exportExcelSiswa(
     @Query('siswaId') siswaId: string,
     @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
     if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
-    const rekap = await this.service.getSiswaAbsensiForExport(
-      siswaId,
-      tanggal || todayStr(),
-      req.user.id,
-      req.user.role,
-    );
-    const buffer = await this.excelService.build(rekap);
-    const namaPart = sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa');
-    const tanggalPart = sanitizeFilenamePart(rekap.tanggal);
-    const filename = `Absensi_${namaPart}_${tanggalPart}.xlsx`;
+    const mode = this.parseExportMode(modeQ);
+    let buffer: Buffer;
+    let filename: string;
+    if (mode === 'harian') {
+      const rekap = await this.service.getSiswaAbsensiForExport(siswaId, tanggal || todayStr(), req.user.id, req.user.role);
+      buffer = await this.excelService.build(rekap);
+      filename = `Absensi_${sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa')}_${sanitizeFilenamePart(rekap.tanggal)}.xlsx`;
+    } else {
+      const rekap = await this.service.getSiswaAbsensiRangeForExport(siswaId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
+      buffer = await this.excelService.buildRange(rekap, 'siswa');
+      filename = `Absensi_${sanitizeFilenamePart(rekap.siswa[0]?.nama ?? 'Siswa')}_${mode === 'bulanan' ? 'Bulanan' : 'Mingguan'}_${this.rangeFilenamePart(mode, rekap)}.xlsx`;
+    }
 
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

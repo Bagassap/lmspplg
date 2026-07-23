@@ -3,7 +3,23 @@ import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
-import { jakartaParts, todayJakarta as todayStr } from '../common/utils/jakarta-date.util';
+import { jakartaParts, todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange } from '../common/utils/jakarta-date.util';
+
+export type RangeSiswaSummary = { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
+export type RangeSiswaRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  byTanggal: Record<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>;
+  summary: RangeSiswaSummary;
+};
+export type RekapRangeData = {
+  kelas: { nama: string } | null;
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: RangeSiswaRow[];
+};
 
 export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
 
@@ -118,6 +134,117 @@ export class AbsensiHarianService {
       }
     }
     return this.getRekapKelas(kelasId, tanggal);
+  }
+
+  private buildRangeSiswaRow(
+    siswaId: string,
+    nama: string | null,
+    nis: string | null,
+    tanggalList: string[],
+    recMap: Map<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>,
+  ): RangeSiswaRow {
+    const byTanggal: RangeSiswaRow['byTanggal'] = {};
+    const tally = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+    for (const tgl of tanggalList) {
+      const rec = recMap.get(`${siswaId}|${tgl}`);
+      const status = rec?.status ?? null;
+      byTanggal[tgl] = { status, waktuAbsen: rec?.waktuAbsen ?? null, waktuPulang: rec?.waktuPulang ?? null };
+      // A day with no record at all counts as Alpa in the RANGE SUMMARY only
+      // (unlike the single-day rekap, which leaves null status uncounted) —
+      // otherwise the 4 categories wouldn't add up to totalHariEfektif, and a
+      // multi-week/month recap needs that invariant to read as a real report.
+      const tallyKey = (status ?? 'ALPA') as keyof typeof tally;
+      if (tallyKey in tally) tally[tallyKey]++;
+    }
+    const totalHariEfektif = tanggalList.length;
+    const persentaseKehadiran = totalHariEfektif > 0 ? Math.round((tally.HADIR / totalHariEfektif) * 1000) / 10 : 0;
+    return { siswaId, nama, nis, byTanggal, summary: { ...tally, totalHariEfektif, persentaseKehadiran } };
+  }
+
+  private resolveRange(
+    mode: 'mingguan' | 'bulanan',
+    tanggalMulai?: string,
+    tanggalSelesai?: string,
+    bulan?: string,
+    tahun?: string,
+  ): { start: string; end: string } {
+    if (mode === 'bulanan') {
+      const b = Number(bulan);
+      const t = Number(tahun);
+      if (!Number.isInteger(b) || b < 1 || b > 12 || !Number.isInteger(t)) {
+        throw new BadRequestException('bulan/tahun tidak valid');
+      }
+      return monthToDateRange(b, t);
+    }
+    if (!tanggalMulai || !tanggalSelesai) {
+      throw new BadRequestException('tanggalMulai/tanggalSelesai wajib diisi untuk mode mingguan');
+    }
+    if (tanggalMulai > tanggalSelesai) {
+      throw new BadRequestException('tanggalMulai harus sebelum atau sama dengan tanggalSelesai');
+    }
+    return { start: tanggalMulai, end: tanggalSelesai };
+  }
+
+  async getRekapKelasRangeForExport(
+    kelasId: string,
+    mode: 'mingguan' | 'bulanan',
+    userId: string,
+    role: string,
+    opts: { tanggalMulai?: string; tanggalSelesai?: string; bulan?: string; tahun?: string },
+  ): Promise<RekapRangeData> {
+    if (role === 'GURU') {
+      const myKelasIds = await this.kelasService.getGuruKelasIds(userId);
+      if (!myKelasIds.includes(kelasId)) {
+        throw new ForbiddenException('Anda bukan wali kelas untuk kelas ini');
+      }
+    }
+    const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId } });
+    if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
+
+    const { start, end } = this.resolveRange(mode, opts.tanggalMulai, opts.tanggalSelesai, opts.bulan, opts.tahun);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    const siswaList = await this.prisma.siswa.findMany({
+      where: { kelasId },
+      include: { user: { select: { nama: true } } },
+      orderBy: { nama: 'asc' },
+    });
+    const records = tanggalList.length > 0
+      ? await this.prisma.absensiHarian.findMany({ where: { kelasId, tanggal: { in: tanggalList } } })
+      : [];
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+
+    const siswa = siswaList.map((s) =>
+      this.buildRangeSiswaRow(s.id, s.user?.nama ?? s.nama, s.nis, tanggalList, recMap),
+    );
+
+    return { kelas: { nama: kelas.nama }, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa };
+  }
+
+  async getSiswaAbsensiRangeForExport(
+    siswaId: string,
+    mode: 'mingguan' | 'bulanan',
+    userId: string,
+    role: string,
+    opts: { tanggalMulai?: string; tanggalSelesai?: string; bulan?: string; tahun?: string },
+  ): Promise<RekapRangeData> {
+    const siswa = await this.assertSiswaAccessible(siswaId, userId, role);
+    const { start, end } = this.resolveRange(mode, opts.tanggalMulai, opts.tanggalSelesai, opts.bulan, opts.tahun);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    const records = tanggalList.length > 0
+      ? await this.prisma.absensiHarian.findMany({ where: { siswaId, tanggal: { in: tanggalList } } })
+      : [];
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+    const row = this.buildRangeSiswaRow(siswa.id, siswa.user?.nama ?? siswa.nama, siswa.nis, tanggalList, recMap);
+
+    return {
+      kelas: siswa.kelas ? { nama: siswa.kelas.nama } : null,
+      tanggalMulai: start,
+      tanggalSelesai: end,
+      tanggalList,
+      siswa: [row],
+    };
   }
 
   private async assertSiswaAccessible(siswaId: string, userId: string, role: string) {

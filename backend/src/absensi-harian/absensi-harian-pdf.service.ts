@@ -27,6 +27,21 @@ type RekapKelasData = {
   siswa: SiswaRekap[];
 };
 
+type RangeSiswaRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  byTanggal: Record<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>;
+  summary: { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
+};
+type RekapRangeData = {
+  kelas: { nama: string } | null;
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: RangeSiswaRow[];
+};
+
 const STATUS_LABEL: Record<string, string> = {
   HADIR: 'Hadir',
   IZIN: 'Izin',
@@ -96,6 +111,18 @@ function formatTanggal(tanggal: string): string {
   }
 }
 
+function formatTanggalShort(tanggal: string): string {
+  try {
+    return new Date(`${tanggal}T00:00:00`).toLocaleDateString('id-ID', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+    });
+  } catch {
+    return tanggal;
+  }
+}
+
 @Injectable()
 export class AbsensiHarianPdfService {
   async build(rekap: RekapKelasData): Promise<Buffer> {
@@ -123,6 +150,137 @@ export class AbsensiHarianPdfService {
 
     doc.end();
     return done;
+  }
+
+  // Weekly/monthly recap: still one page per student, but instead of the
+  // per-day foto/TTD/map dokumentasi block (which would mean dozens of
+  // images per student for a month), each page shows a summary + a Tanggal/
+  // Status/Waktu Hadir/Waktu Pulang table for every effective school day in
+  // the range. A month tops out around ~23 rows, which comfortably fits one
+  // A4 page alongside the header/summary — no pagination-within-student.
+  async buildRange(rekap: RekapRangeData): Promise<Buffer> {
+    const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true, autoFirstPage: false });
+    const chunks: Buffer[] = [];
+    doc.on('data', (c: Buffer) => chunks.push(c));
+    const done = new Promise<Buffer>((resolve, reject) => {
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+    });
+
+    const kelasNama = rekap.kelas?.nama ?? '-';
+    const periodeLabel = `${formatTanggal(rekap.tanggalMulai)} – ${formatTanggal(rekap.tanggalSelesai)}`;
+
+    if (rekap.siswa.length === 0) {
+      doc.addPage();
+      doc.fontSize(14).fillColor('#64748b').text('Tidak ada siswa di kelas ini.', 40, 40);
+    } else {
+      for (let i = 0; i < rekap.siswa.length; i++) {
+        doc.addPage();
+        this.renderRangePage(doc, rekap.siswa[i], kelasNama, periodeLabel, rekap.tanggalList, i, rekap.siswa.length);
+      }
+    }
+
+    doc.end();
+    return done;
+  }
+
+  private renderRangePage(
+    doc: PDFKit.PDFDocument,
+    s: RangeSiswaRow,
+    kelasNama: string,
+    periodeLabel: string,
+    tanggalList: string[],
+    idx: number,
+    total: number,
+  ) {
+    const margin = 40;
+    const pageWidth = doc.page.width;
+    const contentWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    doc.fontSize(9).fillColor('#94a3b8').text('LAPORAN REKAP ABSENSI', margin, y, { characterSpacing: 0.6 });
+    doc.fontSize(9).fillColor('#94a3b8').text(`${idx + 1} / ${total}`, margin, y, { width: contentWidth, align: 'right' });
+    y += 20;
+
+    doc.fontSize(20).fillColor('#0f172a').text(s.nama || '-', margin, y, { width: contentWidth });
+    y = doc.y + 4;
+    doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   Kelas: ${kelasNama}`, margin, y, { width: contentWidth });
+    y = doc.y + 2;
+    doc.fontSize(11).fillColor('#64748b').text(`Periode: ${periodeLabel}`, margin, y, { width: contentWidth });
+    y = doc.y + 12;
+
+    doc.moveTo(margin, y).lineTo(pageWidth - margin, y).strokeColor('#e2e8f0').lineWidth(1).stroke();
+    y += 14;
+
+    const summary = s.summary;
+    const badges: { label: string; count: number; clr: string; bg: string }[] = [
+      { label: 'Hadir', count: summary.HADIR, clr: STATUS_COLOR.HADIR, bg: STATUS_BG.HADIR },
+      { label: 'Izin', count: summary.IZIN, clr: STATUS_COLOR.IZIN, bg: STATUS_BG.IZIN },
+      { label: 'Sakit', count: summary.SAKIT, clr: STATUS_COLOR.SAKIT, bg: STATUS_BG.SAKIT },
+      { label: 'Alpa', count: summary.ALPA, clr: STATUS_COLOR.ALPA, bg: STATUS_BG.ALPA },
+    ];
+    const pctW = 130;
+    const badgeGap = 8;
+    const badgeW = (contentWidth - pctW - badgeGap - badgeGap * badges.length) / badges.length;
+    let bx = margin;
+    badges.forEach((b) => {
+      doc.roundedRect(bx, y, badgeW, 34, 6).fill(b.bg);
+      doc.fontSize(14).fillColor(b.clr).text(String(b.count), bx, y + 5, { width: badgeW, align: 'center' });
+      doc.fontSize(7).fillColor(b.clr).text(b.label.toUpperCase(), bx, y + 21, { width: badgeW, align: 'center' });
+      bx += badgeW + badgeGap;
+    });
+    doc.roundedRect(margin + contentWidth - pctW, y, pctW, 34, 6).fill('#EAF1FF');
+    doc.fontSize(14).fillColor('#3B7CE8').text(`${summary.persentaseKehadiran}%`, margin + contentWidth - pctW, y + 5, { width: pctW, align: 'center' });
+    doc.fontSize(7).fillColor('#3B7CE8').text('PERSENTASE HADIR', margin + contentWidth - pctW, y + 21, { width: pctW, align: 'center' });
+    y += 34 + 6;
+    doc.fontSize(7).fillColor('#94a3b8').text(`Total hari efektif: ${summary.totalHariEfektif}`, margin, y);
+    y += 16;
+
+    const colFrac = [0.34, 0.18, 0.24, 0.24];
+    const colWidths = colFrac.map((f) => f * contentWidth);
+    const headers = ['Tanggal', 'Status', 'Waktu Hadir', 'Waktu Pulang'];
+    const rowH = 17;
+    doc.rect(margin, y, contentWidth, rowH).fill('#F8FAFC');
+    let hx = margin;
+    headers.forEach((h, i) => {
+      doc.fontSize(8).fillColor('#64748b').text(h.toUpperCase(), hx + 6, y + 4.5, { width: colWidths[i] - 6 });
+      hx += colWidths[i];
+    });
+    y += rowH;
+
+    if (tanggalList.length === 0) {
+      doc.fontSize(9).fillColor('#94a3b8').text('Tidak ada hari efektif pada periode ini.', margin, y + 6, { width: contentWidth });
+      y += rowH;
+    }
+
+    tanggalList.forEach((tgl, i) => {
+      const rec = s.byTanggal[tgl];
+      const status = rec?.status;
+      const label = status ? (STATUS_LABEL[status] ?? status) : '-';
+      const clr = status ? (STATUS_COLOR[status] ?? '#64748b') : '#94a3b8';
+      if (i % 2 === 1) doc.rect(margin, y, contentWidth, rowH).fill('#FAFBFC');
+      let cx = margin;
+      doc.fontSize(8).fillColor('#334155').text(formatTanggalShort(tgl), cx + 6, y + 4.5, { width: colWidths[0] - 6 });
+      cx += colWidths[0];
+      doc.fontSize(8).fillColor(clr).text(label, cx + 6, y + 4.5, { width: colWidths[1] - 6 });
+      cx += colWidths[1];
+      doc.fontSize(8).fillColor('#334155').text(rec?.waktuAbsen || '-', cx + 6, y + 4.5, { width: colWidths[2] - 6 });
+      cx += colWidths[2];
+      doc.fontSize(8).fillColor('#334155').text(rec?.waktuPulang || '-', cx + 6, y + 4.5, { width: colWidths[3] - 6 });
+      y += rowH;
+    });
+
+    doc.moveTo(margin, y).lineTo(pageWidth - margin, y).strokeColor('#e2e8f0').lineWidth(1).stroke();
+
+    doc
+      .fontSize(7)
+      .fillColor('#cbd5e1')
+      .text(`Dicetak ${new Date().toLocaleString('id-ID')}`, margin, doc.page.maxY() - 14, {
+        width: contentWidth,
+        align: 'center',
+        height: 14,
+        lineBreak: false,
+      });
   }
 
   private async renderPage(

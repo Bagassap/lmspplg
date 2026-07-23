@@ -27,12 +27,48 @@ type RekapKelasData = {
   siswa: SiswaRekap[];
 };
 
+type RangeSiswaRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  byTanggal: Record<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>;
+  summary: { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
+};
+type RekapRangeData = {
+  kelas: { nama: string } | null;
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: RangeSiswaRow[];
+};
+
 const STATUS_LABEL: Record<string, string> = {
   HADIR: 'Hadir',
   IZIN: 'Izin',
   SAKIT: 'Sakit',
   ALPA: 'Alpa',
 };
+const STATUS_LETTER: Record<string, string> = { HADIR: 'H', IZIN: 'I', SAKIT: 'S', ALPA: 'A' };
+const STATUS_FILL: Record<string, string> = { HADIR: 'FFE8F8F1', IZIN: 'FFF0ECFF', SAKIT: 'FFFFF5DC', ALPA: 'FFFFE9EA' };
+const STATUS_FONT: Record<string, string> = { HADIR: 'FF10B981', IZIN: 'FF6334F4', SAKIT: 'FFE6A800', ALPA: 'FFFF3644' };
+
+function formatTanggalHeader(tanggal: string): string {
+  const [, m, d] = tanggal.split('-');
+  return `${d}/${m}`;
+}
+
+function formatTanggalFull(tanggal: string): string {
+  try {
+    return new Date(`${tanggal}T00:00:00`).toLocaleDateString('id-ID', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } catch {
+    return tanggal;
+  }
+}
 
 const NA_FONT = { color: { argb: 'FFCBD5E1' }, italic: true };
 const LINK_FONT = { color: { argb: 'FF2563EB' }, underline: true };
@@ -174,6 +210,124 @@ export class AbsensiHarianExcelService {
       ].some(Boolean);
 
       if (hasImage) row.height = MEDIA_ROW_HEIGHT;
+    }
+
+    const buf = await wb.xlsx.writeBuffer();
+    return Buffer.from(buf);
+  }
+
+  // Weekly/monthly recap has two very different shapes: a per-kelas export
+  // is a matrix (rows = siswa, one column per date, cell = H/I/S/A) so a
+  // whole class fits on one screen/printout, while a per-siswa export is a
+  // tall date-by-date table (single student, no point in a 1-row matrix)
+  // with a summary block at the end. No foto/TTD/map embeds in either —
+  // that's harian-only, per spec, and would be far too much data across a
+  // week/month.
+  async buildRange(rekap: RekapRangeData, scope: 'kelas' | 'siswa'): Promise<Buffer> {
+    return scope === 'kelas' ? this.buildRangeMatrix(rekap) : this.buildRangeSiswa(rekap);
+  }
+
+  private async buildRangeMatrix(rekap: RekapRangeData): Promise<Buffer> {
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'LMS PPLG';
+    wb.created = new Date();
+    const ws = wb.addWorksheet('Rekap Absensi', { views: [{ state: 'frozen', xSplit: 2, ySplit: 1 }] });
+
+    const dateCols = rekap.tanggalList.map((tgl) => ({ header: formatTanggalHeader(tgl), key: `d_${tgl}`, width: 6 }));
+    ws.columns = [
+      { header: 'Nama', key: 'nama', width: 26 },
+      { header: 'NIS', key: 'nis', width: 14 },
+      ...dateCols,
+      { header: 'Hadir', key: 'totalHadir', width: 8 },
+      { header: 'Izin', key: 'totalIzin', width: 8 },
+      { header: 'Sakit', key: 'totalSakit', width: 8 },
+      { header: 'Alpa', key: 'totalAlpa', width: 8 },
+      { header: 'Kehadiran', key: 'persentase', width: 12 },
+    ];
+
+    const headerRow = ws.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6334F4' } };
+    headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+    headerRow.height = 24;
+
+    for (const s of rekap.siswa) {
+      const rowData: Record<string, string | number> = {
+        nama: s.nama || '-',
+        nis: s.nis || '-',
+        totalHadir: s.summary.HADIR,
+        totalIzin: s.summary.IZIN,
+        totalSakit: s.summary.SAKIT,
+        totalAlpa: s.summary.ALPA,
+        persentase: `${s.summary.persentaseKehadiran}%`,
+      };
+      for (const tgl of rekap.tanggalList) {
+        const status = s.byTanggal[tgl]?.status;
+        rowData[`d_${tgl}`] = status ? (STATUS_LETTER[status] ?? '?') : '-';
+      }
+      const row = ws.addRow(rowData);
+      row.alignment = { vertical: 'middle', horizontal: 'center' };
+      row.getCell('nama').alignment = { vertical: 'middle', horizontal: 'left' };
+
+      for (const tgl of rekap.tanggalList) {
+        const status = s.byTanggal[tgl]?.status;
+        const cell = row.getCell(`d_${tgl}`);
+        if (status && STATUS_FILL[status]) {
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: STATUS_FILL[status] } };
+          cell.font = { bold: true, color: { argb: STATUS_FONT[status] } };
+        } else {
+          cell.font = NA_FONT;
+        }
+      }
+    }
+
+    const buf = await wb.xlsx.writeBuffer();
+    return Buffer.from(buf);
+  }
+
+  private async buildRangeSiswa(rekap: RekapRangeData): Promise<Buffer> {
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'LMS PPLG';
+    wb.created = new Date();
+    const s = rekap.siswa[0];
+    const ws = wb.addWorksheet('Rekap Absensi', { views: [{ state: 'frozen', ySplit: 1 }] });
+
+    ws.columns = [
+      { header: 'Tanggal', key: 'tanggal', width: 26 },
+      { header: 'Status', key: 'status', width: 12 },
+      { header: 'Waktu Hadir', key: 'waktuAbsen', width: 14 },
+      { header: 'Waktu Pulang', key: 'waktuPulang', width: 14 },
+    ];
+    const headerRow = ws.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6334F4' } };
+    headerRow.alignment = { vertical: 'middle' };
+    headerRow.height = 20;
+
+    for (const tgl of rekap.tanggalList) {
+      const rec = s?.byTanggal[tgl];
+      const status = rec?.status;
+      const row = ws.addRow({
+        tanggal: formatTanggalFull(tgl),
+        status: status ? (STATUS_LABEL[status] ?? status) : '-',
+        waktuAbsen: rec?.waktuAbsen || '-',
+        waktuPulang: rec?.waktuPulang || '-',
+      });
+      row.alignment = { vertical: 'middle' };
+      row.getCell('status').font = status ? { bold: true, color: { argb: STATUS_FONT[status] ?? 'FF334155' } } : NA_FONT;
+    }
+
+    if (s) {
+      ws.addRow({});
+      const titleRow = ws.addRow({ tanggal: 'RINGKASAN' });
+      titleRow.font = { bold: true, color: { argb: 'FF334155' } };
+      ws.addRow({ tanggal: 'Total Hari Efektif', status: String(s.summary.totalHariEfektif) });
+      ws.addRow({ tanggal: 'Total Hadir', status: String(s.summary.HADIR) });
+      ws.addRow({ tanggal: 'Total Izin', status: String(s.summary.IZIN) });
+      ws.addRow({ tanggal: 'Total Sakit', status: String(s.summary.SAKIT) });
+      ws.addRow({ tanggal: 'Total Alpa', status: String(s.summary.ALPA) });
+      const pctRow = ws.addRow({ tanggal: 'Persentase Kehadiran', status: `${s.summary.persentaseKehadiran}%` });
+      pctRow.font = { bold: true, color: { argb: 'FF3B7CE8' } };
     }
 
     const buf = await wb.xlsx.writeBuffer();

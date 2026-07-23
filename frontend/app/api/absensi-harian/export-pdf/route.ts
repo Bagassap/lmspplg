@@ -8,12 +8,11 @@ export async function GET(request: Request) {
   if (!token) return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
 
   const { searchParams } = new URL(request.url);
-  const kelasId = searchParams.get("kelasId") ?? "";
-  const tanggal = searchParams.get("tanggal") ?? "";
-
   const qs = new URLSearchParams();
-  if (kelasId) qs.set("kelasId", kelasId);
-  if (tanggal) qs.set("tanggal", tanggal);
+  for (const key of ["kelasId", "tanggal", "mode", "tanggalMulai", "tanggalSelesai", "bulan", "tahun"]) {
+    const value = searchParams.get(key);
+    if (value) qs.set(key, value);
+  }
 
   let backendRes: Response;
   try {

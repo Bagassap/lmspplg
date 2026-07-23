@@ -53,3 +53,31 @@ export function weekDatesJakarta(): string[] {
     return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
   });
 }
+
+function parseIsoDateUTC(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+}
+
+// "Hari efektif" for a recap = school weekdays only (Senin-Jumat) — Sabtu-Minggu
+// never has an absen window at all (see currentWindow() in
+// absensi-harian.service.ts), so they're excluded even if the raw range
+// happens to span a weekend. Inclusive of both start and end.
+export function effectiveWeekdaysInRange(startStr: string, endStr: string): string[] {
+  const start = parseIsoDateUTC(startStr);
+  const end = parseIsoDateUTC(endStr);
+  const days: string[] = [];
+  for (const d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    const dow = d.getUTCDay();
+    if (dow >= 1 && dow <= 5) {
+      days.push(`${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`);
+    }
+  }
+  return days;
+}
+
+// First/last calendar day of a given month (1-12), as yyyy-mm-dd strings.
+export function monthToDateRange(bulan: number, tahun: number): { start: string; end: string } {
+  const lastDay = new Date(Date.UTC(tahun, bulan, 0)).getUTCDate();
+  return { start: `${tahun}-${pad2(bulan)}-01`, end: `${tahun}-${pad2(bulan)}-${pad2(lastDay)}` };
+}

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, GraduationCap, Download,
+  ClipboardCheck, CalendarDays, GraduationCap,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -146,23 +146,17 @@ export default function GuruAbsensiHarianPage() {
         )}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex shrink-0 items-center gap-2">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex shrink-0 items-center gap-2 pt-1.5">
               <CalendarDays size={14} className="text-slate-400" />
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</span>
               <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
                 className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
-                <span title="Unduh Rekap Absensi" className="shrink-0">
-                  <Download size={14} className="text-slate-300 dark:text-slate-600" />
-                </span>
-              </div>
-
-              <span className="shrink-0 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+            <div className="flex flex-wrap items-end gap-3">
+              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
+              <span className="shrink-0 pb-1.5 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
             </div>
           </div>
         </div>
