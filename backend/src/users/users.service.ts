@@ -58,7 +58,11 @@ export class UsersService {
     const hashed = await bcrypt.hash(newPassword, SALT_ROUNDS);
     await this.prisma.user.update({
       where: { id },
-      data: { password: hashed, mustChangePassword: true },
+      data: {
+        password: hashed,
+        mustChangePassword: true,
+        ...(dto.bypassIdentityVerification ? { bypassIdentityVerification: true } : {}),
+      },
     });
 
     return {

@@ -83,6 +83,7 @@ export class AuthService {
       loginId: user.loginId,
       mustChangePassword: user.mustChangePassword,
       profileCompleted: user.profileCompleted,
+      bypassIdentityVerification: user.bypassIdentityVerification,
     };
     const token = this.jwtService.sign(payload);
 
@@ -152,12 +153,17 @@ export class AuthService {
           'Password baru tidak boleh sama dengan password lama',
         );
       }
-    } else {
+    } else if (!user.bypassIdentityVerification) {
       // Forced change (first login, or reset by admin) — a bare "I know the
       // NIS" isn't proof of identity, since a classmate can read/guess it.
       // Require one more piece of identity data before letting the new
       // password through, so someone else's login attempt can't lock the
-      // real account owner out.
+      // real account owner out. Skipped when an admin has already verified
+      // the account owner's identity themselves and set the one-time
+      // bypassIdentityVerification flag via resetPassword() — needed for
+      // cases where the nama/tanggalLahir on file is itself wrong or
+      // incomplete, which would otherwise lock the real owner out with no
+      // self-service recovery.
       const mismatchMessage =
         'Data konfirmasi tidak sesuai dengan data akun ini. Pastikan Anda login dengan akun milik Anda sendiri.';
       if (!user.profileCompleted) {
@@ -200,7 +206,7 @@ export class AuthService {
     const hashed = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
     const updated = await this.prisma.user.update({
       where: { id: userId },
-      data: { password: hashed, mustChangePassword: false },
+      data: { password: hashed, mustChangePassword: false, bypassIdentityVerification: false },
     });
 
     const payload = {
@@ -210,6 +216,7 @@ export class AuthService {
       loginId: updated.loginId,
       mustChangePassword: updated.mustChangePassword,
       profileCompleted: updated.profileCompleted,
+      bypassIdentityVerification: updated.bypassIdentityVerification,
     };
     const token = this.jwtService.sign(payload);
 

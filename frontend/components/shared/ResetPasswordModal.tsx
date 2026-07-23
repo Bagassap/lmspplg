@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2, UserCheck } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 const INPUT =
@@ -22,6 +22,7 @@ export function ResetPasswordModal({
   const [show, setShow] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [bypassIdentity, setBypassIdentity] = useState(false);
 
   async function handleReset() {
     if (!resetToNis && newPassword.length < 8) {
@@ -34,11 +35,19 @@ export function ResetPasswordModal({
       const res = await fetch(`/api/users/${userId}/reset-password`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resetToNis ? {} : { newPassword }),
+        body: JSON.stringify({
+          ...(resetToNis ? {} : { newPassword }),
+          ...(bypassIdentity ? { bypassIdentityVerification: true } : {}),
+        }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.message ?? `Error ${res.status}`);
-      toast.success("Password berhasil direset!", `${userName} wajib mengganti password saat login berikutnya.`);
+      toast.success(
+        "Password berhasil direset!",
+        bypassIdentity
+          ? `${userName} wajib mengganti password saat login berikutnya — verifikasi identitas dilewati sekali.`
+          : `${userName} wajib mengganti password saat login berikutnya.`,
+      );
       onSuccess?.();
       onClose();
     } catch (e) {
@@ -144,6 +153,22 @@ export function ResetPasswordModal({
                 </div>
               </div>
             )}
+            <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:bg-slate-800">
+              <input
+                type="checkbox"
+                checked={bypassIdentity}
+                onChange={(e) => setBypassIdentity(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-primary focus:ring-primary/40 dark:border-slate-600"
+              />
+              <span className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                <span className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
+                  <UserCheck size={12} className="text-primary" /> Lewati verifikasi identitas
+                </span>
+                Gunakan kalau saya sudah memverifikasi identitas {userName} secara manual (mis. langsung/telepon) —
+                berlaku sekali untuk penggantian password berikutnya, berguna kalau data nama/tanggal lahir siswa
+                di sistem belum akurat sehingga siswa tidak bisa lolos verifikasi sendiri.
+              </span>
+            </label>
             {error && <p className="text-xs text-red-500">{error}</p>}
           </div>
           <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">

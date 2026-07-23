@@ -15,7 +15,7 @@ export async function PATCH(
     return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
   }
 
-  let body: { newPassword?: string };
+  let body: { newPassword?: string; bypassIdentityVerification?: boolean };
   try {
     body = await request.json();
   } catch {

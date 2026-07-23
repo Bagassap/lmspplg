@@ -23,7 +23,7 @@ const logoVariants: Variants = {
   },
 };
 
-export function ChangePasswordCard({ profileCompleted }: { profileCompleted: boolean }) {
+export function ChangePasswordCard({ profileCompleted, bypassIdentityVerification }: { profileCompleted: boolean; bypassIdentityVerification: boolean }) {
   return (
     <motion.div
       initial="hidden"
@@ -127,7 +127,7 @@ export function ChangePasswordCard({ profileCompleted }: { profileCompleted: boo
           Silakan buat password baru sebelum melanjutkan.
         </p>
 
-        <ChangePasswordForm profileCompleted={profileCompleted} />
+        <ChangePasswordForm profileCompleted={profileCompleted} bypassIdentityVerification={bypassIdentityVerification} />
       </div>
     </motion.div>
   );

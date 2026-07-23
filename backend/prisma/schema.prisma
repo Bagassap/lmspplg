@@ -8,7 +8,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 enum Role {
   ADMIN
   GURU
@@ -46,19 +45,24 @@ enum StatusPasswordReset {
   SELESAI
 }
 
-
 model User {
-  id                 String   @id @default(cuid())
-  nama               String
-  email              String?  @unique
-  loginId            String?
-  password           String
-  role               Role
-  isActive           Boolean  @default(true)
-  mustChangePassword Boolean  @default(false)
-  profileCompleted   Boolean  @default(false)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                         String   @id @default(cuid())
+  nama                       String
+  email                      String?  @unique
+  loginId                    String?
+  password                   String
+  role                       Role
+  isActive                   Boolean  @default(true)
+  mustChangePassword         Boolean  @default(false)
+  profileCompleted           Boolean  @default(false)
+  // One-time escape hatch for changePassword()'s identity-verification step
+  // (nama/tanggalLahir) — set by an admin who has already confirmed the
+  // account owner's identity themselves (e.g. in person) when the stored
+  // nama/tanggalLahir data is wrong or the student can't otherwise pass it.
+  // Consumed automatically the next time changePassword() succeeds.
+  bypassIdentityVerification Boolean  @default(false)
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
 
   siswa              Siswa?
   guru               Guru?
@@ -116,15 +120,15 @@ model Siswa {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  penempatan    PenempatanMagang[]
-  absensiMagang AbsensiMagang[]
-  izinMagang    IzinMagang[]
-  absensiUkk       AbsensiUjianUKK[]
-  berkasJawaban    BerkasJawabanUKK[]
-  nilaiUkk         NilaiUKK[]
+  penempatan        PenempatanMagang[]
+  absensiMagang     AbsensiMagang[]
+  izinMagang        IzinMagang[]
+  absensiUkk        AbsensiUjianUKK[]
+  berkasJawaban     BerkasJawabanUKK[]
+  nilaiUkk          NilaiUKK[]
   submisiProjectUkk SubmisiProjectUKK[]
   pesertaUkk        PesertaUKK[]
-  absensiTahapanUkk AbsensiUKK[] @relation("AbsensiTahapanUkk")
+  absensiTahapanUkk AbsensiUKK[]        @relation("AbsensiTahapanUkk")
   absensiHarian     AbsensiHarian[]
 
   @@map("siswa")
@@ -150,7 +154,6 @@ model Guru {
   @@map("guru")
 }
 
-
 model Kelas {
   id              String   @id @default(cuid())
   nama            String   @unique
@@ -166,43 +169,42 @@ model Kelas {
 }
 
 model AbsensiHarian {
-  id         String   @id @default(cuid())
+  id         String  @id @default(cuid())
   siswaId    String
-  siswa      Siswa    @relation(fields: [siswaId], references: [id])
+  siswa      Siswa   @relation(fields: [siswaId], references: [id])
   kelasId    String
-  kelas      Kelas    @relation(fields: [kelasId], references: [id])
+  kelas      Kelas   @relation(fields: [kelasId], references: [id])
   tanggal    String
   status     String?
   waktuAbsen String?
   lokasi     String?
   foto       String?
-  ttd        String?  @db.Text
+  ttd        String? @db.Text
   catatan    String?
 
   waktuPulang   String?
   lokasiPulang  String?
   fotoPulang    String?
-  ttdPulang     String?  @db.Text
+  ttdPulang     String? @db.Text
   catatanPulang String?
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([siswaId, tanggal])
   @@map("absensi_harian")
 }
 
-
 model Pengumuman {
-  id        String   @id @default(cuid())
-  slug      String   @unique
+  id        String               @id @default(cuid())
+  slug      String               @unique
   judul     String
-  konten    String   @db.Text
-  kategori  String   @default("Umum")
-  isPinned  Boolean  @default(false)
-  prioritas String   @default("NORMAL")
+  konten    String               @db.Text
+  kategori  String               @default("Umum")
+  isPinned  Boolean              @default(false)
+  prioritas String               @default("NORMAL")
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User                 @relation(fields: [authorId], references: [id])
   komentar  KomentarPengumuman[]
 
   createdAt DateTime @default(now())
@@ -212,20 +214,19 @@ model Pengumuman {
 }
 
 model KomentarPengumuman {
-  id           String     @id @default(cuid())
+  id           String               @id @default(cuid())
   pengumumanId String
-  pengumuman   Pengumuman @relation(fields: [pengumumanId], references: [id], onDelete: Cascade)
+  pengumuman   Pengumuman           @relation(fields: [pengumumanId], references: [id], onDelete: Cascade)
   authorId     String
-  author       User       @relation(fields: [authorId], references: [id])
-  konten       String     @db.Text
+  author       User                 @relation(fields: [authorId], references: [id])
+  konten       String               @db.Text
   parentId     String?
   parent       KomentarPengumuman?  @relation("KomentarReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies      KomentarPengumuman[] @relation("KomentarReplies")
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime             @default(now())
 
   @@map("komentar_pengumuman")
 }
-
 
 model Notification {
   id        String           @id @default(cuid())
@@ -241,7 +242,6 @@ model Notification {
   @@index([userId, isRead])
   @@map("notifications")
 }
-
 
 model TempatMagang {
   id          String  @id @default(cuid())
@@ -303,17 +303,17 @@ model AbsensiMagang {
 }
 
 model IzinMagang {
-  id           String     @id @default(cuid())
-  penempatanId String
-  penempatan   PenempatanMagang @relation(fields: [penempatanId], references: [id])
-  siswaId      String
-  siswa        Siswa      @relation(fields: [siswaId], references: [id])
-  tanggal      DateTime   @db.Date
-  alasan       String
-  buktiUrl     String?
-  status       StatusIzin @default(PENDING)
+  id            String           @id @default(cuid())
+  penempatanId  String
+  penempatan    PenempatanMagang @relation(fields: [penempatanId], references: [id])
+  siswaId       String
+  siswa         Siswa            @relation(fields: [siswaId], references: [id])
+  tanggal       DateTime         @db.Date
+  alasan        String
+  buktiUrl      String?
+  status        StatusIzin       @default(PENDING)
   diperiksaOleh String?
-  guruPemeriksa Guru?     @relation(fields: [diperiksaOleh], references: [id])
+  guruPemeriksa Guru?            @relation(fields: [diperiksaOleh], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -321,7 +321,6 @@ model IzinMagang {
   @@unique([penempatanId, tanggal])
   @@map("izin_magang")
 }
-
 
 enum TipeUKK {
   INTERNAL
@@ -349,9 +348,9 @@ model TahapanUKK {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  soal     SoalTahapanUKK[]
-  peserta  PesertaUKK[]
-  absensi  AbsensiUKK[]
+  soal    SoalTahapanUKK[]
+  peserta PesertaUKK[]
+  absensi AbsensiUKK[]
 
   @@map("tahapan_ukk")
 }
@@ -387,15 +386,15 @@ model AbsensiUKK {
 }
 
 model SoalTahapanUKK {
-  id          String     @id @default(cuid())
-  tahapanId   String
-  tahapan     TahapanUKK @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
-  judul       String
-  deskripsi   String?
-  fileUrl     String
-  fileName    String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id        String     @id @default(cuid())
+  tahapanId String
+  tahapan   TahapanUKK @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
+  judul     String
+  deskripsi String?
+  fileUrl   String
+  fileName  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   submisi SubmisiProjectUKK[]
 
@@ -403,18 +402,18 @@ model SoalTahapanUKK {
 }
 
 model SubmisiProjectUKK {
-  id        String           @id @default(cuid())
-  soalId    String
-  soal      SoalTahapanUKK   @relation(fields: [soalId], references: [id], onDelete: Cascade)
-  siswaId   String
-  siswa     Siswa            @relation(fields: [siswaId], references: [id])
-  fileUrl   String
-  fileName  String
-  catatan      String?
-  pesanRevisi  String?
-  status    StatusSubmisiUKK @default(TERKIRIM)
-  submittedAt DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id          String           @id @default(cuid())
+  soalId      String
+  soal        SoalTahapanUKK   @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  siswaId     String
+  siswa       Siswa            @relation(fields: [siswaId], references: [id])
+  fileUrl     String
+  fileName    String
+  catatan     String?
+  pesanRevisi String?
+  status      StatusSubmisiUKK @default(TERKIRIM)
+  submittedAt DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@unique([soalId, siswaId])
   @@map("submisi_project_ukk")
@@ -432,7 +431,6 @@ model DiskusiUKK {
 
   @@map("diskusi_ukk")
 }
-
 
 model JadwalUjianUKK {
   id         String   @id @default(cuid())
@@ -490,11 +488,11 @@ model SoalUKK {
 }
 
 model BerkasJawabanUKK {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   soalId     String
-  soal       SoalUKK @relation(fields: [soalId], references: [id])
+  soal       SoalUKK  @relation(fields: [soalId], references: [id])
   siswaId    String
-  siswa      Siswa   @relation(fields: [siswaId], references: [id])
+  siswa      Siswa    @relation(fields: [siswaId], references: [id])
   fileUrl    String
   uploadedAt DateTime @default(now())
 

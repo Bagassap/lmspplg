@@ -4,23 +4,24 @@ import { ChangePasswordCard } from "./ChangePasswordCard";
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
-// Which identity-verification field the form asks for depends on
-// profileCompleted, read straight from the session JWT (same claim the
+// Which identity-verification field the form asks for (or whether it's
+// skipped entirely) is read straight from the session JWT (same claims the
 // middleware already trusts to guard this route) — never fetched from a
 // value the client could tamper with.
-async function getProfileCompleted(): Promise<boolean> {
+async function getVerificationState(): Promise<{ profileCompleted: boolean; bypassIdentityVerification: boolean }> {
   const token = (await cookies()).get("token")?.value;
-  if (!token) return false;
+  if (!token) return { profileCompleted: false, bypassIdentityVerification: false };
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return !!(payload as { profileCompleted?: boolean }).profileCompleted;
+    const p = payload as { profileCompleted?: boolean; bypassIdentityVerification?: boolean };
+    return { profileCompleted: !!p.profileCompleted, bypassIdentityVerification: !!p.bypassIdentityVerification };
   } catch {
-    return false;
+    return { profileCompleted: false, bypassIdentityVerification: false };
   }
 }
 
 export default async function ChangePasswordPage() {
-  const profileCompleted = await getProfileCompleted();
+  const { profileCompleted, bypassIdentityVerification } = await getVerificationState();
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F0F2FA] px-4 py-12 sm:px-6">
@@ -32,7 +33,7 @@ export default async function ChangePasswordPage() {
           backgroundSize: "24px 24px",
         }}
       />
-      <ChangePasswordCard profileCompleted={profileCompleted} />
+      <ChangePasswordCard profileCompleted={profileCompleted} bypassIdentityVerification={bypassIdentityVerification} />
     </main>
   );
 }
