@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import ExcelJS from 'exceljs';
 import { promises as fs } from 'fs';
 import { join, normalize } from 'path';
+import { getStaticMapImage } from '../common/utils/static-map.util';
 
 type SiswaRekap = {
   siswaId: string;
@@ -53,8 +54,9 @@ function googleMapsUrl(lokasi?: string | null): string | null {
 
 const FOTO_SIZE = { width: 80, height: 80 };
 const TTD_SIZE = { width: 100, height: 50 };
-// 80px-tall images need ~60pt of row height (96dpi: 1pt = 1.333px); add padding so images aren't clipped.
-const MEDIA_ROW_HEIGHT = 68;
+const MAP_SIZE = { width: 120, height: 90 };
+// 90px-tall map images (the tallest embed) need ~68pt of row height (96dpi: 1pt = 1.333px); add padding so images aren't clipped.
+const MEDIA_ROW_HEIGHT = 76;
 
 async function readFotoBuffer(fotoUrl?: string | null): Promise<Buffer | null> {
   if (!fotoUrl || !fotoUrl.startsWith('/uploads/')) return null;
@@ -101,7 +103,9 @@ export class AbsensiHarianExcelService {
       { header: 'Waktu Hadir', key: 'waktuAbsen', width: 12 },
       { header: 'Waktu Pulang', key: 'waktuPulang', width: 12 },
       { header: 'Lokasi Hadir', key: 'lokasi', width: 32 },
+      { header: 'Peta Hadir', key: 'petaLokasi', width: 18 },
       { header: 'Lokasi Pulang', key: 'lokasiPulang', width: 32 },
+      { header: 'Peta Pulang', key: 'petaLokasiPulang', width: 18 },
       { header: 'Catatan', key: 'catatan', width: 30 },
       { header: 'Foto Hadir', key: 'foto', width: 13 },
       { header: 'Foto Pulang', key: 'fotoPulang', width: 13 },
@@ -146,9 +150,16 @@ export class AbsensiHarianExcelService {
         cell.font = LINK_FONT;
       }
 
-      const [fotoBuf, fotoPulangBuf] = await Promise.all([
+      // Map thumbnails are best-effort — getStaticMapImage() never throws and
+      // resolves to null on any failure (invalid coords, network error,
+      // timeout), so a slow/unreachable tile server can never block the
+      // export. The Lokasi Hadir/Pulang hyperlink cells above always work
+      // regardless of whether the thumbnail comes back.
+      const [fotoBuf, fotoPulangBuf, mapBuf, mapPulangBuf] = await Promise.all([
         readFotoBuffer(s.foto),
         readFotoBuffer(s.fotoPulang),
+        getStaticMapImage(s.lokasi),
+        getStaticMapImage(s.lokasiPulang),
       ]);
       const ttdBuf = decodeTtdBuffer(s.ttd);
       const ttdPulangBuf = decodeTtdBuffer(s.ttdPulang);
@@ -158,6 +169,8 @@ export class AbsensiHarianExcelService {
         this.embedOrClear(wb, ws, row, colIndex.fotoPulang, fotoPulangBuf, FOTO_SIZE),
         this.embedOrClear(wb, ws, row, colIndex.ttd, ttdBuf, TTD_SIZE),
         this.embedOrClear(wb, ws, row, colIndex.ttdPulang, ttdPulangBuf, TTD_SIZE),
+        this.embedOrClear(wb, ws, row, colIndex.petaLokasi, mapBuf, MAP_SIZE),
+        this.embedOrClear(wb, ws, row, colIndex.petaLokasiPulang, mapPulangBuf, MAP_SIZE),
       ].some(Boolean);
 
       if (hasImage) row.height = MEDIA_ROW_HEIGHT;

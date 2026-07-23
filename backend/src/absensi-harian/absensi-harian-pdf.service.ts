@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import PDFDocument from 'pdfkit';
 import { promises as fs } from 'fs';
 import { join, normalize } from 'path';
+import { getStaticMapImage } from '../common/utils/static-map.util';
 
 type SiswaRekap = {
   siswaId: string;
@@ -186,6 +187,15 @@ export class AbsensiHarianPdfService {
 
     const lokasiUrl = googleMapsUrl(s.lokasi);
     const lokasiPulangUrl = googleMapsUrl(s.lokasiPulang);
+    // Map thumbnails are best-effort — getStaticMapImage() never throws and
+    // resolves to null on any failure (invalid coords, network error,
+    // timeout), so a slow/unreachable tile server can never block PDF
+    // generation. The lokasi text + Google Maps link above always render
+    // regardless of whether the thumbnail comes back.
+    const [mapBuf, mapPulangBuf] = await Promise.all([
+      getStaticMapImage(s.lokasi),
+      getStaticMapImage(s.lokasiPulang),
+    ]);
     doc.fillColor('#94a3b8').fontSize(8).text('LOKASI HADIR', margin, y, { width: colW - 10 });
     doc.fillColor('#94a3b8').fontSize(8).text('LOKASI PULANG', margin + colW, y, { width: colW - 10 });
     doc
@@ -204,7 +214,17 @@ export class AbsensiHarianPdfService {
         underline: !!lokasiPulangUrl,
         link: lokasiPulangUrl ?? undefined,
       });
-    y += rowH;
+
+    const mapY = y + 27;
+    const mapW = 110;
+    const mapH = 82.5;
+    if (mapBuf) {
+      try { doc.image(mapBuf, margin, mapY, { width: mapW, height: mapH }); } catch { /* corrupt/unreadable — skip, text+link above already cover it */ }
+    }
+    if (mapPulangBuf) {
+      try { doc.image(mapPulangBuf, margin + colW, mapY, { width: mapW, height: mapH }); } catch { /* same */ }
+    }
+    y = (mapBuf || mapPulangBuf) ? mapY + mapH + 10 : y + rowH;
 
     if (s.catatan || s.catatanPulang) {
       doc.fillColor('#94a3b8').fontSize(8).text('CATATAN', margin, y, { width: contentWidth });
