@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, GraduationCap, Download,
+  ClipboardCheck, CalendarDays, GraduationCap,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -155,9 +155,6 @@ export default function GuruAbsensiHarianPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span title="Unduh Rekap Absensi" className="shrink-0">
-                <Download size={14} className="text-slate-300 dark:text-slate-600" />
-              </span>
               <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
             </div>
 
