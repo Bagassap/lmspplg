@@ -254,8 +254,10 @@ export class AbsensiHarianService {
       if (!extras.lokasi) throw new BadRequestException('Lokasi (GPS) wajib diisi untuk absen hadir');
       if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk absen hadir');
     }
-    if ((tipe === 'IZIN' || tipe === 'SAKIT') && !extras.catatan?.trim()) {
-      throw new BadRequestException('Keterangan wajib diisi untuk Izin/Sakit');
+    if (tipe === 'IZIN' || tipe === 'SAKIT') {
+      if (!extras.catatan?.trim()) throw new BadRequestException('Keterangan wajib diisi untuk Izin/Sakit');
+      if (!extras.fotoUrl) throw new BadRequestException('Foto surat izin/sakit wajib diisi');
+      if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk Izin/Sakit');
     }
 
     const data = {

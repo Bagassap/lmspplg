@@ -20,6 +20,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   const waktu = isPulang ? siswa.waktuPulang : siswa.waktuAbsen;
   const catatan = isPulang ? siswa.catatanPulang : siswa.catatan;
   const status = (siswa.status ?? "HADIR") as StatusAbsensi;
+  const fotoLabel = !isPulang && (status === "IZIN" || status === "SAKIT") ? "Foto Surat Izin/Sakit" : "Foto Selfie";
   const theme = isPulang ? PULANG_CFG : STATUS_CFG[status];
   const ThemeIcon = theme.icon;
   const ac = avatarColor(siswa.nama);
@@ -142,10 +143,10 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                       <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#EF444418" }}>
                         <Camera size={13} style={{ color: "#EF4444" }} />
                       </div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Foto Selfie</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{fotoLabel}</span>
                     </div>
                     <button onClick={() => setImgOverlay(fotoSrc)} className="group block w-full overflow-hidden">
-                      <img src={fotoSrc} alt="Foto selfie" className="max-h-32 w-full object-cover group-hover:brightness-90 transition-all duration-200 sm:max-h-52" />
+                      <img src={fotoSrc} alt={fotoLabel} className="max-h-32 w-full object-cover group-hover:brightness-90 transition-all duration-200 sm:max-h-52" />
                     </button>
                   </div>
                 )}

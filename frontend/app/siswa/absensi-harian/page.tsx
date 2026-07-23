@@ -198,14 +198,13 @@ export default function SiswaAbsensiHarianPage() {
     if (!needsAction) return;
     const tipe = activeTipe;
     if (tipe === "HADIR" || tipe === "PULANG") {
-      if (!fotoFile) { toast.error("Foto wajib diisi", ""); return; }
       if (!lokasi) { toast.error("Lokasi (GPS) wajib diisi", ""); return; }
-      if (!ttd) { toast.error("Tanda tangan wajib diisi", ""); return; }
     }
-    if ((tipe === "IZIN" || tipe === "SAKIT") && !catatan.trim()) {
-      toast.error("Keterangan wajib diisi", "");
-      return;
+    if (tipe === "IZIN" || tipe === "SAKIT") {
+      if (!catatan.trim()) { toast.error("Keterangan wajib diisi", ""); return; }
     }
+    if (!fotoFile) { toast.error("Foto wajib diisi", ""); return; }
+    if (!ttd) { toast.error("Tanda tangan wajib diisi", ""); return; }
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -335,6 +334,7 @@ export default function SiswaAbsensiHarianPage() {
                         desc={<>Anda tercatat <b>{cfg.label}</b> hari ini</>}
                         waktu={data?.record?.waktuAbsen}
                         foto={data?.record?.foto}
+                        fotoLabel={status !== "HADIR" ? "Foto Surat Izin/Sakit" : "Foto Selfie"}
                         ttd={data?.record?.ttd}
                         lokasi={data?.record?.lokasi}
                         catatan={data?.record?.catatan}
@@ -440,12 +440,13 @@ export default function SiswaAbsensiHarianPage() {
 }
 
 function RingkasanAbsen({
-  title, desc, waktu, foto, ttd, lokasi, catatan, footnote, onReload,
+  title, desc, waktu, foto, fotoLabel = "Foto Selfie", ttd, lokasi, catatan, footnote, onReload,
 }: {
   title: string;
   desc: React.ReactNode;
   waktu?: string | null;
   foto?: string | null;
+  fotoLabel?: string;
   ttd?: string | null;
   lokasi?: string | null;
   catatan?: string | null;
@@ -471,9 +472,9 @@ function RingkasanAbsen({
         <div className="relative mx-auto mt-6 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
           {foto && (
             <div className="flex flex-col items-center gap-1.5 rounded-xl bg-white/10 p-3 backdrop-blur-sm">
-              <img src={resolveMediaSrc(foto) ?? undefined} alt="Selfie"
+              <img src={resolveMediaSrc(foto) ?? undefined} alt={fotoLabel}
                 className="h-24 w-24 rounded-xl border-2 border-white/30 object-cover shadow-md" />
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">Foto Selfie</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60">{fotoLabel}</span>
             </div>
           )}
           {ttd && (
@@ -538,11 +539,49 @@ function FormAbsen({
   onSubmit: () => void;
 }) {
   const isIzinSakit = activeTipe === "IZIN" || activeTipe === "SAKIT";
-  const fotoMissing = !isIzinSakit && !fotoPreview;
+  const fotoMissing = !fotoPreview;
   const lokasiMissing = !isIzinSakit && !lokasi;
-  const ttdMissing = !isIzinSakit && !ttd;
+  const ttdMissing = !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
   const disabled = submitting || compressingFoto || fotoMissing || lokasiMissing || ttdMissing || catatanMissing;
+
+  const fotoLabel = isIzinSakit ? "Foto Surat Izin/Sakit" : "Foto Selfie";
+  const fotoField = (
+    <div>
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+        <Camera size={12} /> {fotoLabel} <span className="text-red-400 normal-case">*wajib</span>
+      </p>
+      {fotoPreview ? (
+        <div className="relative flex h-18 items-center">
+          <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
+          <button onClick={onFotoClear}
+            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md">
+            ×
+          </button>
+        </div>
+      ) : (
+        <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
+          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 disabled:cursor-wait disabled:opacity-70 ${
+            fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
+          }`}>
+          {compressingFoto ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              <span className="text-xs font-semibold">Memproses foto...</span>
+            </>
+          ) : (
+            <>
+              <Camera size={18} />
+              <span className="text-xs font-semibold">{isIzinSakit ? "Unggah Foto" : "Ambil Foto"}</span>
+            </>
+          )}
+        </button>
+      )}
+      <input ref={fileInputRef} type="file" accept="image/*" {...(isIzinSakit ? {} : { capture: "user" as const })}
+        className="hidden" onChange={onFotoChange} />
+      {fotoMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">{fotoLabel} wajib diisi</p>}
+    </div>
+  );
 
   return (
     <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -582,7 +621,7 @@ function FormAbsen({
       )}
 
       <div className="space-y-4 px-5 pb-5">
-        {!isIzinSakit && (
+        {!isIzinSakit ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -611,40 +650,10 @@ function FormAbsen({
               )}
             </div>
 
-            <div>
-              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                <Camera size={12} /> Foto Selfie <span className="text-red-400 normal-case">*wajib</span>
-              </p>
-              {fotoPreview ? (
-                <div className="relative flex h-18 items-center">
-                  <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
-                  <button onClick={onFotoClear}
-                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md">
-                    ×
-                  </button>
-                </div>
-              ) : (
-                <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
-                  className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 disabled:cursor-wait disabled:opacity-70 ${
-                    fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
-                  }`}>
-                  {compressingFoto ? (
-                    <>
-                      <Loader2 size={18} className="animate-spin" />
-                      <span className="text-xs font-semibold">Memproses foto...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Camera size={18} />
-                      <span className="text-xs font-semibold">Ambil Foto</span>
-                    </>
-                  )}
-                </button>
-              )}
-              <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={onFotoChange} />
-              {fotoMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Foto wajib diisi</p>}
-            </div>
+            {fotoField}
           </div>
+        ) : (
+          fotoField
         )}
 
         <div>
@@ -662,17 +671,15 @@ function FormAbsen({
           {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
         </div>
 
-        {!isIzinSakit && (
-          <div>
-            <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-              <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
-            </p>
-            <div className={ttdMissing ? "rounded-xl ring-2 ring-red-300" : ""}>
-              <SignaturePad onChange={setTtd} />
-            </div>
-            {ttdMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Tanda tangan wajib diisi</p>}
+        <div>
+          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
+          </p>
+          <div className={ttdMissing ? "rounded-xl ring-2 ring-red-300" : ""}>
+            <SignaturePad onChange={setTtd} />
           </div>
-        )}
+          {ttdMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Tanda tangan wajib diisi</p>}
+        </div>
 
         <motion.button whileTap={{ scale: 0.98 }} onClick={onSubmit}
           disabled={disabled}
