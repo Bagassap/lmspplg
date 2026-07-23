@@ -9,7 +9,8 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
-import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
+import { ExportButtons, RangeModeToggle } from "@/components/absensi-harian/ExportButtons";
+import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { paginate } from "@/components/shared/PageSizeToggle";
@@ -161,6 +162,7 @@ export default function AdminAbsensiHarianPage() {
   const [guruList, setGuruList] = useState<Guru[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [tanggal, setTanggal] = useState(() => todayJakarta());
+  const exportRange = useExportRange(tanggal);
   const [rekapAll, setRekapAll] = useState<RekapKelas[]>([]);
   const [loading, setLoading] = useState(false);
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
@@ -336,18 +338,23 @@ export default function AdminAbsensiHarianPage() {
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="flex shrink-0 items-center gap-2 pt-1.5">
+          <div className="absensi-filter-row">
+            <div className="af-tanggal flex shrink-0 items-center gap-2">
               <CalendarDays size={14} className="text-slate-400" />
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</span>
               <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
                 className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
             </div>
 
-            <div className="flex flex-wrap items-end gap-3">
-              <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} tanggal={tanggal} siswaList={siswaList} />
-              <span className="shrink-0 pb-1.5 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
+            <div className="af-toggle">
+              <RangeModeToggle {...exportRange} />
             </div>
+
+            <div className="af-buttons">
+              <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+            </div>
+
+            <span className="af-info shrink-0 text-xs text-slate-400">{sudahAbsen}/{total} sudah absen</span>
           </div>
         </div>
 

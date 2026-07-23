@@ -4,8 +4,9 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, FileSpreadsheet, Loader2, X, Search, User, Download } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { getInitials, avatarColor, formatTgl, weekRangeFor, MONTH_NAMES } from "./shared";
+import { getInitials, avatarColor, formatTgl, MONTH_NAMES } from "./shared";
 import type { ExportRange, ExportRangeMode } from "./shared";
+import type { UseExportRangeResult } from "./useExportRange";
 import {
   downloadAbsensiPdf, downloadAbsensiPdfSiswa, downloadAbsensiExcel, downloadAbsensiExcelSiswa,
 } from "./downloadAbsensiPdf";
@@ -16,6 +17,51 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "mingguan", label: "Per Minggu" },
   { key: "bulanan", label: "Per Bulan" },
 ];
+
+const selectCls = "rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-2 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
+
+/** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker. Rendered next to the download buttons (or next to Tanggal, when the card wraps to 2 rows) — kept separate from ExportButtons so callers can place the two independently in the filter card's layout. */
+export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [currentYear - 1, currentYear, currentYear + 1];
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <div className="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600">
+        {RANGE_MODES.map((m, i) => (
+          <button key={m.key} type="button" onClick={() => setRangeMode(m.key)}
+            className={`px-2 py-1.5 text-[11px] font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
+              rangeMode === m.key
+                ? "bg-violet-500 text-white"
+                : "bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+            }`}>
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      {rangeMode === "mingguan" && (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <input type="date" value={weekAnchor} onChange={(e) => setWeekAnchor(e.target.value)} className={selectCls} />
+          <span className="text-[11px] text-slate-400">
+            {formatTgl(weekRange.start)} – {formatTgl(weekRange.end)}
+          </span>
+        </div>
+      )}
+
+      {rangeMode === "bulanan" && (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <select value={bulan} onChange={(e) => setBulan(Number(e.target.value))} className={selectCls}>
+            {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+          </select>
+          <select value={tahun} onChange={(e) => setTahun(Number(e.target.value))} className={selectCls}>
+            {yearOptions.map((y) => <option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+      )}
+    </div>
+  );
+}
 
 type ExportKind = "pdf-kelas" | "pdf-siswa" | "excel-kelas" | "excel-siswa";
 
@@ -81,27 +127,12 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
   );
 }
 
-export function ExportButtons({ kelasId, kelasNama, tanggal, siswaList }: {
-  kelasId: string; kelasNama: string; tanggal: string; siswaList: SiswaAbsensi[];
+export function ExportButtons({ kelasId, kelasNama, range, siswaList }: {
+  kelasId: string; kelasNama: string; range: ExportRange; siswaList: SiswaAbsensi[];
 }) {
   const toast = useToast();
   const [loadingKind, setLoadingKind] = useState<ExportKind | null>(null);
   const [picker, setPicker] = useState<"pdf" | "excel" | null>(null);
-
-  const [rangeMode, setRangeMode] = useState<ExportRangeMode>("harian");
-  const [weekAnchor, setWeekAnchor] = useState(tanggal);
-  const [bulan, setBulan] = useState(() => Number(tanggal.slice(5, 7)));
-  const [tahun, setTahun] = useState(() => Number(tanggal.slice(0, 4)));
-
-  const weekRange = useMemo(() => weekRangeFor(weekAnchor), [weekAnchor]);
-  const range: ExportRange = useMemo(() => {
-    if (rangeMode === "mingguan") return { mode: "mingguan", tanggalMulai: weekRange.start, tanggalSelesai: weekRange.end };
-    if (rangeMode === "bulanan") return { mode: "bulanan", bulan, tahun };
-    return { mode: "harian", tanggal };
-  }, [rangeMode, weekRange, bulan, tahun, tanggal]);
-
-  const currentYear = Number(tanggal.slice(0, 4)) || new Date().getFullYear();
-  const yearOptions = [currentYear - 1, currentYear, currentYear + 1];
 
   const disabled = !kelasId || siswaList.length === 0;
 
@@ -133,75 +164,37 @@ export function ExportButtons({ kelasId, kelasNama, tanggal, siswaList }: {
 
   const PDF_STYLE = { backgroundColor: "#FFF0EE", color: "#DC2626", borderColor: "#DC262630" };
   const EXCEL_STYLE = { backgroundColor: "#E8F8F1", color: "#0F9D58", borderColor: "#0F9D5830" };
-  const selectCls = "rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-2 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600">
-            {RANGE_MODES.map((m, i) => (
-              <button key={m.key} type="button" onClick={() => setRangeMode(m.key)}
-                className={`px-2.5 py-1.5 text-[11px] font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
-                  rangeMode === m.key
-                    ? "bg-violet-500 text-white"
-                    : "bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                }`}>
-                {m.label}
-              </button>
-            ))}
-          </div>
-
-          {rangeMode === "mingguan" && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              <input type="date" value={weekAnchor} onChange={(e) => setWeekAnchor(e.target.value)} className={selectCls} />
-              <span className="text-[11px] text-slate-400">
-                Minggu: {formatTgl(weekRange.start)} – {formatTgl(weekRange.end)}
-              </span>
-            </div>
-          )}
-
-          {rangeMode === "bulanan" && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              <select value={bulan} onChange={(e) => setBulan(Number(e.target.value))} className={selectCls}>
-                {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-              </select>
-              <select value={tahun} onChange={(e) => setTahun(Number(e.target.value))} className={selectCls}>
-                {yearOptions.map((y) => <option key={y} value={y}>{y}</option>)}
-              </select>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <button type="button" onClick={() => runKelasExport("pdf-kelas")} disabled={disabled || !!loadingKind}
-            className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={PDF_STYLE}>
-            {loadingKind === "pdf-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
-            PDF Per Kelas
-          </button>
-          <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind}
-            className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={PDF_STYLE}>
-            {loadingKind === "pdf-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
-            PDF Per Siswa
-          </button>
-          <button type="button" onClick={() => runKelasExport("excel-kelas")} disabled={disabled || !!loadingKind}
-            className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={EXCEL_STYLE}>
-            {loadingKind === "excel-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
-            Excel Per Kelas
-          </button>
-          <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind}
-            className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={EXCEL_STYLE}>
-            {loadingKind === "excel-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
-            Excel Per Siswa
-          </button>
-          <span title="Unduh Rekap Absensi" className="shrink-0">
-            <Download size={14} className="text-slate-300 dark:text-slate-600" />
-          </span>
-        </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={() => runKelasExport("pdf-kelas")} disabled={disabled || !!loadingKind}
+          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+          style={PDF_STYLE}>
+          {loadingKind === "pdf-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
+          PDF Per Kelas
+        </button>
+        <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind}
+          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+          style={PDF_STYLE}>
+          {loadingKind === "pdf-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
+          PDF Per Siswa
+        </button>
+        <button type="button" onClick={() => runKelasExport("excel-kelas")} disabled={disabled || !!loadingKind}
+          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+          style={EXCEL_STYLE}>
+          {loadingKind === "excel-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
+          Excel Per Kelas
+        </button>
+        <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind}
+          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+          style={EXCEL_STYLE}>
+          {loadingKind === "excel-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
+          Excel Per Siswa
+        </button>
+        <span title="Unduh Rekap Absensi" className="shrink-0">
+          <Download size={14} className="text-slate-300 dark:text-slate-600" />
+        </span>
       </div>
 
       <AnimatePresence>
