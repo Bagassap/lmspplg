@@ -24,26 +24,30 @@ function CollapsibleList({
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <button type="button" onClick={onToggle}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
-        <span className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: iconBg }}>
-            <Icon size={16} style={{ color: iconColor }} />
+        className="flex w-full flex-col gap-2.5 px-4 pb-3.5 pt-3.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
+        <span className="flex w-full items-center justify-between gap-3">
+          <span className="flex min-w-0 items-center gap-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: iconBg }}>
+              <Icon size={16} style={{ color: iconColor }} />
+            </span>
+            <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{title}</span>
           </span>
-          <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{title}</span>
+          <span className="flex shrink-0 items-center gap-2">
+            <span className="rounded-full px-2 py-0.5 text-[11px] font-extrabold text-white" style={{ backgroundColor: badgeBg }}>
+              {items.length}
+            </span>
+            <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+          </span>
         </span>
-        <span className="flex shrink-0 items-center gap-1.5">
-          <span className="rounded-full px-2 py-0.5 text-[11px] font-extrabold text-white" style={{ backgroundColor: badgeBg }}>
-            {items.length}
+        <span className="flex w-full items-center gap-2.5">
+          <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
+            <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${pct}%`, backgroundColor: iconColor }} />
           </span>
-          <span className="rounded-lg px-1.5 py-0.5 text-[10px] font-extrabold" style={{ backgroundColor: iconBg, color: iconColor }}>
+          <span className="w-9 shrink-0 text-right text-[11px] font-extrabold tabular-nums" style={{ color: iconColor }}>
             {pct}%
           </span>
-          <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
         </span>
       </button>
-      <div className="h-1 w-full bg-slate-100 dark:bg-slate-700/40">
-        <div className="h-full rounded-r-full transition-[width] duration-300" style={{ width: `${pct}%`, backgroundColor: iconColor }} />
-      </div>
       {open && (
         <div className="border-t border-slate-50 dark:border-slate-700/40">
           {items.length === 0 ? (
