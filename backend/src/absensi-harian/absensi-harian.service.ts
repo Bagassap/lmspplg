@@ -44,6 +44,21 @@ function pulangWindowLabel(): string {
   return dayOfWeek === 5 ? '11.00-12.00 WIB (Jumat)' : '14.00-17.00 WIB (Senin-Kamis)';
 }
 
+// GPS is mandatory for Hadir/Pulang — a truthy check alone lets a client
+// (buggy, stale-cached, or a direct API call bypassing the UI entirely)
+// submit a placeholder string like "GPS tidak tersedia" as if it were a
+// real location. Require an actual "lat,lng" pair within valid ranges.
+function isValidGpsLokasi(lokasi?: string): boolean {
+  if (!lokasi) return false;
+  const parts = lokasi.split(',');
+  if (parts.length !== 2) return false;
+  const lat = Number(parts[0].trim());
+  const lng = Number(parts[1].trim());
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return false;
+  return true;
+}
+
 @Injectable()
 export class AbsensiHarianService {
   constructor(
@@ -350,7 +365,7 @@ export class AbsensiHarianService {
         );
       }
       if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen pulang');
-      if (!extras.lokasi) throw new BadRequestException('Lokasi (GPS) wajib diisi untuk absen pulang');
+      if (!isValidGpsLokasi(extras.lokasi)) throw new BadRequestException('Lokasi (GPS) wajib diisi dan harus berupa koordinat valid untuk absen pulang');
       if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk absen pulang');
 
       // Pulang is allowed even without a prior Hadir, but it must never set/imply status HADIR by itself —
@@ -378,7 +393,7 @@ export class AbsensiHarianService {
     }
     if (tipe === 'HADIR') {
       if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen hadir');
-      if (!extras.lokasi) throw new BadRequestException('Lokasi (GPS) wajib diisi untuk absen hadir');
+      if (!isValidGpsLokasi(extras.lokasi)) throw new BadRequestException('Lokasi (GPS) wajib diisi dan harus berupa koordinat valid untuk absen hadir');
       if (!extras.ttd) throw new BadRequestException('Tanda tangan wajib diisi untuk absen hadir');
     }
     if (tipe === 'IZIN' || tipe === 'SAKIT') {

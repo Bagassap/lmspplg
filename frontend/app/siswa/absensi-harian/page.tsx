@@ -47,16 +47,14 @@ const MOTIVASI = [
   "Jangan lewatkan harimu — catat kehadiranmu sekarang!",
 ];
 
-// getCurrentPosition is blocked outright by every browser on non-HTTPS,
-// non-localhost origins (this site is served over plain HTTP on a bare IP,
-// so it always fails here). GPS is still requested and still required to
-// *attempt*, but when the browser itself refuses to even try, we fall back
-// to this marker instead of leaving the field empty forever — otherwise
-// nobody could ever submit an absen on this deployment.
-const GPS_UNAVAILABLE = "GPS tidak tersedia (koneksi tidak aman)";
-function isGpsCoords(loc: string | null) {
-  return !!loc && loc !== GPS_UNAVAILABLE;
-}
+// GPS is mandatory for Hadir/Pulang — there is no fallback that lets a
+// submission through without real coordinates. getCurrentPosition() is
+// blocked outright by browsers on non-HTTPS, non-localhost origins, so a
+// student who reaches this page via the bare IP (http://192.168.111.151)
+// instead of the real domain (https://pplg.smklimpung.id, served over
+// Cloudflare Tunnel) gets a specific message telling them to switch —
+// never a placeholder value standing in for a real location.
+const INSECURE_CONTEXT_MSG = "Akses GPS memerlukan koneksi aman. Silakan buka melalui https://pplg.smklimpung.id, jangan menggunakan alamat IP langsung.";
 
 // Absen pulang closes at a different time on Friday (11:00-12:00) vs
 // Senin-Kamis (14:00-17:00) — keep the displayed range in sync with the
@@ -89,6 +87,7 @@ export default function SiswaAbsensiHarianPage() {
 
   const [lokasi, setLokasi] = useState<string | null>(null);
   const [lokasiLoading, setLokasiLoading] = useState(false);
+  const [lokasiError, setLokasiError] = useState<string | null>(null);
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
   const [compressingFoto, setCompressingFoto] = useState(false);
@@ -142,6 +141,7 @@ export default function SiswaAbsensiHarianPage() {
 
   useEffect(() => {
     setLokasi(null);
+    setLokasiError(null);
     setFotoFile(null);
     setFotoPreview(null);
     setTtd(null);
@@ -150,19 +150,32 @@ export default function SiswaAbsensiHarianPage() {
   }, [activeTab]);
 
   const requestLokasi = useCallback(() => {
-    if (!navigator.geolocation) {
-      setLokasi(GPS_UNAVAILABLE);
+    setLokasi(null);
+    if (typeof window !== "undefined" && !window.isSecureContext) {
+      setLokasiError(INSECURE_CONTEXT_MSG);
       return;
     }
+    if (!navigator.geolocation) {
+      setLokasiError("Perangkat/browser ini tidak mendukung deteksi lokasi GPS.");
+      return;
+    }
+    setLokasiError(null);
     setLokasiLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLokasi(`${pos.coords.latitude}, ${pos.coords.longitude}`);
+        setLokasiError(null);
         setLokasiLoading(false);
       },
-      () => {
-        setLokasi(GPS_UNAVAILABLE);
+      (err) => {
         setLokasiLoading(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLokasiError("Izin lokasi ditolak. Aktifkan izin GPS untuk situs ini di pengaturan browser, lalu coba lagi.");
+        } else if (err.code === err.TIMEOUT) {
+          setLokasiError("Deteksi lokasi timeout. Pastikan GPS aktif dan sinyal memadai, lalu coba lagi.");
+        } else {
+          setLokasiError("Lokasi tidak dapat dideteksi. Coba lagi.");
+        }
       },
       { timeout: 8000 },
     );
@@ -348,7 +361,7 @@ export default function SiswaAbsensiHarianPage() {
                         activeTipe={activeTipe}
                         statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
                         showStatusPicker
-                        lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
+                        lokasi={lokasi} lokasiLoading={lokasiLoading} lokasiError={lokasiError} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
                         onFotoChange={handleFotoChange} compressingFoto={compressingFoto}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
@@ -390,7 +403,7 @@ export default function SiswaAbsensiHarianPage() {
                         activeTipe="PULANG"
                         statusPilihan={statusPilihan} setStatusPilihan={setStatusPilihan}
                         showStatusPicker={false}
-                        lokasi={lokasi} lokasiLoading={lokasiLoading} onRetryLokasi={requestLokasi}
+                        lokasi={lokasi} lokasiLoading={lokasiLoading} lokasiError={lokasiError} onRetryLokasi={requestLokasi}
                         fotoPreview={fotoPreview} fileInputRef={fileInputRef}
                         onFotoChange={handleFotoChange} compressingFoto={compressingFoto}
                         onFotoClear={() => { setFotoFile(null); setFotoPreview(null); }}
@@ -516,7 +529,7 @@ function RingkasanAbsen({
 
 function FormAbsen({
   activeTipe, statusPilihan, setStatusPilihan, showStatusPicker,
-  lokasi, lokasiLoading, onRetryLokasi, fotoPreview, fileInputRef, onFotoChange, compressingFoto, onFotoClear,
+  lokasi, lokasiLoading, lokasiError, onRetryLokasi, fotoPreview, fileInputRef, onFotoChange, compressingFoto, onFotoClear,
   catatan, setCatatan, ttd, setTtd, submitting, onSubmit,
 }: {
   activeTipe: "HADIR" | "IZIN" | "SAKIT" | "PULANG";
@@ -525,6 +538,7 @@ function FormAbsen({
   showStatusPicker: boolean;
   lokasi: string | null;
   lokasiLoading: boolean;
+  lokasiError: string | null;
   onRetryLokasi: () => void;
   fotoPreview: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
@@ -628,25 +642,24 @@ function FormAbsen({
                 <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
               </p>
               <div className={`flex h-18 items-center gap-2 rounded-xl border bg-slate-50 px-3 py-2.5 dark:bg-slate-900/40 ${
-                lokasiMissing ? "border-red-300 dark:border-red-800" : isGpsCoords(lokasi) ? "border-slate-100 dark:border-slate-700" : "border-amber-200 dark:border-amber-800"
+                lokasiMissing ? "border-red-300 dark:border-red-800" : "border-slate-100 dark:border-slate-700"
               }`}>
-                <MapPin size={15} className={isGpsCoords(lokasi) ? "text-emerald-500" : lokasi ? "text-amber-500" : "text-slate-300"} />
+                <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-red-400"} />
                 {lokasiLoading ? (
                   <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
-                ) : isGpsCoords(lokasi) ? (
+                ) : lokasi ? (
                   <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
                 ) : (
                   <div className="flex flex-1 items-center justify-between gap-2">
-                    <span className="text-xs text-amber-600 dark:text-amber-400">{lokasi ?? "Lokasi tidak tersedia"}</span>
+                    <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
                     <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-violet-500 hover:underline">
                       Coba lagi
                     </button>
                   </div>
                 )}
               </div>
-              {lokasiMissing && !lokasiLoading && <p className="mt-1 text-[11px] font-semibold text-red-500">Lokasi (GPS) wajib diisi</p>}
-              {!lokasiMissing && !isGpsCoords(lokasi) && !lokasiLoading && (
-                <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400">GPS tidak dapat diakses browser — absen tetap bisa dikirim</p>
+              {lokasiMissing && !lokasiLoading && (
+                <p className="mt-1 text-[11px] font-semibold text-red-500">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
               )}
             </div>
 
