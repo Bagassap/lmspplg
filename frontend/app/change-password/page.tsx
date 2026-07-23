@@ -1,6 +1,27 @@
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
 import { ChangePasswordCard } from "./ChangePasswordCard";
 
-export default function ChangePasswordPage() {
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+// Which identity-verification field the form asks for depends on
+// profileCompleted, read straight from the session JWT (same claim the
+// middleware already trusts to guard this route) — never fetched from a
+// value the client could tamper with.
+async function getProfileCompleted(): Promise<boolean> {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return false;
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return !!(payload as { profileCompleted?: boolean }).profileCompleted;
+  } catch {
+    return false;
+  }
+}
+
+export default async function ChangePasswordPage() {
+  const profileCompleted = await getProfileCompleted();
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F0F2FA] px-4 py-12 sm:px-6">
       <div
@@ -11,7 +32,7 @@ export default function ChangePasswordPage() {
           backgroundSize: "24px 24px",
         }}
       />
-      <ChangePasswordCard />
+      <ChangePasswordCard profileCompleted={profileCompleted} />
     </main>
   );
 }

@@ -23,7 +23,7 @@ const logoVariants: Variants = {
   },
 };
 
-export function ChangePasswordCard() {
+export function ChangePasswordCard({ profileCompleted }: { profileCompleted: boolean }) {
   return (
     <motion.div
       initial="hidden"
@@ -127,7 +127,7 @@ export function ChangePasswordCard() {
           Silakan buat password baru sebelum melanjutkan.
         </p>
 
-        <ChangePasswordForm />
+        <ChangePasswordForm profileCompleted={profileCompleted} />
       </div>
     </motion.div>
   );

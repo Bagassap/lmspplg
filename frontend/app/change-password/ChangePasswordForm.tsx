@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Eye, EyeOff, Loader2, KeyRound, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Loader2, KeyRound, Sparkles, ShieldCheck, UserCheck, CalendarDays } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
@@ -25,11 +25,12 @@ const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: st
   { key: "confirmPassword", label: "Konfirmasi Password Baru", placeholder: "Ulangi password baru", autoComplete: "new-password", icon: KeyRound },
 ];
 
-export function ChangePasswordForm() {
+export function ChangePasswordForm({ profileCompleted }: { profileCompleted: boolean }) {
   const [values, setValues] = useState<Record<Field, string>>({
     newPassword: "",
     confirmPassword: "",
   });
+  const [identityConfirm, setIdentityConfirm] = useState("");
   const [visible, setVisible] = useState<Record<Field, boolean>>({
     newPassword: false,
     confirmPassword: false,
@@ -45,6 +46,11 @@ export function ChangePasswordForm() {
   }
 
   function validate(): string | null {
+    if (!identityConfirm.trim()) {
+      return profileCompleted
+        ? "Konfirmasi tanggal lahir Anda wajib diisi."
+        : "Konfirmasi nama lengkap Anda wajib diisi.";
+    }
     if (!values.newPassword || !values.confirmPassword) {
       return "Semua field wajib diisi.";
     }
@@ -74,7 +80,12 @@ export function ChangePasswordForm() {
       const res = await fetch("/api/auth/change-password", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          ...(profileCompleted
+            ? { tanggalLahirKonfirmasi: identityConfirm }
+            : { namaKonfirmasi: identityConfirm }),
+        }),
       });
       const data = await res.json().catch(() => null);
 
@@ -110,6 +121,46 @@ export function ChangePasswordForm() {
         <p className="text-xs leading-relaxed text-black/65">
           Selamat datang! Untuk keamanan akun Anda, silakan buat password baru.
           Password default Anda adalah NIS Anda.
+        </p>
+      </motion.div>
+
+      <motion.div
+        variants={item}
+        className="flex items-start gap-2.5 rounded-xl border border-amber-500/20 bg-amber-500/5 px-3.5 py-3"
+      >
+        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-amber-600" />
+        <p className="text-xs leading-relaxed text-black/65">
+          Untuk keamanan, konfirmasi identitas Anda sebelum membuat password baru —
+          ini mencegah orang lain mengganti password akun Anda dengan NIS yang bukan miliknya.
+        </p>
+      </motion.div>
+
+      <motion.div variants={item} className="flex flex-col gap-1.5">
+        <label htmlFor="identityConfirm" className="text-sm font-medium text-black/70">
+          {profileCompleted ? "Konfirmasi Tanggal Lahir Anda" : "Konfirmasi Nama Lengkap Anda"}
+        </label>
+        <div className="relative">
+          {profileCompleted ? (
+            <CalendarDays size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-black/35" />
+          ) : (
+            <UserCheck size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-black/35" />
+          )}
+          <input
+            id="identityConfirm"
+            name="identityConfirm"
+            type={profileCompleted ? "date" : "text"}
+            autoComplete="off"
+            required
+            value={identityConfirm}
+            onChange={(e) => setIdentityConfirm(e.target.value)}
+            placeholder={profileCompleted ? undefined : "Ketik persis sesuai data akun Anda"}
+            className="w-full rounded-xl border border-black/10 bg-black/3 px-4 py-3 pl-11 text-sm text-black placeholder:text-black/35 outline-none transition-all focus:border-blue focus:bg-white focus:ring-2 focus:ring-blue/15"
+          />
+        </div>
+        <p className="text-[11px] text-black/40">
+          {profileCompleted
+            ? "Tanggal lahir yang Anda isi saat melengkapi profil sebelumnya."
+            : "Nama lengkap sesuai data sekolah — bukan nama panggilan."}
         </p>
       </motion.div>
 

@@ -12,7 +12,13 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
   }
 
-  let body: { currentPassword?: string; newPassword?: string; confirmPassword?: string };
+  let body: {
+    currentPassword?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    namaKonfirmasi?: string;
+    tanggalLahirKonfirmasi?: string;
+  };
   try {
     body = await request.json();
   } catch {

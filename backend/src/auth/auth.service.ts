@@ -128,7 +128,10 @@ export class AuthService {
   }
 
   async changePassword(userId: string, dto: ChangePasswordDto) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { siswa: { select: { tanggalLahir: true } } },
+    });
     if (!user) {
       throw new UnauthorizedException('Akun tidak ditemukan');
     }
@@ -148,6 +151,45 @@ export class AuthService {
         throw new BadRequestException(
           'Password baru tidak boleh sama dengan password lama',
         );
+      }
+    } else {
+      // Forced change (first login, or reset by admin) — a bare "I know the
+      // NIS" isn't proof of identity, since a classmate can read/guess it.
+      // Require one more piece of identity data before letting the new
+      // password through, so someone else's login attempt can't lock the
+      // real account owner out.
+      const mismatchMessage =
+        'Data konfirmasi tidak sesuai dengan data akun ini. Pastikan Anda login dengan akun milik Anda sendiri.';
+      if (!user.profileCompleted) {
+        // Never completed lengkapi-profil yet — the only identity data on
+        // file at all is the name imported from the school's CSV roster.
+        const expected = user.nama?.trim().toLowerCase();
+        const given = dto.namaKonfirmasi?.trim().toLowerCase();
+        if (!given) {
+          throw new BadRequestException('Konfirmasi nama lengkap wajib diisi');
+        }
+        if (!expected || given !== expected) {
+          throw new BadRequestException(mismatchMessage);
+        }
+      } else {
+        // Already completed lengkapi-profil at some earlier point (so this
+        // is an admin-triggered reset) — a birth date the student entered
+        // themselves is much harder for a classmate to know or guess than
+        // their own name.
+        const tanggalLahir = user.siswa?.tanggalLahir;
+        if (!tanggalLahir) {
+          throw new BadRequestException(
+            'Data tanggal lahir tidak ditemukan untuk verifikasi. Hubungi admin untuk bantuan reset password.',
+          );
+        }
+        const given = dto.tanggalLahirKonfirmasi?.trim();
+        if (!given) {
+          throw new BadRequestException('Konfirmasi tanggal lahir wajib diisi');
+        }
+        const expected = tanggalLahir.toISOString().slice(0, 10);
+        if (given !== expected) {
+          throw new BadRequestException(mismatchMessage);
+        }
       }
     }
 
