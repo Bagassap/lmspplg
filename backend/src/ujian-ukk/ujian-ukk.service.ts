@@ -190,7 +190,7 @@ export class UjianUkkService {
 
     const peserta = await this.prisma.pesertaUKK.findMany({
       where: { tahapanId },
-      include: { siswa: { include: { user: { select: { id: true, nama: true } } } } },
+      include: { siswa: { include: { user: { select: { id: true, nama: true, fotoProfil: true } } } } },
       orderBy: { siswa: { nama: 'asc' } },
     });
 
@@ -209,6 +209,7 @@ export class UjianUkkService {
         userId: s.userId,
         nama: s.user?.nama ?? s.nama,
         nis: s.nis,
+        fotoProfil: s.user?.fotoProfil ?? null,
         status,
         waktuAbsen: doc?.waktuAbsen ?? null,
         lokasi: doc?.lokasi ?? null,

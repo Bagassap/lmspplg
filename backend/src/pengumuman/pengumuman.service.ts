@@ -22,7 +22,7 @@ function toBaseSlug(judul: string): string {
     .slice(0, 80);
 }
 
-const AUTHOR_SELECT = { select: { id: true, nama: true, role: true } } as const;
+const AUTHOR_SELECT = { select: { id: true, nama: true, role: true, fotoProfil: true } } as const;
 
 const INCLUDE_LIST = {
   author: AUTHOR_SELECT,

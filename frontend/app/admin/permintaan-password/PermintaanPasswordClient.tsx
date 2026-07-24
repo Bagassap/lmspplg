@@ -10,6 +10,7 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { timeAgo } from "@/components/dashboard/ActivityList";
+import { Avatar } from "@/components/shared/Avatar";
 
 type PasswordResetRequest = {
   id: string;
@@ -24,6 +25,7 @@ type PasswordResetRequest = {
     id: string;
     nama: string;
     role: "SISWA" | "GURU" | "ADMIN";
+    fotoProfil?: string | null;
     siswa: { nis: string; kelas: { nama: string } } | null;
     guru: { nip: string | null } | null;
   } | null;
@@ -35,9 +37,6 @@ function formatWaktu(iso: string): string {
   return new Date(iso).toLocaleString("id-ID", {
     day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
   });
-}
-function getInitials(name: string): string {
-  return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 function isToday(iso: string): boolean {
   const d = new Date(iso);
@@ -172,12 +171,15 @@ export default function PermintaanPasswordClient() {
                       transition={{ duration: 0.18, delay: i * 0.03 }}
                       className="flex flex-col gap-3 rounded-xl border-l-4 border-amber-400 bg-white py-3.5 pl-4 pr-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:bg-slate-800/60 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                          style={{ background: r.user
+                        <Avatar
+                          src={r.user?.fotoProfil}
+                          nama={r.namaPengaju}
+                          sizePx={40}
+                          fallbackBg={r.user
                             ? (r.user.role === "SISWA" ? "linear-gradient(135deg,#4F8EF7,#3B7CE8)" : "linear-gradient(135deg,#8B5CF6,#6D28D9)")
-                            : "linear-gradient(135deg,#94a3b8,#64748b)" }}>
-                          {getInitials(r.namaPengaju)}
-                        </div>
+                            : "linear-gradient(135deg,#94a3b8,#64748b)"}
+                          textClassName="text-sm font-bold"
+                        />
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-1.5">
                             <p className="text-[15px] font-semibold text-slate-800 dark:text-white">{r.namaPengaju}</p>
@@ -242,10 +244,13 @@ export default function PermintaanPasswordClient() {
                             transition={{ duration: 0.16, delay: i * 0.02 }}
                             className="flex flex-col gap-2 rounded-xl border-l-4 border-emerald-400 bg-white py-3 pl-4 pr-4 shadow-sm dark:bg-slate-800/60 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex min-w-0 items-center gap-3">
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                                style={{ background: "linear-gradient(135deg,#94a3b8,#64748b)" }}>
-                                {getInitials(r.namaPengaju)}
-                              </div>
+                              <Avatar
+                                src={r.user?.fotoProfil}
+                                nama={r.namaPengaju}
+                                sizePx={36}
+                                fallbackBg="linear-gradient(135deg,#94a3b8,#64748b)"
+                                textClassName="text-xs font-bold"
+                              />
                               <div className="min-w-0">
                                 <div className="flex flex-wrap items-center gap-1.5">
                                   <p className="text-[15px] font-semibold text-slate-800 dark:text-white">{r.namaPengaju}</p>

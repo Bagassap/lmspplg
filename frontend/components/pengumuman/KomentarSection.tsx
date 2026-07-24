@@ -4,12 +4,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, CornerDownRight, Trash2, Send, Loader2, ChevronDown, Sparkles } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { Avatar } from "@/components/shared/Avatar";
 
 export type KomentarItem = {
   id: string;
   konten: string;
   authorId: string;
-  author: { id: string; nama: string; role: string };
+  author: { id: string; nama: string; role: string; fotoProfil?: string | null };
   parentId: string | null;
   replies?: KomentarItem[];
   createdAt: string;
@@ -30,7 +31,6 @@ const AVATAR_PALETTE = [
   "linear-gradient(135deg,#10B981,#34D399)",
 ];
 function avatarGradient(name: string) { return AVATAR_PALETTE[name.charCodeAt(0) % AVATAR_PALETTE.length]; }
-function initials(name: string) { return name.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase(); }
 
 function timeAgo(iso: string): string {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -101,12 +101,14 @@ function KomentarBubble({
         className={`group flex gap-3 ${isReply ? "mt-2" : ""}`}
       >
         <div className="relative shrink-0">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-extrabold text-white shadow-md ring-2 ring-white dark:ring-[#1c2434]"
-            style={{ background: avatarBg }}
-          >
-            {initials(k.author.nama)}
-          </div>
+          <Avatar
+            src={k.author.fotoProfil}
+            nama={k.author.nama}
+            sizePx={36}
+            fallbackBg={avatarBg}
+            textClassName="text-xs font-extrabold"
+            className="shadow-md ring-2 ring-white dark:ring-[#1c2434]"
+          />
           <span
             className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1c2434]"
             style={{ backgroundColor: badge.dot }}

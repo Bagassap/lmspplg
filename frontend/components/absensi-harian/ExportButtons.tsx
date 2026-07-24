@@ -4,7 +4,8 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, FileSpreadsheet, Loader2, X, Search, User, Download } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { getInitials, avatarColor, formatTgl, MONTH_NAMES } from "./shared";
+import { avatarColor, formatTgl, MONTH_NAMES } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 import type { ExportRange, ExportRangeMode } from "./shared";
 import type { UseExportRangeResult } from "./useExportRange";
 import {
@@ -106,10 +107,13 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
             filtered.map((s) => (
               <button key={s.siswaId} onClick={() => onPick(s)}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                  style={{ backgroundColor: avatarColor(s.nama) }}>
-                  {getInitials(s.nama)}
-                </div>
+                <Avatar
+                  src={s.fotoProfil}
+                  nama={s.nama}
+                  sizePx={36}
+                  fallbackBg={avatarColor(s.nama)}
+                  textClassName="text-xs font-bold"
+                />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{s.nama}</p>
                   <p className="text-[11px] text-slate-400">NIS: {s.nis ?? "-"}</p>

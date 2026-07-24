@@ -12,6 +12,7 @@ import type { PengumumanItem } from "./PengumumanFormModal";
 import { PengumumanFormModal } from "./PengumumanFormModal";
 import type { KomentarItem } from "./KomentarSection";
 import { KomentarSection } from "./KomentarSection";
+import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -210,12 +211,13 @@ function AccordionCard({
         {!isOpen && (
           <div className="flex items-center justify-between px-4 py-2.5">
             <div className="flex items-center gap-2">
-              <div
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white"
-                style={{ background: gradient }}
-              >
-                {p.author.nama.charAt(0).toUpperCase()}
-              </div>
+              <Avatar
+                src={p.author.fotoProfil}
+                nama={p.author.nama}
+                sizePx={24}
+                fallbackBg={gradient}
+                textClassName="text-[9px] font-bold"
+              />
               <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{p.author.nama}</span>
               <span className="text-[10px] text-slate-400 dark:text-slate-500">
                 · <MessageCircle size={9} className="mr-0.5 inline" />{p._count.komentar}
@@ -252,12 +254,14 @@ function AccordionCard({
               <div className="relative px-6 py-5">
                 <div className="mb-4 flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
                   <div className="relative shrink-0">
-                    <div
-                      className="flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-lg ring-2 ring-white dark:ring-slate-700"
-                      style={{ background: gradient }}
-                    >
-                      {p.author.nama.charAt(0).toUpperCase()}
-                    </div>
+                    <Avatar
+                      src={p.author.fotoProfil}
+                      nama={p.author.nama}
+                      sizePx={36}
+                      fallbackBg={gradient}
+                      textClassName="text-[11px] font-extrabold"
+                      className="shadow-lg ring-2 ring-white dark:ring-slate-700"
+                    />
                     <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-400 ring-1 ring-white dark:ring-[#1c2434]">
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>

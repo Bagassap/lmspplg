@@ -11,6 +11,7 @@ import { PengumumanFormModal } from "./PengumumanFormModal";
 import { KomentarSection }     from "./KomentarSection";
 import type { PengumumanItem } from "./PengumumanFormModal";
 import type { KomentarItem }   from "./KomentarSection";
+import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -213,12 +214,13 @@ export default function PengumumanDetailModal({
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[11px] text-white/60">
                     <div className="flex items-center gap-1.5">
-                      <div
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] font-bold text-white"
-                        style={{ backgroundColor: "rgba(255,255,255,0.25)" }}
-                      >
-                        {pengumuman.author.nama.charAt(0).toUpperCase()}
-                      </div>
+                      <Avatar
+                        src={pengumuman.author.fotoProfil}
+                        nama={pengumuman.author.nama}
+                        sizePx={20}
+                        fallbackBg="rgba(255,255,255,0.25)"
+                        textClassName="text-[8px] font-bold"
+                      />
                       <span className="font-semibold text-white/85">{pengumuman.author.nama}</span>
                       <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[8px] font-bold text-white">
                         {pengumuman.author.role === "ADMIN" ? "Admin" : "Guru"}

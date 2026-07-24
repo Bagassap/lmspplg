@@ -14,6 +14,7 @@ export type SiswaAbsensi = {
   userId?: string | null;
   nama: string;
   nis?: string | null;
+  fotoProfil?: string | null;
   status: StatusAbsensi | null;
   waktuAbsen?: string | null;
   lokasi?: string | null;

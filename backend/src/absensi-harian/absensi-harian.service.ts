@@ -76,7 +76,7 @@ export class AbsensiHarianService {
 
     const siswaList = await this.prisma.siswa.findMany({
       where: { kelasId },
-      include: { user: { select: { id: true, nama: true } } },
+      include: { user: { select: { id: true, nama: true, fotoProfil: true } } },
       orderBy: { nama: 'asc' },
     });
 
@@ -97,6 +97,7 @@ export class AbsensiHarianService {
         userId: s.userId,
         nama: s.user?.nama ?? s.nama,
         nis: s.nis,
+        fotoProfil: s.user?.fotoProfil ?? null,
         status,
         waktuAbsen: doc?.waktuAbsen ?? null,
         lokasi: doc?.lokasi ?? null,

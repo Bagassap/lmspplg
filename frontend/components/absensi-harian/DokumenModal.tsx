@@ -6,7 +6,8 @@ import {
   X, MapPin, Download, Camera, PenTool, ExternalLink,
 } from "lucide-react";
 import type { SiswaAbsensi, StatusAbsensi } from "./types";
-import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, getInitials, avatarColor, parseLokasi, resolveMediaSrc } from "./shared";
+import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, avatarColor, parseLokasi, resolveMediaSrc } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 
 export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" }: {
   siswa: SiswaAbsensi; tanggal: string; kelas: string; onClose: () => void; source?: "hadir" | "pulang";
@@ -69,9 +70,14 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             <div className="pointer-events-none absolute -right-10 -top-10 hidden h-44 w-44 rounded-full bg-white/10 sm:block" />
 
             <div className="flex items-center gap-3 px-4 pb-3 pt-10 sm:hidden">
-              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-white"
-                style={{ backgroundColor: ac, boxShadow: "0 0 0 3px rgba(255,255,255,0.25)" }}>
-                {getInitials(siswa.nama)}
+              <div className="relative shrink-0" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.25)", borderRadius: "9999px" }}>
+                <Avatar
+                  src={siswa.fotoProfil}
+                  nama={siswa.nama}
+                  sizePx={44}
+                  fallbackBg={ac}
+                  textClassName="text-sm font-extrabold"
+                />
                 <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white/40 bg-white/20">
                   <ThemeIcon size={10} className="text-white" />
                 </div>
@@ -97,9 +103,14 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             )}
 
             <div className="relative hidden flex-1 flex-col items-center justify-center px-5 pb-8 pt-10 text-center sm:flex">
-              <div className="relative flex h-20 w-20 items-center justify-center rounded-full text-xl font-extrabold text-white"
-                style={{ backgroundColor: ac, boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)" }}>
-                {getInitials(siswa.nama)}
+              <div className="relative" style={{ boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)", borderRadius: "9999px" }}>
+                <Avatar
+                  src={siswa.fotoProfil}
+                  nama={siswa.nama}
+                  sizePx={80}
+                  fallbackBg={ac}
+                  textClassName="text-xl font-extrabold"
+                />
                 <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white/40 bg-white/20 shadow-lg">
                   <ThemeIcon size={13} className="text-white" />
                 </div>

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
+import { Avatar } from "@/components/shared/Avatar";
 
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
@@ -19,6 +20,7 @@ type Tahapan = {
 
 type SiswaAbsensi = {
   siswaId: string; nama: string; nis?: string;
+  fotoProfil?: string | null;
   status: StatusAbsensi | null;
   waktuAbsen?: string | null;
   lokasi?: string | null;
@@ -52,9 +54,6 @@ const CARD_GRADIENTS = [
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
-}
-function getInitials(name: string) {
-  return name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase();
 }
 const AVATAR_COLORS = ["#6334F4","#EF4444","#F59E0B","#FF7867","#10B981","#3B82F6"];
 function avatarColor(name: string) {
@@ -144,9 +143,8 @@ function DokumenModal({ siswa, tanggal, lab, onClose }: {
               </button>
             </div>
             <div className="relative flex flex-1 flex-col items-center justify-center px-5 pb-8 text-center">
-              <div className="relative flex h-20 w-20 items-center justify-center rounded-full text-xl font-extrabold text-white"
-                style={{backgroundColor: ac, boxShadow:"0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)"}}>
-                {getInitials(siswa.nama)}
+              <div className="relative" style={{boxShadow:"0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)", borderRadius:"9999px"}}>
+                <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={80} fallbackBg={ac} textClassName="text-xl font-extrabold" />
                 <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white/40 bg-white/20 shadow-lg">
                   <ThemeIcon size={13} className="text-white"/>
                 </div>
@@ -660,10 +658,7 @@ export default function GuruUkkAbsensiPage() {
 
                     <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{idx+1}</span>
 
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0"
-                      style={{backgroundColor:ac}}>
-                      {getInitials(s.nama)}
-                    </div>
+                    <Avatar src={s.fotoProfil} nama={s.nama} sizePx={36} fallbackBg={ac} textClassName="text-[10px] font-extrabold" />
 
                     <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
                     <p className="truncate font-mono text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>

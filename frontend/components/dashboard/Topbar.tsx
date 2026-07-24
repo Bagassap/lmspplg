@@ -12,6 +12,7 @@ import {
 import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import { Avatar } from "@/components/shared/Avatar";
+import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
 
 
 const PAGE_TITLES: Record<string, [string, string]> = {
@@ -261,6 +262,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
   }, [notifOpen]);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profilOpen, setProfilOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -469,6 +471,17 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                     <p className="text-xs text-gray-400 dark:text-slate-400">{ROLE_LABEL[user.role]}</p>
                   </div>
                   <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      if (user.role === "SISWA") router.push("/siswa/profil");
+                      else setProfilOpen(true);
+                    }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50"
+                  >
+                    <UserCircle size={14} />
+                    Profil Saya
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
                   >
@@ -594,6 +607,8 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
           </>
         )}
       </AnimatePresence>
+
+      {profilOpen && <ProfilSayaModal onClose={() => setProfilOpen(false)} />}
     </>
   );
 }

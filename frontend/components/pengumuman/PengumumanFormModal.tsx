@@ -13,7 +13,7 @@ export type PengumumanItem = {
   kategori: string;
   isPinned: boolean;
   prioritas: string;
-  author: { id: string; nama: string; role: string };
+  author: { id: string; nama: string; role: string; fotoProfil?: string | null };
   _count: { komentar: number };
   createdAt: string;
   updatedAt: string;

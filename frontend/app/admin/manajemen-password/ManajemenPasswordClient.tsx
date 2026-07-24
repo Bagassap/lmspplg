@@ -9,6 +9,7 @@ import {
 import { LiveClock } from "@/components/shared/LiveClock";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { PageSizeToggle } from "@/components/shared/PageSizeToggle";
+import { Avatar } from "@/components/shared/Avatar";
 
 type KelasWithWali = {
   id: string;
@@ -24,6 +25,7 @@ type AccountStatus = {
   loginId: string | null;
   mustChangePassword: boolean;
   updatedAt: string;
+  fotoProfil?: string | null;
   siswa: { nis: string; kelas: { nama: string } } | null;
   guru: { nip: string | null } | null;
 };
@@ -32,7 +34,7 @@ type SiswaPageItem = {
   id: string;
   nis: string;
   nama: string;
-  user: { id: string; mustChangePassword: boolean; updatedAt: string } | null;
+  user: { id: string; mustChangePassword: boolean; updatedAt: string; fotoProfil?: string | null } | null;
 };
 
 type SiswaPageResponse = {
@@ -47,9 +49,6 @@ type ResetTarget = { id: string; nama: string; nis?: string; mustChangePassword:
 
 function toTitleCase(str: string): string {
   return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
-function getInitials(name: string): string {
-  return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 function daysSince(iso: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
@@ -253,10 +252,13 @@ export default function ManajemenPasswordClient() {
                       }}
                     >
                       <div className="flex min-w-0 flex-1 items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                          style={{ background: "linear-gradient(135deg,#8B5CF6,#6D28D9)" }}>
-                          {getInitials(displayNama)}
-                        </div>
+                        <Avatar
+                          src={account?.fotoProfil}
+                          nama={displayNama}
+                          sizePx={40}
+                          fallbackBg="linear-gradient(135deg,#8B5CF6,#6D28D9)"
+                          textClassName="text-sm font-bold"
+                        />
                         <div className="min-w-0">
                           <p className="truncate text-[15px] font-semibold text-slate-800 dark:text-white">{displayNama}</p>
                           <p className="mt-0.5 text-[13px] text-slate-500 dark:text-slate-400">
@@ -326,10 +328,13 @@ export default function ManajemenPasswordClient() {
                       <div key={s.id}
                         className="flex flex-col gap-3 px-4 py-3.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20 sm:flex-row sm:items-center">
                         <div className="flex min-w-0 flex-1 items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                            style={{ background: "linear-gradient(135deg,#4F8EF7,#3B7CE8)" }}>
-                            {getInitials(displayNama)}
-                          </div>
+                          <Avatar
+                            src={s.user?.fotoProfil}
+                            nama={displayNama}
+                            sizePx={40}
+                            fallbackBg="linear-gradient(135deg,#4F8EF7,#3B7CE8)"
+                            textClassName="text-sm font-bold"
+                          />
                           <div className="min-w-0">
                             <p className="truncate text-[15px] font-semibold text-slate-800 dark:text-white">{displayNama}</p>
                             <p className="mt-0.5 font-mono text-[13px] text-slate-500 dark:text-slate-400">{s.nis}</p>

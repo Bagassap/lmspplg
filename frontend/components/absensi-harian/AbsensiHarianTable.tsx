@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { Users, Eye, Camera, PenTool, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageSizeToggle } from "@/components/shared/PageSizeToggle";
+import { Avatar } from "@/components/shared/Avatar";
 import { StatusBadge } from "./StatusBadge";
-import { STATUS_CFG, PULANG_CFG, getInitials, avatarColor, parseLokasi } from "./shared";
+import { STATUS_CFG, PULANG_CFG, avatarColor, parseLokasi } from "./shared";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "./types";
 
 const GRID_COLS = "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 96px";
@@ -104,9 +105,13 @@ export function AbsensiHarianTable({
                   className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
                   style={{ gridTemplateColumns: GRID_COLS }}>
                   <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tableStart + idx}</span>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full text-[10px] font-extrabold text-white shrink-0" style={{ backgroundColor: ac }}>
-                    {getInitials(s.nama)}
-                  </div>
+                  <Avatar
+                    src={s.fotoProfil}
+                    nama={s.nama}
+                    sizePx={36}
+                    fallbackBg={ac}
+                    textClassName="text-[10px] font-extrabold"
+                  />
                   <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
                   <p className="truncate text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
                   {isPulangView ? (

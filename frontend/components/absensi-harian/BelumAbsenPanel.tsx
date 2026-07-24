@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { ChevronDown, PartyPopper } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { STATUS_CFG, PULANG_CFG, getInitials } from "./shared";
+import { STATUS_CFG, PULANG_CFG } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 import type { SiswaAbsensi } from "./types";
 
 function CollapsibleList({
@@ -60,10 +61,13 @@ function CollapsibleList({
               {items.map((s) => (
                 <div key={s.siswaId}
                   className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-                    style={{ backgroundColor: avatarColorFor(s.nama) }}>
-                    {getInitials(s.nama)}
-                  </div>
+                  <Avatar
+                    src={s.fotoProfil}
+                    nama={s.nama}
+                    sizePx={32}
+                    fallbackBg={avatarColorFor(s.nama)}
+                    textClassName="text-[10px] font-extrabold"
+                  />
                   <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{s.nama}</span>
                   <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500 dark:bg-slate-700/50 dark:text-slate-400">
                     {s.nis ?? "—"}
