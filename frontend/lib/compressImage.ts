@@ -10,11 +10,28 @@ const DEFAULTS: Required<CompressOptions> = {
   mimeType: "image/jpeg",
 };
 
+// Upper bound passed to createImageBitmap's own resize step, well above
+// DEFAULTS.maxDim. A modern phone camera photo can be 4000-8000px on its
+// long side — decoding that at full resolution before our canvas resize
+// step briefly holds the ENTIRE raw bitmap in memory (a 12MP photo alone is
+// ~48MB as raw RGBA, more for higher-MP sensors). On a device that's low on
+// free storage, Android also tends to be low on free RAM (aggressive
+// swap/cache eviction on cheap hardware), so this decode is the step most
+// likely to fail first — before compression ever gets a chance to shrink
+// anything. Asking the browser to resize *during* decode (which browsers
+// with a scaled/progressive JPEG decoder can do without ever materializing
+// the full-resolution buffer) keeps peak memory bounded from the very first
+// moment the file is touched, not after.
+const DECODE_RESIZE_CAP = 2048;
+
 /**
  * Resizes and re-encodes an image file on the client before upload, so a
  * multi-MB camera photo is never held in memory (or sent over the network)
  * at full resolution — full-resolution decode is what throws "out of
- * memory" on low-RAM Android devices.
+ * memory" on low-RAM/low-storage Android devices. Never writes the original
+ * or any intermediate to localStorage/IndexedDB/Cache API — everything here
+ * stays in-memory (canvas + Blob) and is released as soon as this function
+ * returns.
  */
 export async function compressImage(file: File, options: CompressOptions = {}): Promise<File> {
   const { maxDim, quality, mimeType } = { ...DEFAULTS, ...options };
@@ -25,7 +42,17 @@ export async function compressImage(file: File, options: CompressOptions = {}): 
   let cleanup = () => {};
 
   if (typeof createImageBitmap === "function") {
-    const bitmap = await createImageBitmap(file);
+    let bitmap: ImageBitmap;
+    try {
+      // resizeWidth alone preserves aspect ratio (per spec) — this is the
+      // "compress as early as possible" step: the full-resolution image is
+      // never fully decoded before shrinking.
+      bitmap = await createImageBitmap(file, { resizeWidth: DECODE_RESIZE_CAP, resizeQuality: "medium" });
+    } catch {
+      // Some engines reject resize options for certain formats/orientations —
+      // fall back to a plain decode rather than failing the whole capture.
+      bitmap = await createImageBitmap(file);
+    }
     width = bitmap.width;
     height = bitmap.height;
     drawable = bitmap;
@@ -76,4 +103,39 @@ function loadImageElement(file: File): Promise<{ img: HTMLImageElement; url: str
     };
     img.src = url;
   });
+}
+
+/**
+ * Reads a (already-compressed) file into a data URL for preview, with a
+ * proper error path — a plain `reader.onload = ...` with no `onerror`
+ * silently leaves the caller's "processing" state stuck forever if the read
+ * fails (e.g. the device is critically low on memory right as the preview
+ * is generated).
+ */
+export function readAsDataUrl(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error ?? new Error("Gagal membaca hasil foto"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Turns a low-level capture/compress failure into a message a student can
+ * actually act on. We can't always tell "disk full" apart from "out of
+ * memory" from a caught JS error alone — browsers don't expose a clean
+ * signal for either, and on the low-end Android devices most students use,
+ * the two go hand in hand (aggressive storage-based swap/cache eviction
+ * means a nearly-full disk usually means a nearly-full memory budget too).
+ * So the message leads with the one the student can actually do something
+ * about — freeing up space — rather than a vague "something went wrong"
+ * that leaves them thinking the school's system is broken.
+ */
+export function describePhotoError(): { title: string; detail: string } {
+  return {
+    title: "Foto gagal diproses",
+    detail:
+      "Penyimpanan atau memori HP Anda kemungkinan penuh. Silakan hapus beberapa foto/aplikasi yang tidak terpakai di HP Anda, lalu coba ambil/unggah foto lagi.",
+  };
 }

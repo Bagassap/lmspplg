@@ -12,7 +12,7 @@ import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-import { compressImage } from "@/lib/compressImage";
+import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
 
 type StatusSaya = {
   sudahAbsen: boolean;
@@ -196,16 +196,19 @@ export default function SiswaAbsensiHarianPage() {
     if (!file) return;
     setCompressingFoto(true);
     try {
+      // Compress first — the original (possibly multi-MB) file is only ever
+      // held as a short-lived in-memory handle here, never written to
+      // localStorage/IndexedDB/any persistent storage, so nothing survives
+      // to accumulate across failed attempts.
       const compressed = await compressImage(file);
+      const preview = await readAsDataUrl(compressed);
       setFotoFile(compressed);
-      const reader = new FileReader();
-      reader.onload = () => setFotoPreview(reader.result as string);
-      reader.readAsDataURL(compressed);
+      setFotoPreview(preview);
     } catch {
-      toast.error(
-        "Foto gagal diproses",
-        "Perangkat mungkin kehabisan memori. Coba lagi, gunakan foto lain, atau tutup aplikasi lain lalu ulangi.",
-      );
+      const { title, detail } = describePhotoError();
+      toast.error(title, detail);
+      setFotoFile(null);
+      setFotoPreview(null);
     } finally {
       setCompressingFoto(false);
     }

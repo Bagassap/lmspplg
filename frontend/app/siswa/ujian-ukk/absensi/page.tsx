@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
-import { compressImage } from "@/lib/compressImage";
+import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
 
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
@@ -249,15 +249,14 @@ export default function SiswaUkkAbsensiPage() {
     setCompressingFoto(true);
     try {
       const compressed = await compressImage(file);
+      const preview = await readAsDataUrl(compressed);
       setFotoFile(compressed);
-      const reader = new FileReader();
-      reader.onload = ev => setFotoPreview(ev.target?.result as string);
-      reader.readAsDataURL(compressed);
+      setFotoPreview(preview);
     } catch {
-      toast.error(
-        "Foto gagal diproses",
-        "Perangkat mungkin kehabisan memori. Coba lagi, gunakan foto lain, atau tutup aplikasi lain lalu ulangi.",
-      );
+      const { title, detail } = describePhotoError();
+      toast.error(title, detail);
+      setFotoFile(null);
+      setFotoPreview("");
     } finally {
       setCompressingFoto(false);
     }
