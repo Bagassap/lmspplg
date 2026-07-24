@@ -214,9 +214,7 @@ export default function SiswaAbsensiHarianPage() {
   async function handleSubmit() {
     if (!needsAction) return;
     const tipe = activeTipe;
-    if (tipe === "HADIR" || tipe === "PULANG") {
-      if (!lokasi) { toast.error("Lokasi (GPS) wajib diisi", ""); return; }
-    }
+    if (!lokasi) { toast.error("Lokasi (GPS) wajib diisi", ""); return; }
     if (tipe === "IZIN" || tipe === "SAKIT") {
       if (!catatan.trim()) { toast.error("Keterangan wajib diisi", ""); return; }
     }
@@ -558,7 +556,7 @@ function FormAbsen({
 }) {
   const isIzinSakit = activeTipe === "IZIN" || activeTipe === "SAKIT";
   const fotoMissing = !fotoPreview;
-  const lokasiMissing = !isIzinSakit && !lokasi;
+  const lokasiMissing = !lokasi;
   const ttdMissing = !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
   const disabled = submitting || compressingFoto || fotoMissing || lokasiMissing || ttdMissing || catatanMissing;
@@ -601,6 +599,34 @@ function FormAbsen({
     </div>
   );
 
+  const lokasiField = (
+    <div>
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+        <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
+      </p>
+      <div className={`flex h-18 items-center gap-2 rounded-xl border bg-slate-50 px-3 py-2.5 dark:bg-slate-900/40 ${
+        lokasiMissing ? "border-red-300 dark:border-red-800" : "border-slate-100 dark:border-slate-700"
+      }`}>
+        <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-red-400"} />
+        {lokasiLoading ? (
+          <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
+        ) : lokasi ? (
+          <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
+        ) : (
+          <div className="flex flex-1 items-center justify-between gap-2">
+            <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
+            <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-violet-500 hover:underline">
+              Coba lagi
+            </button>
+          </div>
+        )}
+      </div>
+      {lokasiMissing && !lokasiLoading && (
+        <p className="mt-1 text-[11px] font-semibold text-red-500">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
+      )}
+    </div>
+  );
+
   return (
     <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-3 px-5 pt-5">
@@ -639,39 +665,10 @@ function FormAbsen({
       )}
 
       <div className="space-y-4 px-5 pb-5">
-        {!isIzinSakit ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
-              </p>
-              <div className={`flex h-18 items-center gap-2 rounded-xl border bg-slate-50 px-3 py-2.5 dark:bg-slate-900/40 ${
-                lokasiMissing ? "border-red-300 dark:border-red-800" : "border-slate-100 dark:border-slate-700"
-              }`}>
-                <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-red-400"} />
-                {lokasiLoading ? (
-                  <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
-                ) : lokasi ? (
-                  <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
-                ) : (
-                  <div className="flex flex-1 items-center justify-between gap-2">
-                    <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-                    <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-violet-500 hover:underline">
-                      Coba lagi
-                    </button>
-                  </div>
-                )}
-              </div>
-              {lokasiMissing && !lokasiLoading && (
-                <p className="mt-1 text-[11px] font-semibold text-red-500">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
-              )}
-            </div>
-
-            {fotoField}
-          </div>
-        ) : (
-          fotoField
-        )}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {lokasiField}
+          {fotoField}
+        </div>
 
         <div>
           <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
