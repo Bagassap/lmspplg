@@ -69,6 +69,10 @@ function pulangRange(): string {
 function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {
   if (window_ === "HADIR") return { label: "Jendela Absen Datang", range: "06:00 – 09:00 (Sen-Jum)" };
   if (window_ === "PULANG") return { label: "Jendela Absen Pulang", range: pulangRange() };
+  // TEMPORARY OVERRIDE — 2026-07-24: server membuka window Datang & Pulang
+  // bersamaan hari ini (lihat currentWindow() di absensi-harian.service.ts).
+  // Auto-hilang besok karena backend berhenti mengirim "BOTH".
+  if (window_ === "BOTH") return { label: "Absen Datang & Pulang Dibuka Bersamaan", range: "Hari ini s.d. 23:00 WIB" };
   return { label: "Di luar jam absensi", range: "Tidak ada jendela aktif" };
 }
 
@@ -134,8 +138,8 @@ export default function SiswaAbsensiHarianPage() {
     }
   }, [data]);
 
-  const needsActionDatang = window_ === "HADIR" && !data?.sudahAbsen;
-  const needsActionPulang = window_ === "PULANG" && !data?.sudahPulang;
+  const needsActionDatang = (window_ === "HADIR" || window_ === "BOTH") && !data?.sudahAbsen;
+  const needsActionPulang = (window_ === "PULANG" || window_ === "BOTH") && !data?.sudahPulang;
   const needsAction = activeTab === "DATANG" ? needsActionDatang : needsActionPulang;
   const activeTipe = activeTab === "PULANG" ? "PULANG" : statusPilihan;
 

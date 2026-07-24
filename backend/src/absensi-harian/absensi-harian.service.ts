@@ -21,13 +21,31 @@ export type RekapRangeData = {
   siswa: RangeSiswaRow[];
 };
 
-export type AbsenWindow = 'HADIR' | 'PULANG' | 'CLOSED';
+export type AbsenWindow = 'HADIR' | 'PULANG' | 'BOTH' | 'CLOSED';
+
+// TEMPORARY OVERRIDE — 2026-07-24: gangguan teknis pagi ini membuat siswa
+// tidak bisa absen Datang tepat waktu, dan jendela Datang (06.00-09.00) sudah
+// tertutup saat perbaikan ini dibuat. Untuk TANGGAL INI SAJA, window Datang
+// dan Pulang dibuka BERSAMAAN (sampai jam 23.00 WIB) supaya siswa tetap bisa
+// mencatat kehadiran hari ini. Aman dibiarkan di kode setelah tanggal ini
+// berlalu — perbandingan tanggal di bawah otomatis bernilai false untuk
+// hari-hari berikutnya, sehingga jadwal normal berlaku kembali TANPA perlu
+// deploy ulang atau tindakan manual apa pun. Boleh dihapus kapan saja setelah
+// 2026-07-24 kalau ingin membersihkan kode.
+const OVERRIDE_DATE = '2026-07-24';
+const OVERRIDE_END_MINUTES = 23 * 60; // 23.00 WIB
 
 // Absen datang: 06.00-09.00 WIB, Senin-Jumat.
 // Absen pulang: 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
 // Sabtu-Minggu tidak ada jendela absen sama sekali.
 function currentWindow(): AbsenWindow {
   const { hour, minute, dayOfWeek } = jakartaParts();
+
+  if (todayStr() === OVERRIDE_DATE) {
+    const minutesNow = hour * 60 + minute;
+    return minutesNow < OVERRIDE_END_MINUTES ? 'BOTH' : 'CLOSED';
+  }
+
   const minutesNow = hour * 60 + minute;
   const isMonFri = dayOfWeek >= 1 && dayOfWeek <= 5;
   const isMonThu = dayOfWeek >= 1 && dayOfWeek <= 4;
@@ -358,7 +376,7 @@ export class AbsensiHarianService {
     });
 
     if (tipe === 'PULANG') {
-      if (window !== 'PULANG') {
+      if (window !== 'PULANG' && window !== 'BOTH') {
         throw new ForbiddenException(
           window === 'HADIR'
             ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangWindowLabel()}`
@@ -386,7 +404,7 @@ export class AbsensiHarianService {
     }
 
     // HADIR / IZIN / SAKIT — one submission per day
-    if (window !== 'HADIR') {
+    if (window !== 'HADIR' && window !== 'BOTH') {
       throw new ForbiddenException('Absen datang hanya tersedia jam 06.00-09.00 WIB (Senin-Jumat)');
     }
     if (existing?.status) {

@@ -1,6 +1,6 @@
 export type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 export type FilterAbsensi = StatusAbsensi | "PULANG";
-export type AbsenWindow = "HADIR" | "PULANG" | "CLOSED";
+export type AbsenWindow = "HADIR" | "PULANG" | "BOTH" | "CLOSED";
 
 export type Kelas = {
   id: string;
