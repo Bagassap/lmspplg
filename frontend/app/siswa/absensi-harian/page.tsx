@@ -63,7 +63,16 @@ const INSECURE_CONTEXT_MSG = "Akses GPS memerlukan koneksi aman. Silakan buka me
 function isJakartaFriday(): boolean {
   return new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date()) === "Fri";
 }
+// TEMPORARY OVERRIDE — 2026-07-28: jendela Absen Pulang diperpanjang sampai
+// 20:00 HARI INI SAJA (lihat PULANG_EXTEND_DATE di absensi-harian.service.ts).
+// Auto-hilang besok karena perbandingan tanggal di bawah otomatis false.
+function isPulangExtendedToday(): boolean {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date()) === "2026-07-28";
+}
 function pulangRange(): string {
+  if (isPulangExtendedToday()) {
+    return isJakartaFriday() ? "11:00 – 20:00 (Jumat, hari ini diperpanjang)" : "14:00 – 20:00 (Sen-Kam, hari ini diperpanjang)";
+  }
   return isJakartaFriday() ? "11:00 – 12:00 (Jumat)" : "14:00 – 17:00 (Sen-Kam)";
 }
 function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {

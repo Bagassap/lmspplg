@@ -35,6 +35,17 @@ export type AbsenWindow = 'HADIR' | 'PULANG' | 'BOTH' | 'CLOSED';
 const OVERRIDE_DATE = '2026-07-24';
 const OVERRIDE_END_MINUTES = 23 * 60; // 23.00 WIB
 
+// TEMPORARY OVERRIDE — 2026-07-28: permintaan khusus untuk memperpanjang
+// jendela Absen Pulang HARI INI SAJA sampai jam 20.00 WIB (bukan jam tutup
+// normal 17.00 Senin-Kamis / 12.00 Jumat). Jendela Absen Datang TIDAK
+// terpengaruh. Aman dibiarkan di kode setelah tanggal ini berlalu —
+// perbandingan tanggal di bawah otomatis bernilai false untuk hari-hari
+// berikutnya, sehingga jadwal normal berlaku kembali TANPA perlu deploy ulang
+// atau tindakan manual apa pun. Boleh dihapus kapan saja setelah 2026-07-28
+// kalau ingin membersihkan kode.
+const PULANG_EXTEND_DATE = '2026-07-28';
+const PULANG_EXTEND_END_MINUTES = 20 * 60; // 20.00 WIB
+
 // Absen datang: 06.00-09.00 WIB, Senin-Jumat.
 // Absen pulang: 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
 // Sabtu-Minggu tidak ada jendela absen sama sekali.
@@ -50,15 +61,19 @@ function currentWindow(): AbsenWindow {
   const isMonFri = dayOfWeek >= 1 && dayOfWeek <= 5;
   const isMonThu = dayOfWeek >= 1 && dayOfWeek <= 4;
   const isFriday = dayOfWeek === 5;
+  const pulangExtendedToday = todayStr() === PULANG_EXTEND_DATE;
 
   if (isMonFri && minutesNow >= 6 * 60 && minutesNow < 9 * 60) return 'HADIR';
-  if (isMonThu && minutesNow >= 14 * 60 && minutesNow < 17 * 60) return 'PULANG';
-  if (isFriday && minutesNow >= 11 * 60 && minutesNow < 12 * 60) return 'PULANG';
+  if (isMonThu && minutesNow >= 14 * 60 && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 17 * 60)) return 'PULANG';
+  if (isFriday && minutesNow >= 11 * 60 && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 12 * 60)) return 'PULANG';
   return 'CLOSED';
 }
 
 function pulangWindowLabel(): string {
   const { dayOfWeek } = jakartaParts();
+  if (todayStr() === PULANG_EXTEND_DATE) {
+    return dayOfWeek === 5 ? '11.00-20.00 WIB (Jumat, hari ini diperpanjang)' : '14.00-20.00 WIB (Senin-Kamis, hari ini diperpanjang)';
+  }
   return dayOfWeek === 5 ? '11.00-12.00 WIB (Jumat)' : '14.00-17.00 WIB (Senin-Kamis)';
 }
 
