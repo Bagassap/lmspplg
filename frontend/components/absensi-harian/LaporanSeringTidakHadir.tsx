@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingDown, ShieldCheck, Medal } from "lucide-react";
+import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { formatTgl } from "./shared";
-import type { Kelas, LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
+import { formatTgl, CARD_GRADIENTS } from "./shared";
+import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
 
 const RANK_STYLE = [
   { bg: "#FFF6DF", clr: "#C99A1C" }, // gold
@@ -29,17 +29,40 @@ function RankBadge({ index }: { index: number }) {
   );
 }
 
-export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
+function StatGradientCard({
+  icon: Icon, gradient, value, label,
+}: {
+  icon: React.ElementType;
+  gradient: string;
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl p-4 shadow-sm" style={{ background: gradient }}>
+      <div className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+      <div className="relative flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate text-2xl font-black leading-none text-white">{value}</p>
+          <p className="mt-1.5 truncate text-[11px] font-bold text-white/75">{label}</p>
+        </div>
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+          <Icon size={18} className="text-white" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: string; kelasNama?: string }) {
   const [periode, setPeriode] = useState<PeriodeLaporan>("mingguan");
-  const [kelasId, setKelasId] = useState<string>("");
   const [data, setData] = useState<LaporanData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!kelasId) { setData(null); setLoading(false); return; }
     let cancelled = false;
     setLoading(true);
-    const qs = new URLSearchParams({ periode });
-    if (kelasId) qs.set("kelasId", kelasId);
+    const qs = new URLSearchParams({ periode, kelasId });
     fetch(`/api/absensi-harian/laporan-sering-tidak-hadir?${qs}`)
       .then((r) => r.json())
       .then((d) => { if (!cancelled) setData(d && Array.isArray(d.siswa) ? d : null); })
@@ -63,53 +86,35 @@ export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
             <TrendingDown size={17} className="text-red-500" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Siswa Sering Tidak Hadir</p>
+            <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
+              Siswa Sering Tidak Hadir{kelasNama ? ` · ${kelasNama}` : ""}
+            </p>
             <p className="truncate text-[11px] text-slate-400">
               {data ? `${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {kelasList.length > 1 && (
-            <select value={kelasId} onChange={(e) => setKelasId(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
-              <option value="">Semua Kelas</option>
-              {kelasList.map((k) => (
-                <option key={k.id} value={k.id}>{k.nama}</option>
-              ))}
-            </select>
-          )}
-          <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
-            {([
-              { key: "mingguan", label: "7 Hari" },
-              { key: "bulanan", label: "30 Hari" },
-            ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
-              <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
-                className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
-                  periode === opt.key
-                    ? "bg-white text-violet-600 shadow-sm dark:bg-slate-800"
-                    : "text-slate-500 dark:text-slate-400"
-                }`}>
-                {opt.label}
-              </button>
-            ))}
-          </div>
+        <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
+          {([
+            { key: "mingguan", label: "7 Hari" },
+            { key: "bulanan", label: "30 Hari" },
+          ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
+            <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
+              className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
+                periode === opt.key
+                  ? "bg-white text-violet-600 shadow-sm dark:bg-slate-800"
+                  : "text-slate-500 dark:text-slate-400"
+              }`}>
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#FFE9EA" }}>
-          <p className="text-2xl font-black leading-none" style={{ color: "#FF3644" }}>{totalBermasalah}</p>
-          <p className="mt-1 text-[11px] font-bold" style={{ color: "#FF364499" }}>Siswa Bermasalah</p>
-        </div>
-        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#FFF5DC" }}>
-          <p className="text-2xl font-black leading-none" style={{ color: "#E6A800" }}>{alpaTertinggi}x</p>
-          <p className="mt-1 text-[11px] font-bold" style={{ color: "#E6A80099" }}>Alpa Terbanyak</p>
-        </div>
-        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#EAF1FF" }}>
-          <p className="text-2xl font-black leading-none" style={{ color: "#3B7CE8" }}>{rataKehadiran}%</p>
-          <p className="mt-1 text-[11px] font-bold" style={{ color: "#3B7CE899" }}>Rata-rata Kehadiran</p>
-        </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <StatGradientCard icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Siswa Bermasalah" />
+        <StatGradientCard icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+        <StatGradientCard icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata-rata Kehadiran" />
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">

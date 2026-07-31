@@ -417,7 +417,7 @@ export default function AdminAbsensiHarianPage() {
 
         <BelumAbsenPanel siswaList={siswaList} />
 
-        <LaporanSeringTidakHadir kelasList={kelasList} />
+        <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
       </div>
 
       <AnimatePresence>

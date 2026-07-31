@@ -249,7 +249,7 @@ export default function GuruAbsensiHarianPage() {
 
         <BelumAbsenPanel siswaList={siswaList} />
 
-        <LaporanSeringTidakHadir kelasList={kelasList} />
+        <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
       </div>
 
       <AnimatePresence>
