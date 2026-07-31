@@ -216,10 +216,6 @@ export default function GuruAbsensiHarianPage() {
           })}
         </div>
 
-        <LaporanSeringTidakHadir kelasList={kelasList} />
-
-        <BelumAbsenPanel siswaList={siswaList} />
-
         {activeFilter && (
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span>Menampilkan siswa dengan status</span>
@@ -250,6 +246,10 @@ export default function GuruAbsensiHarianPage() {
             onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
           />
         </div>
+
+        <BelumAbsenPanel siswaList={siswaList} />
+
+        <LaporanSeringTidakHadir kelasList={kelasList} />
       </div>
 
       <AnimatePresence>
