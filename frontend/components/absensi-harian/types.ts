@@ -36,3 +36,30 @@ export type RekapKelas = {
   pulangCount: number;
   siswa: SiswaAbsensi[];
 };
+
+export type PeriodeLaporan = "mingguan" | "bulanan";
+
+export type LaporanSeringTidakHadirRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  fotoProfil: string | null;
+  kelasId: string;
+  kelasNama: string;
+  summary: {
+    HADIR: number;
+    IZIN: number;
+    SAKIT: number;
+    ALPA: number;
+    totalHariEfektif: number;
+    persentaseKehadiran: number;
+  };
+};
+
+export type LaporanSeringTidakHadir = {
+  periode: PeriodeLaporan;
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: LaporanSeringTidakHadirRow[];
+};

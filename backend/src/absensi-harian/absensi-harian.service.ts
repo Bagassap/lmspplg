@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
-import { jakartaParts, todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange } from '../common/utils/jakarta-date.util';
+import { jakartaParts, todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange, addDaysUTC } from '../common/utils/jakarta-date.util';
 
 export type RangeSiswaSummary = { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
 export type RangeSiswaRow = {
@@ -22,6 +22,23 @@ export type RekapRangeData = {
 };
 
 export type AbsenWindow = 'HADIR' | 'PULANG' | 'BOTH' | 'CLOSED';
+
+export type LaporanSeringTidakHadirRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  fotoProfil: string | null;
+  kelasId: string;
+  kelasNama: string;
+  summary: RangeSiswaSummary;
+};
+export type LaporanSeringTidakHadir = {
+  periode: 'mingguan' | 'bulanan';
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: LaporanSeringTidakHadirRow[];
+};
 
 // TEMPORARY OVERRIDE — 2026-07-24: gangguan teknis pagi ini membuat siswa
 // tidak bisa absen Datang tepat waktu, dan jendela Datang (06.00-09.00) sudah
@@ -173,6 +190,72 @@ export class AbsensiHarianService {
 
     if (kelasId) return [await this.getRekapKelas(kelasId, tanggal)];
     return this.getAllRekap(tanggal, userId, role);
+  }
+
+  // "Sering tidak hadir" = siswa dengan minimal satu catatan Alpa dalam
+  // rolling window 7 hari (mingguan) atau 30 hari (bulanan) terakhir
+  // (hari ini inklusif), bukan minggu/bulan kalender — supaya laporan tetap
+  // relevan berapa pun tanggal hari ini. Diurutkan dari yang paling sering
+  // alpa. Hanya hari efektif (Senin-Jumat) yang dihitung, sama seperti rekap
+  // range lainnya.
+  async getLaporanSeringTidakHadir(
+    userId: string,
+    role: string,
+    periode: 'mingguan' | 'bulanan',
+    kelasId?: string,
+  ): Promise<LaporanSeringTidakHadir> {
+    const end = todayStr();
+    const start = addDaysUTC(end, periode === 'bulanan' ? -29 : -6);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    let kelasIds: string[];
+    if (role === 'GURU') {
+      const myKelasIds = await this.kelasService.getGuruKelasIds(userId);
+      if (kelasId) {
+        if (!myKelasIds.includes(kelasId)) {
+          throw new ForbiddenException('Anda bukan wali kelas untuk kelas ini');
+        }
+        kelasIds = [kelasId];
+      } else {
+        kelasIds = myKelasIds;
+      }
+    } else if (kelasId) {
+      kelasIds = [kelasId];
+    } else {
+      kelasIds = (await this.prisma.kelas.findMany({ select: { id: true } })).map((k) => k.id);
+    }
+
+    if (kelasIds.length === 0) {
+      return { periode, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa: [] };
+    }
+
+    const siswaList = await this.prisma.siswa.findMany({
+      where: { kelasId: { in: kelasIds } },
+      include: { user: { select: { nama: true, fotoProfil: true } }, kelas: { select: { nama: true } } },
+      orderBy: { nama: 'asc' },
+    });
+    const records = tanggalList.length > 0
+      ? await this.prisma.absensiHarian.findMany({ where: { kelasId: { in: kelasIds }, tanggal: { in: tanggalList } } })
+      : [];
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+
+    const siswa = siswaList
+      .map((s) => {
+        const row = this.buildRangeSiswaRow(s.id, s.user?.nama ?? s.nama, s.nis, tanggalList, recMap);
+        return {
+          siswaId: row.siswaId,
+          nama: row.nama,
+          nis: row.nis,
+          fotoProfil: s.user?.fotoProfil ?? null,
+          kelasId: s.kelasId,
+          kelasNama: s.kelas?.nama ?? '-',
+          summary: row.summary,
+        };
+      })
+      .filter((r) => r.summary.ALPA > 0)
+      .sort((a, b) => b.summary.ALPA - a.summary.ALPA || a.summary.persentaseKehadiran - b.summary.persentaseKehadiran);
+
+    return { periode, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa };
   }
 
   async getRekapKelasForExport(kelasId: string, tanggal: string, userId: string, role: string) {

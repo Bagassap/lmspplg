@@ -226,6 +226,18 @@ export class AbsensiHarianController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
+  @Get('laporan-sering-tidak-hadir')
+  getLaporanSeringTidakHadir(
+    @Query('periode') periode: string,
+    @Query('kelasId') kelasId: string,
+    @Request() req: any,
+  ) {
+    const p = periode === 'bulanan' ? 'bulanan' : 'mingguan';
+    return this.service.getLaporanSeringTidakHadir(req.user.id, req.user.role, p, kelasId || undefined);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
   @Get()
   getAbsensi(
     @Query('tanggal') tanggal: string,

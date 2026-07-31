@@ -81,3 +81,12 @@ export function monthToDateRange(bulan: number, tahun: number): { start: string;
   const lastDay = new Date(Date.UTC(tahun, bulan, 0)).getUTCDate();
   return { start: `${tahun}-${pad2(bulan)}-01`, end: `${tahun}-${pad2(bulan)}-${pad2(lastDay)}` };
 }
+
+// `dateStr` shifted by `deltaDays` (negative to go back), as a yyyy-mm-dd
+// string. UTC-anchored like the helpers above so it can't be skewed by the
+// host's own timezone.
+export function addDaysUTC(dateStr: string, deltaDays: number): string {
+  const d = parseIsoDateUTC(dateStr);
+  d.setUTCDate(d.getUTCDate() + deltaDays);
+  return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+}
