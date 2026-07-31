@@ -216,9 +216,9 @@ export default function GuruAbsensiHarianPage() {
           })}
         </div>
 
-        <BelumAbsenPanel siswaList={siswaList} />
-
         <LaporanSeringTidakHadir kelasList={kelasList} />
+
+        <BelumAbsenPanel siswaList={siswaList} />
 
         {activeFilter && (
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">

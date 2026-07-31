@@ -1,11 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingDown, ShieldCheck } from "lucide-react";
+import { TrendingDown, ShieldCheck, Medal } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { formatTgl } from "./shared";
 import type { Kelas, LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
+
+const RANK_STYLE = [
+  { bg: "#FFF6DF", clr: "#C99A1C" }, // gold
+  { bg: "#F1F3F7", clr: "#8A96AC" }, // silver
+  { bg: "#FCEEE3", clr: "#C97A3D" }, // bronze
+];
+
+function RankBadge({ index }: { index: number }) {
+  if (index < 3) {
+    const style = RANK_STYLE[index];
+    return (
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: style.bg }}>
+        <Medal size={15} style={{ color: style.clr }} />
+      </span>
+    );
+  }
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[11px] font-extrabold text-slate-400 dark:bg-slate-700/50 dark:text-slate-500">
+      {index + 1}
+    </span>
+  );
+}
 
 export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
   const [periode, setPeriode] = useState<PeriodeLaporan>("mingguan");
@@ -27,16 +49,21 @@ export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
   }, [periode, kelasId]);
 
   const rows = data?.siswa ?? [];
+  const totalBermasalah = rows.length;
+  const alpaTertinggi = rows.reduce((m, r) => Math.max(m, r.summary.ALPA), 0);
+  const rataKehadiran = rows.length > 0
+    ? Math.round((rows.reduce((s, r) => s + r.summary.persentaseKehadiran, 0) / rows.length) * 10) / 10
+    : 0;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-50 px-4 py-3.5 dark:border-slate-700/40">
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
-            <TrendingDown size={16} className="text-red-500" />
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
+            <TrendingDown size={17} className="text-red-500" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">Siswa Sering Tidak Hadir</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Siswa Sering Tidak Hadir</p>
             <p className="truncate text-[11px] text-slate-400">
               {data ? `${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}
             </p>
@@ -45,7 +72,7 @@ export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
         <div className="flex flex-wrap items-center gap-2">
           {kelasList.length > 1 && (
             <select value={kelasId} onChange={(e) => setKelasId(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+              className="rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
               <option value="">Semua Kelas</option>
               {kelasList.map((k) => (
                 <option key={k.id} value={k.id}>{k.nama}</option>
@@ -70,43 +97,61 @@ export function LaporanSeringTidakHadir({ kelasList }: { kelasList: Kelas[] }) {
         </div>
       </div>
 
-      {loading ? (
-        <div className="py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
-      ) : rows.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 py-10 text-center">
-          <ShieldCheck size={22} className="text-emerald-400" />
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-            Tidak ada siswa dengan catatan alpa pada periode ini
-          </p>
+      <div className="grid grid-cols-3 gap-3">
+        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#FFE9EA" }}>
+          <p className="text-2xl font-black leading-none" style={{ color: "#FF3644" }}>{totalBermasalah}</p>
+          <p className="mt-1 text-[11px] font-bold" style={{ color: "#FF364499" }}>Siswa Bermasalah</p>
         </div>
-      ) : (
-        <div className="thin-scrollbar max-h-96 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/30">
-          {rows.map((r, i) => (
-            <div key={r.siswaId} className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
-              <span className="w-5 shrink-0 text-center text-[11px] font-extrabold text-slate-300">{i + 1}</span>
-              <Avatar
-                src={r.fotoProfil}
-                nama={r.nama ?? "-"}
-                sizePx={32}
-                fallbackBg={avatarColorFor(r.nama ?? "-")}
-                textClassName="text-[10px] font-extrabold"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
-                <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                <span className="rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
+        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#FFF5DC" }}>
+          <p className="text-2xl font-black leading-none" style={{ color: "#E6A800" }}>{alpaTertinggi}x</p>
+          <p className="mt-1 text-[11px] font-bold" style={{ color: "#E6A80099" }}>Alpa Terbanyak</p>
+        </div>
+        <div className="rounded-2xl px-4 py-3.5 shadow-sm" style={{ backgroundColor: "#EAF1FF" }}>
+          <p className="text-2xl font-black leading-none" style={{ color: "#3B7CE8" }}>{rataKehadiran}%</p>
+          <p className="mt-1 text-[11px] font-bold" style={{ color: "#3B7CE899" }}>Rata-rata Kehadiran</p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        {loading ? (
+          <div className="py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
+        ) : rows.length === 0 ? (
+          <div className="flex flex-col items-center gap-2 py-10 text-center">
+            <ShieldCheck size={22} className="text-emerald-400" />
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Tidak ada siswa dengan catatan alpa pada periode ini
+            </p>
+          </div>
+        ) : (
+          <div className="thin-scrollbar max-h-96 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/30">
+            {rows.map((r, i) => (
+              <div key={r.siswaId} className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                <RankBadge index={i} />
+                <Avatar
+                  src={r.fotoProfil}
+                  nama={r.nama ?? "-"}
+                  sizePx={34}
+                  fallbackBg={avatarColorFor(r.nama ?? "-")}
+                  textClassName="text-[10px] font-extrabold"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                  <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
+                      <span className="block h-full rounded-full bg-emerald-400 transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%` }} />
+                    </span>
+                    <span className="w-9 shrink-0 text-right text-[10px] font-bold text-slate-400">{r.summary.persentaseKehadiran}%</span>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
                   {r.summary.ALPA}x Alpa
                 </span>
-                <span className="w-11 shrink-0 text-right text-[11px] font-bold text-slate-400">
-                  {r.summary.persentaseKehadiran}%
-                </span>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
