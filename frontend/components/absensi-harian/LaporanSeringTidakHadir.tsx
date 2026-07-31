@@ -39,7 +39,7 @@ function severityColor(pct: number) {
   return "#3B7CE8";
 }
 
-function StatGradientCard({
+function StatPill({
   icon: Icon, gradient, value, label,
 }: {
   icon: React.ElementType;
@@ -48,16 +48,13 @@ function StatGradientCard({
   label: string;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-4 shadow-sm" style={{ background: gradient }}>
-      <div className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
-      <div className="relative flex items-center justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate text-2xl font-black leading-none text-white">{value}</p>
-          <p className="mt-1.5 truncate text-[11px] font-bold text-white/75">{label}</p>
-        </div>
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-          <Icon size={18} className="text-white" />
-        </div>
+    <div className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-1.5 shadow-sm" style={{ background: gradient }}>
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+        <Icon size={14} className="text-white" />
+      </div>
+      <div className="leading-tight">
+        <p className="text-sm font-black text-white">{value}</p>
+        <p className="whitespace-nowrap text-[9px] font-bold text-white/75">{label}</p>
       </div>
     </div>
   );
@@ -91,7 +88,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex min-w-0 items-center gap-2.5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
             <TrendingDown size={17} className="text-red-500" />
@@ -105,27 +102,28 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
             </p>
           </div>
         </div>
-        <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
-          {([
-            { key: "mingguan", label: "7 Hari" },
-            { key: "bulanan", label: "30 Hari" },
-          ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
-            <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
-              className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
-                periode === opt.key
-                  ? "bg-white text-violet-600 shadow-sm dark:bg-slate-800"
-                  : "text-slate-500 dark:text-slate-400"
-              }`}>
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <StatGradientCard icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Siswa Bermasalah" />
-        <StatGradientCard icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-        <StatGradientCard icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata-rata Kehadiran" />
+        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+          <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Bermasalah" />
+          <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+          <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata Hadir" />
+
+          <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
+            {([
+              { key: "mingguan", label: "7 Hari" },
+              { key: "bulanan", label: "30 Hari" },
+            ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
+              <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
+                className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
+                  periode === opt.key
+                    ? "bg-white text-violet-600 shadow-sm dark:bg-slate-800"
+                    : "text-slate-500 dark:text-slate-400"
+                }`}>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
