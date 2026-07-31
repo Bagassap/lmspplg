@@ -87,8 +87,8 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
     : 0;
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex flex-wrap items-center gap-3 px-4 py-3.5">
         <div className="flex min-w-0 items-center gap-2.5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
             <TrendingDown size={17} className="text-red-500" />
@@ -126,17 +126,16 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <button type="button" onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
-          <span className="flex items-center gap-2.5">
-            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Daftar Siswa</span>
-            <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-extrabold text-white">{rows.length}</span>
-          </span>
-          <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-        </button>
+      <button type="button" onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-3 border-t border-slate-50 px-4 py-3.5 text-left transition-colors hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+        <span className="flex items-center gap-2.5">
+          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Daftar Siswa</span>
+          <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-extrabold text-white">{rows.length}</span>
+        </span>
+        <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
 
-        {open && (
+      {open && (
           <div className="border-t border-slate-50 dark:border-slate-700/40">
             {loading ? (
               <div className="py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
@@ -196,7 +195,6 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
             )}
           </div>
         )}
-      </div>
     </div>
   );
 }
