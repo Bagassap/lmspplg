@@ -57,25 +57,19 @@ function CollapsibleList({
               <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{emptyMessage}</p>
             </div>
           ) : (
-            <div className="thin-scrollbar grid max-h-72 grid-cols-2 gap-2 overflow-y-auto p-3 sm:grid-cols-3">
-              {items.map((s, i) => (
+            <div className="thin-scrollbar max-h-60 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/30">
+              {items.map((s) => (
                 <div key={s.siswaId}
-                  className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5 hover:shadow-sm ${
-                    i % 2 === 0
-                      ? "border-transparent"
-                      : "border-slate-100 bg-slate-50 dark:border-slate-700/40 dark:bg-slate-900/30"
-                  }`}
-                  style={i % 2 === 0 ? { borderColor: `${iconColor}22`, backgroundColor: `${iconColor}0F` } : undefined}>
+                  className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
                   <Avatar
                     src={s.fotoProfil}
                     nama={s.nama}
-                    sizePx={42}
+                    sizePx={32}
                     fallbackBg={avatarColorFor(s.nama)}
-                    textClassName="text-xs font-extrabold"
-                    ring={`0 0 0 2px ${iconColor}33`}
+                    textClassName="text-[10px] font-extrabold"
                   />
-                  <span className="line-clamp-2 text-[11px] font-semibold leading-tight text-slate-700 dark:text-slate-200">{s.nama}</span>
-                  <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold" style={{ backgroundColor: `${iconColor}1A`, color: iconColor }}>
+                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{s.nama}</span>
+                  <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500 dark:bg-slate-700/50 dark:text-slate-400">
                     {s.nis ?? "—"}
                   </span>
                 </div>
