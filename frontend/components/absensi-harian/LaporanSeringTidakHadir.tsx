@@ -13,6 +13,18 @@ const RANK_STYLE = [
   { bg: "#FCEEE3", clr: "#C97A3D" }, // bronze
 ];
 
+// Card accent varies with how bad the attendance actually is — red for
+// under 50%, amber for under 75%, blue for the rest — so the grid reads as
+// triaged by severity instead of a flat repeated pattern.
+const SEVERITY = [
+  { max: 50, bg: "#FFF3F3", border: "#FFD7D9", bar: "#FF3644", badgeBg: "#FFE9EA", badgeClr: "#FF3644" },
+  { max: 75, bg: "#FFFAEE", border: "#FBE7B2", bar: "#E6A800", badgeBg: "#FFF5DC", badgeClr: "#E6A800" },
+  { max: 101, bg: "#F2F6FF", border: "#DCE6FC", bar: "#3B7CE8", badgeBg: "#EAF1FF", badgeClr: "#3B7CE8" },
+];
+function severityFor(pct: number) {
+  return SEVERITY.find((s) => pct < s.max) ?? SEVERITY[SEVERITY.length - 1];
+}
+
 function RankBadge({ index }: { index: number }) {
   if (index < 3) {
     const style = RANK_STYLE[index];
@@ -117,46 +129,52 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
         <StatGradientCard icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata-rata Kehadiran" />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        {loading ? (
-          <div className="py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
-        ) : rows.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-10 text-center">
-            <ShieldCheck size={22} className="text-emerald-400" />
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              Tidak ada siswa dengan catatan alpa pada periode ini
-            </p>
-          </div>
-        ) : (
-          <div className="thin-scrollbar max-h-96 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/30">
-            {rows.map((r, i) => (
-              <div key={r.siswaId} className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                <RankBadge index={i} />
-                <Avatar
-                  src={r.fotoProfil}
-                  nama={r.nama ?? "-"}
-                  sizePx={34}
-                  fallbackBg={avatarColorFor(r.nama ?? "-")}
-                  textClassName="text-[10px] font-extrabold"
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
-                  <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
-                      <span className="block h-full rounded-full bg-emerald-400 transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%` }} />
-                    </span>
-                    <span className="w-9 shrink-0 text-right text-[10px] font-bold text-slate-400">{r.summary.persentaseKehadiran}%</span>
+      {loading ? (
+        <div className="rounded-2xl border border-slate-100 bg-white py-10 text-center text-xs font-semibold text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          Memuat data...
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-100 bg-white py-10 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <ShieldCheck size={22} className="text-emerald-400" />
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            Tidak ada siswa dengan catatan alpa pada periode ini
+          </p>
+        </div>
+      ) : (
+        <div className="thin-scrollbar grid max-h-[30rem] grid-cols-1 gap-2.5 overflow-y-auto p-0.5 sm:grid-cols-2 xl:grid-cols-3">
+          {rows.map((r, i) => {
+            const sev = severityFor(r.summary.persentaseKehadiran);
+            return (
+              <div key={r.siswaId} className="rounded-2xl border p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                style={{ backgroundColor: sev.bg, borderColor: sev.border }}>
+                <div className="flex items-center gap-2.5">
+                  <RankBadge index={i} />
+                  <Avatar
+                    src={r.fotoProfil}
+                    nama={r.nama ?? "-"}
+                    sizePx={36}
+                    fallbackBg={avatarColorFor(r.nama ?? "-")}
+                    textClassName="text-[10px] font-extrabold"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-700">{r.nama}</p>
+                    <p className="truncate text-[10px] text-slate-500">{r.kelasNama} · {r.nis ?? "—"}</p>
                   </div>
+                  <span className="shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold" style={{ backgroundColor: sev.badgeBg, color: sev.badgeClr }}>
+                    {r.summary.ALPA}x
+                  </span>
                 </div>
-                <span className="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
-                  {r.summary.ALPA}x Alpa
-                </span>
+                <div className="mt-2.5 flex items-center gap-2">
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/70">
+                    <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: sev.bar }} />
+                  </span>
+                  <span className="w-9 shrink-0 text-right text-[10px] font-bold" style={{ color: sev.bar }}>{r.summary.persentaseKehadiran}%</span>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
