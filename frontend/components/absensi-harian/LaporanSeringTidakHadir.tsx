@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, ChevronRight, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { formatTgl, CARD_GRADIENTS } from "./shared";
@@ -60,11 +61,11 @@ function StatPill({
   );
 }
 
-export function LaporanSeringTidakHadir({ kelasId, kelasNama, className }: { kelasId: string; kelasNama?: string; className?: string }) {
+export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: string; kelasNama?: string }) {
   const [periode, setPeriode] = useState<PeriodeLaporan>("mingguan");
   const [data, setData] = useState<LaporanData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (!kelasId) { setData(null); setLoading(false); return; }
@@ -87,114 +88,137 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, className }: { kel
     : 0;
 
   return (
-    <div className={`flex flex-col overflow-hidden rounded-2xl border border-red-100/70 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 ${className ?? ""}`}>
-      <div className="flex shrink-0 flex-wrap items-center gap-3 bg-gradient-to-r from-red-50/80 via-orange-50/40 to-transparent px-4 py-3.5 dark:from-red-900/10 dark:via-transparent dark:to-transparent">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
-            <TrendingDown size={17} className="text-red-500" />
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
-              Siswa Sering Tidak Hadir{kelasNama ? ` · ${kelasNama}` : ""}
-            </p>
-            <p className="truncate text-[11px] text-slate-400">
-              {data ? `${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
-          <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Bermasalah" />
-          <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-          <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata Hadir" />
-
-          <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
-            {([
-              { key: "mingguan", label: "7 Hari" },
-              { key: "bulanan", label: "30 Hari" },
-            ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
-              <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
-                className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
-                  periode === opt.key
-                    ? "bg-white text-violet-600 shadow-sm dark:bg-slate-800"
-                    : "text-slate-500 dark:text-slate-400"
-                }`}>
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <button type="button" onClick={() => setOpen((v) => !v)}
-        className="flex w-full shrink-0 items-center justify-between gap-3 border-t border-slate-50 px-4 py-3.5 text-left transition-colors hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
-        <span className="flex items-center gap-2.5">
-          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Daftar Siswa</span>
-          <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-extrabold text-white">{rows.length}</span>
+    <>
+      <button type="button" onClick={() => setShowModal(true)}
+        className="flex w-full items-center gap-3 rounded-2xl border border-red-200/50 bg-red-50/40 p-3.5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-red-900/30 dark:bg-red-900/10">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
+          <TrendingDown size={18} className="text-red-500" />
         </span>
-        <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">Siswa Sering Tidak Hadir</p>
+          <p className="truncate text-[11px] text-slate-400">
+            {loading ? "Memuat..." : `Rata-rata kehadiran ${rataKehadiran}%`}
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-extrabold text-white">
+          {totalBermasalah}
+        </span>
+        <ChevronRight size={15} className="shrink-0 text-slate-300" />
       </button>
 
-      {open && (
-        <div className="flex flex-1 min-h-0 flex-col border-t border-slate-50 dark:border-slate-700/40">
-          {loading ? (
-            <div className="flex-1 py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
-          ) : rows.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-2 py-10 text-center">
-              <ShieldCheck size={22} className="text-emerald-400" />
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                Tidak ada siswa dengan catatan alpa pada periode ini
-              </p>
-            </div>
-          ) : (
-            <div className="flex-1 min-h-0 overflow-x-auto">
-              <div className="flex h-full min-w-150 flex-col">
-                <div className="grid shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5 dark:border-slate-700/40"
-                  style={{ gridTemplateColumns: GRID_COLS }}>
-                  <span />
-                  <span />
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Siswa</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kelas</span>
-                  <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Alpa</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kehadiran</span>
+      <AnimatePresence>
+        {showModal && (
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setShowModal(false)} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ type: "spring", damping: 26, stiffness: 300 }}
+              className="relative z-10 flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
+
+              <div className="flex shrink-0 flex-wrap items-center gap-3 bg-gradient-to-r from-red-50 via-orange-50/60 to-transparent px-5 py-4 dark:from-red-900/15 dark:via-transparent dark:to-transparent">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30">
+                    <TrendingDown size={17} className="text-red-500" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-extrabold text-slate-700 dark:text-slate-200">
+                      Siswa Sering Tidak Hadir{kelasNama ? ` · ${kelasNama}` : ""}
+                    </p>
+                    <p className="truncate text-[11px] text-slate-400">
+                      {data ? `${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}
+                    </p>
+                  </div>
                 </div>
-                <div className="thin-scrollbar flex-1 min-h-24 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/30">
-                  {rows.map((r, i) => {
-                    const bar = severityColor(r.summary.persentaseKehadiran);
-                    return (
-                      <div key={r.siswaId}
-                        className="grid items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
-                        style={{ gridTemplateColumns: GRID_COLS }}>
-                        <RankBadge index={i} />
-                        <Avatar
-                          src={r.fotoProfil}
-                          nama={r.nama ?? "-"}
-                          sizePx={32}
-                          fallbackBg={avatarColorFor(r.nama ?? "-")}
-                          textClassName="text-[10px] font-extrabold"
-                        />
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
-                        </div>
-                        <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-                        <span className="mx-auto rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
-                          {r.summary.ALPA}x
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
-                            <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: bar }} />
-                          </span>
-                          <span className="w-9 shrink-0 text-right text-[10px] font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
-                        </div>
-                      </div>
-                    );
-                  })}
+
+                <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+                  <div className="flex rounded-xl bg-white/70 p-1 dark:bg-slate-800/60">
+                    {([
+                      { key: "mingguan", label: "7 Hari" },
+                      { key: "bulanan", label: "30 Hari" },
+                    ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
+                      <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
+                        className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
+                          periode === opt.key
+                            ? "bg-white text-violet-600 shadow-sm dark:bg-slate-700"
+                            : "text-slate-500 dark:text-slate-400"
+                        }`}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <button onClick={() => setShowModal(false)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-slate-500 hover:bg-white dark:bg-slate-800/60 dark:text-slate-300">
+                    <X size={15} />
+                  </button>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+
+              <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
+                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Bermasalah" />
+                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata Hadir" />
+              </div>
+
+              {loading ? (
+                <div className="flex-1 py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
+              ) : rows.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center gap-2 py-10 text-center">
+                  <ShieldCheck size={22} className="text-emerald-400" />
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    Tidak ada siswa dengan catatan alpa pada periode ini
+                  </p>
+                </div>
+              ) : (
+                <div className="flex-1 min-h-0 overflow-auto border-t border-slate-50 dark:border-slate-700/40">
+                  <div className="min-w-150">
+                    <div className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
+                      style={{ gridTemplateColumns: GRID_COLS }}>
+                      <span />
+                      <span />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Siswa</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kelas</span>
+                      <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Alpa</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kehadiran</span>
+                    </div>
+                    <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
+                      {rows.map((r, i) => {
+                        const bar = severityColor(r.summary.persentaseKehadiran);
+                        return (
+                          <div key={r.siswaId}
+                            className="grid items-center gap-3 px-5 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                            style={{ gridTemplateColumns: GRID_COLS }}>
+                            <RankBadge index={i} />
+                            <Avatar
+                              src={r.fotoProfil}
+                              nama={r.nama ?? "-"}
+                              sizePx={32}
+                              fallbackBg={avatarColorFor(r.nama ?? "-")}
+                              textClassName="text-[10px] font-extrabold"
+                            />
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                            </div>
+                            <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
+                            <span className="mx-auto rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
+                              {r.summary.ALPA}x
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
+                                <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: bar }} />
+                              </span>
+                              <span className="w-9 shrink-0 text-right text-[10px] font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
