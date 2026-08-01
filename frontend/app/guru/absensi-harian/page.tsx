@@ -185,71 +185,76 @@ export default function GuruAbsensiHarianPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
-            const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
-            const Icon = cfg.icon;
-            const count = key === "PULANG" ? pulangCount : rekap[key];
-            const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-            const active = activeFilter === key;
-            return (
-              <button key={key} type="button" onClick={() => toggleFilter(key)}
-                className={`flex min-w-0 items-center gap-2 rounded-2xl px-3 py-3 text-left shadow-sm transition-all sm:gap-3 sm:px-4 sm:py-3.5 ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
-                style={{
-                  backgroundColor: cfg.bg,
-                  outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
-                  outlineOffset: active ? "2px" : "0",
-                }}>
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11" style={{ backgroundColor: cfg.darkBg }}>
-                  <Icon size={18} className="sm:hidden" style={{ color: cfg.clr }} />
-                  <Icon size={20} className="hidden sm:block" style={{ color: cfg.clr }} />
-                </div>
-                <div className="flex min-w-0 flex-1 items-baseline gap-1.5 sm:gap-2">
-                  <span className="text-xl font-black leading-none sm:text-2xl" style={{ color: cfg.clr }}>{count}</span>
-                  <span className="truncate text-xs font-bold sm:text-sm" style={{ color: cfg.clr }}>{cfg.label}</span>
-                </div>
-                <div className="shrink-0 rounded-lg px-1.5 py-1 text-[9px] font-extrabold sm:px-2 sm:text-[10px]" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
-                  {pct}%
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
+          <div className="space-y-5 lg:col-span-2">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
+                const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
+                const Icon = cfg.icon;
+                const count = key === "PULANG" ? pulangCount : rekap[key];
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                const active = activeFilter === key;
+                return (
+                  <button key={key} type="button" onClick={() => toggleFilter(key)}
+                    className={`flex min-w-0 items-center gap-2 rounded-2xl px-3 py-3 text-left shadow-sm transition-all sm:gap-3 sm:px-4 sm:py-3.5 ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
+                    style={{
+                      backgroundColor: cfg.bg,
+                      outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
+                      outlineOffset: active ? "2px" : "0",
+                    }}>
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11" style={{ backgroundColor: cfg.darkBg }}>
+                      <Icon size={18} className="sm:hidden" style={{ color: cfg.clr }} />
+                      <Icon size={20} className="hidden sm:block" style={{ color: cfg.clr }} />
+                    </div>
+                    <div className="flex min-w-0 flex-1 items-baseline gap-1.5 sm:gap-2">
+                      <span className="text-xl font-black leading-none sm:text-2xl" style={{ color: cfg.clr }}>{count}</span>
+                      <span className="truncate text-xs font-bold sm:text-sm" style={{ color: cfg.clr }}>{cfg.label}</span>
+                    </div>
+                    <div className="shrink-0 rounded-lg px-1.5 py-1 text-[9px] font-extrabold sm:px-2 sm:text-[10px]" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
+                      {pct}%
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-        {activeFilter && (
-          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-            <span>Menampilkan siswa dengan status</span>
-            <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
-              style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).darkBg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
-              {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
-            </span>
-            <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-              (tampilkan semua)
-            </button>
+            {activeFilter && (
+              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <span>Menampilkan siswa dengan status</span>
+                <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
+                  style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).darkBg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
+                  {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
+                </span>
+                <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                  (tampilkan semua)
+                </button>
+              </div>
+            )}
+
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+              <AbsensiHarianTable
+                loading={loading}
+                hasSiswa={siswaList.length > 0}
+                filteredSiswa={filteredSiswa}
+                pagedSiswa={pagedSiswa}
+                tableStart={tableStart}
+                tableEnd={tableEnd}
+                activeFilter={activeFilter}
+                tablePage={tablePage}
+                setTablePage={setTablePage}
+                tablePageCount={tablePageCount}
+                tablePageSize={tablePageSize}
+                setTablePageSize={setTablePageSize}
+                onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+              />
+            </div>
           </div>
-        )}
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-          <AbsensiHarianTable
-            loading={loading}
-            hasSiswa={siswaList.length > 0}
-            filteredSiswa={filteredSiswa}
-            pagedSiswa={pagedSiswa}
-            tableStart={tableStart}
-            tableEnd={tableEnd}
-            activeFilter={activeFilter}
-            tablePage={tablePage}
-            setTablePage={setTablePage}
-            tablePageCount={tablePageCount}
-            tablePageSize={tablePageSize}
-            setTablePageSize={setTablePageSize}
-            onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-          />
+          <div className="space-y-5 lg:col-span-1">
+            <BelumAbsenPanel siswaList={siswaList} />
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
+          </div>
         </div>
-
-        <BelumAbsenPanel siswaList={siswaList} />
-
-        <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
       </div>
 
       <AnimatePresence>
