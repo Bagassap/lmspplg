@@ -8,6 +8,10 @@ import { avatarColorFor } from "@/components/data-siswa/shared";
 import { formatTgl, CARD_GRADIENTS } from "./shared";
 import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
 
+// Solid gradient (no alpha stops) for the trigger tile, distinct from the
+// red/blue used by BelumAbsenPanel's two triggers for visual variety.
+const TRIGGER_GRADIENT = "linear-gradient(135deg,#F97316,#EF4444)";
+
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
 const RANK_STYLE = [
@@ -26,7 +30,7 @@ function RankBadge({ index }: { index: number }) {
     );
   }
   return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[11px] font-extrabold text-slate-400 dark:bg-slate-700/50 dark:text-slate-500">
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[11px] font-extrabold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
       {index + 1}
     </span>
   );
@@ -41,21 +45,22 @@ function severityColor(pct: number) {
 }
 
 function StatPill({
-  icon: Icon, gradient, value, label,
+  icon: Icon, gradient, iconColor, value, label,
 }: {
   icon: React.ElementType;
   gradient: string;
+  iconColor: string;
   value: string;
   label: string;
 }) {
   return (
     <div className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-1.5 shadow-sm" style={{ background: gradient }}>
-      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
-        <Icon size={14} className="text-white" />
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white">
+        <Icon size={14} style={{ color: iconColor }} />
       </div>
       <div className="leading-tight">
         <p className="text-sm font-black text-white">{value}</p>
-        <p className="whitespace-nowrap text-[9px] font-bold text-white/75">{label}</p>
+        <p className="whitespace-nowrap text-[9px] font-bold text-white">{label}</p>
       </div>
     </div>
   );
@@ -90,48 +95,49 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
   return (
     <>
       <button type="button" onClick={() => setShowModal(true)}
-        className="flex w-full items-center gap-3 rounded-2xl border border-red-200/50 bg-red-50/40 p-3.5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-red-900/30 dark:bg-red-900/10">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20">
+        className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+        style={{ background: TRIGGER_GRADIENT }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
           <TrendingDown size={18} className="text-red-500" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">Siswa Sering Tidak Hadir</p>
-          <p className="truncate text-[11px] text-slate-400">
+          <p className="truncate text-sm font-extrabold text-white">Siswa Sering Tidak Hadir</p>
+          <p className="truncate text-[11px] font-semibold text-white">
             {loading ? "Memuat..." : `Rata-rata kehadiran ${rataKehadiran}%`}
           </p>
         </div>
-        <span className="shrink-0 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-extrabold text-white">
+        <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-red-500">
           {totalBermasalah}
         </span>
-        <ChevronRight size={15} className="shrink-0 text-slate-300" />
+        <ChevronRight size={15} className="shrink-0 text-white" />
       </button>
 
       <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowModal(false)} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+              onClick={() => setShowModal(false)} className="absolute inset-0 bg-slate-950" />
             <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
               transition={{ type: "spring", damping: 26, stiffness: 300 }}
               className="relative z-10 flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
 
-              <div className="flex shrink-0 flex-wrap items-center gap-3 bg-gradient-to-r from-red-50 via-orange-50/60 to-transparent px-5 py-4 dark:from-red-900/15 dark:via-transparent dark:to-transparent">
+              <div className="flex shrink-0 flex-wrap items-center gap-3 bg-gradient-to-r from-red-50 to-orange-50 px-5 py-4 dark:from-red-950 dark:to-orange-950">
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
                     <TrendingDown size={17} className="text-red-500" />
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-extrabold text-slate-700 dark:text-slate-200">
                       Siswa Sering Tidak Hadir{kelasNama ? ` · ${kelasNama}` : ""}
                     </p>
-                    <p className="truncate text-[11px] text-slate-400">
+                    <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
                       {data ? `${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
-                  <div className="flex rounded-xl bg-white/70 p-1 dark:bg-slate-800/60">
+                  <div className="flex rounded-xl bg-white p-1 dark:bg-slate-800">
                     {([
                       { key: "mingguan", label: "7 Hari" },
                       { key: "bulanan", label: "30 Hari" },
@@ -139,7 +145,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                       <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
                         className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
                           periode === opt.key
-                            ? "bg-white text-violet-600 shadow-sm dark:bg-slate-700"
+                            ? "bg-violet-500 text-white shadow-sm"
                             : "text-slate-500 dark:text-slate-400"
                         }`}>
                         {opt.label}
@@ -147,16 +153,16 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                     ))}
                   </div>
                   <button onClick={() => setShowModal(false)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-slate-500 hover:bg-white dark:bg-slate-800/60 dark:text-slate-300">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300">
                     <X size={15} />
                   </button>
                 </div>
               </div>
 
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
-                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} value={String(totalBermasalah)} label="Bermasalah" />
-                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} value={`${rataKehadiran}%`} label="Rata Hadir" />
+                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#EF4444" value={String(totalBermasalah)} label="Bermasalah" />
+                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#F59E0B" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#3B7CE8" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 
               {loading ? (
@@ -169,9 +175,9 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                   </p>
                 </div>
               ) : (
-                <div className="flex-1 min-h-0 overflow-auto border-t border-slate-50 dark:border-slate-700/40">
+                <div className="flex-1 min-h-0 overflow-auto border-t border-slate-100 dark:border-slate-700">
                   <div className="min-w-150">
-                    <div className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
+                    <div className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700"
                       style={{ gridTemplateColumns: GRID_COLS }}>
                       <span />
                       <span />
@@ -180,12 +186,12 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                       <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Alpa</span>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kehadiran</span>
                     </div>
-                    <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
+                    <div className="divide-y divide-slate-100 dark:divide-slate-700">
                       {rows.map((r, i) => {
                         const bar = severityColor(r.summary.persentaseKehadiran);
                         return (
                           <div key={r.siswaId}
-                            className="grid items-center gap-3 px-5 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                            className="grid items-center gap-3 px-5 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700"
                             style={{ gridTemplateColumns: GRID_COLS }}>
                             <RankBadge index={i} />
                             <Avatar
@@ -199,11 +205,11 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                               <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
                             </div>
                             <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-                            <span className="mx-auto rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-900/20">
+                            <span className="mx-auto rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-950">
                               {r.summary.ALPA}x
                             </span>
                             <div className="flex items-center gap-2">
-                              <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700/50">
+                              <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                                 <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: bar }} />
                               </span>
                               <span className="w-9 shrink-0 text-right text-[10px] font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
