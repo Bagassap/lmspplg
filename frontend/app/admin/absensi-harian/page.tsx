@@ -353,8 +353,8 @@ export default function AdminAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
-          <div className="space-y-5 lg:col-span-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <div className="flex flex-col gap-5 lg:col-span-2">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
                 const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
@@ -399,7 +399,13 @@ export default function AdminAbsensiHarianPage() {
               </div>
             )}
 
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-2xl border border-emerald-100/70 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="flex shrink-0 items-center gap-2.5 bg-gradient-to-r from-emerald-50/80 via-sky-50/40 to-transparent px-4 py-3 dark:from-emerald-900/10 dark:via-transparent dark:to-transparent">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-900/20">
+                  <ClipboardCheck size={15} className="text-emerald-500" />
+                </span>
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Status Kehadiran Hari Ini</p>
+              </div>
               <AbsensiHarianTable
                 loading={loading}
                 hasSiswa={siswaList.length > 0}
@@ -418,9 +424,9 @@ export default function AdminAbsensiHarianPage() {
             </div>
           </div>
 
-          <div className="space-y-5 lg:col-span-1">
+          <div className="flex flex-col gap-5 lg:col-span-1">
             <BelumAbsenPanel siswaList={siswaList} />
-            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} className="flex-1 min-h-0" />
           </div>
         </div>
       </div>
