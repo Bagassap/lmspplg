@@ -130,72 +130,46 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        {kelasList.length > 1 ? (
-          <div className="flex flex-col gap-4 sm:flex-row">
-            {(() => {
-              const idx = Math.max(0, kelasList.findIndex((k) => k.id === selectedKelas?.id));
-              return (
-                <motion.button type="button" whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-                  className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-5 text-left shadow-lg sm:w-2/5"
-                  style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
-                  <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
-                  <div className="pointer-events-none absolute -bottom-10 left-10 h-24 w-24 rounded-full bg-white/8" />
-                  <div className="relative flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-white">Kelas Wali</p>
-                      <p className="mt-1 truncate text-xl font-extrabold text-white">{selectedKelas?.nama}</p>
-                    </div>
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white">
-                      <GraduationCap size={20} style={{ color: CARD_ACCENT[idx % CARD_ACCENT.length] }} />
-                    </span>
-                  </div>
-                  <div className="relative mt-6">
-                    <p className="text-4xl font-black text-white">
-                      {sudahAbsen}<span className="ml-1 text-base font-bold text-white">/ {total}</span>
-                    </p>
-                    <p className="mt-1 text-xs font-semibold text-white">siswa sudah absen · {hadirPct}%</p>
-                  </div>
-                </motion.button>
-              );
-            })()}
-
-            <div className="grid flex-1 grid-cols-2 gap-4">
-              {kelasList.filter((k) => k.id !== selectedKelas?.id).map((k) => {
-                const idx = kelasList.findIndex((x) => x.id === k.id);
-                return (
-                  <motion.button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                    whileHover={{ y: -3 }} whileTap={{ scale: 0.96 }}
-                    className="flex flex-col justify-between overflow-hidden rounded-2xl p-3.5 text-left shadow-sm transition-all"
-                    style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
-                    <p className="truncate text-xs font-bold text-white">{k.nama}</p>
-                    <p className="mt-2 text-lg font-black text-white">
-                      {k._count?.siswa ?? 0}<span className="ml-1 text-[10px] font-bold text-white">siswa</span>
-                    </p>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-        ) : selectedKelas ? (
-          <div className="relative overflow-hidden rounded-2xl p-5 shadow-lg" style={{ background: CARD_GRADIENTS[0] }}>
-            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
-            <div className="relative flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white">
-                  <GraduationCap size={22} style={{ color: CARD_ACCENT[0] }} />
-                </span>
-                <div>
+        <div className={`grid grid-cols-2 gap-4 ${kelasList.length > 2 ? "sm:grid-cols-4" : "sm:grid-cols-2"}`}>
+          {kelasList.map((k, i) => {
+            const isSelected = k.id === selectedId;
+            return (
+              <motion.button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl p-4 text-left transition-all"
+                style={{
+                  background: CARD_GRADIENTS[i % CARD_GRADIENTS.length],
+                  outline: isSelected ? "3px solid white" : "3px solid transparent",
+                  boxShadow: isSelected
+                    ? "0 0 0 5px rgba(255,255,255,0.30),0 8px 32px rgba(0,0,0,0.18)"
+                    : "0 4px 16px rgba(0,0,0,0.10)",
+                }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                <div className="relative flex items-start justify-between">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-white">Kelas Wali</p>
-                  <p className="text-lg font-extrabold leading-tight text-white">{selectedKelas.nama}</p>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white">
+                    <GraduationCap size={16} style={{ color: CARD_ACCENT[i % CARD_ACCENT.length] }} />
+                  </span>
                 </div>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <span className="rounded-xl bg-white px-3 py-1 text-lg font-extrabold" style={{ color: CARD_ACCENT[0] }}>{hadirPct}%</span>
-                <span className="text-[10px] font-semibold text-white">{sudahAbsen}/{total} hadir</span>
-              </div>
-            </div>
-          </div>
-        ) : null}
+                <div className="relative">
+                  <p className="truncate text-sm font-extrabold text-white">{k.nama}</p>
+                  {isSelected ? (
+                    <>
+                      <p className="mt-1 text-2xl font-black text-white">
+                        {sudahAbsen}<span className="ml-1 text-sm font-bold text-white">/ {total}</span>
+                      </p>
+                      <p className="mt-0.5 text-[10px] font-semibold text-white">sudah absen · {hadirPct}%</p>
+                    </>
+                  ) : (
+                    <p className="mt-1 text-2xl font-black text-white">
+                      {k._count?.siswa ?? 0}<span className="ml-1 text-sm font-bold text-white">siswa</span>
+                    </p>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -215,58 +189,37 @@ export default function GuruAbsensiHarianPage() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
           <div className="space-y-5 lg:col-span-2">
-            <div className="flex flex-col gap-3.5 sm:flex-row">
-              <button type="button" onClick={() => toggleFilter("HADIR")}
-                className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-md transition-all sm:w-2/5"
-                style={{
-                  background: STATUS_GRADIENT.HADIR,
-                  outline: activeFilter === "HADIR" ? "3px solid white" : "3px solid transparent",
-                }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
-                <div className="relative flex items-center justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
-                    <STATUS_CFG.HADIR.icon size={20} style={{ color: STATUS_CFG.HADIR.clr }} />
-                  </span>
-                  <span className="rounded-lg bg-white px-2 py-1 text-xs font-extrabold" style={{ color: STATUS_CFG.HADIR.clr }}>
-                    {hadirPct}%
-                  </span>
-                </div>
-                <div className="relative mt-4">
-                  <p className="text-3xl font-black text-white">{rekap.HADIR}</p>
-                  <p className="text-xs font-bold text-white">{STATUS_CFG.HADIR.label}</p>
-                </div>
-              </button>
-
-              <div className="grid flex-1 grid-cols-2 gap-3.5">
-                {(["PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
-                  const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
-                  const gradient = key === "PULANG" ? PULANG_GRADIENT : STATUS_GRADIENT[key as keyof typeof STATUS_GRADIENT];
-                  const Icon = cfg.icon;
-                  const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
-                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-                  const active = activeFilter === key;
-                  return (
-                    <button key={key} type="button" onClick={() => toggleFilter(key)}
-                      className="flex min-w-0 items-center gap-2 rounded-2xl p-3 text-left shadow-sm transition-all"
-                      style={{
-                        background: gradient,
-                        outline: active ? "2px solid white" : "2px solid transparent",
-                        outlineOffset: active ? "2px" : "0",
-                      }}>
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white">
-                        <Icon size={15} style={{ color: cfg.clr }} />
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
+              {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
+                const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
+                const gradient = key === "PULANG" ? PULANG_GRADIENT : STATUS_GRADIENT[key as keyof typeof STATUS_GRADIENT];
+                const Icon = cfg.icon;
+                const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                const active = activeFilter === key;
+                return (
+                  <button key={key} type="button" onClick={() => toggleFilter(key)}
+                    className={`relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-md transition-all ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
+                    style={{
+                      background: gradient,
+                      outline: active ? "3px solid white" : "3px solid transparent",
+                    }}>
+                    <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                    <div className="relative flex items-center justify-between">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
+                        <Icon size={20} style={{ color: cfg.clr }} />
                       </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-base font-black leading-none text-white">{count}</p>
-                        <p className="truncate text-[10px] font-bold text-white">{cfg.label}</p>
-                      </div>
-                      <span className="shrink-0 rounded-md bg-white px-1.5 py-0.5 text-[9px] font-extrabold" style={{ color: cfg.clr }}>
+                      <span className="rounded-lg bg-white px-2 py-1 text-xs font-extrabold" style={{ color: cfg.clr }}>
                         {pct}%
                       </span>
-                    </button>
-                  );
-                })}
-              </div>
+                    </div>
+                    <div className="relative mt-4">
+                      <p className="text-3xl font-black text-white">{count}</p>
+                      <p className="text-xs font-bold text-white">{cfg.label}</p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             {activeFilter && (
