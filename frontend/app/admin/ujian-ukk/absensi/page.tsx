@@ -10,6 +10,7 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { Avatar } from "@/components/shared/Avatar";
+import { todayJakarta } from "@/components/absensi-harian/shared";
 
 type StatusAbsensi = "HADIR" | "IZIN" | "SAKIT" | "ALPA";
 
@@ -527,7 +528,7 @@ export default function AdminUkkAbsensiPage() {
 
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [selectedId,  setSelectedId]  = useState<string>("");
-  const [tanggal,     setTanggal]     = useState(() => new Date().toISOString().slice(0, 10));
+  const [tanggal,     setTanggal]     = useState(() => todayJakarta());
   const [data,        setData]        = useState<AbsensiData | null>(null);
   const [loading,     setLoading]     = useState(false);
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);

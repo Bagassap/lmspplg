@@ -5,6 +5,7 @@ import { TipeUKK } from '../../generated/prisma/client';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
+import { todayJakarta } from '../common/utils/jakarta-date.util';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
@@ -234,7 +235,7 @@ export class UjianUkkService {
   async getStatusAbsensiSaya(userId: string, tahapanId: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) return { sudahAbsen: false, status: null };
-    const today = new Date().toISOString().split('T')[0];
+    const today = todayJakarta();
     const record = await this.prisma.absensiUKK.findUnique({
       where: { tahapanId_siswaId_tanggal: { tahapanId, siswaId: siswa.id, tanggal: today } },
     });
@@ -248,7 +249,7 @@ export class UjianUkkService {
   ) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
-    const today = new Date().toISOString().split('T')[0];
+    const today = todayJakarta();
     const data = {
       status: 'HADIR',
       lokasi: extras.lokasi,

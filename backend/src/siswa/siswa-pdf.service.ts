@@ -92,7 +92,7 @@ export class SiswaPdfService {
     doc
       .fontSize(8)
       .fillColor('#e5e0fb')
-      .text(`${group.siswa.length} siswa · dicetak ${new Date().toLocaleDateString('id-ID')}`, margin, y + 12, {
+      .text(`${group.siswa.length} siswa · dicetak ${new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta' })}`, margin, y + 12, {
         width: pageWidth - margin * 2 - 12,
         align: 'right',
       });

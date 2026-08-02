@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
+import { todayJakarta } from "@/components/absensi-harian/shared";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loading: () => (
   <div className="flex-1 flex items-center justify-center py-20">
@@ -634,7 +635,7 @@ export default function AdminJadwalSoalPage() {
     setSubmisiList(Array.isArray(s) ? s : []);
     setLoading(false);
     const nowCheck = new Date();
-    const todayCheck = nowCheck.toISOString().slice(0, 10);
+    const todayCheck = todayJakarta();
     const tasks = all.filter(x => x.hariKe !== 0);
     const hasActive = tasks.some((tk) => {
       const tglStr = tk.tanggal.slice(0, 10);
@@ -659,7 +660,7 @@ export default function AdminJadwalSoalPage() {
       setEditTarget(null);
       await loadAll();
       const tgl = data.tanggal;
-      const todayS = new Date().toISOString().slice(0, 10);
+      const todayS = todayJakarta();
       if (tgl > todayS) {
         setTab("active");
       } else if (tgl < todayS) {
@@ -713,7 +714,7 @@ export default function AdminJadwalSoalPage() {
   const soalFiles   = (filePool?.soal ?? []).filter(s => !s.deskripsi?.startsWith("__jadwal__:"));
   const totalSoal   = soalFiles.length;
   const now       = new Date();
-  const todayStr  = now.toISOString().slice(0, 10);
+  const todayStr  = todayJakarta();
   const active    = tahapanList.filter((t) => {
     const tglStr = t.tanggal.slice(0, 10);
     if (tglStr > todayStr) return true;   

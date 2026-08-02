@@ -9,6 +9,7 @@ import {
   MapPin, Clock, User,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { todayJakarta } from "@/components/absensi-harian/shared";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
@@ -160,7 +161,7 @@ export default function GuruJadwalSoalPage() {
     setSubmisiList(Array.isArray(s) ? s : []);
     setLoading(false);
     const nowCheck = new Date();
-    const todayCheck = nowCheck.toISOString().slice(0, 10);
+    const todayCheck = todayJakarta();
     const hasActive = list.some(tk => {
       const tglStr = tk.tanggal?.slice(0, 10) ?? "";
       if (tglStr > todayCheck) return true;
@@ -176,7 +177,7 @@ export default function GuruJadwalSoalPage() {
   function toggleExpand(id: string) { setExpanded(p=>{ const n=new Set(p); n.has(id)?n.delete(id):n.add(id); return n; }); }
 
   const now      = new Date();
-  const todayStr = now.toISOString().slice(0,10);
+  const todayStr = todayJakarta();
   const active   = tahapanList.filter(t => {
     const tglStr = t.tanggal?.slice(0,10) ?? "";
     if (tglStr > todayStr) return true;

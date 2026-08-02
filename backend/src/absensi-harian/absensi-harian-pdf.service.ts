@@ -275,7 +275,7 @@ export class AbsensiHarianPdfService {
     doc
       .fontSize(7)
       .fillColor('#cbd5e1')
-      .text(`Dicetak ${new Date().toLocaleString('id-ID')}`, margin, doc.page.maxY() - 14, {
+      .text(`Dicetak ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}`, margin, doc.page.maxY() - 14, {
         width: contentWidth,
         align: 'center',
         height: 14,
@@ -422,7 +422,7 @@ export class AbsensiHarianPdfService {
     doc
       .fontSize(7)
       .fillColor('#cbd5e1')
-      .text(`Dicetak ${new Date().toLocaleString('id-ID')}`, margin, doc.page.maxY() - 14, {
+      .text(`Dicetak ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}`, margin, doc.page.maxY() - 14, {
         width: contentWidth,
         align: 'center',
         height: 14,

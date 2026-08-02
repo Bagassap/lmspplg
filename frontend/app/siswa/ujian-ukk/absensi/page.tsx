@@ -273,7 +273,7 @@ export default function SiswaUkkAbsensiPage() {
     if (!ttd) { toast.error("Tanda tangan wajib diisi", ""); return; }
     setSubmitting(true);
 
-    const waktuAbsen = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    const waktuAbsen = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
     const fd = new FormData();
     fd.append("tahapanId", selectedId);
     fd.append("waktuAbsen", waktuAbsen);
