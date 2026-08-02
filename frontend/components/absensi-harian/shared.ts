@@ -14,6 +14,17 @@ export const PULANG_CFG = {
   label: "Pulang", bg: "#EAF1FF", clr: "#3B7CE8", darkBg: "#3B7CE820", icon: LogOut,
 };
 
+// Gradients derived directly from each status's own `clr` (dark stop) blended
+// toward white (light stop) — no new hues introduced, just a lighter tint of
+// the color already used for that status everywhere else in the app.
+export const STATUS_GRADIENT: Record<StatusAbsensi, string> = {
+  HADIR: "linear-gradient(135deg,#10B981,#7CD9BA)",
+  IZIN:  "linear-gradient(135deg,#6334F4,#A98FF9)",
+  SAKIT: "linear-gradient(135deg,#E6A800,#F1CF73)",
+  ALPA:  "linear-gradient(135deg,#FF3644,#FF9098)",
+};
+export const PULANG_GRADIENT = "linear-gradient(135deg,#3B7CE8,#93B7F2)";
+
 export const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 
 export const CARD_GRADIENTS = [

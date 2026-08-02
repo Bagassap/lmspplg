@@ -74,18 +74,17 @@ export function AbsensiHarianTable({
     <>
       <div className="flex-1 overflow-x-auto">
         <div className="min-w-225">
-          <div className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
-            style={{ gridTemplateColumns: GRID_COLS }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2434" }}>
             <span />
             <span />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Nama</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIS</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Status</span>
-            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Waktu</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Lokasi</span>
-            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Foto</span>
-            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">TTD</span>
-            <span className="text-right text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Aksi</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-white">NIS</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
+            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Waktu</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-white">Lokasi</span>
+            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Foto</span>
+            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">TTD</span>
+            <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
           </div>
           <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
             {pagedSiswa.map((s, idx) => {

@@ -14,7 +14,7 @@ import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTab
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, CARD_ACCENT, todayJakarta } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, CARD_ACCENT, STATUS_GRADIENT, PULANG_GRADIENT, todayJakarta } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 export default function GuruAbsensiHarianPage() {
@@ -138,7 +138,9 @@ export default function GuruAbsensiHarianPage() {
                 <motion.button type="button" whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
                   className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-5 text-left shadow-lg sm:w-2/5"
                   style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
+                  <div className="pointer-events-none absolute -bottom-10 left-10 h-24 w-24 rounded-full bg-white/8" />
+                  <div className="relative flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-white">Kelas Wali</p>
                       <p className="mt-1 truncate text-xl font-extrabold text-white">{selectedKelas?.nama}</p>
@@ -147,7 +149,7 @@ export default function GuruAbsensiHarianPage() {
                       <GraduationCap size={20} style={{ color: CARD_ACCENT[idx % CARD_ACCENT.length] }} />
                     </span>
                   </div>
-                  <div className="mt-6">
+                  <div className="relative mt-6">
                     <p className="text-4xl font-black text-white">
                       {sudahAbsen}<span className="ml-1 text-base font-bold text-white">/ {total}</span>
                     </p>
@@ -176,7 +178,8 @@ export default function GuruAbsensiHarianPage() {
           </div>
         ) : selectedKelas ? (
           <div className="relative overflow-hidden rounded-2xl p-5 shadow-lg" style={{ background: CARD_GRADIENTS[0] }}>
-            <div className="flex items-center justify-between">
+            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
+            <div className="relative flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white">
                   <GraduationCap size={22} style={{ color: CARD_ACCENT[0] }} />
@@ -212,14 +215,15 @@ export default function GuruAbsensiHarianPage() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
           <div className="space-y-5 lg:col-span-2">
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3.5 sm:flex-row">
               <button type="button" onClick={() => toggleFilter("HADIR")}
                 className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-md transition-all sm:w-2/5"
                 style={{
-                  background: CARD_GRADIENTS[3],
+                  background: STATUS_GRADIENT.HADIR,
                   outline: activeFilter === "HADIR" ? "3px solid white" : "3px solid transparent",
                 }}>
-                <div className="flex items-center justify-between">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                <div className="relative flex items-center justify-between">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
                     <STATUS_CFG.HADIR.icon size={20} style={{ color: STATUS_CFG.HADIR.clr }} />
                   </span>
@@ -227,15 +231,16 @@ export default function GuruAbsensiHarianPage() {
                     {hadirPct}%
                   </span>
                 </div>
-                <div className="mt-4">
+                <div className="relative mt-4">
                   <p className="text-3xl font-black text-white">{rekap.HADIR}</p>
                   <p className="text-xs font-bold text-white">{STATUS_CFG.HADIR.label}</p>
                 </div>
               </button>
 
-              <div className="grid flex-1 grid-cols-2 gap-3">
+              <div className="grid flex-1 grid-cols-2 gap-3.5">
                 {(["PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
                   const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
+                  const gradient = key === "PULANG" ? PULANG_GRADIENT : STATUS_GRADIENT[key as keyof typeof STATUS_GRADIENT];
                   const Icon = cfg.icon;
                   const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
                   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
@@ -244,16 +249,16 @@ export default function GuruAbsensiHarianPage() {
                     <button key={key} type="button" onClick={() => toggleFilter(key)}
                       className="flex min-w-0 items-center gap-2 rounded-2xl p-3 text-left shadow-sm transition-all"
                       style={{
-                        backgroundColor: cfg.bg,
-                        outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
+                        background: gradient,
+                        outline: active ? "2px solid white" : "2px solid transparent",
                         outlineOffset: active ? "2px" : "0",
                       }}>
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white">
                         <Icon size={15} style={{ color: cfg.clr }} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-base font-black leading-none" style={{ color: cfg.clr }}>{count}</p>
-                        <p className="truncate text-[10px] font-bold" style={{ color: cfg.clr }}>{cfg.label}</p>
+                        <p className="text-base font-black leading-none text-white">{count}</p>
+                        <p className="truncate text-[10px] font-bold text-white">{cfg.label}</p>
                       </div>
                       <span className="shrink-0 rounded-md bg-white px-1.5 py-0.5 text-[9px] font-extrabold" style={{ color: cfg.clr }}>
                         {pct}%

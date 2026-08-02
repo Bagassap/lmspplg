@@ -4,17 +4,10 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, PartyPopper, Search, Copy, Check, X } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { STATUS_CFG, PULANG_CFG } from "./shared";
+import { STATUS_CFG, PULANG_CFG, STATUS_GRADIENT, PULANG_GRADIENT } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
-
-// Solid gradients (no alpha stops) — same style as the kelas cards elsewhere
-// in the app (CARD_GRADIENTS in shared.ts), kept local since these two are
-// tied to a specific theme (Alpa red / Pulang blue) rather than the rotating
-// per-index palette used for kelas cards.
-const HADIR_GRADIENT = "linear-gradient(135deg,#EF4444,#F87171)";
-const PULANG_GRADIENT = "linear-gradient(135deg,#3B7CE8,#4F8EF7)";
 
 function Trigger({
   title, icon: Icon, gradient, iconColor, items, total, onOpen,
@@ -30,12 +23,13 @@ function Trigger({
   const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
   return (
     <button type="button" onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+      className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
       style={{ background: gradient }}>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
+      <div className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
         <Icon size={18} style={{ color: iconColor }} />
       </span>
-      <div className="min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1">
         <p className="truncate text-sm font-extrabold text-white">{title}</p>
         <div className="mt-1.5 flex items-center gap-2">
           <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
@@ -44,10 +38,10 @@ function Trigger({
           <span className="text-[10px] font-extrabold text-white">{pct}%</span>
         </div>
       </div>
-      <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold" style={{ color: iconColor }}>
+      <span className="relative shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold" style={{ color: iconColor }}>
         {items.length}
       </span>
-      <ChevronRight size={15} className="shrink-0 text-white" />
+      <ChevronRight size={15} className="relative shrink-0 text-white" />
     </button>
   );
 }
@@ -168,7 +162,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
         <Trigger
           title="Siswa Belum Absen Hadir"
           icon={STATUS_CFG.ALPA.icon}
-          gradient={HADIR_GRADIENT}
+          gradient={STATUS_GRADIENT.ALPA}
           iconColor={STATUS_CFG.ALPA.clr}
           items={belumHadir}
           total={siswaList.length}

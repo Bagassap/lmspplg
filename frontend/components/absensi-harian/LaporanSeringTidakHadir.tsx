@@ -95,21 +95,25 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
   return (
     <>
       <button type="button" onClick={() => setShowModal(true)}
-        className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+        className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
         style={{ background: TRIGGER_GRADIENT }}>
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
+        <div className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
           <TrendingDown size={18} className="text-red-500" />
         </span>
-        <div className="min-w-0 flex-1">
+        <div className="relative min-w-0 flex-1">
           <p className="truncate text-sm font-extrabold text-white">Siswa Sering Tidak Hadir</p>
-          <p className="truncate text-[11px] font-semibold text-white">
-            {loading ? "Memuat..." : `Rata-rata kehadiran ${rataKehadiran}%`}
-          </p>
+          <div className="mt-1.5 flex items-center gap-2">
+            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
+              <span className="block h-full rounded-full bg-red-500 transition-[width] duration-500 ease-out" style={{ width: `${rataKehadiran}%` }} />
+            </span>
+            <span className="text-[10px] font-extrabold text-white">{loading ? "…" : `${rataKehadiran}%`}</span>
+          </div>
         </div>
-        <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-red-500">
+        <span className="relative shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-red-500">
           {totalBermasalah}
         </span>
-        <ChevronRight size={15} className="shrink-0 text-white" />
+        <ChevronRight size={15} className="relative shrink-0 text-white" />
       </button>
 
       <AnimatePresence>
