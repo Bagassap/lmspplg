@@ -13,6 +13,7 @@ import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
+import { MiniBarChart } from "@/components/absensi-harian/MiniBarChart";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, CARD_ACCENT, STATUS_GRADIENT, PULANG_GRADIENT, todayJakarta } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
@@ -130,48 +131,59 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className={`grid grid-cols-2 gap-4 ${kelasList.length > 2 ? "sm:grid-cols-4" : "sm:grid-cols-2"}`}>
-          {kelasList.map((k, i) => {
-            const isSelected = k.id === selectedId;
-            return (
-              <motion.button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl p-4 text-left transition-all"
-                style={{
-                  background: CARD_GRADIENTS[i % CARD_GRADIENTS.length],
-                  outline: isSelected ? "3px solid white" : "3px solid transparent",
-                  boxShadow: isSelected
-                    ? "0 0 0 5px rgba(255,255,255,0.30),0 8px 32px rgba(0,0,0,0.18)"
-                    : "0 4px 16px rgba(0,0,0,0.10)",
-                }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
-                <div className="relative flex items-start justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-white">Kelas Wali</p>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white">
-                    <GraduationCap size={16} style={{ color: CARD_ACCENT[i % CARD_ACCENT.length] }} />
-                  </span>
-                </div>
-                <div className="relative">
-                  <p className="truncate text-sm font-extrabold text-white">{k.nama}</p>
-                  {isSelected ? (
-                    <>
-                      <p className="mt-1 text-2xl font-black text-white">
-                        {sudahAbsen}<span className="ml-1 text-sm font-bold text-white">/ {total}</span>
-                      </p>
-                      <p className="mt-0.5 text-[10px] font-semibold text-white">sudah absen · {hadirPct}%</p>
-                    </>
-                  ) : (
-                    <p className="mt-1 text-2xl font-black text-white">
-                      {k._count?.siswa ?? 0}<span className="ml-1 text-sm font-bold text-white">siswa</span>
-                    </p>
-                  )}
-                </div>
-              </motion.button>
-            );
-          })}
+        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
+            <div className="lg:w-64 lg:shrink-0">
+              <p className="text-xl font-extrabold leading-snug text-slate-800 dark:text-white">
+                Kelas yang Anda wali-i.
+              </p>
+              <p className="mt-3 text-sm text-slate-400 dark:text-slate-500">
+                Klik salah satu kartu di samping untuk menampilkan status kehadiran siswa kelas tersebut hari ini.
+              </p>
+            </div>
+
+            <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-3">
+              {kelasList.map((k, i) => {
+                const isSelected = k.id === selectedId;
+                return (
+                  <motion.button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                    whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                    className="relative flex min-h-64 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left transition-all"
+                    style={{
+                      background: CARD_GRADIENTS[i % CARD_GRADIENTS.length],
+                      outline: isSelected ? "3px solid white" : "3px solid transparent",
+                      boxShadow: isSelected
+                        ? "0 0 0 5px rgba(255,255,255,0.30),0 12px 32px rgba(0,0,0,0.20)"
+                        : "0 8px 20px rgba(0,0,0,0.12)",
+                    }}>
+                    <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
+                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white">
+                      <GraduationCap size={24} style={{ color: CARD_ACCENT[i % CARD_ACCENT.length] }} />
+                    </span>
+                    <div className="relative">
+                      <p className="truncate text-lg font-extrabold text-white">{k.nama}</p>
+                      {isSelected ? (
+                        <p className="mt-1 text-xs font-semibold text-white">
+                          {sudahAbsen} dari {total} sudah absen · {hadirPct}%
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-xs font-semibold text-white">
+                          {k._count?.siswa ?? 0} siswa
+                        </p>
+                      )}
+                    </div>
+                    <span className="relative inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-xs font-extrabold"
+                      style={{ color: CARD_ACCENT[i % CARD_ACCENT.length] }}>
+                      Lihat Detail
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex shrink-0 items-center gap-2">
               <CalendarDays size={14} className="text-slate-400" />
@@ -197,23 +209,23 @@ export default function GuruAbsensiHarianPage() {
                 const active = activeFilter === key;
                 return (
                   <button key={key} type="button" onClick={() => toggleFilter(key)}
-                    className={`relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-md transition-all ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
+                    className={`relative flex min-h-40 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left shadow-md transition-all ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
                     style={{
                       background: gradient,
                       outline: active ? "3px solid white" : "3px solid transparent",
                     }}>
-                    <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
-                    <div className="relative flex items-center justify-between">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
-                        <Icon size={20} style={{ color: cfg.clr }} />
-                      </span>
-                      <span className="rounded-lg bg-white px-2 py-1 text-xs font-extrabold" style={{ color: cfg.clr }}>
-                        {pct}%
+                    <div className="relative flex items-start justify-between">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-white">{cfg.label}</p>
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white">
+                        <Icon size={16} style={{ color: cfg.clr }} />
                       </span>
                     </div>
-                    <div className="relative mt-4">
-                      <p className="text-3xl font-black text-white">{count}</p>
-                      <p className="text-xs font-bold text-white">{cfg.label}</p>
+                    <div className="relative flex items-end justify-between gap-2">
+                      <MiniBarChart />
+                      <div className="text-right">
+                        <p className="text-3xl font-black leading-none text-white">{count}</p>
+                        <p className="mt-1 text-[10px] font-semibold text-white">{pct}% dari total</p>
+                      </div>
                     </div>
                   </button>
                 );

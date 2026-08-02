@@ -189,14 +189,30 @@ export function AbsensiHarianTable({
           <div className="flex items-center gap-2.5">
             <PageSizeToggle value={tablePageSize} onChange={setTablePageSize} />
             {tablePageCount > 1 && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
                   <ChevronLeft size={14} />
                 </button>
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{tablePage + 1}/{tablePageCount}</span>
+                {Array.from({ length: tablePageCount }, (_, i) => i)
+                  .filter((i) => i === 0 || i === tablePageCount - 1 || Math.abs(i - tablePage) <= 1)
+                  .map((i, idx, arr) => (
+                    <span key={i} className="flex items-center">
+                      {idx > 0 && arr[idx - 1] !== i - 1 && (
+                        <span className="px-1 text-xs font-semibold text-slate-300 dark:text-slate-600">…</span>
+                      )}
+                      <button onClick={() => setTablePage(i)}
+                        className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                          i === tablePage
+                            ? "bg-violet-500 text-white shadow-sm"
+                            : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
+                        }`}>
+                        {i + 1}
+                      </button>
+                    </span>
+                  ))}
                 <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
                   <ChevronRight size={14} />
                 </button>
               </div>

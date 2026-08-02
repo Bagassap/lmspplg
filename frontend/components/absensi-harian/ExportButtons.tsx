@@ -19,7 +19,7 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "bulanan", label: "Per Bulan" },
 ];
 
-const selectCls = "rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
+const selectCls = "rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400";
 
 /** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker — same row height in every mode (harian has no extra picker at all; mingguan/bulanan pickers share selectCls with the tabs' py-1.5). Rendered right after the main Tanggal picker, before the download buttons. */
 export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
@@ -28,13 +28,13 @@ export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAn
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <div className="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600">
-        {RANGE_MODES.map((m, i) => (
+      <div className="inline-flex shrink-0 gap-0.5 rounded-full bg-slate-100 p-1 dark:bg-slate-700/50">
+        {RANGE_MODES.map((m) => (
           <button key={m.key} type="button" onClick={() => setRangeMode(m.key)}
-            className={`px-2 py-1.5 text-[11px] font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
+            className={`rounded-full px-3 py-1.5 text-[11px] font-bold transition-colors ${
               rangeMode === m.key
-                ? "bg-violet-500 text-white"
-                : "bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                ? "bg-violet-500 text-white shadow-sm"
+                : "text-slate-500 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-800"
             }`}>
             {m.label}
           </button>
