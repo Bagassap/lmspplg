@@ -187,9 +187,7 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
-          <div className="space-y-5 lg:col-span-2">
-            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
               {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
                 const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
                 const gradient = key === "PULANG" ? PULANG_GRADIENT : STATUS_GRADIENT[key as keyof typeof STATUS_GRADIENT];
@@ -220,50 +218,50 @@ export default function GuruAbsensiHarianPage() {
                   </button>
                 );
               })}
-            </div>
+        </div>
 
-            {activeFilter && (
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                <span>Menampilkan siswa dengan status</span>
-                <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
-                  style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
-                  {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
-                </span>
-                <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  (tampilkan semua)
-                </button>
-              </div>
-            )}
-
-            <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div className="flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 to-sky-50 px-4 py-3 dark:from-emerald-950 dark:to-sky-950">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
-                  <ClipboardCheck size={15} className="text-emerald-500" />
-                </span>
-                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Status Kehadiran Hari Ini</p>
-              </div>
-              <AbsensiHarianTable
-                loading={loading}
-                hasSiswa={siswaList.length > 0}
-                filteredSiswa={filteredSiswa}
-                pagedSiswa={pagedSiswa}
-                tableStart={tableStart}
-                tableEnd={tableEnd}
-                activeFilter={activeFilter}
-                tablePage={tablePage}
-                setTablePage={setTablePage}
-                tablePageCount={tablePageCount}
-                tablePageSize={tablePageSize}
-                setTablePageSize={setTablePageSize}
-                onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-              />
-            </div>
+        {activeFilter && (
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <span>Menampilkan siswa dengan status</span>
+            <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
+              style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
+              {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
+            </span>
+            <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              (tampilkan semua)
+            </button>
           </div>
+        )}
 
-          <div className="space-y-3 lg:col-span-1">
+        <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 to-sky-50 px-4 py-3 dark:from-emerald-950 dark:to-sky-950">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
+              <ClipboardCheck size={15} className="text-emerald-500" />
+            </span>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Status Kehadiran Hari Ini</p>
+          </div>
+          <AbsensiHarianTable
+            loading={loading}
+            hasSiswa={siswaList.length > 0}
+            filteredSiswa={filteredSiswa}
+            pagedSiswa={pagedSiswa}
+            tableStart={tableStart}
+            tableEnd={tableEnd}
+            activeFilter={activeFilter}
+            tablePage={tablePage}
+            setTablePage={setTablePage}
+            tablePageCount={tablePageCount}
+            tablePageSize={tablePageSize}
+            setTablePageSize={setTablePageSize}
+            onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="sm:col-span-2">
             <BelumAbsenPanel siswaList={siswaList} />
-            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
           </div>
+          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
         </div>
       </div>
 
