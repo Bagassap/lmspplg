@@ -92,18 +92,18 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
     <>
       <motion.button type="button" onClick={() => setShowModal(true)}
         whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
-        className="relative flex min-h-64 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left shadow-lg transition-all"
+        className="relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-lg transition-all"
         style={{ background: DASHBOARD_GRADIENTS[2] }}>
-        <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: DASHBOARD_ACCENT[2] }}>
-          <TrendingDown size={22} className="text-white" />
+        <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: DASHBOARD_ACCENT[2] }}>
+          <TrendingDown size={18} className="text-white" />
         </span>
         <div>
-          <p className="text-lg font-extrabold text-white">Siswa Sering Tidak Hadir</p>
-          <p className="mt-1 text-xs font-semibold text-white">
+          <p className="text-sm font-extrabold text-white">Siswa Sering Tidak Hadir</p>
+          <p className="mt-1 text-[11px] font-semibold text-white">
             {totalBermasalah} siswa &middot; {loading ? "…" : `rata-rata kehadiran ${rataKehadiran}%`}
           </p>
         </div>
-        <span className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-xs font-extrabold" style={{ color: DASHBOARD_ACCENT[2] }}>
+        <span className="inline-flex w-fit items-center rounded-full bg-white px-3.5 py-1.5 text-[11px] font-extrabold" style={{ color: DASHBOARD_ACCENT[2] }}>
           Lihat Daftar
         </span>
       </motion.button>
