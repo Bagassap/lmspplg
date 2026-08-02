@@ -16,7 +16,7 @@ import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { MiniBarChart } from "@/components/absensi-harian/MiniBarChart";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, STATUS_GRADIENT, PULANG_GRADIENT, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 type Guru = { id: string; user: { id: string; nama: string } };
@@ -337,7 +337,7 @@ export default function AdminAbsensiHarianPage() {
                         ? "shadow-md"
                         : "border border-slate-100 bg-white shadow-sm hover:border-slate-200 dark:border-slate-700 dark:bg-slate-800"
                     }`}
-                    style={isSelected ? { background: CARD_GRADIENTS[0] } : undefined}>
+                    style={isSelected ? { background: DASHBOARD_GRADIENTS[1] } : undefined}>
                     <p className={`truncate text-xs font-bold ${isSelected ? "text-white" : "text-slate-700 dark:text-slate-200"}`}>{k.nama}</p>
                     <div className="flex items-end justify-between gap-2">
                       <MiniBarChart size={56} color={isSelected ? "#FFFFFF" : "#CBD5E1"} />

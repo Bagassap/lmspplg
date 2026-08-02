@@ -5,12 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { formatTgl, CARD_GRADIENTS } from "./shared";
+import { formatTgl, CARD_GRADIENTS, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
-
-// Solid gradient (no alpha stops), distinct from BelumAbsenPanel's red/blue
-// triggers for visual variety within the hero card's 3-column row.
-const TRIGGER_GRADIENT = "linear-gradient(135deg,#F97316,#EF4444)";
 
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
@@ -97,8 +93,8 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
       <motion.button type="button" onClick={() => setShowModal(true)}
         whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
         className="relative flex min-h-64 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left shadow-lg transition-all"
-        style={{ background: TRIGGER_GRADIENT }}>
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-600">
+        style={{ background: DASHBOARD_GRADIENTS[2] }}>
+        <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: DASHBOARD_ACCENT[2] }}>
           <TrendingDown size={22} className="text-white" />
         </span>
         <div>
@@ -107,7 +103,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
             {totalBermasalah} siswa &middot; {loading ? "…" : `rata-rata kehadiran ${rataKehadiran}%`}
           </p>
         </div>
-        <span className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-xs font-extrabold text-red-600">
+        <span className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-xs font-extrabold" style={{ color: DASHBOARD_ACCENT[2] }}>
           Lihat Daftar
         </span>
       </motion.button>
@@ -121,10 +117,10 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
               transition={{ type: "spring", damping: 26, stiffness: 300 }}
               className="relative z-10 flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
 
-              <div className="flex shrink-0 flex-wrap items-center gap-3 bg-gradient-to-r from-red-50 to-orange-50 px-5 py-4 dark:from-red-950 dark:to-orange-950">
+              <div className="flex shrink-0 flex-wrap items-center gap-3 px-5 py-4" style={{ backgroundColor: DASHBOARD_PASTEL[2] }}>
                 <div className="flex min-w-0 items-center gap-2.5">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
-                    <TrendingDown size={17} className="text-red-500" />
+                    <TrendingDown size={17} style={{ color: DASHBOARD_ACCENT[2] }} />
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-extrabold text-slate-700 dark:text-slate-200">

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PartyPopper, Search, Copy, Check, X } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { STATUS_CFG, PULANG_CFG, STATUS_GRADIENT, PULANG_GRADIENT } from "./shared";
+import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
@@ -160,8 +160,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
         <Trigger
           title="Siswa Belum Absen Hadir"
           icon={STATUS_CFG.ALPA.icon}
-          gradient={STATUS_GRADIENT.ALPA}
-          iconColor={STATUS_CFG.ALPA.clr}
+          gradient={DASHBOARD_GRADIENTS[3]}
+          iconColor={DASHBOARD_ACCENT[3]}
           items={belumHadir}
           total={siswaList.length}
           onOpen={() => setActiveModal("hadir")}
@@ -169,8 +169,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
         <Trigger
           title="Siswa Belum Absen Pulang"
           icon={PULANG_CFG.icon}
-          gradient={PULANG_GRADIENT}
-          iconColor={PULANG_CFG.clr}
+          gradient={DASHBOARD_GRADIENTS[0]}
+          iconColor={DASHBOARD_ACCENT[0]}
           items={belumPulang}
           total={siswaList.length}
           onOpen={() => setActiveModal("pulang")}
@@ -182,8 +182,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
           <DetailModal
             title="Siswa Belum Absen Hadir"
             icon={STATUS_CFG.ALPA.icon}
-            headerBg={STATUS_CFG.ALPA.bg}
-            iconColor={STATUS_CFG.ALPA.clr}
+            headerBg={DASHBOARD_PASTEL[3]}
+            iconColor={DASHBOARD_ACCENT[3]}
             emptyMessage="Semua siswa sudah absen hadir!"
             items={belumHadir}
             onClose={() => setActiveModal(null)}
@@ -193,8 +193,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
           <DetailModal
             title="Siswa Belum Absen Pulang"
             icon={PULANG_CFG.icon}
-            headerBg={PULANG_CFG.bg}
-            iconColor={PULANG_CFG.clr}
+            headerBg={DASHBOARD_PASTEL[0]}
+            iconColor={DASHBOARD_ACCENT[0]}
             emptyMessage="Semua siswa sudah absen pulang!"
             items={belumPulang}
             onClose={() => setActiveModal(null)}

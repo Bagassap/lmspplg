@@ -41,6 +41,18 @@ export const CARD_GRADIENTS = [
 // an alpha/opacity color.
 export const CARD_ACCENT = ["#3B7CE8", "#EF4444", "#F59E0B", "#10B981", "#6334F4", "#0EA5E9"];
 
+// Same 4-color palette as the "Akses Cepat" quick-access cards on the
+// admin/guru/siswa dashboards (green, blue, purple, orange), so the big
+// cards on this page read as part of the same visual family.
+export const DASHBOARD_GRADIENTS = [
+  "linear-gradient(135deg,#4ade80,#22c55e)", // green
+  "linear-gradient(135deg,#60a5fa,#3b82f6)", // blue
+  "linear-gradient(135deg,#a78bfa,#7c3aed)", // purple
+  "linear-gradient(135deg,#fb923c,#ea580c)", // orange
+];
+export const DASHBOARD_ACCENT = ["#22c55e", "#3b82f6", "#7c3aed", "#ea580c"];
+export const DASHBOARD_PASTEL = ["#E7F9EE", "#EAF1FF", "#F0ECFF", "#FFF1E6"];
+
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
 // crossed into a new date but UTC hasn't (UTC 17:00-23:59 = WIB 00:00-06:59),
