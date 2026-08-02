@@ -201,25 +201,53 @@ export default function GuruAbsensiHarianPage() {
           <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-1">
             <p className="text-sm font-extrabold text-slate-800 dark:text-white">Rekap Kehadiran</p>
             <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">Ringkasan hari ini</p>
-            <div className="relative mt-5 space-y-5 border-l-2 border-slate-100 pl-5 dark:border-slate-700">
-              {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
-                const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
-                const Icon = cfg.icon;
-                const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
-                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-                const active = activeFilter === key;
+
+            <div className="mt-4 space-y-3">
+              {(() => {
+                const activeHadir = activeFilter === "HADIR";
+                const pctHadir = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
                 return (
-                  <button key={key} type="button" onClick={() => toggleFilter(key)}
-                    className="relative -mx-2 block w-full rounded-xl px-2 py-1 text-left transition-colors"
-                    style={{ backgroundColor: active ? cfg.bg : "transparent" }}>
-                    <span className="absolute -left-[27px] top-1 flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-white dark:ring-slate-800" style={{ backgroundColor: cfg.clr }}>
-                      <Icon size={12} className="text-white" />
+                  <button type="button" onClick={() => toggleFilter("HADIR")}
+                    className="flex w-full items-center justify-between gap-3 rounded-2xl p-4 text-left transition-all"
+                    style={{ backgroundColor: STATUS_CFG.HADIR.bg, outline: activeHadir ? `2px solid ${STATUS_CFG.HADIR.clr}` : "2px solid transparent" }}>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: STATUS_CFG.HADIR.clr }}>
+                        <STATUS_CFG.HADIR.icon size={20} className="text-white" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-2xl font-black leading-none" style={{ color: STATUS_CFG.HADIR.clr }}>{rekap.HADIR}</p>
+                        <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Siswa {STATUS_CFG.HADIR.label}</p>
+                      </div>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-extrabold dark:bg-slate-900" style={{ color: STATUS_CFG.HADIR.clr }}>
+                      {pctHadir}%
                     </span>
-                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{count} Siswa {cfg.label}</p>
-                    <p className="text-xs text-slate-400 dark:text-slate-500">{pct}% dari total siswa hari ini</p>
                   </button>
                 );
-              })}
+              })()}
+
+              <div className="grid grid-cols-2 gap-3">
+                {(["PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
+                  const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
+                  const Icon = cfg.icon;
+                  const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
+                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                  const active = activeFilter === key;
+                  return (
+                    <button key={key} type="button" onClick={() => toggleFilter(key)}
+                      className="flex flex-col items-start gap-2 rounded-2xl p-3 text-left transition-all"
+                      style={{ backgroundColor: cfg.bg, outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent" }}>
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: cfg.clr }}>
+                        <Icon size={14} className="text-white" />
+                      </span>
+                      <div>
+                        <p className="text-lg font-black leading-none" style={{ color: cfg.clr }}>{count}</p>
+                        <p className="mt-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">{cfg.label} &middot; {pct}%</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
