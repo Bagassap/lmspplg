@@ -198,18 +198,15 @@ export default function GuruAbsensiHarianPage() {
         </div>
 
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="px-5 pt-5">
-            <p className="text-base font-extrabold text-slate-800 dark:text-white">Status Kehadiran Hari Ini</p>
-            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
-          </div>
-
           <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="min-w-0">
+              <p className="text-base font-extrabold text-slate-800 dark:text-white">Status Kehadiran Hari Ini</p>
+              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
               <CalendarDays size={14} className="text-slate-400" />
               <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
                 className="rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
               <RangeModeToggle {...exportRange} />
               <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
             </div>
