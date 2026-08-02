@@ -152,18 +152,19 @@ export default function GuruAbsensiHarianPage() {
         <div>
           <p className="mb-3 text-sm font-extrabold text-slate-800 dark:text-white">Kelas</p>
           <div className={`grid grid-cols-2 gap-3.5 ${kelasList.length > 2 ? "sm:grid-cols-3 lg:grid-cols-5" : "sm:grid-cols-2"}`}>
-            {kelasList.map((k, i) => {
+            {kelasList.map((k) => {
               const isSelected = k.id === selectedId;
               return (
                 <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                  className="relative flex min-h-44 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left shadow-md transition-all"
-                  style={{
-                    background: CARD_GRADIENTS[i % CARD_GRADIENTS.length],
-                    outline: isSelected ? "3px solid white" : "3px solid transparent",
-                  }}>
-                  <p className="truncate text-xs font-bold text-white">{k.nama}</p>
+                  className={`relative flex min-h-44 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left transition-all ${
+                    isSelected
+                      ? "shadow-md"
+                      : "border border-slate-100 bg-white shadow-sm hover:border-slate-200 dark:border-slate-700 dark:bg-slate-800"
+                  }`}
+                  style={isSelected ? { background: CARD_GRADIENTS[0] } : undefined}>
+                  <p className={`truncate text-xs font-bold ${isSelected ? "text-white" : "text-slate-700 dark:text-slate-200"}`}>{k.nama}</p>
                   <div className="flex items-end justify-between gap-2">
-                    <MiniBarChart size={56} />
+                    <MiniBarChart size={56} color={isSelected ? "#FFFFFF" : "#CBD5E1"} />
                     {isSelected ? (
                       <div className="text-right">
                         <p className="text-3xl font-black leading-none text-white">{sudahAbsen}</p>
@@ -171,8 +172,8 @@ export default function GuruAbsensiHarianPage() {
                       </div>
                     ) : (
                       <div className="text-right">
-                        <p className="text-3xl font-black leading-none text-white">{k._count?.siswa ?? 0}</p>
-                        <p className="mt-1.5 text-[11px] font-semibold text-white">siswa</p>
+                        <p className="text-3xl font-black leading-none text-slate-700 dark:text-slate-200">{k._count?.siswa ?? 0}</p>
+                        <p className="mt-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">siswa</p>
                       </div>
                     )}
                   </div>
