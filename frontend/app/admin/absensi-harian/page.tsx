@@ -15,7 +15,7 @@ import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTab
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, todayJakarta } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, CARD_GRADIENTS, CARD_ACCENT, todayJakarta } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 type Guru = { id: string; user: { id: string; nama: string } };
@@ -173,7 +173,7 @@ export default function AdminAbsensiHarianPage() {
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
   const [tablePageSize, setTablePageSize] = useState<number>(10);
-  const KELAS_PER_PAGE = 4;
+  const KELAS_PER_PAGE = 5;
 
   const loadKelasList = useCallback(async () => {
     const res = await fetch("/api/kelas");
@@ -219,6 +219,18 @@ export default function AdminAbsensiHarianPage() {
   const pulangCount = selected?.pulangCount ?? 0;
   const total = siswaList.length;
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
+
+  function kelasStat(k: Kelas) {
+    const idx = kelasList.findIndex((x) => x.id === k.id);
+    const r = rekapAll.find((x) => x.kelasId === k.id);
+    const hd = r?.rekap.HADIR ?? 0;
+    const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
+    return { idx: idx < 0 ? 0 : idx, hd, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
+  }
+  const kelasPageSlice = kelasList.slice(kelasPage * KELAS_PER_PAGE, kelasPage * KELAS_PER_PAGE + KELAS_PER_PAGE);
+  const bigKelasIdxInSlice = kelasPageSlice.findIndex((k) => k.id === selectedId);
+  const bigKelas = kelasPageSlice[bigKelasIdxInSlice >= 0 ? bigKelasIdxInSlice : 0] ?? null;
+  const smallKelasList = bigKelas ? kelasPageSlice.filter((k) => k.id !== bigKelas.id) : [];
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -291,51 +303,64 @@ export default function AdminAbsensiHarianPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {kelasList.length === 0
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-40 animate-pulse rounded-2xl" style={{ background: CARD_GRADIENTS[i], opacity: 0.4 }} />
-              ))
-            : kelasList.slice(kelasPage * KELAS_PER_PAGE, kelasPage * KELAS_PER_PAGE + KELAS_PER_PAGE).map((k, i) => {
-                const r = rekapAll.find((x) => x.kelasId === k.id);
-                const hd = r?.rekap.HADIR ?? 0;
-                const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
-                return (
-                  <motion.div key={k.id} onClick={() => setSelectedId(k.id)}
-                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.35, delay: 0.03 * i, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative flex h-40 cursor-pointer flex-col justify-between overflow-hidden rounded-2xl p-5 transition-all"
-                    style={{
-                      background: CARD_GRADIENTS[i % CARD_GRADIENTS.length],
-                      outline: selectedId === k.id ? "3px solid white" : "3px solid transparent",
-                      boxShadow: selectedId === k.id
-                        ? "0 0 0 5px rgba(255,255,255,0.30),0 8px 32px rgba(0,0,0,0.18)"
-                        : "0 4px 16px rgba(0,0,0,0.10)",
-                    }}>
-                    <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                    <div className="relative flex items-start justify-between">
-                      <div>
-                        <p className="text-[10px] font-medium uppercase tracking-widest text-white/60">Kelas</p>
-                        <p className="mt-0.5 text-sm font-bold text-white">{k.nama}</p>
-                      </div>
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                        <GraduationCap size={16} className="text-white" />
-                      </div>
+        {kelasList.length === 0 ? (
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="h-48 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800 sm:w-2/5" />
+            <div className="grid flex-1 grid-cols-2 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-[86px] animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+              ))}
+            </div>
+          </div>
+        ) : bigKelas ? (
+          <div className="flex flex-col gap-4 sm:flex-row">
+            {(() => {
+              const big = kelasStat(bigKelas);
+              return (
+                <motion.button type="button" onClick={() => setSelectedId(bigKelas.id)}
+                  whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
+                  className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-5 text-left shadow-lg sm:w-2/5"
+                  style={{ background: CARD_GRADIENTS[big.idx % CARD_GRADIENTS.length] }}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-white">Kelas Dipilih</p>
+                      <p className="mt-1 truncate text-xl font-extrabold text-white">{bigKelas.nama}</p>
                     </div>
-                    <div className="relative">
-                      <p className="text-3xl font-bold text-white">
-                        {hd}<span className="ml-1 text-base font-semibold text-white/60">/ {tt}</span>
-                      </p>
-                      <p className="text-[11px] text-white/70 mt-0.5">siswa hadir hari ini</p>
-                    </div>
-                    <p className="relative text-[11px] font-semibold text-white/80 truncate">
-                      Wali: {k.waliKelasGuru?.user.nama ?? "—"}
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white">
+                      <GraduationCap size={20} style={{ color: CARD_ACCENT[big.idx % CARD_ACCENT.length] }} />
+                    </span>
+                  </div>
+                  <div className="mt-6">
+                    <p className="text-4xl font-black text-white">
+                      {big.hd}<span className="ml-1 text-base font-bold text-white">/ {big.tt}</span>
                     </p>
-                  </motion.div>
+                    <p className="mt-1 text-xs font-semibold text-white">siswa hadir hari ini · {big.pct}%</p>
+                  </div>
+                  <p className="mt-4 truncate text-xs font-bold text-white">
+                    Wali: {bigKelas.waliKelasGuru?.user.nama ?? "—"}
+                  </p>
+                </motion.button>
+              );
+            })()}
+
+            <div className="grid flex-1 grid-cols-2 gap-4">
+              {smallKelasList.map((k) => {
+                const s = kelasStat(k);
+                return (
+                  <motion.button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                    whileHover={{ y: -3 }} whileTap={{ scale: 0.96 }}
+                    className="flex flex-col justify-between overflow-hidden rounded-2xl p-3.5 text-left shadow-sm transition-all"
+                    style={{ background: CARD_GRADIENTS[s.idx % CARD_GRADIENTS.length] }}>
+                    <p className="truncate text-xs font-bold text-white">{k.nama}</p>
+                    <p className="mt-2 text-lg font-black text-white">
+                      {s.hd}<span className="ml-1 text-[10px] font-bold text-white">/{s.tt}</span>
+                    </p>
+                  </motion.button>
                 );
               })}
-        </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -355,42 +380,63 @@ export default function AdminAbsensiHarianPage() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
           <div className="space-y-5 lg:col-span-2">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {(["HADIR", "PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key, i) => {
-                const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key];
-                const Icon = cfg.icon;
-                const count = key === "PULANG" ? pulangCount : rekap[key];
-                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-                const active = activeFilter === key;
-                return (
-                  <button key={key} type="button" onClick={() => toggleFilter(key)}
-                    className={`flex min-w-0 items-center gap-2 rounded-2xl px-3 py-3 text-left shadow-sm transition-all sm:gap-3 sm:px-4 sm:py-3.5 ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
-                    style={{
-                      backgroundColor: cfg.bg,
-                      outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
-                      outlineOffset: active ? "2px" : "0",
-                    }}>
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11" style={{ backgroundColor: cfg.darkBg }}>
-                      <Icon size={18} className="sm:hidden" style={{ color: cfg.clr }} />
-                      <Icon size={20} className="hidden sm:block" style={{ color: cfg.clr }} />
-                    </div>
-                    <div className="flex min-w-0 flex-1 items-baseline gap-1.5 sm:gap-2">
-                      <span className="text-xl font-black leading-none sm:text-2xl" style={{ color: cfg.clr }}>{count}</span>
-                      <span className="truncate text-xs font-bold sm:text-sm" style={{ color: cfg.clr }}>{cfg.label}</span>
-                    </div>
-                    <div className="shrink-0 rounded-lg px-1.5 py-1 text-[9px] font-extrabold sm:px-2 sm:text-[10px]" style={{ backgroundColor: cfg.darkBg, color: cfg.clr }}>
-                      {pct}%
-                    </div>
-                  </button>
-                );
-              })}
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button type="button" onClick={() => toggleFilter("HADIR")}
+                className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-md transition-all sm:w-2/5"
+                style={{
+                  background: CARD_GRADIENTS[3],
+                  outline: activeFilter === "HADIR" ? "3px solid white" : "3px solid transparent",
+                }}>
+                <div className="flex items-center justify-between">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
+                    <STATUS_CFG.HADIR.icon size={20} style={{ color: STATUS_CFG.HADIR.clr }} />
+                  </span>
+                  <span className="rounded-lg bg-white px-2 py-1 text-xs font-extrabold" style={{ color: STATUS_CFG.HADIR.clr }}>
+                    {hadirPct}%
+                  </span>
+                </div>
+                <div className="mt-4">
+                  <p className="text-3xl font-black text-white">{rekap.HADIR}</p>
+                  <p className="text-xs font-bold text-white">{STATUS_CFG.HADIR.label}</p>
+                </div>
+              </button>
+
+              <div className="grid flex-1 grid-cols-2 gap-3">
+                {(["PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
+                  const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
+                  const Icon = cfg.icon;
+                  const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
+                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                  const active = activeFilter === key;
+                  return (
+                    <button key={key} type="button" onClick={() => toggleFilter(key)}
+                      className="flex min-w-0 items-center gap-2 rounded-2xl p-3 text-left shadow-sm transition-all"
+                      style={{
+                        backgroundColor: cfg.bg,
+                        outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent",
+                        outlineOffset: active ? "2px" : "0",
+                      }}>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white">
+                        <Icon size={15} style={{ color: cfg.clr }} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-base font-black leading-none" style={{ color: cfg.clr }}>{count}</p>
+                        <p className="truncate text-[10px] font-bold" style={{ color: cfg.clr }}>{cfg.label}</p>
+                      </div>
+                      <span className="shrink-0 rounded-md bg-white px-1.5 py-0.5 text-[9px] font-extrabold" style={{ color: cfg.clr }}>
+                        {pct}%
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {activeFilter && (
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                 <span>Menampilkan siswa dengan status</span>
                 <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
-                  style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).darkBg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
+                  style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
                   {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
                 </span>
                 <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -399,9 +445,9 @@ export default function AdminAbsensiHarianPage() {
               </div>
             )}
 
-            <div className="overflow-hidden rounded-2xl border border-emerald-100/70 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div className="flex items-center gap-2.5 bg-gradient-to-r from-emerald-50/80 via-sky-50/40 to-transparent px-4 py-3 dark:from-emerald-900/10 dark:via-transparent dark:to-transparent">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-900/20">
+            <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 to-sky-50 px-4 py-3 dark:from-emerald-950 dark:to-sky-950">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
                   <ClipboardCheck size={15} className="text-emerald-500" />
                 </span>
                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Status Kehadiran Hari Ini</p>

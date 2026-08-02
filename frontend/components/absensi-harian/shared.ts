@@ -25,6 +25,11 @@ export const CARD_GRADIENTS = [
   "linear-gradient(135deg,#0EA5E9,#38BDF8)",
 ];
 
+// Solid dominant hue for each CARD_GRADIENTS entry — used to color an icon
+// sitting on a solid white badge over that gradient, without ever needing
+// an alpha/opacity color.
+export const CARD_ACCENT = ["#3B7CE8", "#EF4444", "#F59E0B", "#10B981", "#6334F4", "#0EA5E9"];
+
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
 // crossed into a new date but UTC hasn't (UTC 17:00-23:59 = WIB 00:00-06:59),
