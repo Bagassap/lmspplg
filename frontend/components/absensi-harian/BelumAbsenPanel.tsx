@@ -158,7 +158,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="space-y-3">
         <Trigger
           title="Siswa Belum Absen Hadir"
           icon={STATUS_CFG.ALPA.icon}
