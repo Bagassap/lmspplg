@@ -197,109 +197,52 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:items-start">
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-1">
-            <p className="text-sm font-extrabold text-slate-800 dark:text-white">Rekap Kehadiran</p>
-            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">Ringkasan hari ini</p>
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="px-5 pt-5">
+            <p className="text-base font-extrabold text-slate-800 dark:text-white">Status Kehadiran Hari Ini</p>
+            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+          </div>
 
-            <div className="mt-4 space-y-3">
-              {(() => {
-                const activeHadir = activeFilter === "HADIR";
-                const pctHadir = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
-                return (
-                  <button type="button" onClick={() => toggleFilter("HADIR")}
-                    className="flex w-full items-center justify-between gap-3 rounded-2xl p-4 text-left transition-all"
-                    style={{ backgroundColor: STATUS_CFG.HADIR.bg, outline: activeHadir ? `2px solid ${STATUS_CFG.HADIR.clr}` : "2px solid transparent" }}>
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: STATUS_CFG.HADIR.clr }}>
-                        <STATUS_CFG.HADIR.icon size={20} className="text-white" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-2xl font-black leading-none" style={{ color: STATUS_CFG.HADIR.clr }}>{rekap.HADIR}</p>
-                        <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Siswa {STATUS_CFG.HADIR.label}</p>
-                      </div>
-                    </div>
-                    <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-extrabold dark:bg-slate-900" style={{ color: STATUS_CFG.HADIR.clr }}>
-                      {pctHadir}%
-                    </span>
-                  </button>
-                );
-              })()}
-
-              <div className="grid grid-cols-2 gap-3">
-                {(["PULANG", "IZIN", "SAKIT", "ALPA"] as FilterAbsensi[]).map((key) => {
-                  const cfg = key === "PULANG" ? PULANG_CFG : STATUS_CFG[key as keyof typeof STATUS_CFG];
-                  const Icon = cfg.icon;
-                  const count = key === "PULANG" ? pulangCount : rekap[key as keyof typeof rekap];
-                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-                  const active = activeFilter === key;
-                  return (
-                    <button key={key} type="button" onClick={() => toggleFilter(key)}
-                      className="flex flex-col items-start gap-2 rounded-2xl p-3 text-left transition-all"
-                      style={{ backgroundColor: cfg.bg, outline: active ? `2px solid ${cfg.clr}` : "2px solid transparent" }}>
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: cfg.clr }}>
-                        <Icon size={14} className="text-white" />
-                      </span>
-                      <div>
-                        <p className="text-lg font-black leading-none" style={{ color: cfg.clr }}>{count}</p>
-                        <p className="mt-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">{cfg.label} &middot; {pct}%</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+            <div className="flex shrink-0 items-center gap-2">
+              <CalendarDays size={14} className="text-slate-400" />
+              <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+                className="rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <RangeModeToggle {...exportRange} />
+              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div className="px-5 pt-5">
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">Status Kehadiran Hari Ini</p>
-                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-                <div className="flex shrink-0 items-center gap-2">
-                  <CalendarDays size={14} className="text-slate-400" />
-                  <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                    className="rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <RangeModeToggle {...exportRange} />
-                  <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
-                </div>
-              </div>
-
-              {activeFilter && (
-                <div className="flex flex-wrap items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-500 dark:border-slate-700/40 dark:text-slate-400">
-                  <span>Menampilkan siswa dengan status</span>
-                  <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
-                    style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
-                    {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
-                  </span>
-                  <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    (tampilkan semua)
-                  </button>
-                </div>
-              )}
-
-              <AbsensiHarianTable
-                loading={loading}
-                hasSiswa={siswaList.length > 0}
-                filteredSiswa={filteredSiswa}
-                pagedSiswa={pagedSiswa}
-                tableStart={tableStart}
-                tableEnd={tableEnd}
-                activeFilter={activeFilter}
-                tablePage={tablePage}
-                setTablePage={setTablePage}
-                tablePageCount={tablePageCount}
-                tablePageSize={tablePageSize}
-                setTablePageSize={setTablePageSize}
-                onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-              />
+          {activeFilter && (
+            <div className="flex flex-wrap items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-500 dark:border-slate-700/40 dark:text-slate-400">
+              <span>Menampilkan siswa dengan status</span>
+              <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
+                style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
+                {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
+              </span>
+              <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                (tampilkan semua)
+              </button>
             </div>
-          </div>
+          )}
+
+          <AbsensiHarianTable
+            loading={loading}
+            hasSiswa={siswaList.length > 0}
+            filteredSiswa={filteredSiswa}
+            pagedSiswa={pagedSiswa}
+            tableStart={tableStart}
+            tableEnd={tableEnd}
+            activeFilter={activeFilter}
+            tablePage={tablePage}
+            setTablePage={setTablePage}
+            tablePageCount={tablePageCount}
+            tablePageSize={tablePageSize}
+            setTablePageSize={setTablePageSize}
+            onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+          />
         </div>
       </div>
 
