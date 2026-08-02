@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays,
+  ClipboardCheck, CalendarDays, GraduationCap,
   Settings2, X, Plus, Pencil, Trash2, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -14,7 +14,6 @@ import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
-import { MiniBarChart } from "@/components/absensi-harian/MiniBarChart";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
@@ -322,7 +321,7 @@ export default function AdminAbsensiHarianPage() {
           {kelasList.length === 0 ? (
             <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-44 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                <div key={i} className="h-44 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
               ))}
             </div>
           ) : (
@@ -332,18 +331,38 @@ export default function AdminAbsensiHarianPage() {
                 const isSelected = k.id === selectedId;
                 return (
                   <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                    className={`relative flex min-h-44 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left transition-all ${
-                      isSelected
-                        ? "shadow-md"
-                        : "border border-slate-100 bg-white shadow-sm hover:border-slate-200 dark:border-slate-700 dark:bg-slate-800"
-                    }`}
-                    style={isSelected ? { background: DASHBOARD_GRADIENTS[1] } : undefined}>
-                    <p className={`truncate text-xs font-bold ${isSelected ? "text-white" : "text-slate-700 dark:text-slate-200"}`}>{k.nama}</p>
-                    <div className="flex items-end justify-between gap-2">
-                      <MiniBarChart size={56} color={isSelected ? "#FFFFFF" : "#CBD5E1"} />
+                    className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-left text-white transition-all"
+                    style={{
+                      background: DASHBOARD_GRADIENTS[s.idx % DASHBOARD_GRADIENTS.length],
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                      outline: isSelected ? "3px solid white" : "3px solid transparent",
+                      outlineOffset: isSelected ? "2px" : "0",
+                    }}>
+                    <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                    <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+
+                    <div className="relative flex items-start justify-between">
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Kelas</p>
+                        <p className="mt-0.5 truncate text-sm font-bold">{k.nama}</p>
+                      </div>
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+                        <GraduationCap size={17} />
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <p className="text-3xl font-bold tabular-nums">{s.hd} hadir</p>
+                    </div>
+
+                    <div className="relative flex items-end justify-between">
+                      <div>
+                        <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Total Siswa</p>
+                        <p className="text-[11px] font-semibold">{s.tt} siswa</p>
+                      </div>
                       <div className="text-right">
-                        <p className={`text-3xl font-black leading-none ${isSelected ? "text-white" : "text-slate-700 dark:text-slate-200"}`}>{s.hd}</p>
-                        <p className={`mt-1.5 text-[11px] font-semibold ${isSelected ? "text-white" : "text-slate-400 dark:text-slate-500"}`}>dari {s.tt} &middot; {s.pct}%</p>
+                        <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Kehadiran</p>
+                        <p className="text-[11px] font-semibold">{s.pct}%</p>
                       </div>
                     </div>
                   </button>
