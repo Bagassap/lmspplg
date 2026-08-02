@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, ChevronRight, X } from "lucide-react";
+import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { formatTgl, CARD_GRADIENTS } from "./shared";
 import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
 
-// Solid gradient (no alpha stops) for the trigger tile, distinct from the
-// red/blue used by BelumAbsenPanel's two triggers for visual variety.
+// Solid gradient (no alpha stops), distinct from BelumAbsenPanel's red/blue
+// triggers for visual variety within the hero card's 3-column row.
 const TRIGGER_GRADIENT = "linear-gradient(135deg,#F97316,#EF4444)";
 
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
@@ -94,27 +94,23 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
 
   return (
     <>
-      <button type="button" onClick={() => setShowModal(true)}
-        className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-3.5 text-left shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+      <motion.button type="button" onClick={() => setShowModal(true)}
+        whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
+        className="relative flex min-h-64 flex-col justify-between overflow-hidden rounded-3xl p-5 text-left shadow-lg transition-all"
         style={{ background: TRIGGER_GRADIENT }}>
-        <div className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
-        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
-          <TrendingDown size={18} className="text-red-500" />
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-600">
+          <TrendingDown size={22} className="text-white" />
         </span>
-        <div className="relative min-w-0 flex-1">
-          <p className="truncate text-sm font-extrabold text-white">Siswa Sering Tidak Hadir</p>
-          <div className="mt-1.5 flex items-center gap-2">
-            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
-              <span className="block h-full rounded-full bg-red-500 transition-[width] duration-500 ease-out" style={{ width: `${rataKehadiran}%` }} />
-            </span>
-            <span className="text-[10px] font-extrabold text-white">{loading ? "…" : `${rataKehadiran}%`}</span>
-          </div>
+        <div>
+          <p className="text-lg font-extrabold text-white">Siswa Sering Tidak Hadir</p>
+          <p className="mt-1 text-xs font-semibold text-white">
+            {totalBermasalah} siswa &middot; {loading ? "…" : `rata-rata kehadiran ${rataKehadiran}%`}
+          </p>
         </div>
-        <span className="relative shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-red-500">
-          {totalBermasalah}
+        <span className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-xs font-extrabold text-red-600">
+          Lihat Daftar
         </span>
-        <ChevronRight size={15} className="relative shrink-0 text-white" />
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {showModal && (
