@@ -53,6 +53,21 @@ export const DASHBOARD_GRADIENTS = [
 export const DASHBOARD_ACCENT = ["#22c55e", "#0033FF", "#7c3aed", "#ea580c"];
 export const DASHBOARD_PASTEL = ["#E7F9EE", "#E8EDFF", "#F0ECFF", "#FFF1E6"];
 
+// Wallet-card style palette for the "Kelas" row on the admin Absensi Harian
+// page — order matches the orange/blue/cyan/green sequence of the reference
+// design exactly, cycling by kelas index.
+export const WALLET_GRADIENTS = [
+  "linear-gradient(135deg,#fb923c,#ea580c)", // orange
+  "linear-gradient(135deg,#0033FF,#335CFF)", // blue (sidebar's primary blue)
+  "linear-gradient(135deg,#22D3EE,#06B6D4)", // cyan
+  "linear-gradient(135deg,#4ade80,#22c55e)", // green
+];
+
+// Subtle repeating wave-line texture drawn straight into each wallet card's
+// gradient background, matching the reference's faint background pattern.
+export const WALLET_WAVE_PATTERN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q15 10 30 30 T60 30 T90 30 T120 30' stroke='white' stroke-opacity='0.35' stroke-width='2' fill='none'/%3E%3Cpath d='M0 45 Q15 25 30 45 T60 45 T90 45 T120 45' stroke='white' stroke-opacity='0.22' stroke-width='2' fill='none'/%3E%3C/svg%3E\")";
+
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
 // crossed into a new date but UTC hasn't (UTC 17:00-23:59 = WIB 00:00-06:59),

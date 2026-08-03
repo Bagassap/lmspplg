@@ -2,18 +2,17 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PartyPopper, Search, Copy, Check, X } from "lucide-react";
+import { PartyPopper, Search, Copy, Check, X, Clock } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
 
-// Tall hero-card style trigger, matching the reference's wrapped "step card"
-// section: circular badge, title + stat line, pill button pinned to the
-// bottom. Meant to sit inside the outer white "hero" card as one of 3 equal
-// columns alongside LaporanSeringTidakHadir's trigger.
-function Trigger({
+// Tall hero-card style trigger — the guru page's 3-equal-column hero section
+// (this component's 2 triggers + LaporanSeringTidakHadir's 1 trigger) still
+// relies on this exact shape, so it's kept untouched for variant="hero".
+function HeroTrigger({
   title, icon: Icon, gradient, iconColor, items, total, onOpen,
 }: {
   title: string;
@@ -40,6 +39,36 @@ function Trigger({
       <span className="inline-flex w-fit items-center rounded-full bg-white px-3.5 py-1.5 text-[11px] font-extrabold" style={{ color: iconColor }}>
         Lihat Daftar
       </span>
+    </motion.button>
+  );
+}
+
+// Small white stat-card trigger, matching the reference's "Trading Fees"
+// cards: gradient circular icon badge on the left, big count + small label
+// on the right. Still clickable (opens the same DetailModal as before) —
+// only the visual shell changed, not the underlying interaction. Used for
+// variant="stat" (admin's wallet-style "Keterangan Absensi" section).
+function StatTrigger({
+  title, icon: Icon, gradient, items, onOpen,
+}: {
+  title: string;
+  icon: React.ElementType;
+  gradient: string;
+  items: SiswaAbsensi[];
+  onOpen: () => void;
+}) {
+  return (
+    <motion.button type="button" onClick={onOpen}
+      whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
+      className="flex items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
+        <Icon size={20} className="text-white" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-2xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
+        <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
+        <span className="mt-1.5 block h-1 w-10 rounded-full" style={{ background: gradient }} />
+      </div>
     </motion.button>
   );
 }
@@ -148,42 +177,64 @@ function DetailModal({
   );
 }
 
-export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
+export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: SiswaAbsensi[]; variant?: "hero" | "stat" }) {
   const [activeModal, setActiveModal] = useState<"hadir" | "pulang" | null>(null);
 
   const belumHadir = siswaList.filter((s) => !s.status || s.status === "ALPA");
   const belumPulang = siswaList.filter((s) => !s.waktuPulang);
+  const hadirIdx = 3;
+  const pulangIdx = variant === "stat" ? 1 : 0;
+  const hadirIcon = variant === "stat" ? Clock : STATUS_CFG.ALPA.icon;
 
   return (
     <>
-      <div className="contents">
-        <Trigger
-          title="Siswa Belum Absen Hadir"
-          icon={STATUS_CFG.ALPA.icon}
-          gradient={DASHBOARD_GRADIENTS[3]}
-          iconColor={DASHBOARD_ACCENT[3]}
-          items={belumHadir}
-          total={siswaList.length}
-          onOpen={() => setActiveModal("hadir")}
-        />
-        <Trigger
-          title="Siswa Belum Absen Pulang"
-          icon={PULANG_CFG.icon}
-          gradient={DASHBOARD_GRADIENTS[0]}
-          iconColor={DASHBOARD_ACCENT[0]}
-          items={belumPulang}
-          total={siswaList.length}
-          onOpen={() => setActiveModal("pulang")}
-        />
-      </div>
+      {variant === "stat" ? (
+        <div className="flex flex-col gap-4">
+          <StatTrigger
+            title="Belum Absen Pulang"
+            icon={PULANG_CFG.icon}
+            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
+            items={belumPulang}
+            onOpen={() => setActiveModal("pulang")}
+          />
+          <StatTrigger
+            title="Belum Absen Hadir"
+            icon={hadirIcon}
+            gradient={DASHBOARD_GRADIENTS[hadirIdx]}
+            items={belumHadir}
+            onOpen={() => setActiveModal("hadir")}
+          />
+        </div>
+      ) : (
+        <div className="contents">
+          <HeroTrigger
+            title="Siswa Belum Absen Hadir"
+            icon={hadirIcon}
+            gradient={DASHBOARD_GRADIENTS[hadirIdx]}
+            iconColor={DASHBOARD_ACCENT[hadirIdx]}
+            items={belumHadir}
+            total={siswaList.length}
+            onOpen={() => setActiveModal("hadir")}
+          />
+          <HeroTrigger
+            title="Siswa Belum Absen Pulang"
+            icon={PULANG_CFG.icon}
+            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
+            iconColor={DASHBOARD_ACCENT[pulangIdx]}
+            items={belumPulang}
+            total={siswaList.length}
+            onOpen={() => setActiveModal("pulang")}
+          />
+        </div>
+      )}
 
       <AnimatePresence>
         {activeModal === "hadir" && (
           <DetailModal
             title="Siswa Belum Absen Hadir"
-            icon={STATUS_CFG.ALPA.icon}
-            headerBg={DASHBOARD_PASTEL[3]}
-            iconColor={DASHBOARD_ACCENT[3]}
+            icon={hadirIcon}
+            headerBg={DASHBOARD_PASTEL[hadirIdx]}
+            iconColor={DASHBOARD_ACCENT[hadirIdx]}
             emptyMessage="Semua siswa sudah absen hadir!"
             items={belumHadir}
             onClose={() => setActiveModal(null)}
@@ -193,8 +244,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
           <DetailModal
             title="Siswa Belum Absen Pulang"
             icon={PULANG_CFG.icon}
-            headerBg={DASHBOARD_PASTEL[0]}
-            iconColor={DASHBOARD_ACCENT[0]}
+            headerBg={DASHBOARD_PASTEL[pulangIdx]}
+            iconColor={DASHBOARD_ACCENT[pulangIdx]}
             emptyMessage="Semua siswa sudah absen pulang!"
             items={belumPulang}
             onClose={() => setActiveModal(null)}
