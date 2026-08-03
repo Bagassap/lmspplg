@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, BookOpen,
-  Settings2, X, Plus, Pencil, Trash2, ArrowRight,
+  Settings2, X, Plus, Pencil, Trash2, ArrowRight, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -168,9 +168,11 @@ export default function AdminAbsensiHarianPage() {
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
   const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
   const [showKelola, setShowKelola] = useState(false);
+  const [kelasPage, setKelasPage] = useState(0);
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
   const [tablePageSize, setTablePageSize] = useState<number>(10);
+  const KELAS_PER_PAGE = 4;
 
   const loadKelasList = useCallback(async () => {
     const res = await fetch("/api/kelas");
@@ -185,6 +187,11 @@ export default function AdminAbsensiHarianPage() {
   }, []);
 
   useEffect(() => { loadKelasList(); loadGuruList(); }, [loadKelasList, loadGuruList]);
+
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(kelasList.length / KELAS_PER_PAGE) - 1);
+    setKelasPage((p) => Math.min(p, maxPage));
+  }, [kelasList.length]);
 
   const loadRekap = useCallback(async () => {
     setLoading(true);
@@ -218,6 +225,8 @@ export default function AdminAbsensiHarianPage() {
     const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
     return { idx: idx < 0 ? 0 : idx, hd, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
   }
+  const kelasPageSlice = kelasList.slice(kelasPage * KELAS_PER_PAGE, kelasPage * KELAS_PER_PAGE + KELAS_PER_PAGE);
+  const kelasPageCount = Math.ceil(kelasList.length / KELAS_PER_PAGE);
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -265,21 +274,30 @@ export default function AdminAbsensiHarianPage() {
           <div className="lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
-              <button type="button" onClick={() => setShowKelola(true)}
-                className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                More <ArrowRight size={12} />
-              </button>
+              <div className="flex items-center gap-2">
+                {kelasPageCount > 1 && (
+                  <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
+                )}
+                <button type="button" onClick={() => setKelasPage((p) => Math.max(0, p - 1))} disabled={kelasPage === 0}
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                  <ChevronLeft size={13} />
+                </button>
+                <button type="button" onClick={() => setKelasPage((p) => (p + 1 < kelasPageCount ? p + 1 : p))} disabled={kelasPage + 1 >= kelasPageCount}
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                  <ChevronRight size={13} />
+                </button>
+              </div>
             </div>
 
             {kelasList.length === 0 ? (
-              <div className="flex gap-4 overflow-x-auto pb-1">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-52 w-40 shrink-0 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800 sm:w-44" />
+                  <div key={i} className="h-52 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
                 ))}
               </div>
             ) : (
-              <div className="thin-scrollbar flex gap-4 overflow-x-auto pb-1">
-                {kelasList.map((k) => {
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                {kelasPageSlice.map((k) => {
                   const s = kelasStat(k);
                   const isSelected = k.id === selectedId;
                   const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
@@ -288,7 +306,7 @@ export default function AdminAbsensiHarianPage() {
                     : `${s.pct}% kehadiran`;
                   return (
                     <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      className="relative flex h-52 w-40 shrink-0 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all sm:w-44"
+                      className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
                       style={{
                         background: gradient,
                         boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
