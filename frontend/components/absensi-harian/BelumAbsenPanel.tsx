@@ -122,7 +122,7 @@ function DetailModal({
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        onClick={onClose} className="absolute inset-0 bg-slate-950" />
+        onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
@@ -204,16 +204,6 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
       {variant === "stat" ? (
         <div className="flex flex-col gap-4">
           <StatTrigger
-            title="Belum Absen Pulang"
-            icon={PULANG_CFG.icon}
-            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
-            accent={DASHBOARD_ACCENT[pulangIdx]}
-            items={belumPulang}
-            total={siswaList.length}
-            hint="Klik untuk kirim pengingat →"
-            onOpen={() => setActiveModal("pulang")}
-          />
-          <StatTrigger
             title="Belum Absen Hadir"
             icon={hadirIcon}
             gradient={DASHBOARD_GRADIENTS[hadirIdx]}
@@ -222,6 +212,16 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
             total={siswaList.length}
             hint="Perlu tindak lanjut segera →"
             onOpen={() => setActiveModal("hadir")}
+          />
+          <StatTrigger
+            title="Belum Absen Pulang"
+            icon={PULANG_CFG.icon}
+            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
+            accent={DASHBOARD_ACCENT[pulangIdx]}
+            items={belumPulang}
+            total={siswaList.length}
+            hint="Klik untuk kirim pengingat →"
+            onOpen={() => setActiveModal("pulang")}
           />
         </div>
       ) : (
