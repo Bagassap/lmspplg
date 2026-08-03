@@ -37,7 +37,7 @@ function RankBadge({ index }: { index: number }) {
 function severityColor(pct: number) {
   if (pct < 50) return "#FF3644";
   if (pct < 75) return "#E6A800";
-  return "#3B7CE8";
+  return "#0033FF";
 }
 
 function StatPill({
@@ -158,7 +158,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
                 <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#EF4444" value={String(totalBermasalah)} label="Bermasalah" />
                 <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#F59E0B" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#3B7CE8" value={`${rataKehadiran}%`} label="Rata Hadir" />
+                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#0033FF" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 
               {loading ? (

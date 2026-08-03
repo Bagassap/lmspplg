@@ -11,7 +11,7 @@ export const STATUS_CFG: Record<StatusAbsensi, {
 };
 
 export const PULANG_CFG = {
-  label: "Pulang", bg: "#EAF1FF", clr: "#3B7CE8", darkBg: "#3B7CE820", icon: LogOut,
+  label: "Pulang", bg: "#E8EDFF", clr: "#0033FF", darkBg: "#0033FF20", icon: LogOut,
 };
 
 // Gradients derived directly from each status's own `clr` (dark stop) blended
@@ -23,12 +23,12 @@ export const STATUS_GRADIENT: Record<StatusAbsensi, string> = {
   SAKIT: "linear-gradient(135deg,#E6A800,#F1CF73)",
   ALPA:  "linear-gradient(135deg,#FF3644,#FF9098)",
 };
-export const PULANG_GRADIENT = "linear-gradient(135deg,#3B7CE8,#93B7F2)";
+export const PULANG_GRADIENT = "linear-gradient(135deg,#0033FF,#738FFF)";
 
 export const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
 
 export const CARD_GRADIENTS = [
-  "linear-gradient(135deg,#3B7CE8,#4F8EF7)",
+  "linear-gradient(135deg,#0033FF,#335CFF)",
   "linear-gradient(135deg,#EF4444,#F87171)",
   "linear-gradient(135deg,#F59E0B,#FCD34D)",
   "linear-gradient(135deg,#10B981,#34D399)",
@@ -39,19 +39,19 @@ export const CARD_GRADIENTS = [
 // Solid dominant hue for each CARD_GRADIENTS entry — used to color an icon
 // sitting on a solid white badge over that gradient, without ever needing
 // an alpha/opacity color.
-export const CARD_ACCENT = ["#3B7CE8", "#EF4444", "#F59E0B", "#10B981", "#6334F4", "#0EA5E9"];
+export const CARD_ACCENT = ["#0033FF", "#EF4444", "#F59E0B", "#10B981", "#6334F4", "#0EA5E9"];
 
 // Same 4-color palette as the "Akses Cepat" quick-access cards on the
 // admin/guru/siswa dashboards (green, blue, purple, orange), so the big
 // cards on this page read as part of the same visual family.
 export const DASHBOARD_GRADIENTS = [
   "linear-gradient(135deg,#4ade80,#22c55e)", // green
-  "linear-gradient(135deg,#60a5fa,#3b82f6)", // blue
+  "linear-gradient(135deg,#0033FF,#335CFF)", // blue (sidebar's primary blue)
   "linear-gradient(135deg,#a78bfa,#7c3aed)", // purple
   "linear-gradient(135deg,#fb923c,#ea580c)", // orange
 ];
-export const DASHBOARD_ACCENT = ["#22c55e", "#3b82f6", "#7c3aed", "#ea580c"];
-export const DASHBOARD_PASTEL = ["#E7F9EE", "#EAF1FF", "#F0ECFF", "#FFF1E6"];
+export const DASHBOARD_ACCENT = ["#22c55e", "#0033FF", "#7c3aed", "#ea580c"];
+export const DASHBOARD_PASTEL = ["#E7F9EE", "#E8EDFF", "#F0ECFF", "#FFF1E6"];
 
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
@@ -107,7 +107,7 @@ export function getInitials(name: string) {
   return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 
-const AVATAR_COLORS = ["#6334F4", "#EF4444", "#F59E0B", "#FF7867", "#10B981", "#3B82F6"];
+const AVATAR_COLORS = ["#6334F4", "#EF4444", "#F59E0B", "#FF7867", "#10B981", "#0033FF"];
 export function avatarColor(name: string) {
   let h = 0;
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0x7fffffff;

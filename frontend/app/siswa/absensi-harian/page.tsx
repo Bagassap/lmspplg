@@ -429,8 +429,9 @@ export default function SiswaAbsensiHarianPage() {
                   ) : (
                     <motion.div key="pulang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
-                        {window_ === "HADIR" ? <Clock size={26} className="text-blue-500" /> : <AlertCircle size={26} className="text-red-500" />}
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-full ${window_ === "HADIR" ? "" : "bg-red-50 dark:bg-red-900/20"}`}
+                        style={window_ === "HADIR" ? { background: "#E8EDFF" } : undefined}>
+                        {window_ === "HADIR" ? <Clock size={26} style={{ color: "#0033FF" }} /> : <AlertCircle size={26} className="text-red-500" />}
                       </div>
                       <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">
                         {window_ === "HADIR" ? "Belum Waktunya" : "Waktu Sudah Berakhir"}
