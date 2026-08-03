@@ -222,8 +222,11 @@ export default function AdminAbsensiHarianPage() {
     const idx = kelasList.findIndex((x) => x.id === k.id);
     const r = rekapAll.find((x) => x.kelasId === k.id);
     const hd = r?.rekap.HADIR ?? 0;
+    const iz = r?.rekap.IZIN ?? 0;
+    const sk = r?.rekap.SAKIT ?? 0;
+    const al = r?.rekap.ALPA ?? 0;
     const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
-    return { idx: idx < 0 ? 0 : idx, hd, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
+    return { idx: idx < 0 ? 0 : idx, hd, iz, sk, al, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
   }
   const kelasPageSlice = kelasList.slice(kelasPage * KELAS_PER_PAGE, kelasPage * KELAS_PER_PAGE + KELAS_PER_PAGE);
   const kelasPageCount = Math.ceil(kelasList.length / KELAS_PER_PAGE);
@@ -292,7 +295,7 @@ export default function AdminAbsensiHarianPage() {
             {kelasList.length === 0 ? (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-52 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                  <div key={i} className="h-80 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
                 ))}
               </div>
             ) : (
@@ -301,12 +304,10 @@ export default function AdminAbsensiHarianPage() {
                   const s = kelasStat(k);
                   const isSelected = k.id === selectedId;
                   const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
-                  const keterangan = k.waliKelasGuru?.user.nama
-                    ? `Wali: ${k.waliKelasGuru.user.nama}`
-                    : `${s.pct}% kehadiran`;
+                  const wali = k.waliKelasGuru?.user.nama ?? "Belum ada wali kelas";
                   return (
                     <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
+                      className="relative flex h-80 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
                       style={{
                         background: gradient,
                         boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
@@ -316,17 +317,33 @@ export default function AdminAbsensiHarianPage() {
                       <div className="pointer-events-none absolute inset-0"
                         style={{ backgroundImage: WALLET_WAVE_PATTERN, backgroundSize: "140px 70px", backgroundRepeat: "repeat", opacity: 0.5 }} />
 
-                      <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
-                        <BookOpen size={16} />
-                      </span>
-
-                      <div className="relative">
-                        <p className="truncate text-base font-bold">{k.nama}</p>
+                      <div className="relative flex items-start justify-between">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
+                          <BookOpen size={16} />
+                        </span>
+                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                          Kelas
+                        </span>
                       </div>
 
                       <div className="relative">
-                        <p className="text-lg font-extrabold tabular-nums">{s.hd}/{s.tt} Hadir</p>
-                        <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{keterangan}</p>
+                        <p className="truncate text-base font-bold">{k.nama}</p>
+                        <p className="mt-0.5 truncate text-[10px] font-medium text-white/70">{wali}</p>
+                      </div>
+
+                      <div className="relative">
+                        <p className="text-2xl font-extrabold tabular-nums">{s.hd}/{s.tt}</p>
+                        <p className="text-[11px] font-semibold text-white/80">Siswa Hadir Hari Ini</p>
+                        <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
+                          <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
+                        </div>
+                        <p className="mt-1 text-[10px] font-semibold text-white/70">{s.pct}% kehadiran</p>
+                      </div>
+
+                      <div className="relative flex flex-wrap items-center gap-1.5">
+                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Izin {s.iz}</span>
+                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Sakit {s.sk}</span>
+                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Alpa {s.al}</span>
                       </div>
                     </button>
                   );

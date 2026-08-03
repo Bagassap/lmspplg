@@ -49,25 +49,38 @@ function HeroTrigger({
 // only the visual shell changed, not the underlying interaction. Used for
 // variant="stat" (admin's wallet-style "Keterangan Absensi" section).
 function StatTrigger({
-  title, icon: Icon, gradient, items, onOpen,
+  title, icon: Icon, gradient, accent, items, total, hint, onOpen,
 }: {
   title: string;
   icon: React.ElementType;
   gradient: string;
+  accent: string;
   items: SiswaAbsensi[];
+  total: number;
+  hint: string;
   onOpen: () => void;
 }) {
+  const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
-      className="flex items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      className="flex w-full items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
         <Icon size={20} className="text-white" />
       </span>
-      <div className="min-w-0">
-        <p className="text-2xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-1.5">
+          <p className="text-2xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
+          <span className="text-[11px] font-bold" style={{ color: accent }}>{pct}%</span>
+        </div>
         <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
-        <span className="mt-1.5 block h-1 w-10 rounded-full" style={{ background: gradient }} />
+        <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
+          dari {total} siswa hari ini
+        </p>
+        <div className="mt-1.5 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-700">
+          <div className="h-1 rounded-full transition-all" style={{ width: `${pct}%`, background: gradient }} />
+        </div>
+        <p className="mt-1.5 truncate text-[10px] font-semibold" style={{ color: accent }}>{hint}</p>
       </div>
     </motion.button>
   );
@@ -194,14 +207,20 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
             title="Belum Absen Pulang"
             icon={PULANG_CFG.icon}
             gradient={DASHBOARD_GRADIENTS[pulangIdx]}
+            accent={DASHBOARD_ACCENT[pulangIdx]}
             items={belumPulang}
+            total={siswaList.length}
+            hint="Klik untuk kirim pengingat →"
             onOpen={() => setActiveModal("pulang")}
           />
           <StatTrigger
             title="Belum Absen Hadir"
             icon={hadirIcon}
             gradient={DASHBOARD_GRADIENTS[hadirIdx]}
+            accent={DASHBOARD_ACCENT[hadirIdx]}
             items={belumHadir}
+            total={siswaList.length}
+            hint="Perlu tindak lanjut segera →"
             onOpen={() => setActiveModal("hadir")}
           />
         </div>
