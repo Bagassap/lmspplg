@@ -2,12 +2,17 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PartyPopper, Search, Copy, Check, X, Clock } from "lucide-react";
+import { PartyPopper, Search, Copy, Check, X, Clock, Info, MinusCircle, AlertCircle, Users } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
+
+function formatJam(iso?: string | null) {
+  if (!iso) return "-";
+  return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
+}
 
 // Tall hero-card style trigger — the guru page's 3-equal-column hero section
 // (this component's 2 triggers + LaporanSeringTidakHadir's 1 trigger) still
@@ -87,7 +92,7 @@ function StatTrigger({
 }
 
 function DetailModal({
-  title, icon: Icon, headerBg, iconColor, emptyMessage, items, onClose,
+  title, icon: Icon, headerBg, iconColor, emptyMessage, items, mode, onClose,
 }: {
   title: string;
   icon: React.ElementType;
@@ -95,6 +100,7 @@ function DetailModal({
   iconColor: string;
   emptyMessage: string;
   items: SiswaAbsensi[];
+  mode: "hadir" | "pulang";
   onClose: () => void;
 }) {
   const toast = useToast();
@@ -133,7 +139,9 @@ function DetailModal({
             </span>
             <div className="min-w-0">
               <p className="truncate text-sm font-extrabold" style={{ color: iconColor }}>{title}</p>
-              <p className="text-[11px] font-semibold text-slate-500">{items.length} siswa</p>
+              <p className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
+                <Users size={10} /> {items.length} siswa dalam daftar ini
+              </p>
             </div>
           </div>
           <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-slate-500 hover:bg-slate-100">
@@ -148,6 +156,12 @@ function DetailModal({
           </div>
         ) : (
           <>
+            <div className="flex shrink-0 items-start gap-1.5 border-b border-slate-100 bg-slate-50/70 px-4 py-2 dark:border-slate-700 dark:bg-slate-800/40">
+              <Info size={12} className="mt-0.5 shrink-0 text-slate-400" />
+              <p className="text-[10px] font-medium leading-snug text-slate-400 dark:text-slate-500">
+                Klik <span className="font-bold" style={{ color: iconColor }}>Salin</span> untuk menyalin daftar nama, lalu tempel ke grup WhatsApp sebagai pesan pengingat.
+              </p>
+            </div>
             <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-4 py-3 dark:border-slate-700">
               <div className="relative flex-1">
                 <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -175,7 +189,22 @@ function DetailModal({
                       fallbackBg={avatarColorFor(s.nama)}
                       textClassName="text-[10px] font-extrabold"
                     />
-                    <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{s.nama}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{s.nama}</p>
+                      {mode === "pulang" ? (
+                        <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                          <Clock size={10} className="shrink-0" /> Hadir pukul {formatJam(s.waktuAbsen)}
+                        </p>
+                      ) : s.status === "ALPA" ? (
+                        <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] font-medium text-red-400">
+                          <MinusCircle size={10} className="shrink-0" /> Ditandai alpa
+                        </p>
+                      ) : (
+                        <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                          <AlertCircle size={10} className="shrink-0" /> Belum ada catatan absen
+                        </p>
+                      )}
+                    </div>
                     <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: headerBg, color: iconColor }}>
                       {s.nis ?? "—"}
                     </span>
@@ -256,6 +285,7 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
             iconColor={DASHBOARD_ACCENT[hadirIdx]}
             emptyMessage="Semua siswa sudah absen hadir!"
             items={belumHadir}
+            mode="hadir"
             onClose={() => setActiveModal(null)}
           />
         )}
@@ -267,6 +297,7 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
             iconColor={DASHBOARD_ACCENT[pulangIdx]}
             emptyMessage="Semua siswa sudah absen pulang!"
             items={belumPulang}
+            mode="pulang"
             onClose={() => setActiveModal(null)}
           />
         )}
