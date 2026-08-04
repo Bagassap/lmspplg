@@ -300,12 +300,7 @@ export default function AdminAbsensiHarianPage() {
                   ))}
                 </div>
               ) : (
-                <div className={`grid gap-4 ${
-                  kelasPageSlice.length === 1 ? "grid-cols-1 sm:grid-cols-2"
-                    : kelasPageSlice.length === 2 ? "grid-cols-2"
-                    : kelasPageSlice.length === 3 ? "grid-cols-2 sm:grid-cols-3"
-                    : "grid-cols-2 sm:grid-cols-4"
-                }`}>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {kelasPageSlice.map((k) => {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
