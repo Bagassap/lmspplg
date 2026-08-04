@@ -273,7 +273,7 @@ export default function AdminAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8 mb-8">
           <div className="lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
