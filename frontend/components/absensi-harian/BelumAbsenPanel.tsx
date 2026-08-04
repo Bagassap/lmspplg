@@ -35,13 +35,13 @@ function StatTrigger({
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
-      className="flex w-full items-center gap-2.5 rounded-2xl bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
-        <Icon size={16} className="text-white" />
+      className="flex w-full items-center gap-2 rounded-xl bg-white p-2.5 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
+        <Icon size={14} className="text-white" />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-1.5">
-          <p className="text-lg font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
+          <p className="text-base font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
           <span className="text-[10px] font-bold" style={{ color: accent }}>{pct}%</span>
         </div>
         <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
@@ -191,7 +191,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 
   return (
     <>
-      <div className="flex h-full flex-col justify-between gap-3">
+      <div className="flex flex-col gap-2.5">
         <StatTrigger
           title="Belum Absen Hadir"
           icon={Clock}

@@ -223,7 +223,7 @@ export default function GuruAbsensiHarianPage() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col self-start">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
                 <a href="#status-kehadiran-hari-ini"
@@ -231,9 +231,7 @@ export default function GuruAbsensiHarianPage() {
                   More <ArrowRight size={12} />
                 </a>
               </div>
-              <div className="flex-1">
-                <BelumAbsenPanel siswaList={siswaList} />
-              </div>
+              <BelumAbsenPanel siswaList={siswaList} />
             </div>
           </div>
         </div>
