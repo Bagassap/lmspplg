@@ -65,8 +65,14 @@ export const WALLET_GRADIENTS = [
 
 // Subtle repeating wave-line texture drawn straight into each wallet card's
 // gradient background, matching the reference's faint background pattern.
+// Still used by the guru Absensi Harian page's kelas cards.
 export const WALLET_WAVE_PATTERN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q15 10 30 30 T60 30 T90 30 T120 30' stroke='white' stroke-opacity='0.35' stroke-width='2' fill='none'/%3E%3Cpath d='M0 45 Q15 25 30 45 T60 45 T90 45 T120 45' stroke='white' stroke-opacity='0.22' stroke-width='2' fill='none'/%3E%3C/svg%3E\")";
+
+// Dot-grid texture for the admin Absensi Harian page's kelas cards —
+// a distinct corak from the guru page's wave pattern.
+export const WALLET_DOT_PATTERN = "radial-gradient(circle, rgba(255,255,255,0.55) 1.5px, transparent 1.5px)";
+export const WALLET_DOT_SIZE = "18px 18px";
 
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
