@@ -206,7 +206,7 @@ export default function GuruAbsensiHarianPage() {
             <div className="flex flex-wrap items-center gap-2">
               <CalendarDays size={14} className="text-slate-400" />
               <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                className="rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
+                className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
               <RangeModeToggle {...exportRange} />
               <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
             </div>
