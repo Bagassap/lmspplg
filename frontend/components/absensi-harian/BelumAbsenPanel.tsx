@@ -9,9 +9,11 @@ import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
 
-function formatJam(iso?: string | null) {
-  if (!iso) return "-";
-  return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
+// waktuAbsen is stored as an already-formatted "HH.mm" clock string (set via
+// toLocaleTimeString at check-in time, see app/siswa/absensi-harian/page.tsx),
+// not an ISO datetime — re-parsing it with `new Date()` produces Invalid Date.
+function formatJam(waktu?: string | null) {
+  return waktu && waktu.trim() ? waktu : "-";
 }
 
 // Small white stat-card trigger, matching the reference's "Trading Fees"
