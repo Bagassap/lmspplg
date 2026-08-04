@@ -14,7 +14,7 @@ import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_WAVE_PATTERN, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 export default function GuruAbsensiHarianPage() {
@@ -178,9 +178,6 @@ export default function GuruAbsensiHarianPage() {
                         outline: isSelected ? "3px solid white" : "3px solid transparent",
                         outlineOffset: isSelected ? "2px" : "0",
                       }}>
-                      <div className="pointer-events-none absolute inset-0"
-                        style={{ backgroundImage: WALLET_WAVE_PATTERN, backgroundSize: "140px 70px", backgroundRepeat: "repeat", opacity: 0.5 }} />
-
                       <div className="relative flex items-start justify-between">
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
                           <BookOpen size={16} />
