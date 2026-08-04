@@ -223,7 +223,7 @@ export default function GuruAbsensiHarianPage() {
               </div>
             </div>
 
-            <div className="flex flex-col self-start">
+            <div className="flex flex-col">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
                 <a href="#status-kehadiran-hari-ini"
