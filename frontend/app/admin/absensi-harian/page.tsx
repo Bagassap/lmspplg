@@ -273,95 +273,97 @@ export default function AdminAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8 mb-8">
-          <div className="lg:col-span-2">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
-              <div className="flex items-center gap-2">
-                {kelasPageCount > 1 && (
-                  <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
-                )}
-                <button type="button" onClick={() => setKelasPage((p) => Math.max(0, p - 1))} disabled={kelasPage === 0}
-                  className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                  <ChevronLeft size={13} />
-                </button>
-                <button type="button" onClick={() => setKelasPage((p) => (p + 1 < kelasPageCount ? p + 1 : p))} disabled={kelasPage + 1 >= kelasPageCount}
-                  className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                  <ChevronRight size={13} />
-                </button>
+        <div className="mb-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
+            <div className="lg:col-span-2">
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
+                <div className="flex items-center gap-2">
+                  {kelasPageCount > 1 && (
+                    <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
+                  )}
+                  <button type="button" onClick={() => setKelasPage((p) => Math.max(0, p - 1))} disabled={kelasPage === 0}
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                    <ChevronLeft size={13} />
+                  </button>
+                  <button type="button" onClick={() => setKelasPage((p) => (p + 1 < kelasPageCount ? p + 1 : p))} disabled={kelasPage + 1 >= kelasPageCount}
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                    <ChevronRight size={13} />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {kelasList.length === 0 ? (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-80 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {kelasPageSlice.map((k) => {
-                  const s = kelasStat(k);
-                  const isSelected = k.id === selectedId;
-                  const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
-                  const wali = k.waliKelasGuru?.user.nama ?? "Belum ada wali kelas";
-                  return (
-                    <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      className="relative flex h-80 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
-                      style={{
-                        background: gradient,
-                        boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
-                        outline: isSelected ? "3px solid white" : "3px solid transparent",
-                        outlineOffset: isSelected ? "2px" : "0",
-                      }}>
-                      <div className="pointer-events-none absolute inset-0"
-                        style={{ backgroundImage: WALLET_WAVE_PATTERN, backgroundSize: "140px 70px", backgroundRepeat: "repeat", opacity: 0.5 }} />
+              {kelasList.length === 0 ? (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="h-72 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  {kelasPageSlice.map((k) => {
+                    const s = kelasStat(k);
+                    const isSelected = k.id === selectedId;
+                    const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
+                    const wali = k.waliKelasGuru?.user.nama ?? "Belum ada wali kelas";
+                    return (
+                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                        className="relative flex h-72 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
+                        style={{
+                          background: gradient,
+                          boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
+                          outline: isSelected ? "3px solid white" : "3px solid transparent",
+                          outlineOffset: isSelected ? "2px" : "0",
+                        }}>
+                        <div className="pointer-events-none absolute inset-0"
+                          style={{ backgroundImage: WALLET_WAVE_PATTERN, backgroundSize: "140px 70px", backgroundRepeat: "repeat", opacity: 0.5 }} />
 
-                      <div className="relative flex items-start justify-between">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
-                          <BookOpen size={16} />
-                        </span>
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
-                          Kelas
-                        </span>
-                      </div>
-
-                      <div className="relative">
-                        <p className="truncate text-base font-bold">{k.nama}</p>
-                        <p className="mt-0.5 truncate text-[10px] font-medium text-white/70">{wali}</p>
-                      </div>
-
-                      <div className="relative">
-                        <p className="text-2xl font-extrabold tabular-nums">{s.hd}/{s.tt}</p>
-                        <p className="text-[11px] font-semibold text-white/80">Siswa Hadir Hari Ini</p>
-                        <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
-                          <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
+                        <div className="relative flex items-start justify-between">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
+                            <BookOpen size={16} />
+                          </span>
+                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                            Kelas
+                          </span>
                         </div>
-                        <p className="mt-1 text-[10px] font-semibold text-white/70">{s.pct}% kehadiran</p>
-                      </div>
 
-                      <div className="relative flex flex-wrap items-center gap-1.5">
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Izin {s.iz}</span>
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Sakit {s.sk}</span>
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Alpa {s.al}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                        <div className="relative">
+                          <p className="truncate text-base font-bold">{k.nama}</p>
+                          <p className="mt-0.5 truncate text-[10px] font-medium text-white/70">{wali}</p>
+                        </div>
 
-          <div className="flex flex-col">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
-              <a href="#status-kehadiran-hari-ini"
-                className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                More <ArrowRight size={12} />
-              </a>
+                        <div className="relative">
+                          <p className="text-2xl font-extrabold tabular-nums">{s.hd}/{s.tt}</p>
+                          <p className="text-[11px] font-semibold text-white/80">Siswa Hadir Hari Ini</p>
+                          <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
+                            <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
+                          </div>
+                          <p className="mt-1 text-[10px] font-semibold text-white/70">{s.pct}% kehadiran</p>
+                        </div>
+
+                        <div className="relative flex flex-wrap items-center gap-1.5">
+                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Izin {s.iz}</span>
+                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Sakit {s.sk}</span>
+                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Alpa {s.al}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-            <div className="flex-1">
-              <BelumAbsenPanel siswaList={siswaList} />
+
+            <div className="flex flex-col">
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
+                <a href="#status-kehadiran-hari-ini"
+                  className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                  More <ArrowRight size={12} />
+                </a>
+              </div>
+              <div className="flex-1">
+                <BelumAbsenPanel siswaList={siswaList} />
+              </div>
             </div>
           </div>
         </div>
