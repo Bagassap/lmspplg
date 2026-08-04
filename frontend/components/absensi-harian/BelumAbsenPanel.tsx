@@ -69,7 +69,7 @@ function StatTrigger({
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
-      className="flex w-full items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      className="flex w-full flex-1 items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
         <Icon size={20} className="text-white" />
       </span>
@@ -231,7 +231,7 @@ export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: Si
   return (
     <>
       {variant === "stat" ? (
-        <div className="flex flex-col gap-4">
+        <div className="flex h-full flex-col gap-4">
           <StatTrigger
             title="Belum Absen Hadir"
             icon={hadirIcon}
