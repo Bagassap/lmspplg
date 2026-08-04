@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PartyPopper, Search, Copy, Check, X, Clock, Info, MinusCircle, AlertCircle, Users } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { STATUS_CFG, PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
+import { PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
@@ -14,45 +14,10 @@ function formatJam(iso?: string | null) {
   return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
 }
 
-// Tall hero-card style trigger — the guru page's 3-equal-column hero section
-// (this component's 2 triggers + LaporanSeringTidakHadir's 1 trigger) still
-// relies on this exact shape, so it's kept untouched for variant="hero".
-function HeroTrigger({
-  title, icon: Icon, gradient, iconColor, items, total, onOpen,
-}: {
-  title: string;
-  icon: React.ElementType;
-  gradient: string;
-  iconColor: string;
-  items: SiswaAbsensi[];
-  total: number;
-  onOpen: () => void;
-}) {
-  const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
-  return (
-    <motion.button type="button" onClick={onOpen}
-      whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
-      className="relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-lg transition-all"
-      style={{ background: gradient }}>
-      <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: iconColor }}>
-        <Icon size={18} className="text-white" />
-      </span>
-      <div>
-        <p className="text-sm font-extrabold text-white">{title}</p>
-        <p className="mt-1 text-[11px] font-semibold text-white">{items.length} siswa &middot; {pct}% dari total</p>
-      </div>
-      <span className="inline-flex w-fit items-center rounded-full bg-white px-3.5 py-1.5 text-[11px] font-extrabold" style={{ color: iconColor }}>
-        Lihat Daftar
-      </span>
-    </motion.button>
-  );
-}
-
 // Small white stat-card trigger, matching the reference's "Trading Fees"
 // cards: gradient circular icon badge on the left, big count + small label
 // on the right. Still clickable (opens the same DetailModal as before) —
-// only the visual shell changed, not the underlying interaction. Used for
-// variant="stat" (admin's wallet-style "Keterangan Absensi" section).
+// only the visual shell changed, not the underlying interaction.
 function StatTrigger({
   title, icon: Icon, gradient, accent, items, total, hint, onOpen,
 }: {
@@ -219,68 +184,44 @@ function DetailModal({
   );
 }
 
-export function BelumAbsenPanel({ siswaList, variant = "hero" }: { siswaList: SiswaAbsensi[]; variant?: "hero" | "stat" }) {
+export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
   const [activeModal, setActiveModal] = useState<"hadir" | "pulang" | null>(null);
 
   const belumHadir = siswaList.filter((s) => !s.status || s.status === "ALPA");
   const belumPulang = siswaList.filter((s) => !s.waktuPulang);
   const hadirIdx = 3;
-  const pulangIdx = variant === "stat" ? 1 : 0;
-  const hadirIcon = variant === "stat" ? Clock : STATUS_CFG.ALPA.icon;
+  const pulangIdx = 1;
 
   return (
     <>
-      {variant === "stat" ? (
-        <div className="flex h-full flex-col gap-4">
-          <StatTrigger
-            title="Belum Absen Hadir"
-            icon={hadirIcon}
-            gradient={DASHBOARD_GRADIENTS[hadirIdx]}
-            accent={DASHBOARD_ACCENT[hadirIdx]}
-            items={belumHadir}
-            total={siswaList.length}
-            hint="Perlu tindak lanjut segera →"
-            onOpen={() => setActiveModal("hadir")}
-          />
-          <StatTrigger
-            title="Belum Absen Pulang"
-            icon={PULANG_CFG.icon}
-            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
-            accent={DASHBOARD_ACCENT[pulangIdx]}
-            items={belumPulang}
-            total={siswaList.length}
-            hint="Klik untuk kirim pengingat →"
-            onOpen={() => setActiveModal("pulang")}
-          />
-        </div>
-      ) : (
-        <div className="contents">
-          <HeroTrigger
-            title="Siswa Belum Absen Hadir"
-            icon={hadirIcon}
-            gradient={DASHBOARD_GRADIENTS[hadirIdx]}
-            iconColor={DASHBOARD_ACCENT[hadirIdx]}
-            items={belumHadir}
-            total={siswaList.length}
-            onOpen={() => setActiveModal("hadir")}
-          />
-          <HeroTrigger
-            title="Siswa Belum Absen Pulang"
-            icon={PULANG_CFG.icon}
-            gradient={DASHBOARD_GRADIENTS[pulangIdx]}
-            iconColor={DASHBOARD_ACCENT[pulangIdx]}
-            items={belumPulang}
-            total={siswaList.length}
-            onOpen={() => setActiveModal("pulang")}
-          />
-        </div>
-      )}
+      <div className="flex h-full flex-col gap-4">
+        <StatTrigger
+          title="Belum Absen Hadir"
+          icon={Clock}
+          gradient={DASHBOARD_GRADIENTS[hadirIdx]}
+          accent={DASHBOARD_ACCENT[hadirIdx]}
+          items={belumHadir}
+          total={siswaList.length}
+          hint="Perlu tindak lanjut segera →"
+          onOpen={() => setActiveModal("hadir")}
+        />
+        <StatTrigger
+          title="Belum Absen Pulang"
+          icon={PULANG_CFG.icon}
+          gradient={DASHBOARD_GRADIENTS[pulangIdx]}
+          accent={DASHBOARD_ACCENT[pulangIdx]}
+          items={belumPulang}
+          total={siswaList.length}
+          hint="Klik untuk kirim pengingat →"
+          onOpen={() => setActiveModal("pulang")}
+        />
+      </div>
 
       <AnimatePresence>
         {activeModal === "hadir" && (
           <DetailModal
             title="Siswa Belum Absen Hadir"
-            icon={hadirIcon}
+            icon={Clock}
             headerBg={DASHBOARD_PASTEL[hadirIdx]}
             iconColor={DASHBOARD_ACCENT[hadirIdx]}
             emptyMessage="Semua siswa sudah absen hadir!"

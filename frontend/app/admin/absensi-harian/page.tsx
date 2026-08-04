@@ -361,7 +361,7 @@ export default function AdminAbsensiHarianPage() {
               </a>
             </div>
             <div className="flex-1">
-              <BelumAbsenPanel siswaList={siswaList} variant="stat" />
+              <BelumAbsenPanel siswaList={siswaList} />
             </div>
           </div>
         </div>
