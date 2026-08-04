@@ -21,7 +21,7 @@ function formatJam(waktu?: string | null) {
 // on the right. Still clickable (opens the same DetailModal as before) —
 // only the visual shell changed, not the underlying interaction.
 function StatTrigger({
-  title, icon: Icon, gradient, accent, items, total, hint, onOpen,
+  title, icon: Icon, gradient, accent, items, total, onOpen,
 }: {
   title: string;
   icon: React.ElementType;
@@ -29,30 +29,25 @@ function StatTrigger({
   accent: string;
   items: SiswaAbsensi[];
   total: number;
-  hint: string;
   onOpen: () => void;
 }) {
   const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
-      className="flex w-full flex-1 items-center gap-3.5 rounded-2xl bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
-        <Icon size={20} className="text-white" />
+      className="flex w-full items-center gap-2.5 rounded-2xl bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
+        <Icon size={16} className="text-white" />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-1.5">
-          <p className="text-2xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
-          <span className="text-[11px] font-bold" style={{ color: accent }}>{pct}%</span>
+          <p className="text-lg font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
+          <span className="text-[10px] font-bold" style={{ color: accent }}>{pct}%</span>
         </div>
-        <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
-        <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
-          dari {total} siswa hari ini
-        </p>
-        <div className="mt-1.5 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-700">
+        <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
+        <div className="mt-1 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-700">
           <div className="h-1 rounded-full transition-all" style={{ width: `${pct}%`, background: gradient }} />
         </div>
-        <p className="mt-1.5 truncate text-[10px] font-semibold" style={{ color: accent }}>{hint}</p>
       </div>
     </motion.button>
   );
@@ -196,7 +191,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 
   return (
     <>
-      <div className="flex h-full flex-col gap-4">
+      <div className="flex h-full flex-col justify-between gap-3">
         <StatTrigger
           title="Belum Absen Hadir"
           icon={Clock}
@@ -204,7 +199,6 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
           accent={DASHBOARD_ACCENT[hadirIdx]}
           items={belumHadir}
           total={siswaList.length}
-          hint="Perlu tindak lanjut segera →"
           onOpen={() => setActiveModal("hadir")}
         />
         <StatTrigger
@@ -214,7 +208,6 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
           accent={DASHBOARD_ACCENT[pulangIdx]}
           items={belumPulang}
           total={siswaList.length}
-          hint="Klik untuk kirim pengingat →"
           onOpen={() => setActiveModal("pulang")}
         />
       </div>
