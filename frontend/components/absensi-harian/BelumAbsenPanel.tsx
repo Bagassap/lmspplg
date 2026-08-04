@@ -196,7 +196,7 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 
   return (
     <>
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex h-full flex-col justify-center gap-3">
         <StatTrigger
           title="Belum Absen Hadir"
           icon={Clock}
