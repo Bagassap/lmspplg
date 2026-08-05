@@ -19,6 +19,55 @@ import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
+// Guru is usually wali kelas of a single class, so the responsive Kelas grid
+// (grid-cols-2 for exactly 1 card) leaves an empty second slot — this donut
+// fills it with the selected kelas's own status breakdown instead of dead
+// space, reusing the same rekap/hadirPct/total already fetched for the page.
+function DonutRingkasan({ rekap, hadirPct, total }: { rekap: RekapKelas["rekap"]; hadirPct: number; total: number }) {
+  const segments = [
+    { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
+    { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
+    { key: "SAKIT", value: rekap.SAKIT, color: STATUS_CFG.SAKIT.clr, label: STATUS_CFG.SAKIT.label },
+    { key: "ALPA", value: rekap.ALPA, color: STATUS_CFG.ALPA.clr, label: STATUS_CFG.ALPA.label },
+  ];
+  const r = 40;
+  const circumference = 2 * Math.PI * r;
+  let cumulative = 0;
+
+  return (
+    <div className="flex h-72 flex-col items-center justify-center gap-3 rounded-3xl border border-slate-100 bg-white p-4 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Ringkasan Kehadiran</p>
+      <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
+        <svg viewBox="0 0 100 100" className="h-28 w-28 -rotate-90">
+          <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
+          {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
+            const pct = s.value / total;
+            const dash = pct * circumference;
+            const offset = circumference * (1 - cumulative);
+            cumulative += pct;
+            return (
+              <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
+                strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
+            );
+          })}
+        </svg>
+        <div className="absolute flex flex-col items-center">
+          <span className="text-xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
+          <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+        {segments.map((s) => (
+          <div key={s.key} className="flex items-center gap-1.5 text-left">
+            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{s.label} {s.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function GuruAbsensiHarianPage() {
   const toast = useToast();
   const [kelasList, setKelasList] = useState<Kelas[]>([]);
@@ -228,6 +277,14 @@ export default function GuruAbsensiHarianPage() {
                     </button>
                   );
                 })}
+
+                {/* Guru is usually wali kelas of just one class, leaving the
+                    second grid-cols-2 slot empty — fill it with a donut
+                    breakdown of the selected kelas's status today instead of
+                    leaving dead space. */}
+                {kelasPageSlice.length === 1 && (
+                  <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total} />
+                )}
               </div>
             </div>
 
