@@ -67,6 +67,19 @@ const OVERRIDE_END_MINUTES = 23 * 60; // 23.00 WIB
 const PULANG_EXTEND_DATE = '2026-07-28';
 const PULANG_EXTEND_END_MINUTES = 20 * 60; // 20.00 WIB
 
+// TEMPORARY OVERRIDE — 2026-08-05: permintaan khusus untuk memajukan jam
+// BUKA jendela Absen Pulang HARI INI SAJA ke jam 13.00 WIB (bukan jam buka
+// normal 14.00 Senin-Kamis / 11.00 Jumat). Jam TUTUP tidak berubah (tetap
+// 17.00 Senin-Kamis / 12.00 Jumat, kecuali PULANG_EXTEND_DATE di atas juga
+// kebetulan aktif hari yang sama). Jendela Absen Datang TIDAK terpengaruh.
+// Aman dibiarkan di kode setelah tanggal ini berlalu — perbandingan tanggal
+// di bawah otomatis bernilai false untuk hari-hari berikutnya, sehingga
+// jadwal normal berlaku kembali TANPA perlu deploy ulang atau tindakan
+// manual apa pun. Boleh dihapus kapan saja setelah 2026-08-05 kalau ingin
+// membersihkan kode.
+const PULANG_START_OVERRIDE_DATE = '2026-08-05';
+const PULANG_START_OVERRIDE_MINUTES = 13 * 60; // 13.00 WIB
+
 // Absen datang: 06.00-09.00 WIB, Senin-Jumat.
 // Absen pulang: 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
 // Sabtu-Minggu tidak ada jendela absen sama sekali.
@@ -83,19 +96,24 @@ function currentWindow(): AbsenWindow {
   const isMonThu = dayOfWeek >= 1 && dayOfWeek <= 4;
   const isFriday = dayOfWeek === 5;
   const pulangExtendedToday = todayStr() === PULANG_EXTEND_DATE;
+  const pulangStartOverrideToday = todayStr() === PULANG_START_OVERRIDE_DATE;
+  const pulangStartMonThu = pulangStartOverrideToday ? PULANG_START_OVERRIDE_MINUTES : 14 * 60;
+  const pulangStartFriday = pulangStartOverrideToday ? PULANG_START_OVERRIDE_MINUTES : 11 * 60;
 
   if (isMonFri && minutesNow >= 6 * 60 && minutesNow < 9 * 60) return 'HADIR';
-  if (isMonThu && minutesNow >= 14 * 60 && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 17 * 60)) return 'PULANG';
-  if (isFriday && minutesNow >= 11 * 60 && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 12 * 60)) return 'PULANG';
+  if (isMonThu && minutesNow >= pulangStartMonThu && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 17 * 60)) return 'PULANG';
+  if (isFriday && minutesNow >= pulangStartFriday && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 12 * 60)) return 'PULANG';
   return 'CLOSED';
 }
 
 function pulangWindowLabel(): string {
   const { dayOfWeek } = jakartaParts();
-  if (todayStr() === PULANG_EXTEND_DATE) {
-    return dayOfWeek === 5 ? '11.00-20.00 WIB (Jumat, hari ini diperpanjang)' : '14.00-20.00 WIB (Senin-Kamis, hari ini diperpanjang)';
-  }
-  return dayOfWeek === 5 ? '11.00-12.00 WIB (Jumat)' : '14.00-17.00 WIB (Senin-Kamis)';
+  const startOverride = todayStr() === PULANG_START_OVERRIDE_DATE;
+  const endOverride = todayStr() === PULANG_EXTEND_DATE;
+  const start = dayOfWeek === 5 ? (startOverride ? '13.00' : '11.00') : (startOverride ? '13.00' : '14.00');
+  const end = endOverride ? '20.00' : dayOfWeek === 5 ? '12.00' : '17.00';
+  const note = startOverride || endOverride ? ', hari ini disesuaikan' : '';
+  return `${start}-${end} WIB (${dayOfWeek === 5 ? 'Jumat' : 'Senin-Kamis'}${note})`;
 }
 
 // GPS is mandatory for Hadir/Pulang — a truthy check alone lets a client

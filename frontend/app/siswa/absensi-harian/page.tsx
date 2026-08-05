@@ -69,11 +69,19 @@ function isJakartaFriday(): boolean {
 function isPulangExtendedToday(): boolean {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date()) === "2026-07-28";
 }
+// TEMPORARY OVERRIDE — 2026-08-05: jendela Absen Pulang dibuka lebih awal
+// jam 13:00 HARI INI SAJA (lihat PULANG_START_OVERRIDE_DATE di
+// absensi-harian.service.ts). Auto-hilang besok.
+function isPulangStartOverrideToday(): boolean {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date()) === "2026-08-05";
+}
 function pulangRange(): string {
-  if (isPulangExtendedToday()) {
-    return isJakartaFriday() ? "11:00 – 20:00 (Jumat, hari ini diperpanjang)" : "14:00 – 20:00 (Sen-Kam, hari ini diperpanjang)";
-  }
-  return isJakartaFriday() ? "11:00 – 12:00 (Jumat)" : "14:00 – 17:00 (Sen-Kam)";
+  const startOverride = isPulangStartOverrideToday();
+  const endOverride = isPulangExtendedToday();
+  const start = startOverride ? "13:00" : isJakartaFriday() ? "11:00" : "14:00";
+  const end = endOverride ? "20:00" : isJakartaFriday() ? "12:00" : "17:00";
+  const note = startOverride || endOverride ? ", hari ini disesuaikan" : "";
+  return `${start} – ${end} (${isJakartaFriday() ? "Jumat" : "Sen-Kam"}${note})`;
 }
 function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {
   if (window_ === "HADIR") return { label: "Jendela Absen Datang", range: "06:00 – 09:00 (Sen-Jum)" };
