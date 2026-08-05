@@ -14,6 +14,7 @@ import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
+import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
@@ -455,57 +456,61 @@ export default function AdminAbsensiHarianPage() {
             </div>
           </div>
 
-          <div className="self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
-                <FileText size={18} />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
+          <div className="flex h-full flex-col gap-4">
+            <div className="self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="mb-3 flex items-center gap-2.5">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+                  <FileText size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {RANGE_MODE_CARDS.map((opt) => {
-                const active = exportRange.rangeMode === opt.key;
-                return (
-                  <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
-                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm transition-all"
-                    style={{ background: opt.gradient, opacity: active ? 1 : 0.55, outline: active ? "2px solid white" : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
-                    <opt.icon size={16} />
-                    <span className="text-[11px] font-bold">{opt.label}</span>
-                    <span className="text-[9px] leading-tight text-white/75">{opt.caption}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {exportRange.rangeMode === "mingguan" && (
-              <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
-                title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
-            )}
-
-            {exportRange.rangeMode === "bulanan" && (
-              <div className="mt-2 flex items-center gap-1.5">
-                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
-                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
-                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
+              <div className="grid grid-cols-3 gap-2">
+                {RANGE_MODE_CARDS.map((opt) => {
+                  const active = exportRange.rangeMode === opt.key;
+                  return (
+                    <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
+                      className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm transition-all"
+                      style={{ background: opt.gradient, opacity: active ? 1 : 0.55, outline: active ? "2px solid white" : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
+                      <opt.icon size={16} />
+                      <span className="text-[11px] font-bold">{opt.label}</span>
+                      <span className="text-[9px] leading-tight text-white/75">{opt.caption}</span>
+                    </button>
+                  );
+                })}
               </div>
-            )}
 
-            <div className="mt-3">
-              <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+              {exportRange.rangeMode === "mingguan" && (
+                <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
+                  title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+              )}
+
+              {exportRange.rangeMode === "bulanan" && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                  </select>
+                  <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </div>
+              )}
+
+              <div className="mt-3">
+                <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+              </div>
+              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+                <Download size={11} className="shrink-0 text-violet-500" />
+                Pilih rentang waktu, lalu klik salah satu tombol ekspor
+              </p>
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={11} className="shrink-0 text-violet-500" />
-              Pilih rentang waktu, lalu klik salah satu tombol ekspor
-            </p>
+
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
           </div>
         </div>
       </div>

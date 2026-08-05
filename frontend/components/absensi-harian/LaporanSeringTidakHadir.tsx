@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, X } from "lucide-react";
+import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, X, ArrowRight } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
-import { formatTgl, CARD_GRADIENTS, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
+import { formatTgl, CARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } from "./shared";
 import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./types";
+
+const INLINE_LIMIT = 5;
 
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
@@ -87,32 +89,81 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
   const rataKehadiran = rows.length > 0
     ? Math.round((rows.reduce((s, r) => s + r.summary.persentaseKehadiran, 0) / rows.length) * 10) / 10
     : 0;
+  const inlineRows = rows.slice(0, INLINE_LIMIT);
 
   return (
     <>
-      <motion.button type="button" onClick={() => setShowModal(true)}
-        whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.97 }}
-        className="relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-lg transition-all"
-        style={{ background: DASHBOARD_GRADIENTS[2] }}>
-        <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: DASHBOARD_ACCENT[2] }}>
-          <TrendingDown size={18} className="text-white" />
-        </span>
-        <div>
-          <p className="text-sm font-extrabold text-white">Siswa Sering Tidak Hadir</p>
-          <p className="mt-1 text-[11px] font-semibold text-white">
-            {totalBermasalah} siswa &middot; {loading ? "…" : `rata-rata kehadiran ${rataKehadiran}%`}
-          </p>
+      <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#EF4444,#DC2626)" }}>
+              <TrendingDown size={18} />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-slate-800 dark:text-white">Siswa Bermasalah</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Jarang absen{kelasNama ? ` di ${kelasNama}` : ""}</p>
+            </div>
+          </div>
+          <div className="flex rounded-lg bg-slate-100 p-1 dark:bg-slate-700/50">
+            {([
+              { key: "mingguan", label: "7 Hari" },
+              { key: "bulanan", label: "30 Hari" },
+            ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
+              <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
+                className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition-colors ${
+                  periode === opt.key ? "bg-red-500 text-white shadow-sm" : "text-slate-500 dark:text-slate-400"
+                }`}>
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <span className="inline-flex w-fit items-center rounded-full bg-white px-3.5 py-1.5 text-[11px] font-extrabold" style={{ color: DASHBOARD_ACCENT[2] }}>
-          Lihat Daftar
-        </span>
-      </motion.button>
+
+        {loading ? (
+          <div className="mt-4 space-y-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-12 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />
+            ))}
+          </div>
+        ) : inlineRows.length === 0 ? (
+          <div className="mt-4 flex flex-col items-center gap-2 py-6 text-center">
+            <ShieldCheck size={22} className="text-emerald-400" />
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Tidak ada siswa dengan catatan alpa pada periode ini
+            </p>
+          </div>
+        ) : (
+          <div className="mt-4 space-y-2">
+            {inlineRows.map((r, i) => {
+              const bar = severityColor(r.summary.persentaseKehadiran);
+              return (
+                <div key={r.siswaId} className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+                  <RankBadge index={i} />
+                  <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={32} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                    <p className="truncate text-[10px] text-slate-400">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
+                  </div>
+                  <span className="shrink-0 text-xs font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {totalBermasalah > INLINE_LIMIT && (
+          <button type="button" onClick={() => setShowModal(true)}
+            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-500 hover:bg-red-100 dark:bg-red-900/20">
+            Lihat semua {totalBermasalah} siswa <ArrowRight size={12} />
+          </button>
+        )}
+      </div>
 
       <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowModal(false)} className="absolute inset-0 bg-slate-950" />
+              onClick={() => setShowModal(false)} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
             <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
               transition={{ type: "spring", damping: 26, stiffness: 300 }}
               className="relative z-10 flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
