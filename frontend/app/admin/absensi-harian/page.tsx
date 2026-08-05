@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, BookOpen,
   Settings2, X, Plus, Pencil, Trash2, ArrowRight, ChevronLeft, ChevronRight,
+  Users, TrendingUp, LogOut, FileText, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -242,6 +243,16 @@ export default function AdminAbsensiHarianPage() {
     setActiveFilter((prev) => (prev === key ? null : key));
   }
 
+  const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
+  const filterOptions: { key: FilterAbsensi | null; label: string; icon: React.ElementType; count: number; color: string }[] = [
+    { key: null, label: "Semua", icon: Users, count: total, color: "#334155" },
+    { key: "HADIR", label: "Hadir", icon: STATUS_CFG.HADIR.icon, count: rekap.HADIR, color: STATUS_CFG.HADIR.clr },
+    { key: "IZIN", label: "Izin", icon: STATUS_CFG.IZIN.icon, count: rekap.IZIN, color: STATUS_CFG.IZIN.clr },
+    { key: "SAKIT", label: "Sakit", icon: STATUS_CFG.SAKIT.icon, count: rekap.SAKIT, color: STATUS_CFG.SAKIT.clr },
+    { key: "ALPA", label: "Alpa", icon: STATUS_CFG.ALPA.icon, count: rekap.ALPA, color: STATUS_CFG.ALPA.clr },
+    { key: "PULANG", label: "Pulang", icon: PULANG_CFG.icon, count: pulangCount, color: PULANG_CFG.clr },
+  ];
+
   return (
     <>
       <div className="space-y-5 p-1">
@@ -363,34 +374,81 @@ export default function AdminAbsensiHarianPage() {
           </div>
         </div>
 
-        <div id="status-kehadiran-hari-ini" className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <div className="min-w-0">
-              <p className="text-base font-extrabold text-slate-800 dark:text-white">Status Kehadiran Hari Ini</p>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 dark:text-white">
+                  Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
+                </p>
+                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
+                <CalendarDays size={14} className="shrink-0 text-slate-400" />
+                <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+                  className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <CalendarDays size={14} className="text-slate-400" />
-              <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                className="rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-400" />
-              <RangeModeToggle {...exportRange} />
-              <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+
+            <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-4 dark:border-slate-700">
+              <span className="mr-1 text-[11px] font-semibold text-slate-400">Status:</span>
+              {filterOptions.map((opt) => {
+                const active = activeFilter === opt.key;
+                return (
+                  <button key={String(opt.key)} type="button"
+                    onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
+                    className="rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors"
+                    style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
+                    <span className={`flex items-center gap-1.5 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
+                      <opt.icon size={12} />
+                      {opt.label}
+                      <span className={`rounded-full px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                        {opt.count}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <Users size={12} className="text-violet-500" />
+                Total {total} siswa
+              </span>
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <TrendingUp size={12} className="text-violet-500" />
+                Kehadiran {hadirPct}%
+              </span>
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <LogOut size={12} className="text-violet-500" />
+                Sudah pulang {pulangCount} siswa
+              </span>
             </div>
           </div>
 
-          {activeFilter && (
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-500 dark:border-slate-700/40 dark:text-slate-400">
-              <span>Menampilkan siswa dengan status</span>
-              <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
-                style={{ backgroundColor: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).bg, color: (activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).clr }}>
-                {(activeFilter === "PULANG" ? PULANG_CFG : STATUS_CFG[activeFilter]).label}
+          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+                <FileText size={18} />
               </span>
-              <button onClick={() => setActiveFilter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                (tampilkan semua)
-              </button>
+              <div>
+                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
+              </div>
             </div>
-          )}
+            <RangeModeToggle {...exportRange} />
+            <div className="mt-3">
+              <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+            </div>
+            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+              <Download size={11} className="shrink-0 text-violet-500" />
+              Pilih rentang waktu, lalu klik salah satu tombol ekspor
+            </p>
+          </div>
+        </div>
 
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <AbsensiHarianTable
             loading={loading}
             hasSiswa={siswaList.length > 0}
