@@ -3,22 +3,32 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, BookOpen,
+  ClipboardCheck, CalendarDays, CalendarRange, CalendarCheck2, BookOpen,
   Settings2, X, Plus, Pencil, Trash2, ArrowRight, ChevronLeft, ChevronRight,
   Users, TrendingUp, LogOut, FileText, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
-import { ExportButtons, RangeModeToggle } from "@/components/absensi-harian/ExportButtons";
+import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 type Guru = { id: string; user: { id: string; nama: string } };
+
+// Mirrors the reference "Unduh Laporan PDF" card's 3 gradient period
+// buttons exactly — same shape (icon + label + caption stacked, grid-cols-3)
+// but toggles the shared exportRange's mode instead of firing a one-shot
+// download, since our export needs a separate format pick below (4 kinds).
+const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
+  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "linear-gradient(135deg,#6334F4,#4F46E5)" },
+  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "linear-gradient(135deg,#4ade80,#22c55e)" },
+  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "linear-gradient(135deg,#fb923c,#ea580c)" },
+];
 
 function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
   kelasList: Kelas[]; guruList: Guru[]; onClose: () => void; onSaved: () => void;
@@ -437,7 +447,40 @@ export default function AdminAbsensiHarianPage() {
                 <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
               </div>
             </div>
-            <RangeModeToggle {...exportRange} />
+            <div className="grid grid-cols-3 gap-2">
+              {RANGE_MODE_CARDS.map((opt) => {
+                const active = exportRange.rangeMode === opt.key;
+                return (
+                  <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
+                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm transition-all"
+                    style={{ background: opt.gradient, opacity: active ? 1 : 0.55, outline: active ? "2px solid white" : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
+                    <opt.icon size={16} />
+                    <span className="text-[11px] font-bold">{opt.label}</span>
+                    <span className="text-[9px] leading-tight text-white/75">{opt.caption}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {exportRange.rangeMode === "mingguan" && (
+              <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
+                title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+            )}
+
+            {exportRange.rangeMode === "bulanan" && (
+              <div className="mt-2 flex items-center gap-1.5">
+                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                </select>
+                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            )}
+
             <div className="mt-3">
               <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
             </div>
