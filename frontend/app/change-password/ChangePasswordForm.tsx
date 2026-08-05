@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Eye, EyeOff, Loader2, KeyRound, Sparkles, ShieldCheck, UserCheck, CalendarDays } from "lucide-react";
+import { Eye, EyeOff, Loader2, KeyRound, Sparkles, ShieldCheck, UserCheck, CalendarDays, AlertTriangle } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
@@ -20,6 +20,15 @@ const item: Variants = {
 
 type Field = "newPassword" | "confirmPassword";
 
+// If the nama/tanggalLahir on file is itself wrong (a typo during
+// lengkapi-profil, or bad data from the initial CSV import), the student can
+// NEVER pass this self-service check — only an admin can rescue them (via
+// the "Lewati verifikasi identitas" bypass on reset). Below this threshold,
+// a failure is far more likely to just be an honest typo, so retrying is the
+// right first instinct; past it, we proactively point at the real way out
+// instead of leaving the student to retry the same losing move forever.
+const ESCALATE_AFTER_ATTEMPTS = 2;
+
 const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: string; icon: typeof KeyRound }[] = [
   { key: "newPassword", label: "Password Baru", placeholder: "Minimal 8 karakter", autoComplete: "new-password", icon: KeyRound },
   { key: "confirmPassword", label: "Konfirmasi Password Baru", placeholder: "Ulangi password baru", autoComplete: "new-password", icon: KeyRound },
@@ -31,6 +40,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
     confirmPassword: "",
   });
   const [identityConfirm, setIdentityConfirm] = useState("");
+  const [identityFailedAttempts, setIdentityFailedAttempts] = useState(0);
   const [visible, setVisible] = useState<Record<Field, boolean>>({
     newPassword: false,
     confirmPassword: false,
@@ -93,6 +103,11 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
 
       if (!res.ok) {
         setError(data?.message || "Gagal mengubah password.");
+        // Only count attempts that actually included an identity check —
+        // a password-strength or "must match" validation failure isn't
+        // evidence the identity data on file is wrong, so it shouldn't push
+        // the student toward "go find an admin" prematurely.
+        if (!bypassIdentityVerification) setIdentityFailedAttempts((n) => n + 1);
         setLoading(false);
         return;
       }
@@ -177,6 +192,22 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
                 : "Nama lengkap sesuai data sekolah — bukan nama panggilan."}
             </p>
           </motion.div>
+
+          {identityFailedAttempts >= ESCALATE_AFTER_ATTEMPTS && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 px-3.5 py-3"
+            >
+              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-red-600" />
+              <p className="text-xs leading-relaxed text-black/70">
+                Sudah gagal beberapa kali? Kemungkinan {profileCompleted ? "tanggal lahir" : "nama"} yang tersimpan
+                di sistem sekolah berbeda dari yang Anda ingat — bukan berarti Anda salah ketik.
+                Mengulang lagi kemungkinan besar tidak akan berhasil. Silakan hubungi admin sekolah
+                untuk memverifikasi identitas Anda secara manual dan mengatur ulang password.
+              </p>
+            </motion.div>
+          )}
         </>
       )}
 
