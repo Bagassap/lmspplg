@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import { Loader2, User, IdCard, MessageSquareText, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Loader2, User, IdCard, MessageSquareText, CheckCircle2, ArrowLeft, Clock } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
@@ -26,6 +26,7 @@ export function LupaPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [alreadyPending, setAlreadyPending] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,6 +45,14 @@ export function LupaPasswordForm() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
+        // 409 = a request for this student is already pending — this isn't a
+        // validation error to fix and resubmit, it's a "you already did this"
+        // state, so it gets its own screen instead of an inline error.
+        if (res.status === 409) {
+          setAlreadyPending(true);
+          setLoading(false);
+          return;
+        }
         setError(data?.message || "Gagal mengirim permintaan. Coba lagi.");
         setLoading(false);
         return;
@@ -54,6 +63,33 @@ export function LupaPasswordForm() {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
       setLoading(false);
     }
+  }
+
+  if (alreadyPending) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-amber-500/15 bg-amber-500/[0.04] px-6 py-8 text-center"
+      >
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-50">
+          <Clock size={28} className="text-amber-500" />
+        </div>
+        <p className="text-sm font-semibold text-black/80">
+          Tunggu Konfirmasi Admin
+        </p>
+        <p className="text-sm text-black/55">
+          Anda sudah mengirim permintaan reset password sebelumnya dan masih menunggu diproses.
+          Tidak perlu mengirim permintaan baru — admin akan segera memprosesnya.
+        </p>
+        <Link
+          href="/login"
+          className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-blue transition-colors hover:text-blue/70"
+        >
+          <ArrowLeft size={15} /> Kembali ke halaman login
+        </Link>
+      </motion.div>
+    );
   }
 
   if (submitted) {

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,7 +12,7 @@ import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import { join } from 'path';
-import { Role } from '../../generated/prisma/client';
+import { Role, StatusPasswordReset } from '../../generated/prisma/client';
 
 const SALT_ROUNDS = 10;
 
@@ -272,6 +273,26 @@ export class AuthService {
     const matchedUserId =
       siswa?.userId ??
       (await this.prisma.user.findFirst({ where: { loginId }, select: { id: true } }))?.id;
+
+    // One outstanding request at a time — otherwise a student who keeps
+    // resubmitting (or a spammer) buries the admin's queue in duplicates for
+    // the same account. Matched by userId when we could resolve one, and
+    // always also by the raw loginId so an unresolved/typo'd NIS still gets
+    // deduped against itself.
+    const existingPending = await this.prisma.passwordResetRequest.findFirst({
+      where: {
+        status: StatusPasswordReset.PENDING,
+        OR: [
+          ...(matchedUserId ? [{ userId: matchedUserId }] : []),
+          { loginIdDiajukan: loginId },
+        ],
+      },
+    });
+    if (existingPending) {
+      throw new ConflictException(
+        'Anda sudah mengirim permintaan reset password sebelumnya dan belum diproses admin. Silakan tunggu konfirmasi admin.',
+      );
+    }
 
     await this.prisma.passwordResetRequest.create({
       data: {
