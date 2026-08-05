@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
-  ArrowRight, ChevronLeft, ChevronRight,
+  ArrowRight,
   Users, TrendingUp, LogOut, FileText, Download, PieChart, UserX,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -113,8 +113,6 @@ export default function GuruAbsensiHarianPage() {
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
   const [tablePageSize, setTablePageSize] = useState<number>(10);
-  const [kelasPage, setKelasPage] = useState(0);
-  const KELAS_PER_PAGE = 4;
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -125,11 +123,6 @@ export default function GuruAbsensiHarianPage() {
       })
       .catch(() => {});
   }, []);
-
-  useEffect(() => {
-    const maxPage = Math.max(0, Math.ceil(kelasList.length / KELAS_PER_PAGE) - 1);
-    setKelasPage((p) => Math.min(p, maxPage));
-  }, [kelasList.length]);
 
   const loadRekap = useCallback(async () => {
     if (!selectedId) return;
@@ -157,8 +150,11 @@ export default function GuruAbsensiHarianPage() {
   const total = siswaList.length;
   const sudahAbsen = siswaList.filter((s) => s.status !== null).length;
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
-  const kelasPageSlice = kelasList.slice(kelasPage * KELAS_PER_PAGE, kelasPage * KELAS_PER_PAGE + KELAS_PER_PAGE);
-  const kelasPageCount = Math.ceil(kelasList.length / KELAS_PER_PAGE);
+  // No pagination anymore — kelasList renders in full (grid-cols-4 wraps to
+  // extra rows past 4). DonutRingkasan only needs to know how many empty
+  // slots are left in the LAST row; 0 means the last row is already full
+  // (no filler needed).
+  const kelasLastRowRemainder = kelasList.length % 4;
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -236,23 +232,10 @@ export default function GuruAbsensiHarianPage() {
             <div className="lg:col-span-2">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
-                <div className="flex items-center gap-2">
-                  {kelasPageCount > 1 && (
-                    <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
-                  )}
-                  <button type="button" onClick={() => setKelasPage((p) => Math.max(0, p - 1))} disabled={kelasPage === 0}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                    <ChevronLeft size={13} />
-                  </button>
-                  <button type="button" onClick={() => setKelasPage((p) => (p + 1 < kelasPageCount ? p + 1 : p))} disabled={kelasPage + 1 >= kelasPageCount}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                    <ChevronRight size={13} />
-                  </button>
-                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {kelasPageSlice.map((k) => {
+                {kelasList.map((k) => {
                   const idx = kelasList.findIndex((x) => x.id === k.id);
                   const isSelected = k.id === selectedId;
                   const gradient = WALLET_GRADIENTS[(idx < 0 ? 0 : idx) % WALLET_GRADIENTS.length];
@@ -305,16 +288,17 @@ export default function GuruAbsensiHarianPage() {
                   );
                 })}
 
-                {/* Guru is usually wali kelas of fewer than 4 classes, leaving
-                    empty slots in the fixed 4-column grid (same card size as
-                    admin) — fill whatever's left with a donut breakdown of
+                {/* kelasList renders in full now (no pagination) — the fixed
+                    4-column grid (same card size as admin) only leaves empty
+                    slots in the LAST row when the count isn't a multiple of
+                    4. Fill whatever's left there with a donut breakdown of
                     the selected kelas's status today instead of dead space. */}
-                {kelasPageSlice.length > 0 && kelasPageSlice.length < 4 && (
+                {kelasLastRowRemainder > 0 && (
                   <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
                     pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama}
                     colSpanClass={
-                      kelasPageSlice.length === 1 ? "col-span-2 sm:col-span-3"
-                        : kelasPageSlice.length === 2 ? "col-span-2 sm:col-span-2"
+                      kelasLastRowRemainder === 1 ? "col-span-2 sm:col-span-3"
+                        : kelasLastRowRemainder === 2 ? "col-span-2 sm:col-span-2"
                         : "col-span-2 sm:col-span-1"
                     } />
                 )}
