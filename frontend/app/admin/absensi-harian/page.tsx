@@ -435,9 +435,27 @@ export default function AdminAbsensiHarianPage() {
                 Sudah pulang {pulangCount} siswa
               </span>
             </div>
+
+            <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
+              <AbsensiHarianTable
+                loading={loading}
+                hasSiswa={siswaList.length > 0}
+                filteredSiswa={filteredSiswa}
+                pagedSiswa={pagedSiswa}
+                tableStart={tableStart}
+                tableEnd={tableEnd}
+                activeFilter={activeFilter}
+                tablePage={tablePage}
+                setTablePage={setTablePage}
+                tablePageCount={tablePageCount}
+                tablePageSize={tablePageSize}
+                setTablePageSize={setTablePageSize}
+                onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+              />
+            </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-3 flex items-center gap-2.5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
                 <FileText size={18} />
@@ -489,24 +507,6 @@ export default function AdminAbsensiHarianPage() {
               Pilih rentang waktu, lalu klik salah satu tombol ekspor
             </p>
           </div>
-        </div>
-
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <AbsensiHarianTable
-            loading={loading}
-            hasSiswa={siswaList.length > 0}
-            filteredSiswa={filteredSiswa}
-            pagedSiswa={pagedSiswa}
-            tableStart={tableStart}
-            tableEnd={tableEnd}
-            activeFilter={activeFilter}
-            tablePage={tablePage}
-            setTablePage={setTablePage}
-            tablePageCount={tablePageCount}
-            tablePageSize={tablePageSize}
-            setTablePageSize={setTablePageSize}
-            onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-          />
         </div>
       </div>
 
