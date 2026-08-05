@@ -8,7 +8,7 @@ import { StatusBadge } from "./StatusBadge";
 import { STATUS_CFG, PULANG_CFG, avatarColor, parseLokasi } from "./shared";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "./types";
 
-const GRID_COLS = "28px 40px 2fr 1.2fr 2.4fr 1fr 1.4fr 60px 60px 96px";
+const GRID_COLS = "28px 40px 2.4fr 1.4fr 1fr 1fr 1.4fr 60px 60px 96px";
 
 type Props = {
   loading: boolean;
