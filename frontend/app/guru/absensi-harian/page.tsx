@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
   ArrowRight, ChevronLeft, ChevronRight,
-  Users, TrendingUp, LogOut, FileText, Download,
+  Users, TrendingUp, LogOut, FileText, Download, PieChart, UserX,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -25,7 +25,9 @@ import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/component
 // instead of dead space, reusing the same rekap/hadirPct/total already
 // fetched for the page. colSpanClass controls how many of the leftover
 // columns it spans.
-function DonutRingkasan({ rekap, hadirPct, total, colSpanClass }: { rekap: RekapKelas["rekap"]; hadirPct: number; total: number; colSpanClass: string }) {
+function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama, colSpanClass }: {
+  rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string; colSpanClass: string;
+}) {
   const segments = [
     { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
     { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
@@ -37,34 +39,62 @@ function DonutRingkasan({ rekap, hadirPct, total, colSpanClass }: { rekap: Rekap
   let cumulative = 0;
 
   return (
-    <div className={`flex h-72 flex-wrap items-center justify-center gap-6 overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${colSpanClass}`}>
-      <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
-        <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
-          <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
-          {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
-            const pct = s.value / total;
-            const dash = pct * circumference;
-            const offset = circumference * (1 - cumulative);
-            cumulative += pct;
-            return (
-              <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
-                strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
-            );
-          })}
-        </svg>
-        <div className="absolute flex flex-col items-center">
-          <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
-          <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
+    <div className={`flex h-72 flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${colSpanClass}`}>
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0EA5E9,#0369A1)" }}>
+          <PieChart size={18} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-sm font-bold text-slate-800 dark:text-white">Ringkasan Kehadiran</p>
+          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
+            Distribusi status siswa hari ini{kelasNama ? ` · ${kelasNama}` : ""}
+          </p>
         </div>
       </div>
-      <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Ringkasan Kehadiran</p>
-        {segments.map((s) => (
-          <div key={s.key} className="flex items-center gap-2 text-left">
-            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+
+      <div className="flex flex-1 flex-wrap items-center justify-center gap-6">
+        <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
+          <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
+            <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
+            {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
+              const pct = s.value / total;
+              const dash = pct * circumference;
+              const offset = circumference * (1 - cumulative);
+              cumulative += pct;
+              return (
+                <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
+                  strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
+              );
+            })}
+          </svg>
+          <div className="absolute flex flex-col items-center">
+            <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
           </div>
-        ))}
+        </div>
+        <div className="flex flex-col gap-2.5">
+          {segments.map((s) => (
+            <div key={s.key} className="flex items-center gap-2 text-left">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
+        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+          <Users size={12} className="text-sky-500" />
+          Total {total} siswa
+        </span>
+        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+          <LogOut size={12} className="text-sky-500" />
+          Sudah pulang {pulangCount} siswa
+        </span>
+        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+          <UserX size={12} className="text-sky-500" />
+          Belum absen {belumAbsen} siswa
+        </span>
       </div>
     </div>
   );
@@ -281,6 +311,7 @@ export default function GuruAbsensiHarianPage() {
                     the selected kelas's status today instead of dead space. */}
                 {kelasPageSlice.length > 0 && kelasPageSlice.length < 4 && (
                   <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
+                    pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama}
                     colSpanClass={
                       kelasPageSlice.length === 1 ? "col-span-2 sm:col-span-3"
                         : kelasPageSlice.length === 2 ? "col-span-2 sm:col-span-2"
