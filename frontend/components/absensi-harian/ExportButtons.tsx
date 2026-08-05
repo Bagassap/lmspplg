@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, FileSpreadsheet, Loader2, X, Search, User, Download } from "lucide-react";
+import { FileText, FileSpreadsheet, Loader2, X, Search, User } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { avatarColor, formatTgl, MONTH_NAMES } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
@@ -167,34 +167,31 @@ export function ExportButtons({ kelasId, kelasNama, range, siswaList }: {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
-        <button type="button" onClick={() => runKelasExport("pdf-kelas")} disabled={disabled || !!loadingKind}
-          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+      <div className="flex flex-nowrap items-center gap-1.5">
+        <button type="button" onClick={() => runKelasExport("pdf-kelas")} disabled={disabled || !!loadingKind} title="PDF Per Kelas"
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
           style={PDF_STYLE}>
-          {loadingKind === "pdf-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
-          PDF Per Kelas
+          {loadingKind === "pdf-kelas" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
+          <span className="truncate">PDF Kelas</span>
         </button>
-        <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind}
-          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+        <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind} title="PDF Per Siswa"
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
           style={PDF_STYLE}>
-          {loadingKind === "pdf-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
-          PDF Per Siswa
+          {loadingKind === "pdf-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
+          <span className="truncate">PDF Siswa</span>
         </button>
-        <button type="button" onClick={() => runKelasExport("excel-kelas")} disabled={disabled || !!loadingKind}
-          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+        <button type="button" onClick={() => runKelasExport("excel-kelas")} disabled={disabled || !!loadingKind} title="Excel Per Kelas"
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
           style={EXCEL_STYLE}>
-          {loadingKind === "excel-kelas" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
-          Excel Per Kelas
+          {loadingKind === "excel-kelas" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
+          <span className="truncate">Excel Kelas</span>
         </button>
-        <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind}
-          className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+        <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind} title="Excel Per Siswa"
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
           style={EXCEL_STYLE}>
-          {loadingKind === "excel-siswa" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
-          Excel Per Siswa
+          {loadingKind === "excel-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
+          <span className="truncate">Excel Siswa</span>
         </button>
-        <span title="Unduh Rekap Absensi" className="shrink-0">
-          <Download size={14} className="text-slate-300 dark:text-slate-600" />
-        </span>
       </div>
 
       <AnimatePresence>
