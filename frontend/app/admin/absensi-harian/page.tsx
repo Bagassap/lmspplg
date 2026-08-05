@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardCheck, CalendarDays, CalendarRange, CalendarCheck2, BookOpen,
+  ClipboardCheck, CalendarDays, BookOpen,
   Settings2, X, Plus, Pencil, Trash2, ArrowRight, ChevronLeft, ChevronRight,
   Users, TrendingUp, LogOut, FileText, Download,
 } from "lucide-react";
@@ -16,20 +16,10 @@ import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTab
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 type Guru = { id: string; user: { id: string; nama: string } };
-
-// Mirrors the reference "Unduh Laporan PDF" card's 3 gradient period
-// buttons exactly — same shape (icon + label + caption stacked, grid-cols-3)
-// but toggles the shared exportRange's mode instead of firing a one-shot
-// download, since our export needs a separate format pick below (4 kinds).
-const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "linear-gradient(135deg,#6334F4,#4F46E5)" },
-  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "linear-gradient(135deg,#4ade80,#22c55e)" },
-  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "linear-gradient(135deg,#fb923c,#ea580c)" },
-];
 
 function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
   kelasList: Kelas[]; guruList: Guru[]; onClose: () => void; onSaved: () => void;

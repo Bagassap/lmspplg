@@ -1,4 +1,4 @@
-import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut } from "lucide-react";
+import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut, CalendarDays, CalendarRange, CalendarCheck2 } from "lucide-react";
 import type { StatusAbsensi } from "./types";
 
 export const STATUS_CFG: Record<StatusAbsensi, {
@@ -73,6 +73,17 @@ export const WALLET_WAVE_PATTERN =
 // a distinct corak from the guru page's wave pattern.
 export const WALLET_DOT_PATTERN = "radial-gradient(circle, rgba(255,255,255,0.55) 1.5px, transparent 1.5px)";
 export const WALLET_DOT_SIZE = "18px 18px";
+
+// Mirrors the reference "Unduh Laporan PDF" card's 3 gradient period
+// buttons exactly — same shape (icon + label + caption stacked, grid-cols-3)
+// but toggles the shared exportRange's mode instead of firing a one-shot
+// download, since our export needs a separate format pick below (4 kinds).
+// Shared by both admin and guru's Absensi Harian pages.
+export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
+  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "linear-gradient(135deg,#6334F4,#4F46E5)" },
+  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "linear-gradient(135deg,#4ade80,#22c55e)" },
+  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "linear-gradient(135deg,#fb923c,#ea580c)" },
+];
 
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already
