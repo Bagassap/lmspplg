@@ -10,7 +10,11 @@ export type RangeSiswaRow = {
   siswaId: string;
   nama: string | null;
   nis: string | null;
-  byTanggal: Record<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>;
+  byTanggal: Record<string, {
+    status: string | null; waktuAbsen: string | null; waktuPulang: string | null;
+    foto: string | null; ttd: string | null; lokasi: string | null;
+    fotoPulang: string | null; ttdPulang: string | null; lokasiPulang: string | null;
+  }>;
   summary: RangeSiswaSummary;
 };
 export type RekapRangeData = {
@@ -273,14 +277,22 @@ export class AbsensiHarianService {
     nama: string | null,
     nis: string | null,
     tanggalList: string[],
-    recMap: Map<string, { status: string | null; waktuAbsen: string | null; waktuPulang: string | null }>,
+    recMap: Map<string, {
+      status: string | null; waktuAbsen: string | null; waktuPulang: string | null;
+      foto?: string | null; ttd?: string | null; lokasi?: string | null;
+      fotoPulang?: string | null; ttdPulang?: string | null; lokasiPulang?: string | null;
+    }>,
   ): RangeSiswaRow {
     const byTanggal: RangeSiswaRow['byTanggal'] = {};
     const tally = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
     for (const tgl of tanggalList) {
       const rec = recMap.get(`${siswaId}|${tgl}`);
       const status = rec?.status ?? null;
-      byTanggal[tgl] = { status, waktuAbsen: rec?.waktuAbsen ?? null, waktuPulang: rec?.waktuPulang ?? null };
+      byTanggal[tgl] = {
+        status, waktuAbsen: rec?.waktuAbsen ?? null, waktuPulang: rec?.waktuPulang ?? null,
+        foto: rec?.foto ?? null, ttd: rec?.ttd ?? null, lokasi: rec?.lokasi ?? null,
+        fotoPulang: rec?.fotoPulang ?? null, ttdPulang: rec?.ttdPulang ?? null, lokasiPulang: rec?.lokasiPulang ?? null,
+      };
       // A day with no record at all counts as Alpa in the RANGE SUMMARY only
       // (unlike the single-day rekap, which leaves null status uncounted) —
       // otherwise the 4 categories wouldn't add up to totalHariEfektif, and a

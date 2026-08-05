@@ -70,8 +70,12 @@ function formatTanggalFull(tanggal: string): string {
   }
 }
 
-const NA_FONT = { color: { argb: 'FFCBD5E1' }, italic: true };
-const LINK_FONT = { color: { argb: 'FF2563EB' }, underline: true };
+// Excel embeds only the font NAME, not the glyphs themselves (unlike PDF) —
+// a viewer without Satoshi installed falls back to their default font, but
+// we still set it everywhere so it renders correctly wherever it is available.
+const FONT_NAME = 'Satoshi';
+const NA_FONT = { name: FONT_NAME, color: { argb: 'FFCBD5E1' }, italic: true };
+const LINK_FONT = { name: FONT_NAME, color: { argb: 'FF2563EB' }, underline: true };
 
 const UPLOADS_ROOT = join(process.cwd(), 'uploads');
 
@@ -150,7 +154,7 @@ export class AbsensiHarianExcelService {
     ];
 
     const headerRow = ws.getRow(1);
-    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.font = { name: FONT_NAME, bold: true, color: { argb: 'FFFFFFFF' } };
     headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6334F4' } };
     headerRow.alignment = { vertical: 'middle' };
     headerRow.height = 20;
@@ -246,7 +250,7 @@ export class AbsensiHarianExcelService {
     ];
 
     const headerRow = ws.getRow(1);
-    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.font = { name: FONT_NAME, bold: true, color: { argb: 'FFFFFFFF' } };
     headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6334F4' } };
     headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
     headerRow.height = 24;
@@ -274,7 +278,7 @@ export class AbsensiHarianExcelService {
         const cell = row.getCell(`d_${tgl}`);
         if (status && STATUS_FILL[status]) {
           cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: STATUS_FILL[status] } };
-          cell.font = { bold: true, color: { argb: STATUS_FONT[status] } };
+          cell.font = { name: FONT_NAME, bold: true, color: { argb: STATUS_FONT[status] } };
         } else {
           cell.font = NA_FONT;
         }
@@ -299,7 +303,7 @@ export class AbsensiHarianExcelService {
       { header: 'Waktu Pulang', key: 'waktuPulang', width: 14 },
     ];
     const headerRow = ws.getRow(1);
-    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.font = { name: FONT_NAME, bold: true, color: { argb: 'FFFFFFFF' } };
     headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6334F4' } };
     headerRow.alignment = { vertical: 'middle' };
     headerRow.height = 20;
@@ -314,20 +318,20 @@ export class AbsensiHarianExcelService {
         waktuPulang: rec?.waktuPulang || '-',
       });
       row.alignment = { vertical: 'middle' };
-      row.getCell('status').font = status ? { bold: true, color: { argb: STATUS_FONT[status] ?? 'FF334155' } } : NA_FONT;
+      row.getCell('status').font = status ? { name: FONT_NAME, bold: true, color: { argb: STATUS_FONT[status] ?? 'FF334155' } } : NA_FONT;
     }
 
     if (s) {
       ws.addRow({});
       const titleRow = ws.addRow({ tanggal: 'RINGKASAN' });
-      titleRow.font = { bold: true, color: { argb: 'FF334155' } };
+      titleRow.font = { name: FONT_NAME, bold: true, color: { argb: 'FF334155' } };
       ws.addRow({ tanggal: 'Total Hari Efektif', status: String(s.summary.totalHariEfektif) });
       ws.addRow({ tanggal: 'Total Hadir', status: String(s.summary.HADIR) });
       ws.addRow({ tanggal: 'Total Izin', status: String(s.summary.IZIN) });
       ws.addRow({ tanggal: 'Total Sakit', status: String(s.summary.SAKIT) });
       ws.addRow({ tanggal: 'Total Alpa', status: String(s.summary.ALPA) });
       const pctRow = ws.addRow({ tanggal: 'Persentase Kehadiran', status: `${s.summary.persentaseKehadiran}%` });
-      pctRow.font = { bold: true, color: { argb: 'FF3B7CE8' } };
+      pctRow.font = { name: FONT_NAME, bold: true, color: { argb: 'FF3B7CE8' } };
     }
 
     const buf = await wb.xlsx.writeBuffer();
