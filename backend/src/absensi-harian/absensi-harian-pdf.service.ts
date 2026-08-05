@@ -174,11 +174,13 @@ export class AbsensiHarianPdfService {
   }
 
   // Weekly/monthly recap: still one page per student, but instead of the
-  // per-day foto/TTD/map dokumentasi block (which would mean dozens of
-  // images per student for a month), each page shows a summary + a Tanggal/
-  // Status/Waktu Hadir/Waktu Pulang table for every effective school day in
-  // the range. A month tops out around ~23 rows, which comfortably fits one
-  // A4 page alongside the header/summary — no pagination-within-student.
+  // full-size per-day foto/TTD/map dokumentasi block (which would mean dozens
+  // of large images per student for a month), each page shows a summary + a
+  // Tanggal/Status/Waktu/Selfie/TTD/GPS table for every effective school day
+  // in the range, with the Selfie/TTD photos embedded as small thumbnails
+  // (GPS stays a Maps link — a thumbnail per row for that too would be too
+  // much). A month tops out around ~23 rows, which comfortably fits one A4
+  // page alongside the header/summary — no pagination-within-student.
   async buildRange(rekap: RekapRangeData): Promise<Buffer> {
     const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true, autoFirstPage: false });
     registerFonts(doc);
@@ -198,7 +200,7 @@ export class AbsensiHarianPdfService {
     } else {
       for (let i = 0; i < rekap.siswa.length; i++) {
         doc.addPage();
-        this.renderRangePage(doc, rekap.siswa[i], kelasNama, periodeLabel, rekap.tanggalList, i, rekap.siswa.length);
+        await this.renderRangePage(doc, rekap.siswa[i], kelasNama, periodeLabel, rekap.tanggalList, i, rekap.siswa.length);
       }
     }
 
@@ -206,7 +208,7 @@ export class AbsensiHarianPdfService {
     return done;
   }
 
-  private renderRangePage(
+  private async renderRangePage(
     doc: PDFKit.PDFDocument,
     s: RangeSiswaRow,
     kelasNama: string,
@@ -262,11 +264,26 @@ export class AbsensiHarianPdfService {
     doc.fontSize(7).fillColor('#94a3b8').text(`Total hari efektif: ${summary.totalHariEfektif}`, margin, y);
     y += 16;
 
+    // Small thumbnails need real vertical room per row — rowH=22 leaves
+    // enough headroom that even a full month (~23 effective weekdays) still
+    // fits comfortably above the footer (measured against the ~560pt left
+    // after the header/summary block above).
     const colFrac = [0.19, 0.11, 0.135, 0.135, 0.13, 0.13, 0.14];
     const colWidths = colFrac.map((f) => f * contentWidth);
     const headers = ['Tanggal', 'Status', 'Waktu Hadir', 'Waktu Pulang', 'Selfie', 'TTD', 'GPS'];
-    const rowH = 17;
-    doc.roundedRect(margin, y, contentWidth, rowH, 3).fill(BRAND_BLUE);
+    const rowH = 22;
+    const thumb = 16;
+
+    const rowMedia = await Promise.all(
+      tanggalList.map(async (tgl) => {
+        const rec = s.byTanggal[tgl];
+        const fotoBuf = await readFotoBuffer(rec?.foto || rec?.fotoPulang);
+        const ttdBuf = decodeTtdBuffer(rec?.ttd || rec?.ttdPulang);
+        return { fotoBuf, ttdBuf };
+      }),
+    );
+
+    doc.roundedRect(margin, y, contentWidth, 17, 3).fill(BRAND_BLUE);
     let hx = margin;
     doc.font('Satoshi-Bold');
     headers.forEach((h, i) => {
@@ -274,7 +291,7 @@ export class AbsensiHarianPdfService {
       hx += colWidths[i];
     });
     doc.font('Satoshi');
-    y += rowH;
+    y += 17;
 
     if (tanggalList.length === 0) {
       doc.fontSize(9).fillColor('#94a3b8').text('Tidak ada hari efektif pada periode ini.', margin, y + 6, { width: contentWidth });
@@ -286,26 +303,57 @@ export class AbsensiHarianPdfService {
       const status = rec?.status;
       const label = status ? (STATUS_LABEL[status] ?? status) : '-';
       const clr = status ? (STATUS_COLOR[status] ?? '#64748b') : '#94a3b8';
-      const hasFoto = !!(rec?.foto || rec?.fotoPulang);
-      const hasTtd = !!(rec?.ttd || rec?.ttdPulang);
+      const { fotoBuf, ttdBuf } = rowMedia[i];
       const gpsUrl = googleMapsUrl(rec?.lokasi) ?? googleMapsUrl(rec?.lokasiPulang);
+      const rowTop = y;
+      const rowMidY = rowTop + (rowH - 9) / 2;
       if (i % 2 === 1) doc.rect(margin, y, contentWidth, rowH).fill(BRAND_BLUE_ROW);
       let cx = margin;
-      doc.fontSize(8).fillColor('#334155').text(formatTanggalShort(tgl), cx + 6, y + 4.5, { width: colWidths[0] - 6 });
+      doc.fontSize(8).fillColor('#334155').text(formatTanggalShort(tgl), cx + 6, rowMidY, { width: colWidths[0] - 6 });
       cx += colWidths[0];
-      doc.font('Satoshi-Bold').fontSize(8).fillColor(clr).text(label, cx, y + 4.5, { width: colWidths[1], align: 'center' });
+      doc.font('Satoshi-Bold').fontSize(8).fillColor(clr).text(label, cx, rowMidY, { width: colWidths[1], align: 'center' });
       doc.font('Satoshi');
       cx += colWidths[1];
-      doc.fontSize(8).fillColor('#334155').text(rec?.waktuAbsen || '-', cx, y + 4.5, { width: colWidths[2], align: 'center' });
+      doc.fontSize(8).fillColor('#334155').text(rec?.waktuAbsen || '-', cx, rowMidY, { width: colWidths[2], align: 'center' });
       cx += colWidths[2];
-      doc.fontSize(8).fillColor('#334155').text(rec?.waktuPulang || '-', cx, y + 4.5, { width: colWidths[3], align: 'center' });
+      doc.fontSize(8).fillColor('#334155').text(rec?.waktuPulang || '-', cx, rowMidY, { width: colWidths[3], align: 'center' });
       cx += colWidths[3];
-      doc.fontSize(8).fillColor(hasFoto ? BRAND_BLUE : '#cbd5e1').text(hasFoto ? '✓' : '-', cx, y + 4.5, { width: colWidths[4], align: 'center' });
+
+      // Selfie thumbnail — centered in its column/row; falls back to a dash
+      // both when there's no photo at all and when the file exists but can't
+      // be decoded (corrupt/unsupported format), same defensive pattern as
+      // drawMediaBox() below for the per-day report.
+      const fotoX = cx + (colWidths[4] - thumb) / 2;
+      const thumbY = rowTop + (rowH - thumb) / 2;
+      if (fotoBuf) {
+        try {
+          doc.image(fotoBuf, fotoX, thumbY, { fit: [thumb, thumb], align: 'center', valign: 'center' });
+        } catch {
+          doc.fontSize(8).fillColor('#cbd5e1').text('-', cx, rowMidY, { width: colWidths[4], align: 'center' });
+        }
+      } else {
+        doc.fontSize(8).fillColor('#cbd5e1').text('-', cx, rowMidY, { width: colWidths[4], align: 'center' });
+      }
       cx += colWidths[4];
-      doc.fontSize(8).fillColor(hasTtd ? BRAND_BLUE : '#cbd5e1').text(hasTtd ? '✓' : '-', cx, y + 4.5, { width: colWidths[5], align: 'center' });
+
+      // TTD thumbnail — small white backing box since signatures are drawn
+      // on a transparent/white canvas and would be hard to read directly on
+      // the alternating light-blue row tint.
+      const ttdX = cx + (colWidths[5] - thumb) / 2;
+      if (ttdBuf) {
+        try {
+          doc.rect(ttdX - 1, thumbY - 1, thumb + 2, thumb + 2).fill('#ffffff');
+          doc.image(ttdBuf, ttdX, thumbY, { fit: [thumb, thumb], align: 'center', valign: 'center' });
+        } catch {
+          doc.fontSize(8).fillColor('#cbd5e1').text('-', cx, rowMidY, { width: colWidths[5], align: 'center' });
+        }
+      } else {
+        doc.fontSize(8).fillColor('#cbd5e1').text('-', cx, rowMidY, { width: colWidths[5], align: 'center' });
+      }
       cx += colWidths[5];
+
       doc.fontSize(8).fillColor(gpsUrl ? BRAND_BLUE : '#cbd5e1')
-        .text(gpsUrl ? 'Lihat' : '-', cx, y + 4.5, { width: colWidths[6], align: 'center', underline: !!gpsUrl, link: gpsUrl ?? undefined });
+        .text(gpsUrl ? 'Lihat' : '-', cx, rowMidY, { width: colWidths[6], align: 'center', underline: !!gpsUrl, link: gpsUrl ?? undefined });
       y += rowH;
     });
 
