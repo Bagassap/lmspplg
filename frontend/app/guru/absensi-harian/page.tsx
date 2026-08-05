@@ -19,11 +19,13 @@ import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
-// Guru is usually wali kelas of a single class, so the responsive Kelas grid
-// (grid-cols-2 for exactly 1 card) leaves an empty second slot — this donut
-// fills it with the selected kelas's own status breakdown instead of dead
-// space, reusing the same rekap/hadirPct/total already fetched for the page.
-function DonutRingkasan({ rekap, hadirPct, total }: { rekap: RekapKelas["rekap"]; hadirPct: number; total: number }) {
+// Guru is usually wali kelas of fewer than 4 classes, so the fixed 4-column
+// Kelas grid (same size as admin's) leaves empty slots — this donut fills
+// however many are left with the selected kelas's own status breakdown
+// instead of dead space, reusing the same rekap/hadirPct/total already
+// fetched for the page. colSpanClass controls how many of the leftover
+// columns it spans.
+function DonutRingkasan({ rekap, hadirPct, total, colSpanClass }: { rekap: RekapKelas["rekap"]; hadirPct: number; total: number; colSpanClass: string }) {
   const segments = [
     { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
     { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
@@ -35,10 +37,9 @@ function DonutRingkasan({ rekap, hadirPct, total }: { rekap: RekapKelas["rekap"]
   let cumulative = 0;
 
   return (
-    <div className="flex h-72 flex-col items-center justify-center gap-3 rounded-3xl border border-slate-100 bg-white p-4 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Ringkasan Kehadiran</p>
-      <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
-        <svg viewBox="0 0 100 100" className="h-28 w-28 -rotate-90">
+    <div className={`flex h-72 flex-wrap items-center justify-center gap-6 overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${colSpanClass}`}>
+      <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
+        <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
           <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
           {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
             const pct = s.value / total;
@@ -52,15 +53,16 @@ function DonutRingkasan({ rekap, hadirPct, total }: { rekap: RekapKelas["rekap"]
           })}
         </svg>
         <div className="absolute flex flex-col items-center">
-          <span className="text-xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
-          <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
+          <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
+          <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+      <div className="flex flex-col gap-2.5">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Ringkasan Kehadiran</p>
         {segments.map((s) => (
-          <div key={s.key} className="flex items-center gap-1.5 text-left">
-            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{s.label} {s.value}</span>
+          <div key={s.key} className="flex items-center gap-2 text-left">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
           </div>
         ))}
       </div>
@@ -219,12 +221,7 @@ export default function GuruAbsensiHarianPage() {
                 </div>
               </div>
 
-              <div className={`grid gap-4 ${
-                kelasPageSlice.length === 1 ? "grid-cols-1 sm:grid-cols-2"
-                  : kelasPageSlice.length === 2 ? "grid-cols-2"
-                  : kelasPageSlice.length === 3 ? "grid-cols-2 sm:grid-cols-3"
-                  : "grid-cols-2 sm:grid-cols-4"
-              }`}>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {kelasPageSlice.map((k) => {
                   const idx = kelasList.findIndex((x) => x.id === k.id);
                   const isSelected = k.id === selectedId;
@@ -278,12 +275,17 @@ export default function GuruAbsensiHarianPage() {
                   );
                 })}
 
-                {/* Guru is usually wali kelas of just one class, leaving the
-                    second grid-cols-2 slot empty — fill it with a donut
-                    breakdown of the selected kelas's status today instead of
-                    leaving dead space. */}
-                {kelasPageSlice.length === 1 && (
-                  <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total} />
+                {/* Guru is usually wali kelas of fewer than 4 classes, leaving
+                    empty slots in the fixed 4-column grid (same card size as
+                    admin) — fill whatever's left with a donut breakdown of
+                    the selected kelas's status today instead of dead space. */}
+                {kelasPageSlice.length > 0 && kelasPageSlice.length < 4 && (
+                  <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
+                    colSpanClass={
+                      kelasPageSlice.length === 1 ? "col-span-2 sm:col-span-3"
+                        : kelasPageSlice.length === 2 ? "col-span-2 sm:col-span-2"
+                        : "col-span-2 sm:col-span-1"
+                    } />
                 )}
               </div>
             </div>
