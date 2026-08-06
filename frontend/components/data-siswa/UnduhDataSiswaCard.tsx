@@ -7,10 +7,10 @@ import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
 type Scope = "semua" | "kelas" | "jurusan";
 
-const SCOPE_CARDS: { key: Scope; label: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "semua", label: "Semua Siswa", icon: Users, gradient: "linear-gradient(135deg,#6334F4,#4F46E5)" },
-  { key: "kelas", label: "Kelas Ini", icon: School, gradient: "linear-gradient(135deg,#4ade80,#22c55e)" },
-  { key: "jurusan", label: "Jurusan Ini", icon: BookOpen, gradient: "linear-gradient(135deg,#fb923c,#ea580c)" },
+const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
+  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "linear-gradient(135deg,#6334F4,#4F46E5)" },
+  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "linear-gradient(135deg,#4ade80,#22c55e)" },
+  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "linear-gradient(135deg,#fb923c,#ea580c)" },
 ];
 
 export function UnduhDataSiswaCard({
@@ -47,7 +47,7 @@ export function UnduhDataSiswaCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid flex-1 grid-cols-3 content-center gap-3">
         {SCOPE_CARDS.map((opt) => {
           const disabled = (opt.key === "kelas" && !kelasId) || (opt.key === "jurusan" && !jurusan);
           const active = scope === opt.key;
@@ -58,7 +58,7 @@ export function UnduhDataSiswaCard({
               disabled={disabled}
               onClick={() => setScope(opt.key)}
               title={disabled ? "Pilih kelas/jurusan di filter dahulu" : undefined}
-              className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm transition-all disabled:cursor-not-allowed"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-5 text-center text-white shadow-sm transition-all disabled:cursor-not-allowed"
               style={{
                 background: opt.gradient,
                 opacity: disabled ? 0.25 : active ? 1 : 0.55,
@@ -66,8 +66,9 @@ export function UnduhDataSiswaCard({
                 outlineOffset: active ? "2px" : "0",
               }}
             >
-              <opt.icon size={16} />
-              <span className="text-[11px] font-bold">{opt.label}</span>
+              <opt.icon size={20} />
+              <span className="text-xs font-bold">{opt.label}</span>
+              <span className="text-[10px] leading-tight text-white/75">{opt.caption}</span>
             </button>
           );
         })}
@@ -86,7 +87,7 @@ export function UnduhDataSiswaCard({
         />
       </div>
 
-      <p className="mt-auto flex items-center gap-1.5 pt-3 text-[10px] text-slate-400 dark:text-slate-500">
+      <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
         <Download size={11} className="shrink-0 text-violet-500" />
         Pilih cakupan, lalu klik salah satu tombol ekspor
       </p>

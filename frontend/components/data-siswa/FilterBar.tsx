@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, BookOpen, Mars, Venus, Filter, Sparkles } from "lucide-react";
-import type { SiswaCardData } from "./shared";
+import { Search, X, Users, BookOpen, Mars, Venus, Filter, Sparkles, School, ChevronDown } from "lucide-react";
+import { kelasShort, type SiswaCardData, type KelasRef } from "./shared";
 
 // #1120F0 = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
 // & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
@@ -28,6 +28,7 @@ export function FilterBar({
   search, onSearch,
   filterJurusan, onFilterJurusan,
   filterGender, onFilterGender,
+  kelasList, selectedKelasId, onSelectKelas,
   siswaList,
   isFiltered, onReset,
   loading, totalCount, displayedCount,
@@ -35,6 +36,7 @@ export function FilterBar({
   search: string; onSearch: (v: string) => void;
   filterJurusan: string; onFilterJurusan: (v: string) => void;
   filterGender: string; onFilterGender: (v: string) => void;
+  kelasList: KelasRef[]; selectedKelasId: string; onSelectKelas: (id: string) => void;
   siswaList: SiswaCardData[];
   isFiltered: boolean; onReset: () => void;
   loading: boolean; totalCount: number; displayedCount: number;
@@ -71,30 +73,44 @@ export function FilterBar({
           </p>
         </div>
 
-        <div className="relative w-full sm:max-w-xs">
-          <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="search"
-            name="data-siswa-search"
-            autoComplete="off"
-            data-lpignore="true"
-            data-1p-ignore="true"
-            value={search}
-            onChange={(e) => onSearch(e.target.value)}
-            placeholder="Cari nama atau NIS…"
-            className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
-          />
-          <AnimatePresence>
-            {search && (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-                onClick={() => onSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <X size={14} />
-              </motion.button>
-            )}
-          </AnimatePresence>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+          <div className="relative shrink-0 sm:w-44">
+            <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <select
+              value={selectedKelasId}
+              onChange={(e) => onSelectKelas(e.target.value)}
+              className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+            >
+              {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
+            </select>
+            <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          </div>
+
+          <div className="relative w-full sm:max-w-xs">
+            <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="search"
+              name="data-siswa-search"
+              autoComplete="off"
+              data-lpignore="true"
+              data-1p-ignore="true"
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
+              placeholder="Cari nama atau NIS…"
+              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+            />
+            <AnimatePresence>
+              {search && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={() => onSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  <X size={14} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 

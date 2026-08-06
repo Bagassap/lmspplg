@@ -5,7 +5,6 @@ import { Users, User, School } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
-import { KelasSelectorGrid } from "@/components/data-siswa/KelasSelectorGrid";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
@@ -91,19 +90,13 @@ export default function AdminDataSiswaPage() {
         ]}
       />
 
-      <KelasSelectorGrid
-        kelasList={kelasList}
-        siswaList={siswaList}
-        selectedId={selectedKelasId}
-        onSelect={setSelectedKelasId}
-      />
-
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <FilterBar
             search={search} onSearch={setSearch}
             filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
             filterGender={filterGender} onFilterGender={setFilterGender}
+            kelasList={kelasList} selectedKelasId={selectedKelasId} onSelectKelas={setSelectedKelasId}
             siswaList={inKelas}
             isFiltered={isFiltered}
             onReset={() => { setSearch(""); setFilterJurusan(""); setFilterGender(""); }}
