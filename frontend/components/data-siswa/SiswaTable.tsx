@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
-import { KelasGroupHeader } from "./KelasGroupHeader";
 import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData } from "./shared";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
@@ -62,117 +61,42 @@ function PaginationBar({ page, pageCount, start, end, total, onPage }: {
   );
 }
 
-function TableBody({ siswas, page, setPage, pageSize, ...actions }: ActionProps & {
-  siswas: SiswaCardData[]; page: number; setPage: (p: number) => void; pageSize: number;
-}) {
-  const { pageItems, pageCount, start, end } = paginate(siswas, page, pageSize);
-  const offset = Number.isFinite(pageSize) ? page * pageSize : 0;
-
-  if (siswas.length === 0) {
-    return <EmptyState message="Tidak ada siswa yang ditemukan" />;
-  }
-
-  return (
-    <>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-170 text-left text-sm">
-          <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
-            <SiswaTableHead />
-          </thead>
-          <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
-            {pageItems.map((s, i) => (
-              <SiswaTableRow key={s.id} siswa={s} index={offset + i} {...actions} />
-            ))}
-          </motion.tbody>
-        </table>
-      </div>
-      {pageCount > 1 && (
-        <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage} />
-      )}
-    </>
-  );
-}
-
-function RowList({ siswas, pageSize, ...actions }: ActionProps & { siswas: SiswaCardData[]; pageSize: number }) {
-  const [page, setPage] = useState(0);
-  useEffect(() => setPage(0), [pageSize]);
-  return (
-    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <TableBody siswas={siswas} page={page} setPage={setPage} pageSize={pageSize} {...actions} />
-    </div>
-  );
-}
-
-function KelasSection({
-  kelas, siswas, pageSize, ...actions
-}: ActionProps & { kelas: string; siswas: SiswaCardData[]; pageSize: number }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [page, setPage] = useState(0);
-  useEffect(() => setPage(0), [pageSize]);
-  const waliKelas = siswas[0]?.kelas.waliKelasGuru?.user.nama;
-
-  return (
-    <div className="space-y-2">
-      <KelasGroupHeader
-        kelas={kelas}
-        waliKelas={waliKelas}
-        count={siswas.length}
-        collapsed={collapsed}
-        onToggle={() => setCollapsed((v) => !v)}
-      />
-      {!collapsed && (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <TableBody siswas={siswas} page={page} setPage={setPage} pageSize={pageSize} {...actions} />
-        </div>
-      )}
-    </div>
-  );
-}
-
 export function SiswaTable({
-  loading, siswas, grouped, kelasNamaOrder, onEdit, onResetPassword, onImpersonate,
+  loading, siswas, onEdit, onResetPassword, onImpersonate,
 }: Omit<ActionProps, "onViewDetail"> & {
   loading: boolean;
   siswas: SiswaCardData[];
-  grouped: boolean;
-  kelasNamaOrder: string[];
 }) {
   const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [page, setPage] = useState(0);
+  useEffect(() => setPage(0), [pageSize, siswas]);
   const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa };
+  const { pageItems, pageCount, start, end } = paginate(siswas, page, pageSize);
+  const offset = Number.isFinite(pageSize) ? page * pageSize : 0;
 
   const content = (() => {
-    if (loading) {
-      return (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <LoadingSkeleton />
-        </div>
-      );
-    }
-
-    if (siswas.length === 0) {
-      return (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <EmptyState message="Tidak ada siswa yang ditemukan" />
-        </div>
-      );
-    }
-
-    if (!grouped) {
-      return <RowList siswas={siswas} pageSize={pageSize} {...actions} />;
-    }
-
-    const groupedByKelas = kelasNamaOrder.reduce<Record<string, SiswaCardData[]>>((acc, k) => {
-      acc[k] = siswas.filter((s) => s.kelas.nama === k);
-      return acc;
-    }, {});
+    if (loading) return <LoadingSkeleton />;
+    if (siswas.length === 0) return <EmptyState message="Tidak ada siswa yang ditemukan" />;
 
     return (
-      <div className="space-y-4">
-        {kelasNamaOrder.filter((k) => (groupedByKelas[k]?.length ?? 0) > 0).map((k) => (
-          <KelasSection key={k} kelas={k} siswas={groupedByKelas[k]} pageSize={pageSize} {...actions} />
-        ))}
-      </div>
+      <>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-170 text-left text-sm">
+            <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+              <SiswaTableHead />
+            </thead>
+            <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
+              {pageItems.map((s, i) => (
+                <SiswaTableRow key={s.id} siswa={s} index={offset + i} {...actions} />
+              ))}
+            </motion.tbody>
+          </table>
+        </div>
+        {pageCount > 1 && (
+          <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage} />
+        )}
+      </>
     );
   })();
 
@@ -184,7 +108,9 @@ export function SiswaTable({
           <PageSizeToggle value={pageSize} onChange={setPageSize} />
         </div>
       )}
-      {content}
+      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        {content}
+      </div>
       {detailSiswa && (
         <SiswaDetailModal
           siswa={detailSiswa}

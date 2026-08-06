@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, School, BookOpen, Mars, Venus, Filter, Sparkles } from "lucide-react";
-import { kelasShort, type KelasRef, type SiswaCardData } from "./shared";
+import { Search, X, Users, BookOpen, Mars, Venus, Filter, Sparkles } from "lucide-react";
+import type { SiswaCardData } from "./shared";
 
 // #1120F0 = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
 // & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
@@ -27,34 +27,22 @@ const GENDER_PILLS = [
 export function FilterBar({
   search, onSearch,
   filterJurusan, onFilterJurusan,
-  filterKelas, onFilterKelas,
   filterGender, onFilterGender,
-  kelasList,
   siswaList,
   isFiltered, onReset,
-  loading, totalCount, displayedCount, kelasCount,
+  loading, totalCount, displayedCount,
 }: {
   search: string; onSearch: (v: string) => void;
   filterJurusan: string; onFilterJurusan: (v: string) => void;
-  filterKelas: string; onFilterKelas: (v: string) => void;
   filterGender: string; onFilterGender: (v: string) => void;
-  kelasList: KelasRef[];
   siswaList: SiswaCardData[];
   isFiltered: boolean; onReset: () => void;
-  loading: boolean; totalCount: number; displayedCount: number; kelasCount: number;
+  loading: boolean; totalCount: number; displayedCount: number;
 }) {
   const jurusanCount = (value: string) =>
     value ? siswaList.filter((s) => s.jurusan === value).length : siswaList.length;
   const genderCount = (value: string) =>
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
-
-  const kelasForJurusan: KelasRef[] = filterJurusan
-    ? Array.from(
-        new Map(
-          siswaList.filter((s) => s.jurusan === filterJurusan).map((s) => [s.kelas.id, s.kelas]),
-        ).values(),
-      ).sort((a, b) => a.nama.localeCompare(b.nama))
-    : [];
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
@@ -73,7 +61,7 @@ export function FilterBar({
             Data Siswa <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
           </p>
           <p className="mt-1 ml-9 text-xs text-slate-500 dark:text-slate-400">
-            Cari, saring, dan unduh data siswa dengan cepat
+            Cari dan saring siswa di kelas ini
           </p>
         </div>
 
@@ -113,7 +101,7 @@ export function FilterBar({
                 key={opt.label}
                 type="button"
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { onFilterJurusan(opt.value); onFilterKelas(""); }}
+                onClick={() => onFilterJurusan(opt.value)}
                 className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
               >
                 {active && (
@@ -171,31 +159,6 @@ export function FilterBar({
 
       {isFiltered && (
         <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
-          {filterJurusan && kelasForJurusan.length > 0 && (
-            <>
-              <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                <School size={11} />
-                Kelas:
-              </span>
-              <div className="relative">
-                <School size={13} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <select
-                  value={filterKelas}
-                  onChange={(e) => onFilterKelas(e.target.value)}
-                  className="appearance-none rounded-xl border border-transparent bg-slate-100 py-2 pr-8 pl-8 text-xs font-semibold text-slate-600 transition-all focus:border-[#1120F0] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:bg-slate-700 dark:text-slate-300"
-                >
-                  <option value="">Semua Kelas ({kelasForJurusan.length})</option>
-                  {kelasForJurusan.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
-                </select>
-              </div>
-              {filterKelas && (
-                <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                  {siswaList.filter((s) => s.jurusan === filterJurusan && s.kelas.id === filterKelas).length} siswa di kelas ini
-                </span>
-              )}
-              <span className="h-4 w-px shrink-0 bg-slate-200 dark:bg-slate-700" />
-            </>
-          )}
           <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             <Sparkles size={11} />
             Filter aktif:
@@ -210,12 +173,6 @@ export function FilterBar({
             <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <BookOpen size={12} /> {JURUSAN_PILLS.find((j) => j.value === filterJurusan)?.label ?? filterJurusan}
               <button type="button" onClick={() => onFilterJurusan("")}><X size={12} /></button>
-            </span>
-          )}
-          {filterKelas && (
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
-              <School size={12} /> {kelasShort(kelasList.find((k) => k.id === filterKelas)?.nama ?? "")}
-              <button type="button" onClick={() => onFilterKelas("")}><X size={12} /></button>
             </span>
           )}
           {filterGender && (
@@ -236,7 +193,7 @@ export function FilterBar({
 
       {!loading && !isFiltered && (
         <p className="relative mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
-          Menampilkan {totalCount} siswa dari {kelasCount} kelas
+          Menampilkan {totalCount} siswa di kelas ini
         </p>
       )}
     </div>

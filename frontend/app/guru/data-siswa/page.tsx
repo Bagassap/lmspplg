@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Users, User, School } from "lucide-react";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
+import { KelasSelectorGrid } from "@/components/data-siswa/KelasSelectorGrid";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { SummaryStatsCard } from "@/components/data-siswa/SummaryStatsCard";
@@ -13,8 +14,8 @@ export default function GuruDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<SiswaCardData[]>([]);
   const [kelasList, setKelasList] = useState<KelasRef[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedKelasId, setSelectedKelasId] = useState("");
   const [search, setSearch] = useState("");
-  const [filterKelas, setFilterKelas] = useState("");
   const [filterJurusan, setFilterJurusan] = useState("");
   const [filterGender, setFilterGender] = useState("");
 
@@ -22,35 +23,38 @@ export default function GuruDataSiswaPage() {
     fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (!selectedKelasId && kelasList.length > 0) setSelectedKelasId(kelasList[0].id);
+  }, [kelasList, selectedKelasId]);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const qs = new URLSearchParams();
-      if (filterKelas)   qs.set("kelasId",      filterKelas);
-      if (filterJurusan) qs.set("jurusan",      filterJurusan);
-      if (filterGender)  qs.set("jenisKelamin", filterGender);
-      const res = await fetch(`/api/siswa?${qs}`);
+      const res = await fetch("/api/siswa");
       if (res.ok) setSiswaList(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [filterKelas, filterJurusan, filterGender]);
+  }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const displayed = search
-    ? siswaList.filter((s) => {
-        const q = search.toLowerCase();
-        return getNama(s).toLowerCase().includes(q) || s.nis.includes(q);
-      })
-    : siswaList;
+  const inKelas = useMemo(
+    () => siswaList.filter((s) => s.kelas.id === selectedKelasId),
+    [siswaList, selectedKelasId],
+  );
 
-  const isFiltered = !!(search || filterKelas || filterJurusan || filterGender);
-  const kelasNamaOrder = kelasList.map((k) => k.nama).sort();
+  const displayed = inKelas
+    .filter((s) => (filterJurusan ? s.jurusan === filterJurusan : true))
+    .filter((s) => (filterGender ? s.jenisKelamin === filterGender : true))
+    .filter((s) => (search ? (getNama(s).toLowerCase().includes(search.toLowerCase()) || s.nis.includes(search)) : true));
+
+  const isFiltered = !!(search || filterJurusan || filterGender);
   const totalL = siswaList.filter((s) => s.jenisKelamin === "Laki-laki").length;
   const totalP = siswaList.filter((s) => s.jenisKelamin === "Perempuan").length;
   const genderKnown = hasGenderData(siswaList);
   const kelasSet = new Set(siswaList.map((s) => s.kelas.nama));
+  const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
     <div className="space-y-5">
@@ -66,37 +70,39 @@ export default function GuruDataSiswaPage() {
         ]}
       />
 
+      <KelasSelectorGrid
+        kelasList={kelasList}
+        siswaList={siswaList}
+        selectedId={selectedKelasId}
+        onSelect={setSelectedKelasId}
+      />
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
           <FilterBar
             search={search} onSearch={setSearch}
             filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
-            filterKelas={filterKelas} onFilterKelas={setFilterKelas}
             filterGender={filterGender} onFilterGender={setFilterGender}
-            kelasList={kelasList}
-            siswaList={siswaList}
+            siswaList={inKelas}
             isFiltered={isFiltered}
-            onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
+            onReset={() => { setSearch(""); setFilterJurusan(""); setFilterGender(""); }}
             loading={loading}
-            totalCount={siswaList.length}
+            totalCount={inKelas.length}
             displayedCount={displayed.length}
-            kelasCount={kelasSet.size}
           />
           <SiswaTable
             loading={loading}
             siswas={displayed}
-            grouped={!isFiltered}
-            kelasNamaOrder={kelasNamaOrder}
           />
         </div>
 
         <div className="flex h-full flex-col gap-4">
           <UnduhDataSiswaCard
-            kelasId={filterKelas || undefined}
-            kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+            kelasId={selectedKelasId || undefined}
+            kelasNama={selectedKelas?.nama}
             jurusan={filterJurusan || undefined}
           />
-          {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
+          {!loading && <SummaryStatsCard siswas={displayed} kelasCount={selectedKelasId ? 1 : 0} />}
         </div>
       </div>
     </div>
