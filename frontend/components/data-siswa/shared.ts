@@ -112,3 +112,27 @@ export function avatarColorFor(seed: string): string {
 export function hasGenderData(list: { jenisKelamin: string | null }[]): boolean {
   return list.some((s) => !!s.jenisKelamin);
 }
+
+export type MissingField = { key: string; label: string };
+
+const COMPLETENESS_FIELDS: { key: string; label: string; filled: (s: SiswaCardData) => boolean }[] = [
+  { key: "jenisKelamin", label: "Jenis Kelamin", filled: (s) => !!s.jenisKelamin },
+  { key: "tempatLahir", label: "Tempat Lahir", filled: (s) => !!s.tempatLahir },
+  { key: "tanggalLahir", label: "Tanggal Lahir", filled: (s) => !!s.tanggalLahir },
+  { key: "noHp", label: "No. HP", filled: (s) => !!s.noHp },
+  { key: "namaOrtu", label: "Nama Orang Tua", filled: (s) => !!s.namaOrtu },
+  {
+    key: "alamat",
+    label: "Alamat Lengkap",
+    filled: (s) => !!(s.dukuh && s.desa && s.kecamatan && s.kabupaten),
+  },
+];
+
+export function completeness(s: SiswaCardData): number {
+  const filled = COMPLETENESS_FIELDS.filter((f) => f.filled(s)).length;
+  return Math.round((filled / COMPLETENESS_FIELDS.length) * 100);
+}
+
+export function missingFields(s: SiswaCardData): MissingField[] {
+  return COMPLETENESS_FIELDS.filter((f) => !f.filled(s)).map((f) => ({ key: f.key, label: f.label }));
+}

@@ -2,10 +2,14 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin,
+  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, Hash,
 } from "lucide-react";
-import { type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap } from "./shared";
+import {
+  type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
+  completeness, missingFields,
+} from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
+import { ProgressRing } from "./ProgressRing";
 
 const HEADER_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
 
@@ -35,6 +39,8 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ?? null;
   const alamatLengkap = formatAlamatLengkap(siswa);
+  const pct = completeness(siswa);
+  const missing = missingFields(siswa);
 
   return (
     <AnimatePresence>
@@ -77,15 +83,63 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
 
           {/* Bagian 2 — detail informasi (~70%) */}
           <div className="px-4 py-5 sm:px-6">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
-              <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} />
-              <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} />
-              <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} />
-              <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
-              <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} />
-              <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
-              <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} />
-              <FieldItem icon={MapPin} label="Alamat" value={alamatLengkap} full />
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="space-y-4">
+                <div>
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                    <Hash size={12} className="text-primary" />
+                    Informasi Rekening
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
+                    <FieldItem icon={Hash} label="NIS" value={siswa.nis} />
+                    <FieldItem icon={GraduationCap} label="Kelas" value={kelasShort(siswa.kelas.nama)} />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                    <User size={12} className="text-primary" />
+                    Informasi Pribadi
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
+                    <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} full />
+                    <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} />
+                    <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} />
+                    <FieldItem icon={MapPin} label="Alamat" value={alamatLengkap} full />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/30">
+                  <ProgressRing percent={pct} size={40} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-slate-700 dark:text-white">Kelengkapan Data {pct}%</p>
+                    {missing.length === 0 ? (
+                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 size={11} /> Semua data sudah lengkap
+                      </p>
+                    ) : (
+                      <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
+                        Belum lengkap: {missing.map((m) => m.label).join(", ")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-primary">
+                    <GraduationCap size={12} />
+                    Informasi Sekolah
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                    <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} full />
+                    <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
+                    <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
+                    <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} full />
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="mt-5 flex items-center justify-end gap-2 border-t border-slate-200 pt-3.5 dark:border-slate-700/50">

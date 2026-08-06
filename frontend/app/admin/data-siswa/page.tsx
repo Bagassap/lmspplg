@@ -6,6 +6,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
+import { SummaryStatsCard } from "@/components/data-siswa/SummaryStatsCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
 import { type SiswaCardData, type KelasRef, getNama, toTitleCase, hasGenderData } from "@/components/data-siswa/shared";
@@ -89,6 +90,7 @@ export default function AdminDataSiswaPage() {
         filterKelas={filterKelas} onFilterKelas={setFilterKelas}
         filterGender={filterGender} onFilterGender={setFilterGender}
         kelasList={kelasList}
+        siswaList={siswaList}
         isFiltered={isFiltered}
         onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
         loading={loading}
@@ -96,6 +98,8 @@ export default function AdminDataSiswaPage() {
         displayedCount={displayed.length}
         kelasCount={kelasSet.size}
       />
+
+      {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
 
       <SiswaTable
         loading={loading}

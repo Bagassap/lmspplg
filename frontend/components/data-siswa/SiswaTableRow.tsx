@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import { Eye, ScanEye, KeyRound } from "lucide-react";
 import {
-  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir,
+  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness,
 } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
+import { ProgressRing } from "./ProgressRing";
 
-const GRID_TEMPLATE = "32px 40px 2fr 1fr 1.3fr 1fr 1fr 90px";
+const GRID_TEMPLATE = "32px 40px 1.7fr 0.85fr 1.05fr 0.75fr 0.75fr 1.3fr 90px";
 const LABEL = "text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
@@ -24,6 +25,7 @@ export function SiswaTableHead() {
       <span className={LABEL}>Tempat & Tgl Lahir</span>
       <span className={LABEL}>No. HP</span>
       <span className={LABEL}>Jurusan</span>
+      <span className={LABEL}>Kelengkapan Data</span>
       <span className={`text-right ${LABEL}`}>Aksi</span>
     </div>
   );
@@ -42,6 +44,7 @@ export function SiswaTableRow({
   const displayNama = toTitleCase(getNama(siswa));
   const accent = avatarColorFor(siswa.id || displayNama);
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
+  const pct = completeness(siswa);
 
   return (
     <motion.div
@@ -91,14 +94,18 @@ export function SiswaTableRow({
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center gap-2.5">
+          <ProgressRing percent={pct} />
           <button
             onClick={() => onViewDetail(siswa)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary dark:hover:bg-white/10"
-            title="Lihat Detail"
+            className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
           >
-            <Eye size={14} />
+            <Eye size={12} />
+            Lihat Data
           </button>
+        </div>
+
+        <div className="flex items-center justify-end gap-1">
           {onImpersonate && siswa.user && (
             <button
               onClick={() => onImpersonate(siswa)}
