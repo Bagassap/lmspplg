@@ -24,7 +24,6 @@ export function SiswaTableHead() {
       <th className={TH}>Status Password</th>
       <th className={TH}>Tempat & Tgl Lahir</th>
       <th className={TH}>No. HP</th>
-      <th className={TH}>Jurusan</th>
       <th className={TH}>Kelengkapan Data</th>
       <th className={TH}>Aksi</th>
     </tr>
@@ -91,14 +90,6 @@ export function SiswaTableRow({
       <td className={`${TD} ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</td>
 
       <td className={`${TD} ${TEXT}`}>{siswa.noHp || "—"}</td>
-
-      <td className={TD}>
-        {siswa.jurusan && (
-          <span className="inline-block rounded-full px-2.5 py-1 text-[11px] font-bold text-white" style={{ backgroundColor: "#0d9488" }}>
-            {siswa.jurusan}
-          </span>
-        )}
-      </td>
 
       <td className={TD}>
         <div className="flex items-center gap-2.5">
