@@ -6,6 +6,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
+import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { SummaryStatsCard } from "@/components/data-siswa/SummaryStatsCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
@@ -84,20 +85,26 @@ export default function AdminDataSiswaPage() {
         ]}
       />
 
-      <FilterBar
-        search={search} onSearch={setSearch}
-        filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
-        filterKelas={filterKelas} onFilterKelas={setFilterKelas}
-        filterGender={filterGender} onFilterGender={setFilterGender}
-        kelasList={kelasList}
-        siswaList={siswaList}
-        isFiltered={isFiltered}
-        onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
-        loading={loading}
-        totalCount={siswaList.length}
-        displayedCount={displayed.length}
-        kelasCount={kelasSet.size}
-      />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
+        <FilterBar
+          search={search} onSearch={setSearch}
+          filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
+          filterKelas={filterKelas} onFilterKelas={setFilterKelas}
+          filterGender={filterGender} onFilterGender={setFilterGender}
+          kelasList={kelasList}
+          siswaList={siswaList}
+          isFiltered={isFiltered}
+          onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
+          loading={loading}
+          totalCount={siswaList.length}
+          displayedCount={displayed.length}
+          kelasCount={kelasSet.size}
+        />
+        <UnduhDataSiswaCard
+          kelasId={filterKelas || undefined}
+          kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+        />
+      </div>
 
       {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
 

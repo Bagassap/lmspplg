@@ -1,9 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, School, BookOpen, Mars, Venus, Download, Filter, Sparkles } from "lucide-react";
-import { JURUSAN_OPTIONS, kelasShort, type KelasRef, type SiswaCardData } from "./shared";
-import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
+import { Search, X, Users, School, BookOpen, Mars, Venus, Filter, Sparkles } from "lucide-react";
+import { kelasShort, type KelasRef, type SiswaCardData } from "./shared";
 
 // #1120F0 = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
 // & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
@@ -78,40 +77,30 @@ export function FilterBar({
           </p>
         </div>
 
-        <div className="flex flex-1 flex-wrap items-center gap-2 sm:justify-end">
-          <div className="relative w-full min-w-0 sm:w-auto sm:max-w-xs sm:flex-1">
-            <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="search"
-              name="data-siswa-search"
-              autoComplete="off"
-              data-lpignore="true"
-              data-1p-ignore="true"
-              value={search}
-              onChange={(e) => onSearch(e.target.value)}
-              placeholder="Cari nama atau NIS…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
-            />
-            <AnimatePresence>
-              {search && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={() => onSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  <X size={14} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <span title="Unduh Data Siswa" className="shrink-0">
-            <Download size={14} className="text-slate-300 dark:text-slate-600" />
-          </span>
-          <DataSiswaExportButtons
-            kelasId={filterKelas || undefined}
-            kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+        <div className="relative w-full sm:max-w-xs">
+          <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="search"
+            name="data-siswa-search"
+            autoComplete="off"
+            data-lpignore="true"
+            data-1p-ignore="true"
+            value={search}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Cari nama atau NIS…"
+            className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
           />
+          <AnimatePresence>
+            {search && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                onClick={() => onSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X size={14} />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
