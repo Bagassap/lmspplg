@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
 import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData } from "./shared";
+
+const PAGE_SIZE = 10;
 
 type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
@@ -39,6 +41,27 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
+function PaginationBar({ page, pageCount, start, end, total, onPage }: {
+  page: number; pageCount: number; start: number; end: number; total: number; onPage: (p: number) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
+      <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {total}</span>
+      <div className="flex items-center gap-1.5">
+        <button onClick={() => onPage(page - 1)} disabled={page === 0}
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+          <ChevronLeft size={14} />
+        </button>
+        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{page + 1}/{pageCount}</span>
+        <button onClick={() => onPage(page + 1)} disabled={page >= pageCount - 1}
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+          <ChevronRight size={14} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function SiswaTable({
   loading, siswas, onEdit, onResetPassword, onImpersonate,
 }: Omit<ActionProps, "onViewDetail"> & {
@@ -46,25 +69,37 @@ export function SiswaTable({
   siswas: SiswaCardData[];
 }) {
   const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
+  const [page, setPage] = useState(0);
+  useEffect(() => setPage(0), [siswas]);
   const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa };
+
+  const pageCount = Math.max(1, Math.ceil(siswas.length / PAGE_SIZE));
+  const pageItems = siswas.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const start = siswas.length ? page * PAGE_SIZE + 1 : 0;
+  const end = Math.min((page + 1) * PAGE_SIZE, siswas.length);
 
   const content = (() => {
     if (loading) return <LoadingSkeleton />;
     if (siswas.length === 0) return <EmptyState message="Tidak ada siswa yang ditemukan" />;
 
     return (
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-170 text-left text-sm">
-          <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
-            <SiswaTableHead />
-          </thead>
-          <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
-            {siswas.map((s, i) => (
-              <SiswaTableRow key={s.id} siswa={s} index={i} {...actions} />
-            ))}
-          </motion.tbody>
-        </table>
-      </div>
+      <>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-170 text-left text-sm">
+            <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+              <SiswaTableHead />
+            </thead>
+            <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
+              {pageItems.map((s, i) => (
+                <SiswaTableRow key={s.id} siswa={s} index={page * PAGE_SIZE + i} {...actions} />
+              ))}
+            </motion.tbody>
+          </table>
+        </div>
+        {pageCount > 1 && (
+          <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage} />
+        )}
+      </>
     );
   })();
 
