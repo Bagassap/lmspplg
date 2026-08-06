@@ -8,7 +8,8 @@ import {
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
-const TH = "px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500";
+const TH = "whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500";
+const TD = "whitespace-nowrap px-4 py-3";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
@@ -48,13 +49,13 @@ export function SiswaTableRow({
       transition={{ delay: (index % 15) * 0.02 }}
       className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20"
     >
-      <td className="px-4 py-3">
+      <td className={TD}>
         <div className="flex items-center gap-2.5">
           <div className="relative shrink-0">
             <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={36} fallbackBg={accent} textClassName="text-[10px] font-extrabold" />
           </div>
           <div className="min-w-0">
-            <p className={`truncate ${TEXT}`} title={displayNama}>{displayNama}</p>
+            <p className={TEXT} title={displayNama}>{displayNama}</p>
             <p className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
               <GraduationCap size={11} />
               Siswa &middot; <span className="font-mono">{siswa.nis}</span>
@@ -63,7 +64,7 @@ export function SiswaTableRow({
         </div>
       </td>
 
-      <td className="px-4 py-3">
+      <td className={TD}>
         {sudahGanti === null ? (
           <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
         ) : (
@@ -78,19 +79,19 @@ export function SiswaTableRow({
         )}
       </td>
 
-      <td className={`px-4 py-3 truncate ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</td>
+      <td className={`${TD} ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</td>
 
-      <td className={`px-4 py-3 truncate ${TEXT}`}>{siswa.noHp || "—"}</td>
+      <td className={`${TD} ${TEXT}`}>{siswa.noHp || "—"}</td>
 
-      <td className="px-4 py-3">
+      <td className={TD}>
         {siswa.jurusan && (
-          <span className="inline-block max-w-full truncate rounded-full px-2.5 py-1 text-[11px] font-bold text-white" style={{ backgroundColor: "#0d9488" }}>
+          <span className="inline-block rounded-full px-2.5 py-1 text-[11px] font-bold text-white" style={{ backgroundColor: "#0d9488" }}>
             {siswa.jurusan}
           </span>
         )}
       </td>
 
-      <td className="px-4 py-3">
+      <td className={TD}>
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-2">
             <ProgressRing percent={pct} />
@@ -106,8 +107,8 @@ export function SiswaTableRow({
         </div>
       </td>
 
-      <td className="px-4 py-3">
-        <div className="flex flex-wrap gap-2">
+      <td className={TD}>
+        <div className="flex gap-2">
           {onEdit && (
             <motion.button
               whileHover={{ scale: 1.05 }}
