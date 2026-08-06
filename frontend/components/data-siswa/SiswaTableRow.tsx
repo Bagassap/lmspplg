@@ -1,33 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness,
 } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
-const GRID_TEMPLATE = "32px 40px 1.7fr 0.85fr 1.05fr 0.75fr 0.75fr 1.3fr 90px";
-const LABEL = "text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500";
+const TH = "px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 export function SiswaTableHead() {
   return (
-    <div
-      className="grid items-center gap-3 border-b border-slate-100 px-5 py-2.5 dark:border-slate-700/40"
-      style={{ gridTemplateColumns: GRID_TEMPLATE }}
-    >
-      <span />
-      <span />
-      <span className={LABEL}>Nama Siswa</span>
-      <span className={LABEL}>NIS</span>
-      <span className={LABEL}>Tempat & Tgl Lahir</span>
-      <span className={LABEL}>No. HP</span>
-      <span className={LABEL}>Jurusan</span>
-      <span className={LABEL}>Kelengkapan Data</span>
-      <span className={`text-right ${LABEL}`}>Aksi</span>
-    </div>
+    <tr>
+      <th className={TH}>Nama Siswa</th>
+      <th className={TH}>Status Password</th>
+      <th className={TH}>Tempat & Tgl Lahir</th>
+      <th className={TH}>No. HP</th>
+      <th className={TH}>Jurusan</th>
+      <th className={TH}>Kelengkapan Data</th>
+      <th className={TH}>Aksi</th>
+    </tr>
   );
 }
 
@@ -45,57 +39,63 @@ export function SiswaTableRow({
   const accent = avatarColorFor(siswa.id || displayNama);
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const pct = completeness(siswa);
+  const sudahGanti = siswa.user ? siswa.user.mustChangePassword === false : null;
 
   return (
-    <motion.div
+    <motion.tr
       initial={{ opacity: 0, x: -6 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: (index % 15) * 0.02 }}
-        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
-        style={{ gridTemplateColumns: GRID_TEMPLATE }}
-      >
-        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
-
-        <div className="relative shrink-0">
-          <Avatar
-            src={siswa.user?.fotoProfil}
-            nama={displayNama}
-            sizePx={36}
-            fallbackBg={accent}
-            textClassName="text-[10px] font-extrabold"
-          />
-          {siswa.user && (
-            <span
-              className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-slate-800"
-              style={{ backgroundColor: siswa.user.mustChangePassword ? "#f59e0b" : "#10b981" }}
-              title={siswa.user.mustChangePassword ? "Belum ganti password (masih NIS)" : "Sudah ganti password sendiri"}
-            />
-          )}
-        </div>
-
-        <p className={`truncate ${TEXT}`} title={displayNama}>{displayNama}</p>
-
-        <p className={`truncate font-mono ${TEXT}`} title={`Password Default: ${siswa.nis}`}>
-          {siswa.nis}
-        </p>
-
-        <p className={`truncate ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</p>
-
-        <p className={`truncate ${TEXT}`}>{siswa.noHp || "—"}</p>
-
-        <div className="min-w-0">
-          {siswa.jurusan && (
-            <span
-              className="inline-block max-w-full truncate rounded-full px-2.5 py-1 text-[11px] font-bold text-white"
-              style={{ backgroundColor: "#0d9488" }}
-            >
-              {siswa.jurusan}
-            </span>
-          )}
-        </div>
-
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: (index % 15) * 0.02 }}
+      className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20"
+    >
+      <td className="px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <ProgressRing percent={pct} />
+          <div className="relative shrink-0">
+            <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={36} fallbackBg={accent} textClassName="text-[10px] font-extrabold" />
+          </div>
+          <div className="min-w-0">
+            <p className={`truncate ${TEXT}`} title={displayNama}>{displayNama}</p>
+            <p className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
+              <GraduationCap size={11} />
+              Siswa &middot; <span className="font-mono">{siswa.nis}</span>
+            </p>
+          </div>
+        </div>
+      </td>
+
+      <td className="px-4 py-3">
+        {sudahGanti === null ? (
+          <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
+        ) : (
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
+              sudahGanti ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+            }`}
+          >
+            {sudahGanti ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
+            {sudahGanti ? "Sudah Ganti" : "Masih NIS"}
+          </span>
+        )}
+      </td>
+
+      <td className={`px-4 py-3 truncate ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</td>
+
+      <td className={`px-4 py-3 truncate ${TEXT}`}>{siswa.noHp || "—"}</td>
+
+      <td className="px-4 py-3">
+        {siswa.jurusan && (
+          <span className="inline-block max-w-full truncate rounded-full px-2.5 py-1 text-[11px] font-bold text-white" style={{ backgroundColor: "#0d9488" }}>
+            {siswa.jurusan}
+          </span>
+        )}
+      </td>
+
+      <td className="px-4 py-3">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <ProgressRing percent={pct} />
+            <span className="text-xs text-slate-400 dark:text-slate-500">{pct}%</span>
+          </div>
           <button
             onClick={() => onViewDetail(siswa)}
             className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
@@ -104,27 +104,45 @@ export function SiswaTableRow({
             Lihat Data
           </button>
         </div>
+      </td>
 
-        <div className="flex items-center justify-end gap-1">
-          {onImpersonate && siswa.user && (
-            <button
-              onClick={() => onImpersonate(siswa)}
-              className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20"
-              title="Pantau (masuk sebagai siswa ini)"
+      <td className="px-4 py-3">
+        <div className="flex flex-wrap gap-2">
+          {onEdit && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => onEdit(siswa)}
+              className="flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
             >
-              <ScanEye size={14} className="text-amber-500" />
-            </button>
+              <Pencil size={12} />
+              Edit
+            </motion.button>
+          )}
+          {onImpersonate && siswa.user && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => onImpersonate(siswa)}
+              className="flex items-center gap-1 rounded-lg bg-amber-500 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+            >
+              <ScanEye size={12} />
+              Pantau
+            </motion.button>
           )}
           {onResetPassword && siswa.user && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.92 }}
               onClick={() => onResetPassword(siswa)}
-              className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-              title="Reset Password"
+              className="flex items-center gap-1 rounded-lg bg-red-500 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
             >
-              <KeyRound size={14} className="text-red-500" />
-            </button>
+              <KeyRound size={12} />
+              Reset
+            </motion.button>
           )}
         </div>
-    </motion.div>
+      </td>
+    </motion.tr>
   );
 }

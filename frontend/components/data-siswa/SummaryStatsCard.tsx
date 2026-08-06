@@ -31,7 +31,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
 
   const tiles = [
     { label: "Siswa Ditampilkan", caption: "Sesuai filter aktif", icon: Users, gradient: "linear-gradient(135deg,#0033FF,#335CFF)", value: siswas.length },
-    { label: "Rata-rata Kelengkapan", caption: "Data profil siswa", icon: Sparkles, gradient: "linear-gradient(135deg,#6334F4,#A855F7)", value: `${avgCompleteness}%` },
+    { label: "Rata-rata Kelengkapan", caption: "Data profil siswa", icon: Sparkles, gradient: "linear-gradient(135deg,#10B981,#34D399)", value: `${avgCompleteness}%` },
     { label: "Jumlah Kelas", caption: "Kelas pada tampilan ini", icon: School, gradient: "linear-gradient(135deg,#F59E0B,#FCD34D)", value: kelasCount },
   ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, ChevronDown, Users, School, BookOpen, Mars, Venus, Download, Filter, Sparkles } from "lucide-react";
+import { Search, X, Users, School, BookOpen, Mars, Venus, Download, Filter, Sparkles } from "lucide-react";
 import { JURUSAN_OPTIONS, kelasShort, type KelasRef, type SiswaCardData } from "./shared";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
@@ -37,14 +37,18 @@ export function FilterBar({
   isFiltered: boolean; onReset: () => void;
   loading: boolean; totalCount: number; displayedCount: number; kelasCount: number;
 }) {
-  const SELECT =
-    "h-10.5 w-full min-w-32 appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-600 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300";
-  const DIVIDER = "hidden h-7 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:block";
-
   const jurusanCount = (value: string) =>
     value ? siswaList.filter((s) => s.jurusan === value).length : siswaList.length;
   const genderCount = (value: string) =>
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
+
+  const kelasForJurusan: KelasRef[] = filterJurusan
+    ? Array.from(
+        new Map(
+          siswaList.filter((s) => s.jurusan === filterJurusan).map((s) => [s.kelas.id, s.kelas]),
+        ).values(),
+      ).sort((a, b) => a.nama.localeCompare(b.nama))
+    : [];
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
@@ -94,15 +98,6 @@ export function FilterBar({
             </AnimatePresence>
           </div>
 
-          <div className="relative shrink-0 sm:w-38">
-            <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <select value={filterKelas} onChange={(e) => onFilterKelas(e.target.value)} className={SELECT}>
-              <option value="">Semua Kelas</option>
-              {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
-            </select>
-            <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          </div>
-
           <span title="Unduh Data Siswa" className="shrink-0">
             <Download size={14} className="text-slate-300 dark:text-slate-600" />
           </span>
@@ -122,7 +117,7 @@ export function FilterBar({
                 key={opt.label}
                 type="button"
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onFilterJurusan(opt.value)}
+                onClick={() => { onFilterJurusan(opt.value); onFilterKelas(""); }}
                 className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
               >
                 {active && (
@@ -179,6 +174,31 @@ export function FilterBar({
 
       {isFiltered && (
         <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
+          {filterJurusan && kelasForJurusan.length > 0 && (
+            <>
+              <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                <School size={11} />
+                Kelas:
+              </span>
+              <div className="relative">
+                <School size={13} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <select
+                  value={filterKelas}
+                  onChange={(e) => onFilterKelas(e.target.value)}
+                  className="appearance-none rounded-xl border border-transparent bg-slate-100 py-2 pr-8 pl-8 text-xs font-semibold text-slate-600 transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:bg-slate-700 dark:text-slate-300"
+                >
+                  <option value="">Semua Kelas ({kelasForJurusan.length})</option>
+                  {kelasForJurusan.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
+                </select>
+              </div>
+              {filterKelas && (
+                <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+                  {siswaList.filter((s) => s.jurusan === filterJurusan && s.kelas.id === filterKelas).length} siswa di kelas ini
+                </span>
+              )}
+              <span className="h-4 w-px shrink-0 bg-slate-200 dark:bg-slate-700" />
+            </>
+          )}
           <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             <Sparkles size={11} />
             Filter aktif:

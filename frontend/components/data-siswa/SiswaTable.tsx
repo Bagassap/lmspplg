@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
 import { KelasGroupHeader } from "./KelasGroupHeader";
@@ -74,14 +75,16 @@ function TableBody({ siswas, page, setPage, pageSize, ...actions }: ActionProps 
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="min-w-170">
-          <SiswaTableHead />
-          <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
+        <table className="w-full min-w-170 text-left text-sm">
+          <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+            <SiswaTableHead />
+          </thead>
+          <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
             {pageItems.map((s, i) => (
               <SiswaTableRow key={s.id} siswa={s} index={offset + i} {...actions} />
             ))}
-          </div>
-        </div>
+          </motion.tbody>
+        </table>
       </div>
       {pageCount > 1 && (
         <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage} />
