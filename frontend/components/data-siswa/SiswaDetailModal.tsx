@@ -12,6 +12,8 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
 const HEADER_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
+// Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
+const REF_PRIMARY = "#1120F0";
 
 function FieldItem({ icon: Icon, label, value, full }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean;
@@ -87,7 +89,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               <div className="space-y-4">
                 <div>
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-                    <Hash size={12} className="text-primary" />
+                    <Hash size={12} style={{ color: REF_PRIMARY }} />
                     Informasi Rekening
                   </p>
                   <div className="grid grid-cols-2 gap-3 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
@@ -98,7 +100,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
 
                 <div>
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-                    <User size={12} className="text-primary" />
+                    <User size={12} style={{ color: REF_PRIMARY }} />
                     Informasi Pribadi
                   </p>
                   <div className="grid grid-cols-2 gap-3 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
@@ -128,11 +130,11 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
                 </div>
 
                 <div>
-                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-primary">
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: REF_PRIMARY }}>
                     <GraduationCap size={12} />
                     Informasi Sekolah
                   </p>
-                  <div className="grid grid-cols-2 gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                  <div className="grid grid-cols-2 gap-3 rounded-2xl p-3" style={{ borderWidth: 1, borderColor: `${REF_PRIMARY}33`, backgroundColor: `${REF_PRIMARY}0d` }}>
                     <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} full />
                     <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
                     <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />

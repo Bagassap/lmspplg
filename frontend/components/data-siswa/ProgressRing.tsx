@@ -11,7 +11,7 @@ export function ProgressRing({ percent, size = 32 }: { percent: number; size?: n
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#e2e8f0" strokeWidth={3} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#e5e7eb" strokeWidth={3} fill="none" />
         <motion.circle
           cx={size / 2}
           cy={size / 2}

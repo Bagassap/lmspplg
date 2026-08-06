@@ -5,12 +5,16 @@ import { CheckCircle2, AlertTriangle, XCircle, Users, Sparkles, School, ShieldCh
 import type { SiswaCardData } from "./shared";
 import { completeness } from "./shared";
 
+// Warna persis dari referensi Nasabah (primary #1120F0, success/warning/danger
+// #10b981 / #f59e0b / #f87171) - hardcoded lokal di sini karena token
+// --color-primary bawaan proyek (#4F8EF7) dipakai luas di luar Data Siswa.
+const REF_PRIMARY = "#1120F0";
 const HEALTH_TIER_META: Record<"success" | "warning" | "danger", {
-  color: string; bg: string; text: string; label: string; icon: typeof CheckCircle2;
+  color: string; label: string; icon: typeof CheckCircle2;
 }> = {
-  success: { color: "#10b981", bg: "bg-emerald-50 dark:bg-emerald-900/20", text: "text-emerald-600 dark:text-emerald-400", label: "Keamanan Akun Baik", icon: CheckCircle2 },
-  warning: { color: "#f59e0b", bg: "bg-amber-50 dark:bg-amber-900/20", text: "text-amber-600 dark:text-amber-400", label: "Perlu Diingatkan", icon: AlertTriangle },
-  danger: { color: "#f87171", bg: "bg-red-50 dark:bg-red-900/20", text: "text-red-600 dark:text-red-400", label: "Banyak Belum Ganti Password", icon: XCircle },
+  success: { color: "#10b981", label: "Keamanan Akun Baik", icon: CheckCircle2 },
+  warning: { color: "#f59e0b", label: "Perlu Diingatkan", icon: AlertTriangle },
+  danger: { color: "#f87171", label: "Banyak Belum Ganti Password", icon: XCircle },
 };
 
 const TILE_VARIANTS = {
@@ -30,7 +34,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
     siswas.length > 0 ? Math.round(siswas.reduce((sum, s) => sum + completeness(s), 0) / siswas.length) : 0;
 
   const tiles = [
-    { label: "Siswa Ditampilkan", caption: "Sesuai filter aktif", icon: Users, gradient: "linear-gradient(135deg,#0033FF,#335CFF)", value: siswas.length },
+    { label: "Siswa Ditampilkan", caption: "Sesuai filter aktif", icon: Users, gradient: "linear-gradient(135deg,#1120F0,#3B4CF5)", value: siswas.length },
     { label: "Rata-rata Kelengkapan", caption: "Data profil siswa", icon: Sparkles, gradient: "linear-gradient(135deg,#10B981,#34D399)", value: `${avgCompleteness}%` },
     { label: "Jumlah Kelas", caption: "Kelas pada tampilan ini", icon: School, gradient: "linear-gradient(135deg,#F59E0B,#FCD34D)", value: kelasCount },
   ];
@@ -45,7 +49,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-        style={{ backgroundImage: "radial-gradient(circle, #0033FF 1px, transparent 1px)", backgroundSize: "18px 18px" }}
+        style={{ backgroundImage: `radial-gradient(circle, ${REF_PRIMARY} 1px, transparent 1px)`, backgroundSize: "18px 18px" }}
       />
       <motion.div
         aria-hidden
@@ -64,7 +68,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
               className="absolute inset-0 rounded-full blur-md"
             />
             <svg width={64} height={64} className="relative -rotate-90">
-              <circle cx={32} cy={32} r={27} stroke="#e2e8f0" strokeWidth={6} fill="none" />
+              <circle cx={32} cy={32} r={27} stroke="#e5e7eb" strokeWidth={6} fill="none" />
               <motion.circle
                 cx={32} cy={32} r={27} strokeWidth={6} fill="none" strokeLinecap="round"
                 strokeDasharray={2 * Math.PI * 27}
@@ -79,7 +83,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
           </div>
           <div className="min-w-0">
             <div className="mb-1 flex items-center gap-1.5">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
                 <ShieldCheck size={12} />
               </span>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
@@ -94,7 +98,8 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
-              className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${meta.bg} ${meta.text}`}
+              className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
+              style={{ backgroundColor: `${meta.color}1a`, color: meta.color }}
             >
               <meta.icon size={11} />
               {meta.label}

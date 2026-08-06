@@ -12,6 +12,11 @@ const TH = "whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-sla
 const TD = "whitespace-nowrap px-4 py-3";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
+// Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
+const REF_PRIMARY = "#1120F0";
+const REF_SUCCESS = "#10b981";
+const REF_DANGER = "#f87171";
+
 export function SiswaTableHead() {
   return (
     <tr>
@@ -67,14 +72,18 @@ export function SiswaTableRow({
       <td className={TD}>
         {sudahGanti === null ? (
           <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
-        ) : (
+        ) : sudahGanti ? (
           <span
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
-              sudahGanti ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
-            }`}
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
+            style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}
           >
-            {sudahGanti ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
-            {sudahGanti ? "Sudah Ganti" : "Masih NIS"}
+            <CheckCircle2 size={12} />
+            Sudah Ganti
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+            <XCircle size={12} />
+            Masih NIS
           </span>
         )}
       </td>
@@ -99,7 +108,8 @@ export function SiswaTableRow({
           </div>
           <button
             onClick={() => onViewDetail(siswa)}
-            className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:brightness-95"
+            style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}
           >
             <Eye size={12} />
             Lihat Data
@@ -114,7 +124,8 @@ export function SiswaTableRow({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => onEdit(siswa)}
-              className="flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+              style={{ backgroundColor: REF_PRIMARY }}
             >
               <Pencil size={12} />
               Edit
@@ -136,7 +147,8 @@ export function SiswaTableRow({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => onResetPassword(siswa)}
-              className="flex items-center gap-1 rounded-lg bg-red-500 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+              style={{ backgroundColor: REF_DANGER }}
             >
               <KeyRound size={12} />
               Reset

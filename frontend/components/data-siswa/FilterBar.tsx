@@ -5,9 +5,16 @@ import { Search, X, Users, School, BookOpen, Mars, Venus, Download, Filter, Spar
 import { JURUSAN_OPTIONS, kelasShort, type KelasRef, type SiswaCardData } from "./shared";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
+// #1120F0 = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
+// & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
+// pakai token --color-primary bawaan (#4F8EF7) karena token itu dipakai luas
+// di luar Data Siswa (sidebar, topbar, dll) dan tidak boleh ikut berubah.
+const REF_PRIMARY = "#1120F0";
+const REF_SUCCESS = "#10b981";
+
 const JURUSAN_PILLS = [
-  { value: "" as const, label: "Semua", color: "#0033FF" },
-  { value: "Pengembangan Perangkat Lunak dan Gim" as const, label: "PPLG", color: "#6334F4" },
+  { value: "" as const, label: "Semua", color: REF_PRIMARY },
+  { value: "Pengembangan Perangkat Lunak dan Gim" as const, label: "PPLG", color: "#8b5cf6" },
   { value: "Pengembangan Gim" as const, label: "Gim", color: "#0EA5E9" },
   { value: "Rekayasa Perangkat Lunak" as const, label: "RPL", color: "#0d9488" },
 ];
@@ -55,13 +62,13 @@ export function FilterBar({
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-        style={{ backgroundImage: "radial-gradient(circle, #0033FF 1px, transparent 1px)", backgroundSize: "18px 18px" }}
+        style={{ backgroundImage: `radial-gradient(circle, ${REF_PRIMARY} 1px, transparent 1px)`, backgroundSize: "18px 18px" }}
       />
 
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <Filter size={13} />
             </span>
             Data Siswa <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
@@ -83,7 +90,7 @@ export function FilterBar({
               value={search}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="Cari nama atau NIS…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
             />
             <AnimatePresence>
               {search && (
@@ -156,7 +163,8 @@ export function FilterBar({
                   <motion.span
                     layoutId="gender-pill-active"
                     transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                    className="absolute inset-0 rounded-full bg-primary shadow-sm"
+                    className="absolute inset-0 rounded-full shadow-sm"
+                    style={{ backgroundColor: REF_SUCCESS }}
                   />
                 )}
                 <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
@@ -185,7 +193,7 @@ export function FilterBar({
                 <select
                   value={filterKelas}
                   onChange={(e) => onFilterKelas(e.target.value)}
-                  className="appearance-none rounded-xl border border-transparent bg-slate-100 py-2 pr-8 pl-8 text-xs font-semibold text-slate-600 transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:bg-slate-700 dark:text-slate-300"
+                  className="appearance-none rounded-xl border border-transparent bg-slate-100 py-2 pr-8 pl-8 text-xs font-semibold text-slate-600 transition-all focus:border-[#1120F0] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:bg-slate-700 dark:text-slate-300"
                 >
                   <option value="">Semua Kelas ({kelasForJurusan.length})</option>
                   {kelasForJurusan.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
@@ -204,25 +212,25 @@ export function FilterBar({
             Filter aktif:
           </span>
           {search && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <Search size={12} /> &ldquo;{search}&rdquo;
               <button type="button" onClick={() => onSearch("")}><X size={12} /></button>
             </span>
           )}
           {filterJurusan && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <BookOpen size={12} /> {JURUSAN_PILLS.find((j) => j.value === filterJurusan)?.label ?? filterJurusan}
               <button type="button" onClick={() => onFilterJurusan("")}><X size={12} /></button>
             </span>
           )}
           {filterKelas && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <School size={12} /> {kelasShort(kelasList.find((k) => k.id === filterKelas)?.nama ?? "")}
               <button type="button" onClick={() => onFilterKelas("")}><X size={12} /></button>
             </span>
           )}
           {filterGender && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_SUCCESS}1a`, color: REF_SUCCESS }}>
               {filterGender === "Laki-laki" ? <Mars size={12} /> : <Venus size={12} />} {filterGender}
               <button type="button" onClick={() => onFilterGender("")}><X size={12} /></button>
             </span>
