@@ -99,7 +99,7 @@ export default function AdminDataSiswaPage() {
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="flex flex-col gap-4 lg:col-span-2">
+        <div className="lg:col-span-2">
           <FilterBar
             search={search} onSearch={setSearch}
             filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
@@ -111,13 +111,6 @@ export default function AdminDataSiswaPage() {
             totalCount={inKelas.length}
             displayedCount={displayed.length}
           />
-          <SiswaTable
-            loading={loading}
-            siswas={displayed}
-            onEdit={setEditTarget}
-            onResetPassword={setResetTarget}
-            onImpersonate={handleImpersonate}
-          />
         </div>
 
         <UnduhDataSiswaCard
@@ -126,6 +119,14 @@ export default function AdminDataSiswaPage() {
           jurusan={filterJurusan || undefined}
         />
       </div>
+
+      <SiswaTable
+        loading={loading}
+        siswas={displayed}
+        onEdit={setEditTarget}
+        onResetPassword={setResetTarget}
+        onImpersonate={handleImpersonate}
+      />
 
       {editTarget && <EditSiswaModal siswa={editTarget} kelasList={kelasList} onClose={() => setEditTarget(null)} onSave={handleSaved} />}
 
