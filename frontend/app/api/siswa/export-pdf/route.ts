@@ -9,9 +9,11 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const kelasId = searchParams.get("kelasId") ?? "";
+  const jurusan = searchParams.get("jurusan") ?? "";
 
   const qs = new URLSearchParams();
   if (kelasId) qs.set("kelasId", kelasId);
+  if (jurusan) qs.set("jurusan", jurusan);
 
   let backendRes: Response;
   try {

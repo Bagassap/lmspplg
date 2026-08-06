@@ -156,7 +156,11 @@ export class SiswaService {
    * one, ADMIN gets every kelas and GURU is scoped to their own wali-kelas
    * classes automatically.
    */
-  async getSiswaForExport(kelasId: string | undefined, actor: { id: string; role: string }) {
+  async getSiswaForExport(
+    kelasId: string | undefined,
+    jurusan: string | undefined,
+    actor: { id: string; role: string },
+  ) {
     if (kelasId && actor.role === 'GURU') {
       const waliIds = await this.kelasWaliIds(actor.id);
       if (!waliIds.includes(kelasId)) throw new ForbiddenException('Anda tidak memiliki akses ke kelas ini');
@@ -178,11 +182,11 @@ export class SiswaService {
     const groups: { kelas: { id: string; nama: string }; siswa: Awaited<ReturnType<typeof this.prisma.siswa.findMany>> }[] = [];
     for (const kelas of kelasList) {
       const siswa = await this.prisma.siswa.findMany({
-        where: { kelasId: kelas.id },
+        where: { kelasId: kelas.id, ...(jurusan ? { jurusan } : {}) },
         include: { user: { select: { mustChangePassword: true } } },
         orderBy: { nama: 'asc' },
       });
-      groups.push({ kelas, siswa });
+      if (siswa.length > 0) groups.push({ kelas, siswa });
     }
     return groups;
   }

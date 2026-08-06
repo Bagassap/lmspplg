@@ -61,13 +61,20 @@ export class SiswaController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('export-pdf')
-  async exportPdf(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
-    const groups = await this.service.getSiswaForExport(kelasId || undefined, req.user);
+  async exportPdf(
+    @Query('kelasId') kelasId: string,
+    @Query('jurusan') jurusan: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user);
     const buffer = await this.pdfService.build(groups);
     const filename =
       kelasId && groups[0]
         ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.pdf`
-        : 'Data_Siswa_Semua_Kelas.pdf';
+        : jurusan
+          ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.pdf`
+          : 'Data_Siswa_Semua_Kelas.pdf';
 
     res.set({
       'Content-Type': 'application/pdf',
@@ -80,13 +87,20 @@ export class SiswaController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('export-excel')
-  async exportExcel(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
-    const groups = await this.service.getSiswaForExport(kelasId || undefined, req.user);
+  async exportExcel(
+    @Query('kelasId') kelasId: string,
+    @Query('jurusan') jurusan: string,
+    @Request() req: any,
+    @Res() res: Response,
+  ) {
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user);
     const buffer = await this.excelService.build(groups);
     const filename =
       kelasId && groups[0]
         ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.xlsx`
-        : 'Data_Siswa_Semua_Kelas.xlsx';
+        : jurusan
+          ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.xlsx`
+          : 'Data_Siswa_Semua_Kelas.xlsx';
 
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

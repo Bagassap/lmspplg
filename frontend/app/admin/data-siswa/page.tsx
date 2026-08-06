@@ -116,6 +116,7 @@ export default function AdminDataSiswaPage() {
           <UnduhDataSiswaCard
             kelasId={filterKelas || undefined}
             kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+            jurusan={filterJurusan || undefined}
           />
           {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
         </div>

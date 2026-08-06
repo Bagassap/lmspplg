@@ -7,7 +7,7 @@ import { downloadDataSiswaPdf, downloadDataSiswaExcel } from "./downloadDataSisw
 
 type ExportKind = "pdf" | "excel";
 
-export function DataSiswaExportButtons({ kelasId, kelasNama }: { kelasId?: string; kelasNama?: string }) {
+export function DataSiswaExportButtons({ kelasId, kelasNama, jurusan }: { kelasId?: string; kelasNama?: string; jurusan?: string }) {
   const toast = useToast();
   const [loadingKind, setLoadingKind] = useState<ExportKind | null>(null);
 
@@ -17,8 +17,8 @@ export function DataSiswaExportButtons({ kelasId, kelasNama }: { kelasId?: strin
     try {
       const result =
         kind === "pdf"
-          ? await downloadDataSiswaPdf({ kelasId, kelasNama })
-          : await downloadDataSiswaExcel({ kelasId, kelasNama });
+          ? await downloadDataSiswaPdf({ kelasId, kelasNama, jurusan })
+          : await downloadDataSiswaExcel({ kelasId, kelasNama, jurusan });
       if (!result.ok) toast.error(kind === "pdf" ? "Gagal membuat PDF" : "Gagal membuat Excel", result.message);
     } finally {
       setLoadingKind(null);
