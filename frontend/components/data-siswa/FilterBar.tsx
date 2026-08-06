@@ -45,7 +45,7 @@ export function FilterBar({
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
+    <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -158,7 +158,7 @@ export function FilterBar({
       </div>
 
       {isFiltered && (
-        <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
+        <div className="relative mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
           <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             <Sparkles size={11} />
             Filter aktif:
@@ -192,7 +192,7 @@ export function FilterBar({
       )}
 
       {!loading && !isFiltered && (
-        <p className="relative mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+        <p className="relative mt-auto border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
           Menampilkan {totalCount} siswa di kelas ini
         </p>
       )}
