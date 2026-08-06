@@ -6,7 +6,6 @@ import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { KelasSelectorGrid } from "@/components/data-siswa/KelasSelectorGrid";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
-import { SummaryStatsCard } from "@/components/data-siswa/SummaryStatsCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { type SiswaCardData, type KelasRef, getNama, hasGenderData } from "@/components/data-siswa/shared";
 
@@ -96,14 +95,11 @@ export default function GuruDataSiswaPage() {
           />
         </div>
 
-        <div className="flex h-full flex-col gap-4">
-          <UnduhDataSiswaCard
-            kelasId={selectedKelasId || undefined}
-            kelasNama={selectedKelas?.nama}
-            jurusan={filterJurusan || undefined}
-          />
-          {!loading && <SummaryStatsCard siswas={displayed} kelasCount={selectedKelasId ? 1 : 0} />}
-        </div>
+        <UnduhDataSiswaCard
+          kelasId={selectedKelasId || undefined}
+          kelasNama={selectedKelas?.nama}
+          jurusan={filterJurusan || undefined}
+        />
       </div>
     </div>
   );
