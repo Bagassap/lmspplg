@@ -44,6 +44,12 @@ export function FilterBar({
   const genderCount = (value: string) =>
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
 
+  const total = siswaList.length;
+  const lCount = genderCount("Laki-laki");
+  const pCount = genderCount("Perempuan");
+  const lPct = total > 0 ? Math.round((lCount / total) * 100) : 0;
+  const pPct = total > 0 ? 100 - lPct : 0;
+
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
       <div
@@ -157,8 +163,33 @@ export function FilterBar({
         </div>
       </div>
 
+      {total > 0 && (
+        <div className="relative mt-4 flex flex-1 flex-col justify-center rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/20">
+          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+            <Users size={11} />
+            Ringkasan Jenis Kelamin
+          </p>
+          <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
+            {lPct > 0 && <div style={{ width: `${lPct}%`, backgroundColor: REF_PRIMARY }} />}
+            {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: "#ec4899" }} />}
+          </div>
+          <div className="mt-2.5 flex flex-wrap items-center gap-4">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_PRIMARY }} />
+              Laki-laki <span className="font-bold text-slate-800 dark:text-white">{lCount}</span>
+              <span className="text-slate-400 dark:text-slate-500">({lPct}%)</span>
+            </span>
+            <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#ec4899" }} />
+              Perempuan <span className="font-bold text-slate-800 dark:text-white">{pCount}</span>
+              <span className="text-slate-400 dark:text-slate-500">({pPct}%)</span>
+            </span>
+          </div>
+        </div>
+      )}
+
       {isFiltered && (
-        <div className="relative mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
+        <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
           <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             <Sparkles size={11} />
             Filter aktif:
@@ -192,7 +223,7 @@ export function FilterBar({
       )}
 
       {!loading && !isFiltered && (
-        <p className="relative mt-auto border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+        <p className="relative mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
           Menampilkan {totalCount} siswa di kelas ini
         </p>
       )}
