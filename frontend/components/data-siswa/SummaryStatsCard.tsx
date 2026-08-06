@@ -44,7 +44,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5"
+      className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800"
     >
       <div
         aria-hidden
@@ -58,7 +58,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
         className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full blur-3xl"
       />
 
-      <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr] sm:items-center">
+      <div className="relative flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="relative h-16 w-16 shrink-0">
             <motion.div
@@ -111,7 +111,7 @@ export function SummaryStatsCard({ siswas, kelasCount }: { siswas: SiswaCardData
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } } }}
-          className="grid grid-cols-3 gap-3 border-t border-slate-100 pt-4 dark:border-slate-700/50 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6"
+          className="grid grid-cols-3 gap-2.5 border-t border-slate-100 pt-4 dark:border-slate-700/50"
         >
           {tiles.map((tile) => (
             <motion.div

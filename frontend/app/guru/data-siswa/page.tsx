@@ -66,35 +66,38 @@ export default function GuruDataSiswaPage() {
         ]}
       />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
-        <FilterBar
-          search={search} onSearch={setSearch}
-          filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
-          filterKelas={filterKelas} onFilterKelas={setFilterKelas}
-          filterGender={filterGender} onFilterGender={setFilterGender}
-          kelasList={kelasList}
-          siswaList={siswaList}
-          isFiltered={isFiltered}
-          onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
-          loading={loading}
-          totalCount={siswaList.length}
-          displayedCount={displayed.length}
-          kelasCount={kelasSet.size}
-        />
-        <UnduhDataSiswaCard
-          kelasId={filterKelas || undefined}
-          kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
-        />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="flex flex-col gap-4 lg:col-span-2">
+          <FilterBar
+            search={search} onSearch={setSearch}
+            filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
+            filterKelas={filterKelas} onFilterKelas={setFilterKelas}
+            filterGender={filterGender} onFilterGender={setFilterGender}
+            kelasList={kelasList}
+            siswaList={siswaList}
+            isFiltered={isFiltered}
+            onReset={() => { setSearch(""); setFilterKelas(""); setFilterJurusan(""); setFilterGender(""); }}
+            loading={loading}
+            totalCount={siswaList.length}
+            displayedCount={displayed.length}
+            kelasCount={kelasSet.size}
+          />
+          <SiswaTable
+            loading={loading}
+            siswas={displayed}
+            grouped={!isFiltered}
+            kelasNamaOrder={kelasNamaOrder}
+          />
+        </div>
+
+        <div className="flex h-full flex-col gap-4">
+          <UnduhDataSiswaCard
+            kelasId={filterKelas || undefined}
+            kelasNama={filterKelas ? kelasList.find((k) => k.id === filterKelas)?.nama : undefined}
+          />
+          {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
+        </div>
       </div>
-
-      {!loading && <SummaryStatsCard siswas={displayed} kelasCount={new Set(displayed.map((s) => s.kelas.nama)).size} />}
-
-      <SiswaTable
-        loading={loading}
-        siswas={displayed}
-        grouped={!isFiltered}
-        kelasNamaOrder={kelasNamaOrder}
-      />
     </div>
   );
 }
