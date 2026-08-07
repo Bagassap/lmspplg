@@ -18,7 +18,9 @@ export default function GuruDataSiswaPage() {
   const [filterGender, setFilterGender] = useState("");
 
   useEffect(() => {
-    fetch("/api/kelas").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
+    // "/api/kelas/saya" - dibatasi ke kelas yang guru ini jadi wali kelasnya,
+    // bukan "/api/kelas" yang menampilkan semua kelas di sekolah.
+    fetch("/api/kelas/saya").then((r) => r.json()).then((list) => setKelasList(Array.isArray(list) ? list : [])).catch(() => {});
   }, []);
 
   useEffect(() => {
