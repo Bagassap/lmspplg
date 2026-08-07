@@ -74,8 +74,8 @@ export class SiswaExcelService {
         { header: 'Jenis Kelamin', key: 'jk', width: 14 },
         { header: 'Tempat & Tgl Lahir', key: 'ttl', width: 26 },
         { header: 'No. HP', key: 'nohp', width: 16 },
-        { header: 'Nama Wali Murid', key: 'wali', width: 24 },
-        { header: 'Alamat Lengkap', key: 'alamat', width: 42 },
+        { header: 'Nama Wali Murid', key: 'wali', width: 26 },
+        { header: 'Alamat Lengkap', key: 'alamat', width: 55 },
         { header: 'Status Akun', key: 'status', width: 16 },
       ];
 
@@ -97,7 +97,10 @@ export class SiswaExcelService {
           alamat: formatAlamat(s),
           status: s.user?.mustChangePassword === false ? 'Sudah ganti password' : 'Belum ganti password',
         });
-        row.alignment = { vertical: 'middle', wrapText: false };
+        // wrapText: true - alamat lengkap kadang lebih panjang dari lebar
+        // kolomnya; tanpa wrap, Excel akan menampilkannya seolah terpotong
+        // di batas kolom (datanya sendiri sebenarnya utuh di dalam sel).
+        row.alignment = { vertical: 'middle', wrapText: true };
         const statusCell = row.getCell('status');
         statusCell.font = {
           color: { argb: s.user?.mustChangePassword === false ? 'FF059669' : 'FFD97706' },
