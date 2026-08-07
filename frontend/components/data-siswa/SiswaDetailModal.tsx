@@ -48,7 +48,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
           onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }}
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
-          className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl bg-white shadow-2xl dark:bg-slate-800 sm:mx-0">
+          className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-y-auto rounded-3xl bg-white shadow-2xl dark:bg-slate-800 sm:mx-0">
 
           {/* Bagian 1 — header profil (~30%) */}
           <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: HEADER_GRADIENT }}>
@@ -134,7 +134,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
                   <div className="grid grid-cols-2 gap-3 rounded-2xl p-3" style={{ borderWidth: 1, borderColor: `${REF_PRIMARY}33`, backgroundColor: `${REF_PRIMARY}0d` }}>
                     <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} full />
                     <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
-                    <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} />
+                    <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} full />
                     <FieldItem icon={Users} label="Nama Orang Tua" value={siswa.namaOrtu} full />
                   </div>
                 </div>
