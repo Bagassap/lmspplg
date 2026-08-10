@@ -15,6 +15,7 @@ import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
+import { JadwalAbsenCard } from "@/components/absensi-harian/JadwalAbsenCard";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
@@ -501,6 +502,8 @@ export default function AdminAbsensiHarianPage() {
             </div>
 
             <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
+
+            <JadwalAbsenCard />
           </div>
         </div>
       </div>

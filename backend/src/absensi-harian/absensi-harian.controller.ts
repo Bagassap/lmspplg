@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Param, Query, Body, UseGuards, Request, Res, UseInterceptors, UploadedFile,
+  Controller, Get, Post, Delete, Param, Query, Body, UseGuards, Request, Res, UseInterceptors, UploadedFile,
   BadRequestException, NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -10,7 +10,7 @@ import type { Response } from 'express';
 import { AbsensiHarianService } from './absensi-harian.service';
 import { AbsensiHarianPdfService } from './absensi-harian-pdf.service';
 import { AbsensiHarianExcelService } from './absensi-harian-excel.service';
-import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto } from './dto/absensi-harian.dto';
+import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto, UpsertJadwalOverrideDto } from './dto/absensi-harian.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -222,6 +222,44 @@ export class AbsensiHarianController {
     if (!result) throw new NotFoundException('Tanda tangan tidak tersedia');
     res.set({ 'Content-Type': result.mime, 'Cache-Control': 'private, max-age=60' });
     res.send(result.buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('jadwal-override/hari-ini')
+  getJadwalHariIni() {
+    return this.service.getJadwalHariIni();
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('jadwal-override')
+  listJadwalOverride() {
+    return this.service.listJadwalOverride();
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('jadwal-override')
+  upsertJadwalOverride(@Body() dto: UpsertJadwalOverrideDto, @Request() req: any) {
+    return this.service.upsertJadwalOverride(
+      dto.tanggal,
+      {
+        hadirStartMinutes: dto.hadirStartMinutes,
+        hadirEndMinutes: dto.hadirEndMinutes,
+        pulangStartMinutes: dto.pulangStartMinutes,
+        pulangEndMinutes: dto.pulangEndMinutes,
+        keterangan: dto.keterangan,
+      },
+      req.user.id,
+    );
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Delete('jadwal-override/:tanggal')
+  deleteJadwalOverride(@Param('tanggal') tanggal: string) {
+    return this.service.deleteJadwalOverride(tanggal);
   }
 
   @UseGuards(RolesGuard)

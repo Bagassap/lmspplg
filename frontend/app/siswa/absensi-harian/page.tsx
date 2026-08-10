@@ -20,6 +20,7 @@ type StatusSaya = {
   status: StatusAbsensi | null;
   tanggal: string;
   window: AbsenWindow;
+  pulangLabel?: string;
   record?: {
     waktuAbsen?: string | null;
     lokasi?: string | null;
@@ -56,40 +57,17 @@ const MOTIVASI = [
 // never a placeholder value standing in for a real location.
 const INSECURE_CONTEXT_MSG = "Akses GPS memerlukan koneksi aman. Silakan buka melalui https://pplg.smklimpung.id, jangan menggunakan alamat IP langsung.";
 
-// Absen pulang closes at a different time on Friday (11:00-12:00) vs
-// Senin-Kamis (14:00-17:00) — keep the displayed range in sync with the
-// day-aware window enforced server-side (currentWindow() in
-// absensi-harian.service.ts).
-function isJakartaFriday(): boolean {
-  return new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date()) === "Fri";
-}
-// TEMPORARY OVERRIDE — 2026-07-28: jendela Absen Pulang diperpanjang sampai
-// 20:00 HARI INI SAJA (lihat PULANG_EXTEND_DATE di absensi-harian.service.ts).
-// Auto-hilang besok karena perbandingan tanggal di bawah otomatis false.
-function isPulangExtendedToday(): boolean {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date()) === "2026-07-28";
-}
-// TEMPORARY OVERRIDE — 2026-08-05: jendela Absen Pulang dibuka lebih awal
-// jam 13:00 HARI INI SAJA (lihat PULANG_START_OVERRIDE_DATE di
-// absensi-harian.service.ts). Auto-hilang besok.
-function isPulangStartOverrideToday(): boolean {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date()) === "2026-08-05";
-}
-function pulangRange(): string {
-  const startOverride = isPulangStartOverrideToday();
-  const endOverride = isPulangExtendedToday();
-  const start = startOverride ? "13:00" : isJakartaFriday() ? "11:00" : "14:00";
-  const end = endOverride ? "20:00" : isJakartaFriday() ? "12:00" : "17:00";
-  const note = startOverride || endOverride ? ", hari ini disesuaikan" : "";
-  return `${start} – ${end} (${isJakartaFriday() ? "Jumat" : "Sen-Kam"}${note})`;
-}
-function getWindowInfo(window_: AbsenWindow): { label: string; range: string } {
+// Jadwal jendela Absen Pulang (dan penyesuaian darurat seperti pulang lebih
+// awal/lebih lambat) sekarang dikelola admin lewat menu Jadwal Absen dan
+// dihitung server-side (currentWindow()/pulangWindowLabel() di
+// absensi-harian.service.ts). Label ditampilkan langsung dari respons API
+// (`pulangLabel`) alih-alih dihitung ulang di sini, supaya selalu sinkron
+// dengan jadwal yang benar-benar berlaku (termasuk override admin) tanpa
+// perlu perubahan kode di sisi frontend tiap ada penyesuaian jadwal.
+function getWindowInfo(window_: AbsenWindow, pulangLabel: string): { label: string; range: string } {
   if (window_ === "HADIR") return { label: "Jendela Absen Datang", range: "06:00 – 09:00 (Sen-Jum)" };
-  if (window_ === "PULANG") return { label: "Jendela Absen Pulang", range: pulangRange() };
-  // TEMPORARY OVERRIDE — 2026-07-24: server membuka window Datang & Pulang
-  // bersamaan hari ini (lihat currentWindow() di absensi-harian.service.ts).
-  // Auto-hilang besok karena backend berhenti mengirim "BOTH".
-  if (window_ === "BOTH") return { label: "Absen Datang & Pulang Dibuka Bersamaan", range: "Hari ini s.d. 23:00 WIB" };
+  if (window_ === "PULANG") return { label: "Jendela Absen Pulang", range: pulangLabel };
+  if (window_ === "BOTH") return { label: "Absen Datang & Pulang Dibuka Bersamaan", range: pulangLabel };
   return { label: "Di luar jam absensi", range: "Tidak ada jendela aktif" };
 }
 
@@ -270,7 +248,8 @@ export default function SiswaAbsensiHarianPage() {
   const status = (data?.status ?? "HADIR") as StatusAbsensi;
   const cfg = STATUS_CFG[status];
   const motivasi = MOTIVASI[new Date().getDay() % MOTIVASI.length];
-  const winInfo = getWindowInfo(window_);
+  const pulangLabel = data?.pulangLabel ?? "";
+  const winInfo = getWindowInfo(window_, pulangLabel);
 
   const TABS: { key: Tab; label: string; icon: typeof LogIn }[] = [
     { key: "DATANG", label: "Absen Datang", icon: LogIn },
@@ -373,7 +352,7 @@ export default function SiswaAbsensiHarianPage() {
                         ttd={data?.record?.ttd}
                         lokasi={data?.record?.lokasi}
                         catatan={data?.record?.catatan}
-                        footnote={`Absen pulang tersedia jam ${pulangRange()}`}
+                        footnote={`Absen pulang tersedia jam ${pulangLabel}`}
                         onReload={() => loadStatus()}
                       />
                     </motion.div>
@@ -446,8 +425,8 @@ export default function SiswaAbsensiHarianPage() {
                       </h2>
                       <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
                         {window_ === "HADIR"
-                          ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangRange()}.`
-                          : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangRange()}.`}
+                          ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangLabel}.`
+                          : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangLabel}.`}
                       </p>
                     </motion.div>
                   )

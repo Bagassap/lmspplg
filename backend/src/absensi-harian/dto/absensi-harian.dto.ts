@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsArray, IsIn, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsIn, IsInt, Min, Max, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class AbsenSendiriHarianDto {
@@ -43,4 +43,37 @@ export class UpsertAbsensiHarianDto {
   @ValidateNested({ each: true })
   @Type(() => AbsensiItemDto)
   absensi!: AbsensiItemDto[];
+}
+
+export class UpsertJadwalOverrideDto {
+  @IsString()
+  tanggal!: string;
+
+  @IsInt()
+  @Min(0)
+  @Max(1439)
+  @IsOptional()
+  hadirStartMinutes?: number;
+
+  @IsInt()
+  @Min(0)
+  @Max(1439)
+  @IsOptional()
+  hadirEndMinutes?: number;
+
+  @IsInt()
+  @Min(0)
+  @Max(1439)
+  @IsOptional()
+  pulangStartMinutes?: number;
+
+  @IsInt()
+  @Min(0)
+  @Max(1439)
+  @IsOptional()
+  pulangEndMinutes?: number;
+
+  @IsString()
+  @IsOptional()
+  keterangan?: string;
 }

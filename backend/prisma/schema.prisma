@@ -76,6 +76,7 @@ model User {
 
   passwordResetRequests   PasswordResetRequest[] @relation("PasswordResetRequestUser")
   processedPasswordResets PasswordResetRequest[] @relation("PasswordResetRequestProcessor")
+  jadwalAbsenOverrides    JadwalAbsenOverride[]  @relation("JadwalAbsenOverrideCreator")
 
   @@index([loginId])
   @@map("users")
@@ -96,6 +97,29 @@ model PasswordResetRequest {
 
   @@index([status])
   @@map("password_reset_requests")
+}
+
+// Override jadwal jendela absen (jam buka/tutup Absen Datang & Absen Pulang)
+// untuk SATU tanggal tertentu - menggantikan pola lama "tambah konstanta
+// tanggal hardcode + deploy ulang" di absensi-harian.service.ts. Field yang
+// null berarti "pakai jadwal normal hari itu" untuk batas tersebut; hanya
+// batas yang benar-benar berubah yang perlu diisi (mis. cuma
+// pulangStartMinutes untuk kasus "pulang lebih awal").
+model JadwalAbsenOverride {
+  id                 String    @id @default(cuid())
+  tanggal            String    @unique
+  hadirStartMinutes  Int?
+  hadirEndMinutes    Int?
+  pulangStartMinutes Int?
+  pulangEndMinutes   Int?
+  keterangan         String?
+  createdById        String?
+  createdBy          User?     @relation("JadwalAbsenOverrideCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([tanggal])
+  @@map("jadwal_absen_overrides")
 }
 
 model Siswa {

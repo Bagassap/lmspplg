@@ -44,76 +44,64 @@ export type LaporanSeringTidakHadir = {
   siswa: LaporanSeringTidakHadirRow[];
 };
 
-// TEMPORARY OVERRIDE — 2026-07-24: gangguan teknis pagi ini membuat siswa
-// tidak bisa absen Datang tepat waktu, dan jendela Datang (06.00-09.00) sudah
-// tertutup saat perbaikan ini dibuat. Untuk TANGGAL INI SAJA, window Datang
-// dan Pulang dibuka BERSAMAAN (sampai jam 23.00 WIB) supaya siswa tetap bisa
-// mencatat kehadiran hari ini. Aman dibiarkan di kode setelah tanggal ini
-// berlalu — perbandingan tanggal di bawah otomatis bernilai false untuk
-// hari-hari berikutnya, sehingga jadwal normal berlaku kembali TANPA perlu
-// deploy ulang atau tindakan manual apa pun. Boleh dihapus kapan saja setelah
-// 2026-07-24 kalau ingin membersihkan kode.
-const OVERRIDE_DATE = '2026-07-24';
-const OVERRIDE_END_MINUTES = 23 * 60; // 23.00 WIB
+// Jadwal jendela absen (jam buka/tutup Datang & Pulang) kini datang dari
+// tabel JadwalAbsenOverride per tanggal, dikelola lewat menu admin di
+// Absensi Harian - bukan lagi konstanta tanggal hardcode yang butuh deploy
+// ulang tiap ada perubahan jadwal darurat (mis. pulang lebih awal). Field
+// yang null pada override berarti "pakai jadwal normal hari itu" untuk
+// batas tersebut.
+export type JadwalOverrideRow = {
+  hadirStartMinutes: number | null;
+  hadirEndMinutes: number | null;
+  pulangStartMinutes: number | null;
+  pulangEndMinutes: number | null;
+  keterangan: string | null;
+} | null;
 
-// TEMPORARY OVERRIDE — 2026-07-28: permintaan khusus untuk memperpanjang
-// jendela Absen Pulang HARI INI SAJA sampai jam 20.00 WIB (bukan jam tutup
-// normal 17.00 Senin-Kamis / 12.00 Jumat). Jendela Absen Datang TIDAK
-// terpengaruh. Aman dibiarkan di kode setelah tanggal ini berlalu —
-// perbandingan tanggal di bawah otomatis bernilai false untuk hari-hari
-// berikutnya, sehingga jadwal normal berlaku kembali TANPA perlu deploy ulang
-// atau tindakan manual apa pun. Boleh dihapus kapan saja setelah 2026-07-28
-// kalau ingin membersihkan kode.
-const PULANG_EXTEND_DATE = '2026-07-28';
-const PULANG_EXTEND_END_MINUTES = 20 * 60; // 20.00 WIB
+// Jadwal normal: Absen Datang 06.00-09.00 WIB Senin-Jumat. Absen Pulang
+// 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
+// Sabtu-Minggu tidak ada jendela absen sama sekali (override tidak berlaku
+// di akhir pekan - lingkup fitur ini cuma menggeser jam pada hari efektif).
+function defaultHadirStart(): number { return 6 * 60; }
+function defaultHadirEnd(): number { return 9 * 60; }
+function defaultPulangStart(isFriday: boolean): number { return isFriday ? 11 * 60 : 14 * 60; }
+function defaultPulangEnd(isFriday: boolean): number { return isFriday ? 12 * 60 : 17 * 60; }
 
-// TEMPORARY OVERRIDE — 2026-08-05: permintaan khusus untuk memajukan jam
-// BUKA jendela Absen Pulang HARI INI SAJA ke jam 13.00 WIB (bukan jam buka
-// normal 14.00 Senin-Kamis / 11.00 Jumat). Jam TUTUP tidak berubah (tetap
-// 17.00 Senin-Kamis / 12.00 Jumat, kecuali PULANG_EXTEND_DATE di atas juga
-// kebetulan aktif hari yang sama). Jendela Absen Datang TIDAK terpengaruh.
-// Aman dibiarkan di kode setelah tanggal ini berlalu — perbandingan tanggal
-// di bawah otomatis bernilai false untuk hari-hari berikutnya, sehingga
-// jadwal normal berlaku kembali TANPA perlu deploy ulang atau tindakan
-// manual apa pun. Boleh dihapus kapan saja setelah 2026-08-05 kalau ingin
-// membersihkan kode.
-const PULANG_START_OVERRIDE_DATE = '2026-08-05';
-const PULANG_START_OVERRIDE_MINUTES = 13 * 60; // 13.00 WIB
+function minutesLabel(minutes: number): string {
+  const h = Math.floor(minutes / 60).toString().padStart(2, '0');
+  const m = (minutes % 60).toString().padStart(2, '0');
+  return `${h}.${m}`;
+}
 
-// Absen datang: 06.00-09.00 WIB, Senin-Jumat.
-// Absen pulang: 14.00-17.00 WIB Senin-Kamis, atau 11.00-12.00 WIB khusus Jumat.
-// Sabtu-Minggu tidak ada jendela absen sama sekali.
-function currentWindow(): AbsenWindow {
+function currentWindow(override: JadwalOverrideRow): AbsenWindow {
   const { hour, minute, dayOfWeek } = jakartaParts();
-
-  if (todayStr() === OVERRIDE_DATE) {
-    const minutesNow = hour * 60 + minute;
-    return minutesNow < OVERRIDE_END_MINUTES ? 'BOTH' : 'CLOSED';
-  }
+  const isMonFri = dayOfWeek >= 1 && dayOfWeek <= 5;
+  if (!isMonFri) return 'CLOSED';
 
   const minutesNow = hour * 60 + minute;
-  const isMonFri = dayOfWeek >= 1 && dayOfWeek <= 5;
-  const isMonThu = dayOfWeek >= 1 && dayOfWeek <= 4;
   const isFriday = dayOfWeek === 5;
-  const pulangExtendedToday = todayStr() === PULANG_EXTEND_DATE;
-  const pulangStartOverrideToday = todayStr() === PULANG_START_OVERRIDE_DATE;
-  const pulangStartMonThu = pulangStartOverrideToday ? PULANG_START_OVERRIDE_MINUTES : 14 * 60;
-  const pulangStartFriday = pulangStartOverrideToday ? PULANG_START_OVERRIDE_MINUTES : 11 * 60;
+  const hadirStart = override?.hadirStartMinutes ?? defaultHadirStart();
+  const hadirEnd = override?.hadirEndMinutes ?? defaultHadirEnd();
+  const pulangStart = override?.pulangStartMinutes ?? defaultPulangStart(isFriday);
+  const pulangEnd = override?.pulangEndMinutes ?? defaultPulangEnd(isFriday);
 
-  if (isMonFri && minutesNow >= 6 * 60 && minutesNow < 9 * 60) return 'HADIR';
-  if (isMonThu && minutesNow >= pulangStartMonThu && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 17 * 60)) return 'PULANG';
-  if (isFriday && minutesNow >= pulangStartFriday && minutesNow < (pulangExtendedToday ? PULANG_EXTEND_END_MINUTES : 12 * 60)) return 'PULANG';
+  const hadirOpen = minutesNow >= hadirStart && minutesNow < hadirEnd;
+  const pulangOpen = minutesNow >= pulangStart && minutesNow < pulangEnd;
+
+  if (hadirOpen && pulangOpen) return 'BOTH';
+  if (hadirOpen) return 'HADIR';
+  if (pulangOpen) return 'PULANG';
   return 'CLOSED';
 }
 
-function pulangWindowLabel(): string {
+function pulangWindowLabel(override: JadwalOverrideRow): string {
   const { dayOfWeek } = jakartaParts();
-  const startOverride = todayStr() === PULANG_START_OVERRIDE_DATE;
-  const endOverride = todayStr() === PULANG_EXTEND_DATE;
-  const start = dayOfWeek === 5 ? (startOverride ? '13.00' : '11.00') : (startOverride ? '13.00' : '14.00');
-  const end = endOverride ? '20.00' : dayOfWeek === 5 ? '12.00' : '17.00';
-  const note = startOverride || endOverride ? ', hari ini disesuaikan' : '';
-  return `${start}-${end} WIB (${dayOfWeek === 5 ? 'Jumat' : 'Senin-Kamis'}${note})`;
+  const isFriday = dayOfWeek === 5;
+  const pulangStart = override?.pulangStartMinutes ?? defaultPulangStart(isFriday);
+  const pulangEnd = override?.pulangEndMinutes ?? defaultPulangEnd(isFriday);
+  const isOverridden = override != null && (override.pulangStartMinutes != null || override.pulangEndMinutes != null);
+  const note = isOverridden ? `, hari ini disesuaikan${override?.keterangan ? ` (${override.keterangan})` : ''}` : '';
+  return `${minutesLabel(pulangStart)}-${minutesLabel(pulangEnd)} WIB (${isFriday ? 'Jumat' : 'Senin-Kamis'}${note})`;
 }
 
 // GPS is mandatory for Hadir/Pulang — a truthy check alone lets a client
@@ -470,8 +458,10 @@ export class AbsensiHarianService {
 
   async getStatusSaya(userId: string, tanggal?: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
-    const window = currentWindow();
-    if (!siswa) return { sudahAbsen: false, sudahPulang: false, status: null, window };
+    const override = await this.getOverrideForDate(todayStr());
+    const window = currentWindow(override);
+    const pulangLabel = pulangWindowLabel(override);
+    if (!siswa) return { sudahAbsen: false, sudahPulang: false, status: null, window, pulangLabel };
     const tgl = tanggal || todayStr();
     const record = await this.prisma.absensiHarian.findUnique({
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal: tgl } },
@@ -485,6 +475,7 @@ export class AbsensiHarianService {
       status: record?.status ?? null,
       tanggal: tgl,
       window,
+      pulangLabel,
       record,
     };
   }
@@ -497,8 +488,9 @@ export class AbsensiHarianService {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
 
-    const window = currentWindow();
     const tanggal = todayStr();
+    const override = await this.getOverrideForDate(tanggal);
+    const window = currentWindow(override);
     const existing = await this.prisma.absensiHarian.findUnique({
       where: { siswaId_tanggal: { siswaId: siswa.id, tanggal } },
     });
@@ -507,8 +499,8 @@ export class AbsensiHarianService {
       if (window !== 'PULANG' && window !== 'BOTH') {
         throw new ForbiddenException(
           window === 'HADIR'
-            ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangWindowLabel()}`
-            : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangWindowLabel()}`,
+            ? `Absen pulang belum tersedia. Absen pulang dibuka jam ${pulangWindowLabel(override)}`
+            : `Waktu absen pulang hari ini sudah berakhir atau belum dibuka. Jendela pulang: ${pulangWindowLabel(override)}`,
         );
       }
       if (!extras.fotoUrl) throw new BadRequestException('Foto wajib diisi untuk absen pulang');
@@ -615,5 +607,91 @@ export class AbsensiHarianService {
     );
 
     return result;
+  }
+
+  private async getOverrideForDate(tanggal: string): Promise<JadwalOverrideRow> {
+    return this.prisma.jadwalAbsenOverride.findUnique({
+      where: { tanggal },
+      select: { hadirStartMinutes: true, hadirEndMinutes: true, pulangStartMinutes: true, pulangEndMinutes: true, keterangan: true },
+    });
+  }
+
+  // Jadwal hari ini (efektif, sudah menggabungkan default + override kalau
+  // ada) - dipakai kartu "Jadwal Absen" di halaman admin supaya admin selalu
+  // lihat jam yang BENAR-BENAR berlaku sekarang, bukan cuma jadwal normal.
+  async getJadwalHariIni() {
+    const tanggal = todayStr();
+    const { dayOfWeek } = jakartaParts();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isFriday = dayOfWeek === 5;
+    const override = await this.prisma.jadwalAbsenOverride.findUnique({ where: { tanggal } });
+    return {
+      tanggal,
+      isWeekend,
+      hadirStartMinutes: override?.hadirStartMinutes ?? defaultHadirStart(),
+      hadirEndMinutes: override?.hadirEndMinutes ?? defaultHadirEnd(),
+      pulangStartMinutes: override?.pulangStartMinutes ?? defaultPulangStart(isFriday),
+      pulangEndMinutes: override?.pulangEndMinutes ?? defaultPulangEnd(isFriday),
+      override,
+      window: isWeekend ? 'CLOSED' : currentWindow(override),
+    };
+  }
+
+  // 14 hari ke belakang s.d. 60 hari ke depan - cukup untuk lihat riwayat
+  // terbaru dan menjadwalkan penyesuaian mendatang tanpa daftar tak terbatas.
+  async listJadwalOverride() {
+    const today = todayStr();
+    return this.prisma.jadwalAbsenOverride.findMany({
+      where: { tanggal: { gte: addDaysUTC(today, -14), lte: addDaysUTC(today, 60) } },
+      orderBy: { tanggal: 'asc' },
+      include: { createdBy: { select: { id: true, nama: true } } },
+    });
+  }
+
+  async upsertJadwalOverride(
+    tanggal: string,
+    dto: { hadirStartMinutes?: number | null; hadirEndMinutes?: number | null; pulangStartMinutes?: number | null; pulangEndMinutes?: number | null; keterangan?: string | null },
+    adminId: string,
+  ) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(tanggal)) throw new BadRequestException('Format tanggal tidak valid');
+
+    const checks: [string, number | null | undefined][] = [
+      ['Jam mulai datang', dto.hadirStartMinutes],
+      ['Jam selesai datang', dto.hadirEndMinutes],
+      ['Jam mulai pulang', dto.pulangStartMinutes],
+      ['Jam selesai pulang', dto.pulangEndMinutes],
+    ];
+    for (const [label, v] of checks) {
+      if (v != null && (!Number.isInteger(v) || v < 0 || v > 1439)) {
+        throw new BadRequestException(`${label} tidak valid`);
+      }
+    }
+    if (dto.hadirStartMinutes != null && dto.hadirEndMinutes != null && dto.hadirStartMinutes >= dto.hadirEndMinutes) {
+      throw new BadRequestException('Jam mulai datang harus lebih awal dari jam selesai datang');
+    }
+    if (dto.pulangStartMinutes != null && dto.pulangEndMinutes != null && dto.pulangStartMinutes >= dto.pulangEndMinutes) {
+      throw new BadRequestException('Jam mulai pulang harus lebih awal dari jam selesai pulang');
+    }
+
+    const data = {
+      hadirStartMinutes: dto.hadirStartMinutes ?? null,
+      hadirEndMinutes: dto.hadirEndMinutes ?? null,
+      pulangStartMinutes: dto.pulangStartMinutes ?? null,
+      pulangEndMinutes: dto.pulangEndMinutes ?? null,
+      keterangan: dto.keterangan?.trim() || null,
+      createdById: adminId,
+    };
+    return this.prisma.jadwalAbsenOverride.upsert({
+      where: { tanggal },
+      create: { tanggal, ...data },
+      update: data,
+    });
+  }
+
+  async deleteJadwalOverride(tanggal: string) {
+    const existing = await this.prisma.jadwalAbsenOverride.findUnique({ where: { tanggal } });
+    if (!existing) throw new NotFoundException('Override jadwal tidak ditemukan untuk tanggal ini');
+    await this.prisma.jadwalAbsenOverride.delete({ where: { tanggal } });
+    return { message: 'Override jadwal dihapus, jadwal kembali normal untuk tanggal ini' };
   }
 }
