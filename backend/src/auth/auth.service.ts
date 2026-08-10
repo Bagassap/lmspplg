@@ -66,14 +66,25 @@ export class AuthService {
       guru: { select: { id: true, nip: true } },
     };
 
+    // Trim stray leading/trailing whitespace — a mobile keyboard
+    // autosuggest, voice-to-text, or copy-paste from chat can easily append
+    // one. Every lookup below is an EXACT match (email/nis/loginId), so an
+    // untrimmed value silently fails to find the account at all and the
+    // student sees a generic "kredensial tidak valid" that looks identical
+    // to an actually-wrong password — even though what they typed was
+    // otherwise correct. Password itself is intentionally left untouched:
+    // unlike a login ID, a password may legitimately contain meaningful
+    // leading/trailing characters.
+    const loginId = dto.login.trim();
+
     let user = await this.prisma.user.findUnique({
-      where: { email: dto.login },
+      where: { email: loginId },
       include: profileInclude,
     });
 
     if (!user) {
       const siswa = await this.prisma.siswa.findUnique({
-        where: { nis: dto.login },
+        where: { nis: loginId },
         include: { user: { include: profileInclude } },
       });
       if (siswa) {
@@ -83,7 +94,7 @@ export class AuthService {
 
     if (!user) {
       const candidates = await this.prisma.user.findMany({
-        where: { loginId: dto.login },
+        where: { loginId },
         include: profileInclude,
       });
       for (const candidate of candidates) {

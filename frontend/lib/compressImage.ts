@@ -24,6 +24,14 @@ const DEFAULTS: Required<CompressOptions> = {
 // moment the file is touched, not after.
 const DECODE_RESIZE_CAP = 2048;
 
+// Second attempt's decode cap if the first one throws (OOM on a low-end
+// device) — well below DEFAULTS.maxDim (1280) since the final output is
+// downscaled to that anyway; there is no quality cost to decoding smaller
+// than the target when the target itself is this modest. This buys a
+// student on a genuinely memory-starved phone a real second chance instead
+// of an immediate "penyimpanan penuh" dead end.
+const FALLBACK_DECODE_CAP = 900;
+
 /**
  * Resizes and re-encodes an image file on the client before upload, so a
  * multi-MB camera photo is never held in memory (or sent over the network)
@@ -32,8 +40,21 @@ const DECODE_RESIZE_CAP = 2048;
  * or any intermediate to localStorage/IndexedDB/Cache API — everything here
  * stays in-memory (canvas + Blob) and is released as soon as this function
  * returns.
+ *
+ * Retries once at a much smaller decode size if the first pass throws
+ * (typically OOM on a low-end/low-memory device) — describePhotoError()'s
+ * "storage full" message is only shown to the student after BOTH attempts
+ * fail, not on the first transient failure.
  */
 export async function compressImage(file: File, options: CompressOptions = {}): Promise<File> {
+  try {
+    return await compressOnce(file, options, DECODE_RESIZE_CAP);
+  } catch {
+    return await compressOnce(file, options, FALLBACK_DECODE_CAP);
+  }
+}
+
+async function compressOnce(file: File, options: CompressOptions, decodeResizeCap: number): Promise<File> {
   const { maxDim, quality, mimeType } = { ...DEFAULTS, ...options };
 
   let width: number;
@@ -47,7 +68,7 @@ export async function compressImage(file: File, options: CompressOptions = {}): 
       // resizeWidth alone preserves aspect ratio (per spec) — this is the
       // "compress as early as possible" step: the full-resolution image is
       // never fully decoded before shrinking.
-      bitmap = await createImageBitmap(file, { resizeWidth: DECODE_RESIZE_CAP, resizeQuality: "medium" });
+      bitmap = await createImageBitmap(file, { resizeWidth: decodeResizeCap, resizeQuality: "medium" });
     } catch {
       // Some engines reject resize options for certain formats/orientations —
       // fall back to a plain decode rather than failing the whole capture.
