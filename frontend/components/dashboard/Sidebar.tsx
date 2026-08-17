@@ -48,7 +48,7 @@ const MENUS: Record<string, MenuItem[]> = {
       key: "ujian-ukk", label: "UKK", icon: FileText,
       submenu: [
         { href: "/admin/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
-        { href: "/admin/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
+        { href: "/admin/ujian-ukk/absensi",     label: "Absensi UKK",   icon: ClipboardCheck },
       ],
     },
   ],
@@ -72,7 +72,7 @@ const MENUS: Record<string, MenuItem[]> = {
       key: "ujian-ukk", label: "UKK", icon: FileText,
       submenu: [
         { href: "/guru/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
-        { href: "/guru/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
+        { href: "/guru/ujian-ukk/absensi",     label: "Absensi UKK",   icon: ClipboardCheck },
       ],
     },
   ],
@@ -94,7 +94,7 @@ const MENUS: Record<string, MenuItem[]> = {
       key: "ujian-ukk", href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, locked: true,
       submenu: [
         { href: "/siswa/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
-        { href: "/siswa/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
+        { href: "/siswa/ujian-ukk/absensi",     label: "Absensi UKK",   icon: ClipboardCheck },
         { href: "/siswa/ujian-ukk/nilai-saya",  label: "Nilai Saya",    icon: Trophy },
       ],
     },
