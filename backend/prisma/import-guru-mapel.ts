@@ -12,6 +12,14 @@ const prisma = new PrismaClient({ adapter } as any);
 // itu sebabnya kolom Nama Guru kosong di baris ke-2+ untuk guru yang sama.
 const XLSX_PATH = path.join(__dirname, '../../frontend/public/mapel.xlsx');
 
+// Normalisasi ringan untuk mencocokkan nama guru di xlsx dengan nama user di
+// database walau beda tanda baca/spasi (mis. "Bagas Saputra S.Kom" di xlsx
+// vs "Bagas Saputra, S.Kom" di database) — tetap exact match, cuma abaikan
+// koma & spasi berlebih supaya tidak salah gandeng ke orang lain.
+function normalizeName(s: string): string {
+  return s.replace(/,/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
 async function main() {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(XLSX_PATH);
@@ -32,11 +40,22 @@ async function main() {
 
   console.log(`Ditemukan ${byGuru.size} guru di mapel.xlsx.\n`);
 
+  const allUsers = await prisma.user.findMany({ include: { guru: true } });
+
   let totalInserted = 0;
   for (const [nama, mapelSet] of byGuru) {
-    const user = await prisma.user.findFirst({ where: { nama }, include: { guru: true } });
+    let user = await prisma.user.findFirst({ where: { nama }, include: { guru: true } });
     if (!user) {
-      console.warn(`! Skip "${nama}": tidak ada user dengan nama persis ini di database.`);
+      const target = normalizeName(nama);
+      const matches = allUsers.filter((u) => normalizeName(u.nama) === target);
+      if (matches.length === 1) user = matches[0];
+      else if (matches.length > 1) {
+        console.warn(`! Skip "${nama}": nama ambigu, cocok dengan ${matches.length} user setelah normalisasi.`);
+        continue;
+      }
+    }
+    if (!user) {
+      console.warn(`! Skip "${nama}": tidak ada user dengan nama ini di database (sudah dicoba tanpa tanda baca juga).`);
       continue;
     }
     if (!user.guru) {

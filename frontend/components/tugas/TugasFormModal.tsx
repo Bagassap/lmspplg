@@ -244,7 +244,9 @@ export function TugasFormModal({
                   {mapelOptions ? (
                     <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
                       <option value="">Pilih mata pelajaran…</option>
-                      {mapelOptions.map((m) => <option key={m} value={m}>{m}</option>)}
+                      {(mapel && !mapelOptions.includes(mapel) ? [mapel, ...mapelOptions] : mapelOptions).map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
                     </select>
                   ) : (
                     <input type="text" value={mapel} onChange={(e) => setMapel(e.target.value)}

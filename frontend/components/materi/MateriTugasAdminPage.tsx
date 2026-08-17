@@ -30,6 +30,17 @@ export function MateriTugasAdminPage() {
   const [submisiModalTugas, setSubmisiModalTugas] = useState<TugasItem | null>(null);
   const [revisiTarget, setRevisiTarget] = useState<TugasSubmisiItem | null>(null);
 
+  // Sebagian admin (mis. Wahyu/Syukron/Bagas) juga punya profil Guru dengan
+  // mapel sendiri (dari mapel.xlsx) — kalau ada, tampilkan dropdown mapel
+  // terbatas untuk kenyamanan mereka. Admin murni tanpa profil Guru tetap
+  // pakai input teks bebas seperti biasa (mapelOptions dibiarkan undefined).
+  const [mapelOptions, setMapelOptions] = useState<string[] | undefined>(undefined);
+  useEffect(() => {
+    fetch("/api/mapel/saya").then((r) => r.json()).then((d) => {
+      if (Array.isArray(d) && d.length > 0) setMapelOptions(d);
+    }).catch(() => {});
+  }, []);
+
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
@@ -179,7 +190,7 @@ export function MateriTugasAdminPage() {
         </div>
 
         {category === "materi" ? (
-          <MateriListPage embedded />
+          <MateriListPage embedded mapelOptions={mapelOptions} />
         ) : (
           <TugasListCard
             tugasList={tugasList}
@@ -207,6 +218,7 @@ export function MateriTugasAdminPage() {
       <TugasFormModal
         open={tugasFormOpen}
         tugas={editTarget}
+        mapelOptions={mapelOptions}
         onClose={() => { setTugasFormOpen(false); setEditTarget(null); }}
         onSaved={() => loadAll()}
       />

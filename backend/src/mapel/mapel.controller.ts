@@ -11,7 +11,7 @@ export class MapelController {
   constructor(private readonly service: MapelService) {}
 
   @UseGuards(RolesGuard)
-  @Roles(Role.GURU)
+  @Roles(Role.ADMIN, Role.GURU)
   @Get('saya')
   findMine(@Request() req: any) {
     return this.service.findMineByUserId(req.user.id);
