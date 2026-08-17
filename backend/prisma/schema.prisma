@@ -182,8 +182,24 @@ model Guru {
   soalUkk        SoalUKK[]
   nilaiUkk       NilaiUKK[]
   jadwalUjianUkk JadwalUjianUKK[]
+  mapelDiampu    GuruMapel[]
 
   @@map("guru")
+}
+
+// Mata pelajaran yang diampu tiap guru — sumber data: mapel.xlsx (diimpor
+// sekali via prisma/import-guru-mapel.ts). Dipakai untuk membatasi pilihan
+// mapel saat guru membuat Materi/Tugas (lihat MateriService/TugasService).
+model GuruMapel {
+  id     String @id @default(cuid())
+  guruId String
+  guru   Guru   @relation(fields: [guruId], references: [id], onDelete: Cascade)
+  nama   String
+
+  createdAt DateTime @default(now())
+
+  @@unique([guruId, nama])
+  @@map("guru_mapel")
 }
 
 model Kelas {

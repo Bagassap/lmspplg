@@ -56,6 +56,7 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "dashboard",    href: "/guru/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/guru/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Bell },
+    { key: "materi",       href: "/guru/materi",       label: "Materi & Tugas", icon: BookOpen },
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
     { key: "catatan-siswa", href: "/guru/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     {

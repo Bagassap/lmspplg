@@ -99,29 +99,29 @@ export class TugasController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.GURU)
   @Post()
   @UseInterceptors(FileInterceptor('file', { storage: tugasStorage, ...documentUploadOptions }))
   create(@Body() dto: CreateTugasDto, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
     const fileUrl = file ? `/uploads/tugas/${file.filename}` : undefined;
     const fileName = file ? file.originalname : undefined;
-    return this.service.create(dto, fileUrl, fileName, req.user.id);
+    return this.service.create(dto, fileUrl, fileName, { id: req.user.id, role: req.user.role });
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.GURU)
   @Put(':id')
   @UseInterceptors(FileInterceptor('file', { storage: tugasStorage, ...documentUploadOptions }))
-  update(@Param('id') id: string, @Body() dto: UpdateTugasDto, @UploadedFile() file: Express.Multer.File | undefined) {
+  update(@Param('id') id: string, @Body() dto: UpdateTugasDto, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
     const fileUrl = file ? `/uploads/tugas/${file.filename}` : undefined;
     const fileName = file ? file.originalname : undefined;
-    return this.service.update(id, dto, fileUrl, fileName);
+    return this.service.update(id, dto, fileUrl, fileName, { id: req.user.id, role: req.user.role });
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.GURU)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  remove(@Param('id') id: string, @Request() req: any) {
+    return this.service.remove(id, { id: req.user.id, role: req.user.role });
   }
 }

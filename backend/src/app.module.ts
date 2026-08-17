@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module';
 import { CatatanSiswaModule } from './catatan-siswa/catatan-siswa.module';
 import { MateriModule } from './materi/materi.module';
 import { TugasModule } from './tugas/tugas.module';
+import { MapelModule } from './mapel/mapel.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TugasModule } from './tugas/tugas.module';
     CatatanSiswaModule,
     MateriModule,
     TugasModule,
+    MapelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

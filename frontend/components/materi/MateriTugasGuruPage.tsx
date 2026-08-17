@@ -1,0 +1,240 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { BookOpen, ClipboardList, Send } from "lucide-react";
+import { useToast } from "@/components/shared/ToastSystem";
+import { MateriListPage } from "./MateriListPage";
+import { TugasFormModal } from "@/components/tugas/TugasFormModal";
+import { TugasListCard } from "@/components/tugas/TugasListCard";
+import { SubmisiTugasModal } from "@/components/tugas/SubmisiTugasModal";
+import { RevisiFormModal } from "@/components/tugas/RevisiFormModal";
+import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
+
+type MateriRef = { id: string };
+type Category = "materi" | "tugas";
+
+export function MateriTugasGuruPage() {
+  const toast = useToast();
+  const searchParams = useSearchParams();
+  const [materiList, setMateriList] = useState<MateriRef[]>([]);
+  const [tugasList, setTugasList] = useState<TugasItem[]>([]);
+  const [submisiList, setSubmisiList] = useState<TugasSubmisiItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState<Category>(() => (searchParams.get("tab") === "tugas" ? "tugas" : "materi"));
+
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
+  const [mapelOptions, setMapelOptions] = useState<string[]>([]);
+  const [mapelLoaded, setMapelLoaded] = useState(false);
+
+  const [tugasFormOpen, setTugasFormOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<TugasItem | null>(null);
+  const [submisiModalTugas, setSubmisiModalTugas] = useState<TugasItem | null>(null);
+  const [revisiTarget, setRevisiTarget] = useState<TugasSubmisiItem | null>(null);
+
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [m, t, s] = await Promise.all([
+        fetch("/api/materi").then((r) => r.json()),
+        fetch("/api/tugas").then((r) => r.json()),
+        fetch("/api/tugas/submisi").then((r) => r.json()),
+      ]);
+      setMateriList(Array.isArray(m) ? m : []);
+      setTugasList(Array.isArray(t) ? t : []);
+      setSubmisiList(Array.isArray(s) ? s : []);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { if (category === "tugas") loadAll(); }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
+      setCurrentUserId(d?.id ?? "");
+      setCurrentUserRole(d?.role ?? "");
+    }).catch(() => {});
+    fetch("/api/mapel/saya").then((r) => r.json()).then((d) => {
+      setMapelOptions(Array.isArray(d) ? d : []);
+    }).catch(() => {}).finally(() => setMapelLoaded(true));
+  }, []);
+
+  // Selama mapel.saya belum selesai dimuat, jangan tampilkan tombol Tambah
+  // dulu — mencegah kedip "boleh tambah" lalu langsung disembunyikan begitu
+  // ternyata guru ini tidak diampu mapel apa pun.
+  const canCreate = mapelLoaded && mapelOptions.length > 0;
+
+  async function deleteTugas(id: string) {
+    if (!await toast.confirm("Hapus tugas ini?", "Semua submisi siswa untuk tugas ini juga akan terhapus.")) return;
+    const res = await fetch(`/api/tugas/${id}`, { method: "DELETE" });
+    if (res.ok) { toast.success("Tugas dihapus", ""); loadAll(); }
+    else toast.error("Gagal menghapus tugas");
+  }
+
+  async function updateStatus(id: string, status: "DITERIMA" | "REVISI", pesanRevisi?: string) {
+    const res = await fetch(`/api/tugas/submisi/${id}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status, ...(pesanRevisi ? { pesanRevisi } : {}) }),
+    });
+    if (res.ok) {
+      toast.success(status === "DITERIMA" ? "Tugas diterima!" : "Revisi dikirim ke siswa", "");
+      loadAll();
+    } else {
+      toast.error("Gagal memperbarui status");
+    }
+  }
+
+  async function kirimRevisi(id: string, pesan: string) {
+    await updateStatus(id, "REVISI", pesan);
+    setRevisiTarget(null);
+  }
+
+  async function simpanNilai(submisiId: string, nilai: number) {
+    const res = await fetch(`/api/tugas/submisi/${submisiId}/nilai`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nilai }),
+    });
+    if (res.ok) {
+      toast.success("Nilai disimpan!", `Nilai ${nilai} tersimpan, tugas otomatis ditandai selesai.`);
+      loadAll();
+    } else {
+      toast.error("Gagal menyimpan nilai");
+    }
+  }
+
+  const perluReview = submisiList.filter((s) => s.status === "TERKIRIM").length;
+
+  return (
+    <div className="space-y-6">
+      <div className="relative overflow-hidden rounded-2xl p-6"
+        style={{ background: "#0033FF" }}>
+        <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
+        <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6" />
+
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+              <BookOpen size={22} className="text-white sm:hidden" />
+              <BookOpen size={26} className="text-white hidden sm:block" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Guru</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
+              <p className="text-xs sm:text-sm text-white/70 mt-0.5 hidden sm:block">Berikan materi dan tugas untuk mata pelajaran yang Anda ampu</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {[
+              { icon: BookOpen, label: "Materi", val: materiList.length },
+              { icon: ClipboardList, label: "Tugas", val: tugasList.length },
+              { icon: Send, label: "Kumpul", val: submisiList.length },
+            ].map(({ icon: Icon, label, val }) => (
+              <div key={label} className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-[64px]">
+                <Icon size={13} className="text-white/70 mb-1" />
+                <p className="text-lg sm:text-xl font-extrabold text-white leading-none">{loading ? "—" : val}</p>
+                <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
+        <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+          <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
+          <div className="flex flex-col gap-4">
+            <button type="button" onClick={() => setCategory("materi")}
+              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                background: "linear-gradient(135deg,#0033FF,#335CFF)",
+                boxShadow: category === "materi" ? "0 8px 24px rgba(0,51,255,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                outline: category === "materi" ? "2px solid #0033FF" : "none",
+                outlineOffset: "3px",
+              }}>
+              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                <BookOpen size={16} />
+              </div>
+              <div className="relative">
+                <p className="text-xl font-black leading-tight">Materi</p>
+                <p className="mt-0.5 text-[11px] font-medium text-white/75">{materiList.length} materi tersedia</p>
+              </div>
+            </button>
+
+            <button type="button" onClick={() => setCategory("tugas")}
+              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                background: "linear-gradient(135deg,#F59E0B,#EA580C)",
+                boxShadow: category === "tugas" ? "0 8px 24px rgba(245,158,11,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                outline: category === "tugas" ? "2px solid #F59E0B" : "none",
+                outlineOffset: "3px",
+              }}>
+              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                <Send size={16} />
+              </div>
+              <div className="relative">
+                <p className="text-xl font-black leading-tight">Tugas</p>
+                <p className="mt-0.5 text-[11px] font-medium text-white/75">
+                  {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}
+                </p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {category === "materi" ? (
+          <MateriListPage
+            embedded
+            roleBadge="Guru"
+            currentUserId={currentUserId}
+            currentUserRole={currentUserRole}
+            mapelOptions={mapelOptions}
+            canCreate={canCreate}
+          />
+        ) : (
+          <TugasListCard
+            tugasList={tugasList}
+            submisiList={submisiList}
+            loading={loading}
+            currentUserId={currentUserId}
+            currentUserRole={currentUserRole}
+            canCreate={canCreate}
+            onAddTugas={() => { setEditTarget(null); setTugasFormOpen(true); }}
+            onEditTugas={(t) => { setEditTarget(t); setTugasFormOpen(true); }}
+            onDeleteTugas={deleteTugas}
+            onLihatSubmisi={(t) => setSubmisiModalTugas(t)}
+          />
+        )}
+      </div>
+
+      <SubmisiTugasModal
+        tugas={submisiModalTugas}
+        submisi={submisiList}
+        onClose={() => setSubmisiModalTugas(null)}
+        onTerima={(id) => updateStatus(id, "DITERIMA")}
+        onRevisi={(s) => setRevisiTarget(s)}
+        onSimpanNilai={simpanNilai}
+      />
+
+      <RevisiFormModal target={revisiTarget} onClose={() => setRevisiTarget(null)} onSend={kirimRevisi} />
+
+      <TugasFormModal
+        open={tugasFormOpen}
+        tugas={editTarget}
+        mapelOptions={mapelOptions}
+        onClose={() => { setTugasFormOpen(false); setEditTarget(null); }}
+        onSaved={() => loadAll()}
+      />
+    </div>
+  );
+}

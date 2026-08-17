@@ -64,6 +64,25 @@ export class TugasService {
     );
   }
 
+  // Guru hanya boleh membuat/mengubah Tugas untuk mapel yang benar-benar ia
+  // ampu (sumber: GuruMapel, diimpor dari mapel.xlsx) — ADMIN tidak dibatasi.
+  private async assertGuruMapel(actor: Actor, mapel: string) {
+    if (actor.role !== 'GURU') return;
+    const guru = await this.prisma.guru.findUnique({ where: { userId: actor.id } });
+    const allowed = guru
+      ? await this.prisma.guruMapel.findMany({ where: { guruId: guru.id }, select: { nama: true } })
+      : [];
+    if (!allowed.some((a) => a.nama === mapel)) {
+      throw new ForbiddenException('Anda tidak terdaftar sebagai pengampu mata pelajaran ini');
+    }
+  }
+
+  private assertOwnerOrAdmin(actor: Actor, createdById: string) {
+    if (actor.role === 'GURU' && createdById !== actor.id) {
+      throw new ForbiddenException('Anda hanya bisa mengubah tugas buatan sendiri');
+    }
+  }
+
   private async replaceSoal(tugasId: string, tipe: string, soalJson: string | undefined) {
     if (!NEEDS_SOAL.has(tipe)) return;
     const soal = parseJsonArray<SoalInput>(soalJson, 'soal');
@@ -131,7 +150,8 @@ export class TugasService {
     return tugas;
   }
 
-  async create(dto: CreateTugasDto, fileUrl: string | undefined, fileName: string | undefined, actorId: string) {
+  async create(dto: CreateTugasDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
+    await this.assertGuruMapel(actor, dto.mapel);
     const tipe = dto.tipe || 'SUBMIT';
     const tugas = await this.prisma.tugas.create({
       data: {
@@ -146,7 +166,7 @@ export class TugasService {
         starterHtml: dto.starterHtml,
         starterCss: dto.starterCss,
         starterJs: dto.starterJs,
-        createdById: actorId,
+        createdById: actor.id,
       },
     });
     await this.replaceSoal(tugas.id, tipe, dto.soal);
@@ -157,9 +177,11 @@ export class TugasService {
     });
   }
 
-  async update(id: string, dto: UpdateTugasDto, fileUrl?: string, fileName?: string) {
+  async update(id: string, dto: UpdateTugasDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
     const existing = await this.prisma.tugas.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Tugas tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, existing.createdById);
+    if (dto.mapel !== undefined) await this.assertGuruMapel(actor, dto.mapel);
 
     const tugas = await this.prisma.tugas.update({
       where: { id },
@@ -185,9 +207,10 @@ export class TugasService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, actor: Actor) {
     const existing = await this.prisma.tugas.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Tugas tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, existing.createdById);
     return this.prisma.tugas.delete({ where: { id } });
   }
 

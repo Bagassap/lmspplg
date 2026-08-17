@@ -22,8 +22,23 @@ const ROW_PALETTES = [
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
-export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}) {
+export function MateriListPage({
+  embedded = false, roleBadge = "Admin", currentUserId, currentUserRole, mapelOptions, canCreate = true,
+}: {
+  embedded?: boolean;
+  roleBadge?: string;
+  // Bila diisi, tombol Edit/Hapus per baris hanya tampil untuk materi milik
+  // sendiri (createdBy.id === currentUserId) — ADMIN tetap bebas ke semua.
+  currentUserId?: string;
+  currentUserRole?: string;
+  // Diteruskan ke MateriFormModal — lihat dokumentasi prop di sana.
+  mapelOptions?: string[];
+  // false = guru belum diampu mapel apa pun (tidak ada di mapel.xlsx) —
+  // tombol Tambah disembunyikan dan diganti pesan penjelasan.
+  canCreate?: boolean;
+} = {}) {
   const toast = useToast();
+  const canEdit = (m: MateriItem) => !currentUserRole || currentUserRole === "ADMIN" || m.createdBy.id === currentUserId;
   const [list, setList] = useState<MateriItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -85,7 +100,7 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Manajemen Materi</span>
-                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
+                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
                 </div>
                 <h1 className="text-2xl font-extrabold leading-tight text-white">Materi Pembelajaran</h1>
                 <p className="mt-0.5 text-sm text-white/70">Kelola modul pembelajaran per mata pelajaran</p>
@@ -102,13 +117,15 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
                   <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
                 </div>
               ))}
-              <motion.button
-                onClick={() => { setEditItem(null); setModalOpen(true); }}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-[13px] font-bold shadow-lg shrink-0"
-                style={{ color: "#0033FF" }}>
-                <Plus size={15} /> Tambah Materi
-              </motion.button>
+              {canCreate && (
+                <motion.button
+                  onClick={() => { setEditItem(null); setModalOpen(true); }}
+                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-[13px] font-bold shadow-lg shrink-0"
+                  style={{ color: "#0033FF" }}>
+                  <Plus size={15} /> Tambah Materi
+                </motion.button>
+              )}
             </div>
           </div>
         </div>
@@ -124,11 +141,13 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
               <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
               <span className="ml-1 rounded-full bg-[#0033FF]/10 px-2 py-0.5 text-[10px] font-bold text-[#0033FF]">{filtered.length} materi</span>
             </div>
-            <button onClick={() => { setEditItem(null); setModalOpen(true); }}
-              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-              style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
-              <Plus size={13} /> Tambah Materi
-            </button>
+            {canCreate && (
+              <button onClick={() => { setEditItem(null); setModalOpen(true); }}
+                className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
+                style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                <Plus size={13} /> Tambah Materi
+              </button>
+            )}
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -139,6 +158,13 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
         </div>
 
         <AnimatePresence>
+          {!canCreate && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-400">
+              <AlertCircle size={14} className="shrink-0" />
+              Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi. Hubungi admin bila ini keliru.
+            </motion.div>
+          )}
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
@@ -153,7 +179,7 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
             <div className="px-5 py-14 text-center">
               <BookOpen size={32} className="mx-auto mb-3 text-slate-200" />
               <p className="text-sm text-slate-400 mb-4">{search.trim() ? `Tidak ada materi dengan kata kunci "${search.trim()}"` : "Belum ada materi"}</p>
-              {!search.trim() && (
+              {!search.trim() && canCreate && (
                 <motion.button
                   onClick={() => { setEditItem(null); setModalOpen(true); }}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -207,14 +233,18 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
                               <Download size={14} />
                             </a>
                           )}
-                          <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-500 dark:hover:bg-amber-900/20">
-                            <Pencil size={14} />
-                          </button>
-                          <button onClick={() => handleDelete(m)} title="Hapus"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
-                            <Trash2 size={14} />
-                          </button>
+                          {canEdit(m) && (
+                            <>
+                              <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-500 dark:hover:bg-amber-900/20">
+                                <Pencil size={14} />
+                              </button>
+                              <button onClick={() => handleDelete(m)} title="Hapus"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                                <Trash2 size={14} />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -229,6 +259,7 @@ export function MateriListPage({ embedded = false }: { embedded?: boolean } = {}
       <MateriFormModal
         open={modalOpen}
         materi={editItem}
+        mapelOptions={mapelOptions}
         onClose={() => setModalOpen(false)}
         onSaved={(saved) => {
           setList((prev) => {

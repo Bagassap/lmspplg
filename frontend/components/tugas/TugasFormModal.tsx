@@ -59,12 +59,16 @@ const TIPE_OPTIONS: { value: TugasTipe; label: string; icon: typeof Send; gradie
 ];
 
 export function TugasFormModal({
-  open, tugas, onClose, onSaved,
+  open, tugas, onClose, onSaved, mapelOptions,
 }: {
   open: boolean;
   tugas?: TugasItem | null;
   onClose: () => void;
   onSaved: (t: TugasItem) => void;
+  // Bila diisi, field Mata Pelajaran jadi dropdown terbatas pada daftar ini
+  // (dipakai di halaman Guru — mapel yang benar-benar diampu, dari mapel.xlsx).
+  // Kosongkan/undefined untuk tetap pakai input teks bebas (halaman Admin).
+  mapelOptions?: string[];
 }) {
   const isEdit = !!tugas;
   const toast = useToast();
@@ -237,8 +241,15 @@ export function TugasFormModal({
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                     Mata Pelajaran <span className="text-red-500">*</span>
                   </label>
-                  <input type="text" value={mapel} onChange={(e) => setMapel(e.target.value)}
-                    placeholder="Contoh: Pemrograman Web" className={INPUT_CLS} />
+                  {mapelOptions ? (
+                    <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
+                      <option value="">Pilih mata pelajaran…</option>
+                      {mapelOptions.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  ) : (
+                    <input type="text" value={mapel} onChange={(e) => setMapel(e.target.value)}
+                      placeholder="Contoh: Pemrograman Web" className={INPUT_CLS} />
+                  )}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">Kelas Target</label>

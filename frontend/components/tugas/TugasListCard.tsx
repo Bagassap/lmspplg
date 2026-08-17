@@ -24,6 +24,7 @@ function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
 export function TugasListCard({
   tugasList, submisiList, loading, onAddTugas, onEditTugas, onDeleteTugas, onLihatSubmisi,
+  currentUserId, currentUserRole, canCreate = true,
 }: {
   tugasList: TugasItem[];
   submisiList: TugasSubmisiItem[];
@@ -32,9 +33,16 @@ export function TugasListCard({
   onEditTugas: (t: TugasItem) => void;
   onDeleteTugas: (id: string) => void;
   onLihatSubmisi: (t: TugasItem) => void;
+  // Bila diisi, tombol Edit/Hapus per baris hanya tampil untuk tugas milik
+  // sendiri (createdBy.id === currentUserId) — ADMIN tetap bebas ke semua.
+  currentUserId?: string;
+  currentUserRole?: string;
+  // false = guru belum diampu mapel apa pun — tombol Tambah disembunyikan.
+  canCreate?: boolean;
 }) {
   const [tab, setTab] = useState<"active" | "completed">("active");
   const [search, setSearch] = useState("");
+  const canEdit = (t: TugasItem) => !currentUserRole || currentUserRole === "ADMIN" || t.createdBy.id === currentUserId;
 
   const active = tugasList.filter((t) => isTugasActive(t));
   const completed = tugasList.filter((t) => !isTugasActive(t));
@@ -51,11 +59,13 @@ export function TugasListCard({
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas</p>
           </div>
-          <button onClick={onAddTugas}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-            style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
-            <Plus size={13} /> Tambah Tugas
-          </button>
+          {canCreate && (
+            <button onClick={onAddTugas}
+              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
+              style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
+              <Plus size={13} /> Tambah Tugas
+            </button>
+          )}
         </div>
         <div className="relative mb-3">
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -140,14 +150,18 @@ export function TugasListCard({
                           <Send size={11} /> Lihat
                           {cnt > 0 && <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white" style={{ backgroundColor: rp.bar }}>{cnt}</span>}
                         </button>
-                        <button onClick={() => onEditTugas(t)}
-                          className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
-                          <Pencil size={12} />
-                        </button>
-                        <button onClick={() => onDeleteTugas(t.id)}
-                          className="rounded-lg p-1.5 text-slate-300 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
-                          <Trash2 size={12} />
-                        </button>
+                        {canEdit(t) && (
+                          <>
+                            <button onClick={() => onEditTugas(t)}
+                              className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
+                              <Pencil size={12} />
+                            </button>
+                            <button onClick={() => onDeleteTugas(t.id)}
+                              className="rounded-lg p-1.5 text-slate-300 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                              <Trash2 size={12} />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

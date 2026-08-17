@@ -33,6 +33,25 @@ export class MateriService {
     );
   }
 
+  // Guru hanya boleh membuat/mengubah Materi untuk mapel yang benar-benar ia
+  // ampu (sumber: GuruMapel, diimpor dari mapel.xlsx) — ADMIN tidak dibatasi.
+  private async assertGuruMapel(actor: Actor, mapel: string) {
+    if (actor.role !== 'GURU') return;
+    const guru = await this.prisma.guru.findUnique({ where: { userId: actor.id } });
+    const allowed = guru
+      ? await this.prisma.guruMapel.findMany({ where: { guruId: guru.id }, select: { nama: true } })
+      : [];
+    if (!allowed.some((a) => a.nama === mapel)) {
+      throw new ForbiddenException('Anda tidak terdaftar sebagai pengampu mata pelajaran ini');
+    }
+  }
+
+  private assertOwnerOrAdmin(actor: Actor, createdById: string) {
+    if (actor.role === 'GURU' && createdById !== actor.id) {
+      throw new ForbiddenException('Anda hanya bisa mengubah materi buatan sendiri');
+    }
+  }
+
   async findAll(actor: Actor) {
     if (actor.role === 'SISWA') {
       const kelasId = await this.siswaKelasId(actor.id);
@@ -62,7 +81,8 @@ export class MateriService {
     return materi;
   }
 
-  async create(dto: CreateMateriDto, fileUrl: string | undefined, fileName: string | undefined, actorId: string) {
+  async create(dto: CreateMateriDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
+    await this.assertGuruMapel(actor, dto.mapel);
     const materi = await this.prisma.materi.create({
       data: {
         judul: dto.judul,
@@ -71,7 +91,7 @@ export class MateriService {
         kelasId: dto.kelasId || null,
         fileUrl,
         fileName,
-        createdById: actorId,
+        createdById: actor.id,
       },
       include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
     });
@@ -79,9 +99,11 @@ export class MateriService {
     return materi;
   }
 
-  async update(id: string, dto: UpdateMateriDto, fileUrl?: string, fileName?: string) {
+  async update(id: string, dto: UpdateMateriDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
     const existing = await this.prisma.materi.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Materi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, existing.createdById);
+    if (dto.mapel !== undefined) await this.assertGuruMapel(actor, dto.mapel);
 
     return this.prisma.materi.update({
       where: { id },
@@ -96,9 +118,10 @@ export class MateriService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, actor: Actor) {
     const existing = await this.prisma.materi.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Materi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, existing.createdById);
     return this.prisma.materi.delete({ where: { id } });
   }
 }

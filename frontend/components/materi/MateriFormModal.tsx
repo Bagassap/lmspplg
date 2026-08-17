@@ -24,12 +24,16 @@ type KelasOption = { id: string; nama: string };
 const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0033FF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0033FF]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-700";
 
 export function MateriFormModal({
-  open, materi, onClose, onSaved,
+  open, materi, onClose, onSaved, mapelOptions,
 }: {
   open: boolean;
   materi?: MateriItem | null;
   onClose: () => void;
   onSaved: (m: MateriItem) => void;
+  // Bila diisi, field Mata Pelajaran jadi dropdown terbatas pada daftar ini
+  // (dipakai di halaman Guru — mapel yang benar-benar diampu, dari mapel.xlsx).
+  // Kosongkan/undefined untuk tetap pakai input teks bebas (halaman Admin).
+  mapelOptions?: string[];
 }) {
   const isEdit = !!materi;
   const toast = useToast();
@@ -149,8 +153,15 @@ export function MateriFormModal({
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                     Mata Pelajaran <span className="text-red-500">*</span>
                   </label>
-                  <input type="text" value={mapel} onChange={(e) => setMapel(e.target.value)}
-                    placeholder="Contoh: Pemrograman Web" className={INPUT_CLS} />
+                  {mapelOptions ? (
+                    <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
+                      <option value="">Pilih mata pelajaran…</option>
+                      {mapelOptions.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  ) : (
+                    <input type="text" value={mapel} onChange={(e) => setMapel(e.target.value)}
+                      placeholder="Contoh: Pemrograman Web" className={INPUT_CLS} />
+                  )}
                 </div>
               </div>
 
