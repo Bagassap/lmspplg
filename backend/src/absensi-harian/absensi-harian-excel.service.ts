@@ -50,7 +50,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_LETTER: Record<string, string> = { HADIR: 'H', IZIN: 'I', SAKIT: 'S', ALPA: 'A' };
 const STATUS_FILL: Record<string, string> = { HADIR: 'FFE8F8F1', IZIN: 'FFF0ECFF', SAKIT: 'FFFFF5DC', ALPA: 'FFFFE9EA' };
-const STATUS_FONT: Record<string, string> = { HADIR: 'FF10B981', IZIN: 'FF6334F4', SAKIT: 'FFE6A800', ALPA: 'FFFF3644' };
+const STATUS_FONT: Record<string, string> = { HADIR: 'FF00D67F', IZIN: 'FF6334F4', SAKIT: 'FFE6A800', ALPA: 'FFFF3644' };
 
 function formatTanggalHeader(tanggal: string): string {
   const [, m, d] = tanggal.split('-');
@@ -64,6 +64,7 @@ function formatTanggalFull(tanggal: string): string {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+      timeZone: 'Asia/Jakarta',
     });
   } catch {
     return tanggal;

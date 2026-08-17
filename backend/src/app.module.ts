@@ -13,6 +13,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { UjianUkkModule } from './ujian-ukk/ujian-ukk.module';
 import { NotificationModule } from './notification/notification.module';
 import { UsersModule } from './users/users.module';
+import { CatatanSiswaModule } from './catatan-siswa/catatan-siswa.module';
+import { MateriModule } from './materi/materi.module';
+import { TugasModule } from './tugas/tugas.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { UsersModule } from './users/users.module';
     UjianUkkModule,
     NotificationModule,
     UsersModule,
+    CatatanSiswaModule,
+    MateriModule,
+    TugasModule,
   ],
   controllers: [AppController],
   providers: [AppService],

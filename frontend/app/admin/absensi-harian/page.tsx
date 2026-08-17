@@ -259,20 +259,21 @@ export default function AdminAbsensiHarianPage() {
     <>
       <div className="space-y-5 p-1">
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
+          style={{ background: "#0033FF" }}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-                <ClipboardCheck size={26} className="text-white" />
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+                <ClipboardCheck size={22} className="text-white sm:hidden" />
+                <ClipboardCheck size={26} className="hidden text-white sm:block" />
               </div>
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
                   <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
                 </div>
-                <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi Harian</h1>
+                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
                 <p className="mt-0.5 text-sm text-white/70">Pantau kehadiran seluruh siswa setiap kelas</p>
               </div>
             </div>
@@ -309,7 +310,7 @@ export default function AdminAbsensiHarianPage() {
               {kelasList.length === 0 ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-72 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                    <div key={i} className="h-52 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
                   ))}
                 </div>
               ) : (
@@ -318,44 +319,35 @@ export default function AdminAbsensiHarianPage() {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
                     const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
-                    const wali = k.waliKelasGuru?.user.nama ?? "Belum ada wali kelas";
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        className="relative flex h-72 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
+                        className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
                         style={{
                           background: gradient,
                           boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
                           outline: isSelected ? "3px solid white" : "3px solid transparent",
                           outlineOffset: isSelected ? "2px" : "0",
                         }}>
-                        <div className="relative flex items-start justify-between">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
-                            <BookOpen size={16} />
+                        <div className="relative flex items-center gap-2">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/25">
+                            <BookOpen size={14} />
                           </span>
-                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
-                            Kelas
-                          </span>
+                          <p className="truncate text-sm font-bold">{k.nama}</p>
                         </div>
 
                         <div className="relative">
-                          <p className="truncate text-base font-bold">{k.nama}</p>
-                          <p className="mt-0.5 truncate text-[10px] font-medium text-white/70">{wali}</p>
-                        </div>
-
-                        <div className="relative">
-                          <p className="text-2xl font-extrabold tabular-nums">{s.hd}/{s.tt}</p>
-                          <p className="text-[11px] font-semibold text-white/80">Siswa Hadir Hari Ini</p>
+                          <p className="text-2xl font-extrabold tabular-nums">
+                            {s.hd}<span className="text-sm font-semibold text-white/70">/{s.tt}</span>
+                          </p>
+                          <p className="text-[11px] font-semibold text-white/80">Hadir · {s.pct}%</p>
                           <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
                             <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
                           </div>
-                          <p className="mt-1 text-[10px] font-semibold text-white/70">{s.pct}% kehadiran</p>
                         </div>
 
-                        <div className="relative flex flex-wrap items-center gap-1.5">
-                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Izin {s.iz}</span>
-                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Sakit {s.sk}</span>
-                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Alpa {s.al}</span>
-                        </div>
+                        <p className="relative text-[10px] font-medium text-white/70">
+                          Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
+                        </p>
                       </button>
                     );
                   })}

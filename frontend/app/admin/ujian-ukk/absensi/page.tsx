@@ -40,7 +40,7 @@ const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string;
   icon: React.ElementType;
 }> = {
-  HADIR: { label: "Hadir",  bg: "#E8F8F1", clr: "#10B981", darkBg: "#10B98120", icon: CheckCircle2  },
+  HADIR: { label: "Hadir",  bg: "#E8F8F1", clr: "#00D67F", darkBg: "#00D67F20", icon: CheckCircle2  },
   IZIN:  { label: "Izin",   bg: "#F0ECFF", clr: "#6334F4", darkBg: "#6334F420", icon: AlertCircle   },
   SAKIT: { label: "Sakit",  bg: "#FFF5DC", clr: "#E6A800", darkBg: "#E6A80020", icon: Thermometer   },
   ALPA:  { label: "Alpa",   bg: "#FFE9EA", clr: "#FF3644", darkBg: "#FF364420", icon: MinusCircle   },
@@ -50,19 +50,19 @@ const CARD_GRADIENTS = [
   "linear-gradient(135deg,#3B7CE8,#4F8EF7)",
   "linear-gradient(135deg,#EF4444,#F87171)",
   "linear-gradient(135deg,#F59E0B,#FCD34D)",
-  "linear-gradient(135deg,#10B981,#34D399)",
+  "linear-gradient(135deg,#00D67F,#34D399)",
 ];
 
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
-  return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 function getInitials(name: string) {
   return name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase();
 }
 
-const AVATAR_COLORS = ["#6334F4","#EF4444","#F59E0B","#FF7867","#10B981","#3B82F6"];
+const AVATAR_COLORS = ["#6334F4","#EF4444","#F59E0B","#FF7867","#00D67F","#3B82F6"];
 function avatarColor(name: string) {
   let h = 0;
   for (const c of name) h = ((h * 31 + c.charCodeAt(0)) & 0x7fffffff);
@@ -368,11 +368,11 @@ function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
   API: string;
 }) {
   const tglFormatted = tanggal
-    ? new Date(tanggal).toLocaleDateString("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric" })
+    ? new Date(tanggal).toLocaleDateString("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric", timeZone: "Asia/Jakarta" })
     : "-";
 
   const statusColor: Record<string, string> = {
-    HADIR: "#10B981", IZIN: "#6334F4", SAKIT: "#E6A800", ALPA: "#FF3644",
+    HADIR: "#00D67F", IZIN: "#6334F4", SAKIT: "#E6A800", ALPA: "#FF3644",
   };
   const statusBg: Record<string, string> = {
     HADIR: "#E8F8F1", IZIN: "#F0ECFF", SAKIT: "#FFF5DC", ALPA: "#FFE9EA",
@@ -397,19 +397,19 @@ function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
       <div style="page-break-after:${isLast?"avoid":"always"};padding:32px;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;box-sizing:border-box;display:flex;flex-direction:column;gap:20px;">
 
         <!-- Header -->
-        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #10B981;padding-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #00D67F;padding-bottom:14px;">
           <div>
             <h1 style="margin:0;font-size:20px;font-weight:900;color:#0f172a;">Laporan Absensi UKK</h1>
             <p style="margin:4px 0 0;font-size:12px;color:#64748b;">${tglFormatted}</p>
           </div>
           <div style="text-align:right;font-size:11px;color:#94a3b8;">
-            <div style="font-weight:700;color:#10B981;font-size:16px;">${i+1} / ${siswaList.length}</div>
+            <div style="font-weight:700;color:#00D67F;font-size:16px;">${i+1} / ${siswaList.length}</div>
             <div>siswa ke-${i+1}</div>
           </div>
         </div>
 
         <!-- Info Lab -->
-        <div style="background:linear-gradient(135deg,#10B981,#059669);border-radius:14px;padding:16px 20px;color:white;">
+        <div style="background:linear-gradient(135deg,#00D67F,#00B368);border-radius:14px;padding:16px 20px;color:white;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div>
               <p style="margin:0;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.65;">Sesi / Lab</p>
@@ -495,7 +495,7 @@ function printAbsensiPDF({ siswaList, tahapan, tanggal, rekap, total, API }: {
 
         <!-- Footer -->
         <div style="margin-top:auto;border-top:1px solid #e2e8f0;padding-top:12px;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;">
-          <span>Laporan Absensi UKK — Dicetak ${new Date().toLocaleDateString("id-ID")}</span>
+          <span>Laporan Absensi UKK — Dicetak ${new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" })}</span>
           <span>Rekap: Hadir ${rekap.HADIR} | Izin ${rekap.IZIN} | Sakit ${rekap.SAKIT} | Alpa ${rekap.ALPA} dari ${total} siswa</span>
         </div>
       </div>
@@ -573,22 +573,23 @@ export default function AdminUkkAbsensiPage() {
       <div className="space-y-5 p-1">
 
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
+          style={{background:"#0033FF"}}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10"/>
           <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8"/>
           <div className="pointer-events-none absolute bottom-4 -left-6 h-24 w-24 rounded-full bg-white/6"/>
 
           <div className="relative flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-                <ClipboardCheck size={26} className="text-white"/>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+                <ClipboardCheck size={22} className="text-white sm:hidden"/>
+                <ClipboardCheck size={26} className="hidden text-white sm:block"/>
               </div>
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Ujian Kompetensi Keahlian</span>
                   <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
                 </div>
-                <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi UKK</h1>
+                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi UKK</h1>
                 <p className="mt-0.5 text-sm text-white/70">Pantau kehadiran siswa di setiap lab komputer</p>
               </div>
             </div>

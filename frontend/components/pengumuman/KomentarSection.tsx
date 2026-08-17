@@ -19,7 +19,7 @@ export type KomentarItem = {
 const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
   ADMIN: { label: "Admin",  cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300", dot: "#6334F4" },
   GURU:  { label: "Guru",   cls: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",  dot: "#F97316" },
-  SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#10B981" },
+  SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#00D67F" },
 };
 
 const AVATAR_PALETTE = [
@@ -28,7 +28,7 @@ const AVATAR_PALETTE = [
   "linear-gradient(135deg,#F97316,#FB923C)",
   "linear-gradient(135deg,#F59E0B,#FCD34D)",
   "linear-gradient(135deg,#0033FF,#4F8EF7)",
-  "linear-gradient(135deg,#10B981,#34D399)",
+  "linear-gradient(135deg,#00D67F,#34D399)",
 ];
 function avatarGradient(name: string) { return AVATAR_PALETTE[name.charCodeAt(0) % AVATAR_PALETTE.length]; }
 

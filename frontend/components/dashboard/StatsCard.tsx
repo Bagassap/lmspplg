@@ -6,7 +6,7 @@ import type { LucideIcon } from "lucide-react";
 
 const THEMES = [
   { icon: "#4F8EF7", iconBg: "#EEF4FF" },
-  { icon: "#10B981", iconBg: "#ECFDF5" },
+  { icon: "#00D67F", iconBg: "#ECFDF5" },
   { icon: "#EF4444", iconBg: "#FFF1F2" },
   { icon: "#F59E0B", iconBg: "#FFFBEB" },
 ] as const;

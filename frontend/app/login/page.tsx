@@ -7,7 +7,7 @@ export default function LoginPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(151,125,255,0.045) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(79,142,247,0.045) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />

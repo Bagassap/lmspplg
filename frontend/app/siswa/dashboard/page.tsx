@@ -32,7 +32,7 @@ interface DashboardData {
 
 const P = "#4F8EF7";
 const R = "#EF4444";
-const G = "#10B981";
+const G = "#00D67F";
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
@@ -162,8 +162,8 @@ export default function SiswaDashboardPage() {
     },
     {
       href: "/siswa/magang",
-      label: "Magang / PKL",
-      display: belumMagang ? "Belum Magang" : `${magang.hadir ?? 0}x hadir`,
+      label: "PKL",
+      display: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
       small: belumMagang,
       gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
       icon: GraduationCap,

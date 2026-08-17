@@ -3,16 +3,52 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2, UserCheck } from "lucide-react";
+import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2, UserCheck, Copy, CheckCheck, Printer } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
+// Kartu slip dicetak di jendela terpisah (bukan window.print() pada modal
+// itu sendiri) supaya CSS/layout aplikasi tidak ikut ke kertas — slip ini
+// satu-satunya tempat password baru pernah terlihat, jadi tidak disimpan
+// di state React setelah modal ditutup ataupun dikirim ke server manapun.
+function printSlip(opts: { nama: string; loginId?: string; password: string }) {
+  const w = window.open("", "_blank", "width=420,height=600");
+  if (!w) return;
+  const tanggal = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta", weekday: "long", day: "numeric", month: "long", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  }).format(new Date()) + " WIB";
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Slip Password — ${opts.nama}</title>
+    <style>
+      body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;color:#1e293b;}
+      .card{border:2px dashed #cbd5e1;border-radius:16px;padding:20px;max-width:340px;margin:0 auto;}
+      h1{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#6334F4;margin:0 0 4px;}
+      .nama{font-size:18px;font-weight:800;margin:0 0 16px;}
+      .row{margin-bottom:12px;}
+      .label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;font-weight:700;}
+      .value{font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:700;margin-top:2px;}
+      .note{margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:11px;color:#64748b;line-height:1.5;}
+      .ts{margin-top:10px;font-size:10px;color:#94a3b8;}
+    </style></head><body>
+    <div class="card">
+      <h1>Slip Password Akun</h1>
+      <p class="nama">${opts.nama}</p>
+      ${opts.loginId ? `<div class="row"><div class="label">Login</div><div class="value">${opts.loginId}</div></div>` : ""}
+      <div class="row"><div class="label">Password Baru</div><div class="value">${opts.password}</div></div>
+      <p class="note">Password ini wajib diganti saat login berikutnya. Jangan bagikan slip ini ke orang lain selain pemilik akun.</p>
+      <p class="ts">Dicetak ${tanggal}</p>
+    </div>
+    <script>window.onload=()=>window.print();</script>
+    </body></html>`);
+  w.document.close();
+}
+
 export function ResetPasswordModal({
-  userId, userName, nis, mustChangePassword, onClose, onSuccess,
+  userId, userName, nis, loginId, mustChangePassword, onClose, onSuccess,
 }: {
-  userId: string; userName: string; nis?: string; mustChangePassword?: boolean; onClose: () => void; onSuccess?: () => void;
+  userId: string; userName: string; nis?: string; loginId?: string | null; mustChangePassword?: boolean; onClose: () => void; onSuccess?: () => void;
 }) {
   const toast = useToast();
   const resetToNis = !!nis;
@@ -23,6 +59,10 @@ export function ResetPasswordModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [bypassIdentity, setBypassIdentity] = useState(false);
+  const [successPassword, setSuccessPassword] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const effectiveLoginId = loginId || nis || undefined;
 
   async function handleReset() {
     if (!resetToNis && newPassword.length < 8) {
@@ -42,20 +82,30 @@ export function ResetPasswordModal({
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.message ?? `Error ${res.status}`);
-      toast.success(
-        "Password berhasil direset!",
-        bypassIdentity
-          ? `${userName} wajib mengganti password saat login berikutnya — verifikasi identitas dilewati sekali.`
-          : `${userName} wajib mengganti password saat login berikutnya.`,
-      );
       onSuccess?.();
-      onClose();
+      // Modal tetap terbuka lewat layar sukses di bawah — ini satu-satunya
+      // momen password baru bisa dilihat/disalin/dicetak sebelum hash-nya
+      // yang tersimpan di server. Tidak ditutup otomatis supaya admin
+      // sempat menyalin/mencetaknya dulu.
+      setSuccessPassword(resetToNis ? nis! : newPassword);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Gagal mereset password. Coba lagi.";
       setError(msg);
       toast.error("Gagal mereset password", msg);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleCopy() {
+    if (!successPassword) return;
+    const text = effectiveLoginId ? `Login: ${effectiveLoginId}\nPassword: ${successPassword}` : successPassword;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      toast.error("Gagal menyalin", "Salin manual dari layar ini.");
     }
   }
 
@@ -68,6 +118,72 @@ export function ResetPasswordModal({
         <motion.div className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900"
           initial={{ scale: 0.95, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 24 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
+          {successPassword ? (
+            <>
+              <div className="relative overflow-hidden px-6 py-5"
+                style={{ background: "linear-gradient(135deg, #00B368 0%, #34D399 100%)" }}>
+                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm">
+                      <CheckCircle2 size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/55">Password Direset</p>
+                      <h2 className="text-base font-extrabold leading-tight text-white">{userName}</h2>
+                    </div>
+                  </div>
+                  <button onClick={onClose}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white/80 transition-all hover:bg-white/25 hover:text-white">
+                    <X size={15} />
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-4 px-5 py-5">
+                <div className="flex items-start gap-2.5 rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 dark:border-amber-900/30 dark:bg-amber-900/10">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-amber-500" />
+                  <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-400">
+                    Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
+                    menyimpan hash-nya dan tidak bisa ditampilkan ulang. Salin atau catat sekarang.
+                  </p>
+                </div>
+
+                <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                  {effectiveLoginId && (
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Login</p>
+                      <p className="font-mono text-sm font-semibold text-slate-700 dark:text-slate-200">{effectiveLoginId}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Password Baru</p>
+                    <p className="font-mono text-lg font-extrabold tracking-wide text-emerald-600 dark:text-emerald-400">{successPassword}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button type="button" onClick={handleCopy}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                    {copied ? <CheckCheck size={15} className="text-emerald-500" /> : <Copy size={15} />}
+                    {copied ? "Tersalin" : "Salin"}
+                  </button>
+                  <button type="button" onClick={() => printSlip({ nama: userName, loginId: effectiveLoginId, password: successPassword })}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                    <Printer size={15} /> Cetak Slip
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">
+                <motion.button type="button" onClick={onClose}
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md"
+                  style={{ backgroundColor: "#00B368" }}>
+                  Selesai
+                </motion.button>
+              </div>
+            </>
+          ) : (
+          <>
           <div className="relative overflow-hidden px-6 py-5"
             style={{ background: "linear-gradient(135deg, #DC2626 0%, #F87171 100%)" }}>
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
@@ -185,6 +301,8 @@ export function ResetPasswordModal({
                 : <><KeyRound size={14} />Reset Password</>}
             </motion.button>
           </div>
+          </>
+          )}
         </motion.div>
       </motion.div>
     </AnimatePresence>,

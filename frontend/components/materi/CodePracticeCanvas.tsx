@@ -1,0 +1,133 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
+
+type Tab = "html" | "css" | "js";
+
+const TABS: { key: Tab; label: string; icon: typeof Code2 }[] = [
+  { key: "html", label: "HTML", icon: Code2 },
+  { key: "css", label: "CSS", icon: Palette },
+  { key: "js", label: "JavaScript", icon: FileCode },
+];
+
+function buildSrcDoc(html: string, css: string, js: string) {
+  const safeJs = js.replace(/<\/script/gi, "<\\/script");
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  body { font-family: system-ui, sans-serif; color: #0f172a; margin: 0; padding: 12px; }
+  ${css}
+</style>
+</head>
+<body>
+${html}
+<script>
+  window.addEventListener("error", function (e) {
+    var pre = document.createElement("pre");
+    pre.textContent = "Error: " + e.message;
+    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FFE9EA;color:#DC2626;font:12px monospace;white-space:pre-wrap;border-top:1px solid #FCA5A5;";
+    document.body.appendChild(pre);
+  });
+<\/script>
+<script>
+${safeJs}
+<\/script>
+</body>
+</html>`;
+}
+
+export function CodePracticeCanvas({
+  initialHtml = "", initialCss = "", initialJs = "", onChange, minHeight = 420,
+}: {
+  initialHtml?: string;
+  initialCss?: string;
+  initialJs?: string;
+  onChange?: (code: { html: string; css: string; js: string }) => void;
+  minHeight?: number;
+}) {
+  const [html, setHtml] = useState(initialHtml);
+  const [css, setCss] = useState(initialCss);
+  const [js, setJs] = useState(initialJs);
+  const [tab, setTab] = useState<Tab>("html");
+  const [srcDoc, setSrcDoc] = useState(() => buildSrcDoc(initialHtml, initialCss, initialJs));
+  const [runKey, setRunKey] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setSrcDoc(buildSrcDoc(html, css, js)), 400);
+    onChange?.({ html, css, js });
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [html, css, js]);
+
+  function runNow() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setSrcDoc(buildSrcDoc(html, css, js));
+    setRunKey((k) => k + 1);
+  }
+
+  function reset() {
+    setHtml(initialHtml);
+    setCss(initialCss);
+    setJs(initialJs);
+  }
+
+  const value = tab === "html" ? html : tab === "css" ? css : js;
+  const setValue = tab === "html" ? setHtml : tab === "css" ? setCss : setJs;
+
+  return (
+    <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/60 px-3 py-2 dark:border-slate-700 dark:bg-slate-700/20">
+        <div className="flex items-center gap-1">
+          {TABS.map((t) => {
+            const active = tab === t.key;
+            return (
+              <button key={t.key} type="button" onClick={() => setTab(t.key)}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
+                style={active ? { background: "linear-gradient(135deg,#0033FF,#335CFF)" } : {}}>
+                <t.icon size={13} /> {t.label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-1.5">
+          <button type="button" onClick={reset}
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
+            <RotateCcw size={12} /> Reset
+          </button>
+          <button type="button" onClick={runNow}
+            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
+            style={{ background: "linear-gradient(135deg,#00D67F,#00B368)" }}>
+            <Play size={12} /> Run
+          </button>
+          <button type="button" onClick={() => setFullscreen((f) => !f)}
+            className="flex items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
+            {fullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid flex-1 grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1" style={fullscreen ? undefined : { minHeight }}>
+        <textarea
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          spellCheck={false}
+          placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #0033FF; }" : "console.log('halo');"}
+          className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"
+        />
+        <iframe
+          key={runKey}
+          title="Hasil"
+          srcDoc={srcDoc}
+          sandbox="allow-scripts"
+          className="h-full w-full bg-white"
+        />
+      </div>
+    </div>
+  );
+}

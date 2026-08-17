@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -7,6 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { Role, StatusPasswordReset } from '../../generated/prisma/client';
 import { SUPER_ADMIN_LOGIN_ID } from '../auth/guards/super-admin.guard';
 import * as bcrypt from 'bcrypt';
@@ -68,6 +70,57 @@ export class UsersService {
     return {
       message: `Password ${user.nama} berhasil direset${user.role === Role.SISWA ? ' ke NIS' : ''}`,
     };
+  }
+
+  async createAccount(dto: CreateUserDto) {
+    try {
+      if (dto.role === Role.SISWA) {
+        const hashed = await bcrypt.hash(dto.nis!, SALT_ROUNDS);
+        const user = await this.prisma.user.create({
+          data: {
+            nama: dto.nama,
+            password: hashed,
+            role: Role.SISWA,
+            mustChangePassword: true,
+            siswa: {
+              create: {
+                nis: dto.nis!,
+                nama: dto.nama,
+                kelasId: dto.kelasId!,
+                jurusan: dto.jurusan!,
+                angkatan: dto.angkatan!,
+                jenisKelamin: dto.jenisKelamin,
+              },
+            },
+          },
+          select: { id: true, nama: true, role: true, siswa: { select: { nis: true } } },
+        });
+        return { message: `Akun siswa ${user.nama} berhasil dibuat`, id: user.id, loginId: user.siswa?.nis };
+      }
+
+      const existing = await this.prisma.user.findFirst({ where: { loginId: dto.loginId } });
+      if (existing) throw new ConflictException('Login ID sudah digunakan akun lain');
+
+      const hashed = await bcrypt.hash(dto.password!, SALT_ROUNDS);
+      const user = await this.prisma.user.create({
+        data: {
+          nama: dto.nama,
+          loginId: dto.loginId,
+          password: hashed,
+          role: dto.role === 'GURU' ? Role.GURU : Role.ADMIN,
+          mustChangePassword: true,
+          ...(dto.role === 'GURU' ? { guru: { create: { nip: dto.nip || undefined, noWa: dto.noWa } } } : {}),
+        },
+        select: { id: true, nama: true, role: true, loginId: true },
+      });
+      return { message: `Akun ${dto.role === 'GURU' ? 'guru' : 'admin'} ${user.nama} berhasil dibuat`, id: user.id, loginId: user.loginId };
+    } catch (err) {
+      if (err instanceof ConflictException) throw err;
+      if ((err as { code?: string }).code === 'P2002') {
+        throw new ConflictException('NIS/Login ID sudah digunakan akun lain');
+      }
+      throw err;
+    }
   }
 
   async findPasswordStatus() {

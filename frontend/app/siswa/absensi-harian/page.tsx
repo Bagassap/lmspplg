@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, MapPin, Camera, CheckCircle2, Loader2, Clock, RefreshCw,
-  Sparkles, FileSignature, MessageSquareText, LogIn, LogOut, Moon, AlertCircle,
+  FileSignature, MessageSquareText, LogIn, LogOut, Moon, AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -37,16 +37,6 @@ type StatusSaya = {
 
 type AbsensiSummary = { hadir: number; izin: number; sakit: number; alpa: number; total: number; persentase: number };
 type Tab = "DATANG" | "PULANG";
-
-const MOTIVASI = [
-  "Kehadiranmu hari ini adalah langkah kecil menuju kesuksesan besar!",
-  "Konsisten hadir, konsisten berkembang.",
-  "Rajin hadir, ilmu makin melekat.",
-  "Semangat pagi! Satu absen, satu langkah maju.",
-  "Disiplin hari ini, hasil gemilang nanti.",
-  "Hadir hari ini, bangga selamanya.",
-  "Jangan lewatkan harimu — catat kehadiranmu sekarang!",
-];
 
 // GPS is mandatory for Hadir/Pulang — there is no fallback that lets a
 // submission through without real coordinates. getCurrentPosition() is
@@ -247,7 +237,6 @@ export default function SiswaAbsensiHarianPage() {
 
   const status = (data?.status ?? "HADIR") as StatusAbsensi;
   const cfg = STATUS_CFG[status];
-  const motivasi = MOTIVASI[new Date().getDay() % MOTIVASI.length];
   const pulangLabel = data?.pulangLabel ?? "";
   const winInfo = getWindowInfo(window_, pulangLabel);
 
@@ -260,7 +249,7 @@ export default function SiswaAbsensiHarianPage() {
     <div className="space-y-5">
 
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
+        className="relative overflow-hidden rounded-2xl p-6"
         style={{ background: BRAND_GRADIENT }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />
@@ -268,46 +257,26 @@ export default function SiswaAbsensiHarianPage() {
         <div className="pointer-events-none absolute -left-8 -bottom-8 h-36 w-36 rounded-full bg-white/5" />
 
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
               initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 12, stiffness: 300, delay: 0.05 }}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-              <ClipboardCheck size={26} className="text-white" />
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+              <ClipboardCheck size={22} className="text-white sm:hidden" />
+              <ClipboardCheck size={26} className="hidden text-white sm:block" />
             </motion.div>
             <div className="min-w-0">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
-              <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi Harian</h1>
+              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
               <p className="mt-0.5 text-sm text-white/70">{formatTgl(today)}</p>
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
-                className="mt-1.5 flex items-center gap-1.5 text-xs text-white/60">
-                <Sparkles size={12} className="shrink-0" /> <span className="truncate">{motivasi}</span>
-              </motion.p>
             </div>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2 self-start sm:self-center">
-            <span className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm">
+            <span className="flex items-center gap-1.5 rounded-xl bg-white/15 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm">
               <Clock size={11} /> {winInfo.label} · {winInfo.range}
             </span>
             <LiveClock />
           </div>
-        </div>
-
-        <div className="relative mt-5 flex flex-wrap gap-2">
-          <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
-            style={{ background: data?.sudahAbsen ? "rgba(16,185,129,0.35)" : "rgba(255,255,255,0.12)" }}>
-            <LogIn size={11} /> Datang {data?.sudahAbsen ? `· ${data.record?.waktuAbsen ?? ""}` : "· belum"}
-          </span>
-          <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
-            style={{ background: data?.sudahPulang ? "rgba(59,124,232,0.35)" : "rgba(255,255,255,0.12)" }}>
-            <LogOut size={11} /> Pulang {data?.sudahPulang ? `· ${data.record?.waktuPulang ?? ""}` : "· belum"}
-          </span>
-          {data?.status && data.status !== "HADIR" && (
-            <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm"
-              style={{ background: "rgba(255,255,255,0.18)" }}>
-              Keterangan: {cfg.label}
-            </span>
-          )}
         </div>
       </motion.div>
 

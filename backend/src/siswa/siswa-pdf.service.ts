@@ -27,7 +27,7 @@ const BRAND = '#6334F4';
 
 function formatTanggalLahir(tempatLahir: string | null, tanggalLahir: Date | null): string {
   const tgl = tanggalLahir
-    ? tanggalLahir.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    ? tanggalLahir.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' })
     : null;
   if (tempatLahir && tgl) return `${tempatLahir}, ${tgl}`;
   return tempatLahir || tgl || '-';
@@ -125,7 +125,7 @@ export class SiswaPdfService {
   private rowValues(s: SiswaExportRow, no: number): [string, string][] {
     const jk = s.jenisKelamin === 'Perempuan' ? 'P' : s.jenisKelamin === 'Laki-laki' ? 'L' : '-';
     const status = s.user?.mustChangePassword === false ? 'Sudah ganti' : 'Belum ganti';
-    const statusColor = s.user?.mustChangePassword === false ? '#059669' : '#d97706';
+    const statusColor = s.user?.mustChangePassword === false ? '#00B368' : '#d97706';
     return [
       [String(no), '#334155'],
       [s.nama || '-', '#0f172a'],

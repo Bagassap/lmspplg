@@ -25,7 +25,7 @@ type KelasGroup = {
 
 function formatTanggalLahir(tempatLahir: string | null, tanggalLahir: Date | null): string {
   const tgl = tanggalLahir
-    ? tanggalLahir.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    ? tanggalLahir.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' })
     : null;
   if (tempatLahir && tgl) return `${tempatLahir}, ${tgl}`;
   return tempatLahir || tgl || '-';
@@ -103,7 +103,7 @@ export class SiswaExcelService {
         row.alignment = { vertical: 'middle', wrapText: true };
         const statusCell = row.getCell('status');
         statusCell.font = {
-          color: { argb: s.user?.mustChangePassword === false ? 'FF059669' : 'FFD97706' },
+          color: { argb: s.user?.mustChangePassword === false ? 'FF00B368' : 'FFD97706' },
           bold: true,
         };
       });

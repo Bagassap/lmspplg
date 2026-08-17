@@ -53,13 +53,13 @@ export function kelasShort(kelas: string): string {
 export function formatTglShort(iso: string | null): string {
   if (!iso) return "—";
   const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 function formatTglPadded(iso: string | null): string | null {
   if (!iso) return null;
   const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  const mon = new Date(y, m - 1, d).toLocaleDateString("id-ID", { month: "short" });
+  const mon = new Date(y, m - 1, d).toLocaleDateString("id-ID", { month: "short", timeZone: "Asia/Jakarta" });
   return `${String(d).padStart(2, "0")} ${mon} ${y}`;
 }
 

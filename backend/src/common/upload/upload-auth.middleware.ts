@@ -50,7 +50,14 @@ export function createUploadAuthMiddleware(
     }
 
     // Exam question documents are shared material for every participant of a tahapan.
-    if (req.path.startsWith('/ukk-soal/')) {
+    // Materi modules and tugas attachments are likewise shared instructional
+    // material — visibility (kelas/jurusan scope) is already enforced at the
+    // API/DB-query layer, not per-file, so no ownership check applies here.
+    if (
+      req.path.startsWith('/ukk-soal/') ||
+      req.path.startsWith('/materi/') ||
+      req.path.startsWith('/tugas/')
+    ) {
       next();
       return;
     }
@@ -89,6 +96,12 @@ export function createUploadAuthMiddleware(
       owned = !!row;
     } else if (req.path.startsWith('/ukk-submisi/')) {
       const row = await prisma.submisiProjectUKK.findFirst({
+        where: { siswaId: siswa.id, fileUrl: requestedUrl },
+        select: { id: true },
+      });
+      owned = !!row;
+    } else if (req.path.startsWith('/tugas-submisi/')) {
+      const row = await prisma.tugasSubmisi.findFirst({
         where: { siswaId: siswa.id, fileUrl: requestedUrl },
         select: { id: true },
       });

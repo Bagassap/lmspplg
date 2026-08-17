@@ -19,7 +19,7 @@ import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 const P = "#4F8EF7";   
 const R = "#EF4444";   
 const B = "#6366F1";   
-const G = "#10B981";   
+const G = "#00D67F";   
 
 
 interface Pengumuman {
@@ -157,7 +157,7 @@ export default function AdminDashboardPage() {
       value: data.kehadiran.hadir,
       prefix: "",
       suffix: " hadir",
-      validThru: "2024/2025",
+      validThru: "2026/2027",
       holder: "Admin PPLG",
       gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
       icon: Calendar,
@@ -168,29 +168,29 @@ export default function AdminDashboardPage() {
       value: data.pengumuman.length,
       prefix: "",
       suffix: " item",
-      validThru: "2024/2025",
+      validThru: "2026/2027",
       holder: "Admin PPLG",
       gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
       icon: Megaphone,
     },
     {
       href: "/admin/magang",
-      label: "Magang",
+      label: "PKL",
       value: data.totalSiswa,
       prefix: "",
       suffix: " siswa",
-      validThru: "2024/2025",
+      validThru: "2026/2027",
       holder: "Admin PPLG",
       gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
       icon: Briefcase,
     },
     {
       href: "/admin/ujian-ukk",
-      label: "Ujian UKK",
+      label: "UKK",
       value: data.totalKelas,
       prefix: "",
       suffix: " kelas",
-      validThru: "2024/2025",
+      validThru: "2026/2027",
       holder: "Admin PPLG",
       gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
       icon: FileText,

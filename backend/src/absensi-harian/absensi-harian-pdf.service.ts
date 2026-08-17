@@ -53,7 +53,7 @@ const STATUS_LABEL: Record<string, string> = {
   ALPA: 'Alpa',
 };
 const STATUS_COLOR: Record<string, string> = {
-  HADIR: '#10B981',
+  HADIR: '#00D67F',
   IZIN: '#6334F4',
   SAKIT: '#E6A800',
   ALPA: '#FF3644',
@@ -125,6 +125,7 @@ function formatTanggal(tanggal: string): string {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+      timeZone: 'Asia/Jakarta',
     });
   } catch {
     return tanggal;
@@ -137,6 +138,7 @@ function formatTanggalShort(tanggal: string): string {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
+      timeZone: 'Asia/Jakarta',
     });
   } catch {
     return tanggal;

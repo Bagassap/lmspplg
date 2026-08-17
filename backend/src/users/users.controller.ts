@@ -1,5 +1,6 @@
-import { Controller, Get, Patch, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
@@ -11,6 +12,11 @@ import { Role } from '../../generated/prisma/client';
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
+
+  @Post()
+  createAccount(@Body() dto: CreateUserDto) {
+    return this.service.createAccount(dto);
+  }
 
   @Get('password-status')
   findPasswordStatus() {

@@ -148,7 +148,7 @@ export function LoginForm() {
         whileHover={!loading ? { scale: 1.02 } : undefined}
         whileTap={!loading ? { scale: 0.98 } : undefined}
         className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,51,255,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,51,255,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
-        style={{ background: "linear-gradient(to right, #977DFF, #0033FF)" }}
+        style={{ background: "linear-gradient(to right, #4F8EF7, #0033FF)" }}
       >
         {loading ? (
           <>

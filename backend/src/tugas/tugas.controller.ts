@@ -1,0 +1,127 @@
+import {
+  Controller, Get, Post, Put, Delete, Param, Body,
+  UseGuards, Request, UseInterceptors, UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
+import * as fs from 'fs';
+import { TugasService } from './tugas.service';
+import { CreateTugasDto } from './dto/create-tugas.dto';
+import { UpdateTugasDto } from './dto/update-tugas.dto';
+import { SubmitTugasDto } from './dto/submit-tugas.dto';
+import { UpdateNilaiSubmisiDto } from './dto/update-nilai-submisi.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { documentUploadOptions } from '../common/upload/file-filters';
+import { Role } from '../../generated/prisma/client';
+
+function makeStorage(folder: string) {
+  return diskStorage({
+    destination: (_req, _file, cb) => {
+      const dir = join(process.cwd(), 'uploads', folder);
+      fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: (_req, file, cb) => {
+      const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, unique + extname(file.originalname));
+    },
+  });
+}
+
+const tugasStorage = makeStorage('tugas');
+const submisiStorage = makeStorage('tugas-submisi');
+
+@UseGuards(JwtAuthGuard)
+@Controller('tugas')
+export class TugasController {
+  constructor(private readonly service: TugasService) {}
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('submisi')
+  findAllSubmisi() {
+    return this.service.findAllSubmisi();
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Get('submisi/saya')
+  findMySubmisi(@Request() req: any) {
+    return this.service.findMySubmisi(req.user.id);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post('submisi')
+  @UseInterceptors(FileInterceptor('file', { storage: submisiStorage, ...documentUploadOptions }))
+  submitTugas(@Request() req: any, @Body() dto: SubmitTugasDto, @UploadedFile() file: Express.Multer.File | undefined) {
+    const fileUrl = file ? `/uploads/tugas-submisi/${file.filename}` : undefined;
+    const fileName = file ? file.originalname : undefined;
+    return this.service.submitTugas(req.user.id, dto, fileUrl, fileName);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Put('submisi/:id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: 'TERKIRIM' | 'DITERIMA' | 'REVISI',
+    @Body('pesanRevisi') pesanRevisi?: string,
+  ) {
+    return this.service.updateStatusSubmisi(id, status, pesanRevisi);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Put('submisi/:id/nilai')
+  updateNilai(@Param('id') id: string, @Body() dto: UpdateNilaiSubmisiDto) {
+    return this.service.updateNilaiSubmisi(id, dto.nilai);
+  }
+
+  @Get()
+  findAll(@Request() req: any) {
+    return this.service.findAll({ id: req.user.id, role: req.user.role });
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get(':id/belum-mengumpulkan')
+  findBelumMengumpulkan(@Param('id') id: string) {
+    return this.service.findBelumMengumpulkan(id);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string, @Request() req: any) {
+    return this.service.findOne(id, { id: req.user.id, role: req.user.role });
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post()
+  @UseInterceptors(FileInterceptor('file', { storage: tugasStorage, ...documentUploadOptions }))
+  create(@Body() dto: CreateTugasDto, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
+    const fileUrl = file ? `/uploads/tugas/${file.filename}` : undefined;
+    const fileName = file ? file.originalname : undefined;
+    return this.service.create(dto, fileUrl, fileName, req.user.id);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Put(':id')
+  @UseInterceptors(FileInterceptor('file', { storage: tugasStorage, ...documentUploadOptions }))
+  update(@Param('id') id: string, @Body() dto: UpdateTugasDto, @UploadedFile() file: Express.Multer.File | undefined) {
+    const fileUrl = file ? `/uploads/tugas/${file.filename}` : undefined;
+    const fileName = file ? file.originalname : undefined;
+    return this.service.update(id, dto, fileUrl, fileName);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.service.remove(id);
+  }
+}

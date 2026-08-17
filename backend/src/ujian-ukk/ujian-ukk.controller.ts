@@ -1,12 +1,14 @@
 import {
   Controller, Get, Post, Put, Delete, Param, Body, Query,
-  UseGuards, Request, UseInterceptors, UploadedFile,
+  UseGuards, Request, Res, UseInterceptors, UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import * as fs from 'fs';
+import type { Response } from 'express';
 import { UjianUkkService } from './ujian-ukk.service';
+import { UjianUkkExcelService } from './ujian-ukk-excel.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
@@ -46,7 +48,10 @@ const submitStorage = diskStorage({
 @UseGuards(JwtAuthGuard)
 @Controller('ujian-ukk')
 export class UjianUkkController {
-  constructor(private readonly service: UjianUkkService) {}
+  constructor(
+    private readonly service: UjianUkkService,
+    private readonly excelService: UjianUkkExcelService,
+  ) {}
 
   @Get('tahapan')
   findAllTahapan() { return this.service.findAllTahapan(); }
@@ -111,6 +116,20 @@ export class UjianUkkController {
     const fileUrl  = file ? `/uploads/ukk-submisi/${file.filename}` : (dto.driveUrl ?? '');
     const fileName = file ? file.originalname : 'Google Drive';
     return this.service.submitProject(req.user.id, dto, fileUrl, fileName);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('submisi/export-excel')
+  async exportSubmisiExcel(@Res() res: Response) {
+    const groups = await this.service.getSubmisiForExport();
+    const buffer = await this.excelService.build(groups);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="Rekap_Submisi_UKK.xlsx"',
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
   }
 
   @UseGuards(RolesGuard)

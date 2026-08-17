@@ -98,9 +98,31 @@ export class UjianUkkService {
     });
   }
 
+  // Wadah umum (hariKe:0) menampung file Jadwal/Soal yang tidak terikat ke
+  // task harian tertentu — dibuat sekali secara lazy saat admin mengupload
+  // file pertamanya, bukan lewat seed manual. Tanpa ini, upload pertama di
+  // instalasi baru gagal senyap: frontend butuh tahapanId sebelum submit,
+  // tapi belum ada tahapan hariKe:0 untuk diambil id-nya.
+  private async getOrCreateGlobalContainer() {
+    const existing = await this.prisma.tahapanUKK.findFirst({ where: { hariKe: 0 } });
+    if (existing) return existing;
+    return this.prisma.tahapanUKK.create({
+      data: {
+        hariKe: 0,
+        tipe: TipeUKK.INTERNAL,
+        judul: 'Berkas Umum UKK',
+        tanggal: new Date(),
+        jamMulai: '00:00',
+        jamSelesai: '23:59',
+        lokasi: '-',
+      },
+    });
+  }
+
   async createSoal(dto: CreateSoalDto, fileUrl: string, fileName: string) {
+    const tahapanId = dto.tahapanId || (await this.getOrCreateGlobalContainer()).id;
     return this.prisma.soalTahapanUKK.create({
-      data: { ...dto, fileUrl, fileName },
+      data: { ...dto, tahapanId, fileUrl, fileName },
       include: { tahapan: { select: { id: true, judul: true } } },
     });
   }
@@ -119,6 +141,24 @@ export class UjianUkkService {
         siswa: { include: { user: { select: { id: true, nama: true } } } },
       },
     });
+  }
+
+  async getSubmisiForExport() {
+    const kelasList = await this.prisma.kelas.findMany({
+      orderBy: { nama: 'asc' },
+      include: {
+        siswa: {
+          orderBy: { nama: 'asc' },
+          include: {
+            submisiProjectUkk: {
+              orderBy: { submittedAt: 'asc' },
+              include: { soal: { select: { judul: true } } },
+            },
+          },
+        },
+      },
+    });
+    return kelasList.map((k) => ({ kelas: { nama: k.nama }, siswa: k.siswa }));
   }
 
   async findMySubmisi(userId: string) {

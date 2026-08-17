@@ -8,7 +8,7 @@ import {
 
 type FeatureType = "magang" | "ujian-ukk";
 
-const BRAND_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
+const BRAND_GRADIENT = "#0033FF";
 
 const CONFIG: Record<FeatureType, {
   icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
@@ -20,7 +20,7 @@ const CONFIG: Record<FeatureType, {
 }> = {
   magang: {
     icon: Briefcase,
-    title: "Magang",
+    title: "PKL",
     features: [
       { icon: MapPin,        label: "Penempatan" },
       { icon: CalendarCheck, label: "Absensi" },
@@ -28,25 +28,25 @@ const CONFIG: Record<FeatureType, {
       { icon: FileText,      label: "Rekap" },
     ],
     subtitle: (isGuru) => isGuru
-      ? "Menu ini akan aktif ketika program magang siswa resmi dimulai"
-      : "Menu ini akan aktif ketika jadwal magang kamu telah dimulai",
+      ? "Menu ini akan aktif ketika program PKL siswa resmi dimulai"
+      : "Menu ini akan aktif ketika jadwal PKL kamu telah dimulai",
     info: (isGuru) => isGuru
-      ? "Semua fitur pemantauan, absensi, dan rekap siswa akan tersedia setelah program magang resmi dibuka oleh admin."
-      : "Fitur penempatan, absensi harian, monitoring progres, dan rekap laporan akan terbuka setelah magang kamu resmi dimulai.",
-    footerHint: (isGuru) => `Pantau pengumuman dari ${isGuru ? "koordinator magang" : "pembimbing magang"} Anda`,
+      ? "Semua fitur pemantauan, absensi, dan rekap siswa akan tersedia setelah program PKL resmi dibuka oleh admin."
+      : "Fitur penempatan, absensi harian, monitoring progres, dan rekap laporan akan terbuka setelah PKL kamu resmi dimulai.",
+    footerHint: (isGuru) => `Pantau pengumuman dari ${isGuru ? "koordinator PKL" : "pembimbing PKL"} Anda`,
   },
   "ujian-ukk": {
     icon: FileTextIcon,
-    title: "Ujian UKK",
+    title: "UKK",
     features: [
       { icon: CalendarCheck, label: "Jadwal" },
       { icon: FileText,      label: "Absensi" },
       { icon: Trophy,        label: "Nilai" },
       { icon: BarChart3,     label: "Progres" },
     ],
-    subtitle: () => "Menu ini akan aktif ketika jadwal Ujian UKK kamu telah dimulai",
-    info: () => "Fitur jadwal & soal, absensi ujian, dan nilai akan terbuka setelah periode Ujian UKK resmi dibuka oleh admin.",
-    footerHint: () => "Pantau pengumuman dari panitia Ujian UKK",
+    subtitle: () => "Menu ini akan aktif ketika jadwal UKK kamu telah dimulai",
+    info: () => "Fitur jadwal & soal, absensi ujian, dan nilai akan terbuka setelah periode UKK resmi dibuka oleh admin.",
+    footerHint: () => "Pantau pengumuman dari panitia UKK",
   },
 };
 

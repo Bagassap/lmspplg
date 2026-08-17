@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   CalendarDays, FileText, Send, BookOpen, Loader2,
-  ChevronLeft, ChevronRight, X, Download, Upload,
-  MapPin, Clock, User, CheckCircle, AlertCircle, Link2, ExternalLink,
+  ChevronLeft, ChevronRight, X, Upload, Search,
+  MapPin, Clock, User, CheckCircle, AlertCircle, Link2, ExternalLink, PieChart,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { todayJakarta } from "@/components/absensi-harian/shared";
@@ -23,33 +23,24 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface MySubmisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
-interface DiskusiItem { id: string; konten: string; createdAt: string; user: { id: string; nama: string; role: string }; replies: DiskusiItem[]; }
 
-function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric" }); }
+function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric", timeZone: "Asia/Jakarta" }); }
 
 function statusInfo(s: "TERKIRIM"|"DITERIMA"|"REVISI") {
-  if (s === "DITERIMA") return { bg:"#ECFDF5", color:"#10B981", label:"Diterima",      icon: <CheckCircle size={10}/> };
+  if (s === "DITERIMA") return { bg:"#ECFDF5", color:"#00D67F", label:"Diterima",      icon: <CheckCircle size={10}/> };
   if (s === "REVISI")   return { bg:"#FEF3C7", color:"#F59E0B", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
   return                       { bg:"#EEF2FF", color:"#6366F1", label:"Menunggu Review", icon: <Clock size={10}/> };
 }
 
 const ROW_PALETTES = [
   { bg:"#EEF4FF", text:"#4F8EF7",  bar:"#4F8EF7",  gradient:"linear-gradient(135deg,#4F8EF7,#6366F1)" },
-  { bg:"#ECFDF5", text:"#10B981",  bar:"#10B981",  gradient:"linear-gradient(135deg,#10B981,#0D9488)" },
+  { bg:"#ECFDF5", text:"#00D67F",  bar:"#00D67F",  gradient:"linear-gradient(135deg,#00D67F,#0D9488)" },
   { bg:"#FFF1F2", text:"#EF4444",  bar:"#EF4444",  gradient:"linear-gradient(135deg,#EF4444,#F97316)" },
   { bg:"#FFFBEB", text:"#F59E0B",  bar:"#F59E0B",  gradient:"linear-gradient(135deg,#F59E0B,#EF4444)" },
   { bg:"#F0F0FF", text:"#6366F1",  bar:"#6366F1",  gradient:"linear-gradient(135deg,#6366F1,#8B5CF6)" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
-const BUBBLE_COLORS = [
-  { bubble:"#EEF2FF", text:"#4338CA", avatar:"linear-gradient(135deg,#6366F1,#818CF8)" },
-  { bubble:"#F0FDF4", text:"#15803D", avatar:"linear-gradient(135deg,#10B981,#34D399)" },
-  { bubble:"#FFF7ED", text:"#C2410C", avatar:"linear-gradient(135deg,#F97316,#FBBF24)" },
-  { bubble:"#FDF4FF", text:"#7E22CE", avatar:"linear-gradient(135deg,#A855F7,#EC4899)" },
-  { bubble:"#ECFEFF", text:"#0E7490", avatar:"linear-gradient(135deg,#06B6D4,#3B82F6)" },
-];
-function bubbleFor(id: string) { let h=0; for(const c of id) h=(h*31+c.charCodeAt(0))>>>0; return BUBBLE_COLORS[h % BUBBLE_COLORS.length]; }
 
 function isValidDriveUrl(url: string) {
   return url.startsWith("https://drive.google.com/") || url.startsWith("https://docs.google.com/");
@@ -90,7 +81,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={e=>e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{background:"linear-gradient(135deg,#10B981 0%,#059669 100%)"}}>
+              style={{background:"linear-gradient(135deg,#00D67F 0%,#00B368 100%)"}}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -159,7 +150,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </button>
                 <button type="submit" disabled={saving || !driveUrl.trim()}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
+                  style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
               </div>
@@ -171,95 +162,6 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
   );
 }
 
-function DiskusiActivity({ currentUserId }: { currentUserId: string }) {
-  const [list, setList] = useState<DiskusiItem[]>([]);
-  const [input, setInput] = useState("");
-  const [replyTo, setReplyTo] = useState<{ id: string; nama: string } | null>(null);
-  const [sending, setSending] = useState(false);
-  const toast = useToast();
-  const load = useCallback(async () => { const r = await fetch("/api/ujian-ukk/diskusi"); if (r.ok) setList(await r.json()); }, []);
-  useEffect(() => { load(); }, [load]);
-
-  async function send() {
-    if (!input.trim()) return;
-    setSending(true);
-    const body: Record<string,string> = { konten: input.trim() };
-    if (replyTo) body.parentId = replyTo.id;
-    const r = await fetch("/api/ujian-ukk/diskusi", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
-    setSending(false);
-    if (r.ok) { setInput(""); setReplyTo(null); load(); } else toast.error("Gagal mengirim","");
-  }
-  async function hapus(id: string) { await fetch(`/api/ujian-ukk/diskusi/${id}`, { method:"DELETE" }); load(); }
-
-  const ROLE_LABELS: Record<string,string> = { ADMIN:"Admin", GURU:"Guru", SISWA:"Siswa" };
-
-  return (
-    <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden" style={{minHeight:420}}>
-      <div className="relative px-5 py-4 overflow-hidden shrink-0"
-        style={{background:"linear-gradient(135deg,#6334F4 0%,#8B5CF6 50%,#EC4899 100%)"}}>
-        <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
-        <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
-              <Send size={14} className="text-white"/>
-            </div>
-            <h3 className="text-sm font-extrabold text-white">Diskusi UKK</h3>
-          </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">
-            {list.flatMap(d=>[d,...d.replies]).length} pesan
-          </span>
-        </div>
-      </div>
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-        {list.flatMap(d=>[d,...d.replies]).length === 0 && (
-          <div className="flex flex-col items-center justify-center py-10 text-center">
-            <Send size={24} className="text-slate-200 mb-2"/>
-            <p className="text-xs text-slate-400">Belum ada diskusi.</p>
-          </div>
-        )}
-        {list.flatMap(d=>[{...d,isReply:false},...d.replies.map(r=>({...r,isReply:true}))]).map((d) => {
-          const bc = bubbleFor(d.user.id);
-          return (
-            <div key={d.id} className={`flex gap-2.5 ${d.isReply?"pl-6":""}`}>
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                style={{background:bc.avatar}}>{d.user.nama[0].toUpperCase()}</div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{d.user.nama}</span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white" style={{background:bc.avatar}}>{ROLE_LABELS[d.user.role]??d.user.role}</span>
-                </div>
-                <div className="rounded-2xl rounded-tl-none px-3 py-2" style={{backgroundColor:bc.bubble}}>
-                  <p className="text-xs leading-relaxed" style={{color:bc.text}}>{d.konten}</p>
-                </div>
-                <div className="flex gap-2 mt-1">
-                  <button onClick={()=>setReplyTo({id:d.id,nama:d.user.nama})} className="text-[10px] text-slate-400 hover:text-violet-500">Balas</button>
-                  {d.user.id === currentUserId && <button onClick={()=>hapus(d.id)} className="text-[10px] text-slate-400 hover:text-red-500">Hapus</button>}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="shrink-0 px-4 py-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
-        {replyTo && (
-          <div className="flex items-center gap-2 text-xs bg-violet-50 dark:bg-violet-900/20 text-violet-600 px-3 py-1.5 rounded-lg">
-            Balas ke <strong>{replyTo.nama}</strong>
-            <button onClick={()=>setReplyTo(null)} className="ml-auto"><X size={11}/></button>
-          </div>
-        )}
-        <div className="flex gap-2">
-          <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()}
-            placeholder="Tulis pesan..." className="flex-1 text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none focus:border-violet-400"/>
-          <button onClick={send} disabled={sending||!input.trim()}
-            className="w-8 h-8 flex items-center justify-center rounded-xl text-white shrink-0 disabled:opacity-50"
-            style={{background:"linear-gradient(135deg,#6334F4,#8B5CF6)"}}>
-            <Send size={13}/>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function SiswaJadwalSoalPage() {
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]); 
@@ -267,6 +169,7 @@ export default function SiswaJadwalSoalPage() {
   const [mySubmisi,   setMySubmisi]   = useState<MySubmisi[]>([]);
   const [loading,     setLoading]     = useState(true);
   const [tab,          setTab]         = useState<"active"|"completed"|"all">("all");
+  const [taskSearch,   setTaskSearch]  = useState("");
   const [submitSoal,   setSubmitSoal]  = useState<Soal | null>(null);
   const [detailTarget, setDetailTarget] = useState<MySubmisi | null>(null);
   const [revisiModal,  setRevisiModal]  = useState<MySubmisi | null>(null);
@@ -319,12 +222,15 @@ export default function SiswaJadwalSoalPage() {
     return now < selesai;
   });
   const completed  = tahapanList.filter(t => !active.includes(t));
-  const shown      = tab === "all" ? tahapanList : tab === "active" ? active : completed;
+  const shown      = (tab === "all" ? tahapanList : tab === "active" ? active : completed)
+    .filter((t) => t.judul.toLowerCase().includes(taskSearch.trim().toLowerCase()));
   const jadwalFiles = (filePool?.soal ?? []).filter(s => s.deskripsi?.startsWith("__jadwal__:"));
   const soalFiles   = (filePool?.soal ?? []).filter(s => !s.deskripsi?.startsWith("__jadwal__:"));
   const totalSoal   = soalFiles.length;
   const submisiMap = new Map(mySubmisi.filter(s=>s.soal?.id).map(s=>[s.soal.id, s]));
   const diterima   = mySubmisi.filter(s=>s.status==="DITERIMA").length;
+  const revisiCnt  = mySubmisi.filter(s=>s.status==="REVISI").length;
+  const menungguCnt = mySubmisi.filter(s=>s.status==="TERKIRIM").length;
 
   return (
     <div className="space-y-5">
@@ -333,21 +239,22 @@ export default function SiswaJadwalSoalPage() {
         <div className="flex-1 min-w-0 space-y-6">
 
           <div className="relative overflow-hidden rounded-2xl p-6"
-            style={{background:"linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)"}}>
+            style={{background:"#0033FF"}}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
             <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
             <div className="relative flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-                  <FileText size={26} className="text-white"/>
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+                  <FileText size={22} className="text-white sm:hidden"/>
+                  <FileText size={26} className="text-white hidden sm:block"/>
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
                     <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Siswa</span>
                   </div>
-                  <h1 className="text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
+                  <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
                   <p className="text-sm text-white/70 mt-0.5">Lihat jadwal, download soal, dan kirim project</p>
                 </div>
               </div>
@@ -381,7 +288,7 @@ export default function SiswaJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                      style={{background:"linear-gradient(135deg,#fb923c,#ea580c)"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <CalendarDays size={22} className="text-white"/>
@@ -429,7 +336,7 @@ export default function SiswaJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#6366F1,#4F46E5)"}}>
+                      style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <FileText size={22} className="text-white"/>
@@ -464,82 +371,102 @@ export default function SiswaJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          <div className="flex flex-col lg:flex-row gap-4 items-stretch">
+          <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
+            <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
+              <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
+                <div className="flex flex-col gap-4">
+              <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{ background: "linear-gradient(135deg,#fb923c,#ea580c)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
 
-            <div className="flex-1 min-w-0 flex flex-col gap-4">
-
-              <div className="flex gap-3">
-                <button onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                  className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
-                  style={{background:"linear-gradient(135deg,#F59E0B,#F97316)", boxShadow:"0 8px 28px rgba(245,158,11,0.45)"}}>
-                  <div className="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/10 pointer-events-none"/>
-                  <div className="absolute -right-2 -bottom-4 w-20 h-20 rounded-full bg-white/10 pointer-events-none"/>
-                  <div className="relative flex items-center justify-between gap-2">
-                    <div className="flex flex-col gap-2 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                          <CalendarDays size={14} className="text-white"/>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-[9px] font-bold tracking-widest uppercase text-white/60 leading-none mb-0.5">Lihat &amp; Download</p>
-                          <p className="text-xs sm:text-sm font-extrabold text-white leading-none truncate">Jadwal UKK</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Download size={11} className="text-white/60 shrink-0"/>
-                        <p className="text-[10px] text-white/70 font-medium">Klik untuk unduh PDF</p>
-                      </div>
-                    </div>
-                    <div className="relative text-right shrink-0">
-                      <p className="text-4xl sm:text-5xl font-black leading-none">{jadwalFiles.length}</p>
-                      <p className="text-[10px] text-white/70 mt-1 font-medium">info</p>
-                    </div>
+                <div className="relative flex items-start justify-between">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                    <CalendarDays size={15} />
                   </div>
-                </button>
-
-                <button onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                  className="flex-1 relative overflow-hidden rounded-2xl text-white text-left focus:outline-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] p-4 sm:p-5"
-                  style={{background:"linear-gradient(135deg,#6366F1,#4F46E5)", boxShadow:"0 8px 28px rgba(99,102,241,0.45)"}}>
-                  <div className="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/10 pointer-events-none"/>
-                  <div className="absolute -right-2 -bottom-4 w-20 h-20 rounded-full bg-white/10 pointer-events-none"/>
-                  <div className="relative flex items-center justify-between gap-2">
-                    <div className="flex flex-col gap-2 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                          <FileText size={14} className="text-white"/>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-[9px] font-bold tracking-widest uppercase text-white/60 leading-none mb-0.5">Lihat &amp; Download</p>
-                          <p className="text-xs sm:text-sm font-extrabold text-white leading-none truncate">Soal UKK</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Download size={11} className="text-white/60 shrink-0"/>
-                        <p className="text-[10px] text-white/70 font-medium">Klik untuk unduh PDF</p>
-                      </div>
-                    </div>
-                    <div className="relative text-right shrink-0">
-                      <p className="text-4xl sm:text-5xl font-black leading-none">{totalSoal}</p>
-                      <p className="text-[10px] text-white/70 mt-1 font-medium">soal</p>
-                    </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/60">Kategori</p>
+                    <p className="text-lg font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
                   </div>
-                </button>
+                </div>
+
+                <div className="relative flex items-baseline gap-2">
+                  <span className="text-5xl font-black leading-none tabular-nums">{jadwalFiles.length}</span>
+                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/70">file<br />jadwal</span>
+                </div>
+
+
+                <div className="relative flex items-end justify-between pt-2">
+                  <div>
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">TA</p>
+                    <p className="text-base font-black leading-none">2026/2027</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">Status</p>
+                    <p className="text-[10px] font-semibold">Aktif</p>
+                  </div>
+                </div>
+              </button>
+
+              <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
+                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+
+                <div className="relative flex items-start justify-between">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                    <FileText size={15} />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/60">Kategori</p>
+                    <p className="text-lg font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-baseline gap-2">
+                  <span className="text-5xl font-black leading-none tabular-nums">{totalSoal}</span>
+                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/70">soal<br />tersedia</span>
+                </div>
+
+
+                <div className="relative flex items-end justify-between pt-2">
+                  <div>
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">TA</p>
+                    <p className="text-base font-black leading-none">2026/2027</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">Status</p>
+                    <p className="text-[10px] font-semibold">{diterima > 0 ? "Diterima" : "Berjalan"}</p>
+                  </div>
+                </div>
+              </button>
+                </div>
               </div>
 
-              <div className="flex-1 min-w-0 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col">
-              <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(16,185,129,0.06) 0%,rgba(99,102,241,0.06) 50%,rgba(245,158,11,0.06) 100%)"}}>
+              <div className="flex flex-col gap-6">
+
+          <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(0,51,255,0.06) 0%,rgba(51,92,255,0.06) 50%,rgba(245,158,11,0.06) 100%)"}}>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
                     <BookOpen size={14} className="text-white"/>
                   </div>
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                 </div>
+                <div className="relative mb-3">
+                  <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
+                  <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)}
+                    placeholder="Cari nama task..."
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-blue-900/30" />
+                </div>
                 <div className="flex gap-5 border-b border-slate-100 dark:border-slate-700">
                   <button onClick={()=>setTab("all")}
-                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="all"?"border-violet-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
-                    style={tab==="all"?{color:"#8B5CF6"}:{}}>
+                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="all"?"border-slate-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
+                    style={tab==="all"?{color:"#64748B"}:{}}>
                     Semua
-                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#8B5CF6"}}>{tahapanList.length}</span>}
+                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#64748B"}}>{tahapanList.length}</span>}
                   </button>
                   <button onClick={()=>setTab("active")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="active"?"border-blue-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
@@ -549,91 +476,88 @@ export default function SiswaJadwalSoalPage() {
                   </button>
                   <button onClick={()=>setTab("completed")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed"?"border-emerald-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
-                    style={tab==="completed"?{color:"#10B981"}:{}}>
+                    style={tab==="completed"?{color:"#00D67F"}:{}}>
                     Completed
-                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#10B981"}}>{completed.length}</span>}
+                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
                   </button>
                 </div>
               </div>
 
-              <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
+              <div className="max-h-[330px] overflow-auto">
                 {loading && <div className="px-5 py-10 text-center text-sm text-slate-400">Memuat data...</div>}
                 {!loading && shown.length === 0 && (
                   <div className="px-5 py-12 text-center">
                     <CalendarDays size={32} className="mx-auto mb-3 text-slate-200"/>
-                    <p className="text-sm text-slate-400">{tab==="active" ? "Tidak ada task aktif" : tab==="completed" ? "Tidak ada task selesai" : "Belum ada task tersedia"}</p>
+                    <p className="text-sm text-slate-400">{taskSearch.trim() ? `Tidak ada task dengan nama "${taskSearch.trim()}"` : tab==="active" ? "Tidak ada task aktif" : tab==="completed" ? "Tidak ada task selesai" : "Belum ada task tersedia"}</p>
                   </div>
                 )}
-                {shown.map((t, idx) => {
-                  const rp        = rowPalette(idx);
-                  const globalSoal = soalFiles[0] ?? null;
-                  const myS       = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
-                  const isDiterima = myS?.status === "DITERIMA";
-                  const isRevisi   = myS?.status === "REVISI";
-                  const isTerkirim = myS?.status === "TERKIRIM";
-                  const pct        = myS ? 100 : 0;
+                {!loading && shown.length > 0 && (
+                  <table className="w-full min-w-170 text-left text-sm">
+                    <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
+                      <tr>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Task</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Waktu</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Lokasi</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Progress</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {shown.map((t, idx) => {
+                        const rp        = rowPalette(idx);
+                        const globalSoal = soalFiles[0] ?? null;
+                        const myS       = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                        const isDiterima = myS?.status === "DITERIMA";
+                        const isRevisi   = myS?.status === "REVISI";
+                        const isTerkirim = myS?.status === "TERKIRIM";
+                        const pct        = myS ? 100 : 0;
 
-                  const btn = isDiterima
-                    ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#ECFDF5", clr:"#10B981", border:"#10B981", onClick:()=>setDetailTarget(myS!) }
-                    : isRevisi
-                    ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#FFFBEB", clr:"#F59E0B", border:"#F59E0B", onClick:()=>setRevisiModal(myS!) }
-                    : isTerkirim
-                    ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#EEF2FF", clr:"#6366F1", border:"#6366F1", onClick:()=>setDetailTarget(myS!) }
-                    : { label:"Kirim", icon:<Send size={11}/>, bg:"#ECFDF5", clr:"#10B981", border:"#10B981", onClick:()=>globalSoal && setSubmitSoal(globalSoal) };
+                        const btn = isDiterima
+                          ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#ECFDF5", clr:"#00D67F", border:"#00D67F", onClick:()=>setDetailTarget(myS!) }
+                          : isRevisi
+                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#FFFBEB", clr:"#F59E0B", border:"#F59E0B", onClick:()=>setRevisiModal(myS!) }
+                          : isTerkirim
+                          ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#EEF2FF", clr:"#6366F1", border:"#6366F1", onClick:()=>setDetailTarget(myS!) }
+                          : { label:"Kirim", icon:<Send size={11}/>, bg:"#ECFDF5", clr:"#00D67F", border:"#00D67F", onClick:()=>globalSoal && setSubmitSoal(globalSoal) };
 
-                  return (
-                    <motion.div key={t.id} initial={{opacity:0,y:4}} animate={{opacity:1,y:0}} transition={{delay:idx*0.05}}>
-                      <div className="px-5 py-4 flex items-center gap-4 border-l-4 transition-all hover:bg-slate-50/80 dark:hover:bg-slate-700/20"
-                        style={{borderLeftColor: isRevisi ? "#F59E0B" : isDiterima ? "#10B981" : rp.bar}}>
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm"
-                          style={{background: rp.gradient}}>
-                          <span className="text-sm font-bold text-white">{idx+1}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1.5">{t.judul}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-lg" style={{backgroundColor:"#EFF6FF",color:"#3B82F6"}}>
-                              <CalendarDays size={10}/>{formatTgl(t.tanggal)}
-                            </span>
-                            <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-lg" style={{backgroundColor:"#F0FDF4",color:"#16A34A"}}>
-                              <Clock size={10}/>{t.jamMulai}–{t.jamSelesai}
-                            </span>
-                            <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-lg" style={{backgroundColor:"#FFF7ED",color:"#EA580C"}}>
-                              <MapPin size={10}/>{t.lokasi}
-                            </span>
-                            {t.penguji && (
-                              <span className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-lg" style={{backgroundColor:"#FDF4FF",color:"#9333EA"}}>
-                                <User size={10}/>{t.penguji}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="w-28 shrink-0 hidden sm:block">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] text-slate-400">Progress</span>
-                            <span className="text-[10px] font-bold" style={{color: isDiterima?"#10B981":isRevisi?"#F59E0B":rp.bar}}>{pct}%</span>
-                          </div>
-                          <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-                            <div className="h-full rounded-full transition-all" style={{width:`${pct}%`, background: isDiterima?"linear-gradient(90deg,#10B981,#059669)":isRevisi?"linear-gradient(90deg,#F59E0B,#F97316)":rp.gradient}}/>
-                          </div>
-                        </div>
-                        <button onClick={btn.onClick}
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border shrink-0 transition-all hover:brightness-95"
-                          style={{borderColor:btn.border, color:btn.clr, backgroundColor:btn.bg}}>
-                          {btn.icon}{btn.label}
-                        </button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                        return (
+                          <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2.5">
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background: rp.gradient}}>
+                                  <span className="text-xs font-bold text-white">{idx+1}</span>
+                                </div>
+                                <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
+                            <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
+                            <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
+                            <td className="whitespace-nowrap px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                                  <div className="h-full rounded-full" style={{width:`${pct}%`, background: isDiterima?"linear-gradient(90deg,#00D67F,#00B368)":isRevisi?"linear-gradient(90deg,#F59E0B,#F97316)":rp.gradient}}/>
+                                </div>
+                                <span className="text-xs font-bold" style={{color: isDiterima?"#00D67F":isRevisi?"#F59E0B":rp.bar}}>{pct}%</span>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3 text-right">
+                              <button onClick={btn.onClick}
+                                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"
+                                style={{borderColor:btn.border, color:btn.clr, backgroundColor:btn.bg}}>
+                                {btn.icon}{btn.label}
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
-
-            </div>
-
-            <div className="w-full lg:w-80 shrink-0">
-              <DiskusiActivity currentUserId=""/>
-            </div>
+          </div>
           </div>
 
         </div>
@@ -653,7 +577,7 @@ export default function SiswaJadwalSoalPage() {
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
                 style={{background: detailTarget.status==="DITERIMA"
-                  ? "linear-gradient(135deg,#10B981,#059669)"
+                  ? "linear-gradient(135deg,#00D67F,#00B368)"
                   : "linear-gradient(135deg,#6366F1,#4F46E5)"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
@@ -685,14 +609,14 @@ export default function SiswaJadwalSoalPage() {
                     <span className="text-xs text-slate-500">Status</span>
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full"
                       style={{backgroundColor: detailTarget.status==="DITERIMA"?"#ECFDF5":"#EEF2FF",
-                              color: detailTarget.status==="DITERIMA"?"#10B981":"#6366F1"}}>
+                              color: detailTarget.status==="DITERIMA"?"#00D67F":"#6366F1"}}>
                       {detailTarget.status==="DITERIMA" ? "Diterima" : "Menunggu Review"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
                     <span className="text-xs text-slate-500">Dikirim pada</span>
                     <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      {new Date(detailTarget.submittedAt).toLocaleString("id-ID",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}
+                      {new Date(detailTarget.submittedAt).toLocaleString("id-ID",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"})} WIB
                     </span>
                   </div>
                   {detailTarget.catatan && (

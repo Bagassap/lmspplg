@@ -29,10 +29,11 @@ const PRIORITAS_BADGE: Record<string, { cls: string; label: string }> = {
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
+  const formatted = new Date(iso).toLocaleDateString("id-ID", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
+    hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta",
   });
+  return `${formatted} WIB`;
 }
 
 function timeAgo(iso: string) {

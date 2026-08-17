@@ -16,7 +16,7 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
 
   const LEGEND = [
     { label: "Hadir",  color: "#4F8EF7", pct: hadirPct, val: hadir },
-    { label: "Sakit",  color: "#10B981", pct: sakitPct, val: sakit },
+    { label: "Sakit",  color: "#00D67F", pct: sakitPct, val: sakit },
     { label: "Izin",   color: "#F59E0B", pct: izinPct,  val: izin },
     { label: "Alpha",  color: "#EF4444", pct: alphaPct, val: alpha },
   ];
@@ -51,7 +51,7 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
         },
       },
     },
-    colors: ["#4F8EF7", "#10B981", "#F59E0B", "#EF4444"],
+    colors: ["#4F8EF7", "#00D67F", "#F59E0B", "#EF4444"],
     series: [hadirPct, sakitPct, izinPct, alphaPct],
     labels: ["Hadir", "Sakit", "Izin", "Alpha"],
     stroke: { lineCap: "round" },

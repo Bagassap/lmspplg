@@ -31,14 +31,14 @@ type AbsensiStatus = {
 const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
 }> = {
-  HADIR: { label: "Hadir", bg: "#E8F8F1", clr: "#10B981", darkBg: "#10B98120", icon: CheckCircle2 },
+  HADIR: { label: "Hadir", bg: "#E8F8F1", clr: "#00D67F", darkBg: "#00D67F20", icon: CheckCircle2 },
   IZIN:  { label: "Izin",  bg: "#F0ECFF", clr: "#6334F4", darkBg: "#6334F420", icon: AlertCircle  },
   SAKIT: { label: "Sakit", bg: "#FFF5DC", clr: "#E6A800", darkBg: "#E6A80020", icon: Thermometer  },
   ALPA:  { label: "Alpa",  bg: "#FFE9EA", clr: "#FF3644", darkBg: "#FF364420", icon: MinusCircle  },
 };
 
 const CARD_GRADIENTS_BY_STATUS: Record<string, string> = {
-  HADIR: "linear-gradient(135deg,#10B981,#34D399)",
+  HADIR: "linear-gradient(135deg,#00D67F,#34D399)",
   IZIN:  "linear-gradient(135deg,#6334F4,#8B5CF6)",
   SAKIT: "linear-gradient(135deg,#F59E0B,#FCD34D)",
   ALPA:  "linear-gradient(135deg,#EF4444,#F87171)",
@@ -47,7 +47,7 @@ const CARD_GRADIENTS_BY_STATUS: Record<string, string> = {
 
 function formatTgl(tgl?: string) {
   if (!tgl) return "-";
-  return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 function SignaturePad({ value, onChange }: { value: string; onChange: (v: string) => void }) {
@@ -328,22 +328,23 @@ export default function SiswaUkkAbsensiPage() {
     <div className="space-y-5 p-1">
 
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{background:"linear-gradient(135deg,#059669 0%,#10B981 40%,#34D399 80%,#6EE7B7 100%)"}}>
+        style={{background:"#0033FF"}}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8"/>
         <div className="pointer-events-none absolute bottom-4 -left-6 h-24 w-24 rounded-full bg-white/6"/>
 
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-              <ClipboardCheck size={26} className="text-white"/>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+              <ClipboardCheck size={22} className="text-white sm:hidden"/>
+              <ClipboardCheck size={26} className="hidden text-white sm:block"/>
             </div>
             <div>
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Ujian Kompetensi Keahlian</span>
                 <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
               </div>
-              <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi UKK</h1>
+              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi UKK</h1>
               <p className="mt-0.5 text-sm text-white/70">Lakukan absensi dan pantau rekap kehadiranmu</p>
             </div>
           </div>
@@ -532,14 +533,14 @@ export default function SiswaUkkAbsensiPage() {
                       initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
                       className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-8 text-center shadow-sm">
                       <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                        style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
+                        style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
                         <ClipboardCheck size={32} className="text-white"/>
                       </div>
                       <p className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">Belum Absen</p>
-                      <p className="text-sm text-slate-400 mb-6">Kamu wajib absen sebelum memulai ujian UKK</p>
+                      <p className="text-sm text-slate-400 mb-6">Kamu wajib absen sebelum memulai UKK</p>
                       <button onClick={() => setShowForm(true)}
                         className="px-10 py-3 rounded-xl text-sm font-bold text-white w-full max-w-xs transition-all hover:brightness-95 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
+                        style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
                         Absen Sekarang
                       </button>
                     </motion.div>
@@ -625,7 +626,7 @@ export default function SiswaUkkAbsensiPage() {
 
                         <button onClick={handleAbsen} disabled={submitting || !ttd || compressingFoto}
                           className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
-                          style={{background:"linear-gradient(135deg,#10B981,#059669)"}}>
+                          style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
                           <Send size={15}/>{submitting ? "Menyimpan..." : "Konfirmasi Absen"}
                         </button>
                       </div>

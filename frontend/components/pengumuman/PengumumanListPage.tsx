@@ -27,9 +27,26 @@ const KATEGORI_GRADIENT: Record<string, string> = {
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const DAY_ID   = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
 
+// "Hari ini" dan tanggal pengumuman dibaca eksplisit dalam WIB (Asia/Jakarta),
+// bukan Date getter lokal / slice mentah ISO string (yang berarti UTC) — SSR
+// pertama kali render di server (UTC), jadi cara lama bisa salah tanggal
+// terutama untuk pengumuman yang dibuat larut malam WIB.
+function jakartaYMDParts(d: Date) {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value ?? 0);
+  return { year: get("year"), month: get("month") - 1, date: get("day") };
+}
+function jakartaYMD(iso: string): string {
+  const { year, month, date } = jakartaYMDParts(new Date(iso));
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+}
+function jakartaToday() {
+  return jakartaYMDParts(new Date());
+}
+
 function MiniCalendar({ announcementDates }: { announcementDates: Set<string> }) {
-  const today = new Date();
-  const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const today = jakartaToday();
+  const [viewDate, setViewDate] = useState(new Date(today.year, today.month, 1));
 
   const year        = viewDate.getFullYear();
   const month       = viewDate.getMonth();
@@ -43,14 +60,14 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
   while (cells.length % 7 !== 0) cells.push(null);
 
   function isToday(d: number) {
-    return d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+    return d === today.date && month === today.month && year === today.year;
   }
   function hasAnnouncement(d: number) {
     const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
     return announcementDates.has(key);
   }
 
-  const CALENDAR_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
+  const CALENDAR_GRADIENT = "#0033FF";
   const DOT_COLOR = "#2563eb";
   function dotColor(_d: number) { return DOT_COLOR; }
 
@@ -160,7 +177,7 @@ function AccordionCard({
     if (diff < 86400)     return `${Math.floor(diff / 3600)} jam lalu`;
     if (diff < 86400 * 2) return "Kemarin";
     if (diff < 86400 * 7) return `${Math.floor(diff / 86400)} hari lalu`;
-    return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+    return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
   }
 
   return (
@@ -453,33 +470,32 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
-  const announcementDates = new Set(list.map((p) => p.createdAt.split("T")[0]));
+  const announcementDates = new Set(list.map((p) => jakartaYMD(p.createdAt)));
   const pinnedCount  = list.filter((p) => p.isPinned).length;
-  const todayCount   = list.filter((p) => {
-    const d = new Date(p.createdAt); const t = new Date();
-    return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
-  }).length;
+  const todayStr     = (() => { const t = jakartaToday(); return `${t.year}-${String(t.month + 1).padStart(2, "0")}-${String(t.date).padStart(2, "0")}`; })();
+  const todayCount   = list.filter((p) => jakartaYMD(p.createdAt) === todayStr).length;
   const totalKomentar = list.reduce((s, p) => s + p._count.komentar, 0);
 
   return (
     <div className="space-y-5">
 
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
+        style={{ background: "#0033FF" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
         <div className="relative flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-              <Megaphone size={26} className="text-white"/>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+              <Megaphone size={22} className="text-white sm:hidden"/>
+              <Megaphone size={26} className="text-white hidden sm:block"/>
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Papan Informasi</span>
                 {canManage && <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Admin</span>}
               </div>
-              <h1 className="text-2xl font-extrabold text-white leading-tight">Pengumuman</h1>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Pengumuman</h1>
               <p className="text-sm text-white/70 mt-0.5">Kelola dan pantau semua pengumuman sekolah</p>
             </div>
           </div>

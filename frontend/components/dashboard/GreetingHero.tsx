@@ -19,8 +19,22 @@ const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
   SISWA: { label: "Siswa",  cls: "bg-white/20 text-white" },
 };
 
+// Dibaca eksplisit sebagai jam WIB (Asia/Jakarta) via Intl, bukan getHours()/
+// getDay() lokal — komponen ini render duluan di server saat SSR, dan server
+// berjalan di UTC, jadi getter lokal biasa akan salah beberapa jam.
+const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+function jakartaHour(): number {
+  return Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", hour: "2-digit", hourCycle: "h23" }).format(new Date()));
+}
+
+function jakartaWeekday(): number {
+  const short = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date());
+  return WEEKDAY_NUM[short] ?? 0;
+}
+
 function getGreeting(): { emoji: string; text: string } {
-  const h = new Date().getHours();
+  const h = jakartaHour();
   if (h < 5)  return { emoji: "🌙", text: "Selamat Malam" };
   if (h < 11) return { emoji: "☀️", text: "Selamat Pagi" };
   if (h < 15) return { emoji: "🌤️", text: "Selamat Siang" };
@@ -44,12 +58,12 @@ export default function GreetingHero({
   const { emoji, text } = getGreeting();
   const firstName   = getFirstName(nama);
   const badge       = ROLE_BADGE[role] ?? ROLE_BADGE.SISWA;
-  const motivasi    = MOTIVASI[new Date().getDay() % MOTIVASI.length];
+  const motivasi    = MOTIVASI[jakartaWeekday() % MOTIVASI.length];
 
   return (
     <div
       className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
-      style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}
+      style={{ background: "#0033FF" }}
     >
       <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />
       <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />

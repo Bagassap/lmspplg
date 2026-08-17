@@ -15,20 +15,21 @@ export function DataSiswaHeader({
 }) {
   return (
     <div className="relative overflow-hidden rounded-2xl p-6"
-      style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
+      style={{ background: "#0033FF" }}>
       <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
       <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
       <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-            <Users size={26} className="text-white" />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+            <Users size={22} className="text-white sm:hidden" />
+            <Users size={26} className="hidden text-white sm:block" />
           </div>
           <div>
             <div className="mb-1 flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Data Siswa</span>
               <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
             </div>
-            <h1 className="text-2xl font-extrabold leading-tight text-white">{title}</h1>
+            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">{title}</h1>
             <p className="mt-0.5 text-sm text-white/70">{subtitle}</p>
           </div>
         </div>

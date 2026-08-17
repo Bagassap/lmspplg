@@ -180,13 +180,14 @@ export default function GuruAbsensiHarianPage() {
     return (
       <div className="space-y-5 p-1">
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
-          <div className="relative flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-              <ClipboardCheck size={26} className="text-white" />
+          style={{ background: "#0033FF" }}>
+          <div className="relative flex items-center gap-3 sm:gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+              <ClipboardCheck size={22} className="text-white sm:hidden" />
+              <ClipboardCheck size={26} className="hidden text-white sm:block" />
             </div>
             <div>
-              <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi Harian</h1>
+              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
               <p className="mt-0.5 text-sm text-white/70">Presensi kehadiran harian siswa</p>
             </div>
           </div>
@@ -206,20 +207,21 @@ export default function GuruAbsensiHarianPage() {
     <>
       <div className="space-y-5 p-1">
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)" }}>
+          style={{ background: "#0033FF" }}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-                <ClipboardCheck size={26} className="text-white" />
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+                <ClipboardCheck size={22} className="text-white sm:hidden" />
+                <ClipboardCheck size={26} className="hidden text-white sm:block" />
               </div>
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
                   <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Wali Kelas</span>
                 </div>
-                <h1 className="text-2xl font-extrabold leading-tight text-white">Absensi Harian</h1>
+                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
                 <p className="mt-0.5 text-sm text-white/70">Catat kehadiran siswa di kelas yang Anda wali-i</p>
               </div>
             </div>
@@ -248,36 +250,31 @@ export default function GuruAbsensiHarianPage() {
                         outline: isSelected ? "3px solid white" : "3px solid transparent",
                         outlineOffset: isSelected ? "2px" : "0",
                       }}>
-                      <div className="relative flex items-start justify-between">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/25">
-                          <BookOpen size={16} />
+                      <div className="relative flex items-center gap-2">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/25">
+                          <BookOpen size={14} />
                         </span>
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
-                          Kelas Wali
-                        </span>
-                      </div>
-
-                      <div className="relative">
-                        <p className="truncate text-base font-bold">{k.nama}</p>
-                        <p className="mt-0.5 truncate text-[10px] font-medium text-white/70">{k._count?.siswa ?? 0} siswa terdaftar</p>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-bold">{k.nama}</p>
+                          <p className="truncate text-[10px] font-medium text-white/70">{k._count?.siswa ?? 0} siswa</p>
+                        </div>
                       </div>
 
                       {isSelected ? (
                         <>
                           <div className="relative">
-                            <p className="text-2xl font-extrabold tabular-nums">{sudahAbsen}/{total}</p>
-                            <p className="text-[11px] font-semibold text-white/80">Siswa Hadir Hari Ini</p>
+                            <p className="text-2xl font-extrabold tabular-nums">
+                              {sudahAbsen}<span className="text-sm font-semibold text-white/70">/{total}</span>
+                            </p>
+                            <p className="text-[11px] font-semibold text-white/80">Hadir · {hadirPct}%</p>
                             <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
                               <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${hadirPct}%` }} />
                             </div>
-                            <p className="mt-1 text-[10px] font-semibold text-white/70">{hadirPct}% kehadiran</p>
                           </div>
 
-                          <div className="relative flex flex-wrap items-center gap-1.5">
-                            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Izin {rekap.IZIN}</span>
-                            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Sakit {rekap.SAKIT}</span>
-                            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold">Alpa {rekap.ALPA}</span>
-                          </div>
+                          <p className="relative text-[10px] font-medium text-white/70">
+                            Izin {rekap.IZIN} · Sakit {rekap.SAKIT} · Alpa {rekap.ALPA}
+                          </p>
                         </>
                       ) : (
                         <div className="relative">

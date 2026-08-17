@@ -34,7 +34,7 @@ interface DashboardData {
 
 const P = "#4F8EF7";
 const R = "#EF4444";
-const G = "#10B981";
+const G = "#00D67F";
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
@@ -264,7 +264,7 @@ export default function GuruDashboardPage() {
               <div className="relative flex items-end justify-between">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">TA</p>
-                  <p className="text-[11px] font-semibold">2024/2025</p>
+                  <p className="text-[11px] font-semibold">2026/2027</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Guru</p>

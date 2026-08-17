@@ -34,10 +34,10 @@ type SiswaProfil = {
   user: { id: string; nama: string; email: string | null; fotoProfil?: string | null } | null;
 };
 
-const HERO_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
+const HERO_GRADIENT = "#0033FF";
 const ACCENT_VIOLET = "linear-gradient(135deg,#6366F1,#4F46E5)";
 const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#F97316)";
-const PROFILE_CARD_GRADIENT = "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)";
+const PROFILE_CARD_GRADIENT = "#0033FF";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
 function toTitleCase(str: string): string {
@@ -52,7 +52,7 @@ function kelasShort(kelas: string): string {
 function formatTanggal(iso: string | null): string {
   if (!iso) return "—";
   const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 const INPUT =
@@ -366,33 +366,21 @@ export default function SiswaProfilPage() {
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
 
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-              <User size={26} className="text-white" />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+              <User size={22} className="text-white sm:hidden" />
+              <User size={26} className="hidden text-white sm:block" />
             </div>
             <div className="min-w-0">
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
                 <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
               </div>
-              <h1 className="text-2xl font-extrabold leading-tight text-white">Profil Saya</h1>
+              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Profil Saya</h1>
               <p className="mt-0.5 text-sm text-white/70">Informasi data diri kamu</p>
             </div>
           </div>
           <LiveClock />
-        </div>
-
-        <div className="relative mt-5 flex flex-wrap gap-2">
-          {[
-            { label: kelasShort(profil.kelas.nama), bg: "bg-white/15" },
-            { label: profil.jurusan ?? "—", bg: "bg-white/10" },
-            { label: `Angkatan ${profil.angkatan}`, bg: "bg-white/10" },
-            { label: profil.jenisKelamin ?? "—", bg: isP ? "bg-pink-400/30" : "bg-sky-400/20" },
-          ].map(({ label, bg }, i) => (
-            <span key={i} className={`rounded-full px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-sm ${bg}`}>
-              {label}
-            </span>
-          ))}
         </div>
       </motion.div>
 

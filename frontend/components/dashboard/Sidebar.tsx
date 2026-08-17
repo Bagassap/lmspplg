@@ -7,10 +7,10 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, LayoutDashboard, Bell, Users, Briefcase,
-  FileText, UserCircle, ChevronRight, ChevronDown,
-  ChevronsLeft, ChevronsRight, Lock, KeyRound, Inbox,
+  FileText, ChevronRight, ChevronDown,
+  ChevronsLeft, ChevronsRight, Lock, KeyRound,
   Building2, ClipboardCheck, Activity, FileBarChart,
-  CalendarDays, Trophy,
+  CalendarDays, Trophy, NotebookPen, BookOpen,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
@@ -31,11 +31,12 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "dashboard",    href: "/admin/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/admin/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Bell },
+    { key: "materi",       href: "/admin/materi",       label: "Materi",      icon: BookOpen },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
+    { key: "catatan-siswa", href: "/admin/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     { key: "manajemen-password", href: "/admin/manajemen-password", label: "Manajemen Password", icon: KeyRound },
-    { key: "permintaan-password", href: "/admin/permintaan-password", label: "Permintaan Password", icon: Inbox },
     {
-      key: "magang", label: "Magang", icon: Briefcase,
+      key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
         { href: "/admin/magang/penempatan", label: "Penempatan",    icon: Building2 },
         { href: "/admin/magang/absensi",    label: "Absensi",       icon: ClipboardCheck },
@@ -44,7 +45,7 @@ const MENUS: Record<string, MenuItem[]> = {
       ],
     },
     {
-      key: "ujian-ukk", label: "Ujian UKK", icon: FileText,
+      key: "ujian-ukk", label: "UKK", icon: FileText,
       submenu: [
         { href: "/admin/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
         { href: "/admin/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
@@ -56,8 +57,9 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "absensi-harian", href: "/guru/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Bell },
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
+    { key: "catatan-siswa", href: "/guru/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     {
-      key: "magang", href: "/guru/magang", label: "Magang", icon: Briefcase, locked: true,
+      key: "magang", href: "/guru/magang", label: "PKL", icon: Briefcase, locked: true,
       submenu: [
         { href: "/guru/magang/penempatan", label: "Penempatan",     icon: Building2 },
         { href: "/guru/magang/absensi",    label: "Absensi",        icon: ClipboardCheck },
@@ -66,7 +68,7 @@ const MENUS: Record<string, MenuItem[]> = {
       ],
     },
     {
-      key: "ujian-ukk", label: "Ujian UKK", icon: FileText,
+      key: "ujian-ukk", label: "UKK", icon: FileText,
       submenu: [
         { href: "/guru/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
         { href: "/guru/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
@@ -77,9 +79,10 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "dashboard",    href: "/siswa/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/siswa/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
     { key: "pengumuman",   href: "/siswa/pengumuman",   label: "Pengumuman",  icon: Bell },
-    { key: "profil",       href: "/siswa/profil",       label: "Profil Saya", icon: UserCircle },
+    { key: "materi",       href: "/siswa/materi",       label: "Materi",      icon: BookOpen },
+    { key: "catatan-siswa", href: "/siswa/catatan-siswa", label: "Catatan Saya", icon: NotebookPen },
     {
-      key: "magang", href: "/siswa/magang", label: "Magang", icon: Briefcase, locked: true,
+      key: "magang", href: "/siswa/magang", label: "PKL", icon: Briefcase, locked: true,
       submenu: [
         { href: "/siswa/magang/penempatan", label: "Penempatan", icon: Building2 },
         { href: "/siswa/magang/absensi",    label: "Absensi",    icon: ClipboardCheck },
@@ -87,7 +90,7 @@ const MENUS: Record<string, MenuItem[]> = {
       ],
     },
     {
-      key: "ujian-ukk", href: "/siswa/ujian-ukk", label: "Ujian UKK", icon: FileText, locked: true,
+      key: "ujian-ukk", href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, locked: true,
       submenu: [
         { href: "/siswa/ujian-ukk/jadwal-soal", label: "Jadwal & Soal", icon: CalendarDays },
         { href: "/siswa/ujian-ukk/absensi",     label: "Absensi",       icon: ClipboardCheck },
@@ -119,6 +122,14 @@ const GREETINGS = [
   "Terus berkarya dan berkembang!",
 ];
 
+// Baca hari eksplisit dalam WIB (Asia/Jakarta), bukan getDay() lokal — server SSR
+// berjalan di UTC sehingga getter lokal biasa bisa salah hari di sekitar tengah malam.
+const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+function jakartaWeekday(): number {
+  const short = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date());
+  return WEEKDAY_NUM[short] ?? 0;
+}
+
 export function Sidebar({
   user, open, collapsed, onClose, onToggleCollapse,
 }: {
@@ -131,7 +142,7 @@ export function Sidebar({
   const pathname = usePathname();
   const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
   const items = (MENUS[user.role] ?? []).filter(
-    (item) => (item.key !== "manajemen-password" && item.key !== "permintaan-password") || isSuperAdmin,
+    (item) => item.key !== "manajemen-password" || isSuperAdmin,
   );
 
   const [pendingResetCount, setPendingResetCount] = useState(0);
@@ -149,7 +160,7 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [isSuperAdmin]);
   const PRIMARY  = SIDEBAR_ACCENT;
-  const greeting = GREETINGS[new Date().getDay() % GREETINGS.length];
+  const greeting = GREETINGS[jakartaWeekday() % GREETINGS.length];
 
   const [expanded, setExpanded] = useState<Set<string>>(() => {
     const s = new Set<string>();
@@ -305,7 +316,7 @@ export function Sidebar({
                         ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
-                        {item.key === "permintaan-password" && pendingResetCount > 0 && (
+                        {item.key === "manajemen-password" && pendingResetCount > 0 && (
                           <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#1c2434]" />
                         )}
                       </span>
@@ -490,7 +501,7 @@ export function Sidebar({
                     {item.label}
                   </span>
 
-                  {item.key === "permintaan-password" && pendingResetCount > 0 && (
+                  {item.key === "manajemen-password" && pendingResetCount > 0 && (
                     <span className="relative flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
                       {pendingResetCount > 99 ? "99+" : pendingResetCount}
                     </span>
