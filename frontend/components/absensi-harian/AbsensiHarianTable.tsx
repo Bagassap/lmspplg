@@ -111,8 +111,8 @@ export function AbsensiHarianTable({
                     fallbackBg={ac}
                     textClassName="text-[10px] font-extrabold"
                   />
-                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{s.nama}</p>
-                  <p className="truncate text-sm font-semibold text-slate-600 dark:text-slate-300">{s.nis ?? "—"}</p>
+                  <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama}</p>
+                  <p className="truncate text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">{s.nis ?? "—"}</p>
                   {isPulangView ? (
                     <span className="inline-flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
                       style={{ backgroundColor: PULANG_CFG.bg, color: PULANG_CFG.clr }}>
@@ -139,7 +139,7 @@ export function AbsensiHarianTable({
                   ) : (
                     <StatusBadge status={s.status} />
                   )}
-                  <span className="text-center text-sm text-slate-500 dark:text-slate-400">{waktu ?? "—"}</span>
+                  <span className="text-center text-sm font-semibold tabular-nums text-slate-500 dark:text-slate-400">{waktu ?? "—"}</span>
                   <div className="min-w-0">
                     {lokasiParsed ? (
                       <button onClick={openDokumen} title="Lihat lokasi absen"
