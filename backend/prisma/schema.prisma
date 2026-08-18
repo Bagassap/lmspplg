@@ -158,7 +158,6 @@ model Siswa {
   nilaiUkk          NilaiUKK[]
   submisiProjectUkk SubmisiProjectUKK[]
   pesertaUkk        PesertaUKK[]
-  absensiTahapanUkk AbsensiUKK[]        @relation("AbsensiTahapanUkk")
   absensiHarian     AbsensiHarian[]
   catatanSiswa      CatatanSiswa[]
   tugasSubmisi      TugasSubmisi[]
@@ -541,7 +540,6 @@ model TahapanUKK {
 
   soal    SoalTahapanUKK[]
   peserta PesertaUKK[]
-  absensi AbsensiUKK[]
 
   @@map("tahapan_ukk")
 }
@@ -555,25 +553,6 @@ model PesertaUKK {
 
   @@unique([siswaId, tahapanId])
   @@map("peserta_ukk")
-}
-
-model AbsensiUKK {
-  id         String     @id @default(cuid())
-  tahapanId  String
-  tahapan    TahapanUKK @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
-  siswaId    String
-  siswa      Siswa      @relation("AbsensiTahapanUkk", fields: [siswaId], references: [id])
-  tanggal    String
-  status     String     @default("HADIR")
-  waktuAbsen String?
-  lokasi     String?
-  foto       String?
-  ttd        String?    @db.Text
-  catatan    String?
-  createdAt  DateTime   @default(now())
-
-  @@unique([tahapanId, siswaId, tanggal])
-  @@map("absensi_ukk")
 }
 
 model SoalTahapanUKK {

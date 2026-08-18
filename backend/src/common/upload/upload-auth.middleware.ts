@@ -88,12 +88,6 @@ export function createUploadAuthMiddleware(
         select: { id: true },
       });
       owned = !!row;
-    } else if (req.path.startsWith('/absensi-ukk/')) {
-      const row = await prisma.absensiUKK.findFirst({
-        where: { siswaId: siswa.id, foto: requestedUrl },
-        select: { id: true },
-      });
-      owned = !!row;
     } else if (req.path.startsWith('/ukk-submisi/')) {
       const row = await prisma.submisiProjectUKK.findFirst({
         where: { siswaId: siswa.id, fileUrl: requestedUrl },

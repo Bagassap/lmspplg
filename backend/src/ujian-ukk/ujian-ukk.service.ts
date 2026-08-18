@@ -5,7 +5,6 @@ import { TipeUKK } from '../../generated/prisma/client';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
-import { todayJakarta } from '../common/utils/jakarta-date.util';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
@@ -225,94 +224,4 @@ export class UjianUkkService {
     return this.prisma.diskusiUKK.delete({ where: { id } });
   }
 
-  async getAbsensiByTahapan(tahapanId: string, tanggal: string) {
-    const tahapan = await this.prisma.tahapanUKK.findUnique({ where: { id: tahapanId } });
-    if (!tahapan) throw new NotFoundException('Tahapan tidak ditemukan');
-
-    const peserta = await this.prisma.pesertaUKK.findMany({
-      where: { tahapanId },
-      include: { siswa: { include: { user: { select: { id: true, nama: true, fotoProfil: true } } } } },
-      orderBy: { siswa: { nama: 'asc' } },
-    });
-
-    const existing = await this.prisma.absensiUKK.findMany({
-      where: { tahapanId, tanggal },
-    });
-    const docMap = new Map(existing.map((a) => [a.siswaId, a]));
-
-    const rekap = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
-    const siswaList = peserta.map(({ siswa: s }) => {
-      const doc = docMap.get(s.id) ?? null;
-      const status = doc?.status ?? null;
-      if (status && status in rekap) rekap[status as keyof typeof rekap]++;
-      return {
-        siswaId: s.id,
-        userId: s.userId,
-        nama: s.user?.nama ?? s.nama,
-        nis: s.nis,
-        fotoProfil: s.user?.fotoProfil ?? null,
-        status,
-        waktuAbsen: doc?.waktuAbsen ?? null,
-        lokasi: doc?.lokasi ?? null,
-        foto: doc?.foto ?? null,
-        ttd: doc?.ttd ?? null,
-        catatan: doc?.catatan ?? null,
-      };
-    });
-
-    return { tahapanId, tahapan, tanggal, rekap, siswa: siswaList };
-  }
-
-  async getAllAbsensi(tanggal: string) {
-    const tahapanList = await this.prisma.tahapanUKK.findMany({
-      where: { hariKe: { gt: 0 } },
-      orderBy: { hariKe: 'asc' },
-    });
-
-    return Promise.all(tahapanList.map((t) => this.getAbsensiByTahapan(t.id, tanggal)));
-  }
-
-  async getStatusAbsensiSaya(userId: string, tahapanId: string) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
-    if (!siswa) return { sudahAbsen: false, status: null };
-    const today = todayJakarta();
-    const record = await this.prisma.absensiUKK.findUnique({
-      where: { tahapanId_siswaId_tanggal: { tahapanId, siswaId: siswa.id, tanggal: today } },
-    });
-    return { sudahAbsen: !!record, status: record?.status ?? null, tanggal: today, record };
-  }
-
-  async absenSendiriUkk(
-    userId: string,
-    tahapanId: string,
-    extras: { lokasi?: string; waktuAbsen?: string; ttd?: string; fotoUrl?: string; catatan?: string } = {},
-  ) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
-    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
-    const today = todayJakarta();
-    const data = {
-      status: 'HADIR',
-      lokasi: extras.lokasi,
-      waktuAbsen: extras.waktuAbsen,
-      ttd: extras.ttd,
-      foto: extras.fotoUrl,
-      catatan: extras.catatan,
-    };
-    return this.prisma.absensiUKK.upsert({
-      where: { tahapanId_siswaId_tanggal: { tahapanId, siswaId: siswa.id, tanggal: today } },
-      update: data,
-      create: { tahapanId, siswaId: siswa.id, tanggal: today, ...data },
-    });
-  }
-
-  async upsertAbsensiUkk(tahapanId: string, tanggal: string, absensi: { siswaId: string; status: string }[]) {
-    const ops = absensi.map((item) =>
-      this.prisma.absensiUKK.upsert({
-        where: { tahapanId_siswaId_tanggal: { tahapanId, siswaId: item.siswaId, tanggal } },
-        update: { status: item.status },
-        create: { tahapanId, siswaId: item.siswaId, tanggal, status: item.status },
-      }),
-    );
-    return this.prisma.$transaction(ops);
-  }
 }

@@ -129,7 +129,6 @@ const WIPE_ORDER = [
   'soalTahapanUKK',
   'soalUKK',
   'nilaiUKK',
-  'absensiUKK',
   'pesertaUKK',
   'tahapanUKK',
   'absensiUjianUKK',
@@ -168,7 +167,6 @@ async function wipeAll() {
   await prisma.soalTahapanUKK.deleteMany();
   await prisma.soalUKK.deleteMany();
   await prisma.nilaiUKK.deleteMany();
-  await prisma.absensiUKK.deleteMany();
   await prisma.pesertaUKK.deleteMany();
   await prisma.tahapanUKK.deleteMany();
   await prisma.absensiUjianUKK.deleteMany();
