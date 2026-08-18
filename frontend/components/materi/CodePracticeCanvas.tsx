@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2, ShieldAlert } from "lucide-react";
 
 type Tab = "html" | "css" | "js";
 
@@ -40,13 +40,16 @@ ${safeJs}
 }
 
 export function CodePracticeCanvas({
-  initialHtml = "", initialCss = "", initialJs = "", onChange, minHeight = 420,
+  initialHtml = "", initialCss = "", initialJs = "", onChange, minHeight = 420, restrictPaste = false,
 }: {
   initialHtml?: string;
   initialCss?: string;
   initialJs?: string;
   onChange?: (code: { html: string; css: string; js: string }) => void;
   minHeight?: number;
+  // Saat true: paste/cut/copy/drop teks ke editor diblokir — siswa harus
+  // murni mengetik sendiri kodenya (anti-copas untuk mode Praktik Kode).
+  restrictPaste?: boolean;
 }) {
   const [html, setHtml] = useState(initialHtml);
   const [css, setCss] = useState(initialCss);
@@ -55,7 +58,32 @@ export function CodePracticeCanvas({
   const [srcDoc, setSrcDoc] = useState(() => buildSrcDoc(initialHtml, initialCss, initialJs));
   const [runKey, setRunKey] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
+  const [blockedHint, setBlockedHint] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function flashBlockedHint() {
+    setBlockedHint(true);
+    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    hintTimeoutRef.current = setTimeout(() => setBlockedHint(false), 2200);
+  }
+
+  useEffect(() => () => { if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current); }, []);
+
+  function blockClipboardEvent(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    if (!restrictPaste) return;
+    e.preventDefault();
+    flashBlockedHint();
+  }
+  function blockDropEvent(e: React.DragEvent<HTMLTextAreaElement>) {
+    if (!restrictPaste) return;
+    e.preventDefault();
+    flashBlockedHint();
+  }
+  function blockContextMenu(e: React.MouseEvent<HTMLTextAreaElement>) {
+    if (!restrictPaste) return;
+    e.preventDefault();
+  }
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -96,6 +124,13 @@ export function CodePracticeCanvas({
           })}
         </div>
         <div className="flex items-center gap-1.5">
+          {restrictPaste && (
+            <span className={`hidden items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold transition-opacity sm:flex ${
+              blockedHint ? "bg-red-50 text-red-500 opacity-100 dark:bg-red-900/30 dark:text-red-400" : "text-slate-300 opacity-70 dark:text-slate-600"
+            }`}>
+              <ShieldAlert size={11} /> {blockedHint ? "Tempel diblokir — ketik sendiri" : "Mode anti-copas"}
+            </span>
+          )}
           <button type="button" onClick={reset}
             className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
             <RotateCcw size={12} /> Reset
@@ -116,6 +151,12 @@ export function CodePracticeCanvas({
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onPaste={blockClipboardEvent}
+          onCut={blockClipboardEvent}
+          onCopy={blockClipboardEvent}
+          onDrop={blockDropEvent}
+          onDragOver={blockDropEvent}
+          onContextMenu={blockContextMenu}
           spellCheck={false}
           placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #0033FF; }" : "console.log('halo');"}
           className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"

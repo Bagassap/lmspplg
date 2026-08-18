@@ -25,6 +25,11 @@ export function MateriTugasSiswaPage() {
 
   const [submitTarget, setSubmitTarget] = useState<TugasItem | null>(null);
   const [detailTarget, setDetailTarget] = useState<{ s: TugasSubmisiItem; t: TugasItem } | null>(null);
+  const [currentUserNama, setCurrentUserNama] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/auth/me").then((r) => r.json()).then((d) => setCurrentUserNama(d?.nama ?? "")).catch(() => {});
+  }, []);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -160,7 +165,7 @@ export function MateriTugasSiswaPage() {
         )}
       </div>
 
-      <SubmitTugasModal tugas={submitTarget} onClose={() => setSubmitTarget(null)} onSubmit={doSubmit} />
+      <SubmitTugasModal tugas={submitTarget} onClose={() => setSubmitTarget(null)} onSubmit={doSubmit} currentUserNama={currentUserNama} />
 
       <SubmisiSayaModal
         target={detailTarget?.s ?? null}

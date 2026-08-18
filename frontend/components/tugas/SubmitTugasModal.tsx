@@ -7,12 +7,17 @@ import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import type { TugasItem } from "./types";
 import { formatTgl } from "./types";
 
+// Akun demo/showcase yang dikecualikan dari pembatasan anti-copas mode
+// Praktik Kode — nama harus cocok persis dengan data user di database.
+const PASTE_RESTRICTION_EXEMPT_NAMA = "Bagas Demo";
+
 function SubmitPraktikModal({
-  tugas, onClose, onSubmit,
+  tugas, onClose, onSubmit, restrictPaste,
 }: {
   tugas: TugasItem;
   onClose: () => void;
   onSubmit: (fd: FormData) => Promise<void>;
+  restrictPaste: boolean;
 }) {
   const mySubmisi = tugas.submisi?.[0];
   const [code, setCode] = useState({
@@ -74,6 +79,7 @@ function SubmitPraktikModal({
               initialJs={code.js}
               onChange={setCode}
               minHeight={560}
+              restrictPaste={restrictPaste}
             />
           </div>
           <div className="mt-4 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end">
@@ -311,16 +317,20 @@ function SubmitSoalModal({
 }
 
 export function SubmitTugasModal({
-  tugas, onClose, onSubmit,
+  tugas, onClose, onSubmit, currentUserNama,
 }: {
   tugas: TugasItem | null;
   onClose: () => void;
   onSubmit: (fd: FormData) => Promise<void>;
+  // Nama siswa yang sedang login (dari /api/auth/me) — dipakai untuk
+  // mengecualikan akun demo dari pembatasan anti-copas mode Praktik Kode.
+  currentUserNama?: string;
 }) {
+  const restrictPaste = currentUserNama !== PASTE_RESTRICTION_EXEMPT_NAMA;
   return (
     <AnimatePresence>
       {tugas && (
-        tugas.tipe === "PRAKTIK" ? <SubmitPraktikModal tugas={tugas} onClose={onClose} onSubmit={onSubmit} />
+        tugas.tipe === "PRAKTIK" ? <SubmitPraktikModal tugas={tugas} onClose={onClose} onSubmit={onSubmit} restrictPaste={restrictPaste} />
         : tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY" ? <SubmitSoalModal tugas={tugas} onClose={onClose} onSubmit={onSubmit} />
         : <SubmitFileModal tugas={tugas} onClose={onClose} onSubmit={onSubmit} />
       )}
