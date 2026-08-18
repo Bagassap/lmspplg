@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2, ShieldAlert } from "lucide-react";
 
 type Tab = "html" | "css" | "js";
@@ -109,7 +110,28 @@ export function CodePracticeCanvas({
   const setValue = tab === "html" ? setHtml : tab === "css" ? setCss : setJs;
 
   return (
-    <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
+    <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
+      <AnimatePresence>
+        {blockedHint && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: -8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -8 }}
+            transition={{ type: "spring", damping: 22, stiffness: 340 }}
+            className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center p-4"
+          >
+            <div className="flex items-center gap-3 rounded-2xl bg-red-500 px-5 py-3.5 text-white shadow-2xl">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+                <ShieldAlert size={18} />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-extrabold leading-tight">Tempel/salin dinonaktifkan</p>
+                <p className="text-xs font-medium text-white/85">Mode Praktik — ketik kodenya sendiri, ya!</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/60 px-3 py-2 dark:border-slate-700 dark:bg-slate-700/20">
         <div className="flex items-center gap-1">
           {TABS.map((t) => {
@@ -125,10 +147,8 @@ export function CodePracticeCanvas({
         </div>
         <div className="flex items-center gap-1.5">
           {restrictPaste && (
-            <span className={`hidden items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold transition-opacity sm:flex ${
-              blockedHint ? "bg-red-50 text-red-500 opacity-100 dark:bg-red-900/30 dark:text-red-400" : "text-slate-300 opacity-70 dark:text-slate-600"
-            }`}>
-              <ShieldAlert size={11} /> {blockedHint ? "Tempel diblokir — ketik sendiri" : "Mode anti-copas"}
+            <span className="hidden items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-slate-300 opacity-70 sm:flex dark:text-slate-600">
+              <ShieldAlert size={11} /> Mode anti-copas
             </span>
           )}
           <button type="button" onClick={reset}
