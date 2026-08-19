@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
   ArrowRight,
-  Users, TrendingUp, LogOut, FileText, Download, PieChart, UserX,
+  Users, TrendingUp, LogOut, FileText, Download, PieChart, Copy, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -37,11 +37,49 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
   );
 }
 
+// Reuses the same "salin nama untuk pesan pengingat WA" pattern as
+// BelumAbsenPanel's DetailModal — but as a one-click shortcut sized to
+// match the kelas pill, instead of opening a modal first.
+function KirimPengingatCard({ siswaList }: { siswaList: SiswaAbsensi[] }) {
+  const toast = useToast();
+  const [copied, setCopied] = useState(false);
+  const belum = siswaList.filter((s) => !s.status || s.status === "ALPA");
+
+  async function copy() {
+    if (belum.length === 0) return;
+    const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success("Daftar disalin", `${belum.length} nama siap ditempel ke pesan pengingat`);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Gagal menyalin", "Coba lagi atau salin manual");
+    }
+  }
+
+  return (
+    <button type="button" onClick={copy} disabled={belum.length === 0}
+      className="flex items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 text-left transition-all hover:border-slate-200 disabled:cursor-default disabled:opacity-50 dark:bg-slate-700/30 dark:hover:border-slate-600">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+        {copied ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
+      </span>
+      <div className="min-w-0">
+        <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{copied ? "Disalin!" : "Kirim Pengingat"}</p>
+        <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+          {belum.length > 0 ? `Salin ${belum.length} nama belum absen` : "Semua siswa sudah absen"}
+        </p>
+      </div>
+    </button>
+  );
+}
+
 function RingkasanKehadiranCard({
-  kelasList, selectedId, onSelectKelas, kelasStat, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
+  kelasList, selectedId, onSelectKelas, kelasStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
 }: {
   kelasList: Kelas[]; selectedId: string; onSelectKelas: (id: string) => void;
   kelasStat: (k: Kelas) => { hd: number; tt: number; pct: number };
+  siswaList: SiswaAbsensi[];
   rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string;
 }) {
   const segments = [
@@ -120,7 +158,7 @@ function RingkasanKehadiranCard({
 
           <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
           <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
-          <MiniStat icon={UserX} value={belumAbsen} label="Belum absen" />
+          <KirimPengingatCard siswaList={siswaList} />
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
@@ -303,7 +341,7 @@ export default function GuruAbsensiHarianPage() {
             <div className="lg:col-span-2">
               <RingkasanKehadiranCard
                 kelasList={kelasList} selectedId={selectedId} onSelectKelas={setSelectedId} kelasStat={kelasStat}
-                rekap={rekap} hadirPct={hadirPct} total={total}
+                siswaList={siswaList} rekap={rekap} hadirPct={hadirPct} total={total}
                 pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama} />
             </div>
 
