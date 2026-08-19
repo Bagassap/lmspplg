@@ -16,17 +16,11 @@ import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTab
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
-// Guru is usually wali kelas of fewer than 4 classes, so the fixed 4-column
-// Kelas grid (same size as admin's) leaves empty slots — this donut fills
-// however many are left with the selected kelas's own status breakdown
-// instead of dead space, reusing the same rekap/hadirPct/total already
-// fetched for the page. colSpanClass controls how many of the leftover
-// columns it spans.
-function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama, colSpanClass }: {
-  rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string; colSpanClass: string;
+function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama }: {
+  rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string;
 }) {
   const segments = [
     { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
@@ -39,7 +33,7 @@ function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelas
   let cumulative = 0;
 
   return (
-    <div className={`flex h-72 flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${colSpanClass}`}>
+    <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:w-80 sm:shrink-0">
       <div className="flex items-center gap-2.5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0EA5E9,#0369A1)" }}>
           <PieChart size={18} />
@@ -155,21 +149,11 @@ export default function GuruAbsensiHarianPage() {
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
 
   function kelasStat(k: Kelas) {
-    const idx = kelasList.findIndex((x) => x.id === k.id);
     const r = rekapAll.find((x) => x.kelasId === k.id);
     const hd = r?.rekap.HADIR ?? 0;
-    const iz = r?.rekap.IZIN ?? 0;
-    const sk = r?.rekap.SAKIT ?? 0;
-    const al = r?.rekap.ALPA ?? 0;
     const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
-    return { idx: idx < 0 ? 0 : idx, hd, iz, sk, al, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
+    return { hd, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
   }
-
-  // No pagination anymore — kelasList renders in full (grid-cols-4 wraps to
-  // extra rows past 4). DonutRingkasan only needs to know how many empty
-  // slots are left in the LAST row; 0 means the last row is already full
-  // (no filler needed).
-  const kelasLastRowRemainder = kelasList.length % 4;
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -251,58 +235,38 @@ export default function GuruAbsensiHarianPage() {
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {kelasList.map((k) => {
-                  const s = kelasStat(k);
-                  const isSelected = k.id === selectedId;
-                  const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
-                  return (
-                    <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
-                      style={{
-                        background: gradient,
-                        boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
-                        outline: isSelected ? "3px solid white" : "3px solid transparent",
-                        outlineOffset: isSelected ? "2px" : "0",
-                      }}>
-                      <div className="relative flex items-center gap-2">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/25">
-                          <BookOpen size={14} />
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-stretch">
+                <div className="flex flex-1 flex-wrap content-start gap-2.5">
+                  {kelasList.map((k) => {
+                    const s = kelasStat(k);
+                    const isSelected = k.id === selectedId;
+                    return (
+                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                        className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                          isSelected
+                            ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                            : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                        }`}>
+                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                          isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                        }`}>
+                          <BookOpen size={16} />
                         </span>
-                        <p className="truncate text-sm font-bold">{k.nama}</p>
-                      </div>
-
-                      <div className="relative">
-                        <p className="text-2xl font-extrabold tabular-nums">
-                          {s.hd}<span className="text-sm font-semibold text-white/70">/{s.tt}</span>
-                        </p>
-                        <p className="text-[11px] font-semibold text-white/80">Hadir · {s.pct}%</p>
-                        <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
-                          <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
+                        <div className="min-w-0">
+                          <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                            {k.nama}
+                          </p>
+                          <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                            {s.hd}/{s.tt} hadir · {s.pct}%
+                          </p>
                         </div>
-                      </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                      <p className="relative text-[10px] font-medium text-white/70">
-                        Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                      </p>
-                    </button>
-                  );
-                })}
-
-                {/* kelasList renders in full now (no pagination) — the fixed
-                    4-column grid (same card size as admin) only leaves empty
-                    slots in the LAST row when the count isn't a multiple of
-                    4. Fill whatever's left there with a donut breakdown of
-                    the selected kelas's status today instead of dead space. */}
-                {kelasLastRowRemainder > 0 && (
-                  <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
-                    pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama}
-                    colSpanClass={
-                      kelasLastRowRemainder === 1 ? "col-span-2 sm:col-span-3"
-                        : kelasLastRowRemainder === 2 ? "col-span-2 sm:col-span-2"
-                        : "col-span-2 sm:col-span-1"
-                    } />
-                )}
+                <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
+                  pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama} />
               </div>
             </div>
 
