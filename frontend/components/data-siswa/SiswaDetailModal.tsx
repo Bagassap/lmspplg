@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
-  completeness, missingFields,
+  completeness, missingFields, waLink,
 } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
@@ -15,8 +15,8 @@ const HEADER_GRADIENT = "#0033FF";
 // Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
 const REF_PRIMARY = "#1120F0";
 
-function FieldItem({ icon: Icon, label, value, full }: {
-  icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean;
+function FieldItem({ icon: Icon, label, value, full, href }: {
+  icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
 }) {
   return (
     <div className={full ? "sm:col-span-2" : undefined}>
@@ -24,9 +24,21 @@ function FieldItem({ icon: Icon, label, value, full }: {
         <Icon size={12} className="shrink-0" />
         <p className="text-[10px] font-bold uppercase tracking-wider">{label}</p>
       </div>
-      <p className="mt-1.5 break-words text-[15px] font-bold text-slate-800 dark:text-white">
-        {value || "—"}
-      </p>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Kirim pesan WhatsApp"
+          className="mt-1.5 inline-block break-words text-[15px] font-bold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+        >
+          {value}
+        </a>
+      ) : (
+        <p className="mt-1.5 break-words text-[15px] font-bold text-slate-800 dark:text-white">
+          {value || "—"}
+        </p>
+      )}
     </div>
   );
 }
@@ -103,7 +115,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
                   <div className="grid grid-cols-2 gap-3 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
                     <FieldItem icon={CalendarDays} label="Tempat & Tanggal Lahir" value={tempatTanggal} full />
                     <FieldItem icon={User} label="Jenis Kelamin" value={siswa.jenisKelamin} />
-                    <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} />
+                    <FieldItem icon={Phone} label="No. HP" value={siswa.noHp} href={waLink(siswa.noHp)} />
                     <FieldItem icon={MapPin} label="Alamat" value={alamatLengkap} full />
                   </div>
                 </div>

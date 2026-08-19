@@ -35,6 +35,16 @@ export function getNama(s: SiswaCardData): string {
   return s.nama ?? s.user?.nama ?? "—";
 }
 
+// Ubah nomor HP Indonesia (format lokal 08xx, +62xx, atau 62xx) jadi link
+// wa.me — wa.me butuh kode negara tanpa "0" di depan (mis. 6281234567890).
+// Null kalau nomornya kosong/tidak punya digit sama sekali.
+export function waLink(noHp: string | null | undefined): string | null {
+  const digits = (noHp ?? "").replace(/\D/g, "");
+  if (!digits) return null;
+  const normalized = digits.startsWith("0") ? `62${digits.slice(1)}` : digits.startsWith("62") ? digits : `62${digits}`;
+  return `https://wa.me/${normalized}`;
+}
+
 export function getInitials(name: string): string {
   return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }

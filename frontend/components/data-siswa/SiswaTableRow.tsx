@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap, MessageCircle } from "lucide-react";
 import {
-  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness,
+  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
@@ -89,7 +89,23 @@ export function SiswaTableRow({
 
       <td className={`${TD} ${TEXT}`} title={tempatTanggal}>{tempatTanggal}</td>
 
-      <td className={`${TD} ${TEXT}`}>{siswa.noHp || "—"}</td>
+      <td className={TD}>
+        {siswa.noHp ? (
+          <a
+            href={waLink(siswa.noHp)!}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            title="Kirim pesan WhatsApp"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+          >
+            <MessageCircle size={13} className="shrink-0" />
+            {siswa.noHp}
+          </a>
+        ) : (
+          <span className={TEXT}>—</span>
+        )}
+      </td>
 
       <td className={TD}>
         <div className="flex items-center gap-2.5">
