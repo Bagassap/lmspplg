@@ -10,7 +10,7 @@ import type { Response } from 'express';
 import { AbsensiHarianService } from './absensi-harian.service';
 import { AbsensiHarianPdfService } from './absensi-harian-pdf.service';
 import { AbsensiHarianExcelService } from './absensi-harian-excel.service';
-import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto, UpsertJadwalOverrideDto } from './dto/absensi-harian.dto';
+import { AbsenSendiriHarianDto, UpsertAbsensiHarianDto, UpsertJadwalOverrideDto, KirimPengingatDto } from './dto/absensi-harian.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -317,5 +317,12 @@ export class AbsensiHarianController {
   @Post()
   upsertAbsensi(@Body() dto: UpsertAbsensiHarianDto, @Request() req: any) {
     return this.service.upsertAbsensi(dto.kelasId, dto.tanggal, dto.absensi, req.user.id, req.user.role);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Post('kirim-pengingat')
+  kirimPengingat(@Body() dto: KirimPengingatDto, @Request() req: any) {
+    return this.service.kirimPengingatBelumAbsen(dto.kelasId, dto.tanggal, req.user.id, req.user.role);
   }
 }

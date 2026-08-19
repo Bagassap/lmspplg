@@ -45,6 +45,14 @@ export class UpsertAbsensiHarianDto {
   absensi!: AbsensiItemDto[];
 }
 
+export class KirimPengingatDto {
+  @IsString()
+  kelasId!: string;
+
+  @IsString()
+  tanggal!: string;
+}
+
 export class UpsertJadwalOverrideDto {
   @IsString()
   tanggal!: string;

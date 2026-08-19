@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
   ArrowRight,
-  Users, TrendingUp, LogOut, FileText, Download, PieChart, Copy, Check,
+  Users, TrendingUp, LogOut, FileText, Download, PieChart, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
@@ -25,7 +25,7 @@ import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/component
 // same flex-wrap row as the kelas pills.
 function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 dark:bg-slate-700/30">
+    <div className="flex h-full w-full items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 dark:bg-slate-700/30">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
         <Icon size={16} />
       </span>
@@ -37,37 +37,53 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
   );
 }
 
-// Reuses the same "salin nama untuk pesan pengingat WA" pattern as
-// BelumAbsenPanel's DetailModal — but as a one-click shortcut sized to
-// match the kelas pill, instead of opening a modal first.
-function KirimPengingatCard({ siswaList }: { siswaList: SiswaAbsensi[] }) {
+// Klik ini benar-benar mengirim notifikasi in-app (lonceng Topbar) ke tiap
+// siswa yang belum tercatat absen — bukan cuma dekorasi — lewat endpoint
+// backend /absensi-harian/kirim-pengingat, sekaligus menyalin nama-nama itu
+// ke clipboard (pola yang sama dengan BelumAbsenPanel) untuk ditempel manual
+// sebagai pengingat WA. Merah karena ini aksi mendesak/menegur, senada
+// dengan warna status Alpa di halaman ini.
+function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
   const toast = useToast();
-  const [copied, setCopied] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
   const belum = siswaList.filter((s) => !s.status || s.status === "ALPA");
 
-  async function copy() {
-    if (belum.length === 0) return;
-    const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
+  async function kirim() {
+    if (belum.length === 0 || sending) return;
+    setSending(true);
     try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      toast.success("Daftar disalin", `${belum.length} nama siap ditempel ke pesan pengingat`);
-      setTimeout(() => setCopied(false), 2000);
+      const res = await fetch("/api/absensi-harian/kirim-pengingat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kelasId, tanggal }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
+
+      const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
+      try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
+
+      setSent(true);
+      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
+      setTimeout(() => setSent(false), 2000);
     } catch {
-      toast.error("Gagal menyalin", "Coba lagi atau salin manual");
+      toast.error("Server tidak dapat dijangkau", "");
+    } finally {
+      setSending(false);
     }
   }
 
   return (
-    <button type="button" onClick={copy} disabled={belum.length === 0}
-      className="flex items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 text-left transition-all hover:border-slate-200 disabled:cursor-default disabled:opacity-50 dark:bg-slate-700/30 dark:hover:border-slate-600">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
-        {copied ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
+    <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
+      className="flex h-full w-full items-center gap-3 rounded-2xl border-2 border-transparent bg-red-50 px-4 py-3 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#DC2626] text-white">
+        {sent ? <Check size={16} /> : <Bell size={16} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{copied ? "Disalin!" : "Kirim Pengingat"}</p>
-        <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-          {belum.length > 0 ? `Salin ${belum.length} nama belum absen` : "Semua siswa sudah absen"}
+        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+        <p className="text-[11px] font-semibold text-red-400 dark:text-red-500/80">
+          {belum.length > 0 ? `Notifikasi ke ${belum.length} siswa belum absen` : "Semua siswa sudah absen"}
         </p>
       </div>
     </button>
@@ -75,11 +91,11 @@ function KirimPengingatCard({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 }
 
 function RingkasanKehadiranCard({
-  kelasList, selectedId, onSelectKelas, kelasStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
+  kelasList, selectedId, onSelectKelas, kelasStat, siswaList, tanggal, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
 }: {
   kelasList: Kelas[]; selectedId: string; onSelectKelas: (id: string) => void;
   kelasStat: (k: Kelas) => { hd: number; tt: number; pct: number };
-  siswaList: SiswaAbsensi[];
+  siswaList: SiswaAbsensi[]; tanggal: string;
   rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string;
 }) {
   const segments = [
@@ -128,13 +144,13 @@ function RingkasanKehadiranCard({
       </p>
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="flex flex-1 flex-wrap content-start gap-2.5">
+        <div className="grid flex-1 grid-cols-[repeat(auto-fit,minmax(180px,1fr))] items-stretch gap-2.5">
           {kelasList.map((k) => {
             const s = kelasStat(k);
             const isSelected = k.id === selectedId;
             return (
               <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
-                className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                className={`flex h-full w-full items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
                   isSelected
                     ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
                     : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
@@ -158,7 +174,7 @@ function RingkasanKehadiranCard({
 
           <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
           <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
-          <KirimPengingatCard siswaList={siswaList} />
+          <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
@@ -341,7 +357,7 @@ export default function GuruAbsensiHarianPage() {
             <div className="lg:col-span-2">
               <RingkasanKehadiranCard
                 kelasList={kelasList} selectedId={selectedId} onSelectKelas={setSelectedId} kelasStat={kelasStat}
-                siswaList={siswaList} rekap={rekap} hadirPct={hadirPct} total={total}
+                siswaList={siswaList} tanggal={tanggal} rekap={rekap} hadirPct={hadirPct} total={total}
                 pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama} />
             </div>
 

@@ -609,6 +609,53 @@ export class AbsensiHarianService {
     return result;
   }
 
+  // Dipanggil dari tombol "Kirim Pengingat" wali kelas — mengirim notifikasi
+  // in-app (muncul di lonceng notifikasi siswa) ke siswa yang belum tercatat
+  // hadir (status kosong atau ALPA) di kelas & tanggal terpilih.
+  async kirimPengingatBelumAbsen(
+    kelasId: string,
+    tanggal: string,
+    actorUserId: string,
+    actorRole: string,
+  ) {
+    if (actorRole === 'GURU') {
+      const myKelasIds = await this.kelasService.getGuruKelasIds(actorUserId);
+      if (!myKelasIds.includes(kelasId)) {
+        throw new ForbiddenException('Anda bukan wali kelas untuk kelas ini');
+      }
+    }
+
+    const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId }, select: { nama: true } });
+    if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
+
+    const siswaList = await this.prisma.siswa.findMany({
+      where: { kelasId, userId: { not: null } },
+      select: { id: true, userId: true },
+    });
+    const existing = await this.prisma.absensiHarian.findMany({
+      where: { kelasId, tanggal },
+      select: { siswaId: true, status: true },
+    });
+    const statusMap = new Map(existing.map((a) => [a.siswaId, a.status]));
+    const belumAbsenUserIds = siswaList
+      .filter((s) => {
+        const status = statusMap.get(s.id) ?? null;
+        return status === null || status === 'ALPA';
+      })
+      .map((s) => s.userId!);
+
+    if (belumAbsenUserIds.length === 0) return { count: 0 };
+
+    await this.notificationService.createMany(belumAbsenUserIds, {
+      title:   'Pengingat Absen',
+      message: `Kamu belum tercatat absen hari ini di kelas ${kelas.nama}. Segera lakukan presensi.`,
+      type:    NotificationType.ABSENSI,
+      link:    '/absensi-harian',
+    });
+
+    return { count: belumAbsenUserIds.length };
+  }
+
   private async getOverrideForDate(tanggal: string): Promise<JadwalOverrideRow> {
     return this.prisma.jadwalAbsenOverride.findUnique({
       where: { tanggal },
