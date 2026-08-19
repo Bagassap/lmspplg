@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine,
+  ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download,
 } from "lucide-react";
 import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
@@ -137,6 +137,12 @@ export function TugasListCardSiswa({
                           <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
                             Nilai {mySubmisi.nilai}
                           </span>
+                        )}
+                        {t.fileUrl && (
+                          <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
+                            <Download size={14} />
+                          </a>
                         )}
                         <button onClick={btn.onClick}
                           className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"

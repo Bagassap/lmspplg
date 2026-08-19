@@ -2,10 +2,28 @@
 
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Loader2, Upload, File as FileIcon, CalendarClock, Code2, ListChecks, PenLine } from "lucide-react";
+import { X, Send, Loader2, Upload, File as FileIcon, CalendarClock, Code2, ListChecks, PenLine, Download } from "lucide-react";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import type { TugasItem } from "./types";
 import { formatTgl } from "./types";
+
+// Lampiran (soal/materi pendukung) yang diunggah guru/admin saat membuat
+// tugas — tampil di setiap mode pengerjaan (Kirim File/Praktik/Pilihan
+// Ganda/Essay) supaya siswa selalu bisa mengunduhnya sebelum mengerjakan.
+function LampiranGuru({ tugas }: { tugas: TugasItem }) {
+  if (!tugas.fileUrl) return null;
+  return (
+    <a href={tugas.fileUrl} target="_blank" rel="noopener noreferrer"
+      className="mb-4 flex shrink-0 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 dark:border-slate-600 dark:bg-slate-700/40 dark:text-slate-200 dark:hover:bg-slate-700">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400">
+        <Download size={14} />
+      </span>
+      <span className="min-w-0 flex-1 truncate">
+        {tugas.fileName ?? "Lampiran dari guru"}
+      </span>
+    </a>
+  );
+}
 
 // Akun demo/showcase yang dikecualikan dari pembatasan anti-copas mode
 // Praktik Kode — nama harus cocok persis dengan data user di database.
@@ -66,6 +84,7 @@ function SubmitPraktikModal({
         </div>
 
         <div className="flex flex-1 flex-col overflow-y-auto p-5">
+          <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
             <p className="mb-4 shrink-0 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700/40 dark:text-slate-300">
               {tugas.deskripsi}
@@ -154,6 +173,7 @@ function SubmitFileModal({
           </p>
         </div>
         <form onSubmit={submit} className="p-6 space-y-4">
+          <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
             <div className="rounded-xl bg-slate-50 dark:bg-slate-700/40 px-3.5 py-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               {tugas.deskripsi}
@@ -254,6 +274,7 @@ function SubmitSoalModal({
         </div>
 
         <div className="flex-1 overflow-y-auto p-5">
+          <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
             <p className="mb-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700/40 dark:text-slate-300">
               {tugas.deskripsi}
