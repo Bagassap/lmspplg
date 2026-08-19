@@ -95,8 +95,7 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
       )}
 
       <button onClick={submit} disabled={!dariKelasId || !keKelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50"
-        style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0033FF] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <ArrowUpCircle size={15} />}
         {saving ? "Memproses…" : "Naikkan Semua Siswa"}
       </button>
@@ -157,8 +156,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50"
-        style={{ background: "linear-gradient(135deg,#EF4444,#DC2626)" }}>
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -185,8 +183,7 @@ export function KenaikanKelasModal({
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
-            <div className="flex shrink-0 items-center justify-between gap-3 px-5 py-4"
-              style={{ background: "linear-gradient(135deg,#0033FF,#4F46E5)" }}>
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0033FF] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
                   <ArrowUpCircle size={18} className="text-white" />
