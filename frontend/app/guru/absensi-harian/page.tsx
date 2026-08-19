@@ -25,13 +25,13 @@ import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/component
 // same flex-wrap row as the kelas pills.
 function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
-    <div className="flex h-full w-full items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 dark:bg-slate-700/30">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
-        <Icon size={16} />
+    <div className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-slate-50 px-3 py-2.5 dark:bg-slate-700/30">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+        <Icon size={14} />
       </span>
       <div className="min-w-0">
         <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{value}</p>
-        <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">{label}</p>
+        <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{label}</p>
       </div>
     </div>
   );
@@ -76,14 +76,14 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
 
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
-      className="flex h-full w-full items-center gap-3 rounded-2xl border-2 border-transparent bg-red-50 px-4 py-3 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#DC2626] text-white">
-        {sent ? <Check size={16} /> : <Bell size={16} />}
+      className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-red-50 px-3 py-2.5 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#DC2626] text-white">
+        {sent ? <Check size={14} /> : <Bell size={14} />}
       </span>
       <div className="min-w-0">
         <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
-        <p className="text-[11px] font-semibold text-red-400 dark:text-red-500/80">
-          {belum.length > 0 ? `Notifikasi ke ${belum.length} siswa belum absen` : "Semua siswa sudah absen"}
+        <p className="truncate text-[10px] font-semibold text-red-400 dark:text-red-500/80">
+          {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
         </p>
       </div>
     </button>
@@ -144,27 +144,27 @@ function RingkasanKehadiranCard({
       </p>
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="grid flex-1 grid-cols-[repeat(auto-fit,minmax(180px,1fr))] items-stretch gap-2.5">
+        <div className="grid flex-1 grid-cols-[repeat(auto-fit,140px)] items-stretch justify-start gap-2.5">
           {kelasList.map((k) => {
             const s = kelasStat(k);
             const isSelected = k.id === selectedId;
             return (
               <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
-                className={`flex h-full w-full items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
                   isSelected
                     ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
                     : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
                 }`}>
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
                   isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
                 }`}>
-                  <BookOpen size={16} />
+                  <BookOpen size={14} />
                 </span>
                 <div className="min-w-0">
                   <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
                     {k.nama}
                   </p>
-                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                  <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                     {s.hd}/{s.tt} hadir · {s.pct}%
                   </p>
                 </div>
