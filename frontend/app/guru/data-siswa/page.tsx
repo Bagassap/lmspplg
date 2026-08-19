@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Users, User, School } from "lucide-react";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
+import { KartuPelajarBanner } from "@/components/data-siswa/KartuPelajarBanner";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
@@ -69,6 +70,8 @@ export default function GuruDataSiswaPage() {
           { icon: School, label: `${loading ? "—" : kelasSet.size} Kelas` },
         ]}
       />
+
+      <KartuPelajarBanner />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">

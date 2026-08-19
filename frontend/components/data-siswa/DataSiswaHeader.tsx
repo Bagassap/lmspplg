@@ -1,9 +1,7 @@
 "use client";
 
-import { Users, CreditCard, ExternalLink } from "lucide-react";
+import { Users } from "lucide-react";
 import { LiveClock } from "@/components/shared/LiveClock";
-
-const KARTU_PELAJAR_URL = "https://e-kartu.smklimpung.id";
 
 export type HeaderStat = { icon: React.ComponentType<{ size?: number; className?: string }>; label: string };
 
@@ -44,14 +42,6 @@ export function DataSiswaHeader({
               </div>
             ))}
           </div>
-          <a
-            href={KARTU_PELAJAR_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/25"
-          >
-            <CreditCard size={14} /> Kartu Pelajar <ExternalLink size={12} className="text-white/60" />
-          </a>
           <LiveClock />
         </div>
       </div>
