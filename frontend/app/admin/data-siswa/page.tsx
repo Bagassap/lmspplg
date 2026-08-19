@@ -97,21 +97,23 @@ export default function AdminDataSiswaPage() {
         ]}
       />
 
-      <KartuPelajarBanner />
+      <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
+        <KartuPelajarBanner />
 
-      <button onClick={() => setKenaikanOpen(true)}
-        className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/40">
-        <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0033FF,#4F46E5)" }}>
-            <ArrowUpCircle size={18} />
-          </span>
-          <div>
-            <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">Naikkan siswa antar kelas, atau luluskan satu kelas sekaligus (akhir tahun ajaran)</p>
+        <button onClick={() => setKenaikanOpen(true)}
+          className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/40">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0033FF,#4F46E5)" }}>
+              <ArrowUpCircle size={18} />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Naikkan siswa antar kelas, atau luluskan satu kelas sekaligus (akhir tahun ajaran)</p>
+            </div>
           </div>
-        </div>
-        <ChevronRight size={16} className="shrink-0 text-slate-300" />
-      </button>
+          <ChevronRight size={16} className="shrink-0 text-slate-300" />
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
