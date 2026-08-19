@@ -36,6 +36,14 @@ function RingkasanKehadiranCard({
   const circumference = 2 * Math.PI * r;
   let cumulative = 0;
 
+  const statsPerKelas = kelasList.map((k) => ({ kelas: k, ...kelasStat(k) })).filter((s) => s.tt > 0);
+  const avgPct = statsPerKelas.length > 0 ? Math.round(statsPerKelas.reduce((sum, s) => sum + s.pct, 0) / statsPerKelas.length) : 0;
+  const terbaik = statsPerKelas.length > 0 ? statsPerKelas.reduce((a, b) => (b.pct > a.pct ? b : a)) : null;
+  const terendah = statsPerKelas.length > 0 ? statsPerKelas.reduce((a, b) => (b.pct < a.pct ? b : a)) : null;
+  const showComparison = !!terbaik && !!terendah && terbaik.kelas.id !== terendah.kelas.id;
+  const sudahAbsen = total - belumAbsen;
+  const progresPct = total > 0 ? Math.round((sudahAbsen / total) * 100) : 0;
+
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-2.5">
@@ -50,34 +58,59 @@ function RingkasanKehadiranCard({
         </div>
       </div>
 
+      <p className="mt-2.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+        {showComparison ? (
+          <>Rata-rata kehadiran <span className="font-bold text-slate-700 dark:text-slate-200">{avgPct}%</span> dari {kelasList.length} kelas hari ini ·
+            tertinggi <span className="font-bold text-emerald-600 dark:text-emerald-400">{terbaik!.kelas.nama} ({terbaik!.pct}%)</span> ·
+            perlu perhatian <span className="font-bold text-red-500 dark:text-red-400">{terendah!.kelas.nama} ({terendah!.pct}%)</span>
+          </>
+        ) : (
+          <>Sudah <span className="font-bold text-slate-700 dark:text-slate-200">{sudahAbsen}</span> dari <span className="font-bold text-slate-700 dark:text-slate-200">{total}</span> siswa tercatat absen hari ini
+            {belumAbsen > 0 ? `, ${belumAbsen} lagi belum absen.` : ", semua siswa sudah absen."}
+          </>
+        )}
+      </p>
+
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="flex flex-1 flex-wrap content-start gap-2.5">
-          {kelasList.map((k) => {
-            const s = kelasStat(k);
-            const isSelected = k.id === selectedId;
-            return (
-              <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
-                className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
-                  isSelected
-                    ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
-                    : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
-                }`}>
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                  isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                }`}>
-                  <BookOpen size={16} />
-                </span>
-                <div className="min-w-0">
-                  <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
-                    {k.nama}
-                  </p>
-                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                    {s.hd}/{s.tt} hadir · {s.pct}%
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="flex flex-wrap content-start gap-2.5">
+            {kelasList.map((k) => {
+              const s = kelasStat(k);
+              const isSelected = k.id === selectedId;
+              return (
+                <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
+                  className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                    isSelected
+                      ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                  }`}>
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                    isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                  }`}>
+                    <BookOpen size={16} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                      {k.nama}
+                    </p>
+                    <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                      {s.hd}/{s.tt} hadir · {s.pct}%
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+            <div className="mb-1.5 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+              <span>Progres absen tercatat{kelasNama ? ` · ${kelasNama}` : ""}</span>
+              <span className="text-slate-700 dark:text-slate-200">{sudahAbsen}/{total}</span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
+              <div className="h-2 rounded-full bg-[#0EA5E9] transition-all" style={{ width: `${progresPct}%` }} />
+            </div>
+          </div>
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
