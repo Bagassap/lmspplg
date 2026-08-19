@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { KeyRound, Users, CheckCircle2, AlertTriangle, Clock, UserPlus } from "lucide-react";
+import { KeyRound, Users, CheckCircle2, AlertTriangle, Clock, UserPlus, FileSpreadsheet } from "lucide-react";
 import { motion } from "framer-motion";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -9,6 +9,7 @@ import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
 import { PermintaanPasswordCard, type PasswordResetRequest } from "./PermintaanPasswordCard";
 import { SiswaPasswordTable, type SiswaPasswordItem } from "./SiswaPasswordTable";
 import { CreateAccountModal } from "./CreateAccountModal";
+import { ImportSiswaModal } from "./ImportSiswaModal";
 
 type KelasWithWali = {
   id: string;
@@ -56,6 +57,7 @@ export default function ManajemenPasswordClient() {
 
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
+  const [importSiswaOpen, setImportSiswaOpen] = useState(false);
 
   const fetchHeader = useCallback(async () => {
     setLoadingHeader(true);
@@ -206,6 +208,12 @@ export default function ManajemenPasswordClient() {
               </div>
             </div>
             <motion.button
+              onClick={() => setImportSiswaOpen(true)}
+              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-1.5 rounded-xl bg-white/15 px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0 backdrop-blur-sm hover:bg-white/25">
+              <FileSpreadsheet size={15} /> Impor Massal
+            </motion.button>
+            <motion.button
               onClick={() => setCreateAccountOpen(true)}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-lg shrink-0"
@@ -267,6 +275,12 @@ export default function ManajemenPasswordClient() {
         kelasList={kelasList.map((k) => ({ id: k.id, nama: k.nama }))}
         onClose={() => setCreateAccountOpen(false)}
         onCreated={refetchAll}
+      />
+
+      <ImportSiswaModal
+        open={importSiswaOpen}
+        onClose={() => setImportSiswaOpen(false)}
+        onImported={refetchAll}
       />
     </div>
   );

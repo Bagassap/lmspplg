@@ -1,5 +1,8 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards, Request, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
 import { UsersService } from './users.service';
+import { ImportSiswaService } from './import-siswa.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -11,11 +14,31 @@ import { Role } from '../../generated/prisma/client';
 @Roles(Role.ADMIN)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(
+    private readonly service: UsersService,
+    private readonly importSiswaService: ImportSiswaService,
+  ) {}
 
   @Post()
   createAccount(@Body() dto: CreateUserDto) {
     return this.service.createAccount(dto);
+  }
+
+  @Get('import-siswa/template')
+  async importSiswaTemplate(@Res() res: Response) {
+    const buffer = await this.importSiswaService.buildTemplate();
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="Template_Impor_Siswa_Baru.xlsx"',
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @Post('import-siswa')
+  @UseInterceptors(FileInterceptor('file'))
+  importSiswa(@UploadedFile() file: Express.Multer.File) {
+    return this.importSiswaService.importFromBuffer(file.buffer);
   }
 
   @Get('password-status')
