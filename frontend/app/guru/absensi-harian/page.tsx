@@ -19,6 +19,24 @@ import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
+// Same shape/size as the clickable kelas pill (icon badge + 2-line text),
+// but static (a div, not a button) with a muted icon — reads as a stat
+// display rather than an action, while still lining up visually in the
+// same flex-wrap row as the kelas pills.
+function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border-2 border-transparent bg-slate-50 px-4 py-3 dark:bg-slate-700/30">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+        <Icon size={16} />
+      </span>
+      <div className="min-w-0">
+        <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{value}</p>
+        <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">{label}</p>
+      </div>
+    </div>
+  );
+}
+
 function RingkasanKehadiranCard({
   kelasList, selectedId, onSelectKelas, kelasStat, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
 }: {
@@ -72,45 +90,37 @@ function RingkasanKehadiranCard({
       </p>
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="flex flex-1 flex-col gap-3">
-          <div className="flex flex-wrap content-start gap-2.5">
-            {kelasList.map((k) => {
-              const s = kelasStat(k);
-              const isSelected = k.id === selectedId;
-              return (
-                <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
-                  className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
-                    isSelected
-                      ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
-                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
-                  }`}>
-                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                    isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                  }`}>
-                    <BookOpen size={16} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
-                      {k.nama}
-                    </p>
-                    <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                      {s.hd}/{s.tt} hadir · {s.pct}%
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+        <div className="flex flex-1 flex-wrap content-start gap-2.5">
+          {kelasList.map((k) => {
+            const s = kelasStat(k);
+            const isSelected = k.id === selectedId;
+            return (
+              <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
+                className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                  isSelected
+                    ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                    : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                }`}>
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                  isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                }`}>
+                  <BookOpen size={16} />
+                </span>
+                <div className="min-w-0">
+                  <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                    {k.nama}
+                  </p>
+                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                    {s.hd}/{s.tt} hadir · {s.pct}%
+                  </p>
+                </div>
+              </button>
+            );
+          })}
 
-          <div className="rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-            <div className="mb-1.5 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-              <span>Progres absen tercatat{kelasNama ? ` · ${kelasNama}` : ""}</span>
-              <span className="text-slate-700 dark:text-slate-200">{sudahAbsen}/{total}</span>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
-              <div className="h-2 rounded-full bg-[#0EA5E9] transition-all" style={{ width: `${progresPct}%` }} />
-            </div>
-          </div>
+          <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
+          <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
+          <MiniStat icon={UserX} value={belumAbsen} label="Belum absen" />
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
@@ -148,14 +158,6 @@ function RingkasanKehadiranCard({
         <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
           <Users size={12} className="text-sky-500" />
           Total {total} siswa
-        </span>
-        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-          <LogOut size={12} className="text-sky-500" />
-          Sudah pulang {pulangCount} siswa
-        </span>
-        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-          <UserX size={12} className="text-sky-500" />
-          Belum absen {belumAbsen} siswa
         </span>
       </div>
     </div>
