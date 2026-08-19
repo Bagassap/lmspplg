@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Patch, Body, Param, Query, UseGuards, Request, Res } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Body, Param, Query, UseGuards, Request, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import { SiswaService } from './siswa.service';
 import { SiswaPdfService } from './siswa-pdf.service';
@@ -6,6 +6,8 @@ import { SiswaExcelService } from './siswa-excel.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
 import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
 import { LengkapiProfilSiswaDto } from './dto/lengkapi-profil-siswa.dto';
+import { NaikkanKelasDto } from './dto/naikkan-kelas.dto';
+import { LuluskanKelasDto } from './dto/luluskan-kelas.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -108,6 +110,20 @@ export class SiswaController {
       'Content-Length': buffer.length,
     });
     res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('naikkan-kelas')
+  naikkanKelas(@Body() dto: NaikkanKelasDto) {
+    return this.service.naikkanKelas(dto.dariKelasId, dto.keKelasId);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('luluskan-kelas')
+  luluskanKelas(@Body() dto: LuluskanKelasDto) {
+    return this.service.luluskanKelas(dto.kelasId);
   }
 
   @UseGuards(RolesGuard)

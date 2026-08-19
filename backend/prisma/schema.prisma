@@ -31,6 +31,11 @@ enum StatusIzin {
   DITOLAK
 }
 
+enum StatusSiswa {
+  AKTIF
+  LULUS
+}
+
 enum NotificationType {
   PENGUMUMAN
   ABSENSI
@@ -146,6 +151,13 @@ model Siswa {
   tempatLahir  String?
   tanggalLahir DateTime?
   namaOrtu     String?
+
+  // AKTIF = siswa berjalan biasa. LULUS = sudah lulus (kelas XII naik jadi
+  // alumni) — otomatis disembunyikan dari Data Siswa aktif, dan akun
+  // login-nya (jika ada) dinonaktifkan. Riwayat (absensi/nilai/tugas dst)
+  // tetap disimpan, tidak dihapus.
+  status    StatusSiswa @default(AKTIF)
+  lulusPada DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

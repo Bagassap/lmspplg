@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
@@ -44,6 +44,7 @@ export class SiswaService {
 
     return this.prisma.siswa.findMany({
       where: {
+        status: 'AKTIF',
         ...(kelasIdFilter ? { kelasId: kelasIdFilter } : {}),
         ...(jurusan ? { jurusan } : {}),
         ...(jenisKelamin ? { jenisKelamin } : {}),
@@ -182,12 +183,60 @@ export class SiswaService {
     const groups: { kelas: { id: string; nama: string }; siswa: Awaited<ReturnType<typeof this.prisma.siswa.findMany>> }[] = [];
     for (const kelas of kelasList) {
       const siswa = await this.prisma.siswa.findMany({
-        where: { kelasId: kelas.id, ...(jurusan ? { jurusan } : {}) },
+        where: { kelasId: kelas.id, status: 'AKTIF', ...(jurusan ? { jurusan } : {}) },
         include: { user: { select: { mustChangePassword: true } } },
         orderBy: { nama: 'asc' },
       });
       if (siswa.length > 0) groups.push({ kelas, siswa });
     }
     return groups;
+  }
+
+  // Kenaikan kelas: pindahkan semua siswa AKTIF dari satu kelas ke kelas
+  // lain sekaligus (mis. "X PPLG 1" -> "XI PPLG 1" di awal tahun ajaran
+  // baru). Kelas tujuan harus sudah dibuat lebih dulu lewat Kelola Kelas.
+  async naikkanKelas(dariKelasId: string, keKelasId: string) {
+    if (dariKelasId === keKelasId) {
+      throw new BadRequestException('Kelas asal dan tujuan tidak boleh sama');
+    }
+    const [dari, ke] = await Promise.all([
+      this.prisma.kelas.findUnique({ where: { id: dariKelasId } }),
+      this.prisma.kelas.findUnique({ where: { id: keKelasId } }),
+    ]);
+    if (!dari) throw new NotFoundException('Kelas asal tidak ditemukan');
+    if (!ke) throw new NotFoundException('Kelas tujuan tidak ditemukan');
+
+    const result = await this.prisma.siswa.updateMany({
+      where: { kelasId: dariKelasId, status: 'AKTIF' },
+      data: { kelasId: keKelasId },
+    });
+    return { jumlahSiswa: result.count, dariKelas: dari.nama, keKelas: ke.nama };
+  }
+
+  // Kelulusan: tandai semua siswa AKTIF di satu kelas (biasanya kelas XII)
+  // sebagai LULUS. Data siswa & seluruh riwayatnya TETAP disimpan, cuma
+  // otomatis hilang dari Data Siswa aktif — dan akun login mereka (kalau
+  // ada) dinonaktifkan supaya alumni tidak bisa login lagi.
+  async luluskanKelas(kelasId: string) {
+    const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId } });
+    if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
+
+    const siswaList = await this.prisma.siswa.findMany({
+      where: { kelasId, status: 'AKTIF' },
+      select: { id: true, userId: true },
+    });
+    const userIds = siswaList.filter((s) => s.userId).map((s) => s.userId!);
+
+    await this.prisma.$transaction([
+      this.prisma.siswa.updateMany({
+        where: { id: { in: siswaList.map((s) => s.id) } },
+        data: { status: 'LULUS', lulusPada: new Date() },
+      }),
+      ...(userIds.length > 0
+        ? [this.prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isActive: false } })]
+        : []),
+    ]);
+
+    return { jumlahSiswa: siswaList.length, kelas: kelas.nama };
   }
 }
