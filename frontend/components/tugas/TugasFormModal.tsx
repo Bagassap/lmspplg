@@ -52,7 +52,7 @@ function wibInputToIso(value: string) {
 }
 
 const TIPE_OPTIONS: { value: TugasTipe; label: string; icon: typeof Send; gradient: string; desc: string }[] = [
-  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "linear-gradient(135deg,#0033FF,#335CFF)", desc: "Siswa mengunggah file jawaban (PDF/ZIP), tanpa mode pengerjaan di LMS." },
+  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "linear-gradient(135deg,#0033FF,#335CFF)", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
   { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "linear-gradient(135deg,#00D67F,#00B368)", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
   { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "linear-gradient(135deg,#F59E0B,#EA580C)", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
   { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "linear-gradient(135deg,#2563EB,#1D4ED8)", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
@@ -329,10 +329,10 @@ export function TugasFormModal({
                     ) : tugas?.fileName ? (
                       <p className="truncate text-sm font-semibold text-gray-800 dark:text-slate-200">{tugas.fileName} <span className="font-normal text-gray-400">(saat ini, pilih untuk ganti)</span></p>
                     ) : (
-                      <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">Klik untuk unggah PDF/ZIP (maks. 20MB)</p>
+                      <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">Klik untuk unggah PDF/PPT/ZIP (maks. 20MB)</p>
                     )}
                   </div>
-                  <input ref={fileInputRef} type="file" accept=".pdf,.zip,application/pdf,application/zip,application/x-zip-compressed"
+                  <input ref={fileInputRef} type="file" accept=".pdf,.ppt,.pptx,.zip,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/zip,application/x-zip-compressed"
                     onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="hidden" />
                 </label>
               </div>

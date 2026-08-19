@@ -6,6 +6,8 @@ const DOCUMENT_MIME_TYPES = [
   'application/pdf',
   'application/zip',
   'application/x-zip-compressed',
+  'application/vnd.ms-powerpoint', // .ppt (format lama)
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
 ];
 
 function mimeFileFilter(allowed: string[]): MulterOptions['fileFilter'] {
