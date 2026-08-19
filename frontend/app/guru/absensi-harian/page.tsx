@@ -106,7 +106,7 @@ export default function GuruAbsensiHarianPage() {
   const [selectedId, setSelectedId] = useState<string>("");
   const [tanggal, setTanggal] = useState(() => todayJakarta());
   const exportRange = useExportRange(tanggal);
-  const [data, setData] = useState<RekapKelas | null>(null);
+  const [rekapAll, setRekapAll] = useState<RekapKelas[]>([]);
   const [loading, setLoading] = useState(false);
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
   const [dokumenSource, setDokumenSource] = useState<"hadir" | "pulang">("hadir");
@@ -124,32 +124,47 @@ export default function GuruAbsensiHarianPage() {
       .catch(() => {});
   }, []);
 
+  // Ambil rekap SEMUA kelas wali guru sekaligus (bukan cuma kelas terpilih)
+  // — sama seperti pola admin — supaya tiap kartu kelas bisa menampilkan
+  // statistik asli (hadir/total, persen, izin/sakit/alpa) tanpa syarat
+  // terpilih dulu, senada dengan desain kartu di halaman Admin.
   const loadRekap = useCallback(async () => {
-    if (!selectedId) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/absensi-harian?kelasId=${selectedId}&tanggal=${tanggal}`);
+      const res = await fetch(`/api/absensi-harian?tanggal=${tanggal}`);
       const list = await res.json().catch(() => []);
-      const d: RekapKelas | undefined = Array.isArray(list) ? list[0] : undefined;
-      setData(d ?? null);
+      setRekapAll(Array.isArray(list) ? list : []);
     } catch {
       toast.error("Gagal memuat data absensi", "");
     } finally {
       setLoading(false);
     }
-  }, [selectedId, tanggal]);
+  }, [tanggal]);
 
   useEffect(() => { loadRekap(); }, [loadRekap]);
 
   useEffect(() => { setTablePage(0); }, [selectedId, tanggal, activeFilter, tablePageSize]);
 
   const selectedKelas = kelasList.find((k) => k.id === selectedId);
-  const siswaList = data?.siswa ?? [];
-  const rekap = data?.rekap ?? { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
-  const pulangCount = data?.pulangCount ?? 0;
+  const selected = rekapAll.find((r) => r.kelasId === selectedId) ?? null;
+  const siswaList = selected?.siswa ?? [];
+  const rekap = selected?.rekap ?? { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+  const pulangCount = selected?.pulangCount ?? 0;
   const total = siswaList.length;
   const sudahAbsen = siswaList.filter((s) => s.status !== null).length;
   const hadirPct = total > 0 ? Math.round((rekap.HADIR / total) * 100) : 0;
+
+  function kelasStat(k: Kelas) {
+    const idx = kelasList.findIndex((x) => x.id === k.id);
+    const r = rekapAll.find((x) => x.kelasId === k.id);
+    const hd = r?.rekap.HADIR ?? 0;
+    const iz = r?.rekap.IZIN ?? 0;
+    const sk = r?.rekap.SAKIT ?? 0;
+    const al = r?.rekap.ALPA ?? 0;
+    const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
+    return { idx: idx < 0 ? 0 : idx, hd, iz, sk, al, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
+  }
+
   // No pagination anymore — kelasList renders in full (grid-cols-4 wraps to
   // extra rows past 4). DonutRingkasan only needs to know how many empty
   // slots are left in the LAST row; 0 means the last row is already full
@@ -238,12 +253,12 @@ export default function GuruAbsensiHarianPage() {
 
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {kelasList.map((k) => {
-                  const idx = kelasList.findIndex((x) => x.id === k.id);
+                  const s = kelasStat(k);
                   const isSelected = k.id === selectedId;
-                  const gradient = WALLET_GRADIENTS[(idx < 0 ? 0 : idx) % WALLET_GRADIENTS.length];
+                  const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
                   return (
                     <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      className={`relative flex h-72 flex-col overflow-hidden rounded-3xl p-4 text-left text-white transition-all ${isSelected ? "justify-between" : "justify-start gap-3"}`}
+                      className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
                       style={{
                         background: gradient,
                         boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
@@ -254,33 +269,22 @@ export default function GuruAbsensiHarianPage() {
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/25">
                           <BookOpen size={14} />
                         </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-bold">{k.nama}</p>
-                          <p className="truncate text-[10px] font-medium text-white/70">{k._count?.siswa ?? 0} siswa</p>
+                        <p className="truncate text-sm font-bold">{k.nama}</p>
+                      </div>
+
+                      <div className="relative">
+                        <p className="text-2xl font-extrabold tabular-nums">
+                          {s.hd}<span className="text-sm font-semibold text-white/70">/{s.tt}</span>
+                        </p>
+                        <p className="text-[11px] font-semibold text-white/80">Hadir · {s.pct}%</p>
+                        <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
+                          <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
                         </div>
                       </div>
 
-                      {isSelected ? (
-                        <>
-                          <div className="relative">
-                            <p className="text-2xl font-extrabold tabular-nums">
-                              {sudahAbsen}<span className="text-sm font-semibold text-white/70">/{total}</span>
-                            </p>
-                            <p className="text-[11px] font-semibold text-white/80">Hadir · {hadirPct}%</p>
-                            <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
-                              <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${hadirPct}%` }} />
-                            </div>
-                          </div>
-
-                          <p className="relative text-[10px] font-medium text-white/70">
-                            Izin {rekap.IZIN} · Sakit {rekap.SAKIT} · Alpa {rekap.ALPA}
-                          </p>
-                        </>
-                      ) : (
-                        <div className="relative">
-                          <p className="text-[11px] font-semibold text-white/80">Klik untuk lihat detail kehadiran hari ini</p>
-                        </div>
-                      )}
+                      <p className="relative text-[10px] font-medium text-white/70">
+                        Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
+                      </p>
                     </button>
                   );
                 })}
