@@ -19,7 +19,11 @@ import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
-function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama }: {
+function RingkasanKehadiranCard({
+  kelasList, selectedId, onSelectKelas, kelasStat, rekap, hadirPct, total, pulangCount, belumAbsen, kelasNama,
+}: {
+  kelasList: Kelas[]; selectedId: string; onSelectKelas: (id: string) => void;
+  kelasStat: (k: Kelas) => { hd: number; tt: number; pct: number };
   rekap: RekapKelas["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; kelasNama?: string;
 }) {
   const segments = [
@@ -33,7 +37,7 @@ function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelas
   let cumulative = 0;
 
   return (
-    <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:w-80 sm:shrink-0">
+    <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-2.5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0EA5E9,#0369A1)" }}>
           <PieChart size={18} />
@@ -46,37 +50,68 @@ function DonutRingkasan({ rekap, hadirPct, total, pulangCount, belumAbsen, kelas
         </div>
       </div>
 
-      <div className="flex flex-1 flex-wrap items-center justify-center gap-6">
-        <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
-          <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
-            <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
-            {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
-              const pct = s.value / total;
-              const dash = pct * circumference;
-              const offset = circumference * (1 - cumulative);
-              cumulative += pct;
-              return (
-                <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
-                  strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
-              );
-            })}
-          </svg>
-          <div className="absolute flex flex-col items-center">
-            <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
-            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
-          </div>
+      <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
+        <div className="flex flex-1 flex-wrap content-start gap-2.5">
+          {kelasList.map((k) => {
+            const s = kelasStat(k);
+            const isSelected = k.id === selectedId;
+            return (
+              <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
+                className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                  isSelected
+                    ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                    : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                }`}>
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                  isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                }`}>
+                  <BookOpen size={16} />
+                </span>
+                <div className="min-w-0">
+                  <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                    {k.nama}
+                  </p>
+                  <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                    {s.hd}/{s.tt} hadir · {s.pct}%
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
-        <div className="flex flex-col gap-2.5">
-          {segments.map((s) => (
-            <div key={s.key} className="flex items-center gap-2 text-left">
-              <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+
+        <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
+          <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
+            <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
+              <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
+              {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
+                const pct = s.value / total;
+                const dash = pct * circumference;
+                const offset = circumference * (1 - cumulative);
+                cumulative += pct;
+                return (
+                  <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
+                    strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
+                );
+              })}
+            </svg>
+            <div className="absolute flex flex-col items-center">
+              <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
             </div>
-          ))}
+          </div>
+          <div className="flex flex-col gap-2.5">
+            {segments.map((s) => (
+              <div key={s.key} className="flex items-center gap-2 text-left">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
         <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
           <Users size={12} className="text-sky-500" />
           Total {total} siswa
@@ -231,43 +266,10 @@ export default function GuruAbsensiHarianPage() {
         <div className="mb-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
             <div className="lg:col-span-2">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
-              </div>
-
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-stretch">
-                <div className="flex flex-1 flex-wrap content-start gap-2.5">
-                  {kelasList.map((k) => {
-                    const s = kelasStat(k);
-                    const isSelected = k.id === selectedId;
-                    return (
-                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${
-                          isSelected
-                            ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
-                            : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
-                        }`}>
-                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                          isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                        }`}>
-                          <BookOpen size={16} />
-                        </span>
-                        <div className="min-w-0">
-                          <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
-                            {k.nama}
-                          </p>
-                          <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                            {s.hd}/{s.tt} hadir · {s.pct}%
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <DonutRingkasan rekap={rekap} hadirPct={hadirPct} total={total}
-                  pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama} />
-              </div>
+              <RingkasanKehadiranCard
+                kelasList={kelasList} selectedId={selectedId} onSelectKelas={setSelectedId} kelasStat={kelasStat}
+                rekap={rekap} hadirPct={hadirPct} total={total}
+                pulangCount={pulangCount} belumAbsen={total - sudahAbsen} kelasNama={selectedKelas?.nama} />
             </div>
 
             <div className="flex flex-col">
