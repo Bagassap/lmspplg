@@ -219,8 +219,7 @@ export function TugasFormModal({
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
             className={`relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800 ${tipe === "PRAKTIK" || isSoalBased ? "max-w-3xl" : "max-w-lg"}`}
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5"
-              style={{ background: "linear-gradient(135deg,#0033FF,#335CFF,#5B8DEF)" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0033FF] px-6 py-5">
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                 <ClipboardList size={18} className="text-white" />
@@ -360,7 +359,7 @@ export function TugasFormModal({
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                      style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                      style={{ background: "#0033FF" }}>
                       <Plus size={12} /> Tambah Soal
                     </button>
                   </div>
@@ -448,7 +447,7 @@ export function TugasFormModal({
               </button>
               <button type="button" onClick={handleSubmit} disabled={saving}
                 className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                style={{ background: "#0033FF" }}>
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Tugas"}
               </button>

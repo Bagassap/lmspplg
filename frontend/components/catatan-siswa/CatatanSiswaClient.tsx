@@ -220,7 +220,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
                         <td className="whitespace-nowrap px-4 py-3 text-right">
                           <button onClick={() => setDetailId(s.siswaId)}
                             className="rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
-                            style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                            style={{ background: "#0033FF" }}>
                             Lihat &amp; Catat
                           </button>
                         </td>
@@ -424,7 +424,7 @@ function CatatanDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-800" onClick={(e) => e.stopPropagation()}>
-        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#0033FF" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
           <div className="relative flex items-center justify-between">
             <div className="min-w-0">
@@ -470,7 +470,7 @@ function CatatanDetailModal({
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Batal</button>
                 <button type="submit" disabled={saving}
                   className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                  style={{ background: "#0033FF" }}>
                   {saving && <Loader2 size={13} className="animate-spin" />}
                   {editTarget ? "Simpan Perubahan" : "Simpan Catatan"}
                 </button>

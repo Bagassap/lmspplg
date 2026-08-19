@@ -35,7 +35,7 @@ export function RevisiFormModal({
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "linear-gradient(135deg,#F59E0B,#F97316)" }}>
+            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#F59E0B" }}>
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
@@ -77,7 +77,7 @@ export function RevisiFormModal({
               </button>
               <button onClick={submit} disabled={!pesan.trim() || sending}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-110"
-                style={{ background: "linear-gradient(135deg,#F59E0B,#F97316)" }}>
+                style={{ background: "#F59E0B" }}>
                 <span className="flex items-center justify-center gap-2">
                   <AlertCircle size={14} /> {sending ? "Mengirim…" : "Kirim Revisi"}
                 </span>

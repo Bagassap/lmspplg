@@ -19,7 +19,7 @@ export function TugasJawabanViewerModal({
   onSaveNilai?: (nilai: number) => Promise<void>;
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
-  const gradient = isPg ? "linear-gradient(135deg,#F59E0B 0%,#EA580C 100%)" : "linear-gradient(135deg,#2563EB 0%,#1D4ED8 100%)";
+  const warna = isPg ? "#F59E0B" : "#2563EB";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
   const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
@@ -51,7 +51,7 @@ export function TugasJawabanViewerModal({
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ type: "spring", damping: 24, stiffness: 320 }}
             className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: gradient }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                 {isPg ? <ListChecks size={18} className="text-white" /> : <PenLine size={18} className="text-white" />}
@@ -154,7 +154,7 @@ export function TugasJawabanViewerModal({
                   className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                 <button onClick={handleSaveNilai} disabled={saving || nilaiInput === ""}
                   className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                  style={{ background: "#0033FF" }}>
                   <Save size={13} /> {saving ? "Menyimpan…" : "Simpan Nilai"}
                 </button>
                 {nilai != null && <span className="text-[11px] text-slate-400">Nilai tersimpan: {nilai}</span>}

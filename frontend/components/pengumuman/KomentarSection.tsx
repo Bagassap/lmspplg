@@ -174,7 +174,7 @@ function KomentarBubble({
                     onClick={submitReply}
                     disabled={sending || !replyText.trim()}
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
-                    style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}
+                    style={{ background: "#4338ca" }}
                   >
                     {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   </button>
@@ -327,7 +327,7 @@ export function KomentarSection({
             onClick={submitKomentar}
             disabled={sending || !teks.trim()}
             className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(37,99,235,0.45)] active:scale-95"
-            style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}
+            style={{ background: "#4338ca" }}
           >
             {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             {sending ? "Mengirim…" : "Kirim"}

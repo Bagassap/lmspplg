@@ -119,7 +119,7 @@ export function PengumumanFormModal({
           >
             <div
               className="relative flex items-center gap-3 overflow-hidden px-6 py-5"
-              style={{ background: "linear-gradient(135deg,#6334F4 0%,#977DFF 100%)" }}
+              style={{ background: "#6334F4" }}
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -230,7 +230,7 @@ export function PengumumanFormModal({
                   type="submit"
                   disabled={saving}
                   className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                  style={{ background: "linear-gradient(135deg,#6334F4,#977DFF)" }}
+                  style={{ background: "#6334F4" }}
                 >
                   {saving && <Loader2 size={14} className="animate-spin" />}
                   {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Publikasikan"}

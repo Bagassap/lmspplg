@@ -66,7 +66,7 @@ function SubmitPraktikModal({
         transition={{ type: "spring", damping: 24, stiffness: 320 }}
         className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-          style={{ background: "linear-gradient(135deg,#00D67F 0%,#00B368 100%)" }}>
+          style={{ background: "#00D67F" }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
             <Code2 size={18} className="text-white" />
@@ -110,7 +110,7 @@ function SubmitPraktikModal({
             </div>
             <button onClick={submit} disabled={saving}
               className="flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#00D67F,#00B368)" }}>
+              style={{ background: "#00D67F" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Tugas</>}
             </button>
           </div>
@@ -152,7 +152,7 @@ function SubmitFileModal({
         transition={{ type: "spring", damping: 26, stiffness: 340 }}
         className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}>
-        <div className="relative px-6 py-5 overflow-hidden" style={{ background: "linear-gradient(135deg,#00D67F 0%,#00B368 100%)" }}>
+        <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#00D67F" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ function SubmitFileModal({
             </button>
             <button type="submit" disabled={saving || !file}
               className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-              style={{ background: "linear-gradient(135deg,#00D67F,#00B368)" }}>
+              style={{ background: "#00D67F" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kumpulkan</>}
             </button>
           </div>
@@ -231,7 +231,7 @@ function SubmitSoalModal({
   });
   const [catatan, setCatatan] = useState("");
   const [saving, setSaving] = useState(false);
-  const gradient = isPg ? "linear-gradient(135deg,#F59E0B 0%,#EA580C 100%)" : "linear-gradient(135deg,#2563EB 0%,#1D4ED8 100%)";
+  const warna = isPg ? "#F59E0B" : "#2563EB";
 
   async function submit() {
     setSaving(true);
@@ -256,7 +256,7 @@ function SubmitSoalModal({
       <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
         transition={{ type: "spring", damping: 24, stiffness: 320 }}
         className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: gradient }}>
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
             {isPg ? <ListChecks size={18} className="text-white" /> : <PenLine size={18} className="text-white" />}
@@ -328,7 +328,7 @@ function SubmitSoalModal({
           </div>
           <button onClick={submit} disabled={saving || soalList.length === 0}
             className="flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm disabled:opacity-60"
-            style={{ background: gradient }}>
+            style={{ background: warna }}>
             {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Jawaban</>}
           </button>
         </div>

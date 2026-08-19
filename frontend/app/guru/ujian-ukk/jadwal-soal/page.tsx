@@ -144,7 +144,7 @@ export default function GuruJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#fb923c,#ea580c)"}}>
+                      style={{background:"#fb923c"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <CalendarDays size={22} className="text-white"/>
@@ -200,7 +200,7 @@ export default function GuruJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
+                      style={{background:"#0033FF"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <FileText size={22} className="text-white"/>

@@ -54,7 +54,7 @@ export function MateriPdfViewerModal({ materi, onClose }: { materi: MateriItem |
             className="relative flex h-[92dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
 
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-              style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+              style={{ background: "#0033FF" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                 <BookOpen size={18} className="text-white" />
@@ -87,7 +87,7 @@ export function MateriPdfViewerModal({ materi, onClose }: { materi: MateriItem |
                 </div>
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md"
-                  style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                  style={{ background: "#0033FF" }}>
                   <Download size={14} /> Unduh File
                 </a>
               </div>
@@ -140,7 +140,7 @@ export function MateriPdfViewerModal({ materi, onClose }: { materi: MateriItem |
                   <p className="min-w-0 flex-1 truncate text-xs text-slate-400">{materi.fileName}</p>
                   <a href={fileUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shrink-0"
-                    style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                    style={{ background: "#0033FF" }}>
                     <Download size={14} /> Unduh PDF
                   </a>
                 </div>

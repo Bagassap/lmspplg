@@ -197,12 +197,12 @@ export function SubmisiTugasModal({
                         <div className="flex gap-2 shrink-0">
                           <button onClick={() => onTerima(s.id)}
                             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "linear-gradient(135deg,#00D67F,#00B368)" }}>
+                            style={{ background: "#00D67F" }}>
                             <CheckCircle size={12} /> Terima
                           </button>
                           <button onClick={() => onRevisi(s)}
                             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "linear-gradient(135deg,#F59E0B,#F97316)" }}>
+                            style={{ background: "#F59E0B" }}>
                             <AlertCircle size={12} /> Revisi
                           </button>
                         </div>

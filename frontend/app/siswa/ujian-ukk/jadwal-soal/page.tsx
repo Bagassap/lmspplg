@@ -81,7 +81,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={e=>e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{background:"linear-gradient(135deg,#00D67F 0%,#00B368 100%)"}}>
+              style={{background:"#00D67F"}}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -150,7 +150,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </button>
                 <button type="submit" disabled={saving || !driveUrl.trim()}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
+                  style={{background:"#00D67F"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
               </div>
@@ -288,7 +288,7 @@ export default function SiswaJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#fb923c,#ea580c)"}}>
+                      style={{background:"#fb923c"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <CalendarDays size={22} className="text-white"/>
@@ -336,7 +336,7 @@ export default function SiswaJadwalSoalPage() {
                     className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
+                      style={{background:"#0033FF"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                       <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                         <FileText size={22} className="text-white"/>
@@ -576,9 +576,7 @@ export default function SiswaJadwalSoalPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: detailTarget.status==="DITERIMA"
-                  ? "linear-gradient(135deg,#00D67F,#00B368)"
-                  : "linear-gradient(135deg,#6366F1,#4F46E5)"}}>
+                style={{background: detailTarget.status==="DITERIMA" ? "#00D67F" : "#6366F1"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -628,7 +626,7 @@ export default function SiswaJadwalSoalPage() {
                 </div>
                 <a href={detailTarget.fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{background:"linear-gradient(135deg,#4285F4,#1A73E8)"}}>
+                  style={{background:"#4285F4"}}>
                   <ExternalLink size={14}/> Buka Google Drive
                 </a>
               </div>
@@ -648,7 +646,7 @@ export default function SiswaJadwalSoalPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                style={{background:"#F59E0B"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -696,7 +694,7 @@ export default function SiswaJadwalSoalPage() {
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2"
-                  style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                  style={{background:"#F59E0B"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

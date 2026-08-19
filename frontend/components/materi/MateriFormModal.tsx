@@ -119,8 +119,7 @@ export function MateriFormModal({
             className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800"
           >
             <div
-              className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5"
-              style={{ background: "linear-gradient(135deg,#0033FF 0%,#335CFF 100%)" }}
+              className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0033FF] px-6 py-5"
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -222,8 +221,7 @@ export function MateriFormModal({
                 type="button"
                 onClick={handleSubmit}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}
+                className="flex items-center gap-2 rounded-xl bg-[#0033FF] px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
               >
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Materi"}

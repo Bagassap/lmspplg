@@ -15,12 +15,12 @@ import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
-const KATEGORI_GRADIENT: Record<string, string> = {
-  Umum:     "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)",
-  Akademik: "linear-gradient(135deg,#0033FF 0%,#2952FF 100%)",
-  Magang:   "linear-gradient(135deg,#FF7867 0%,#FF5A45 100%)",
-  Ujian:    "linear-gradient(135deg,#FF3644 0%,#CC1A26 100%)",
-  Lainnya:  "linear-gradient(135deg,#FFC25B 0%,#FFa020 100%)",
+const KATEGORI_WARNA: Record<string, string> = {
+  Umum:     "#4338ca",
+  Akademik: "#0033FF",
+  Magang:   "#FF7867",
+  Ujian:    "#FF3644",
+  Lainnya:  "#FFC25B",
 };
 
 const PRIORITAS_BADGE: Record<string, { cls: string; label: string }> = {
@@ -119,7 +119,7 @@ export default function PengumumanDetailModal({
     setPinning(false);
   }
 
-  const grad    = pengumuman ? (KATEGORI_GRADIENT[pengumuman.kategori] ?? KATEGORI_GRADIENT.Umum) : KATEGORI_GRADIENT.Umum;
+  const grad    = pengumuman ? (KATEGORI_WARNA[pengumuman.kategori] ?? KATEGORI_WARNA.Umum) : KATEGORI_WARNA.Umum;
   const pb      = pengumuman ? PRIORITAS_BADGE[pengumuman.prioritas] : null;
 
   return (

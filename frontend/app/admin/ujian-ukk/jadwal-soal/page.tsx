@@ -163,8 +163,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
             className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden"
             style={{ maxHeight: "92vh" }}>
 
-            <div className="relative flex items-center gap-4 px-6 py-5 overflow-hidden"
-              style={{ background: "linear-gradient(135deg,#0033FF,#335CFF,#5B8DEF)" }}>
+            <div className="relative flex items-center gap-4 overflow-hidden bg-[#0033FF] px-6 py-5">
               <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none"/>
               <div className="absolute -bottom-6 right-20 w-28 h-28 rounded-full bg-white/7 pointer-events-none"/>
               <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -270,7 +269,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                 <motion.button type="submit" disabled={saving}
                   whileHover={{ scale: saving ? 1 : 1.02 }} whileTap={{ scale: saving ? 1 : 0.97 }}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                  style={{ background: "#0033FF" }}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Menyimpan...</> : <><Send size={13}/> {isEdit ? "Perbarui" : "Simpan Task"}</>}
                 </motion.button>
               </div>
@@ -282,9 +281,9 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
   );
 }
 
-function TambahFileModal({ open, onClose, onUpload, tahapanList, title, gradient, showTahapan }: {
+function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, showTahapan }: {
   open: boolean; onClose: () => void; onUpload: (fd: FormData) => Promise<void>;
-  tahapanList: Tahapan[]; title: string; gradient: string; showTahapan?: boolean;
+  tahapanList: Tahapan[]; title: string; warna: string; showTahapan?: boolean;
 }) {
   const [judul, setJudul]           = useState("");
   const [keterangan, setKeterangan] = useState("");
@@ -326,7 +325,7 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, gradient
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={(e)=>e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{background: gradient}}>
+            <div className="relative px-6 py-5 overflow-hidden" style={{background: warna}}>
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-extrabold text-white">{title}</h2>
@@ -382,7 +381,7 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, gradient
                 </button>
                 <button type="submit" disabled={saving || !file || (showTahapan ? !tahapanId : false)}
                   className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-60"
-                  style={{background: gradient}}>
+                  style={{background: warna}}>
                   {saving ? "Mengupload..." : "Upload"}
                 </button>
               </div>
@@ -654,7 +653,7 @@ export default function AdminJadwalSoalPage() {
                   style={{maxHeight:"92vh"}}>
 
                   <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                    style={{background:"linear-gradient(135deg,#fb923c,#ea580c)"}}>
+                    style={{background:"#fb923c"}}>
                     <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                     <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -734,7 +733,7 @@ export default function AdminJadwalSoalPage() {
                     return (
                       <>
                         <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                          style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
+                          style={{background:"#0033FF"}}>
                           <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                           <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
                           <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -1057,12 +1056,12 @@ export default function AdminJadwalSoalPage() {
                           <div className="flex gap-2 shrink-0">
                             <button onClick={() => updateStatus(s.id, "DITERIMA")}
                               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                              style={{background:"linear-gradient(135deg,#00D67F,#00B368)"}}>
+                              style={{background:"#00D67F"}}>
                               <CheckCircle size={12}/> Terima
                             </button>
                             <button onClick={() => { setRevisiTarget(s); setPesanRevisi(""); }}
                               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                              style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                              style={{background:"#F59E0B"}}>
                               <AlertCircle size={12}/> Revisi
                             </button>
                           </div>
@@ -1105,7 +1104,7 @@ export default function AdminJadwalSoalPage() {
         }}
         tahapanList={filePool ? [filePool] : []}
         title="Tambah Jadwal"
-        gradient="linear-gradient(135deg,#fb923c,#ea580c)"
+        warna="#fb923c"
         showTahapan={false}
       />
 
@@ -1119,7 +1118,7 @@ export default function AdminJadwalSoalPage() {
         }}
         tahapanList={filePool ? [filePool] : []}
         title="Upload Soal"
-        gradient="linear-gradient(135deg,#0033FF,#335CFF)"
+        warna="#0033FF"
         showTahapan={false}
       />
 
@@ -1134,7 +1133,7 @@ export default function AdminJadwalSoalPage() {
               onClick={(e)=>e.stopPropagation()}>
 
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                style={{background:"#F59E0B"}}>
                 <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
@@ -1177,7 +1176,7 @@ export default function AdminJadwalSoalPage() {
                 </button>
                 <button onClick={kirimRevisi} disabled={!pesanRevisi.trim()}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-110"
-                  style={{background:"linear-gradient(135deg,#F59E0B,#F97316)"}}>
+                  style={{background:"#F59E0B"}}>
                   <span className="flex items-center justify-center gap-2">
                     <AlertCircle size={14}/> Kirim Revisi
                   </span>
