@@ -6,10 +6,15 @@ import { motion } from "framer-motion";
 const KARTU_PELAJAR_URL = "https://e-kartu.smklimpung.id";
 
 // Sengaja dibuat sebagai strip promo yang ramping dan ringan (bukan blok
-// hero besar seperti DataSiswaHeader) — bila keduanya memakai bentuk yang
-// sama (rounded besar, background solid penuh, dekorasi lingkaran blur),
-// banner ini akan terkesan menyaingi header alih-alih jadi elemen sekunder.
-export function KartuPelajarBanner() {
+// hero besar seperti header dashboard/Data Siswa) — bila keduanya memakai
+// bentuk yang sama (rounded besar, background solid penuh, dekorasi
+// lingkaran blur), banner ini akan terkesan menyaingi header alih-alih
+// jadi elemen sekunder. Dipakai di Data Siswa (Admin/Guru) & Dashboard Siswa.
+export function KartuPelajarBanner({
+  description = "Cek & cetak kartu pelajar siswa lewat portal e-Kartu",
+}: {
+  description?: string;
+}) {
   return (
     <motion.a
       href={KARTU_PELAJAR_URL}
@@ -29,7 +34,7 @@ export function KartuPelajarBanner() {
             <p className="text-sm font-extrabold text-amber-900 dark:text-amber-300">Kartu Pelajar Digital</p>
             <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-bold text-white">Baru</span>
           </div>
-          <p className="text-xs text-amber-700/80 dark:text-amber-400/70">Cek &amp; cetak kartu pelajar siswa lewat portal e-Kartu</p>
+          <p className="text-xs text-amber-700/80 dark:text-amber-400/70">{description}</p>
         </div>
       </div>
 

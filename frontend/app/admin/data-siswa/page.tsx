@@ -5,7 +5,7 @@ import { Users, User, School } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
-import { KartuPelajarBanner } from "@/components/data-siswa/KartuPelajarBanner";
+import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
 import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";

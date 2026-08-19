@@ -9,6 +9,7 @@ import {
   Thermometer, Calendar, Megaphone, Clock, ClipboardCheck, GraduationCap,
 } from "lucide-react";
 import GreetingHero from "@/components/dashboard/GreetingHero";
+import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
@@ -177,6 +178,8 @@ export default function SiswaDashboardPage() {
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <GreetingHero nama={user.nama} role={user.role} kelas={data.kelas} />
         </motion.div>
+
+        <KartuPelajarBanner description="Cek & cetak kartu pelajarmu lewat portal e-Kartu" />
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatsCard icon={CheckCircle} label="Hadir"     value={absensi.hadir}      sub="Hari tercatat hadir" index={0} delay={0.05} />
