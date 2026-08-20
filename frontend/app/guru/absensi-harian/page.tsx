@@ -446,6 +446,9 @@ export default function GuruAbsensiHarianPage() {
                 tablePageSize={tablePageSize}
                 setTablePageSize={setTablePageSize}
                 onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+                kelasId={selectedId}
+                tanggal={tanggal}
+                onStatusUpdated={loadRekap}
               />
             </div>
           </div>
