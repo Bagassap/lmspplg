@@ -130,6 +130,7 @@ export function Sidebar({
   const pathname = usePathname();
   const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
   const isGuru = user.role === "GURU";
+  const isSiswa = user.role === "SISWA";
 
   // null = belum diketahui (belum selesai fetch) — selama itu menu Materi
   // tetap ditampilkan agar tidak flicker untuk mayoritas guru yang punya mapel;
@@ -147,11 +148,39 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [isGuru]);
 
-  const items = (MENUS[user.role] ?? []).filter((item) => {
-    if (item.key === "manajemen-password") return isSuperAdmin;
-    if (item.key === "materi" && isGuru) return guruHasMapel !== false;
-    return true;
-  });
+  // PKL & UKK cuma relevan buat siswa kelas XII — kelas X/XI tetap lihat menu
+  // ini (biar tahu fiturnya ada) tapi terkunci ke halaman "Coming Soon", lalu
+  // otomatis kebuka sendiri begitu siswa naik ke XII (kenaikan kelas ganti
+  // kelasId-nya, tidak perlu toggle manual apa pun). Default false (terkunci)
+  // selama status kelas belum dikonfirmasi, supaya X/XI tidak sempat kelihatan
+  // submenu asli walau sekejap. Tidak berlaku untuk guru/admin — sisi admin
+  // (mis. Tempatkan Siswa) tetap menampilkan siswa dari semua kelas.
+  const [siswaKelasXII, setSiswaKelasXII] = useState(false);
+  useEffect(() => {
+    if (!isSiswa) return;
+    let cancelled = false;
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((me: { siswa?: { kelas?: { nama?: string } } } | null) => {
+        if (cancelled) return;
+        const namaKelas = me?.siswa?.kelas?.nama?.trim().toUpperCase() ?? "";
+        setSiswaKelasXII(namaKelas.startsWith("XII"));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isSiswa]);
+
+  const items = (MENUS[user.role] ?? [])
+    .filter((item) => {
+      if (item.key === "manajemen-password") return isSuperAdmin;
+      if (item.key === "materi" && isGuru) return guruHasMapel !== false;
+      return true;
+    })
+    .map((item) => {
+      if (!isSiswa || (item.key !== "magang" && item.key !== "ujian-ukk")) return item;
+      if (siswaKelasXII) return { ...item, locked: false, href: undefined };
+      return { ...item, locked: true, href: item.key === "magang" ? "/siswa/magang" : "/siswa/ujian-ukk" };
+    });
 
   const [pendingResetCount, setPendingResetCount] = useState(0);
   useEffect(() => {
