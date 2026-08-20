@@ -2,15 +2,16 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Briefcase, X, Search } from "lucide-react";
+import { Briefcase, X, Search, Pencil } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { getNama, toTitleCase } from "@/components/data-siswa/shared";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColorFor, getNama, toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
 import type { TempatMagang, PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
+const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0033FF]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
 
 export function TempatkanSiswaModal({
   siswaList, tempatList, guruList, penempatanList, onClose, onSaved,
@@ -41,6 +42,15 @@ export function TempatkanSiswaModal({
       .filter((s) => (search ? getNama(s).toLowerCase().includes(search.toLowerCase()) || s.nis.includes(search) : true)),
     [siswaList, siswaAktifIds, search],
   );
+  const siswaTerpilih = siswaList.find((s) => s.id === siswaId) ?? null;
+
+  function pilihSiswa(s: SiswaCardData) {
+    setSiswaId(s.id);
+    setSearch("");
+  }
+  function gantiSiswa() {
+    setSiswaId("");
+  }
 
   async function save() {
     if (!siswaId || !tempatId || !guruId || !tanggalMulai) {
@@ -77,33 +87,64 @@ export function TempatkanSiswaModal({
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/30">
-              <Briefcase size={16} className="text-violet-500" />
-            </div>
-            <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">Tempatkan Siswa PKL</h2>
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0033FF] px-6 py-5">
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+            <Briefcase size={18} className="text-white" />
           </div>
-          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-            <X size={16} className="text-slate-400" />
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</p>
+            <h2 className="text-base font-extrabold text-white">Tempatkan Siswa PKL</h2>
+          </div>
+          <button onClick={onClose}
+            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+            <X size={15} />
           </button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-5">
           <div>
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Siswa</label>
-            <div className="mb-1.5 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900">
-              <Search size={13} className="text-slate-400" />
-              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama/NIS…"
-                className="w-full bg-transparent text-sm focus:outline-none dark:text-slate-200" />
-            </div>
-            <select value={siswaId} onChange={(e) => setSiswaId(e.target.value)} size={5} className={`${INPUT_CLS} h-auto`}>
-              {siswaTersedia.length === 0 && <option value="" disabled>Tidak ada siswa tersedia</option>}
-              {siswaTersedia.map((s) => (
-                <option key={s.id} value={s.id}>{toTitleCase(getNama(s))} — {s.nis} · {s.kelas.nama}</option>
-              ))}
-            </select>
-            <p className="mt-1 text-[10px] text-slate-400">Hanya menampilkan siswa yang belum punya penempatan PKL aktif.</p>
+            {siswaTerpilih ? (
+              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-800/60">
+                <Avatar src={siswaTerpilih.user?.fotoProfil} nama={toTitleCase(getNama(siswaTerpilih))} sizePx={32}
+                  fallbackBg={avatarColorFor(getNama(siswaTerpilih))} textClassName="text-[10px] font-extrabold" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{toTitleCase(getNama(siswaTerpilih))}</p>
+                  <p className="truncate text-[11px] text-slate-400">{siswaTerpilih.nis} · {siswaTerpilih.kelas.nama}</p>
+                </div>
+                <button type="button" onClick={gantiSiswa}
+                  className="flex shrink-0 items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#0033FF] shadow-sm hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
+                  <Pencil size={11} /> Ganti
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900">
+                  <Search size={14} className="shrink-0 text-slate-400" />
+                  <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama atau NIS…" autoFocus
+                    className="w-full bg-transparent text-sm focus:outline-none dark:text-slate-200" />
+                </div>
+                <div className="mt-1.5 max-h-52 space-y-1 overflow-y-auto rounded-xl border border-slate-100 p-1.5 dark:border-slate-700/50">
+                  {siswaTersedia.length === 0 ? (
+                    <p className="py-6 text-center text-xs text-slate-400">Tidak ada siswa tersedia</p>
+                  ) : (
+                    siswaTersedia.map((s) => (
+                      <button key={s.id} type="button" onClick={() => pilihSiswa(s)}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
+                        <Avatar src={s.user?.fotoProfil} nama={toTitleCase(getNama(s))} sizePx={30}
+                          fallbackBg={avatarColorFor(getNama(s))} textClassName="text-[10px] font-extrabold" />
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{toTitleCase(getNama(s))}</p>
+                          <p className="truncate text-[11px] text-slate-400">{s.nis} · {s.kelas.nama}</p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+                <p className="mt-1 text-[10px] text-slate-400">Hanya menampilkan siswa yang belum punya penempatan PKL aktif.</p>
+              </>
+            )}
           </div>
 
           <div>
@@ -149,8 +190,7 @@ export function TempatkanSiswaModal({
             Batal
           </button>
           <button onClick={save} disabled={saving}
-            className="rounded-xl px-5 py-2 text-xs font-bold text-white disabled:opacity-50"
-            style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+            className="rounded-xl bg-[#0033FF] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
             {saving ? "Menyimpan..." : "Tempatkan"}
           </button>
         </div>
