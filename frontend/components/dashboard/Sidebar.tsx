@@ -129,9 +129,29 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
-  const items = (MENUS[user.role] ?? []).filter(
-    (item) => item.key !== "manajemen-password" || isSuperAdmin,
-  );
+  const isGuru = user.role === "GURU";
+
+  // null = belum diketahui (belum selesai fetch) — selama itu menu Materi
+  // tetap ditampilkan agar tidak flicker untuk mayoritas guru yang punya mapel;
+  // baru disembunyikan begitu terkonfirmasi guru ini tidak diampu mapel apa pun.
+  const [guruHasMapel, setGuruHasMapel] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!isGuru) return;
+    let cancelled = false;
+    fetch("/api/mapel/saya", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: string[]) => {
+        if (!cancelled) setGuruHasMapel(Array.isArray(list) && list.length > 0);
+      })
+      .catch(() => { if (!cancelled) setGuruHasMapel(true); });
+    return () => { cancelled = true; };
+  }, [isGuru]);
+
+  const items = (MENUS[user.role] ?? []).filter((item) => {
+    if (item.key === "manajemen-password") return isSuperAdmin;
+    if (item.key === "materi" && isGuru) return guruHasMapel !== false;
+    return true;
+  });
 
   const [pendingResetCount, setPendingResetCount] = useState(0);
   useEffect(() => {
