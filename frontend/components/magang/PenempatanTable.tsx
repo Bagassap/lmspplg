@@ -10,7 +10,7 @@ import type { PenempatanMagang, StatusPenempatan } from "./types";
 const PAGE_SIZE = 10;
 
 function fmtTgl(iso: string): string {
-  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 export function PenempatanTable({

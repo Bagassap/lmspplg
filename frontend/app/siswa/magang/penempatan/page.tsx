@@ -7,7 +7,7 @@ import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
 import type { PenempatanMagang } from "@/components/magang/types";
 
 function fmt(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 export default function SiswaMagangPenempatanPage() {

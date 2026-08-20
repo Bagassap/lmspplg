@@ -7,6 +7,10 @@ import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
 import type { PenempatanMagang } from "@/components/magang/types";
 
+function fmtTgl(iso: string): string {
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
+}
+
 export default function GuruMagangPenempatanPage() {
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,8 +91,8 @@ export default function GuruMagangPenempatanPage() {
                     </p>
                   )}
                   <p className="w-40 shrink-0 text-[11px] text-slate-500 dark:text-slate-400">
-                    {new Date(p.tanggalMulai).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
-                    {p.tanggalSelesai ? ` – ${new Date(p.tanggalSelesai).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}` : ""}
+                    {fmtTgl(p.tanggalMulai)}
+                    {p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
                   </p>
                 </div>
               );

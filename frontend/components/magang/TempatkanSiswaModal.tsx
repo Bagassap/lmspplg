@@ -7,6 +7,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, getNama, toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
+import { todayJakarta } from "@/components/absensi-harian/shared";
 import type { TempatMagang, PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
@@ -28,7 +29,7 @@ export function TempatkanSiswaModal({
   const [siswaId, setSiswaId] = useState("");
   const [tempatId, setTempatId] = useState("");
   const [guruId, setGuruId] = useState("");
-  const [tanggalMulai, setTanggalMulai] = useState(() => new Date().toISOString().slice(0, 10));
+  const [tanggalMulai, setTanggalMulai] = useState(() => todayJakarta());
   const [tanggalSelesai, setTanggalSelesai] = useState("");
   const [saving, setSaving] = useState(false);
 
