@@ -3,15 +3,15 @@
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
-type Tone = "blue" | "green" | "cyan" | "orange";
+type Tone = "green" | "blue" | "purple" | "orange";
 
 // Sama persis dengan WALLET_GRADIENTS di components/absensi-harian/shared.ts
-// (dipakai kartu kelas Absensi Harian) — supaya kartu statistik di halaman
-// lain terasa satu keluarga warna dengan itu, bukan warna bankmini asli.
+// (kartu kelas Absensi Harian) dan kartu "Akses Cepat" di Dashboard — satu
+// urutan warna yang sama (hijau-biru-ungu-oranye) dipakai di semua tempat.
 const TONE_GRADIENT: Record<Tone, string> = {
-  blue: "from-[#0033FF] to-[#335CFF]",
   green: "from-[#4ade80] to-[#22c55e]",
-  cyan: "from-[#22D3EE] to-[#06B6D4]",
+  blue: "from-[#60a5fa] to-[#3b82f6]",
+  purple: "from-[#a78bfa] to-[#7c3aed]",
   orange: "from-[#fb923c] to-[#ea580c]",
 };
 

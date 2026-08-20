@@ -54,13 +54,13 @@ export const DASHBOARD_ACCENT = ["#22c55e", "#0033FF", "#7c3aed", "#ea580c"];
 export const DASHBOARD_PASTEL = ["#E7F9EE", "#E8EDFF", "#F0ECFF", "#FFF1E6"];
 
 // Wallet-card style palette for the "Kelas" row on the admin Absensi Harian
-// page — order matches the orange/blue/cyan/green sequence of the reference
-// design exactly, cycling by kelas index.
+// page — order/colors match the "Akses Cepat" gradient cards on the
+// Dashboard exactly (green/blue/purple/orange), cycling by kelas index.
 export const WALLET_GRADIENTS = [
-  "linear-gradient(135deg,#fb923c,#ea580c)", // orange
-  "linear-gradient(135deg,#0033FF,#335CFF)", // blue (sidebar's primary blue)
-  "linear-gradient(135deg,#22D3EE,#06B6D4)", // cyan
   "linear-gradient(135deg,#4ade80,#22c55e)", // green
+  "linear-gradient(135deg,#60a5fa,#3b82f6)", // blue
+  "linear-gradient(135deg,#a78bfa,#7c3aed)", // purple
+  "linear-gradient(135deg,#fb923c,#ea580c)", // orange
 ];
 
 // Subtle repeating wave-line texture drawn straight into each wallet card's
