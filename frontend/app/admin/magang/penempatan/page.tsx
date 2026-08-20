@@ -149,43 +149,51 @@ export default function AdminMagangPenempatanPage() {
       </div>
 
       <motion.div initial="hidden" animate="visible" variants={statGridVariants}
-        className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <GradientStatCard
-          tone="blue"
-          label="Tempat Magang"
-          value={loading ? "—" : tempatList.length}
-          caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
-          icon={Building2}
-          secondaryLabel={tempatFavorit ? `Terbanyak: ${tempatFavorit.namaTempat}` : "Belum ada data"}
-          secondaryIcon={Award}
-        />
-        <GradientStatCard
-          tone="green"
-          label="Siswa PKL Aktif"
-          value={loading ? "—" : jumlahAktif}
-          caption={`${jumlahSelesai} sudah selesai`}
-          icon={Briefcase}
-          secondaryLabel={`${jumlahBatal} dibatalkan`}
-          secondaryIcon={CheckCircle2}
-        />
-        <GradientStatCard
-          tone="cyan"
-          label="Total Kuota"
-          value={loading ? "—" : totalKuota}
-          caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
-          icon={Wallet}
-          secondaryLabel={`Sisa ${Math.max(0, totalKuota - kuotaTerisi)} kuota`}
-          secondaryIcon={Award}
-        />
-        <GradientStatCard
-          tone="orange"
-          label="Total Riwayat Penempatan"
-          value={loading ? "—" : penempatanList.length}
-          caption="Sepanjang periode PKL"
-          icon={ClipboardList}
-          secondaryLabel="Aktif, selesai, & batal"
-          secondaryIcon={ClipboardList}
-        />
+        className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
+        <div className="lg:col-span-3">
+          <GradientStatCard
+            tone="blue"
+            label="Tempat Magang"
+            value={loading ? "—" : tempatList.length}
+            caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
+            icon={Building2}
+            secondaryLabel={tempatFavorit ? `Terbanyak: ${tempatFavorit.namaTempat}` : "Belum ada data"}
+            secondaryIcon={Award}
+          />
+        </div>
+        <div className="lg:col-span-4">
+          <GradientStatCard
+            tone="green"
+            label="Siswa PKL Aktif"
+            value={loading ? "—" : jumlahAktif}
+            caption={`${jumlahSelesai} sudah selesai`}
+            icon={Briefcase}
+            secondaryLabel={`${jumlahBatal} dibatalkan`}
+            secondaryIcon={CheckCircle2}
+          />
+        </div>
+        <div className="lg:col-span-2">
+          <GradientStatCard
+            tone="cyan"
+            label="Total Kuota"
+            value={loading ? "—" : totalKuota}
+            caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
+            icon={Wallet}
+            secondaryLabel={`Sisa ${Math.max(0, totalKuota - kuotaTerisi)} kuota`}
+            secondaryIcon={Award}
+          />
+        </div>
+        <div className="lg:col-span-3">
+          <GradientStatCard
+            tone="orange"
+            label="Total Riwayat Penempatan"
+            value={loading ? "—" : penempatanList.length}
+            caption="Sepanjang periode PKL"
+            icon={ClipboardList}
+            secondaryLabel="Aktif, selesai, & batal"
+            secondaryIcon={ClipboardList}
+          />
+        </div>
       </motion.div>
 
       <PenempatanFilterBar

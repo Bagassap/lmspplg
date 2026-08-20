@@ -5,10 +5,13 @@ import type { ComponentType } from "react";
 
 type Tone = "blue" | "green" | "cyan" | "orange";
 
+// Sama persis dengan WALLET_GRADIENTS di components/absensi-harian/shared.ts
+// (dipakai kartu kelas Absensi Harian) — supaya kartu statistik di halaman
+// lain terasa satu keluarga warna dengan itu, bukan warna bankmini asli.
 const TONE_GRADIENT: Record<Tone, string> = {
-  blue: "from-[#1120F0] to-[#0D1AC0]",
+  blue: "from-[#0033FF] to-[#335CFF]",
   green: "from-[#4ade80] to-[#22c55e]",
-  cyan: "from-[#60a5fa] to-[#3b82f6]",
+  cyan: "from-[#22D3EE] to-[#06B6D4]",
   orange: "from-[#fb923c] to-[#ea580c]",
 };
 
