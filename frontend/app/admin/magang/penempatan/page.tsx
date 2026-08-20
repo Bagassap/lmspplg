@@ -1,18 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { Briefcase, Building2, Plus, Trash2, Users } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Award, Briefcase, Building2, CheckCircle2, ClipboardList, Plus, Wallet } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
+import { GradientStatCard } from "@/components/shared/GradientStatCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TempatkanSiswaModal } from "@/components/magang/TempatkanSiswaModal";
-import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
+import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
+import { PenempatanTable } from "@/components/magang/PenempatanTable";
 import type { TempatMagang, PenempatanMagang, StatusPenempatan } from "@/components/magang/types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
+
+const statGridVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 
 export default function AdminMagangPenempatanPage() {
   const toast = useToast();
@@ -24,6 +27,8 @@ export default function AdminMagangPenempatanPage() {
   const [showKelolaTempat, setShowKelolaTempat] = useState(false);
   const [showTempatkan, setShowTempatkan] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<PenempatanStatusFilter>("");
 
   const loadTempat = useCallback(async () => {
     const res = await fetch("/api/magang/tempat", { cache: "no-store" });
@@ -93,6 +98,22 @@ export default function AdminMagangPenempatanPage() {
   }
 
   const jumlahAktif = penempatanList.filter((p) => p.status === "AKTIF").length;
+  const jumlahSelesai = penempatanList.filter((p) => p.status === "SELESAI").length;
+  const jumlahBatal = penempatanList.filter((p) => p.status === "BATAL").length;
+  const totalKuota = tempatList.reduce((sum, t) => sum + t.kuota, 0);
+  const kuotaTerisi = tempatList.reduce((sum, t) => sum + (t._count?.penempatan ?? 0), 0);
+  const tempatFavorit = [...tempatList].sort((a, b) => (b._count?.penempatan ?? 0) - (a._count?.penempatan ?? 0))[0] ?? null;
+
+  const displayList = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return penempatanList
+      .filter((p) => (statusFilter ? p.status === statusFilter : true))
+      .filter((p) => {
+        if (!q) return true;
+        const nama = (p.siswa.nama ?? p.siswa.user?.nama ?? "").toLowerCase();
+        return nama.includes(q) || p.siswa.nis.includes(q) || p.tempatMagang.namaTempat.toLowerCase().includes(q);
+      });
+  }, [penempatanList, search, statusFilter]);
 
   return (
     <div className="space-y-5 p-1">
@@ -127,83 +148,60 @@ export default function AdminMagangPenempatanPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <p className="text-2xl font-extrabold text-slate-800 dark:text-white">{loading ? "—" : tempatList.length}</p>
-          <p className="text-[11px] font-semibold text-slate-400">Tempat Magang</p>
-        </div>
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <p className="text-2xl font-extrabold text-slate-800 dark:text-white">{loading ? "—" : jumlahAktif}</p>
-          <p className="text-[11px] font-semibold text-slate-400">Siswa PKL Aktif</p>
-        </div>
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <p className="text-2xl font-extrabold text-slate-800 dark:text-white">
-            {loading ? "—" : tempatList.reduce((sum, t) => sum + t.kuota, 0)}
-          </p>
-          <p className="text-[11px] font-semibold text-slate-400">Total Kuota</p>
-        </div>
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <p className="text-2xl font-extrabold text-slate-800 dark:text-white">{loading ? "—" : penempatanList.length}</p>
-          <p className="text-[11px] font-semibold text-slate-400">Total Riwayat Penempatan</p>
-        </div>
-      </div>
+      <motion.div initial="hidden" animate="visible" variants={statGridVariants}
+        className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <GradientStatCard
+          tone="blue"
+          label="Tempat Magang"
+          value={loading ? "—" : tempatList.length}
+          caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
+          icon={Building2}
+          secondaryLabel={tempatFavorit ? `Terbanyak: ${tempatFavorit.namaTempat}` : "Belum ada data"}
+          secondaryIcon={Award}
+        />
+        <GradientStatCard
+          tone="green"
+          label="Siswa PKL Aktif"
+          value={loading ? "—" : jumlahAktif}
+          caption={`${jumlahSelesai} sudah selesai`}
+          icon={Briefcase}
+          secondaryLabel={`${jumlahBatal} dibatalkan`}
+          secondaryIcon={CheckCircle2}
+        />
+        <GradientStatCard
+          tone="cyan"
+          label="Total Kuota"
+          value={loading ? "—" : totalKuota}
+          caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
+          icon={Wallet}
+          secondaryLabel={`Sisa ${Math.max(0, totalKuota - kuotaTerisi)} kuota`}
+          secondaryIcon={Award}
+        />
+        <GradientStatCard
+          tone="orange"
+          label="Total Riwayat Penempatan"
+          value={loading ? "—" : penempatanList.length}
+          caption="Sepanjang periode PKL"
+          icon={ClipboardList}
+          secondaryLabel="Aktif, selesai, & batal"
+          secondaryIcon={ClipboardList}
+        />
+      </motion.div>
 
-      <div className="rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700">
-          <p className="text-sm font-bold text-slate-800 dark:text-white">Daftar Penempatan Siswa</p>
-        </div>
+      <PenempatanFilterBar
+        search={search} onSearch={setSearch}
+        statusFilter={statusFilter} onStatusFilter={setStatusFilter}
+        total={penempatanList.length} aktifCount={jumlahAktif} selesaiCount={jumlahSelesai} batalCount={jumlahBatal}
+        displayedCount={displayList.length}
+      />
 
-        {loading ? (
-          <div className="space-y-3 p-6">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-14 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />
-            ))}
-          </div>
-        ) : penempatanList.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
-              <Users size={24} className="text-slate-300 dark:text-slate-500" />
-            </div>
-            <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Belum ada siswa yang ditempatkan PKL</p>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-50 overflow-x-auto dark:divide-slate-700/30">
-            {penempatanList.map((p) => {
-              const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
-              const cfg = STATUS_PENEMPATAN_CFG[p.status];
-              const busy = busyId === p.id;
-              return (
-                <div key={p.id} className="flex min-w-175 items-center gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                  <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={34} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
-                  <div className="min-w-0 flex-[1.4]">
-                    <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{nama}</p>
-                    <p className="truncate text-[11px] text-slate-400">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
-                  </div>
-                  <div className="min-w-0 flex-[1.6]">
-                    <p className="truncate text-xs font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
-                    <p className="truncate text-[11px] text-slate-400">Pembimbing: {toTitleCase(p.guruPembimbing.user.nama)}</p>
-                  </div>
-                  <div className="w-40 shrink-0 text-[11px] text-slate-500 dark:text-slate-400">
-                    {new Date(p.tanggalMulai).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
-                    {p.tanggalSelesai ? ` – ${new Date(p.tanggalSelesai).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}` : ""}
-                  </div>
-                  <select value={p.status} disabled={busy} onChange={(e) => ubahStatus(p, e.target.value as StatusPenempatan)}
-                    className="w-28 shrink-0 rounded-lg border-0 px-2 py-1 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-violet-400"
-                    style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
-                    <option value="AKTIF">Aktif</option>
-                    <option value="SELESAI">Selesai</option>
-                    <option value="BATAL">Batal</option>
-                  </select>
-                  <button onClick={() => hapus(p)} disabled={busy}
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
-                    <Trash2 size={12} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <PenempatanTable
+        loading={loading}
+        list={displayList}
+        busyId={busyId}
+        onUbahStatus={ubahStatus}
+        onHapus={hapus}
+      />
 
       <AnimatePresence>
         {showKelolaTempat && (
