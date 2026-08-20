@@ -206,8 +206,13 @@ export class AuthService {
       if (!user.profileCompleted) {
         // Never completed lengkapi-profil yet — the only identity data on
         // file at all is the name imported from the school's CSV roster.
-        const expected = user.nama?.trim().toLowerCase();
-        const given = dto.namaKonfirmasi?.trim().toLowerCase();
+        // Guru names on file are frequently stored with a trailing academic
+        // title ("Candra Tanu Wibowo, S.Kom") that nobody types when asked
+        // to "confirm your full name" — compare only the part before the
+        // first comma so the title can't block a legitimate owner forever.
+        const coreName = (s: string) => s.split(',')[0].trim().toLowerCase();
+        const expected = user.nama ? coreName(user.nama) : '';
+        const given = dto.namaKonfirmasi ? coreName(dto.namaKonfirmasi) : '';
         if (!given) {
           throw new BadRequestException('Konfirmasi nama lengkap wajib diisi');
         }

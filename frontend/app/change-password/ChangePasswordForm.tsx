@@ -34,7 +34,7 @@ const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: st
   { key: "confirmPassword", label: "Konfirmasi Password Baru", placeholder: "Ulangi password baru", autoComplete: "new-password", icon: KeyRound },
 ];
 
-export function ChangePasswordForm({ profileCompleted, bypassIdentityVerification }: { profileCompleted: boolean; bypassIdentityVerification: boolean }) {
+export function ChangePasswordForm({ profileCompleted, bypassIdentityVerification, role }: { profileCompleted: boolean; bypassIdentityVerification: boolean; role: string }) {
   const [values, setValues] = useState<Record<Field, string>>({
     newPassword: "",
     confirmPassword: "",
@@ -136,8 +136,9 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
       >
         <Sparkles size={16} className="mt-0.5 shrink-0 text-blue" />
         <p className="text-xs leading-relaxed text-black/65">
-          Selamat datang! Untuk keamanan akun Anda, silakan buat password baru.
-          Password default Anda adalah NIS Anda.
+          {role === "SISWA"
+            ? "Selamat datang! Untuk keamanan akun Anda, silakan buat password baru. Password default Anda adalah NIS Anda."
+            : "Selamat datang! Untuk keamanan akun Anda, silakan buat password baru sebelum melanjutkan."}
         </p>
       </motion.div>
 
@@ -189,7 +190,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
             <p className="text-[11px] text-black/40">
               {profileCompleted
                 ? "Tanggal lahir yang Anda isi saat melengkapi profil sebelumnya."
-                : "Nama lengkap sesuai data sekolah — bukan nama panggilan."}
+                : "Nama lengkap sesuai data sekolah — bukan nama panggilan. Gelar akademik (S.Kom, S.Pd, dll) tidak perlu diketik."}
             </p>
           </motion.div>
 

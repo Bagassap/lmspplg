@@ -8,20 +8,20 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 // skipped entirely) is read straight from the session JWT (same claims the
 // middleware already trusts to guard this route) — never fetched from a
 // value the client could tamper with.
-async function getVerificationState(): Promise<{ profileCompleted: boolean; bypassIdentityVerification: boolean }> {
+async function getVerificationState(): Promise<{ profileCompleted: boolean; bypassIdentityVerification: boolean; role: string }> {
   const token = (await cookies()).get("token")?.value;
-  if (!token) return { profileCompleted: false, bypassIdentityVerification: false };
+  if (!token) return { profileCompleted: false, bypassIdentityVerification: false, role: "SISWA" };
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    const p = payload as { profileCompleted?: boolean; bypassIdentityVerification?: boolean };
-    return { profileCompleted: !!p.profileCompleted, bypassIdentityVerification: !!p.bypassIdentityVerification };
+    const p = payload as { profileCompleted?: boolean; bypassIdentityVerification?: boolean; role?: string };
+    return { profileCompleted: !!p.profileCompleted, bypassIdentityVerification: !!p.bypassIdentityVerification, role: p.role ?? "SISWA" };
   } catch {
-    return { profileCompleted: false, bypassIdentityVerification: false };
+    return { profileCompleted: false, bypassIdentityVerification: false, role: "SISWA" };
   }
 }
 
 export default async function ChangePasswordPage() {
-  const { profileCompleted, bypassIdentityVerification } = await getVerificationState();
+  const { profileCompleted, bypassIdentityVerification, role } = await getVerificationState();
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F0F2FA] px-4 py-12 sm:px-6">
@@ -33,7 +33,7 @@ export default async function ChangePasswordPage() {
           backgroundSize: "24px 24px",
         }}
       />
-      <ChangePasswordCard profileCompleted={profileCompleted} bypassIdentityVerification={bypassIdentityVerification} />
+      <ChangePasswordCard profileCompleted={profileCompleted} bypassIdentityVerification={bypassIdentityVerification} role={role} />
     </main>
   );
 }
