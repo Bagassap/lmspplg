@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { KeyRound, Users, CheckCircle2, AlertTriangle, Clock, UserPlus, FileSpreadsheet } from "lucide-react";
+import { KeyRound, Users, CheckCircle2, AlertTriangle, Clock, UserPlus, FileSpreadsheet, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -10,6 +10,7 @@ import { PermintaanPasswordCard, type PasswordResetRequest } from "./PermintaanP
 import { SiswaPasswordTable, type SiswaPasswordItem } from "./SiswaPasswordTable";
 import { CreateAccountModal } from "./CreateAccountModal";
 import { ImportSiswaModal } from "./ImportSiswaModal";
+import { KelolaGuruModal } from "./KelolaGuruModal";
 
 type KelasWithWali = {
   id: string;
@@ -58,6 +59,7 @@ export default function ManajemenPasswordClient() {
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const [importSiswaOpen, setImportSiswaOpen] = useState(false);
+  const [kelolaGuruOpen, setKelolaGuruOpen] = useState(false);
 
   const fetchHeader = useCallback(async () => {
     setLoadingHeader(true);
@@ -208,6 +210,12 @@ export default function ManajemenPasswordClient() {
               </div>
             </div>
             <motion.button
+              onClick={() => setKelolaGuruOpen(true)}
+              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-1.5 rounded-xl bg-white/15 px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0 backdrop-blur-sm hover:bg-white/25">
+              <GraduationCap size={15} /> Kelola Guru
+            </motion.button>
+            <motion.button
               onClick={() => setImportSiswaOpen(true)}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-1.5 rounded-xl bg-white/15 px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0 backdrop-blur-sm hover:bg-white/25">
@@ -281,6 +289,14 @@ export default function ManajemenPasswordClient() {
         open={importSiswaOpen}
         onClose={() => setImportSiswaOpen(false)}
         onImported={refetchAll}
+      />
+
+      <KelolaGuruModal
+        open={kelolaGuruOpen}
+        kelasList={kelasList}
+        onClose={() => setKelolaGuruOpen(false)}
+        onResetPassword={(t) => setResetTarget(t)}
+        onChanged={refetchAll}
       />
     </div>
   );

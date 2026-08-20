@@ -174,6 +174,61 @@ export class UsersService {
     };
   }
 
+  async findGuruList() {
+    return this.prisma.user.findMany({
+      where: { role: Role.GURU },
+      select: {
+        id: true,
+        nama: true,
+        loginId: true,
+        isActive: true,
+        mustChangePassword: true,
+        fotoProfil: true,
+        updatedAt: true,
+        guru: {
+          select: {
+            id: true,
+            nip: true,
+            noWa: true,
+            mapelDiampu: { select: { id: true, nama: true }, orderBy: { nama: 'asc' } },
+            kelasWali: { select: { id: true, nama: true }, orderBy: { nama: 'asc' } },
+          },
+        },
+      },
+      orderBy: { nama: 'asc' },
+    });
+  }
+
+  // Nonaktifkan bukan hard-delete — pola yang sama dipakai untuk siswa yang
+  // sudah lulus (lihat SiswaService.luluskanKelas): akun dinonaktifkan
+  // (tidak bisa login lagi) tapi seluruh riwayat data (materi, nilai UKK,
+  // bimbingan magang, dll) tetap tersimpan karena banyak tabel punya FK
+  // wajib ke Guru yang tidak boleh diputus begitu saja.
+  async deactivateGuru(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { guru: { include: { kelasWali: true } } },
+    });
+    if (!user || user.role !== Role.GURU || !user.guru) {
+      throw new NotFoundException('Guru tidak ditemukan');
+    }
+    if (user.guru.kelasWali.length > 0) {
+      const namaKelas = user.guru.kelasWali.map((k) => k.nama).join(', ');
+      throw new BadRequestException(
+        `Guru ini masih menjadi wali kelas ${namaKelas}. Pindahkan wali kelas terlebih dahulu.`,
+      );
+    }
+    await this.prisma.user.update({ where: { id: userId }, data: { isActive: false } });
+    return { message: `Akun ${user.nama} dinonaktifkan` };
+  }
+
+  async activateGuru(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.role !== Role.GURU) throw new NotFoundException('Guru tidak ditemukan');
+    await this.prisma.user.update({ where: { id: userId }, data: { isActive: true } });
+    return { message: `Akun ${user.nama} diaktifkan kembali` };
+  }
+
   async findPasswordResetRequests() {
     return this.prisma.passwordResetRequest.findMany({
       orderBy: { createdAt: 'desc' },

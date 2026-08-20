@@ -59,6 +59,21 @@ export class UsersController {
     );
   }
 
+  @Get('guru')
+  findGuruList() {
+    return this.service.findGuruList();
+  }
+
+  @Patch('guru/:id/nonaktifkan')
+  deactivateGuru(@Param('id') id: string) {
+    return this.service.deactivateGuru(id);
+  }
+
+  @Patch('guru/:id/aktifkan')
+  activateGuru(@Param('id') id: string) {
+    return this.service.activateGuru(id);
+  }
+
   @Get('password-reset-requests')
   findPasswordResetRequests() {
     return this.service.findPasswordResetRequests();
