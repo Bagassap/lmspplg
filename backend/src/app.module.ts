@@ -17,6 +17,7 @@ import { CatatanSiswaModule } from './catatan-siswa/catatan-siswa.module';
 import { MateriModule } from './materi/materi.module';
 import { TugasModule } from './tugas/tugas.module';
 import { MapelModule } from './mapel/mapel.module';
+import { MagangModule } from './magang/magang.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MapelModule } from './mapel/mapel.module';
     MateriModule,
     TugasModule,
     MapelModule,
+    MagangModule,
   ],
   controllers: [AppController],
   providers: [AppService],

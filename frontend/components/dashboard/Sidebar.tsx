@@ -54,7 +54,7 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
     { key: "catatan-siswa", href: "/guru/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     {
-      key: "magang", href: "/guru/magang", label: "PKL", icon: Briefcase, locked: true,
+      key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
         { href: "/guru/magang/penempatan", label: "Penempatan",     icon: Building2 },
         { href: "/guru/magang/absensi",    label: "Absensi",        icon: ClipboardCheck },
@@ -71,7 +71,7 @@ const MENUS: Record<string, MenuItem[]> = {
     { key: "materi",       href: "/siswa/materi",       label: "Materi",      icon: BookOpen },
     { key: "catatan-siswa", href: "/siswa/catatan-siswa", label: "Catatan Saya", icon: NotebookPen },
     {
-      key: "magang", href: "/siswa/magang", label: "PKL", icon: Briefcase, locked: true,
+      key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
         { href: "/siswa/magang/penempatan", label: "Penempatan", icon: Building2 },
         { href: "/siswa/magang/absensi",    label: "Absensi",    icon: ClipboardCheck },
