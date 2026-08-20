@@ -18,7 +18,7 @@ export function PageSizeToggle({ value, onChange }: {
           <button key={size} type="button" onClick={() => onChange(size)}
             className={`px-3 py-1.5 text-xs font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
               active
-                ? "bg-violet-500 text-white"
+                ? "bg-[#0082FB] text-white"
                 : "bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             }`}>
             {labelFor(size)}

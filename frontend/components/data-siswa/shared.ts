@@ -102,15 +102,17 @@ export function formatAlamatLengkap(s: AlamatFields): string {
 }
 
 // Palet vivid/solid — dipilih berdasarkan hash nama/id (sum charCode % 8) agar konsisten per siswa.
+// Semua varian biru-ke-tinta dari palet utama, kecuali dua slot hijau/merah
+// yang memang sudah diizinkan (sukses/error) untuk variasi rotasi avatar.
 export const AVATAR_PALETTE = [
-  "#6366f1", // indigo
-  "#ec4899", // pink
-  "#f97316", // orange
-  "#10b981", // emerald
-  "#3b82f6", // blue
-  "#8b5cf6", // violet
-  "#ef4444", // red
-  "#14b8a6", // teal
+  "#0082FB",
+  "#0064E0",
+  "#4FB0FF",
+  "#00D67F",
+  "#1C2B33",
+  "#0082FB",
+  "#EF4444",
+  "#0064E0",
 ] as const;
 
 export function avatarColorFor(seed: string): string {

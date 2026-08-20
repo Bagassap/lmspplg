@@ -37,7 +37,7 @@ export function SubmisiSayaModal({
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{ background: isDiterima ? "#00D67F" : isRevisi ? "#F59E0B" : "#2563EB" }}>
+              style={{ background: isDiterima ? "#00D67F" : isRevisi ? "#F59E0B" : "#0064E0" }}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10" />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -97,19 +97,19 @@ export function SubmisiSayaModal({
               {isPraktik ? (
                 <button onClick={() => setViewCode(true)}
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   <Code2 size={14} /> Lihat Kode Terkirim
                 </button>
               ) : isSoalBased ? (
                 <button onClick={() => setViewJawaban(true)}
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   {tipe === "PILIHAN_GANDA" ? <ListChecks size={14} /> : <PenLine size={14} />} Lihat Jawaban Saya
                 </button>
               ) : target.fileUrl && (
                 <a href={target.fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   <Download size={14} /> Lihat File Terkirim
                 </a>
               )}

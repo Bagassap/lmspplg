@@ -106,7 +106,7 @@ export function AbsensiHarianTable({
     <>
       <div className="flex-1 overflow-x-auto">
         <div className="min-w-225">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2434" }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama</span>
@@ -181,7 +181,7 @@ export function AbsensiHarianTable({
                   <div className="min-w-0">
                     {lokasiParsed ? (
                       <button onClick={openDokumen} title="Lihat lokasi absen"
-                        className="block max-w-full truncate text-left text-[11px] text-[#0033FF] hover:underline">
+                        className="block max-w-full truncate text-left text-[11px] text-[#0082FB] hover:underline">
                         {lokasiParsed.lat.slice(0, 8)}…
                       </button>
                     ) : (
@@ -199,8 +199,8 @@ export function AbsensiHarianTable({
                   <div className="flex justify-center">
                     {ttdRaw ? (
                       <button onClick={openDokumen} title="Lihat tanda tangan"
-                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/20">
-                        <PenTool size={13} className="text-violet-500" />
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#4FB0FF] dark:hover:bg-[#0064E0]/20">
+                        <PenTool size={13} className="text-[#0082FB]" />
                       </button>
                     ) : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
                   </div>
@@ -215,7 +215,7 @@ export function AbsensiHarianTable({
                     {hasDok && (
                       <button onClick={openDokumen}
                         className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                        style={{ background: "linear-gradient(135deg,#6334F4,#0033FF)" }}>
+                        style={{ background: "linear-gradient(135deg,#0082FB,#0082FB)" }}>
                         <Eye size={11} /> Lihat
                       </button>
                     )}
@@ -249,7 +249,7 @@ export function AbsensiHarianTable({
                       <button onClick={() => setTablePage(i)}
                         className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                           i === tablePage
-                            ? "bg-violet-500 text-white shadow-sm"
+                            ? "bg-[#0082FB] text-white shadow-sm"
                             : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                         }`}>
                         {i + 1}

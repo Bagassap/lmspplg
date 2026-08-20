@@ -26,7 +26,7 @@ function emptySoal(): SoalDraft {
   return { pertanyaan: "", pilihanA: "", pilihanB: "", pilihanC: "", pilihanD: "", jawabanBenar: "" };
 }
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0033FF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0033FF]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-700";
+const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-700";
 
 // Selalu baca/tulis nilai datetime-local sebagai jam dinding WIB (Asia/Jakarta),
 // bukan timezone lokal browser/OS — server & sebagian browser testing berjalan
@@ -52,10 +52,10 @@ function wibInputToIso(value: string) {
 }
 
 const TIPE_OPTIONS: { value: TugasTipe; label: string; icon: typeof Send; gradient: string; desc: string }[] = [
-  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "linear-gradient(135deg,#0033FF,#335CFF)", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
-  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "linear-gradient(135deg,#00D67F,#00B368)", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
-  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "linear-gradient(135deg,#F59E0B,#EA580C)", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
-  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "linear-gradient(135deg,#2563EB,#1D4ED8)", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
+  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "linear-gradient(135deg,#0082FB,#0064E0)", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
+  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "linear-gradient(135deg,#00D67F,#00D67F)", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
+  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "linear-gradient(135deg,#F59E0B,#0064E0)", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
+  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "linear-gradient(135deg,#0064E0,#1D4ED8)", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
 ];
 
 export function TugasFormModal({
@@ -219,7 +219,7 @@ export function TugasFormModal({
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
             className={`relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800 ${tipe === "PRAKTIK" || isSoalBased ? "max-w-3xl" : "max-w-lg"}`}
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0033FF] px-6 py-5">
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                 <ClipboardList size={18} className="text-white" />
@@ -318,8 +318,8 @@ export function TugasFormModal({
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                   File Soal / Lampiran <span className="font-normal text-gray-400">(opsional)</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0033FF]/40 hover:bg-[#0033FF]/5 dark:border-slate-600 dark:bg-slate-700/40">
-                  <Upload size={16} className="shrink-0 text-[#0033FF]" />
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40">
+                  <Upload size={16} className="shrink-0 text-[#0082FB]" />
                   <div className="min-w-0 flex-1">
                     {file ? (
                       <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-gray-800 dark:text-slate-200">
@@ -359,7 +359,7 @@ export function TugasFormModal({
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                      style={{ background: "#0033FF" }}>
+                      style={{ background: "#0082FB" }}>
                       <Plus size={12} /> Tambah Soal
                     </button>
                   </div>
@@ -398,7 +398,7 @@ export function TugasFormModal({
                                     <input value={s[`pilihan${huruf}` as keyof SoalDraft]}
                                       onChange={(e) => updateSoal(idx, { [`pilihan${huruf}`]: e.target.value } as Partial<SoalDraft>)}
                                       placeholder={`Pilihan ${huruf}`}
-                                      className={`w-full rounded-lg border bg-white px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#0033FF] dark:bg-slate-800 dark:text-slate-100 ${
+                                      className={`w-full rounded-lg border bg-white px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#0082FB] dark:bg-slate-800 dark:text-slate-100 ${
                                         isKey ? "border-emerald-300 dark:border-emerald-700" : "border-gray-200 dark:border-slate-600"
                                       }`} />
                                     {isKey && <span className="shrink-0 text-[10px] font-bold text-emerald-500">Jawaban Benar</span>}
@@ -447,7 +447,7 @@ export function TugasFormModal({
               </button>
               <button type="button" onClick={handleSubmit} disabled={saving}
                 className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                style={{ background: "#0033FF" }}>
+                style={{ background: "#0082FB" }}>
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Tugas"}
               </button>

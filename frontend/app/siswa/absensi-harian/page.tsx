@@ -282,7 +282,7 @@ export default function SiswaAbsensiHarianPage() {
 
       {loading ? (
         <div className="flex items-center justify-center rounded-2xl border border-slate-100 bg-white py-20 dark:border-slate-700 dark:bg-slate-800">
-          <Loader2 size={24} className="animate-spin text-violet-400" />
+          <Loader2 size={24} className="animate-spin text-[#4FB0FF]" />
         </div>
       ) : (
         <>
@@ -386,8 +386,8 @@ export default function SiswaAbsensiHarianPage() {
                     <motion.div key="pulang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
                       <div className={`flex h-16 w-16 items-center justify-center rounded-full ${window_ === "HADIR" ? "" : "bg-red-50 dark:bg-red-900/20"}`}
-                        style={window_ === "HADIR" ? { background: "#E8EDFF" } : undefined}>
-                        {window_ === "HADIR" ? <Clock size={26} style={{ color: "#0033FF" }} /> : <AlertCircle size={26} className="text-red-500" />}
+                        style={window_ === "HADIR" ? { background: "#EAF3FF" } : undefined}>
+                        {window_ === "HADIR" ? <Clock size={26} style={{ color: "#0082FB" }} /> : <AlertCircle size={26} className="text-red-500" />}
                       </div>
                       <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">
                         {window_ === "HADIR" ? "Belum Waktunya" : "Waktu Sudah Berakhir"}
@@ -406,7 +406,7 @@ export default function SiswaAbsensiHarianPage() {
             {summary && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.25 }}
-                className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-5">
+                className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-5">
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran semester ini</p>
                 <StatisticRainbow
@@ -546,7 +546,7 @@ function FormAbsen({
         </div>
       ) : (
         <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
-          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-violet-400 hover:text-violet-400 disabled:cursor-wait disabled:opacity-70 ${
+          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-[#4FB0FF] hover:text-[#4FB0FF] disabled:cursor-wait disabled:opacity-70 ${
             fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
           }`}>
           {compressingFoto ? (
@@ -584,7 +584,7 @@ function FormAbsen({
         ) : (
           <div className="flex flex-1 items-center justify-between gap-2">
             <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-            <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-violet-500 hover:underline">
+            <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-[#0082FB] hover:underline">
               Coba lagi
             </button>
           </div>
@@ -649,7 +649,7 @@ function FormAbsen({
           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
             placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
             className={`w-full resize-none rounded-xl border bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
-              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-violet-400 dark:border-slate-600"
+              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-[#4FB0FF] dark:border-slate-600"
             }`} />
           {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
         </div>

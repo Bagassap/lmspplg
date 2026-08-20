@@ -27,7 +27,7 @@ export default function SiswaMagangPenempatanPage() {
 
   return (
     <div className="space-y-5 p-1">
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0033FF" }}>
+      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-3 sm:gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
@@ -56,7 +56,7 @@ export default function SiswaMagangPenempatanPage() {
         <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <Building2 size={18} />
               </span>
               <div>
@@ -71,7 +71,7 @@ export default function SiswaMagangPenempatanPage() {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-              <MapPin size={15} className="mt-0.5 shrink-0 text-violet-500" />
+              <MapPin size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat}</p>
@@ -79,7 +79,7 @@ export default function SiswaMagangPenempatanPage() {
             </div>
             {aktif.tempatMagang.kontak && (
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <Phone size={15} className="mt-0.5 shrink-0 text-violet-500" />
+                <Phone size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Kontak</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.kontak}</p>
@@ -87,14 +87,14 @@ export default function SiswaMagangPenempatanPage() {
               </div>
             )}
             <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-              <User size={15} className="mt-0.5 shrink-0 text-violet-500" />
+              <User size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing.user.nama)}</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-              <CalendarDays size={15} className="mt-0.5 shrink-0 text-violet-500" />
+              <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Periode</p>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">

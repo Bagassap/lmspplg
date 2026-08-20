@@ -57,7 +57,7 @@ function formatTanggalWib(tgl: string, opts: Intl.DateTimeFormatOptions = { day:
   return new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", ...opts }).format(new Date(`${tgl}T00:00:00Z`));
 }
 
-const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-violet-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
+const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-[#4FB0FF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
 const LABEL = "mb-1 block text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500";
 
 export function JadwalAbsenCard() {
@@ -145,7 +145,7 @@ export function JadwalAbsenCard() {
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
             <CalendarClock size={18} />
           </span>
           <div>
@@ -156,7 +156,7 @@ export function JadwalAbsenCard() {
         <motion.button
           type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
           onClick={() => openForm()}
-          className="flex items-center gap-1 rounded-lg bg-violet-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-violet-600"
+          className="flex items-center gap-1 rounded-lg bg-[#0082FB] px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#0082FB]"
         >
           <Plus size={13} /> Atur Jadwal
         </motion.button>
@@ -167,7 +167,7 @@ export function JadwalAbsenCard() {
       ) : hariIni ? (
         <div className="grid grid-cols-2 gap-2.5">
           <p className="col-span-2 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-            <Clock size={11} className="text-violet-400" />
+            <Clock size={11} className="text-[#4FB0FF]" />
             {formatTanggalWib(hariIni.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · WIB
           </p>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
@@ -294,7 +294,7 @@ export function JadwalAbsenCard() {
                     Batal
                   </button>
                   <button type="submit" disabled={saving}
-                    className="flex items-center gap-1.5 rounded-xl bg-violet-500 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-violet-600 disabled:opacity-60">
+                    className="flex items-center gap-1.5 rounded-xl bg-[#0082FB] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#0082FB] disabled:opacity-60">
                     {saving && <Loader2 size={14} className="animate-spin" />}
                     {saving ? "Menyimpan..." : "Simpan Jadwal"}
                   </button>

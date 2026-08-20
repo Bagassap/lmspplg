@@ -54,15 +54,15 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_COLOR: Record<string, string> = {
   HADIR: '#00D67F',
-  IZIN: '#6334F4',
+  IZIN: '#0082FB',
   SAKIT: '#E6A800',
-  ALPA: '#FF3644',
+  ALPA: '#EF4444',
 };
 const STATUS_BG: Record<string, string> = {
-  HADIR: '#E8F8F1',
-  IZIN: '#F0ECFF',
+  HADIR: '#E3FBF0',
+  IZIN: '#EAF3FF',
   SAKIT: '#FFF5DC',
-  ALPA: '#FFE9EA',
+  ALPA: '#FEE9EA',
 };
 
 const UPLOADS_ROOT = join(process.cwd(), 'uploads');
@@ -72,10 +72,10 @@ const FONT_BOLD = join(process.cwd(), 'src', 'assets', 'fonts', 'Satoshi-Bold.tt
 // App's primary brand blue (sidebar, Pulang status, etc.) — used to give the
 // weekly/monthly recap table a matching "menarik" blue identity instead of
 // the plain gray chrome the per-day report still uses.
-const BRAND_BLUE = '#0033FF';
-const BRAND_BLUE_TINT = '#E8EDFF';
-const BRAND_BLUE_ROW = '#F5F8FF';
-const BRAND_BLUE_BORDER = '#D6E0FF';
+const BRAND_BLUE = '#0082FB';
+const BRAND_BLUE_TINT = '#EAF3FF';
+const BRAND_BLUE_ROW = '#EAF3FF';
+const BRAND_BLUE_BORDER = '#EAF3FF';
 
 function registerFonts(doc: PDFKit.PDFDocument) {
   doc.registerFont('Satoshi', FONT_REGULAR);
@@ -231,7 +231,7 @@ export class AbsensiHarianPdfService {
     doc.font('Satoshi');
     y += 20;
 
-    doc.font('Satoshi-Bold').fontSize(20).fillColor('#0f172a').text(s.nama || '-', margin, y, { width: contentWidth });
+    doc.font('Satoshi-Bold').fontSize(20).fillColor('#1C2B33').text(s.nama || '-', margin, y, { width: contentWidth });
     doc.font('Satoshi');
     y = doc.y + 4;
     doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   Kelas: ${kelasNama}`, margin, y, { width: contentWidth });
@@ -390,7 +390,7 @@ export class AbsensiHarianPdfService {
     doc.font('Satoshi');
     y += 20;
 
-    doc.font('Satoshi-Bold').fontSize(20).fillColor('#0f172a').text(s.nama || '-', margin, y, { width: contentWidth });
+    doc.font('Satoshi-Bold').fontSize(20).fillColor('#1C2B33').text(s.nama || '-', margin, y, { width: contentWidth });
     doc.font('Satoshi');
     y = doc.y + 4;
     doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   Kelas: ${kelasNama}`, margin, y, { width: contentWidth });
@@ -404,7 +404,7 @@ export class AbsensiHarianPdfService {
     const status = s.status ?? 'ALPA';
     const label = STATUS_LABEL[status] ?? status;
     const clr = STATUS_COLOR[status] ?? '#64748b';
-    const bg = STATUS_BG[status] ?? '#f1f5f9';
+    const bg = STATUS_BG[status] ?? '#F1F5F8';
     doc.roundedRect(margin, y, 110, 26, 6).fill(bg);
     doc.font('Satoshi-Bold').fontSize(12).fillColor(clr).text(label, margin, y + 7, { width: 110, align: 'center' });
     doc.font('Satoshi');
@@ -449,7 +449,7 @@ export class AbsensiHarianPdfService {
     doc.fillColor('#94a3b8').fontSize(8).text('LOKASI HADIR', margin, y, { width: colW - 10 });
     doc.fillColor('#94a3b8').fontSize(8).text('LOKASI PULANG', margin + colW, y, { width: colW - 10 });
     doc
-      .fillColor(lokasiUrl ? '#2563eb' : '#334155')
+      .fillColor(lokasiUrl ? '#0064E0' : '#334155')
       .fontSize(10)
       .text(s.lokasi || '-', margin, y + 11, {
         width: colW - 10,
@@ -457,7 +457,7 @@ export class AbsensiHarianPdfService {
         link: lokasiUrl ?? undefined,
       });
     doc
-      .fillColor(lokasiPulangUrl ? '#2563eb' : '#334155')
+      .fillColor(lokasiPulangUrl ? '#0064E0' : '#334155')
       .fontSize(10)
       .text(s.lokasiPulang || '-', margin + colW, y + 11, {
         width: colW - 10,
@@ -492,7 +492,7 @@ export class AbsensiHarianPdfService {
     doc.moveTo(margin, y).lineTo(pageWidth - margin, y).strokeColor('#e2e8f0').lineWidth(1).stroke();
     y += 16;
 
-    doc.font('Satoshi-Bold').fontSize(11).fillColor('#0f172a').text('Dokumentasi', margin, y);
+    doc.font('Satoshi-Bold').fontSize(11).fillColor('#1C2B33').text('Dokumentasi', margin, y);
     doc.font('Satoshi');
     y = doc.y + 10;
 

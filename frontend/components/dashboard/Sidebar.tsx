@@ -94,8 +94,8 @@ const ROLE_LABEL: Record<string, string> = {
   SISWA: "Pelajar",
 };
 
-const SIDEBAR_GRADIENT = "linear-gradient(160deg,#977DFF 0%,#0033FF 45%,#0600AF 72%,#00003D 100%)";
-const SIDEBAR_ACCENT = "#0033FF";
+const SIDEBAR_GRADIENT = "linear-gradient(160deg,#0082FB 0%,#0082FB 45%,#0064E0 72%,#1C2B33 100%)";
+const SIDEBAR_ACCENT = "#0082FB";
 
 const TOGGLE_BTN_CLASS =
   "flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-white/15 dark:hover:text-white";
@@ -224,7 +224,7 @@ export function Sidebar({
     <aside
       className={[
         "fixed inset-y-0 left-0 z-40 flex flex-col bg-white transition-all duration-300 ease-in-out",
-        "shadow-[4px_0_24px_rgba(79,142,247,0.08)] dark:bg-[#1c2434] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
+        "shadow-[4px_0_24px_rgba(0,130,251,0.08)] dark:bg-[#1C2B33] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
         collapsed ? "w-18" : "w-64",
         open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       ].join(" ")}
@@ -255,7 +255,7 @@ export function Sidebar({
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto" />
               </div>
               <span className="flex items-baseline gap-1">
-                <span className="bg-gradient-to-br from-[#8b6bff] via-[#4f6bff] to-[#0033ff] bg-clip-text text-[17px] font-black tracking-tight text-transparent dark:from-[#b3a1ff] dark:via-[#7aa2fb] dark:to-[#60a5fa]">
+                <span className="bg-gradient-to-br from-[#4FB0FF] via-[#0082FB] to-[#0064E0] bg-clip-text text-[17px] font-black tracking-tight text-transparent dark:from-[#4FB0FF] dark:via-[#0082FB] dark:to-[#0082FB]">
                   LMS
                 </span>
                 <span className="text-[11px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">
@@ -297,7 +297,7 @@ export function Sidebar({
         ) : (
           <div className="flex flex-col items-center px-5 pb-5 pt-6">
             <div
-              className="mb-3 rounded-full ring-4 ring-offset-2 dark:ring-offset-[#1c2434]"
+              className="mb-3 rounded-full ring-4 ring-offset-2 dark:ring-offset-[#1C2B33]"
               style={{ "--tw-ring-color": `${PRIMARY}40` } as React.CSSProperties}
             >
               <Avatar
@@ -314,7 +314,7 @@ export function Sidebar({
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-300">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
             </p>
-            <p className="mt-2 rounded-full bg-[#0033FF]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#0033FF] dark:bg-white/10 dark:text-indigo-200">
+            <p className="mt-2 rounded-full bg-[#0082FB]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#0082FB] dark:bg-white/10 dark:text-[#4FB0FF]">
               &ldquo;{greeting}&rdquo;
             </p>
           </div>
@@ -349,12 +349,12 @@ export function Sidebar({
                       <span
                         className={[
                           "relative flex h-7 w-7 items-center justify-center rounded-lg",
-                          active ? "bg-[#0033FF]" : "",
+                          active ? "bg-[#0082FB]" : "",
                         ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
                         {item.key === "manajemen-password" && pendingResetCount > 0 && (
-                          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#1c2434]" />
+                          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#1C2B33]" />
                         )}
                       </span>
                     </Link>
@@ -377,7 +377,7 @@ export function Sidebar({
                       <span
                         className={[
                           "relative flex h-7 w-7 items-center justify-center rounded-lg",
-                          active ? "bg-[#0033FF]" : "",
+                          active ? "bg-[#0082FB]" : "",
                         ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
@@ -404,7 +404,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                      active ? "bg-[#0033FF]" : "",
+                      active ? "bg-[#0082FB]" : "",
                     ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}
@@ -413,7 +413,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex-1 text-left text-[13px] font-semibold",
-                      active ? "text-[#0033FF] dark:text-white" : "text-slate-700 dark:text-slate-300",
+                      active ? "text-[#0082FB] dark:text-white" : "text-slate-700 dark:text-slate-300",
                     ].join(" ")}
                   >
                     {item.label}
@@ -426,7 +426,7 @@ export function Sidebar({
                       className={[
                         "relative shrink-0 transition-transform duration-200",
                         isExp ? "rotate-180" : "",
-                        active ? "text-[#0033FF] dark:text-white" : "text-slate-400",
+                        active ? "text-[#0082FB] dark:text-white" : "text-slate-400",
                       ].join(" ")}
                     />
                   )}
@@ -473,19 +473,19 @@ export function Sidebar({
                                   className={[
                                     "flex items-center gap-2 rounded-lg px-2 py-1.5 text-[12.5px] transition-all duration-150",
                                     subActive
-                                      ? "bg-primary/10 font-semibold text-[#0033FF] dark:text-white"
+                                      ? "bg-primary/10 font-semibold text-[#0082FB] dark:text-white"
                                       : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
                                   ].join(" ")}
                                 >
                                   <span
                                     className={[
                                       "flex h-5 w-5 shrink-0 items-center justify-center rounded-md",
-                                      subActive ? "bg-[#0033FF]/20" : "",
+                                      subActive ? "bg-[#0082FB]/20" : "",
                                     ].join(" ")}
                                   >
                                     <sub.icon
                                       size={12}
-                                      className={subActive ? "text-[#0033FF] dark:text-white" : "text-slate-400"}
+                                      className={subActive ? "text-[#0082FB] dark:text-white" : "text-slate-400"}
                                     />
                                   </span>
                                   <span>{sub.label}</span>
@@ -522,7 +522,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                      active ? "bg-[#0033FF]" : "",
+                      active ? "bg-[#0082FB]" : "",
                     ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}
@@ -532,7 +532,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex-1 text-[13px] font-semibold",
-                      active ? "text-[#0033FF] dark:text-white" : "text-slate-700 dark:text-slate-300",
+                      active ? "text-[#0082FB] dark:text-white" : "text-slate-700 dark:text-slate-300",
                     ].join(" ")}
                   >
                     {item.label}
@@ -546,7 +546,7 @@ export function Sidebar({
 
                   <ChevronRight
                     size={13}
-                    className={active ? "relative shrink-0 text-[#0033FF] dark:text-white" : "relative shrink-0 text-slate-300"}
+                    className={active ? "relative shrink-0 text-[#0082FB] dark:text-white" : "relative shrink-0 text-slate-300"}
                   />
                 </Link>
               </li>

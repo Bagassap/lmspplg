@@ -32,7 +32,7 @@ interface DashboardData {
 }
 
 
-const P = "#4F8EF7";
+const P = "#0082FB";
 const R = "#EF4444";
 const G = "#00D67F";
 
@@ -41,7 +41,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
-  UMUM: P, AKADEMIK: "#6366F1", EKSKUL: G, DARURAT: R,
+  UMUM: P, AKADEMIK: "#0082FB", EKSKUL: G, DARURAT: R,
 };
 const kColor = (k: string) => KATEGORI_COLOR[k] ?? P;
 
@@ -57,7 +57,7 @@ function SectionCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] ${className}`}
+      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] ${className}`}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-700/40">
         <div className="flex items-center gap-2.5">
@@ -149,7 +149,7 @@ export default function GuruDashboardPage() {
       label: "Absensi Harian",
       value: data.kehadiran.hadir,
       suffix: " hadir",
-      gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
       icon: ClipboardCheck,
     },
     {
@@ -157,7 +157,7 @@ export default function GuruDashboardPage() {
       label: "Siswa Diampu",
       value: data.siswaAmpu,
       suffix: " siswa",
-      gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
       icon: Users,
     },
     {
@@ -165,7 +165,7 @@ export default function GuruDashboardPage() {
       label: "Kelas Wali",
       value: kelasWali.length,
       suffix: " kelas",
-      gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
+      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
       icon: GraduationCap,
     },
     {
@@ -173,7 +173,7 @@ export default function GuruDashboardPage() {
       label: "Pengumuman",
       value: data.pengumuman.length,
       suffix: " info",
-      gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
+      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
       icon: Megaphone,
     },
   ] as const;
@@ -197,7 +197,7 @@ export default function GuruDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-4"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-4"
         >
           <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi absensi kelas wali hari ini</p>
@@ -210,7 +210,7 @@ export default function GuruDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-8"
+          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-8"
         >
           <div className="mb-3 flex items-start justify-between">
             <div>
@@ -291,7 +291,7 @@ export default function GuruDashboardPage() {
                   transition={{ delay: 0.5 + i * 0.06 }}
                   className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                    style={{ background: "linear-gradient(135deg,#6334F4,#4F8EF7)" }}>
+                    style={{ background: "linear-gradient(135deg,#0082FB,#0082FB)" }}>
                     {k.nama.charAt(0)}
                   </div>
                   <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{k.nama}</p>

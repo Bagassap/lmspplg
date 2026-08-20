@@ -15,18 +15,18 @@ const STYLES = `
 `;
 
 const PARTICLES: { x: string; y: string; size: number; color: string; delay: number; dur: number }[] = [
-  { x: "11%",  y: "15%", size: 3,   color: "#4F8EF7", delay: 0,    dur: 6.2 },
+  { x: "11%",  y: "15%", size: 3,   color: "#0082FB", delay: 0,    dur: 6.2 },
   { x: "79%",  y: "10%", size: 2,   color: "#ffffff", delay: 1.3,  dur: 7.6 },
-  { x: "54%",  y: "6%",  size: 3.5, color: "#0033FF", delay: 0.7,  dur: 5.9 },
-  { x: "89%",  y: "43%", size: 2,   color: "#4F8EF7", delay: 1.9,  dur: 8.1 },
+  { x: "54%",  y: "6%",  size: 3.5, color: "#0082FB", delay: 0.7,  dur: 5.9 },
+  { x: "89%",  y: "43%", size: 2,   color: "#0082FB", delay: 1.9,  dur: 8.1 },
   { x: "23%",  y: "74%", size: 3,   color: "#ffffff", delay: 0.4,  dur: 6.6 },
-  { x: "66%",  y: "82%", size: 2,   color: "#0033FF", delay: 2.2,  dur: 7.1 },
-  { x: "93%",  y: "68%", size: 2.5, color: "#4F8EF7", delay: 1.0,  dur: 5.6 },
+  { x: "66%",  y: "82%", size: 2,   color: "#0082FB", delay: 2.2,  dur: 7.1 },
+  { x: "93%",  y: "68%", size: 2.5, color: "#0082FB", delay: 1.0,  dur: 5.6 },
   { x: "7%",   y: "52%", size: 2,   color: "#ffffff", delay: 1.6,  dur: 8.6 },
-  { x: "37%",  y: "90%", size: 3,   color: "#0033FF", delay: 2.5,  dur: 6.3 },
-  { x: "73%",  y: "33%", size: 2,   color: "#4F8EF7", delay: 0.8,  dur: 7.3 },
+  { x: "37%",  y: "90%", size: 3,   color: "#0082FB", delay: 2.5,  dur: 6.3 },
+  { x: "73%",  y: "33%", size: 2,   color: "#0082FB", delay: 0.8,  dur: 7.3 },
   { x: "46%",  y: "60%", size: 1.5, color: "#ffffff", delay: 3.0,  dur: 9.0 },
-  { x: "18%",  y: "38%", size: 2,   color: "#0033FF", delay: 1.1,  dur: 6.8 },
+  { x: "18%",  y: "38%", size: 2,   color: "#0082FB", delay: 1.1,  dur: 6.8 },
 ];
 
 const container: Variants = {
@@ -58,7 +58,7 @@ const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const DOT_COLORS = ["#4F8EF7", "#0033FF", "#ffffff"] as const;
+const DOT_COLORS = ["#0082FB", "#0082FB", "#ffffff"] as const;
 
 export function Splash() {
   const router = useRouter();
@@ -76,9 +76,9 @@ export function Splash() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 70% 5%, rgba(79,142,247,0.65), transparent 50%)," +
-            "radial-gradient(ellipse at 5% 95%, rgba(6,0,175,0.8), transparent 50%)," +
-            "linear-gradient(165deg, #4F8EF7 0%, #0033FF 38%, #0600AF 68%, #00003D 100%)",
+            "radial-gradient(ellipse at 70% 5%, rgba(0,130,251,0.65), transparent 50%)," +
+            "radial-gradient(ellipse at 5% 95%, rgba(0,100,224,0.8), transparent 50%)," +
+            "linear-gradient(165deg, #0082FB 0%, #0082FB 38%, #0064E0 68%, #1C2B33 100%)",
           backgroundSize: "200% 200%",
           animation: "gradientShift 9s ease-in-out infinite",
         }}
@@ -86,25 +86,25 @@ export function Splash() {
 
       <motion.div
         className="pointer-events-none absolute left-[4%] top-[4%] h-100 w-100 rounded-full blur-[110px]"
-        style={{ background: "rgba(79,142,247,0.22)" }}
+        style={{ background: "rgba(0,130,251,0.22)" }}
         animate={{ x: [0, 48, -12, 0], y: [0, 28, -16, 0] }}
         transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="pointer-events-none absolute bottom-[4%] right-[4%] h-90 w-90 rounded-full blur-[115px]"
-        style={{ background: "rgba(0,51,255,0.18)" }}
+        style={{ background: "rgba(0,130,251,0.18)" }}
         animate={{ x: [0, -38, 18, 0], y: [0, -22, 12, 0] }}
         transition={{ duration: 34, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="pointer-events-none absolute bottom-[-8%] left-[18%] h-80 w-80 rounded-full blur-[95px]"
-        style={{ background: "rgba(6,0,175,0.28)" }}
+        style={{ background: "rgba(0,100,224,0.28)" }}
         animate={{ x: [0, 26, 0], y: [0, -18, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="pointer-events-none absolute right-[14%] top-[22%] h-65 w-65 rounded-full blur-[85px]"
-        style={{ background: "rgba(79,142,247,0.13)" }}
+        style={{ background: "rgba(0,130,251,0.13)" }}
         animate={{ x: [0, -22, 10, 0], y: [0, 32, -10, 0] }}
         transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -180,7 +180,7 @@ export function Splash() {
               width: 200,
               height: 200,
               background:
-                "radial-gradient(circle, rgba(79,142,247,0.55), rgba(0,51,255,0.3) 55%, transparent 80%)",
+                "radial-gradient(circle, rgba(0,130,251,0.55), rgba(0,130,251,0.3) 55%, transparent 80%)",
               filter: "blur(40px)",
             }}
             animate={{ scale: [1, 1.22, 1], opacity: [0.5, 0.9, 0.5] }}
@@ -192,7 +192,7 @@ export function Splash() {
               width: 136,
               height: 136,
               background:
-                "radial-gradient(circle, rgba(79,142,247,0.4), rgba(0,51,255,0.2) 60%, transparent 80%)",
+                "radial-gradient(circle, rgba(0,130,251,0.4), rgba(0,130,251,0.2) 60%, transparent 80%)",
               filter: "blur(18px)",
             }}
             animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
@@ -207,7 +207,7 @@ export function Splash() {
             className="relative h-28 w-auto sm:h-32"
             style={{
               filter:
-                "drop-shadow(0 0 32px rgba(79,142,247,0.75)) drop-shadow(0 0 64px rgba(0,51,255,0.4)) drop-shadow(0 8px 24px rgba(0,0,0,0.55))",
+                "drop-shadow(0 0 32px rgba(0,130,251,0.75)) drop-shadow(0 0 64px rgba(0,130,251,0.4)) drop-shadow(0 8px 24px rgba(0,0,0,0.55))",
             }}
           />
         </motion.div>
@@ -223,7 +223,7 @@ export function Splash() {
             variants={slideRight}
             className="text-[1.65rem] font-bold leading-tight sm:text-[2rem]"
             style={{
-              background: "linear-gradient(90deg, #4F8EF7 0%, #7ab8ff 100%)",
+              background: "linear-gradient(90deg, #0082FB 0%, #0082FB 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -248,7 +248,7 @@ export function Splash() {
           >
             <span
               className="h-1.25 w-1.25 shrink-0 rounded-full"
-              style={{ background: "#4F8EF7", boxShadow: "0 0 6px #4F8EF7" }}
+              style={{ background: "#0082FB", boxShadow: "0 0 6px #0082FB" }}
             />
             SMK Ma&apos;arif NU 01 Limpung
           </span>

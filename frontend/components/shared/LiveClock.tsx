@@ -47,7 +47,7 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
   if (variant === "compact") {
     return (
       <div className="flex items-center gap-2 rounded-xl bg-white/12 px-3 py-1.5 backdrop-blur-sm">
-        <Clock size={11} className="shrink-0 animate-pulse text-[#977DFF]" />
+        <Clock size={11} className="shrink-0 animate-pulse text-[#0082FB]" />
         <span className="text-xs font-bold tabular-nums text-white">{jam}</span>
       </div>
     );
@@ -61,14 +61,14 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
   return (
     <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 sm:gap-3 sm:px-4 sm:py-2">
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <CalendarDays className="h-3 w-3 shrink-0 text-[#977DFF] sm:h-4 sm:w-4" />
+        <CalendarDays className="h-3 w-3 shrink-0 text-[#0082FB] sm:h-4 sm:w-4" />
         <span className="text-[11px] font-medium text-white/90 sm:text-sm">{hari}, {tanggal} {bulan} {tahun}</span>
       </div>
 
       <div className="h-3 w-px bg-white/20 sm:h-4" />
 
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <Clock className="h-3 w-3 shrink-0 animate-pulse text-[#977DFF] sm:h-4 sm:w-4" />
+        <Clock className="h-3 w-3 shrink-0 animate-pulse text-[#0082FB] sm:h-4 sm:w-4" />
         <span className="text-[11px] font-bold tabular-nums text-white sm:text-sm">{jam} WIB</span>
       </div>
     </div>

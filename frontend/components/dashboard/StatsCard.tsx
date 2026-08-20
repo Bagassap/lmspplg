@@ -5,9 +5,9 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 
 const THEMES = [
-  { icon: "#4F8EF7", iconBg: "#EEF4FF" },
-  { icon: "#00D67F", iconBg: "#ECFDF5" },
-  { icon: "#EF4444", iconBg: "#FFF1F2" },
+  { icon: "#0082FB", iconBg: "#EAF3FF" },
+  { icon: "#00D67F", iconBg: "#E3FBF0" },
+  { icon: "#EF4444", iconBg: "#FEE9EA" },
   { icon: "#F59E0B", iconBg: "#FFFBEB" },
 ] as const;
 
@@ -52,7 +52,7 @@ export default function StatsCard({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(0,0,0,0.10)" }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] cursor-default"
+      className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] cursor-default"
     >
       <div
         className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"

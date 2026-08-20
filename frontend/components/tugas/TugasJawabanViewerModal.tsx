@@ -19,7 +19,7 @@ export function TugasJawabanViewerModal({
   onSaveNilai?: (nilai: number) => Promise<void>;
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
-  const warna = isPg ? "#F59E0B" : "#2563EB";
+  const warna = isPg ? "#F59E0B" : "#0064E0";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
   const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
@@ -154,7 +154,7 @@ export function TugasJawabanViewerModal({
                   className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                 <button onClick={handleSaveNilai} disabled={saving || nilaiInput === ""}
                   className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   <Save size={13} /> {saving ? "Menyimpan…" : "Simpan Nilai"}
                 </button>
                 {nilai != null && <span className="text-[11px] text-slate-400">Nilai tersimpan: {nilai}</span>}

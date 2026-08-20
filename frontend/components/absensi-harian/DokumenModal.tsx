@@ -142,8 +142,8 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             </div>
           </div>
 
-          <div className="flex min-w-0 flex-1 flex-col bg-slate-50 dark:bg-[#141b2d]">
-            <div className="sticky top-0 z-10 shrink-0 border-b border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700/40 dark:bg-[#141b2d] sm:px-5 sm:py-4">
+          <div className="flex min-w-0 flex-1 flex-col bg-slate-50 dark:bg-[#1C2B33]">
+            <div className="sticky top-0 z-10 shrink-0 border-b border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700/40 dark:bg-[#1C2B33] sm:px-5 sm:py-4">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Dokumen Kehadiran</p>
             </div>
             <div className="flex-1 sm:min-h-0 sm:overflow-y-auto">
@@ -166,7 +166,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#6334F418" }}>
-                          <PenTool size={13} style={{ color: "#6334F4" }} />
+                          <PenTool size={13} style={{ color: "#0082FB" }} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tanda Tangan Digital</span>
                       </div>
@@ -188,19 +188,19 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0033FF18" }}>
-                          <MapPin size={13} style={{ color: "#0033FF" }} />
+                          <MapPin size={13} style={{ color: "#0082FB" }} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi Absensi</span>
                       </div>
                       <a href={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold hover:opacity-80" style={{ background: "#E8EDFF", color: "#0033FF" }}>
+                        className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold hover:opacity-80" style={{ background: "#EAF3FF", color: "#0082FB" }}>
                         <ExternalLink size={10} /> Maps
                       </a>
                     </div>
                     <iframe src={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}&output=embed`}
                       className="h-24 w-full border-0 sm:h-40" loading="lazy" title="Lokasi" />
                     <div className="flex items-center gap-2 px-4 py-2 sm:py-2.5">
-                      <MapPin size={11} className="shrink-0" style={{ color: "#335CFF" }} />
+                      <MapPin size={11} className="shrink-0" style={{ color: "#0064E0" }} />
                       <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400">{lokasi.lat}, {lokasi.lng}</span>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                 )}
               </div>
             </div>
-            <div className="sticky bottom-0 z-10 shrink-0 border-t border-slate-100 bg-white px-4 py-2.5 dark:border-slate-700/40 dark:bg-[#141b2d] sm:py-3">
+            <div className="sticky bottom-0 z-10 shrink-0 border-t border-slate-100 bg-white px-4 py-2.5 dark:border-slate-700/40 dark:bg-[#1C2B33] sm:py-3">
               <button onClick={onClose} className="w-full rounded-xl py-2.5 text-sm font-bold text-white"
                 style={{ background: BRAND_GRADIENT }}>
                 Tutup

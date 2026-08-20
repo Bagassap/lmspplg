@@ -79,7 +79,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={loading ? undefined : onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1c2434]"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1C2B33]"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
@@ -145,7 +145,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
                   <input
                     type="range" min={1} max={3} step={0.01} value={zoom}
                     onChange={(e) => setZoom(Number(e.target.value))}
-                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0033FF]"
+                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0082FB]"
                   />
                 </div>
                 <button

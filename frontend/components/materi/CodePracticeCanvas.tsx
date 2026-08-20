@@ -19,7 +19,7 @@ function buildSrcDoc(html: string, css: string, js: string) {
 <head>
 <meta charset="utf-8" />
 <style>
-  body { font-family: system-ui, sans-serif; color: #0f172a; margin: 0; padding: 12px; }
+  body { font-family: system-ui, sans-serif; color: #1C2B33; margin: 0; padding: 12px; }
   ${css}
 </style>
 </head>
@@ -29,7 +29,7 @@ ${html}
   window.addEventListener("error", function (e) {
     var pre = document.createElement("pre");
     pre.textContent = "Error: " + e.message;
-    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FFE9EA;color:#DC2626;font:12px monospace;white-space:pre-wrap;border-top:1px solid #FCA5A5;";
+    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FEE9EA;color:#EF4444;font:12px monospace;white-space:pre-wrap;border-top:1px solid #FCA5A5;";
     document.body.appendChild(pre);
   });
 <\/script>
@@ -139,7 +139,7 @@ export function CodePracticeCanvas({
             return (
               <button key={t.key} type="button" onClick={() => setTab(t.key)}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
-                style={active ? { background: "linear-gradient(135deg,#0033FF,#335CFF)" } : {}}>
+                style={active ? { background: "linear-gradient(135deg,#0082FB,#0064E0)" } : {}}>
                 <t.icon size={13} /> {t.label}
               </button>
             );
@@ -157,7 +157,7 @@ export function CodePracticeCanvas({
           </button>
           <button type="button" onClick={runNow}
             className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
-            style={{ background: "linear-gradient(135deg,#00D67F,#00B368)" }}>
+            style={{ background: "linear-gradient(135deg,#00D67F,#00D67F)" }}>
             <Play size={12} /> Run
           </button>
           <button type="button" onClick={() => setFullscreen((f) => !f)}
@@ -178,7 +178,7 @@ export function CodePracticeCanvas({
           onDragOver={blockDropEvent}
           onContextMenu={blockContextMenu}
           spellCheck={false}
-          placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #0033FF; }" : "console.log('halo');"}
+          placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #0082FB; }" : "console.log('halo');"}
           className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"
         />
         <iframe

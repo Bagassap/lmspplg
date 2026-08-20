@@ -31,7 +31,7 @@ interface DashboardData {
 }
 
 
-const P = "#4F8EF7";
+const P = "#0082FB";
 const R = "#EF4444";
 const G = "#00D67F";
 
@@ -40,7 +40,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
-  UMUM: P, AKADEMIK: "#6366F1", EKSKUL: G, DARURAT: R,
+  UMUM: P, AKADEMIK: "#0082FB", EKSKUL: G, DARURAT: R,
 };
 const kColor = (k: string) => KATEGORI_COLOR[k] ?? P;
 
@@ -56,7 +56,7 @@ function SectionCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] ${className}`}
+      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] ${className}`}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-700/40">
         <div className="flex items-center gap-2.5">
@@ -142,7 +142,7 @@ export default function SiswaDashboardPage() {
       label: "Absensi Harian",
       display: `${absensi.persentase}% hadir`,
       small: false,
-      gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
       icon: ClipboardCheck,
     },
     {
@@ -150,7 +150,7 @@ export default function SiswaDashboardPage() {
       label: "Total Hadir",
       display: `${absensi.hadir}x`,
       small: false,
-      gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
       icon: CheckCircle,
     },
     {
@@ -158,7 +158,7 @@ export default function SiswaDashboardPage() {
       label: "Pengumuman",
       display: `${data.pengumuman.length} info`,
       small: false,
-      gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
+      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
       icon: Megaphone,
     },
     {
@@ -166,7 +166,7 @@ export default function SiswaDashboardPage() {
       label: "PKL",
       display: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
       small: belumMagang,
-      gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
+      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
       icon: GraduationCap,
     },
   ] as const;
@@ -193,7 +193,7 @@ export default function SiswaDashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.25 }}
-            className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-4"
+            className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-4"
           >
             <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran semester ini</p>

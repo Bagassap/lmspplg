@@ -117,7 +117,7 @@ export default function AdminMagangPenempatanPage() {
 
   return (
     <div className="space-y-5 p-1">
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0033FF" }}>
+      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
         <div className="relative flex items-center gap-3 sm:gap-4">
@@ -140,7 +140,7 @@ export default function AdminMagangPenempatanPage() {
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
           <GradientStatCard
-            tone="green"
+            tone="bright"
             label="Tempat Magang"
             value={loading ? "—" : tempatList.length}
             caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
@@ -151,7 +151,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-4">
           <GradientStatCard
-            tone="blue"
+            tone="deep"
             label="Siswa PKL Aktif"
             value={loading ? "—" : jumlahAktif}
             caption={`${jumlahSelesai} sudah selesai`}
@@ -162,7 +162,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-2">
           <GradientStatCard
-            tone="purple"
+            tone="tint"
             label="Total Kuota"
             value={loading ? "—" : totalKuota}
             caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
@@ -173,7 +173,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-3">
           <GradientStatCard
-            tone="orange"
+            tone="ink"
             label="Total Riwayat Penempatan"
             value={loading ? "—" : penempatanList.length}
             caption="Sepanjang periode PKL"

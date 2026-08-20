@@ -21,10 +21,10 @@ type KelasGroup = {
   siswa: SiswaRow[];
 };
 
-const BRAND_BLUE = '#0033FF';
-const BRAND_BLUE_TINT = '#E8EDFF';
-const BRAND_BLUE_BORDER = '#D6E0FF';
-const POIN_RED = '#FF3644';
+const BRAND_BLUE = '#0082FB';
+const BRAND_BLUE_TINT = '#EAF3FF';
+const BRAND_BLUE_BORDER = '#EAF3FF';
+const POIN_RED = '#EF4444';
 
 const FONT_REGULAR = join(process.cwd(), 'src', 'assets', 'fonts', 'Satoshi-Regular.ttf');
 const FONT_BOLD = join(process.cwd(), 'src', 'assets', 'fonts', 'Satoshi-Bold.ttf');
@@ -67,7 +67,7 @@ export class CatatanSiswaPdfService {
     const drawTitle = () => {
       doc.roundedRect(margin, y, contentWidth, 3, 1.5).fill(BRAND_BLUE);
       y += 10;
-      doc.font('Satoshi-Bold').fontSize(16).fillColor('#0f172a').text('Laporan Catatan Siswa', margin, y);
+      doc.font('Satoshi-Bold').fontSize(16).fillColor('#1C2B33').text('Laporan Catatan Siswa', margin, y);
       doc.font('Satoshi').fontSize(9).fillColor('#94a3b8')
         .text(`Dicetak ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'short' })}`, margin, doc.y + 2);
       y = doc.y + 16;
@@ -104,7 +104,7 @@ export class CatatanSiswaPdfService {
     groups.forEach((group, gi) => {
       ensureSpace(30, false);
       if (gi > 0) y += 8;
-      doc.font('Satoshi-Bold').fontSize(13).fillColor('#0f172a').text(group.kelas.nama, margin, y);
+      doc.font('Satoshi-Bold').fontSize(13).fillColor('#1C2B33').text(group.kelas.nama, margin, y);
       doc.font('Satoshi');
       y = doc.y + 8;
 
@@ -145,7 +145,7 @@ export class CatatanSiswaPdfService {
           let cx = margin;
           doc.fontSize(8).fillColor('#334155').text(formatTgl(c.tanggal), cx + cellPad, y + 5, { width: colWidths[0] - cellPad * 2 });
           cx += colWidths[0];
-          doc.font('Satoshi-Bold').fontSize(8).fillColor('#0f172a').text(c.judul, cx + cellPad, y + 5, { width: colWidths[1] - cellPad * 2 });
+          doc.font('Satoshi-Bold').fontSize(8).fillColor('#1C2B33').text(c.judul, cx + cellPad, y + 5, { width: colWidths[1] - cellPad * 2 });
           doc.font('Satoshi');
           cx += colWidths[1];
           doc.fontSize(8).fillColor('#475569').text(c.catatan, cx + cellPad, y + 5, { width: colWidths[2] - cellPad * 2 });

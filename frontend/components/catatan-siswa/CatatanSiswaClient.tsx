@@ -192,7 +192,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
                         className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
                         <td className="whitespace-nowrap px-4 py-3">
                           <div className="flex items-center gap-2.5">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: "linear-gradient(135deg,#4F8EF7,#3B7CE8)" }}>
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                               {(s.nama ?? "?")[0]?.toUpperCase()}
                             </div>
                             <div className="min-w-0">
@@ -214,13 +214,13 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-center">
                           {s.totalPoin > 0 ? (
-                            <span className="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FFE9EA", color: "#FF3644" }}>{s.totalPoin} poin</span>
+                            <span className="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
                           ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-right">
                           <button onClick={() => setDetailId(s.siswaId)}
                             className="rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
-                            style={{ background: "#0033FF" }}>
+                            style={{ background: "#0082FB" }}>
                             Lihat &amp; Catat
                           </button>
                         </td>
@@ -258,17 +258,17 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
               <Users size={12} /> Ringkasan {selectedKelas?.nama ?? "Kelas"}
             </p>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#4F8EF7,#3B7CE8)" }}>
+              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <UserIcon size={16} className="shrink-0" />
                 <span className="text-sm font-extrabold">{inKelas.length}</span>
                 <span className="text-[10px] font-semibold text-white/80">Total Siswa</span>
               </div>
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#4ade80,#16a34a)" }}>
+              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#00D67F,#16a34a)" }}>
                 <NotebookPen size={16} className="shrink-0" />
                 <span className="text-sm font-extrabold">{kelasTercatat}</span>
                 <span className="text-[10px] font-semibold text-white/80">Siswa Tercatat</span>
               </div>
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#fb923c,#ea580c)" }}>
+              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <AlertTriangle size={16} className="shrink-0" />
                 <span className="text-sm font-extrabold">{kelasTotalPoin}</span>
                 <span className="text-[10px] font-semibold text-white/80">Total Poin</span>
@@ -278,7 +278,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
 
           <div className="flex flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <Download size={18} />
               </span>
               <div>
@@ -288,12 +288,12 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
             </div>
 
             <div className="mb-3 grid grid-cols-2 gap-2">
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "linear-gradient(135deg,#4F8EF7,#3B7CE8)" }}>
+              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <UserIcon size={15} />
                 <span className="text-base font-extrabold">{loading ? "—" : inKelas.length}</span>
                 <span className="text-[9px] font-semibold uppercase tracking-wide text-white/80">Siswa Kelas Ini</span>
               </div>
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "linear-gradient(135deg,#fb923c,#ea580c)" }}>
+              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                 <NotebookPen size={15} />
                 <span className="text-base font-extrabold">{loading ? "—" : kelasTotalCatatan}</span>
                 <span className="text-[9px] font-semibold uppercase tracking-wide text-white/80">Catatan Kelas Ini</span>
@@ -303,12 +303,12 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
             <div className="flex gap-1.5">
               <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
                 className="flex flex-1 items-center justify-center gap-1 rounded-xl border px-2 py-2 text-[11px] font-bold transition-all hover:brightness-95"
-                style={{ backgroundColor: "#FFF0EE", color: "#DC2626", borderColor: "#DC262630" }}>
+                style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#DC262630" }}>
                 <FileText size={12} /> PDF
               </a>
               <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
                 className="flex flex-1 items-center justify-center gap-1 rounded-xl border px-2 py-2 text-[11px] font-bold transition-all hover:brightness-95"
-                style={{ backgroundColor: "#E8F8F1", color: "#0F9D58", borderColor: "#0F9D5830" }}>
+                style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#0F9D5830" }}>
                 <FileSpreadsheet size={12} /> Excel
               </a>
             </div>
@@ -424,7 +424,7 @@ function CatatanDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-800" onClick={(e) => e.stopPropagation()}>
-        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#0033FF" }}>
+        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#0082FB" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
           <div className="relative flex items-center justify-between">
             <div className="min-w-0">
@@ -470,7 +470,7 @@ function CatatanDetailModal({
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Batal</button>
                 <button type="submit" disabled={saving}
                   className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   {saving && <Loader2 size={13} className="animate-spin" />}
                   {editTarget ? "Simpan Perubahan" : "Simpan Catatan"}
                 </button>
@@ -489,7 +489,7 @@ function CatatanDetailModal({
                   <div className="mb-1.5 flex items-start justify-between gap-2">
                     <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                     {c.poin != null && (
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#FFE9EA", color: "#FF3644" }}>{c.poin} poin</span>
+                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
                     )}
                   </div>
                   <p className="whitespace-pre-wrap text-xs leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>

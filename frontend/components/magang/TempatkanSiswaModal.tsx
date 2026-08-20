@@ -12,7 +12,7 @@ import type { TempatMagang, PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0033FF]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
+const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
 
 export function TempatkanSiswaModal({
   siswaList, tempatList, guruList, penempatanList, onClose, onSaved,
@@ -88,7 +88,7 @@ export function TempatkanSiswaModal({
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0033FF] px-6 py-5">
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
             <Briefcase size={18} className="text-white" />
@@ -115,7 +115,7 @@ export function TempatkanSiswaModal({
                   <p className="truncate text-[11px] text-slate-400">{siswaTerpilih.nis} · {siswaTerpilih.kelas.nama}</p>
                 </div>
                 <button type="button" onClick={gantiSiswa}
-                  className="flex shrink-0 items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#0033FF] shadow-sm hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
+                  className="flex shrink-0 items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#0082FB] shadow-sm hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
                   <Pencil size={11} /> Ganti
                 </button>
               </div>
@@ -191,7 +191,7 @@ export function TempatkanSiswaModal({
             Batal
           </button>
           <button onClick={save} disabled={saving}
-            className="rounded-xl bg-[#0033FF] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
+            className="rounded-xl bg-[#0082FB] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
             {saving ? "Menyimpan..." : "Tempatkan"}
           </button>
         </div>

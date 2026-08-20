@@ -60,7 +60,7 @@ export function SubmisiTugasModal({
             <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90dvh] flex flex-col overflow-hidden">
 
-              <div className="relative p-6 shrink-0" style={{ background: "#0033FF" }}>
+              <div className="relative p-6 shrink-0" style={{ background: "#0082FB" }}>
                 <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
                 <button onClick={onClose} className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors">
                   <X size={16} className="text-white" />
@@ -89,10 +89,10 @@ export function SubmisiTugasModal({
 
               <div className="grid grid-cols-3 gap-y-3 shrink-0 border-b border-slate-100 py-3 dark:border-slate-700 sm:grid-cols-5 sm:gap-y-0 sm:py-0">
                 {[
-                  { label: "Total", val: rows.length, color: "#0033FF" },
+                  { label: "Total", val: rows.length, color: "#0082FB" },
                   { label: "Diterima", val: cntDiterima, color: "#00D67F" },
                   { label: "Revisi", val: cntRevisi, color: "#F59E0B" },
-                  { label: "Menunggu", val: cntMenunggu, color: "#4F8EF7" },
+                  { label: "Menunggu", val: cntMenunggu, color: "#0082FB" },
                   { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#EF4444" },
                 ].map((st, i) => (
                   <div key={i} className="p-2.5 text-center sm:border-r sm:border-slate-100 sm:p-4 sm:last:border-r-0 dark:sm:border-slate-700">
@@ -105,7 +105,7 @@ export function SubmisiTugasModal({
               <div className="flex shrink-0 gap-1 border-b border-slate-100 px-4 pt-3 dark:border-slate-700">
                 <button onClick={() => setTab("sudah")}
                   className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2 text-xs font-bold transition-colors ${
-                    tab === "sudah" ? "bg-[#0033FF]/10 text-[#0033FF]" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    tab === "sudah" ? "bg-[#0082FB]/10 text-[#0082FB]" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   }`}>
                   <CheckCircle size={13} /> Sudah Mengumpulkan ({rows.length})
                 </button>
@@ -175,19 +175,19 @@ export function SubmisiTugasModal({
                       {isPraktik ? (
                         <button onClick={() => setViewCodeTarget(s)}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#0033FF", backgroundColor: "#EFF6FF" }}>
+                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
                           <Code2 size={12} /> Lihat Kode
                         </button>
                       ) : isSoalBased ? (
                         <button onClick={() => setViewJawabanTarget(s)}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#0033FF", backgroundColor: "#EFF6FF" }}>
+                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
                           {tugas.tipe === "PILIHAN_GANDA" ? <ListChecks size={12} /> : <PenLine size={12} />} Lihat Jawaban
                         </button>
                       ) : s.fileUrl && (
                         <a href={s.fileUrl} target="_blank" rel="noopener noreferrer"
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#0033FF", backgroundColor: "#EFF6FF" }}>
+                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
                           <Download size={12} /> File
                         </a>
                       )}

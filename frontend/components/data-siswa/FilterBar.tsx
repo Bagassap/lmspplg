@@ -4,18 +4,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, Users, BookOpen, Mars, Venus, Filter, Sparkles, School, ChevronDown } from "lucide-react";
 import { kelasShort, type SiswaCardData, type KelasRef } from "./shared";
 
-// #1120F0 = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
+// #0082FB = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
 // & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
-// pakai token --color-primary bawaan (#4F8EF7) karena token itu dipakai luas
+// pakai token --color-primary bawaan (#0082FB) karena token itu dipakai luas
 // di luar Data Siswa (sidebar, topbar, dll) dan tidak boleh ikut berubah.
-const REF_PRIMARY = "#1120F0";
-const REF_SUCCESS = "#10b981";
+const REF_PRIMARY = "#0082FB";
+const REF_SUCCESS = "#00D67F";
 
 const JURUSAN_PILLS = [
   { value: "" as const, label: "Semua", color: REF_PRIMARY },
-  { value: "Pengembangan Perangkat Lunak dan Gim" as const, label: "PPLG", color: "#8b5cf6" },
-  { value: "Pengembangan Gim" as const, label: "Gim", color: "#0EA5E9" },
-  { value: "Rekayasa Perangkat Lunak" as const, label: "RPL", color: "#0d9488" },
+  { value: "Pengembangan Perangkat Lunak dan Gim" as const, label: "PPLG", color: "#0082FB" },
+  { value: "Pengembangan Gim" as const, label: "Gim", color: "#0082FB" },
+  { value: "Rekayasa Perangkat Lunak" as const, label: "RPL", color: "#0064E0" },
 ];
 
 const GENDER_PILLS = [
@@ -79,7 +79,7 @@ export function FilterBar({
             <select
               value={selectedKelasId}
               onChange={(e) => onSelectKelas(e.target.value)}
-              className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             >
               {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
             </select>
@@ -97,7 +97,7 @@ export function FilterBar({
               value={search}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="Cari nama atau NIS…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
             />
             <AnimatePresence>
               {search && (
@@ -187,7 +187,7 @@ export function FilterBar({
           </p>
           <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
             {lPct > 0 && <div style={{ width: `${lPct}%`, backgroundColor: REF_PRIMARY }} />}
-            {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: "#ec4899" }} />}
+            {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: "#0082FB" }} />}
           </div>
           <div className="mt-2.5 flex flex-wrap items-center gap-4">
             <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -196,7 +196,7 @@ export function FilterBar({
               <span className="text-slate-400 dark:text-slate-500">({lPct}%)</span>
             </span>
             <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#ec4899" }} />
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#0082FB" }} />
               Perempuan <span className="font-bold text-slate-800 dark:text-white">{pCount}</span>
               <span className="text-slate-400 dark:text-slate-500">({pPct}%)</span>
             </span>

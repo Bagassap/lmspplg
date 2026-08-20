@@ -162,7 +162,7 @@ export default function ManajemenPasswordClient() {
   return (
     <div className="space-y-5">
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "#0033FF" }}>
+        style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -225,7 +225,7 @@ export default function ManajemenPasswordClient() {
               onClick={() => setCreateAccountOpen(true)}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-lg shrink-0"
-              style={{ color: "#0033FF" }}>
+              style={{ color: "#0082FB" }}>
               <UserPlus size={15} /> Buat Akun
             </motion.button>
           </div>

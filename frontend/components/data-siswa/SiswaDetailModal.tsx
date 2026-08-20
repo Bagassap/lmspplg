@@ -11,9 +11,9 @@ import {
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
-const HEADER_GRADIENT = "#0033FF";
+const HEADER_GRADIENT = "#0082FB";
 // Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
-const REF_PRIMARY = "#1120F0";
+const REF_PRIMARY = "#0082FB";
 
 function FieldItem({ icon: Icon, label, value, full, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
@@ -163,7 +163,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               {onEdit && (
                 <motion.button
                   type="button" onClick={onEdit}
-                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(37,99,235,0.4)" }}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(0,100,224,0.4)" }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold text-white shadow-sm"
                   style={{ background: HEADER_GRADIENT }}

@@ -22,9 +22,9 @@ function printSlip(opts: { nama: string; loginId?: string; password: string }) {
   }).format(new Date()) + " WIB";
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Slip Password — ${opts.nama}</title>
     <style>
-      body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;color:#1e293b;}
+      body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;color:#1C2B33;}
       .card{border:2px dashed #cbd5e1;border-radius:16px;padding:20px;max-width:340px;margin:0 auto;}
-      h1{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#6334F4;margin:0 0 4px;}
+      h1{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#0082FB;margin:0 0 4px;}
       .nama{font-size:18px;font-weight:800;margin:0 0 16px;}
       .row{margin-bottom:12px;}
       .label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;font-weight:700;}
@@ -120,7 +120,7 @@ export function ResetPasswordModal({
           exit={{ scale: 0.95, opacity: 0, y: 24 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
           {successPassword ? (
             <>
-              <div className="relative overflow-hidden bg-[#00B368] px-6 py-5">
+              <div className="relative overflow-hidden bg-[#00D67F] px-6 py-5">
                 <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -176,14 +176,14 @@ export function ResetPasswordModal({
                 <motion.button type="button" onClick={onClose}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md"
-                  style={{ backgroundColor: "#00B368" }}>
+                  style={{ backgroundColor: "#00D67F" }}>
                   Selesai
                 </motion.button>
               </div>
             </>
           ) : (
           <>
-          <div className="relative overflow-hidden bg-[#DC2626] px-6 py-5">
+          <div className="relative overflow-hidden bg-[#EF4444] px-6 py-5">
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -293,7 +293,7 @@ export function ResetPasswordModal({
             <motion.button type="button" onClick={handleReset} disabled={saving}
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #DC262655" }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md transition-opacity disabled:opacity-60"
-              style={{ backgroundColor: "#DC2626" }}>
+              style={{ backgroundColor: "#EF4444" }}>
               {saving
                 ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Mereset…</>
                 : <><KeyRound size={14} />Reset Password</>}

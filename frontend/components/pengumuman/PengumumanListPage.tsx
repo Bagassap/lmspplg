@@ -17,10 +17,10 @@ import { Avatar } from "@/components/shared/Avatar";
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
 const KATEGORI_GRADIENT: Record<string, string> = {
-  Umum:     "linear-gradient(135deg, #6334F4 0%, #977DFF 100%)",
-  Akademik: "linear-gradient(135deg, #3B7CE8 0%, #4F8EF7 100%)",
-  Magang:   "linear-gradient(135deg, #F97316 0%, #FB923C 100%)",
-  Ujian:    "linear-gradient(135deg, #EF4444 0%, #F87171 100%)",
+  Umum:     "linear-gradient(135deg, #0082FB 0%, #0082FB 100%)",
+  Akademik: "linear-gradient(135deg, #0064E0 0%, #0082FB 100%)",
+  Magang:   "linear-gradient(135deg, #0082FB 0%, #0082FB 100%)",
+  Ujian:    "linear-gradient(135deg, #EF4444 0%, #EF4444 100%)",
   Lainnya:  "linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%)",
 };
 
@@ -67,8 +67,8 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     return announcementDates.has(key);
   }
 
-  const CALENDAR_GRADIENT = "#0033FF";
-  const DOT_COLOR = "#2563eb";
+  const CALENDAR_GRADIENT = "#0082FB";
+  const DOT_COLOR = "#0064E0";
   function dotColor(_d: number) { return DOT_COLOR; }
 
   return (
@@ -95,11 +95,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1c2434] px-4 pb-4 pt-3">
+      <div className="bg-white dark:bg-[#1C2B33] px-4 pb-4 pt-3">
         <div className="grid grid-cols-7 mb-2">
           {DAY_ID.map((d, i) => (
             <div key={d} className="text-center text-[10px] font-bold"
-              style={{ color: i >= 5 ? "#0ea5e9" : "#94a3b8" }}>{d}</div>
+              style={{ color: i >= 5 ? "#0082FB" : "#94a3b8" }}>{d}</div>
           ))}
         </div>
 
@@ -112,7 +112,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-sky-500 dark:text-sky-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#0082FB] dark:text-[#4FB0FF]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
@@ -181,7 +181,7 @@ function AccordionCard({
   }
 
   return (
-    <div className={`overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1c2434] ${
+    <div className={`overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1C2B33] ${
       isOpen ? "shadow-[0_4px_20px_rgba(0,0,0,0.12)]" : ""
     }`}>
 
@@ -279,7 +279,7 @@ function AccordionCard({
                       textClassName="text-[11px] font-extrabold"
                       className="shadow-lg ring-2 ring-white dark:ring-slate-700"
                     />
-                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-400 ring-1 ring-white dark:ring-[#1c2434]">
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-400 ring-1 ring-white dark:ring-[#1C2B33]">
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
                   </div>
@@ -318,23 +318,23 @@ function AccordionCard({
             <div className="relative overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-                style={{ background: "linear-gradient(90deg, #6334F4 0%, #977DFF 60%, transparent 100%)" }}
+                style={{ background: "linear-gradient(90deg, #0082FB 0%, #0082FB 60%, transparent 100%)" }}
               />
-              <div className="relative flex items-center gap-3 border-y border-[#6334F4]/10 px-6 py-3 dark:border-[#6334F4]/20">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6334F4]/12 dark:bg-[#6334F4]/20">
-                  <MessageCircle size={13} className="text-[#6334F4] dark:text-purple-400" />
+              <div className="relative flex items-center gap-3 border-y border-[#0082FB]/10 px-6 py-3 dark:border-[#0082FB]/20">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0082FB]/12 dark:bg-[#0082FB]/20">
+                  <MessageCircle size={13} className="text-[#0082FB] dark:text-[#4FB0FF]" />
                 </div>
                 <span className="text-[13px] font-extrabold tracking-tight text-slate-800 dark:text-white">
                   Ruang Diskusi
                 </span>
                 {detail && (
-                  <span className="rounded-full bg-[#6334F4]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#6334F4] dark:bg-purple-900/30 dark:text-purple-400">
+                  <span className="rounded-full bg-[#0082FB]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#0082FB] dark:bg-[#0064E0]/30 dark:text-[#4FB0FF]">
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}
                 <div className="ml-auto flex items-center gap-1 opacity-30">
                   {[0,1,2].map(i => (
-                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#6334F4]" style={{ opacity: 1 - i * 0.25 }} />
+                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#0082FB]" style={{ opacity: 1 - i * 0.25 }} />
                   ))}
                 </div>
               </div>
@@ -344,8 +344,8 @@ function AccordionCard({
               {detailLoading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <div className="h-10 w-10 rounded-full bg-[#6334F4]/10" />
-                    <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#6334F4]" />
+                    <div className="h-10 w-10 rounded-full bg-[#0082FB]/10" />
+                    <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#0082FB]" />
                   </div>
                   <span className="text-[12px] text-slate-400">Memuat diskusi...</span>
                 </div>
@@ -480,7 +480,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
     <div className="space-y-5">
 
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "#0033FF" }}>
+        style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
@@ -517,7 +517,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                 onClick={() => { setEditItem(null); setModalOpen(true); }}
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-[13px] font-bold shadow-lg shrink-0"
-                style={{ color: "#6334F4" }}>
+                style={{ color: "#0082FB" }}>
                 <Plus size={15}/> Buat Pengumuman
               </motion.button>
             )}
@@ -550,7 +550,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             ))}
           </div>
         ) : sorted.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-100 bg-white py-24 text-center dark:border-slate-700/50 dark:bg-[#1c2434]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-100 bg-white py-24 text-center dark:border-slate-700/50 dark:bg-[#1C2B33]">
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
               <Bell size={22} className="text-primary" />
             </div>

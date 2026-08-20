@@ -10,7 +10,7 @@ import type { KelasRef } from "./shared";
 // merender popup <option> pakai tema terang bawaan OS meski <select>-nya
 // sendiri sudah gelap (Tailwind dark: tidak bisa menjangkau elemen <option>),
 // sehingga daftar kelas jadi teks gelap di atas background gelap saat dibuka.
-const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#0033FF] focus:bg-white focus:ring-2 focus:ring-[#0033FF]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
+const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#0082FB] focus:bg-white focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
 
 // Jumlah siswa AKTIF di satu kelas — dihitung langsung dari /api/siswa
 // (sudah difilter AKTIF di backend) supaya preview di modal ini selalu
@@ -95,7 +95,7 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
       )}
 
       <button onClick={submit} disabled={!dariKelasId || !keKelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0033FF] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0082FB] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <ArrowUpCircle size={15} />}
         {saving ? "Memproses…" : "Naikkan Semua Siswa"}
       </button>
@@ -156,7 +156,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#EF4444] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -183,7 +183,7 @@ export function KenaikanKelasModal({
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
-            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0033FF] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0082FB] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
                   <ArrowUpCircle size={18} className="text-white" />
@@ -197,7 +197,7 @@ export function KenaikanKelasModal({
 
             <div className="flex shrink-0 gap-1 border-b border-slate-100 px-5 pt-3 dark:border-slate-700">
               <button onClick={() => setTab("naik")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "naik" ? "bg-blue-50 text-[#0033FF] dark:bg-blue-900/20" : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "naik" ? "bg-blue-50 text-[#0082FB] dark:bg-blue-900/20" : "text-slate-400 hover:text-slate-600"}`}>
                 <ArrowUpCircle size={13} /> Naikkan Kelas
               </button>
               <button onClick={() => setTab("lulus")}

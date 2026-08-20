@@ -16,9 +16,9 @@ import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal
 import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-const P = "#4F8EF7";   
+const P = "#0082FB";   
 const R = "#EF4444";   
-const B = "#6366F1";   
+const B = "#0082FB";   
 const G = "#00D67F";   
 
 
@@ -42,7 +42,7 @@ interface DashboardData {
 
 
 function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1c2434] ${className}`} />;
+  return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1C2B33] ${className}`} />;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
@@ -63,7 +63,7 @@ function SectionCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[#1c2434] ${className}`}
+      className={`flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33] ${className}`}
       style={style}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-7.5 py-4 dark:border-slate-700/40">
@@ -159,7 +159,7 @@ export default function AdminDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
       icon: Calendar,
     },
     {
@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
       icon: Megaphone,
     },
     {
@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
+      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
       icon: Briefcase,
     },
     {
@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
+      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
       icon: FileText,
     },
   ] as const;
@@ -217,7 +217,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-4"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-4"
         >
           <div className="mb-1">
             <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
@@ -232,7 +232,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-8"
+          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-8"
         >
           <div className="mb-2 flex items-start justify-between">
             <div>
@@ -353,7 +353,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.6 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1c2434] xl:col-span-7"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-7"
         >
           <h2 className="mb-1 text-base font-bold text-slate-800 dark:text-white">Kehadiran Per Kelas</h2>
           <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">Hadir vs tidak hadir per kelas</p>

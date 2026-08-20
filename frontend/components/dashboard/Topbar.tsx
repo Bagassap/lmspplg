@@ -102,8 +102,8 @@ const NOTIF_TYPE_STYLE: Record<ApiNotifType, NotifType> = {
 };
 
 const NOTIF_STYLE: Record<NotifType, { bg: string; color: string }> = {
-  info:    { bg: "#EFF6FF", color: "#3B82F6" },
-  success: { bg: "#F0FDF4", color: "#22C55E" },
+  info:    { bg: "#EAF3FF", color: "#0082FB" },
+  success: { bg: "#F0FDF4", color: "#00D67F" },
   warning: { bg: "#FFFBEB", color: "#F59E0B" },
   error:   { bg: "#FEF2F2", color: "#EF4444" },
 };
@@ -280,7 +280,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-white px-4 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-colors duration-200 dark:bg-[#1c2434] md:px-5 2xl:px-10">
+      <header className="sticky top-0 z-30 flex items-center gap-3 bg-white px-4 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-colors duration-200 dark:bg-[#1C2B33] md:px-5 2xl:px-10">
         <button
           onClick={onMenuClick}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 lg:hidden"
@@ -362,7 +362,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1c2434] dark:shadow-black/30"
+                  className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1C2B33] dark:shadow-black/30"
                 >
                   <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-slate-700">
                     <div>
@@ -443,7 +443,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                 src={user.fotoProfil}
                 nama={user.nama}
                 sizePx={28}
-                fallbackBg="linear-gradient(135deg, #8099EC, #4F8EF7)"
+                fallbackBg="linear-gradient(135deg, #8099EC, #0082FB)"
                 textClassName="text-[11px] font-bold"
               />
               <span className="hidden text-sm font-medium text-gray-700 dark:text-slate-200 sm:block">
@@ -462,7 +462,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.13 }}
-                  className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-[10px] border border-gray-200 bg-white py-2 shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1c2434] dark:shadow-black/30"
+                  className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-[10px] border border-gray-200 bg-white py-2 shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1C2B33] dark:shadow-black/30"
                 >
                   <div className="mb-1 border-b border-gray-200 px-4 pb-3 pt-1 dark:border-slate-700">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.nama}</p>
@@ -512,7 +512,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.97 }}
               transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-4 top-20 z-50 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#1c2434] sm:left-1/2 sm:right-auto sm:top-24 sm:w-full sm:max-w-lg sm:-translate-x-1/2"
+              className="fixed inset-x-4 top-20 z-50 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#1C2B33] sm:left-1/2 sm:right-auto sm:top-24 sm:w-full sm:max-w-lg sm:-translate-x-1/2"
             >
               <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3.5 dark:border-slate-700">
                 <Search size={17} className="shrink-0 text-gray-400 dark:text-slate-400" />
@@ -552,7 +552,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                         onClick={() => { setSearchOpen(false); router.push(item.href); }}
                         onMouseEnter={() => setSelectedIdx(i)}
                         className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50"
-                        style={isSelected ? { backgroundColor: "rgba(79,142,247,0.1)" } : {}}
+                        style={isSelected ? { backgroundColor: "rgba(0,130,251,0.1)" } : {}}
                       >
                         <div
                           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
@@ -568,7 +568,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                         <div className="min-w-0 flex-1">
                           <p
                             className="text-sm font-medium"
-                            style={{ color: isSelected ? "#4F8EF7" : undefined }}
+                            style={{ color: isSelected ? "#0082FB" : undefined }}
                           >
                             {item.label}
                           </p>

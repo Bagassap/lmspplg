@@ -37,9 +37,9 @@ function RankBadge({ index }: { index: number }) {
 // Bar color varies with how bad the attendance actually is — red under 50%,
 // amber under 75%, blue otherwise.
 function severityColor(pct: number) {
-  if (pct < 50) return "#FF3644";
+  if (pct < 50) return "#EF4444";
   if (pct < 75) return "#E6A800";
-  return "#0033FF";
+  return "#0082FB";
 }
 
 function StatPill({
@@ -96,7 +96,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#EF4444,#DC2626)" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#EF4444,#EF4444)" }}>
               <TrendingDown size={18} />
             </span>
             <div>
@@ -192,7 +192,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
                       <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
                         className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
                           periode === opt.key
-                            ? "bg-violet-500 text-white shadow-sm"
+                            ? "bg-[#0082FB] text-white shadow-sm"
                             : "text-slate-500 dark:text-slate-400"
                         }`}>
                         {opt.label}
@@ -209,7 +209,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
                 <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#EF4444" value={String(totalBermasalah)} label="Bermasalah" />
                 <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#F59E0B" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#0033FF" value={`${rataKehadiran}%`} label="Rata Hadir" />
+                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#0082FB" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 
               {loading ? (

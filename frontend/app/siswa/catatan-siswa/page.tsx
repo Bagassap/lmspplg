@@ -38,7 +38,7 @@ export default function SiswaCatatanSayaPage() {
   return (
     <div className="space-y-5">
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "#0033FF" }}>
+        style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -87,7 +87,7 @@ export default function SiswaCatatanSayaPage() {
                 <div className="mb-1.5 flex items-start justify-between gap-2">
                   <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                   {c.poin != null && (
-                    <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#FFE9EA", color: "#FF3644" }}>{c.poin} poin</span>
+                    <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
                   )}
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>

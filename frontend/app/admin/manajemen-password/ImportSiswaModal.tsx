@@ -86,7 +86,7 @@ export function ImportSiswaModal({
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
-            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0033FF] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0082FB] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
                   <FileSpreadsheet size={18} className="text-white" />
@@ -110,8 +110,8 @@ export function ImportSiswaModal({
                 <Download size={15} /> Unduh Template Excel
               </button>
 
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0033FF]/40 hover:bg-[#0033FF]/5 dark:border-slate-600 dark:bg-slate-700/40">
-                <Upload size={16} className="shrink-0 text-[#0033FF]" />
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40">
+                <Upload size={16} className="shrink-0 text-[#0082FB]" />
                 <div className="min-w-0 flex-1">
                   {file ? (
                     <p className="truncate text-sm font-semibold text-gray-800 dark:text-slate-200">{file.name}</p>
@@ -124,7 +124,7 @@ export function ImportSiswaModal({
               </label>
 
               <button onClick={submit} disabled={!file || uploading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0033FF] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0082FB] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
                 {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
                 {uploading ? "Memproses…" : "Proses Impor"}
               </button>

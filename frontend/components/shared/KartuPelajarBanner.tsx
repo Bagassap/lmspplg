@@ -26,7 +26,7 @@ export function KartuPelajarBanner({
     >
       <div className="flex items-center gap-3.5">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-sm animate-pulse [animation-duration:2.5s]"
-          style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
+          style={{ background: "linear-gradient(135deg,#F59E0B,#0064E0)" }}>
           <CreditCard size={20} />
         </div>
         <div>
@@ -39,7 +39,7 @@ export function KartuPelajarBanner({
       </div>
 
       <span className="flex shrink-0 items-center gap-1.5 self-start rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm transition-transform group-hover:translate-x-0.5 sm:self-auto"
-        style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
+        style={{ background: "linear-gradient(135deg,#F59E0B,#0064E0)" }}>
         Buka e-Kartu
         <ArrowUpRight size={14} />
       </span>

@@ -87,7 +87,7 @@ export function PenempatanTable({
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus(p, e.target.value as StatusPenempatan)}
-                          className="rounded-full border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#1120F0]/30"
+                          className="rounded-full border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
                           style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                           <option value="AKTIF">Aktif</option>
                           <option value="SELESAI">Selesai</option>

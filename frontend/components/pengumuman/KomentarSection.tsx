@@ -17,18 +17,18 @@ export type KomentarItem = {
 };
 
 const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300", dot: "#6334F4" },
-  GURU:  { label: "Guru",   cls: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",  dot: "#F97316" },
+  ADMIN: { label: "Admin",  cls: "bg-[#4FB0FF] text-[#0064E0] dark:bg-[#0064E0]/40 dark:text-[#4FB0FF]", dot: "#0082FB" },
+  GURU:  { label: "Guru",   cls: "bg-[#1C2B33]/10 text-[#1C2B33] dark:bg-[#1C2B33]/60 dark:text-[#F1F5F8]",  dot: "#0064E0" },
   SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#00D67F" },
 };
 
 const AVATAR_PALETTE = [
-  "linear-gradient(135deg,#6334F4,#977DFF)",
-  "linear-gradient(135deg,#EF4444,#F87171)",
-  "linear-gradient(135deg,#F97316,#FB923C)",
+  "linear-gradient(135deg,#0082FB,#0082FB)",
+  "linear-gradient(135deg,#EF4444,#EF4444)",
+  "linear-gradient(135deg,#0082FB,#0082FB)",
   "linear-gradient(135deg,#F59E0B,#FCD34D)",
-  "linear-gradient(135deg,#0033FF,#4F8EF7)",
-  "linear-gradient(135deg,#00D67F,#34D399)",
+  "linear-gradient(135deg,#0082FB,#0082FB)",
+  "linear-gradient(135deg,#00D67F,#00D67F)",
 ];
 function avatarGradient(name: string) { return AVATAR_PALETTE[name.charCodeAt(0) % AVATAR_PALETTE.length]; }
 
@@ -107,10 +107,10 @@ function KomentarBubble({
             sizePx={36}
             fallbackBg={avatarBg}
             textClassName="text-xs font-extrabold"
-            className="shadow-md ring-2 ring-white dark:ring-[#1c2434]"
+            className="shadow-md ring-2 ring-white dark:ring-[#1C2B33]"
           />
           <span
-            className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1c2434]"
+            className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1C2B33]"
             style={{ backgroundColor: badge.dot }}
           />
         </div>
@@ -137,7 +137,7 @@ function KomentarBubble({
               {!isReply && (
                 <button
                   onClick={() => setShowReplyForm((v) => !v)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-blue-50 hover:text-[#2563eb] dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-blue-50 hover:text-[#0064E0] dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 >
                   <CornerDownRight size={11} /> Balas
                 </button>
@@ -161,7 +161,7 @@ function KomentarBubble({
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-2 overflow-hidden"
               >
-                <div className="flex items-end gap-2 rounded-xl border border-[#2563eb]/25 bg-gradient-to-br from-blue-50 to-white p-3 dark:border-blue-700/30 dark:from-blue-900/10 dark:to-[#1c2434]">
+                <div className="flex items-end gap-2 rounded-xl border border-[#0064E0]/25 bg-gradient-to-br from-blue-50 to-white p-3 dark:border-blue-700/30 dark:from-blue-900/10 dark:to-[#1C2B33]">
                   <textarea
                     rows={2}
                     value={replyText}
@@ -173,8 +173,8 @@ function KomentarBubble({
                   <button
                     onClick={submitReply}
                     disabled={sending || !replyText.trim()}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
-                    style={{ background: "#4338ca" }}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(0,100,224,0.4)]"
+                    style={{ background: "#0064E0" }}
                   >
                     {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   </button>
@@ -189,7 +189,7 @@ function KomentarBubble({
         <div className="ml-12">
           <button
             onClick={() => setShowReplies((v) => !v)}
-            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#2563eb]/70 transition-all hover:bg-blue-50 hover:text-[#2563eb] dark:hover:bg-blue-900/20"
+            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#0064E0]/70 transition-all hover:bg-blue-50 hover:text-[#0064E0] dark:hover:bg-blue-900/20"
           >
             <ChevronDown size={12} className={`transition-transform duration-200 ${showReplies ? "rotate-180" : ""}`} />
             {k.replies.length} balasan
@@ -200,7 +200,7 @@ function KomentarBubble({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="space-y-2 border-l-2 border-[#2563eb]/15 pl-3 dark:border-blue-700/25"
+                className="space-y-2 border-l-2 border-[#0064E0]/15 pl-3 dark:border-blue-700/25"
               >
                 {k.replies.map((r) => (
                   <KomentarBubble
@@ -302,11 +302,11 @@ export function KomentarSection({
 
       <div className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 dark:bg-slate-800/50 ${
         focused
-          ? "border-[#2563eb]/40 shadow-[0_0_0_4px_rgba(37,99,235,0.08)]"
+          ? "border-[#0064E0]/40 shadow-[0_0_0_4px_rgba(0,100,224,0.08)]"
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: "linear-gradient(90deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }} />
+          style={{ background: "linear-gradient(90deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }} />
 
         <textarea
           rows={3}
@@ -326,8 +326,8 @@ export function KomentarSection({
           <button
             onClick={submitKomentar}
             disabled={sending || !teks.trim()}
-            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(37,99,235,0.45)] active:scale-95"
-            style={{ background: "#4338ca" }}
+            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(0,100,224,0.45)] active:scale-95"
+            style={{ background: "#0064E0" }}
           >
             {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             {sending ? "Mengirim…" : "Kirim"}
@@ -336,9 +336,9 @@ export function KomentarSection({
       </div>
 
       {komentar.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-gradient-to-br from-slate-50 to-white py-10 text-center dark:border-slate-700/40 dark:from-slate-800/30 dark:to-[#1c2434]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2563eb]/10 to-[#0ea5e9]/10">
-            <Sparkles size={20} className="text-[#2563eb] dark:text-blue-400" />
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-gradient-to-br from-slate-50 to-white py-10 text-center dark:border-slate-700/40 dark:from-slate-800/30 dark:to-[#1C2B33]">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0064E0]/10 to-[#0082FB]/10">
+            <Sparkles size={20} className="text-[#0064E0] dark:text-blue-400" />
           </div>
           <p className="text-[13px] font-bold text-slate-500 dark:text-slate-400">Belum ada komentar</p>
           <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Jadilah yang pertama berkomentar!</p>
@@ -362,7 +362,7 @@ export function KomentarSection({
               className={`flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed py-2 text-[12px] font-bold transition-all ${
                 showAll
                   ? "border-slate-200 text-slate-400 hover:bg-slate-50 dark:border-slate-700/50 dark:hover:bg-slate-800/40"
-                  : "border-slate-200 text-[#2563eb] hover:bg-blue-50 dark:border-slate-700/50 dark:hover:bg-blue-900/20"
+                  : "border-slate-200 text-[#0064E0] hover:bg-blue-50 dark:border-slate-700/50 dark:hover:bg-blue-900/20"
               }`}
             >
               <ChevronDown size={13} className={showAll ? "rotate-180" : ""} />

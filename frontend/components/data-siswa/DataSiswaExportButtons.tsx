@@ -25,8 +25,8 @@ export function DataSiswaExportButtons({ kelasId, kelasNama, jurusan }: { kelasI
     }
   }
 
-  const PDF_STYLE = { backgroundColor: "#FFF0EE", color: "#DC2626", borderColor: "#DC262630" };
-  const EXCEL_STYLE = { backgroundColor: "#E8F8F1", color: "#0F9D58", borderColor: "#0F9D5830" };
+  const PDF_STYLE = { backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#DC262630" };
+  const EXCEL_STYLE = { backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#0F9D5830" };
 
   return (
     <div className="flex flex-wrap items-center gap-2">

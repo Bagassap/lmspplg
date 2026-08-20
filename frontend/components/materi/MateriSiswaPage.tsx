@@ -25,11 +25,11 @@ function formatDate(iso: string): string {
 }
 
 const ROW_PALETTES = [
-  { bar: "#4F8EF7", gradient: "linear-gradient(135deg,#4F8EF7,#2563EB)" },
-  { bar: "#00D67F", gradient: "linear-gradient(135deg,#00D67F,#0D9488)" },
-  { bar: "#EF4444", gradient: "linear-gradient(135deg,#EF4444,#F97316)" },
+  { bar: "#0082FB", gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
+  { bar: "#00D67F", gradient: "linear-gradient(135deg,#00D67F,#0064E0)" },
+  { bar: "#EF4444", gradient: "linear-gradient(135deg,#EF4444,#0082FB)" },
   { bar: "#F59E0B", gradient: "linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bar: "#2563EB", gradient: "linear-gradient(135deg,#2563EB,#0EA5E9)" },
+  { bar: "#0064E0", gradient: "linear-gradient(135deg,#0064E0,#0082FB)" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -70,7 +70,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
     <div className="space-y-5">
       {!embedded && (
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0033FF" }}>
+          style={{ background: "#0082FB" }}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -101,13 +101,13 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
       )}
 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-        <div className="px-5 pt-5 pb-0" style={{ background: "linear-gradient(135deg,rgba(0,51,255,0.06) 0%,rgba(51,92,255,0.06) 50%,rgba(16,185,129,0.06) 100%)" }}>
+        <div className="px-5 pt-5 pb-0" style={{ background: "linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(16,185,129,0.06) 100%)" }}>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#0033FF" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#0082FB" }}>
               <BookOpen size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-            <span className="ml-1 rounded-full bg-[#0033FF]/10 px-2 py-0.5 text-[10px] font-bold text-[#0033FF]">{filtered.length} materi</span>
+            <span className="ml-1 rounded-full bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -172,7 +172,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
                           {m.fileUrl ? (
                             <button onClick={() => setViewerMateri(m)}
                               className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-105"
-                              style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)" }}>
+                              style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                               <BookOpen size={12} /> Buka Modul
                             </button>
                           ) : (

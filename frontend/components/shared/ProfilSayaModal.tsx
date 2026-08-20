@@ -18,7 +18,7 @@ type MeResponse = {
 };
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
-const GRADIENT = "#0033FF";
+const GRADIENT = "#0082FB";
 
 export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
   const [me, setMe] = useState<MeResponse | null>(null);
@@ -41,7 +41,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1c2434]"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1C2B33]"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
@@ -87,7 +87,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                     type="button"
                     onClick={() => setShowChangeFoto(true)}
                     title="Ganti foto profil"
-                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#2563eb] text-white shadow-md transition hover:brightness-90"
+                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#0064E0] text-white shadow-md transition hover:brightness-90"
                   >
                     <Camera size={11} />
                   </button>
@@ -117,8 +117,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-900/20">
-                    <IdCard size={15} className="text-violet-500" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#4FB0FF] dark:bg-[#0064E0]/20">
+                    <IdCard size={15} className="text-[#0082FB]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Login ID</p>

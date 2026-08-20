@@ -5,8 +5,8 @@ import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, S
 import { Avatar } from "@/components/shared/Avatar";
 import { kelasShort } from "@/components/data-siswa/shared";
 
-const REF_PRIMARY = "#1120F0";
-const REF_SUCCESS = "#10b981";
+const REF_PRIMARY = "#0082FB";
+const REF_SUCCESS = "#00D67F";
 
 export type StatusFilter = "" | "sudah" | "belum";
 
@@ -66,7 +66,7 @@ export function FilterBarPassword({
             <select
               value={selectedKelasId}
               onChange={(e) => onSelectKelas(e.target.value)}
-              className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             >
               {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
             </select>
@@ -80,7 +80,7 @@ export function FilterBarPassword({
               value={search}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="Cari nama atau NIS…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
             />
             <AnimatePresence>
               {search && (
@@ -98,11 +98,11 @@ export function FilterBarPassword({
       </div>
 
       {wali && (
-        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-violet-100 bg-violet-50/50 p-3 dark:border-violet-900/30 dark:bg-violet-900/10">
+        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-[#4FB0FF] bg-[#4FB0FF]/50 p-3 dark:border-[#0064E0]/30 dark:bg-[#0064E0]/10">
           <div className="flex min-w-0 items-center gap-2.5">
-            <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="linear-gradient(135deg,#8B5CF6,#6D28D9)" textClassName="text-xs font-bold" />
+            <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="linear-gradient(135deg,#0082FB,#0064E0)" textClassName="text-xs font-bold" />
             <div className="min-w-0">
-              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-violet-600 dark:text-violet-400">
+              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-[#0082FB] dark:text-[#4FB0FF]">
                 <UserCheck size={11} /> Wali Kelas
               </p>
               <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{wali.nama}</p>
@@ -114,7 +114,7 @@ export function FilterBarPassword({
             </span>
             <button onClick={onResetWali}
               className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:brightness-95"
-              style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}>
+              style={{ background: "linear-gradient(135deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }}>
               <KeyRound size={11} /> Reset
             </button>
           </div>

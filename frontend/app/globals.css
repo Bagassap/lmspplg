@@ -2,20 +2,31 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/* Palet utama = Meta color palette (biru #0082FB/#0064E0 + netral
+   #F1F5F8/#1C2B33). Satu-satunya pengecualian: hijau untuk sukses dan
+   merah untuk error (lihat --color-success/--color-error di bawah).
+   Nama token lama (brand/accent/lavender/pink/violet/navy/deep) sengaja
+   dipertahankan supaya puluhan file yang sudah memakainya (util class
+   bg-violet, from-navy, to-deep, dst — terutama gradient hero halaman
+   login/splash) tidak perlu diubah satu-satu; cukup nilai hex-nya yang
+   dipetakan ulang ke palet baru di sini. */
 :root {
   --background: #ffffff;
-  --foreground: #000000;
+  --foreground: #1C2B33;
 
-  --color-brand: #7d39eb;
-  --color-brand-dark: #5e2bc0;
-  --color-accent: #c6ff33;
+  --color-brand: #0082FB;
+  --color-brand-dark: #0064E0;
+  --color-accent: #0082FB;
 
-  --color-lavender: #F2E6EE;
-  --color-pink: #FFCCF2;
-  --color-violet: #977DFF;
-  --color-blue: #0033FF;
-  --color-navy: #0600AF;
-  --color-deep: #00003D;
+  --color-lavender: #EAF3FF;
+  --color-pink: #DCEBFF;
+  --color-violet: #0082FB;
+  --color-blue: #0082FB;
+  --color-navy: #0064E0;
+  --color-deep: #1C2B33;
+
+  --color-success: #00D67F;
+  --color-error: #EF4444;
 }
 
 @theme inline {
@@ -33,12 +44,14 @@
   --color-navy: var(--color-navy);
   --color-deep: var(--color-deep);
 
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
 
-  --color-primary: #4F8EF7;
-  --color-primary-light: #EEF4FF;
-  --color-primary-dark: #3B7CE8;
+  --color-primary: #0082FB;
+  --color-primary-light: #EAF3FF;
+  --color-primary-dark: #0064E0;
 
-  --color-surface: #F5F7FA;
+  --color-surface: #F1F5F8;
 }
 
 *,

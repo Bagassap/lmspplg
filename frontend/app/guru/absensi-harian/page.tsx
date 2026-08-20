@@ -77,7 +77,7 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
       className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-red-50 px-3 py-2.5 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#DC2626] text-white">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#EF4444] text-white">
         {sent ? <Check size={14} /> : <Bell size={14} />}
       </span>
       <div className="min-w-0">
@@ -119,7 +119,7 @@ function RingkasanKehadiranCard({
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0EA5E9,#0369A1)" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
           <PieChart size={18} />
         </span>
         <div className="min-w-0">
@@ -153,16 +153,16 @@ function RingkasanKehadiranCard({
                 <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
                   className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
                     isSelected
-                      ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                      ? "border-[#0082FB] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
                       : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
                   }`}>
                   <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                    isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                    isSelected ? "bg-[#0082FB] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
                   }`}>
                     <BookOpen size={14} />
                   </span>
                   <div className="min-w-0">
-                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0082FB] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
                       {k.nama}
                     </p>
                     <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
@@ -185,7 +185,7 @@ function RingkasanKehadiranCard({
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
           <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
             <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
-              <circle cx="50" cy="50" r={r} stroke="#F1F5F9" strokeWidth="12" fill="none" />
+              <circle cx="50" cy="50" r={r} stroke="#F1F5F8" strokeWidth="12" fill="none" />
               {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
                 const pct = s.value / total;
                 const dash = pct * circumference;
@@ -215,7 +215,7 @@ function RingkasanKehadiranCard({
 
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
         <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-          <Users size={12} className="text-sky-500" />
+          <Users size={12} className="text-[#0082FB]" />
           Total {total} siswa
         </span>
       </div>
@@ -308,7 +308,7 @@ export default function GuruAbsensiHarianPage() {
     return (
       <div className="space-y-5 p-1">
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0033FF" }}>
+          style={{ background: "#0082FB" }}>
           <div className="relative flex items-center gap-3 sm:gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
               <ClipboardCheck size={22} className="text-white sm:hidden" />
@@ -335,7 +335,7 @@ export default function GuruAbsensiHarianPage() {
     <>
       <div className="space-y-5 p-1">
         <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0033FF" }}>
+          style={{ background: "#0082FB" }}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -418,15 +418,15 @@ export default function GuruAbsensiHarianPage() {
 
             <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
               <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <Users size={12} className="text-violet-500" />
+                <Users size={12} className="text-[#0082FB]" />
                 Total {total} siswa
               </span>
               <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <TrendingUp size={12} className="text-violet-500" />
+                <TrendingUp size={12} className="text-[#0082FB]" />
                 Kehadiran {hadirPct}%
               </span>
               <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <LogOut size={12} className="text-violet-500" />
+                <LogOut size={12} className="text-[#0082FB]" />
                 Sudah pulang {pulangCount} siswa
               </span>
             </div>
@@ -456,7 +456,7 @@ export default function GuruAbsensiHarianPage() {
           <div className="flex h-full flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
                   <FileText size={18} />
                 </span>
                 <div>
@@ -482,17 +482,17 @@ export default function GuruAbsensiHarianPage() {
               {exportRange.rangeMode === "mingguan" && (
                 <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
                   title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
@@ -502,7 +502,7 @@ export default function GuruAbsensiHarianPage() {
                 <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                <Download size={11} className="shrink-0 text-violet-500" />
+                <Download size={11} className="shrink-0 text-[#0082FB]" />
                 Pilih rentang waktu, lalu klik salah satu tombol ekspor
               </p>
             </div>

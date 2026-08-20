@@ -68,7 +68,7 @@ export function PermintaanPasswordCard({
   return (
     <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#6334F4,#4F46E5)" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
           <Inbox size={18} />
         </span>
         <div>
@@ -95,7 +95,7 @@ export function PermintaanPasswordCard({
       <div className="mt-3 flex-1 space-y-2 overflow-y-auto border-t border-slate-100 pt-3 dark:border-slate-700/50" style={{ maxHeight: 280 }}>
         {loading ? (
           <div className="flex items-center justify-center py-6">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-200 border-t-violet-500" />
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#4FB0FF] border-t-violet-500" />
           </div>
         ) : pending.length === 0 ? (
           <div className="flex flex-col items-center gap-1.5 py-6 text-center">
@@ -110,7 +110,7 @@ export function PermintaanPasswordCard({
                   src={r.user?.fotoProfil}
                   nama={r.namaPengaju}
                   sizePx={30}
-                  fallbackBg={r.user ? (r.user.role === "SISWA" ? "linear-gradient(135deg,#4F8EF7,#3B7CE8)" : "linear-gradient(135deg,#8B5CF6,#6D28D9)") : "linear-gradient(135deg,#94a3b8,#64748b)"}
+                  fallbackBg={r.user ? (r.user.role === "SISWA" ? "linear-gradient(135deg,#0082FB,#0064E0)" : "linear-gradient(135deg,#4FB0FF,#0082FB)") : "linear-gradient(135deg,#94a3b8,#64748b)"}
                   textClassName="text-[10px] font-bold"
                 />
                 <div className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function PermintaanPasswordCard({
                 {r.user && (
                   <button onClick={() => onProcess(r)}
                     className="flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-white shadow-sm transition-all hover:brightness-95"
-                    style={{ background: "linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0ea5e9 100%)" }}>
+                    style={{ background: "linear-gradient(135deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }}>
                     <KeyRound size={11} /> Proses
                   </button>
                 )}

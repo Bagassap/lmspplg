@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, Filter, Users, Clock, CheckCircle2, XCircle, Building2, Plus } from "lucide-react";
 import type { StatusPenempatan } from "./types";
 
-const REF_PRIMARY = "#1120F0";
+const REF_PRIMARY = "#0082FB";
 
 export type PenempatanStatusFilter = StatusPenempatan | "";
 
@@ -64,7 +64,7 @@ export function PenempatanFilterBar({
               value={search}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="Cari nama siswa, NIS, atau tempat…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#1120F0] focus:outline-none focus:ring-2 focus:ring-[#1120F0]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
             />
             <AnimatePresence>
               {search && (

@@ -112,7 +112,7 @@ export function MateriTugasGuruPage() {
   return (
     <div className="space-y-6">
       <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "#0033FF" }}>
+        style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6" />
@@ -155,9 +155,9 @@ export function MateriTugasGuruPage() {
             <button type="button" onClick={() => setCategory("materi")}
               className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                background: "linear-gradient(135deg,#0033FF,#335CFF)",
-                boxShadow: category === "materi" ? "0 8px 24px rgba(0,51,255,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "materi" ? "2px solid #0033FF" : "none",
+                background: "linear-gradient(135deg,#0082FB,#0064E0)",
+                boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                outline: category === "materi" ? "2px solid #0082FB" : "none",
                 outlineOffset: "3px",
               }}>
               <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
@@ -173,7 +173,7 @@ export function MateriTugasGuruPage() {
             <button type="button" onClick={() => setCategory("tugas")}
               className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                background: "linear-gradient(135deg,#F59E0B,#EA580C)",
+                background: "linear-gradient(135deg,#F59E0B,#0064E0)",
                 boxShadow: category === "tugas" ? "0 8px 24px rgba(245,158,11,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
                 outline: category === "tugas" ? "2px solid #F59E0B" : "none",
                 outlineOffset: "3px",

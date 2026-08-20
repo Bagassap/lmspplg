@@ -16,10 +16,10 @@ import { Avatar } from "@/components/shared/Avatar";
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
 const KATEGORI_WARNA: Record<string, string> = {
-  Umum:     "#4338ca",
-  Akademik: "#0033FF",
-  Magang:   "#FF7867",
-  Ujian:    "#FF3644",
+  Umum:     "#0064E0",
+  Akademik: "#0082FB",
+  Magang:   "#4FB0FF",
+  Ujian:    "#EF4444",
   Lainnya:  "#FFC25B",
 };
 
@@ -269,7 +269,7 @@ export default function PengumumanDetailModal({
 
               <div className="border-b border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-slate-700">
-                  <RotateCcw size={12} className="text-[#2563eb]" />
+                  <RotateCcw size={12} className="text-[#0064E0]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Isi Pengumuman</span>
                   <span className="ml-auto text-[10px] font-normal text-gray-400 dark:text-slate-500">{formatDate(pengumuman.createdAt)}</span>
                 </div>

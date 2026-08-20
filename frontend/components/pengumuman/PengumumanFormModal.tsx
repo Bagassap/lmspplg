@@ -26,7 +26,7 @@ const PRIORITAS_OPTIONS = [
   { value: "MENDESAK", label: "Mendesak", cls: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400" },
 ];
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#6334F4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6334F4]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-purple-500 dark:focus:bg-slate-700";
+const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#0082FB] dark:focus:bg-slate-700";
 
 export function PengumumanFormModal({
   open,
@@ -119,7 +119,7 @@ export function PengumumanFormModal({
           >
             <div
               className="relative flex items-center gap-3 overflow-hidden px-6 py-5"
-              style={{ background: "#6334F4" }}
+              style={{ background: "#0082FB" }}
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -174,7 +174,7 @@ export function PengumumanFormModal({
                         onClick={() => setPrioritas(p.value)}
                         className={`flex-1 rounded-lg px-2 py-1.5 text-xs font-bold transition-all ${
                           prioritas === p.value
-                            ? `${p.cls} ring-2 ring-offset-1 ring-[#6334F4]`
+                            ? `${p.cls} ring-2 ring-offset-1 ring-[#0082FB]`
                             : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400"
                         }`}
                       >
@@ -198,14 +198,14 @@ export function PengumumanFormModal({
                 />
               </div>
 
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:bg-[#6334F4]/5 dark:border-slate-600 dark:bg-slate-700/40 dark:hover:bg-purple-900/20">
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40 dark:hover:bg-[#0064E0]/20">
                 <input
                   type="checkbox"
                   checked={isPinned}
                   onChange={(e) => setIsPinned(e.target.checked)}
-                  className="h-4 w-4 accent-[#6334F4]"
+                  className="h-4 w-4 accent-[#0082FB]"
                 />
-                <Pin size={14} className="text-[#6334F4]" />
+                <Pin size={14} className="text-[#0082FB]" />
                 <div>
                   <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">Sematkan pengumuman ini</p>
                   <p className="text-xs text-gray-400 dark:text-slate-500">Akan tampil di paling atas dengan penanda khusus</p>
@@ -230,7 +230,7 @@ export function PengumumanFormModal({
                   type="submit"
                   disabled={saving}
                   className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                  style={{ background: "#6334F4" }}
+                  style={{ background: "#0082FB" }}
                 >
                   {saving && <Loader2 size={14} className="animate-spin" />}
                   {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Publikasikan"}

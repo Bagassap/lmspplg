@@ -18,14 +18,14 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loa
   </div>
 )});
 
-const PRIMARY = "#4F8EF7";
+const PRIMARY = "#0082FB";
 
 const PALETTE = [
-  { bg: "#EEF4FF", text: "#4F8EF7",  bar: "#4F8EF7",  gradient: "linear-gradient(135deg,#4F8EF7,#6366F1)" },
-  { bg: "#ECFDF5", text: "#00D67F",  bar: "#00D67F",  gradient: "linear-gradient(135deg,#00D67F,#0D9488)" },
-  { bg: "#FFF1F2", text: "#EF4444",  bar: "#EF4444",  gradient: "linear-gradient(135deg,#EF4444,#F97316)" },
+  { bg: "#EAF3FF", text: "#0082FB",  bar: "#0082FB",  gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
+  { bg: "#E3FBF0", text: "#00D67F",  bar: "#00D67F",  gradient: "linear-gradient(135deg,#00D67F,#0064E0)" },
+  { bg: "#FEE9EA", text: "#EF4444",  bar: "#EF4444",  gradient: "linear-gradient(135deg,#EF4444,#0082FB)" },
   { bg: "#FFFBEB", text: "#F59E0B",  bar: "#F59E0B",  gradient: "linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bg: "#F0F0FF", text: "#6366F1",  bar: "#6366F1",  gradient: "linear-gradient(135deg,#6366F1,#8B5CF6)" },
+  { bg: "#EAF3FF", text: "#0064E0",  bar: "#0064E0",  gradient: "linear-gradient(135deg,#4FB0FF,#0082FB)" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 
@@ -36,11 +36,11 @@ interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; 
 interface Submisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
-  if (s === "DITERIMA") return { bg: "#ECFDF5", text: "#00D67F", icon: <CheckCircle size={10} /> };
+  if (s === "DITERIMA") return { bg: "#E3FBF0", text: "#00D67F", icon: <CheckCircle size={10} /> };
   if (s === "REVISI")   return { bg: "#FFFBEB", text: "#F59E0B", icon: <AlertCircle size={10} /> };
-  return { bg: "#EEF4FF", text: "#4F8EF7", icon: <Clock size={10} /> };
+  return { bg: "#EAF3FF", text: "#0082FB", icon: <Clock size={10} /> };
 }
-function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#6366F1", GURU: "#4F8EF7", SISWA: "#00D67F" }; return m[role] ?? "#64748b"; }
+function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#0082FB", GURU: "#0082FB", SISWA: "#00D67F" }; return m[role] ?? "#64748b"; }
 
 function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
   // "Hari ini" dibaca dari todayJakarta() (WIB), bukan new Date() lokal — server
@@ -115,8 +115,8 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
               <div
                 className="w-9 h-9 flex items-center justify-center rounded-full text-sm transition-all cursor-default select-none"
                 style={{
-                  background: isUkk ? "#4F8EF7" : "transparent",
-                  color:      isUkk ? "#fff" : isToday ? "#4F8EF7" : "inherit",
+                  background: isUkk ? "#0082FB" : "transparent",
+                  color:      isUkk ? "#fff" : isToday ? "#0082FB" : "inherit",
                   fontWeight: isUkk || isToday ? 700 : 400,
                 }}>
                 {d.getDate()}
@@ -126,7 +126,7 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
                   {tasks.map((tk) => (
                     <div key={tk.id}
                       className="whitespace-nowrap text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-lg text-white"
-                      style={{ background: "#4F8EF7" }}>
+                      style={{ background: "#0082FB" }}>
                       {tk.judul}
                     </div>
                   ))}
@@ -142,7 +142,7 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
 
 interface TahapanForm { hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji: string; keterangan: string; }
 
-const INPUT_CLS = "w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500";
+const INPUT_CLS = "w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-[#4FB0FF] focus:ring-2 focus:ring-[#4FB0FF] dark:focus:ring-[#0064E0]/30 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500";
 
 function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClose: () => void; onSave: (d: TahapanForm) => Promise<void>; initial?: Partial<TahapanForm>; }) {
   const [form, setForm] = useState<TahapanForm>({ hariKe: 1, judul: "", tanggal: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial });
@@ -163,7 +163,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
             className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden"
             style={{ maxHeight: "92vh" }}>
 
-            <div className="relative flex items-center gap-4 overflow-hidden bg-[#0033FF] px-6 py-5">
+            <div className="relative flex items-center gap-4 overflow-hidden bg-[#0082FB] px-6 py-5">
               <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none"/>
               <div className="absolute -bottom-6 right-20 w-28 h-28 rounded-full bg-white/7 pointer-events-none"/>
               <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -269,7 +269,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                 <motion.button type="submit" disabled={saving}
                   whileHover={{ scale: saving ? 1 : 1.02 }} whileTap={{ scale: saving ? 1 : 0.97 }}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{ background: "#0033FF" }}>
+                  style={{ background: "#0082FB" }}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Menyimpan...</> : <><Send size={13}/> {isEdit ? "Perbarui" : "Simpan Task"}</>}
                 </motion.button>
               </div>
@@ -602,7 +602,7 @@ export default function AdminJadwalSoalPage() {
         <div className="flex-1 min-w-0 space-y-6">
 
           <div className="relative overflow-hidden rounded-2xl p-6"
-            style={{ background: "#0033FF" }}>
+            style={{ background: "#0082FB" }}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
             <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
@@ -653,7 +653,7 @@ export default function AdminJadwalSoalPage() {
                   style={{maxHeight:"92vh"}}>
 
                   <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                    style={{background:"#fb923c"}}>
+                    style={{background:"#0082FB"}}>
                     <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                     <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -704,7 +704,7 @@ export default function AdminJadwalSoalPage() {
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
                       <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#fb923c22,#ea580c22)"}}>
-                        <FileText size={30} className="text-orange-400"/>
+                        <FileText size={30} className="text-[#4FB0FF]"/>
                       </div>
                       <div>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada file jadwal</p>
@@ -733,7 +733,7 @@ export default function AdminJadwalSoalPage() {
                     return (
                       <>
                         <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                          style={{background:"#0033FF"}}>
+                          style={{background:"#0082FB"}}>
                           <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                           <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
                           <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -806,7 +806,7 @@ export default function AdminJadwalSoalPage() {
                 <div className="flex flex-col gap-4">
               <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#fb923c,#ea580c)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <CalendarDays size={16} />
@@ -819,7 +819,7 @@ export default function AdminJadwalSoalPage() {
 
               <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0033FF,#335CFF)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <FileText size={16} />
@@ -835,17 +835,17 @@ export default function AdminJadwalSoalPage() {
               <div className="flex flex-col gap-6">
 
           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-            <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(0,51,255,0.06) 0%,rgba(51,92,255,0.06) 50%,rgba(16,185,129,0.06) 100%)"}}>
+            <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(16,185,129,0.06) 100%)"}}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#0082FB,#0064E0)"}}>
                     <BookOpen size={14} className="text-white"/>
                   </div>
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                 </div>
                 <button onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
                   className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-                  style={{background:"linear-gradient(135deg,#0033FF,#335CFF)"}}>
+                  style={{background:"linear-gradient(135deg,#0082FB,#0064E0)"}}>
                   <Plus size={13} /> Tambah Task
                 </button>
               </div>
@@ -858,9 +858,9 @@ export default function AdminJadwalSoalPage() {
               <div className="flex gap-6 border-b border-slate-100 dark:border-slate-700">
                 <button onClick={() => setTab("active")}
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="active" ? "border-blue-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
-                  style={tab==="active"?{color:"#4F8EF7"}:{}}>
+                  style={tab==="active"?{color:"#0082FB"}:{}}>
                   Active Task
-                  {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#4F8EF7"}}>{active.length}</span>}
+                  {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
                 </button>
                 <button onClick={() => setTab("completed")}
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-emerald-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
@@ -969,7 +969,7 @@ export default function AdminJadwalSoalPage() {
                 className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
 
                 <div className="relative p-6 shrink-0"
-                  style={{background:"#0033FF"}}>
+                  style={{background:"#0082FB"}}>
                   <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"/>
                   <button onClick={() => setSubmisiModalTahapan(null)}
                     className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors">
@@ -1004,10 +1004,10 @@ export default function AdminJadwalSoalPage() {
 
                 <div className="grid grid-cols-4 shrink-0 border-b border-slate-100 dark:border-slate-700">
                   {[
-                    { label: "Total",    val: rows.length,   color: "#0033FF" },
+                    { label: "Total",    val: rows.length,   color: "#0082FB" },
                     { label: "Diterima", val: cntDiterima,   color: "#00D67F" },
                     { label: "Revisi",   val: cntRevisi,     color: "#F59E0B" },
-                    { label: "Menunggu", val: cntMenunggu,   color: "#4F8EF7" },
+                    { label: "Menunggu", val: cntMenunggu,   color: "#0082FB" },
                   ].map((st, i) => (
                     <div key={i} className="p-4 text-center border-r last:border-r-0 border-slate-100 dark:border-slate-700">
                       <p className="text-2xl font-extrabold" style={{color:st.color}}>{st.val}</p>
@@ -1044,7 +1044,7 @@ export default function AdminJadwalSoalPage() {
                         <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
                           target="_blank" rel="noopener noreferrer"
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{color:"#4285F4", backgroundColor:"#EFF6FF"}}>
+                          style={{color:"#0082FB", backgroundColor:"#EAF3FF"}}>
                           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current shrink-0">
                             <path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/>
                           </svg>
@@ -1104,7 +1104,7 @@ export default function AdminJadwalSoalPage() {
         }}
         tahapanList={filePool ? [filePool] : []}
         title="Tambah Jadwal"
-        warna="#fb923c"
+        warna="#0082FB"
         showTahapan={false}
       />
 
@@ -1118,7 +1118,7 @@ export default function AdminJadwalSoalPage() {
         }}
         tahapanList={filePool ? [filePool] : []}
         title="Upload Soal"
-        warna="#0033FF"
+        warna="#0082FB"
         showTahapan={false}
       />
 

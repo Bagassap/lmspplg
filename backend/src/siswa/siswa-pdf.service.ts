@@ -23,7 +23,7 @@ type KelasGroup = {
   siswa: SiswaExportRow[];
 };
 
-const BRAND = '#6334F4';
+const BRAND = '#0082FB';
 
 function formatTanggalLahir(tempatLahir: string | null, tanggalLahir: Date | null): string {
   const tgl = tanggalLahir
@@ -91,7 +91,7 @@ export class SiswaPdfService {
     doc.fontSize(14).fillColor('#ffffff').text(`Data Siswa — ${group.kelas.nama}`, margin + 12, y + 9);
     doc
       .fontSize(8)
-      .fillColor('#e5e0fb')
+      .fillColor('#EAF3FF')
       .text(`${group.siswa.length} siswa · dicetak ${new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta' })}`, margin, y + 12, {
         width: pageWidth - margin * 2 - 12,
         align: 'right',
@@ -125,10 +125,10 @@ export class SiswaPdfService {
   private rowValues(s: SiswaExportRow, no: number): [string, string][] {
     const jk = s.jenisKelamin === 'Perempuan' ? 'P' : s.jenisKelamin === 'Laki-laki' ? 'L' : '-';
     const status = s.user?.mustChangePassword === false ? 'Sudah ganti' : 'Belum ganti';
-    const statusColor = s.user?.mustChangePassword === false ? '#00B368' : '#d97706';
+    const statusColor = s.user?.mustChangePassword === false ? '#00D67F' : '#d97706';
     return [
       [String(no), '#334155'],
-      [s.nama || '-', '#0f172a'],
+      [s.nama || '-', '#1C2B33'],
       [s.nis, '#334155'],
       [jk, '#334155'],
       [formatTanggalLahir(s.tempatLahir, s.tanggalLahir), '#334155'],
@@ -140,7 +140,7 @@ export class SiswaPdfService {
   }
 
   private drawTableHeader(doc: PDFKit.PDFDocument, margin: number, y: number): number {
-    doc.rect(margin, y, TABLE_WIDTH, 18).fill('#f1f5f9');
+    doc.rect(margin, y, TABLE_WIDTH, 18).fill('#F1F5F8');
     let x = margin;
     doc.fontSize(7).fillColor('#475569');
     for (const col of COLS) {

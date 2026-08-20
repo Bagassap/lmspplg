@@ -13,9 +13,9 @@ const TD = "whitespace-nowrap px-4 py-3";
 const TEXT = "text-sm font-medium text-slate-800 dark:text-white";
 
 // Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
-const REF_PRIMARY = "#1120F0";
-const REF_SUCCESS = "#10b981";
-const REF_DANGER = "#f87171";
+const REF_PRIMARY = "#0082FB";
+const REF_SUCCESS = "#00D67F";
+const REF_DANGER = "#EF4444";
 
 export function SiswaTableHead() {
   return (

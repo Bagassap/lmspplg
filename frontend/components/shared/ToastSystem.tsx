@@ -57,10 +57,10 @@ const THEME = {
     blob2:       "rgba(52,211,153,0.14)",
     ring1:       "rgba(16,185,129,0.18)",
     ring2:       "rgba(16,185,129,0.10)",
-    iconBg:      "linear-gradient(135deg,#00B368,#00D67F,#34D399)",
+    iconBg:      "linear-gradient(135deg,#00D67F,#00D67F,#00D67F)",
     iconShadow:  "0 16px 40px rgba(16,185,129,0.55)",
-    bar:         "linear-gradient(90deg,#00B368,#34D399)",
-    btnBg:       "linear-gradient(135deg,#00B368,#00D67F)",
+    bar:         "linear-gradient(90deg,#00D67F,#00D67F)",
+    btnBg:       "linear-gradient(135deg,#00D67F,#00D67F)",
     btnShadow:   "0 8px 24px rgba(16,185,129,0.45)",
     dotColor:    "#00D67F",
     icon:        CheckCircle2,
@@ -73,10 +73,10 @@ const THEME = {
     blob2:       "rgba(252,165,165,0.14)",
     ring1:       "rgba(239,68,68,0.18)",
     ring2:       "rgba(239,68,68,0.10)",
-    iconBg:      "linear-gradient(135deg,#991B1B,#DC2626,#F87171)",
+    iconBg:      "linear-gradient(135deg,#991B1B,#EF4444,#EF4444)",
     iconShadow:  "0 16px 40px rgba(239,68,68,0.55)",
-    bar:         "linear-gradient(90deg,#DC2626,#F87171)",
-    btnBg:       "linear-gradient(135deg,#DC2626,#EF4444)",
+    bar:         "linear-gradient(90deg,#EF4444,#EF4444)",
+    btnBg:       "linear-gradient(135deg,#EF4444,#EF4444)",
     btnShadow:   "0 8px 24px rgba(239,68,68,0.45)",
     dotColor:    "#EF4444",
     icon:        XCircle,
@@ -100,17 +100,17 @@ const THEME = {
   },
   info: {
     headerFrom:  "#dbeafe",
-    headerTo:    "#eff6ff",
-    blob1:       "rgba(79,142,247,0.22)",
-    blob2:       "rgba(147,197,253,0.14)",
-    ring1:       "rgba(79,142,247,0.18)",
-    ring2:       "rgba(79,142,247,0.10)",
-    iconBg:      "linear-gradient(135deg,#1E40AF,#2563EB,#93C5FD)",
-    iconShadow:  "0 16px 40px rgba(79,142,247,0.55)",
-    bar:         "linear-gradient(90deg,#2563EB,#93C5FD)",
-    btnBg:       "linear-gradient(135deg,#2563EB,#4F8EF7)",
-    btnShadow:   "0 8px 24px rgba(79,142,247,0.45)",
-    dotColor:    "#4F8EF7",
+    headerTo:    "#EAF3FF",
+    blob1:       "rgba(0,130,251,0.22)",
+    blob2:       "rgba(79,176,255,0.14)",
+    ring1:       "rgba(0,130,251,0.18)",
+    ring2:       "rgba(0,130,251,0.10)",
+    iconBg:      "linear-gradient(135deg,#1E40AF,#0064E0,#93C5FD)",
+    iconShadow:  "0 16px 40px rgba(0,130,251,0.55)",
+    bar:         "linear-gradient(90deg,#0064E0,#93C5FD)",
+    btnBg:       "linear-gradient(135deg,#0064E0,#0082FB)",
+    btnShadow:   "0 8px 24px rgba(0,130,251,0.45)",
+    dotColor:    "#0082FB",
     icon:        Info,
     label:       "Informasi",
   },
@@ -144,8 +144,8 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 
   const handleEnd = useCallback(() => onDismiss(toast.id), [toast.id, onDismiss]);
 
-  const cardBg     = isDark ? "#1e293b" : "#ffffff";
-  const titleColor = isDark ? "#f1f5f9" : "#0f172a";
+  const cardBg     = isDark ? "#1C2B33" : "#ffffff";
+  const titleColor = isDark ? "#F1F5F8" : "#1C2B33";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const headerBg   = isDark
@@ -339,11 +339,11 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
 
-  const cardBg     = isDark ? "#1e293b" : "#ffffff";
-  const titleColor = isDark ? "#f1f5f9" : "#0f172a";
+  const cardBg     = isDark ? "#1C2B33" : "#ffffff";
+  const titleColor = isDark ? "#F1F5F8" : "#1C2B33";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-  const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#f1f5f9";
+  const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#F1F5F8";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
   const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "linear-gradient(180deg,#fee2e2 0%,#fff5f5 100%)";
 
@@ -415,7 +415,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
               className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
               style={{
-                background: "linear-gradient(135deg,#991B1B,#DC2626,#F87171)",
+                background: "linear-gradient(135deg,#991B1B,#EF4444,#EF4444)",
                 boxShadow: "0 16px 40px rgba(239,68,68,0.55)",
               }}
             >
@@ -495,7 +495,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               onClick={() => onClose(true)}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white"
               style={{
-                background: "linear-gradient(135deg,#DC2626,#EF4444)",
+                background: "linear-gradient(135deg,#EF4444,#EF4444)",
                 boxShadow: "0 6px 20px rgba(239,68,68,0.40)",
               }}
             >

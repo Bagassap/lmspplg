@@ -3,16 +3,20 @@
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
-type Tone = "green" | "blue" | "purple" | "orange";
+type Tone = "bright" | "deep" | "tint" | "ink" | "success" | "error";
 
-// Sama persis dengan WALLET_GRADIENTS di components/absensi-harian/shared.ts
-// (kartu kelas Absensi Harian) dan kartu "Akses Cepat" di Dashboard — satu
-// urutan warna yang sama (hijau-biru-ungu-oranye) dipakai di semua tempat.
+// Palet utama = Meta color palette (#0082FB/#0064E0 biru, #1C2B33 tinta).
+// bright/deep/tint/ink cuma gradasi biru-ke-tinta (sama dengan
+// WALLET_GRADIENTS & DASHBOARD_GRADIENTS di components/absensi-harian/
+// shared.ts) untuk kartu dekoratif/rotasi. success/error hanya dipakai
+// kalau kartu ini benar-benar merepresentasikan status sukses/gagal.
 const TONE_GRADIENT: Record<Tone, string> = {
-  green: "from-[#4ade80] to-[#22c55e]",
-  blue: "from-[#60a5fa] to-[#3b82f6]",
-  purple: "from-[#a78bfa] to-[#7c3aed]",
-  orange: "from-[#fb923c] to-[#ea580c]",
+  bright: "from-[#0082FB] to-[#0064E0]",
+  deep: "from-[#0064E0] to-[#1C2B33]",
+  tint: "from-[#4FB0FF] to-[#0082FB]",
+  ink: "from-[#1C2B33] to-[#0064E0]",
+  success: "from-[#00D67F] to-[#00A868]",
+  error: "from-[#EF4444] to-[#C62828]",
 };
 
 const cardVariants = {

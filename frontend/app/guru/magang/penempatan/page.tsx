@@ -27,7 +27,7 @@ export default function GuruMagangPenempatanPage() {
 
   return (
     <div className="space-y-5 p-1">
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0033FF" }}>
+      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-3 sm:gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
@@ -81,7 +81,7 @@ export default function GuruMagangPenempatanPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="flex items-center gap-1 truncate text-xs font-bold text-slate-700 dark:text-slate-200">
-                      <MapPin size={11} className="shrink-0 text-violet-500" /> {p.tempatMagang.namaTempat}
+                      <MapPin size={11} className="shrink-0 text-[#0082FB]" /> {p.tempatMagang.namaTempat}
                     </p>
                     <p className="truncate text-[11px] text-slate-400">{p.tempatMagang.alamat}</p>
                   </div>
