@@ -144,37 +144,42 @@ function RingkasanKehadiranCard({
       </p>
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="grid flex-1 grid-cols-[repeat(auto-fit,140px)] items-stretch justify-start gap-2.5">
-          {kelasList.map((k) => {
-            const s = kelasStat(k);
-            const isSelected = k.id === selectedId;
-            return (
-              <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
-                className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
-                  isSelected
-                    ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
-                    : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
-                }`}>
-                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                  isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                }`}>
-                  <BookOpen size={14} />
-                </span>
-                <div className="min-w-0">
-                  <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
-                    {k.nama}
-                  </p>
-                  <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                    {s.hd}/{s.tt} hadir · {s.pct}%
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+        <div className="flex flex-1 flex-col gap-2.5">
+          <div className="grid grid-cols-[repeat(auto-fit,140px)] items-stretch justify-start gap-2.5">
+            {kelasList.map((k) => {
+              const s = kelasStat(k);
+              const isSelected = k.id === selectedId;
+              return (
+                <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
+                  className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
+                    isSelected
+                      ? "border-[#0033FF] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                  }`}>
+                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
+                    isSelected ? "bg-[#0033FF] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                  }`}>
+                    <BookOpen size={14} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0033FF] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                      {k.nama}
+                    </p>
+                    <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                      {s.hd}/{s.tt} hadir · {s.pct}%
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
 
-          <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
-          <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
-          <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+            <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
+            <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,140px)] justify-start gap-2.5">
+            <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+          </div>
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
