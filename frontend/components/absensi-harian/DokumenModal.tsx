@@ -165,7 +165,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#6334F418" }}>
+                        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0082FB18" }}>
                           <PenTool size={13} style={{ color: "#0082FB" }} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tanda Tangan Digital</span>
@@ -187,7 +187,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0033FF18" }}>
+                        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0082FB18" }}>
                           <MapPin size={13} style={{ color: "#0082FB" }} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi Absensi</span>

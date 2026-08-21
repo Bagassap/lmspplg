@@ -1,73 +1,74 @@
 import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut, CalendarDays, CalendarRange, CalendarCheck2 } from "lucide-react";
 import type { StatusAbsensi } from "./types";
 
+// Palet aplikasi = 5 warna utama Meta (#0082FB biru, #0064E0 navy, #F1F5F8
+// terang, #1C2B33 tinta, #C3F84A lime — pengganti kuning/amber) + hijau
+// #00D67F khusus sukses dan merah #EF4444 khusus error. TIDAK ADA gradient
+// dan TIDAK ADA warna kuning di mana pun — semua warna di file ini adalah
+// solid dari 7 hex tsb (atau tint transparan darinya).
 export const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
 }> = {
   HADIR: { label: "Hadir", bg: "#E3FBF0", clr: "#00D67F", darkBg: "#00D67F20", icon: CheckCircle2 },
-  IZIN:  { label: "Izin",  bg: "#F0ECFF", clr: "#0082FB", darkBg: "#6334F420", icon: AlertCircle  },
-  SAKIT: { label: "Sakit", bg: "#FFF5DC", clr: "#E6A800", darkBg: "#E6A80020", icon: Thermometer  },
-  ALPA:  { label: "Alpa",  bg: "#FEE9EA", clr: "#EF4444", darkBg: "#FF364420", icon: MinusCircle  },
+  IZIN:  { label: "Izin",  bg: "#EAF3FF", clr: "#0082FB", darkBg: "#0082FB20", icon: AlertCircle  },
+  SAKIT: { label: "Sakit", bg: "#F4FFD9", clr: "#8A9E1F", darkBg: "#C3F84A20", icon: Thermometer  },
+  ALPA:  { label: "Alpa",  bg: "#FEE9EA", clr: "#EF4444", darkBg: "#EF444420", icon: MinusCircle  },
 };
 
 export const PULANG_CFG = {
-  label: "Pulang", bg: "#EAF3FF", clr: "#0082FB", darkBg: "#0033FF20", icon: LogOut,
+  label: "Pulang", bg: "#EAF3FF", clr: "#0082FB", darkBg: "#0082FB20", icon: LogOut,
 };
 
-// Gradients derived directly from each status's own `clr` (dark stop) blended
-// toward white (light stop) — no new hues introduced, just a lighter tint of
-// the color already used for that status everywhere else in the app.
+// Solid — tidak ada gradasi. Warna murni dari palet, dipakai apa adanya di
+// tempat yang tadinya menampilkan gradient dua warna.
 export const STATUS_GRADIENT: Record<StatusAbsensi, string> = {
-  HADIR: "linear-gradient(135deg,#00D67F,#7CD9BA)",
-  IZIN:  "linear-gradient(135deg,#0082FB,#A98FF9)",
-  SAKIT: "linear-gradient(135deg,#E6A800,#F1CF73)",
-  ALPA:  "linear-gradient(135deg,#EF4444,#FF9098)",
+  HADIR: "#00D67F",
+  IZIN:  "#0082FB",
+  SAKIT: "#C3F84A",
+  ALPA:  "#EF4444",
 };
-export const PULANG_GRADIENT = "linear-gradient(135deg,#0082FB,#738FFF)";
+export const PULANG_GRADIENT = "#0082FB";
 
 export const BRAND_GRADIENT = "#0082FB";
 
-// Palet utama aplikasi = Meta color palette (#0082FB/#0064E0 biru +
-// #F1F5F8/#1C2B33 netral). Hijau (#00D67F) & merah (#EF4444) HANYA dipakai
-// untuk makna sukses/error yang sesungguhnya (lihat STATUS_CFG) — untuk
-// dekorasi/rotasi kartu yang tidak merepresentasikan sukses/error/warning
-// (mis. kartu kelas, kartu ringkasan), semua varian di bawah ini sengaja
-// cuma memakai gradasi biru-ke-tinta (#0082FB/#0064E0/#1C2B33) supaya tidak
-// ada warna lain di luar palet.
+// Rotasi warna untuk kartu/badge yang tampil berjejer (>1) — sengaja
+// memakai variasi dari seluruh 5 warna utama + hijau, bukan cuma biru,
+// supaya kelima warna benar-benar terpakai.
 export const CARD_GRADIENTS = [
-  "linear-gradient(135deg,#0082FB,#0064E0)",
-  "linear-gradient(135deg,#EF4444,#FF9098)",
-  "linear-gradient(135deg,#F59E0B,#FCD34D)",
-  "linear-gradient(135deg,#00D67F,#7CD9BA)",
-  "linear-gradient(135deg,#4FB0FF,#0082FB)",
-  "linear-gradient(135deg,#1C2B33,#0064E0)",
+  "#0082FB", // blue
+  "#EF4444", // red
+  "#C3F84A", // lime
+  "#00D67F", // green
+  "#0064E0", // navy
+  "#1C2B33", // ink
 ];
 
 // Solid dominant hue for each CARD_GRADIENTS entry — used to color an icon
-// sitting on a solid white badge over that gradient, without ever needing
-// an alpha/opacity color.
-export const CARD_ACCENT = ["#0082FB", "#EF4444", "#F59E0B", "#00D67F", "#0082FB", "#1C2B33"];
+// sitting on a solid white badge, without ever needing an alpha/opacity color.
+export const CARD_ACCENT = ["#0082FB", "#EF4444", "#C3F84A", "#00D67F", "#0064E0", "#1C2B33"];
 
-// Same 4-tone rotation as the "Akses Cepat" quick-access cards on the
-// admin/guru/siswa dashboards — semua varian biru-ke-tinta dari palet
-// utama, dibedakan lewat gelap/terangnya saja (lihat catatan di atas).
+// Rotasi warna yang sama dengan kartu "Akses Cepat" di dashboard admin/guru/
+// siswa — 4 warna berbeda dari palet (bukan gradasi satu hue).
 export const DASHBOARD_GRADIENTS = [
-  "linear-gradient(135deg,#0082FB,#0064E0)", // bright
-  "linear-gradient(135deg,#0064E0,#1C2B33)", // deep
-  "linear-gradient(135deg,#4FB0FF,#0082FB)", // tint
-  "linear-gradient(135deg,#1C2B33,#0064E0)", // ink
+  "#0082FB", // blue
+  "#00D67F", // green
+  "#C3F84A", // lime
+  "#0064E0", // navy
 ];
-export const DASHBOARD_ACCENT = ["#0082FB", "#0064E0", "#0082FB", "#1C2B33"];
-export const DASHBOARD_PASTEL = ["#EAF3FF", "#DCEBFF", "#D6E9FF", "#E7EAEC"];
+export const DASHBOARD_ACCENT = ["#0082FB", "#00D67F", "#8A9E1F", "#0064E0"];
+export const DASHBOARD_PASTEL = ["#EAF3FF", "#E3FBF0", "#F4FFD9", "#DCEBFF"];
+
+// Teks/ikon di atas tiap WALLET_GRADIENTS — putih untuk warna gelap (biru/
+// navy/hijau), tinta gelap untuk lime yang terlalu terang buat teks putih.
+export const WALLET_ON_TEXT = ["#FFFFFF", "#FFFFFF", "#1C2B33", "#FFFFFF"];
 
 // Wallet-card style palette for the "Kelas" row on the admin Absensi Harian
-// page — order/colors match DASHBOARD_GRADIENTS di atas (bright/deep/tint/
-// ink), cycling by kelas index.
+// page — order/colors match DASHBOARD_GRADIENTS di atas, cycling by kelas index.
 export const WALLET_GRADIENTS = [
-  "linear-gradient(135deg,#0082FB,#0064E0)", // bright
-  "linear-gradient(135deg,#0064E0,#1C2B33)", // deep
-  "linear-gradient(135deg,#4FB0FF,#0082FB)", // tint
-  "linear-gradient(135deg,#1C2B33,#0064E0)", // ink
+  "#0082FB", // blue
+  "#00D67F", // green
+  "#C3F84A", // lime
+  "#0064E0", // navy
 ];
 
 // Subtle repeating wave-line texture drawn straight into each wallet card's
@@ -87,9 +88,9 @@ export const WALLET_DOT_SIZE = "18px 18px";
 // download, since our export needs a separate format pick below (4 kinds).
 // Shared by both admin and guru's Absensi Harian pages.
 export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
-  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "linear-gradient(135deg,#00D67F,#00D67F)" },
-  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
+  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "#0082FB" },
+  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "#00D67F" },
+  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "#0082FB" },
 ];
 
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
@@ -146,7 +147,7 @@ export function getInitials(name: string) {
   return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 
-const AVATAR_COLORS = ["#0082FB", "#EF4444", "#F59E0B", "#4FB0FF", "#00D67F", "#0064E0"];
+const AVATAR_COLORS = ["#0082FB", "#EF4444", "#C3F84A", "#0082FB", "#00D67F", "#0064E0"];
 export function avatarColor(name: string) {
   let h = 0;
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0x7fffffff;

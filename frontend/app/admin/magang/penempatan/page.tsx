@@ -140,7 +140,7 @@ export default function AdminMagangPenempatanPage() {
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
           <GradientStatCard
-            tone="bright"
+            tone="blue"
             label="Tempat Magang"
             value={loading ? "—" : tempatList.length}
             caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
@@ -151,7 +151,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-4">
           <GradientStatCard
-            tone="deep"
+            tone="green"
             label="Siswa PKL Aktif"
             value={loading ? "—" : jumlahAktif}
             caption={`${jumlahSelesai} sudah selesai`}
@@ -162,7 +162,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-2">
           <GradientStatCard
-            tone="tint"
+            tone="lime"
             label="Total Kuota"
             value={loading ? "—" : totalKuota}
             caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
@@ -173,7 +173,7 @@ export default function AdminMagangPenempatanPage() {
         </div>
         <div className="lg:col-span-3">
           <GradientStatCard
-            tone="ink"
+            tone="navy"
             label="Total Riwayat Penempatan"
             value={loading ? "—" : penempatanList.length}
             caption="Sepanjang periode PKL"

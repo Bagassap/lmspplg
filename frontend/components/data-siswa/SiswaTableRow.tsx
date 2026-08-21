@@ -143,7 +143,7 @@ export function SiswaTableRow({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => onImpersonate(siswa)}
-              className="flex items-center gap-1 rounded-lg bg-amber-500 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+              className="flex items-center gap-1 rounded-lg bg-[#C3F84A] px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
             >
               <ScanEye size={12} />
               Pantau

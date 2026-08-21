@@ -29,7 +29,7 @@ ${html}
   window.addEventListener("error", function (e) {
     var pre = document.createElement("pre");
     pre.textContent = "Error: " + e.message;
-    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FEE9EA;color:#EF4444;font:12px monospace;white-space:pre-wrap;border-top:1px solid #FCA5A5;";
+    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FEE9EA;color:#EF4444;font:12px monospace;white-space:pre-wrap;border-top:1px solid #EF4444;";
     document.body.appendChild(pre);
   });
 <\/script>
@@ -139,7 +139,7 @@ export function CodePracticeCanvas({
             return (
               <button key={t.key} type="button" onClick={() => setTab(t.key)}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
-                style={active ? { background: "linear-gradient(135deg,#0082FB,#0064E0)" } : {}}>
+                style={active ? { background: "#0082FB" } : {}}>
                 <t.icon size={13} /> {t.label}
               </button>
             );
@@ -157,7 +157,7 @@ export function CodePracticeCanvas({
           </button>
           <button type="button" onClick={runNow}
             className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
-            style={{ background: "linear-gradient(135deg,#00D67F,#00D67F)" }}>
+            style={{ background: "#00D67F" }}>
             <Play size={12} /> Run
           </button>
           <button type="button" onClick={() => setFullscreen((f) => !f)}

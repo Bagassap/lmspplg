@@ -9,16 +9,16 @@ import type { TugasItem, TugasSubmisiItem } from "./types";
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
   PRAKTIK: { icon: Code2, cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" },
-  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400" },
+  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#C3F84A]" },
   ESSAY: { icon: PenLine, cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400" },
 };
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
-  { bar: "#00D67F", gradient: "linear-gradient(135deg,#00D67F,#0064E0)" },
-  { bar: "#EF4444", gradient: "linear-gradient(135deg,#EF4444,#0082FB)" },
-  { bar: "#F59E0B", gradient: "linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bar: "#0064E0", gradient: "linear-gradient(135deg,#0064E0,#0082FB)" },
+  { bar: "#0082FB", gradient: "#0082FB" },
+  { bar: "#00D67F", gradient: "#00D67F" },
+  { bar: "#EF4444", gradient: "#EF4444" },
+  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -51,10 +51,10 @@ export function TugasListCard({
 
   return (
     <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-      <div className="px-5 pt-5 pb-0" style={{ background: "linear-gradient(135deg,rgba(245,158,11,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(0,130,251,0.06) 100%)" }}>
+      <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,#F59E0B,#0064E0)" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#C3F84A" }}>
               <ClipboardList size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas</p>
@@ -62,7 +62,7 @@ export function TugasListCard({
           {canCreate && (
             <button onClick={onAddTugas}
               className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-              style={{ background: "linear-gradient(135deg,#F59E0B,#0064E0)" }}>
+              style={{ background: "#C3F84A" }}>
               <Plus size={13} /> Tambah Tugas
             </button>
           )}
@@ -71,7 +71,7 @@ export function TugasListCard({
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
           <input value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari nama tugas atau mapel..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-amber-900/30" />
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#C3F84A] focus:ring-2 focus:ring-[#F1F5F8] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#1C2B33]/30" />
         </div>
         <div className="flex gap-6 border-b border-slate-100 dark:border-slate-700">
           <button onClick={() => setTab("active")}

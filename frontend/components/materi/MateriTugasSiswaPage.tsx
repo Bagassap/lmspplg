@@ -116,7 +116,7 @@ export function MateriTugasSiswaPage() {
             <button type="button" onClick={() => setCategory("materi")}
               className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                background: "linear-gradient(135deg,#0082FB,#0064E0)",
+                background: "#0082FB",
                 boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
                 outline: category === "materi" ? "2px solid #0082FB" : "none",
                 outlineOffset: "3px",
@@ -134,9 +134,9 @@ export function MateriTugasSiswaPage() {
             <button type="button" onClick={() => setCategory("tugas")}
               className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                background: "linear-gradient(135deg,#F59E0B,#0064E0)",
-                boxShadow: category === "tugas" ? "0 8px 24px rgba(245,158,11,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "tugas" ? "2px solid #F59E0B" : "none",
+                background: "#C3F84A",
+                boxShadow: category === "tugas" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                outline: category === "tugas" ? "2px solid #C3F84A" : "none",
                 outlineOffset: "3px",
               }}>
               <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />

@@ -231,7 +231,7 @@ function SubmitSoalModal({
   });
   const [catatan, setCatatan] = useState("");
   const [saving, setSaving] = useState(false);
-  const warna = isPg ? "#F59E0B" : "#0064E0";
+  const warna = isPg ? "#C3F84A" : "#0064E0";
 
   async function submit() {
     setSaving(true);
@@ -297,10 +297,10 @@ function SubmitSoalModal({
                           <button key={huruf} type="button"
                             onClick={() => setJawaban((prev) => ({ ...prev, [s.id]: huruf }))}
                             className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-all ${
-                              active ? "border-amber-400 bg-amber-50 dark:bg-amber-900/20" : "border-slate-200 hover:border-amber-200 dark:border-slate-600"
+                              active ? "border-[#C3F84A] bg-[#F1F5F8] dark:bg-[#1C2B33]/20" : "border-slate-200 hover:border-[#F1F5F8] dark:border-slate-600"
                             }`}>
                             <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                              active ? "bg-amber-500 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                              active ? "bg-[#C3F84A] text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>
                           </button>

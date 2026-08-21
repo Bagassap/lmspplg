@@ -117,7 +117,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#4FB0FF] dark:bg-[#0064E0]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0082FB] dark:bg-[#0064E0]/20">
                     <IdCard size={15} className="text-[#0082FB]" />
                   </div>
                   <div className="min-w-0">

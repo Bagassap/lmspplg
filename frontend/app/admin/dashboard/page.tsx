@@ -70,7 +70,7 @@ function SectionCard({
         <div className="flex items-center gap-2.5">
           {Icon && (
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: `linear-gradient(135deg, ${iconColor}30, ${iconColor}12)` }}>
+              style={{ background: `${iconColor}20` }}>
               <Icon size={14} style={{ color: iconColor }} />
             </div>
           )}
@@ -159,7 +159,7 @@ export default function AdminDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
+      gradient: "#0082FB",
       icon: Calendar,
     },
     {
@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
+      gradient: "#0064E0",
       icon: Megaphone,
     },
     {
@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
+      gradient: "#0082FB",
       icon: Briefcase,
     },
     {
@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
+      gradient: "#1C2B33",
       icon: FileText,
     },
   ] as const;
@@ -244,7 +244,7 @@ export default function AdminDashboardPage() {
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#F59E0B" }} />Total
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#C3F84A" }} />Total
               </span>
             </div>
           </div>

@@ -103,7 +103,7 @@ export default function AdminDataSiswaPage() {
         <button onClick={() => setKenaikanOpen(true)}
           className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/40">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
               <ArrowUpCircle size={18} />
             </span>
             <div>

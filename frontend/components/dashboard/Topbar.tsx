@@ -103,9 +103,9 @@ const NOTIF_TYPE_STYLE: Record<ApiNotifType, NotifType> = {
 
 const NOTIF_STYLE: Record<NotifType, { bg: string; color: string }> = {
   info:    { bg: "#EAF3FF", color: "#0082FB" },
-  success: { bg: "#F0FDF4", color: "#00D67F" },
-  warning: { bg: "#FFFBEB", color: "#F59E0B" },
-  error:   { bg: "#FEF2F2", color: "#EF4444" },
+  success: { bg: "#E3FBF0", color: "#00D67F" },
+  warning: { bg: "#F4FFD9", color: "#8A9E1F" },
+  error:   { bg: "#FEE9EA", color: "#EF4444" },
 };
 
 const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
@@ -443,7 +443,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                 src={user.fotoProfil}
                 nama={user.nama}
                 sizePx={28}
-                fallbackBg="linear-gradient(135deg, #8099EC, #0082FB)"
+                fallbackBg="#0082FB"
                 textClassName="text-[11px] font-bold"
               />
               <span className="hidden text-sm font-medium text-gray-700 dark:text-slate-200 sm:block">

@@ -156,9 +156,9 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
         <>
           <motion.div
             variants={item}
-            className="flex items-start gap-2.5 rounded-xl border border-amber-500/20 bg-amber-500/5 px-3.5 py-3"
+            className="flex items-start gap-2.5 rounded-xl border border-[#C3F84A]/20 bg-[#C3F84A]/5 px-3.5 py-3"
           >
-            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-amber-600" />
+            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#1C2B33]" />
             <p className="text-xs leading-relaxed text-black/65">
               Untuk keamanan, konfirmasi identitas Anda sebelum membuat password baru —
               ini mencegah orang lain mengganti password akun Anda dengan NIS yang bukan miliknya.
@@ -262,7 +262,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
         whileHover={!loading ? { scale: 1.02 } : undefined}
         whileTap={!loading ? { scale: 0.98 } : undefined}
         className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
-        style={{ background: "linear-gradient(to right, #0082FB, #0082FB)" }}
+        style={{ background: "#0082FB" }}
       >
         {loading ? (
           <>

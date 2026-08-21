@@ -282,7 +282,7 @@ export default function SiswaAbsensiHarianPage() {
 
       {loading ? (
         <div className="flex items-center justify-center rounded-2xl border border-slate-100 bg-white py-20 dark:border-slate-700 dark:bg-slate-800">
-          <Loader2 size={24} className="animate-spin text-[#4FB0FF]" />
+          <Loader2 size={24} className="animate-spin text-[#0082FB]" />
         </div>
       ) : (
         <>
@@ -299,7 +299,7 @@ export default function SiswaAbsensiHarianPage() {
                     <button key={t.key} type="button" onClick={() => setActiveTab(t.key)}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all"
                       style={active
-                        ? { background: t.key === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT, color: "#fff" }
+                        ? { background: t.key === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT, color: "#fff" }
                         : { background: "transparent", color: "#94a3b8" }}>
                       <Icon size={15} /> {t.label}
                     </button>
@@ -355,7 +355,7 @@ export default function SiswaAbsensiHarianPage() {
                 ) : (
                   data?.sudahPulang ? (
                     <motion.div key="pulang-sudah" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="overflow-hidden rounded-2xl shadow-lg" style={{ background: `linear-gradient(160deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` }}>
+                      className="overflow-hidden rounded-2xl shadow-lg" style={{ background: PULANG_CFG.clr }}>
                       <RingkasanAbsen
                         title="Kepulangan Tercatat"
                         desc={<>Anda tercatat <b>Pulang</b> hari ini</>}
@@ -546,7 +546,7 @@ function FormAbsen({
         </div>
       ) : (
         <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
-          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-[#4FB0FF] hover:text-[#4FB0FF] disabled:cursor-wait disabled:opacity-70 ${
+          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-[#0082FB] hover:text-[#0082FB] disabled:cursor-wait disabled:opacity-70 ${
             fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
           }`}>
           {compressingFoto ? (
@@ -600,7 +600,7 @@ function FormAbsen({
     <div className="space-y-4 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-3 px-5 pt-5">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-md"
-          style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+          style={{ background: activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT }}>
           {activeTipe === "PULANG" ? <LogOut size={18} /> : activeTipe === "HADIR" ? <LogIn size={18} /> : (() => { const Icon = STATUS_CFG[activeTipe].icon; return <Icon size={18} />; })()}
         </div>
         <div className="min-w-0">
@@ -649,7 +649,7 @@ function FormAbsen({
           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
             placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
             className={`w-full resize-none rounded-xl border bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
-              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-[#4FB0FF] dark:border-slate-600"
+              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-[#0082FB] dark:border-slate-600"
             }`} />
           {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
         </div>
@@ -667,7 +667,7 @@ function FormAbsen({
         <motion.button whileTap={{ scale: 0.98 }} onClick={onSubmit}
           disabled={disabled}
           className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md disabled:opacity-50"
-          style={{ background: activeTipe === "PULANG" ? `linear-gradient(135deg,${PULANG_CFG.clr}dd,${PULANG_CFG.clr})` : BRAND_GRADIENT }}>
+          style={{ background: activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT }}>
           {submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />)}
           {submitting ? "Menyimpan..." : activeTipe === "PULANG" ? "Absen Pulang Sekarang" : `Absen ${STATUS_CFG[activeTipe].label} Sekarang`}
         </motion.button>

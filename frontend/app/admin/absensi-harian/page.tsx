@@ -18,7 +18,7 @@ import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeri
 import { JadwalAbsenCard } from "@/components/absensi-harian/JadwalAbsenCard";
 import { KelolaKelasModal, type Guru } from "@/components/absensi-harian/KelolaKelasModal";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 export default function AdminAbsensiHarianPage() {
@@ -180,18 +180,21 @@ export default function AdminAbsensiHarianPage() {
                   {kelasPageSlice.map((k) => {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
-                    const gradient = WALLET_GRADIENTS[s.idx % WALLET_GRADIENTS.length];
+                    const idx = s.idx % WALLET_GRADIENTS.length;
+                    const bg = WALLET_GRADIENTS[idx];
+                    const onText = WALLET_ON_TEXT[idx];
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left text-white transition-all"
+                        className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left transition-all"
                         style={{
-                          background: gradient,
+                          background: bg,
+                          color: onText,
                           boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
-                          outline: isSelected ? "3px solid white" : "3px solid transparent",
+                          outline: isSelected ? `3px solid ${onText}` : "3px solid transparent",
                           outlineOffset: isSelected ? "2px" : "0",
                         }}>
                         <div className="relative flex items-center gap-2">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/25">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${onText}40` }}>
                             <BookOpen size={14} />
                           </span>
                           <p className="truncate text-sm font-bold">{k.nama}</p>
@@ -199,15 +202,15 @@ export default function AdminAbsensiHarianPage() {
 
                         <div className="relative">
                           <p className="text-2xl font-extrabold tabular-nums">
-                            {s.hd}<span className="text-sm font-semibold text-white/70">/{s.tt}</span>
+                            {s.hd}<span className="text-sm font-semibold" style={{ color: `${onText}B3` }}>/{s.tt}</span>
                           </p>
-                          <p className="text-[11px] font-semibold text-white/80">Hadir · {s.pct}%</p>
-                          <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
-                            <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${s.pct}%` }} />
+                          <p className="text-[11px] font-semibold" style={{ color: `${onText}CC` }}>Hadir · {s.pct}%</p>
+                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}40` }}>
+                            <div className="h-1.5 rounded-full transition-all" style={{ width: `${s.pct}%`, backgroundColor: onText }} />
                           </div>
                         </div>
 
-                        <p className="relative text-[10px] font-medium text-white/70">
+                        <p className="relative text-[10px] font-medium" style={{ color: `${onText}B3` }}>
                           Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
                         </p>
                       </button>
@@ -307,7 +310,7 @@ export default function AdminAbsensiHarianPage() {
           <div className="flex h-full flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
                   <FileText size={18} />
                 </span>
                 <div>
@@ -333,17 +336,17 @@ export default function AdminAbsensiHarianPage() {
               {exportRange.rangeMode === "mingguan" && (
                 <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
                   title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>

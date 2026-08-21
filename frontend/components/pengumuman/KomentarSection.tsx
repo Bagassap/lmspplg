@@ -17,18 +17,18 @@ export type KomentarItem = {
 };
 
 const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-[#4FB0FF] text-[#0064E0] dark:bg-[#0064E0]/40 dark:text-[#4FB0FF]", dot: "#0082FB" },
+  ADMIN: { label: "Admin",  cls: "bg-[#EAF3FF] text-[#0064E0] dark:bg-[#0064E0]/40 dark:text-[#EAF3FF]", dot: "#0082FB" },
   GURU:  { label: "Guru",   cls: "bg-[#1C2B33]/10 text-[#1C2B33] dark:bg-[#1C2B33]/60 dark:text-[#F1F5F8]",  dot: "#0064E0" },
   SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#00D67F" },
 };
 
 const AVATAR_PALETTE = [
-  "linear-gradient(135deg,#0082FB,#0082FB)",
-  "linear-gradient(135deg,#EF4444,#EF4444)",
-  "linear-gradient(135deg,#0082FB,#0082FB)",
-  "linear-gradient(135deg,#F59E0B,#FCD34D)",
-  "linear-gradient(135deg,#0082FB,#0082FB)",
-  "linear-gradient(135deg,#00D67F,#00D67F)",
+  "#0082FB",
+  "#EF4444",
+  "#0082FB",
+  "#C3F84A",
+  "#0082FB",
+  "#00D67F",
 ];
 function avatarGradient(name: string) { return AVATAR_PALETTE[name.charCodeAt(0) % AVATAR_PALETTE.length]; }
 
@@ -161,7 +161,7 @@ function KomentarBubble({
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-2 overflow-hidden"
               >
-                <div className="flex items-end gap-2 rounded-xl border border-[#0064E0]/25 bg-gradient-to-br from-blue-50 to-white p-3 dark:border-blue-700/30 dark:from-blue-900/10 dark:to-[#1C2B33]">
+                <div className="flex items-end gap-2 rounded-xl border border-[#0064E0]/25 bg-[#EAF3FF] p-3 dark:border-blue-700/30 dark:bg-[#1C2B33]">
                   <textarea
                     rows={2}
                     value={replyText}
@@ -306,7 +306,7 @@ export function KomentarSection({
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: "linear-gradient(90deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }} />
+          style={{ background: "#0064E0" }} />
 
         <textarea
           rows={3}
@@ -336,8 +336,8 @@ export function KomentarSection({
       </div>
 
       {komentar.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-gradient-to-br from-slate-50 to-white py-10 text-center dark:border-slate-700/40 dark:from-slate-800/30 dark:to-[#1C2B33]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0064E0]/10 to-[#0082FB]/10">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-slate-50 py-10 text-center dark:border-slate-700/40 dark:bg-[#1C2B33]">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0082FB]/10">
             <Sparkles size={20} className="text-[#0064E0] dark:text-blue-400" />
           </div>
           <p className="text-[13px] font-bold text-slate-500 dark:text-slate-400">Belum ada komentar</p>

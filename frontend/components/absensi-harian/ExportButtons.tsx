@@ -19,7 +19,7 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "bulanan", label: "Per Bulan" },
 ];
 
-const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF]";
+const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0082FB]";
 
 /** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker — same row height in every mode (harian has no extra picker at all; mingguan/bulanan pickers share selectCls with the tabs' py-1.5). Rendered right after the main Tanggal picker, before the download buttons. */
 export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
@@ -162,8 +162,8 @@ export function ExportButtons({ kelasId, kelasNama, range, siswaList }: {
     }
   }
 
-  const PDF_STYLE = { backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#DC262630" };
-  const EXCEL_STYLE = { backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#0F9D5830" };
+  const PDF_STYLE = { backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" };
+  const EXCEL_STYLE = { backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" };
 
   return (
     <>

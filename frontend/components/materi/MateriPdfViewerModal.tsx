@@ -71,8 +71,8 @@ export function MateriPdfViewerModal({ materi, onClose }: { materi: MateriItem |
 
             {!fileUrl ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 p-10 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50">
-                  <AlertCircle size={28} className="text-amber-500" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F5F8]">
+                  <AlertCircle size={28} className="text-[#C3F84A]" />
                 </div>
                 <p className="font-bold text-gray-700 dark:text-slate-200">Materi ini belum punya file</p>
               </div>
@@ -96,8 +96,8 @@ export function MateriPdfViewerModal({ materi, onClose }: { materi: MateriItem |
                 <div ref={containerRef} className="relative flex-1 overflow-y-auto bg-gray-100 dark:bg-slate-900">
                   {pdfError ? (
                     <div className="flex flex-col items-center justify-center gap-4 p-10 text-center" style={{ minHeight: 340 }}>
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50">
-                        <AlertCircle size={28} className="text-amber-500" />
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F5F8]">
+                        <AlertCircle size={28} className="text-[#C3F84A]" />
                       </div>
                       <div>
                         <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>

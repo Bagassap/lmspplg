@@ -35,7 +35,7 @@ export function RevisiFormModal({
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#F59E0B" }}>
+            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#C3F84A" }}>
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
@@ -49,9 +49,9 @@ export function RevisiFormModal({
             </div>
 
             <div className="px-6 py-5 space-y-4">
-              <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20">
-                <AlertCircle size={15} className="text-amber-500 mt-0.5 shrink-0" />
-                <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+              <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#F1F5F8] dark:bg-[#C3F84A]/10 border border-[#F1F5F8] dark:border-[#C3F84A]/20">
+                <AlertCircle size={15} className="text-[#C3F84A] mt-0.5 shrink-0" />
+                <p className="text-xs text-[#1C2B33] dark:text-[#C3F84A] leading-relaxed">
                   Siswa akan menerima notifikasi revisi dan <strong>wajib mengirim ulang</strong> tugas mereka.
                 </p>
               </div>
@@ -64,7 +64,7 @@ export function RevisiFormModal({
                   onChange={(e) => setPesan(e.target.value)}
                   rows={4}
                   placeholder="Tuliskan catatan revisi untuk siswa…"
-                  className="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-amber-400 placeholder:text-slate-400"
+                  className="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-[#C3F84A] placeholder:text-slate-400"
                   autoFocus
                 />
               </div>
@@ -77,7 +77,7 @@ export function RevisiFormModal({
               </button>
               <button onClick={submit} disabled={!pesan.trim() || sending}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-110"
-                style={{ background: "#F59E0B" }}>
+                style={{ background: "#C3F84A" }}>
                 <span className="flex items-center justify-center gap-2">
                   <AlertCircle size={14} /> {sending ? "Mengirim…" : "Kirim Revisi"}
                 </span>

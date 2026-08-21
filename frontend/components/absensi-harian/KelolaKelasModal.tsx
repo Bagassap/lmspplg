@@ -70,7 +70,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
         className="relative z-10 flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4FB0FF] dark:bg-[#0064E0]/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0082FB] dark:bg-[#0064E0]/30">
               <Settings2 size={16} className="text-[#0082FB]" />
             </div>
             <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">Kelola Kelas</h2>
@@ -86,12 +86,12 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Nama Kelas</label>
                 <input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: XII RPL 1"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200" />
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200" />
               </div>
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Wali Kelas</label>
                 <select value={waliId} onChange={(e) => setWaliId(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200">
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200">
                   <option value="">— Belum ditentukan —</option>
                   {guruList.map((g) => (
                     <option key={g.id} value={g.user.id}>{g.user.nama}</option>
@@ -104,14 +104,14 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                 </button>
                 <button onClick={save} disabled={saving}
                   className="rounded-xl px-4 py-1.5 text-xs font-bold text-white disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                  style={{ background: "#0082FB" }}>
                   {saving ? "Menyimpan..." : "Simpan"}
                 </button>
               </div>
             </div>
           ) : (
             <button onClick={startCreate}
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 hover:border-[#4FB0FF] hover:text-[#0082FB] dark:border-slate-600">
+              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 hover:border-[#0082FB] hover:text-[#0082FB] dark:border-slate-600">
               <Plus size={14} /> Tambah Kelas
             </button>
           )}

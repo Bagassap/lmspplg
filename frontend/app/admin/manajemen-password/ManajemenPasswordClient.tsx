@@ -196,7 +196,7 @@ export default function ManajemenPasswordClient() {
               </div>
             </div>
             <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <AlertTriangle size={14} className="text-amber-300" />
+              <AlertTriangle size={14} className="text-[#C3F84A]" />
               <div className="leading-tight">
                 <p className="text-sm font-extrabold text-white">{loadingHeader ? "—" : belumGantiCount}</p>
                 <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Belum Ganti</p>

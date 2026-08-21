@@ -15,7 +15,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
   loading: () => (
     <div className="flex-1 flex items-center justify-center py-20">
-      <Loader2 size={28} className="animate-spin text-amber-500" />
+      <Loader2 size={28} className="animate-spin text-[#C3F84A]" />
     </div>
   ),
 });
@@ -28,16 +28,16 @@ function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", {
 
 function statusInfo(s: "TERKIRIM"|"DITERIMA"|"REVISI") {
   if (s === "DITERIMA") return { bg:"#E3FBF0", color:"#00D67F", label:"Diterima",      icon: <CheckCircle size={10}/> };
-  if (s === "REVISI")   return { bg:"#FEF3C7", color:"#F59E0B", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
+  if (s === "REVISI")   return { bg:"#F1F5F8", color:"#C3F84A", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
   return                       { bg:"#EAF3FF", color:"#0082FB", label:"Menunggu Review", icon: <Clock size={10}/> };
 }
 
 const ROW_PALETTES = [
-  { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"linear-gradient(135deg,#0082FB,#0064E0)" },
-  { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"linear-gradient(135deg,#00D67F,#0064E0)" },
-  { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"linear-gradient(135deg,#EF4444,#0082FB)" },
-  { bg:"#FFFBEB", text:"#F59E0B",  bar:"#F59E0B",  gradient:"linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"linear-gradient(135deg,#4FB0FF,#0082FB)" },
+  { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
+  { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
+  { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
+  { bg:"#F1F5F8", text:"#C3F84A",  bar:"#C3F84A",  gradient:"#C3F84A" },
+  { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -313,7 +313,7 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/> : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-amber-300"/>
+                        <FileText size={30} className="text-[#C3F84A]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada file jadwal</p>
                       </div>
                     )}
@@ -361,7 +361,7 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenSoalModal(false)}/> : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-[#4FB0FF]"/>
+                        <FileText size={30} className="text-[#0082FB]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada soal</p>
                       </div>
                     )}
@@ -377,7 +377,7 @@ export default function SiswaJadwalSoalPage() {
                 <div className="flex flex-col gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
                 className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
 
@@ -411,7 +411,7 @@ export default function SiswaJadwalSoalPage() {
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
 
@@ -448,9 +448,9 @@ export default function SiswaJadwalSoalPage() {
               <div className="flex flex-col gap-6">
 
           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-              <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(245,158,11,0.06) 100%)"}}>
+              <div className="px-5 pt-5 pb-0" style={{background:"rgba(0,130,251,0.05)"}}>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#0082FB,#0064E0)"}}>
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"#0082FB"}}>
                     <BookOpen size={14} className="text-white"/>
                   </div>
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
@@ -516,7 +516,7 @@ export default function SiswaJadwalSoalPage() {
                         const btn = isDiterima
                           ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#E3FBF0", clr:"#00D67F", border:"#00D67F", onClick:()=>setDetailTarget(myS!) }
                           : isRevisi
-                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#FFFBEB", clr:"#F59E0B", border:"#F59E0B", onClick:()=>setRevisiModal(myS!) }
+                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F1F5F8", clr:"#C3F84A", border:"#C3F84A", onClick:()=>setRevisiModal(myS!) }
                           : isTerkirim
                           ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#EAF3FF", clr:"#0082FB", border:"#0082FB", onClick:()=>setDetailTarget(myS!) }
                           : { label:"Kirim", icon:<Send size={11}/>, bg:"#E3FBF0", clr:"#00D67F", border:"#00D67F", onClick:()=>globalSoal && setSubmitSoal(globalSoal) };
@@ -537,9 +537,9 @@ export default function SiswaJadwalSoalPage() {
                             <td className="whitespace-nowrap px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                  <div className="h-full rounded-full" style={{width:`${pct}%`, background: isDiterima?"linear-gradient(90deg,#00D67F,#00D67F)":isRevisi?"linear-gradient(90deg,#F59E0B,#0082FB)":rp.gradient}}/>
+                                  <div className="h-full rounded-full" style={{width:`${pct}%`, background: isDiterima?"#00D67F":isRevisi?"#C3F84A":rp.gradient}}/>
                                 </div>
-                                <span className="text-xs font-bold" style={{color: isDiterima?"#00D67F":isRevisi?"#F59E0B":rp.bar}}>{pct}%</span>
+                                <span className="text-xs font-bold" style={{color: isDiterima?"#00D67F":isRevisi?"#C3F84A":rp.bar}}>{pct}%</span>
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 text-right">
@@ -646,7 +646,7 @@ export default function SiswaJadwalSoalPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background:"#F59E0B"}}>
+                style={{background:"#C3F84A"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -664,12 +664,12 @@ export default function SiswaJadwalSoalPage() {
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-4 py-4">
+                <div className="rounded-xl border border-[#F1F5F8] dark:border-[#C3F84A]/30 bg-[#F1F5F8] dark:bg-[#C3F84A]/10 px-4 py-4">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle size={15} className="text-amber-500 mt-0.5 shrink-0"/>
+                    <AlertCircle size={15} className="text-[#C3F84A] mt-0.5 shrink-0"/>
                     <div>
-                      <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-1.5">Catatan dari Penguji</p>
-                      <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed whitespace-pre-line">
+                      <p className="text-xs font-bold text-[#1C2B33] dark:text-[#C3F84A] mb-1.5">Catatan dari Penguji</p>
+                      <p className="text-sm text-[#1C2B33] dark:text-[#C3F84A] leading-relaxed whitespace-pre-line">
                         {revisiModal.pesanRevisi || "Silakan perbaiki project kamu dan kirim ulang."}
                       </p>
                     </div>
@@ -694,7 +694,7 @@ export default function SiswaJadwalSoalPage() {
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2"
-                  style={{background:"#F59E0B"}}>
+                  style={{background:"#C3F84A"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

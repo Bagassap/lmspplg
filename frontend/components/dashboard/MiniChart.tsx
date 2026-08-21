@@ -276,12 +276,12 @@ export function AreaLineChart({
           <g key={i}>
             <circle cx={cx} cy={cy} r={9} fill={color} opacity={0.14} />
             <circle cx={cx} cy={cy} r={5} fill="white" stroke={color} strokeWidth={2.5}
-              className="dark:fill-[#24303F]" />
+              className="dark:fill-[#1C2B33]" />
             {showValueLabels && (
               <g>
                 <rect x={cx - 17} y={labelY - 12} width={34} height={16} rx={5}
                   fill="white" fillOpacity={0.92} stroke={color} strokeOpacity={0.25} strokeWidth={1}
-                  className="dark:fill-[#24303F]" />
+                  className="dark:fill-[#1C2B33]" />
                 <text x={cx} y={labelY} textAnchor="middle" fontSize={11} fontWeight="700" fill={color}>{val}</text>
               </g>
             )}

@@ -35,8 +35,8 @@ type SiswaProfil = {
 };
 
 const HERO_GRADIENT = "#0082FB";
-const ACCENT_VIOLET = "linear-gradient(135deg,#0082FB,#0064E0)";
-const ACCENT_ORANGE = "linear-gradient(135deg,#F59E0B,#0082FB)";
+const ACCENT_VIOLET = "#0082FB";
+const ACCENT_ORANGE = "#C3F84A";
 const PROFILE_CARD_GRADIENT = "#0082FB";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
@@ -327,7 +327,7 @@ export default function SiswaProfilPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#4FB0FF] border-t-violet-600" />
+        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#0082FB] border-t-violet-600" />
       </div>
     );
   }
@@ -347,7 +347,7 @@ export default function SiswaProfilPage() {
   const isP = profil.jenisKelamin === "Perempuan";
   const kelasGrad = PROFILE_CARD_GRADIENT;
   const avatarGrad = isP
-    ? "linear-gradient(135deg,#0082FB,#1C2B33)"
+    ? "#0082FB"
     : kelasGrad;
   const tglLahir = [profil.tempatLahir, formatTanggal(profil.tanggalLahir)].filter(Boolean).join(", ") || "—";
   const jurusanShort = (profil.jurusan ?? "—")
@@ -392,8 +392,6 @@ export default function SiswaProfilPage() {
       >
         <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1C2B33]">
           <div className="relative h-24" style={{ background: kelasGrad }}>
-            <div className="pointer-events-none absolute inset-0 opacity-30"
-              style={{ backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 60%)" }} />
             <span className="absolute right-3 top-3 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
               {kelasShort(profil.kelas.nama)}
             </span>
@@ -438,8 +436,8 @@ export default function SiswaProfilPage() {
             {profil.jenisKelamin && (
               <span className={`mt-3 rounded-full px-3.5 py-1.5 text-[11px] font-bold ${
                 isP
-                  ? "bg-[#4FB0FF] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#4FB0FF]"
-                  : "bg-[#4FB0FF] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#4FB0FF]"
+                  ? "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"
+                  : "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"
               }`}>
                 {profil.jenisKelamin}
               </span>

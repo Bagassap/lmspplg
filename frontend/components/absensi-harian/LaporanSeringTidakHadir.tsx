@@ -13,9 +13,9 @@ const INLINE_LIMIT = 5;
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
 const RANK_STYLE = [
-  { bg: "#FFF6DF", clr: "#C99A1C" }, // gold
-  { bg: "#F1F3F7", clr: "#8A96AC" }, // silver
-  { bg: "#FCEEE3", clr: "#C97A3D" }, // bronze
+  { bg: "#F4FFD9", clr: "#8A9E1F" }, // gold (lime)
+  { bg: "#DCEBFF", clr: "#0064E0" }, // silver (navy)
+  { bg: "#E7EAEC", clr: "#1C2B33" }, // bronze (ink)
 ];
 
 function RankBadge({ index }: { index: number }) {
@@ -38,18 +38,19 @@ function RankBadge({ index }: { index: number }) {
 // amber under 75%, blue otherwise.
 function severityColor(pct: number) {
   if (pct < 50) return "#EF4444";
-  if (pct < 75) return "#E6A800";
+  if (pct < 75) return "#C3F84A";
   return "#0082FB";
 }
 
 function StatPill({
-  icon: Icon, gradient, iconColor, value, label,
+  icon: Icon, gradient, iconColor, value, label, textColor = "#FFFFFF",
 }: {
   icon: React.ElementType;
   gradient: string;
   iconColor: string;
   value: string;
   label: string;
+  textColor?: string;
 }) {
   return (
     <div className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-1.5 shadow-sm" style={{ background: gradient }}>
@@ -57,8 +58,8 @@ function StatPill({
         <Icon size={14} style={{ color: iconColor }} />
       </div>
       <div className="leading-tight">
-        <p className="text-sm font-black text-white">{value}</p>
-        <p className="whitespace-nowrap text-[9px] font-bold text-white">{label}</p>
+        <p className="text-sm font-black" style={{ color: textColor }}>{value}</p>
+        <p className="whitespace-nowrap text-[9px] font-bold" style={{ color: textColor }}>{label}</p>
       </div>
     </div>
   );
@@ -96,7 +97,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#EF4444,#EF4444)" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#EF4444" }}>
               <TrendingDown size={18} />
             </span>
             <div>
@@ -208,7 +209,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
 
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
                 <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#EF4444" value={String(totalBermasalah)} label="Bermasalah" />
-                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#F59E0B" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#8A9E1F" textColor="#1C2B33" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
                 <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#0082FB" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 

@@ -3,20 +3,22 @@
 @variant dark (&:where(.dark, .dark *));
 
 /* Palet utama = Meta color palette (biru #0082FB/#0064E0 + netral
-   #F1F5F8/#1C2B33). Satu-satunya pengecualian: hijau untuk sukses dan
-   merah untuk error (lihat --color-success/--color-error di bawah).
-   Nama token lama (brand/accent/lavender/pink/violet/navy/deep) sengaja
-   dipertahankan supaya puluhan file yang sudah memakainya (util class
-   bg-violet, from-navy, to-deep, dst — terutama gradient hero halaman
-   login/splash) tidak perlu diubah satu-satu; cukup nilai hex-nya yang
-   dipetakan ulang ke palet baru di sini. */
+   #F1F5F8/#1C2B33), ditambah #C3F84A (lime, pengganti kuning/amber).
+   Satu-satunya pengecualian lain: hijau #00D67F untuk sukses dan merah
+   #EF4444 untuk error (lihat --color-success/--color-error di bawah).
+   TIDAK ADA gradient dua-warna di seluruh aplikasi — semua token di
+   bawah adalah warna solid. Nama token lama (brand/accent/lavender/
+   pink/violet/navy/deep) sengaja dipertahankan supaya puluhan file yang
+   sudah memakainya (util class bg-violet, from-navy, to-deep, dst)
+   tidak perlu diubah satu-satu; cukup nilai hex-nya yang dipetakan
+   ulang ke palet baru di sini. */
 :root {
   --background: #ffffff;
   --foreground: #1C2B33;
 
   --color-brand: #0082FB;
   --color-brand-dark: #0064E0;
-  --color-accent: #0082FB;
+  --color-accent: #C3F84A;
 
   --color-lavender: #EAF3FF;
   --color-pink: #DCEBFF;

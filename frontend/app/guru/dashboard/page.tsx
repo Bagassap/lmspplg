@@ -149,7 +149,7 @@ export default function GuruDashboardPage() {
       label: "Absensi Harian",
       value: data.kehadiran.hadir,
       suffix: " hadir",
-      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
+      gradient: "#0082FB",
       icon: ClipboardCheck,
     },
     {
@@ -157,7 +157,7 @@ export default function GuruDashboardPage() {
       label: "Siswa Diampu",
       value: data.siswaAmpu,
       suffix: " siswa",
-      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
+      gradient: "#0064E0",
       icon: Users,
     },
     {
@@ -165,7 +165,7 @@ export default function GuruDashboardPage() {
       label: "Kelas Wali",
       value: kelasWali.length,
       suffix: " kelas",
-      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
+      gradient: "#0082FB",
       icon: GraduationCap,
     },
     {
@@ -173,7 +173,7 @@ export default function GuruDashboardPage() {
       label: "Pengumuman",
       value: data.pengumuman.length,
       suffix: " info",
-      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
+      gradient: "#1C2B33",
       icon: Megaphone,
     },
   ] as const;
@@ -222,7 +222,7 @@ export default function GuruDashboardPage() {
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#F59E0B" }} />Total
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#C3F84A" }} />Total
               </span>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function GuruDashboardPage() {
                   transition={{ delay: 0.5 + i * 0.06 }}
                   className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                    style={{ background: "linear-gradient(135deg,#0082FB,#0082FB)" }}>
+                    style={{ background: "#0082FB" }}>
                     {k.nama.charAt(0)}
                   </div>
                   <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{k.nama}</p>

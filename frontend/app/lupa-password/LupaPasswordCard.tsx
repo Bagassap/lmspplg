@@ -33,10 +33,7 @@ export function LupaPasswordCard() {
     >
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-5 sm:w-[320px] sm:shrink-0 sm:px-10 sm:py-12"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse at 75% 10%, rgba(0,130,251,0.55), transparent 50%), linear-gradient(160deg, #0082FB 0%, #0082FB 45%, #0064E0 72%, #1C2B33 100%)",
-        }}
+        style={{ backgroundColor: "#0082FB" }}
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.12]"
@@ -90,7 +87,7 @@ export function LupaPasswordCard() {
               <br />
               <span
                 style={{
-                  background: "linear-gradient(90deg, #EAF3FF 20%, #0082FB 100%)",
+                  background: "#EAF3FF",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -107,7 +104,7 @@ export function LupaPasswordCard() {
               className="mx-auto mt-4 hidden h-px w-16 sm:block"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, rgba(0,130,251,0.9), rgba(0,130,251,0.7), transparent)",
+                  "rgba(0,130,251,0.8)",
               }}
             />
 

@@ -52,10 +52,10 @@ function wibInputToIso(value: string) {
 }
 
 const TIPE_OPTIONS: { value: TugasTipe; label: string; icon: typeof Send; gradient: string; desc: string }[] = [
-  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "linear-gradient(135deg,#0082FB,#0064E0)", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
-  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "linear-gradient(135deg,#00D67F,#00D67F)", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
-  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "linear-gradient(135deg,#F59E0B,#0064E0)", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
-  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "linear-gradient(135deg,#0064E0,#1D4ED8)", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
+  { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "#0082FB", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
+  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "#00D67F", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
+  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "#C3F84A", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
+  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "#0064E0", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
 ];
 
 export function TugasFormModal({

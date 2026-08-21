@@ -94,7 +94,6 @@ const ROLE_LABEL: Record<string, string> = {
   SISWA: "Pelajar",
 };
 
-const SIDEBAR_GRADIENT = "linear-gradient(160deg,#0082FB 0%,#0082FB 45%,#0064E0 72%,#1C2B33 100%)";
 const SIDEBAR_ACCENT = "#0082FB";
 
 const TOGGLE_BTN_CLASS =
@@ -250,12 +249,12 @@ export function Sidebar({
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-md shadow-blue-900/25 ring-1 ring-white/40 dark:shadow-black/40 dark:ring-white/10"
-                style={{ background: SIDEBAR_GRADIENT }}
+                style={{ background: SIDEBAR_ACCENT }}
               >
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto" />
               </div>
               <span className="flex items-baseline gap-1">
-                <span className="bg-gradient-to-br from-[#4FB0FF] via-[#0082FB] to-[#0064E0] bg-clip-text text-[17px] font-black tracking-tight text-transparent dark:from-[#4FB0FF] dark:via-[#0082FB] dark:to-[#0082FB]">
+                <span className="text-[17px] font-black tracking-tight text-[#0082FB]">
                   LMS
                 </span>
                 <span className="text-[11px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">
@@ -290,7 +289,7 @@ export function Sidebar({
               src={user.fotoProfil}
               nama={user.nama}
               sizePx={40}
-              fallbackBg={SIDEBAR_GRADIENT}
+              fallbackBg={SIDEBAR_ACCENT}
               textClassName="text-sm font-extrabold"
             />
           </div>
@@ -304,7 +303,7 @@ export function Sidebar({
                 src={user.fotoProfil}
                 nama={user.nama}
                 sizePx={64}
-                fallbackBg={SIDEBAR_GRADIENT}
+                fallbackBg={SIDEBAR_ACCENT}
                 textClassName="text-2xl font-extrabold"
               />
             </div>
@@ -314,7 +313,7 @@ export function Sidebar({
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-300">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
             </p>
-            <p className="mt-2 rounded-full bg-[#0082FB]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#0082FB] dark:bg-white/10 dark:text-[#4FB0FF]">
+            <p className="mt-2 rounded-full bg-[#0082FB]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#0082FB] dark:bg-white/10 dark:text-[#0082FB]">
               &ldquo;{greeting}&rdquo;
             </p>
           </div>

@@ -74,14 +74,7 @@ export function Splash() {
 
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 70% 5%, rgba(0,130,251,0.65), transparent 50%)," +
-            "radial-gradient(ellipse at 5% 95%, rgba(0,100,224,0.8), transparent 50%)," +
-            "linear-gradient(165deg, #0082FB 0%, #0082FB 38%, #0064E0 68%, #1C2B33 100%)",
-          backgroundSize: "200% 200%",
-          animation: "gradientShift 9s ease-in-out infinite",
-        }}
+        style={{ backgroundColor: "#0082FB" }}
       />
 
       <motion.div
@@ -223,7 +216,7 @@ export function Splash() {
             variants={slideRight}
             className="text-[1.65rem] font-bold leading-tight sm:text-[2rem]"
             style={{
-              background: "linear-gradient(90deg, #0082FB 0%, #0082FB 100%)",
+              background: "#0082FB",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",

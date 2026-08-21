@@ -42,8 +42,8 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
       <div ref={containerRef} className="relative flex-1 overflow-y-auto bg-gray-100 dark:bg-slate-800" style={{ minHeight: 340 }}>
         {pdfError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-10 text-center" style={{ minHeight: 340 }}>
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50">
-              <AlertCircle size={28} className="text-amber-500" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F5F8]">
+              <AlertCircle size={28} className="text-[#C3F84A]" />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>
@@ -52,7 +52,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
           </div>
         ) : !blobUrl ? (
           <div className="flex items-center justify-center gap-3 py-20">
-            <Loader2 size={28} className="animate-spin text-amber-500" />
+            <Loader2 size={28} className="animate-spin text-[#C3F84A]" />
             <span className="text-sm text-gray-500 dark:text-slate-400">Memuat PDF…</span>
           </div>
         ) : (
@@ -60,10 +60,10 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
             <Document file={blobUrl}
               onLoadSuccess={({ numPages: n }) => { setNumPages(n); setPdfError(false); }}
               onLoadError={() => setPdfError(true)}
-              loading={<div className="flex items-center justify-center gap-3 py-20"><Loader2 size={28} className="animate-spin text-amber-500" /></div>}>
+              loading={<div className="flex items-center justify-center gap-3 py-20"><Loader2 size={28} className="animate-spin text-[#C3F84A]" /></div>}>
               <Page pageNumber={pageNumber} width={pageWidth > 0 ? pageWidth : 640}
                 renderAnnotationLayer={false} renderTextLayer={false}
-                loading={<div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-amber-500" /></div>}
+                loading={<div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#C3F84A]" /></div>}
                 className="shadow-xl" />
             </Document>
           </div>
@@ -87,7 +87,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shrink-0"
-          style={{ background: "#F59E0B" }}>
+          style={{ background: "#C3F84A" }}>
           <Download size={14} /> Unduh PDF
         </motion.a>
       </div>

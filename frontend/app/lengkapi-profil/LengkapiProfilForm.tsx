@@ -237,7 +237,7 @@ export function LengkapiProfilForm() {
         whileHover={canSubmit ? { scale: 1.02 } : undefined}
         whileTap={canSubmit ? { scale: 0.98 } : undefined}
         className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ background: "linear-gradient(to right, #0082FB, #0082FB)" }}
+        style={{ background: "#0082FB" }}
       >
         {loading ? (
           <>

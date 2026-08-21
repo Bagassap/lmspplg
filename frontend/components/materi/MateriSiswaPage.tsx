@@ -25,11 +25,11 @@ function formatDate(iso: string): string {
 }
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
-  { bar: "#00D67F", gradient: "linear-gradient(135deg,#00D67F,#0064E0)" },
-  { bar: "#EF4444", gradient: "linear-gradient(135deg,#EF4444,#0082FB)" },
-  { bar: "#F59E0B", gradient: "linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bar: "#0064E0", gradient: "linear-gradient(135deg,#0064E0,#0082FB)" },
+  { bar: "#0082FB", gradient: "#0082FB" },
+  { bar: "#00D67F", gradient: "#00D67F" },
+  { bar: "#EF4444", gradient: "#EF4444" },
+  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -101,7 +101,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
       )}
 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-        <div className="px-5 pt-5 pb-0" style={{ background: "linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(16,185,129,0.06) 100%)" }}>
+        <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#0082FB" }}>
               <BookOpen size={14} className="text-white" />
@@ -172,7 +172,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
                           {m.fileUrl ? (
                             <button onClick={() => setViewerMateri(m)}
                               className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-105"
-                              style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                              style={{ background: "#0082FB" }}>
                               <BookOpen size={12} /> Buka Modul
                             </button>
                           ) : (

@@ -14,7 +14,7 @@ export function PlaceholderPage({
       ? "bg-[#0082FB]/15 text-[#0082FB]"
       : badgeVariant === "lihat"
         ? "bg-[#0082FB]/10 text-[#0082FB]"
-        : "bg-[#FFCCF2] text-[#0082FB]";
+        : "bg-[#0064E0]/15 text-[#0064E0]";
 
   return (
     <div>

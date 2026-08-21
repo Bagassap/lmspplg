@@ -142,7 +142,7 @@ export default function SiswaDashboardPage() {
       label: "Absensi Harian",
       display: `${absensi.persentase}% hadir`,
       small: false,
-      gradient: "linear-gradient(135deg, #0082FB 0%, #0064E0 100%)",
+      gradient: "#0082FB",
       icon: ClipboardCheck,
     },
     {
@@ -150,7 +150,7 @@ export default function SiswaDashboardPage() {
       label: "Total Hadir",
       display: `${absensi.hadir}x`,
       small: false,
-      gradient: "linear-gradient(135deg, #0064E0 0%, #1C2B33 100%)",
+      gradient: "#0064E0",
       icon: CheckCircle,
     },
     {
@@ -158,7 +158,7 @@ export default function SiswaDashboardPage() {
       label: "Pengumuman",
       display: `${data.pengumuman.length} info`,
       small: false,
-      gradient: "linear-gradient(135deg, #4FB0FF 0%, #0082FB 100%)",
+      gradient: "#0082FB",
       icon: Megaphone,
     },
     {
@@ -166,7 +166,7 @@ export default function SiswaDashboardPage() {
       label: "PKL",
       display: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
       small: belumMagang,
-      gradient: "linear-gradient(135deg, #1C2B33 0%, #0064E0 100%)",
+      gradient: "#1C2B33",
       icon: GraduationCap,
     },
   ] as const;

@@ -68,7 +68,7 @@ export function PermintaanPasswordCard({
   return (
     <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
           <Inbox size={18} />
         </span>
         <div>
@@ -80,7 +80,7 @@ export function PermintaanPasswordCard({
       <div className="grid grid-cols-2 gap-2.5">
         <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
           <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-            <Clock size={11} className="text-amber-500" /> Pending
+            <Clock size={11} className="text-[#C3F84A]" /> Pending
           </p>
           <p className="mt-1 text-lg font-bold text-slate-800 dark:text-white">{loading ? "—" : pending.length}</p>
         </div>
@@ -95,7 +95,7 @@ export function PermintaanPasswordCard({
       <div className="mt-3 flex-1 space-y-2 overflow-y-auto border-t border-slate-100 pt-3 dark:border-slate-700/50" style={{ maxHeight: 280 }}>
         {loading ? (
           <div className="flex items-center justify-center py-6">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#4FB0FF] border-t-violet-500" />
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#0082FB] border-t-violet-500" />
           </div>
         ) : pending.length === 0 ? (
           <div className="flex flex-col items-center gap-1.5 py-6 text-center">
@@ -104,13 +104,13 @@ export function PermintaanPasswordCard({
           </div>
         ) : (
           pending.map((r) => (
-            <div key={r.id} className="rounded-xl border-l-4 border-amber-400 bg-amber-50/50 p-2.5 dark:bg-amber-900/10">
+            <div key={r.id} className="rounded-xl border-l-4 border-[#C3F84A] bg-[#F1F5F8]/50 p-2.5 dark:bg-[#1C2B33]/10">
               <div className="flex items-start gap-2">
                 <Avatar
                   src={r.user?.fotoProfil}
                   nama={r.namaPengaju}
                   sizePx={30}
-                  fallbackBg={r.user ? (r.user.role === "SISWA" ? "linear-gradient(135deg,#0082FB,#0064E0)" : "linear-gradient(135deg,#4FB0FF,#0082FB)") : "linear-gradient(135deg,#94a3b8,#64748b)"}
+                  fallbackBg={r.user ? (r.user.role === "SISWA" ? "#0082FB" : "#0082FB") : "#94a3b8"}
                   textClassName="text-[10px] font-bold"
                 />
                 <div className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function PermintaanPasswordCard({
                 {r.user && (
                   <button onClick={() => onProcess(r)}
                     className="flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-white shadow-sm transition-all hover:brightness-95"
-                    style={{ background: "linear-gradient(135deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }}>
+                    style={{ background: "#0064E0" }}>
                     <KeyRound size={11} /> Proses
                   </button>
                 )}
@@ -177,7 +177,7 @@ export function PermintaanPasswordCard({
                     {pagedRiwayat.map((r) => (
                       <div key={r.id} className="flex flex-col gap-2 rounded-xl border-l-4 border-emerald-400 bg-slate-50 p-3 dark:bg-slate-700/30 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex min-w-0 items-center gap-3">
-                          <Avatar src={r.user?.fotoProfil} nama={r.namaPengaju} sizePx={32} fallbackBg="linear-gradient(135deg,#94a3b8,#64748b)" textClassName="text-xs font-bold" />
+                          <Avatar src={r.user?.fotoProfil} nama={r.namaPengaju} sizePx={32} fallbackBg="#94a3b8" textClassName="text-xs font-bold" />
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <p className="text-sm font-semibold text-slate-800 dark:text-white">{r.namaPengaju}</p>

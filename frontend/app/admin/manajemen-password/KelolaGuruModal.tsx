@@ -139,7 +139,7 @@ export function KelolaGuruModal({
 
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4FB0FF] dark:bg-[#0064E0]/30">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0082FB] dark:bg-[#0064E0]/30">
                   <GraduationCap size={16} className="text-[#0082FB]" />
                 </div>
                 <div>
@@ -210,7 +210,7 @@ export function KelolaGuruModal({
                               onChange={(e) => setMapelInput((prev) => ({ ...prev, [g.id]: e.target.value }))}
                               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); tambahMapel(g.id); } }}
                               placeholder="Tambah mapel…"
-                              className="w-28 rounded-full border border-dashed border-slate-300 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-600 focus:outline-none focus:ring-1 focus:ring-[#4FB0FF] dark:border-slate-600 dark:text-slate-300"
+                              className="w-28 rounded-full border border-dashed border-slate-300 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-600 focus:outline-none focus:ring-1 focus:ring-[#0082FB] dark:border-slate-600 dark:text-slate-300"
                             />
                             <button type="button" disabled={busy || !(mapelInput[g.id] ?? "").trim()} onClick={() => tambahMapel(g.id)}
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
@@ -225,7 +225,7 @@ export function KelolaGuruModal({
                             <span className="text-[11px] text-slate-400">Bukan wali kelas</span>
                           ) : (
                             g.guru!.kelasWali.map((k) => (
-                              <span key={k.id} className="rounded-full bg-[#4FB0FF] px-2.5 py-1 text-[11px] font-semibold text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#4FB0FF]">
+                              <span key={k.id} className="rounded-full bg-[#0082FB] px-2.5 py-1 text-[11px] font-semibold text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]">
                                 {k.nama}
                               </span>
                             ))

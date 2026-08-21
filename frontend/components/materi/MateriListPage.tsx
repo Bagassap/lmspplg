@@ -14,11 +14,11 @@ function formatDate(iso: string): string {
 }
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
-  { bar: "#00D67F", gradient: "linear-gradient(135deg,#00D67F,#0064E0)" },
-  { bar: "#EF4444", gradient: "linear-gradient(135deg,#EF4444,#0082FB)" },
-  { bar: "#F59E0B", gradient: "linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bar: "#0064E0", gradient: "linear-gradient(135deg,#0064E0,#0082FB)" },
+  { bar: "#0082FB", gradient: "#0082FB" },
+  { bar: "#00D67F", gradient: "#00D67F" },
+  { bar: "#EF4444", gradient: "#EF4444" },
+  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -132,7 +132,7 @@ export function MateriListPage({
       )}
 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-        <div className="px-5 pt-5 pb-0" style={{ background: "linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(16,185,129,0.06) 100%)" }}>
+        <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#0082FB" }}>
@@ -144,7 +144,7 @@ export function MateriListPage({
             {canCreate && (
               <button onClick={() => { setEditItem(null); setModalOpen(true); }}
                 className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                style={{ background: "#0082FB" }}>
                 <Plus size={13} /> Tambah Materi
               </button>
             )}
@@ -160,7 +160,7 @@ export function MateriListPage({
         <AnimatePresence>
           {!canCreate && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-400">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F1F5F8] bg-[#F1F5F8] px-4 py-3 text-sm text-[#1C2B33] dark:border-[#1C2B33]/40 dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
               <AlertCircle size={14} className="shrink-0" />
               Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi. Hubungi admin bila ini keliru.
             </motion.div>
@@ -184,7 +184,7 @@ export function MateriListPage({
                   onClick={() => { setEditItem(null); setModalOpen(true); }}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   className="mx-auto flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold text-white"
-                  style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                  style={{ background: "#0082FB" }}>
                   <Plus size={14} /> Tambah Materi Pertama
                 </motion.button>
               )}
@@ -236,7 +236,7 @@ export function MateriListPage({
                           {canEdit(m) && (
                             <>
                               <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-500 dark:hover:bg-amber-900/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1F5F8] hover:text-[#C3F84A] dark:hover:bg-[#1C2B33]/20">
                                 <Pencil size={14} />
                               </button>
                               <button onClick={() => handleDelete(m)} title="Hapus"

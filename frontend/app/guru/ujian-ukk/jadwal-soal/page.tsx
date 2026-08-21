@@ -15,7 +15,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
   loading: () => (
     <div className="flex-1 flex items-center justify-center py-20">
-      <Loader2 size={28} className="animate-spin text-amber-500" />
+      <Loader2 size={28} className="animate-spin text-[#C3F84A]" />
     </div>
   ),
 });
@@ -27,11 +27,11 @@ interface Submisi { id: string; fileUrl: string; fileName: string; status: "TERK
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 
 const ROW_PALETTES = [
-  { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"linear-gradient(135deg,#0082FB,#0064E0)" },
-  { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"linear-gradient(135deg,#00D67F,#0064E0)" },
-  { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"linear-gradient(135deg,#EF4444,#0082FB)" },
-  { bg:"#FFFBEB", text:"#F59E0B",  bar:"#F59E0B",  gradient:"linear-gradient(135deg,#F59E0B,#EF4444)" },
-  { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"linear-gradient(135deg,#4FB0FF,#0082FB)" },
+  { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
+  { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
+  { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
+  { bg:"#F1F5F8", text:"#C3F84A",  bar:"#C3F84A",  gradient:"#C3F84A" },
+  { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -177,7 +177,7 @@ export default function GuruJadwalSoalPage() {
                       <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/>
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-amber-300"/>
+                        <FileText size={30} className="text-[#C3F84A]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada file jadwal</p>
                       </div>
                     )}
@@ -233,7 +233,7 @@ export default function GuruJadwalSoalPage() {
                       <SoalPdfViewer soal={curSoal} onClose={()=>setOpenSoalModal(false)}/>
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-[#4FB0FF]"/>
+                        <FileText size={30} className="text-[#0082FB]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada soal</p>
                       </div>
                     )}
@@ -251,7 +251,7 @@ export default function GuruJadwalSoalPage() {
                 <div className="flex flex-col gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <CalendarDays size={16} />
@@ -264,7 +264,7 @@ export default function GuruJadwalSoalPage() {
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <FileText size={16} />
@@ -280,10 +280,10 @@ export default function GuruJadwalSoalPage() {
               <div className="flex flex-col gap-6">
 
           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-              <div className="px-5 pt-5 pb-0" style={{background:"linear-gradient(135deg,rgba(0,130,251,0.06) 0%,rgba(0,100,224,0.06) 50%,rgba(16,185,129,0.06) 100%)"}}>
+              <div className="px-5 pt-5 pb-0" style={{background:"rgba(0,130,251,0.05)"}}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"linear-gradient(135deg,#0082FB,#0064E0)"}}>
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"#0082FB"}}>
                       <BookOpen size={14} className="text-white"/>
                     </div>
                     <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
@@ -392,14 +392,14 @@ export default function GuruJadwalSoalPage() {
                                       {submisiTahapan.map(s => {
                                         const statusCfg: Record<string,{label:string;color:string;bg:string}> = {
                                           DITERIMA:{ label:"Diterima", color:"#00D67F", bg:"#E3FBF0" },
-                                          REVISI:  { label:"Revisi",   color:"#F59E0B", bg:"#FEF3C7" },
+                                          REVISI:  { label:"Revisi",   color:"#C3F84A", bg:"#F1F5F8" },
                                           TERKIRIM:{ label:"Menunggu", color:"#0082FB", bg:"#EAF3FF" },
                                         };
                                         const cfg = statusCfg[s.status];
                                         return (
                                           <div key={s.id} className="px-4 py-3 flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                                              style={{background:"linear-gradient(135deg,#0082FB,#0082FB)"}}>
+                                              style={{background:"#0082FB"}}>
                                               {(s.siswa?.user?.nama || s.siswa?.nama)?.[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">

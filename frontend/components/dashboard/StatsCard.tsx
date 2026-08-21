@@ -8,7 +8,7 @@ const THEMES = [
   { icon: "#0082FB", iconBg: "#EAF3FF" },
   { icon: "#00D67F", iconBg: "#E3FBF0" },
   { icon: "#EF4444", iconBg: "#FEE9EA" },
-  { icon: "#F59E0B", iconBg: "#FFFBEB" },
+  { icon: "#C3F84A", iconBg: "#F1F5F8" },
 ] as const;
 
 function useCountUp(target: number, duration = 1200) {

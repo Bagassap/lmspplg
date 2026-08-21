@@ -69,14 +69,6 @@ export default function GreetingHero({
       <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />
       <div className="pointer-events-none absolute top-3 left-[45%] h-24 w-24 rounded-full bg-white/5" />
       <div className="pointer-events-none absolute -left-8 -bottom-8 h-36 w-36 rounded-full bg-white/5" />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(0,0,0,0.12) 0%, transparent 50%)",
-        }}
-      />
-
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

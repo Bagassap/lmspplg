@@ -10,7 +10,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export function KehadiranDonutApex({ hadir, tidakHadir }: PropsType) {
   const chartOptions: ApexOptions = {
     chart: { type: "donut", fontFamily: "inherit" },
-    colors: ["#0082FB", "#00D67F", "#F59E0B", "#EF4444"],
+    colors: ["#0082FB", "#00D67F", "#C3F84A", "#EF4444"],
     labels: ["Hadir", "Sakit", "Izin", "Alpha"],
     legend: {
       show: true,

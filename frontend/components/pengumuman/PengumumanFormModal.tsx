@@ -22,7 +22,7 @@ export type PengumumanItem = {
 const KATEGORI_OPTIONS = ["Umum", "Akademik", "Magang", "Ujian", "Lainnya"];
 const PRIORITAS_OPTIONS = [
   { value: "NORMAL",   label: "Normal",   cls: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300" },
-  { value: "PENTING",  label: "Penting",  cls: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400" },
+  { value: "PENTING",  label: "Penting",  cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#C3F84A]" },
   { value: "MENDESAK", label: "Mendesak", cls: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400" },
 ];
 

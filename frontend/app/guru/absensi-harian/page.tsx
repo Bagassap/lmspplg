@@ -119,7 +119,7 @@ function RingkasanKehadiranCard({
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
           <PieChart size={18} />
         </span>
         <div className="min-w-0">
@@ -456,7 +456,7 @@ export default function GuruAbsensiHarianPage() {
           <div className="flex h-full flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
                   <FileText size={18} />
                 </span>
                 <div>
@@ -482,17 +482,17 @@ export default function GuruAbsensiHarianPage() {
               {exportRange.rangeMode === "mingguan" && (
                 <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
                   title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>

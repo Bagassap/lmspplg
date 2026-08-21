@@ -8,9 +8,9 @@ import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 type Scope = "semua" | "kelas" | "jurusan";
 
 const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
-  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "linear-gradient(135deg,#00D67F,#00D67F)" },
-  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "linear-gradient(135deg,#0082FB,#0064E0)" },
+  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#0082FB" },
+  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#00D67F" },
+  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "#0082FB" },
 ];
 
 export function UnduhDataSiswaCard({
@@ -38,7 +38,7 @@ export function UnduhDataSiswaCard({
   return (
     <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
           <FileText size={18} />
         </span>
         <div>

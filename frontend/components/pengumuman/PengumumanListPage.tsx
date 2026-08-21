@@ -17,11 +17,11 @@ import { Avatar } from "@/components/shared/Avatar";
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
 const KATEGORI_GRADIENT: Record<string, string> = {
-  Umum:     "linear-gradient(135deg, #0082FB 0%, #0082FB 100%)",
-  Akademik: "linear-gradient(135deg, #0064E0 0%, #0082FB 100%)",
-  Magang:   "linear-gradient(135deg, #0082FB 0%, #0082FB 100%)",
-  Ujian:    "linear-gradient(135deg, #EF4444 0%, #EF4444 100%)",
-  Lainnya:  "linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%)",
+  Umum:     "#0082FB",
+  Akademik: "#0064E0",
+  Magang:   "#0082FB",
+  Ujian:    "#EF4444",
+  Lainnya:  "#C3F84A",
 };
 
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -112,7 +112,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#0082FB] dark:text-[#4FB0FF]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#0082FB] dark:text-[#0082FB]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
@@ -167,7 +167,7 @@ function AccordionCard({
   onPin: () => void;
 }) {
   const gradient = p.isPinned
-    ? "linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%)"
+    ? "#C3F84A"
     : (KATEGORI_GRADIENT[p.kategori] ?? KATEGORI_GRADIENT.Lainnya);
 
   function timeAgo(iso: string): string {
@@ -296,8 +296,8 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-amber-50 text-amber-500 dark:bg-amber-900/20"
-                            : "text-slate-400 hover:bg-amber-50 hover:text-amber-500 dark:hover:bg-amber-900/20"
+                            ? "bg-[#F1F5F8] text-[#C3F84A] dark:bg-[#1C2B33]/20"
+                            : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#C3F84A] dark:hover:bg-[#1C2B33]/20"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
@@ -318,17 +318,17 @@ function AccordionCard({
             <div className="relative overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-                style={{ background: "linear-gradient(90deg, #0082FB 0%, #0082FB 60%, transparent 100%)" }}
+                style={{ background: "#0082FB" }}
               />
               <div className="relative flex items-center gap-3 border-y border-[#0082FB]/10 px-6 py-3 dark:border-[#0082FB]/20">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0082FB]/12 dark:bg-[#0082FB]/20">
-                  <MessageCircle size={13} className="text-[#0082FB] dark:text-[#4FB0FF]" />
+                  <MessageCircle size={13} className="text-[#0082FB] dark:text-[#0082FB]" />
                 </div>
                 <span className="text-[13px] font-extrabold tracking-tight text-slate-800 dark:text-white">
                   Ruang Diskusi
                 </span>
                 {detail && (
-                  <span className="rounded-full bg-[#0082FB]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#0082FB] dark:bg-[#0064E0]/30 dark:text-[#4FB0FF]">
+                  <span className="rounded-full bg-[#0082FB]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#0082FB] dark:bg-[#0064E0]/30 dark:text-[#0082FB]">
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}

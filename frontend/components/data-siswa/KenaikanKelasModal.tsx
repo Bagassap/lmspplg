@@ -136,7 +136,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-xs text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+      <div className="flex items-start gap-2 rounded-xl bg-[#F1F5F8] px-4 py-3 text-xs text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
         <AlertTriangle size={14} className="mt-0.5 shrink-0" />
         <span>Aksi ini menonaktifkan akun login semua siswa di kelas terpilih. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
       </div>

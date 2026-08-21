@@ -57,7 +57,7 @@ function formatTanggalWib(tgl: string, opts: Intl.DateTimeFormatOptions = { day:
   return new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", ...opts }).format(new Date(`${tgl}T00:00:00Z`));
 }
 
-const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-[#4FB0FF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#4FB0FF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
+const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
 const LABEL = "mb-1 block text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500";
 
 export function JadwalAbsenCard() {
@@ -145,7 +145,7 @@ export function JadwalAbsenCard() {
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#0082FB,#0064E0)" }}>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
             <CalendarClock size={18} />
           </span>
           <div>
@@ -167,7 +167,7 @@ export function JadwalAbsenCard() {
       ) : hariIni ? (
         <div className="grid grid-cols-2 gap-2.5">
           <p className="col-span-2 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-            <Clock size={11} className="text-[#4FB0FF]" />
+            <Clock size={11} className="text-[#0082FB]" />
             {formatTanggalWib(hariIni.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · WIB
           </p>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
@@ -187,7 +187,7 @@ export function JadwalAbsenCard() {
             </p>
           </div>
           {isOverriddenToday && (
-            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-amber-50 px-3 py-2 text-[11px] text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#F1F5F8] px-3 py-2 text-[11px] text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
               <Sparkles size={12} className="mt-0.5 shrink-0" />
               <span>Jadwal hari ini disesuaikan{hariIni.override?.keterangan ? ` — ${hariIni.override.keterangan}` : ""}</span>
             </div>

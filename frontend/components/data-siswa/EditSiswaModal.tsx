@@ -201,7 +201,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                 Batal
               </button>
               <motion.button type="button" onClick={handleSave} disabled={saving}
-                whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #4F8EF755" }} whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #0082FB55" }} whileTap={{ scale: 0.97 }}
                 className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md transition-opacity disabled:opacity-60"
                 style={{ backgroundColor: "#0082FB" }}>
                 {saving

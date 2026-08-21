@@ -51,64 +51,60 @@ function useDarkMode() {
 
 const THEME = {
   success: {
-    headerFrom:  "#dcfce7",
-    headerTo:    "#f0fdf4",
-    blob1:       "rgba(16,185,129,0.22)",
-    blob2:       "rgba(52,211,153,0.14)",
-    ring1:       "rgba(16,185,129,0.18)",
-    ring2:       "rgba(16,185,129,0.10)",
-    iconBg:      "linear-gradient(135deg,#00D67F,#00D67F,#00D67F)",
-    iconShadow:  "0 16px 40px rgba(16,185,129,0.55)",
-    bar:         "linear-gradient(90deg,#00D67F,#00D67F)",
-    btnBg:       "linear-gradient(135deg,#00D67F,#00D67F)",
-    btnShadow:   "0 8px 24px rgba(16,185,129,0.45)",
+    headerBg:    "#E3FBF0",
+    blob1:       "rgba(0,214,127,0.22)",
+    blob2:       "rgba(0,214,127,0.14)",
+    ring1:       "rgba(0,214,127,0.18)",
+    ring2:       "rgba(0,214,127,0.10)",
+    iconBg:      "#00D67F",
+    iconShadow:  "0 16px 40px rgba(0,214,127,0.55)",
+    bar:         "#00D67F",
+    btnBg:       "#00D67F",
+    btnShadow:   "0 8px 24px rgba(0,214,127,0.45)",
     dotColor:    "#00D67F",
     icon:        CheckCircle2,
     label:       "Berhasil",
   },
   error: {
-    headerFrom:  "#fee2e2",
-    headerTo:    "#fff5f5",
+    headerBg:    "#FEE9EA",
     blob1:       "rgba(239,68,68,0.22)",
-    blob2:       "rgba(252,165,165,0.14)",
+    blob2:       "rgba(239,68,68,0.14)",
     ring1:       "rgba(239,68,68,0.18)",
     ring2:       "rgba(239,68,68,0.10)",
-    iconBg:      "linear-gradient(135deg,#991B1B,#EF4444,#EF4444)",
+    iconBg:      "#EF4444",
     iconShadow:  "0 16px 40px rgba(239,68,68,0.55)",
-    bar:         "linear-gradient(90deg,#EF4444,#EF4444)",
-    btnBg:       "linear-gradient(135deg,#EF4444,#EF4444)",
+    bar:         "#EF4444",
+    btnBg:       "#EF4444",
     btnShadow:   "0 8px 24px rgba(239,68,68,0.45)",
     dotColor:    "#EF4444",
     icon:        XCircle,
     label:       "Gagal",
   },
   warning: {
-    headerFrom:  "#fef3c7",
-    headerTo:    "#fffbeb",
-    blob1:       "rgba(245,158,11,0.22)",
-    blob2:       "rgba(253,211,77,0.14)",
-    ring1:       "rgba(245,158,11,0.18)",
-    ring2:       "rgba(245,158,11,0.10)",
-    iconBg:      "linear-gradient(135deg,#92400E,#D97706,#FCD34D)",
-    iconShadow:  "0 16px 40px rgba(245,158,11,0.55)",
-    bar:         "linear-gradient(90deg,#D97706,#FCD34D)",
-    btnBg:       "linear-gradient(135deg,#D97706,#F59E0B)",
-    btnShadow:   "0 8px 24px rgba(245,158,11,0.45)",
-    dotColor:    "#F59E0B",
+    headerBg:    "#F4FFD9",
+    blob1:       "rgba(195,248,74,0.35)",
+    blob2:       "rgba(195,248,74,0.22)",
+    ring1:       "rgba(195,248,74,0.28)",
+    ring2:       "rgba(195,248,74,0.16)",
+    iconBg:      "#1C2B33",
+    iconShadow:  "0 16px 40px rgba(28,43,51,0.35)",
+    bar:         "#C3F84A",
+    btnBg:       "#C3F84A",
+    btnShadow:   "0 8px 24px rgba(195,248,74,0.45)",
+    dotColor:    "#C3F84A",
     icon:        AlertTriangle,
     label:       "Perhatian",
   },
   info: {
-    headerFrom:  "#dbeafe",
-    headerTo:    "#EAF3FF",
+    headerBg:    "#EAF3FF",
     blob1:       "rgba(0,130,251,0.22)",
-    blob2:       "rgba(79,176,255,0.14)",
+    blob2:       "rgba(0,130,251,0.14)",
     ring1:       "rgba(0,130,251,0.18)",
     ring2:       "rgba(0,130,251,0.10)",
-    iconBg:      "linear-gradient(135deg,#1E40AF,#0064E0,#93C5FD)",
+    iconBg:      "#0064E0",
     iconShadow:  "0 16px 40px rgba(0,130,251,0.55)",
-    bar:         "linear-gradient(90deg,#0064E0,#93C5FD)",
-    btnBg:       "linear-gradient(135deg,#0064E0,#0082FB)",
+    bar:         "#0064E0",
+    btnBg:       "#0064E0",
     btnShadow:   "0 8px 24px rgba(0,130,251,0.45)",
     dotColor:    "#0082FB",
     icon:        Info,
@@ -148,9 +144,7 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
   const titleColor = isDark ? "#F1F5F8" : "#1C2B33";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-  const headerBg   = isDark
-    ? "linear-gradient(180deg,rgba(30,41,59,0) 0%,rgba(30,41,59,0) 100%)"
-    : `linear-gradient(180deg,${theme.headerFrom} 0%,${theme.headerTo} 100%)`;
+  const headerBg   = isDark ? "rgba(30,41,59,0)" : theme.headerBg;
 
   const dots = [
     { x: -52, y: -48, delay: 0.1,  size: 7 },
@@ -248,11 +242,10 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
               style={{ background: theme.iconBg, boxShadow: theme.iconShadow }}
             >
               <motion.div
-                initial={{ x: "-100%", opacity: 0 }}
-                animate={{ x: "200%", opacity: [0, 1, 0] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.3, 0] }}
                 transition={{ duration: 1.0, delay: 0.28, ease: "easeInOut" }}
-                className="absolute inset-0 rounded-2xl"
-                style={{ background: "linear-gradient(105deg,transparent 35%,rgba(255,255,255,0.30) 50%,transparent 65%)" }}
+                className="absolute inset-0 rounded-2xl bg-white"
               />
               <motion.div
                 initial={{ scale: 0 }}
@@ -345,7 +338,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#F1F5F8";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
-  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "linear-gradient(180deg,#fee2e2 0%,#fff5f5 100%)";
+  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "#FEE9EA";
 
   const dots = [
     { x: -50, y: -46, delay: 0.1,  size: 7 },
@@ -415,16 +408,15 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
               className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
               style={{
-                background: "linear-gradient(135deg,#991B1B,#EF4444,#EF4444)",
+                background: "#EF4444",
                 boxShadow: "0 16px 40px rgba(239,68,68,0.55)",
               }}
             >
               <motion.div
-                initial={{ x: "-100%", opacity: 0 }}
-                animate={{ x: "200%", opacity: [0, 1, 0] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.3, 0] }}
                 transition={{ duration: 1.0, delay: 0.28, ease: "easeInOut" }}
-                className="absolute inset-0 rounded-2xl"
-                style={{ background: "linear-gradient(105deg,transparent 35%,rgba(255,255,255,0.30) 50%,transparent 65%)" }}
+                className="absolute inset-0 rounded-2xl bg-white"
               />
               <motion.div
                 initial={{ scale: 0 }}
@@ -495,7 +487,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               onClick={() => onClose(true)}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white"
               style={{
-                background: "linear-gradient(135deg,#EF4444,#EF4444)",
+                background: "#EF4444",
                 boxShadow: "0 6px 20px rgba(239,68,68,0.40)",
               }}
             >

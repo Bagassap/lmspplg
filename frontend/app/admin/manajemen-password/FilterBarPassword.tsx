@@ -98,11 +98,11 @@ export function FilterBarPassword({
       </div>
 
       {wali && (
-        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-[#4FB0FF] bg-[#4FB0FF]/50 p-3 dark:border-[#0064E0]/30 dark:bg-[#0064E0]/10">
+        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-[#0082FB] bg-[#0082FB]/50 p-3 dark:border-[#0064E0]/30 dark:bg-[#0064E0]/10">
           <div className="flex min-w-0 items-center gap-2.5">
-            <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="linear-gradient(135deg,#0082FB,#0064E0)" textClassName="text-xs font-bold" />
+            <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="#0082FB" textClassName="text-xs font-bold" />
             <div className="min-w-0">
-              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-[#0082FB] dark:text-[#4FB0FF]">
+              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-[#0082FB] dark:text-[#0082FB]">
                 <UserCheck size={11} /> Wali Kelas
               </p>
               <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{wali.nama}</p>
@@ -114,7 +114,7 @@ export function FilterBarPassword({
             </span>
             <button onClick={onResetWali}
               className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:brightness-95"
-              style={{ background: "linear-gradient(135deg, #0064E0 0%, #0064E0 50%, #0082FB 100%)" }}>
+              style={{ background: "#0064E0" }}>
               <KeyRound size={11} /> Reset
             </button>
           </div>

@@ -199,7 +199,7 @@ export function AbsensiHarianTable({
                   <div className="flex justify-center">
                     {ttdRaw ? (
                       <button onClick={openDokumen} title="Lihat tanda tangan"
-                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#4FB0FF] dark:hover:bg-[#0064E0]/20">
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#0082FB] dark:hover:bg-[#0064E0]/20">
                         <PenTool size={13} className="text-[#0082FB]" />
                       </button>
                     ) : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
@@ -215,7 +215,7 @@ export function AbsensiHarianTable({
                     {hasDok && (
                       <button onClick={openDokumen}
                         className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                        style={{ background: "linear-gradient(135deg,#0082FB,#0082FB)" }}>
+                        style={{ background: "#0082FB" }}>
                         <Eye size={11} /> Lihat
                       </button>
                     )}

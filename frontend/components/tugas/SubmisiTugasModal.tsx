@@ -91,7 +91,7 @@ export function SubmisiTugasModal({
                 {[
                   { label: "Total", val: rows.length, color: "#0082FB" },
                   { label: "Diterima", val: cntDiterima, color: "#00D67F" },
-                  { label: "Revisi", val: cntRevisi, color: "#F59E0B" },
+                  { label: "Revisi", val: cntRevisi, color: "#C3F84A" },
                   { label: "Menunggu", val: cntMenunggu, color: "#0082FB" },
                   { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#EF4444" },
                 ].map((st, i) => (
@@ -165,7 +165,7 @@ export function SubmisiTugasModal({
                         <p className="text-xs text-slate-400 truncate">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
                       </div>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
-                        <span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
+                        <span className="shrink-0 rounded-full bg-[#F1F5F8] px-2.5 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
                           Nilai {s.nilai}
                         </span>
                       )}
@@ -202,7 +202,7 @@ export function SubmisiTugasModal({
                           </button>
                           <button onClick={() => onRevisi(s)}
                             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "#F59E0B" }}>
+                            style={{ background: "#C3F84A" }}>
                             <AlertCircle size={12} /> Revisi
                           </button>
                         </div>
@@ -214,7 +214,7 @@ export function SubmisiTugasModal({
 
               <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/60">
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  <span className="font-semibold text-amber-500">Revisi</span> → siswa kirim ulang ·{" "}
+                  <span className="font-semibold text-[#C3F84A]">Revisi</span> → siswa kirim ulang ·{" "}
                   <span className="font-semibold text-emerald-500">Terima</span> → tugas selesai
                 </p>
                 <button onClick={onClose}
