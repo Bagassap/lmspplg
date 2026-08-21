@@ -9,7 +9,7 @@ import {
   X, LayoutDashboard, Bell, Users, Briefcase,
   FileText, ChevronRight, ChevronDown,
   ChevronsLeft, ChevronsRight, Lock, KeyRound,
-  Building2, ClipboardCheck, Activity, FileBarChart,
+  Building2, ClipboardCheck, FileBarChart,
   CalendarDays, Trophy, NotebookPen, BookOpen,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
@@ -40,7 +40,6 @@ const MENUS: Record<string, MenuItem[]> = {
       submenu: [
         { href: "/admin/magang/penempatan", label: "Penempatan",    icon: Building2 },
         { href: "/admin/magang/absensi",    label: "Absensi",       icon: ClipboardCheck },
-        { href: "/admin/magang/monitoring", label: "Monitoring",    icon: Activity },
         { href: "/admin/magang/rekap",      label: "Rekap & Laporan", icon: FileBarChart },
       ],
     },
@@ -58,7 +57,6 @@ const MENUS: Record<string, MenuItem[]> = {
       submenu: [
         { href: "/guru/magang/penempatan", label: "Penempatan",     icon: Building2 },
         { href: "/guru/magang/absensi",    label: "Absensi",        icon: ClipboardCheck },
-        { href: "/guru/magang/monitoring", label: "Monitoring",     icon: Activity },
         { href: "/guru/magang/rekap",      label: "Rekap & Laporan",icon: FileBarChart },
       ],
     },

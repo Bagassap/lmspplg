@@ -387,7 +387,18 @@ export class AbsensiMagangService {
         throw new ForbiddenException('Anda bukan pembimbing PKL untuk siswa ini');
       }
     }
+    if (role === 'SISWA' && siswa.userId !== userId) {
+      throw new ForbiddenException('Anda hanya bisa mengakses data absensi milik sendiri');
+    }
     return siswa;
+  }
+
+  // Dipakai endpoint self-service siswa (export rekap sendiri) — siswaId tidak
+  // pernah dipercaya dari klien, selalu diturunkan dari token JWT sendiri.
+  async resolveOwnSiswaId(userId: string): Promise<string> {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, select: { id: true } });
+    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+    return siswa.id;
   }
 
   async getSiswaAbsensiForExport(siswaId: string, tanggal: string, userId: string, role: string) {

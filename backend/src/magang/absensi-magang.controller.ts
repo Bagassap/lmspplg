@@ -101,10 +101,10 @@ export class AbsensiMagangController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.GURU)
+  @Roles(Role.ADMIN, Role.GURU, Role.SISWA)
   @Get('export-pdf-siswa')
   async exportPdfSiswa(
-    @Query('siswaId') siswaId: string,
+    @Query('siswaId') siswaIdQ: string,
     @Query('tanggal') tanggal: string,
     @Query('mode') modeQ: string,
     @Query('tanggalMulai') tanggalMulai: string,
@@ -114,6 +114,9 @@ export class AbsensiMagangController {
     @Request() req: any,
     @Res() res: Response,
   ) {
+    // Siswa tidak pernah dipercaya mengirim siswaId sendiri — selalu
+    // diturunkan dari token JWT-nya, bukan dari query string.
+    const siswaId = req.user.role === 'SISWA' ? await this.service.resolveOwnSiswaId(req.user.id) : siswaIdQ;
     if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
     const mode = this.parseExportMode(modeQ);
     let buffer: Buffer;
@@ -182,10 +185,10 @@ export class AbsensiMagangController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.GURU)
+  @Roles(Role.ADMIN, Role.GURU, Role.SISWA)
   @Get('export-excel-siswa')
   async exportExcelSiswa(
-    @Query('siswaId') siswaId: string,
+    @Query('siswaId') siswaIdQ: string,
     @Query('tanggal') tanggal: string,
     @Query('mode') modeQ: string,
     @Query('tanggalMulai') tanggalMulai: string,
@@ -195,6 +198,7 @@ export class AbsensiMagangController {
     @Request() req: any,
     @Res() res: Response,
   ) {
+    const siswaId = req.user.role === 'SISWA' ? await this.service.resolveOwnSiswaId(req.user.id) : siswaIdQ;
     if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
     const mode = this.parseExportMode(modeQ);
     let buffer: Buffer;
@@ -218,6 +222,49 @@ export class AbsensiMagangController {
       'Content-Length': buffer.length,
     });
     res.send(buffer);
+  }
+
+  // Data JSON di balik export-pdf/export-excel di atas, dipakai halaman
+  // Rekap & Laporan untuk menampilkan tabel rekap sebelum diunduh.
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('rekap')
+  async getRekap(
+    @Query('tempatMagangId') tempatMagangId: string,
+    @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
+    @Request() req: any,
+  ) {
+    if (!tempatMagangId) throw new BadRequestException('tempatMagangId wajib diisi');
+    const mode = this.parseExportMode(modeQ);
+    if (mode === 'harian') {
+      return this.service.getRekapTempatForExport(tempatMagangId, tanggal || todayStr(), req.user.id, req.user.role);
+    }
+    return this.service.getRekapTempatRangeForExport(tempatMagangId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Get('saya/rekap')
+  async getRekapSaya(
+    @Query('tanggal') tanggal: string,
+    @Query('mode') modeQ: string,
+    @Query('tanggalMulai') tanggalMulai: string,
+    @Query('tanggalSelesai') tanggalSelesai: string,
+    @Query('bulan') bulan: string,
+    @Query('tahun') tahun: string,
+    @Request() req: any,
+  ) {
+    const siswaId = await this.service.resolveOwnSiswaId(req.user.id);
+    const mode = this.parseExportMode(modeQ);
+    if (mode === 'harian') {
+      return this.service.getSiswaAbsensiForExport(siswaId, tanggal || todayStr(), req.user.id, req.user.role);
+    }
+    return this.service.getSiswaAbsensiRangeForExport(siswaId, mode, req.user.id, req.user.role, { tanggalMulai, tanggalSelesai, bulan, tahun });
   }
 
   @UseGuards(RolesGuard)
