@@ -100,6 +100,21 @@ export function createUploadAuthMiddleware(
         select: { id: true },
       });
       owned = !!row;
+    } else if (req.path.startsWith('/absensi-magang/')) {
+      const row = await prisma.absensiMagang.findFirst({
+        where: {
+          siswaId: siswa.id,
+          OR: [{ foto: requestedUrl }, { fotoPulang: requestedUrl }],
+        },
+        select: { id: true },
+      });
+      owned = !!row;
+    } else if (req.path.startsWith('/lapor-diri-magang/')) {
+      const row = await prisma.laporDiriMagang.findFirst({
+        where: { siswaId: siswa.id, fileUrl: requestedUrl },
+        select: { id: true },
+      });
+      owned = !!row;
     }
 
     if (!owned) {
