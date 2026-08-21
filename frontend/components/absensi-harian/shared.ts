@@ -87,12 +87,21 @@ export const WALLET_DOT_SIZE = "18px 18px";
 // buttons exactly — same shape (icon + label + caption stacked, grid-cols-3)
 // but toggles the shared exportRange's mode instead of firing a one-shot
 // download, since our export needs a separate format pick below (4 kinds).
-// Shared by both admin and guru's Absensi Harian pages.
+// Shared by both admin and guru's Absensi Harian pages, dan pola warna yang
+// sama (biru, lime, merah) dipakai ulang di semua kartu "Unduh Laporan"
+// lain di aplikasi (Data Siswa, Catatan Siswa) — lihat RANGE_MODE_FG untuk
+// warna teks yang otomatis gelap saat backgroundnya lime.
 export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "#0082FB" },
-  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "#00D67F" },
-  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "#0082FB" },
+  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "#0064E0" },
+  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "#C3F84A" },
+  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "#EF4444" },
 ];
+
+// Warna teks di atas tiap gradient card "Unduh Laporan" — putih untuk biru/
+// merah, tinta gelap untuk lime supaya tetap kontras.
+export function reportCardFg(gradient: string): string {
+  return gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF";
+}
 
 // Date.prototype.toISOString() always renders the UTC calendar date, not the
 // browser's local one — during the ~7h/day window where WIB has already

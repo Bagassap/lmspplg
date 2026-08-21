@@ -16,7 +16,7 @@ import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTab
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 // Same shape/size as the clickable kelas pill (icon badge + 2-line text),
@@ -467,13 +467,14 @@ export default function GuruAbsensiHarianPage() {
               <div className="grid grid-cols-3 gap-2">
                 {RANGE_MODE_CARDS.map((opt) => {
                   const active = exportRange.rangeMode === opt.key;
+                  const fg = reportCardFg(opt.gradient);
                   return (
                     <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
-                      className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm transition-all"
-                      style={{ background: opt.gradient, opacity: active ? 1 : 0.55, outline: active ? "2px solid white" : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
+                      className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm transition-all"
+                      style={{ background: opt.gradient, color: fg, opacity: active ? 1 : 0.55, outline: active ? `2px solid ${fg}` : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
                       <opt.icon size={16} />
                       <span className="text-[11px] font-bold">{opt.label}</span>
-                      <span className="text-[9px] leading-tight text-white/75">{opt.caption}</span>
+                      <span className="text-[9px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
                     </button>
                   );
                 })}

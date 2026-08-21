@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { FileText, Download, Users, School, BookOpen } from "lucide-react";
 import { kelasShort } from "./shared";
+import { reportCardFg } from "@/components/absensi-harian/shared";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
 type Scope = "semua" | "kelas" | "jurusan";
 
 const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#0082FB" },
-  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#00D67F" },
-  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "#0082FB" },
+  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#0064E0" },
+  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#C3F84A" },
+  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "#EF4444" },
 ];
 
 export function UnduhDataSiswaCard({
@@ -51,6 +52,7 @@ export function UnduhDataSiswaCard({
         {SCOPE_CARDS.map((opt) => {
           const disabled = (opt.key === "kelas" && !kelasId) || (opt.key === "jurusan" && !jurusan);
           const active = scope === opt.key;
+          const fg = reportCardFg(opt.gradient);
           return (
             <button
               key={opt.key}
@@ -58,17 +60,18 @@ export function UnduhDataSiswaCard({
               disabled={disabled}
               onClick={() => setScope(opt.key)}
               title={disabled ? "Pilih kelas/jurusan di filter dahulu" : undefined}
-              className="flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-5 text-center text-white shadow-sm transition-all disabled:cursor-not-allowed"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-5 text-center shadow-sm transition-all disabled:cursor-not-allowed"
               style={{
                 background: opt.gradient,
+                color: fg,
                 opacity: disabled ? 0.25 : active ? 1 : 0.55,
-                outline: active ? "2px solid white" : "2px solid transparent",
+                outline: active ? `2px solid ${fg}` : "2px solid transparent",
                 outlineOffset: active ? "2px" : "0",
               }}
             >
               <opt.icon size={20} />
               <span className="text-xs font-bold">{opt.label}</span>
-              <span className="text-[10px] leading-tight text-white/75">{opt.caption}</span>
+              <span className="text-[10px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
             </button>
           );
         })}
