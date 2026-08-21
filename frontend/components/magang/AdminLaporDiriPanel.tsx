@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Users, CheckCircle2, XCircle, Search, Filter } from "lucide-react";
+import { XCircle, Search, Filter } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LaporDiriTable } from "./LaporDiriTable";
 import type { LaporDiriResponse, LaporDiriRow } from "./lapor-diri-types";
-
-const STAT_GRADIENTS = ["#0064E0", "#00D67F", "#EF4444"];
 
 export function AdminLaporDiriPanel() {
   const toast = useToast();
@@ -31,7 +29,6 @@ export function AdminLaporDiriPanel() {
   useEffect(() => { load(); }, [load]);
 
   const rows = data?.rows ?? [];
-  const summary = data?.summary ?? { total: 0, sudahLapor: 0, belumLapor: 0 };
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -42,26 +39,8 @@ export function AdminLaporDiriPanel() {
     });
   }, [rows, search, onlyBelum]);
 
-  const STATS = [
-    { label: "Penempatan Aktif", value: summary.total, icon: Users },
-    { label: "Sudah Lapor", value: summary.sudahLapor, icon: CheckCircle2 },
-    { label: "Belum Lapor", value: summary.belumLapor, icon: XCircle },
-  ];
-
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {STATS.map((s, i) => (
-          <div key={s.label} className="relative overflow-hidden rounded-2xl p-4" style={{ background: STAT_GRADIENTS[i], color: "#FFFFFF", boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.2)" }}>
-              <s.icon size={16} />
-            </span>
-            <p className="mt-3 text-2xl font-extrabold tabular-nums">{loading ? "—" : s.value}</p>
-            <p className="text-[11px] font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{s.label}</p>
-          </div>
-        ))}
-      </div>
-
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
