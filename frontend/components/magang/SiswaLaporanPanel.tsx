@@ -1,72 +1,75 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Briefcase, MapPin, FileText, FileSpreadsheet, Loader2, AlertCircle } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
+import {
+  Briefcase, MapPin, AlertCircle, CheckCircle2, AlertTriangle, Clock, Upload, File as FileIcon,
+  Loader2,
+} from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { RangeModeToggle } from "@/components/absensi-harian/ExportButtons";
-import { useExportRange } from "@/components/absensi-harian/useExportRange";
-import { STATUS_CFG, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
-import { downloadAbsensiMagangPdfSiswa, downloadAbsensiMagangExcelSiswa } from "@/components/absensi-magang/downloadAbsensiMagang";
-import type { RekapTempat, RekapRangeData } from "@/components/absensi-magang/types";
+import type { LaporanAkhirStatusSaya } from "./laporan-akhir-types";
 
-type StatusSaya = { hasPenempatan: boolean; tempatMagang?: { namaTempat: string; alamat: string } | null };
+function fmtTgl(iso: string): string {
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
+}
 
 export function SiswaLaporanPanel() {
   const toast = useToast();
-  const tanggal = todayJakarta();
-  const exportRange = useExportRange(tanggal);
-
-  const [status, setStatus] = useState<StatusSaya | null>(null);
-  const [rekapHarian, setRekapHarian] = useState<RekapTempat | null>(null);
-  const [rekapRange, setRekapRange] = useState<RekapRangeData | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [status, setStatus] = useState<LaporanAkhirStatusSaya | null>(null);
   const [loading, setLoading] = useState(true);
-  const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [catatan, setCatatan] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetch(`/api/magang/absensi/saya?tanggal=${tanggal}`).then((r) => r.json()).then(setStatus).catch(() => {});
-  }, [tanggal]);
-
-  const loadRekap = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
-      const qs = new URLSearchParams({ mode: exportRange.range.mode });
-      if (exportRange.range.mode === "harian") qs.set("tanggal", exportRange.range.tanggal);
-      else if (exportRange.range.mode === "mingguan") {
-        qs.set("tanggalMulai", exportRange.range.tanggalMulai);
-        qs.set("tanggalSelesai", exportRange.range.tanggalSelesai);
-      } else {
-        qs.set("bulan", String(exportRange.range.bulan));
-        qs.set("tahun", String(exportRange.range.tahun));
-      }
-      const res = await fetch(`/api/magang/absensi/saya/rekap?${qs}`);
-      const json = await res.json().catch(() => null);
-      if (exportRange.range.mode === "harian") { setRekapHarian(json); setRekapRange(null); }
-      else { setRekapRange(json); setRekapHarian(null); }
+      const res = await fetch("/api/magang/laporan-akhir/saya", { cache: "no-store" });
+      setStatus(await res.json());
     } catch {
-      toast.error("Gagal memuat rekap PKL", "");
+      toast.error("Gagal memuat status laporan akhir", "");
     } finally {
       setLoading(false);
     }
-  }, [exportRange.range]);
+  }, []);
 
-  useEffect(() => { loadRekap(); }, [loadRekap]);
+  useEffect(() => { load(); }, [load]);
 
-  async function handleExport(kind: "pdf" | "excel") {
-    setExporting(kind);
+  async function handleSubmit() {
+    if (!file) { toast.error("File laporan wajib diunggah", ""); return; }
+    setSubmitting(true);
     try {
-      const result = kind === "pdf"
-        ? await downloadAbsensiMagangPdfSiswa({ siswaId: "", range: exportRange.range, siswaNama: "Rekap-PKL" })
-        : await downloadAbsensiMagangExcelSiswa({ siswaId: "", range: exportRange.range, siswaNama: "Rekap-PKL" });
-      if (!result.ok) toast.error(kind === "pdf" ? "Gagal membuat PDF" : "Gagal membuat Excel", result.message);
+      const fd = new FormData();
+      fd.append("file", file);
+      if (catatan.trim()) fd.append("catatan", catatan.trim());
+      const res = await fetch("/api/magang/laporan-akhir/saya", { method: "POST", body: fd });
+      if (res.ok) {
+        toast.success("Laporan akhir berhasil dikirim!", "");
+        setFile(null);
+        setCatatan("");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        load();
+      } else {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ?? "Gagal mengirim laporan", "");
+      }
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "");
     } finally {
-      setExporting(null);
+      setSubmitting(false);
     }
   }
 
-  const own = rekapHarian?.siswa?.[0];
-  const ownRange = rekapRange?.siswa?.[0];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center rounded-3xl border border-slate-100 bg-white py-16 dark:border-slate-700 dark:bg-slate-800">
+        <Loader2 size={24} className="animate-spin text-[#0082FB]" />
+      </div>
+    );
+  }
 
-  if (status && !status.hasPenempatan) {
+  if (!status?.hasPenempatan) {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
@@ -74,93 +77,98 @@ export function SiswaLaporanPanel() {
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
         <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-          Anda belum memiliki penempatan PKL yang aktif, jadi belum ada rekap yang bisa ditampilkan.
+          Anda belum memiliki penempatan PKL yang aktif, jadi belum perlu mengirim laporan akhir.
         </p>
       </div>
     );
   }
 
+  const laporan = status.laporan;
+  const canUpload = !laporan || laporan.status === "REVISI";
+
   return (
     <div className="space-y-4">
-      {status?.tempatMagang && (
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <p className="flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-white">
-            <Briefcase size={15} className="text-[#0082FB]" /> {status.tempatMagang.namaTempat}
-          </p>
-          <p className="mt-1 flex items-start gap-1.5 text-xs text-slate-400 dark:text-slate-500">
-            <MapPin size={12} className="mt-0.5 shrink-0" /> {status.tempatMagang.alamat}
-          </p>
-        </div>
+      <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <p className="flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-white">
+          <Briefcase size={15} className="text-[#0082FB]" /> {status.tempatMagang.namaTempat}
+        </p>
+        <p className="mt-1 flex items-start gap-1.5 text-xs text-slate-400 dark:text-slate-500">
+          <MapPin size={12} className="mt-0.5 shrink-0" /> {status.tempatMagang.alamat}
+        </p>
+      </div>
+
+      {laporan && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          className="overflow-hidden rounded-2xl shadow-lg"
+          style={{ background: laporan.status === "DITERIMA" ? "#00D67F" : laporan.status === "REVISI" ? "#C3F84A" : "#0082FB" }}>
+          <div className="relative px-6 py-8 text-center" style={{ color: laporan.status === "REVISI" ? "#1C2B33" : "#FFFFFF" }}>
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
+              className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg"
+              style={{ background: laporan.status === "REVISI" ? "rgba(28,43,51,0.15)" : "rgba(255,255,255,0.25)" }}>
+              {laporan.status === "DITERIMA" ? <CheckCircle2 size={30} />
+                : laporan.status === "REVISI" ? <AlertTriangle size={30} />
+                : <Clock size={30} />}
+            </motion.div>
+            <h2 className="mt-4 text-lg font-extrabold">
+              {laporan.status === "DITERIMA" ? "Laporan Diterima!"
+                : laporan.status === "REVISI" ? "Perlu Direvisi"
+                : "Menunggu Review"}
+            </h2>
+            <p className="mt-1 text-sm opacity-80">Dikirim {fmtTgl(laporan.submittedAt)}</p>
+            <a href={`/api/uploads${laporan.fileUrl}`} target="_blank" rel="noopener noreferrer"
+              className="mx-auto mt-5 flex w-fit items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold backdrop-blur-sm"
+              style={{ background: laporan.status === "REVISI" ? "rgba(28,43,51,0.12)" : "rgba(255,255,255,0.15)" }}>
+              <FileIcon size={14} /> {laporan.fileName}
+            </a>
+            {laporan.status === "REVISI" && laporan.pesanRevisi && (
+              <p className="mx-auto mt-4 max-w-sm rounded-xl px-4 py-3 text-left text-sm" style={{ background: "rgba(28,43,51,0.08)" }}>
+                <span className="block text-[10px] font-bold uppercase tracking-wider opacity-70">Catatan Revisi</span>
+                {laporan.pesanRevisi}
+              </p>
+            )}
+          </div>
+        </motion.div>
       )}
 
-      <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <p className="text-sm font-bold text-slate-800 dark:text-white">Rekap Kehadiran</p>
-            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
-              {exportRange.range.mode === "harian" ? formatTgl(exportRange.range.tanggal)
-                : exportRange.range.mode === "mingguan" ? `${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`
-                : `Bulan ${exportRange.bulan}/${exportRange.tahun}`}
-            </p>
+      {canUpload && (
+        <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-white">
+            {laporan ? "Kirim Ulang Laporan" : "Kirim Laporan Akhir"}
+          </h2>
+          <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">File PDF, Word, atau PPT/PPTX, maks. 20MB. Hanya bisa dikirim sekali kecuali diminta revisi.</p>
+
+          <div className="mt-4">
+            <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40">
+              <Upload size={16} className="shrink-0 text-[#0082FB]" />
+              <div className="min-w-0 flex-1">
+                {file ? (
+                  <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-gray-800 dark:text-slate-200">
+                    <FileIcon size={13} className="shrink-0" /> {file.name}
+                  </p>
+                ) : (
+                  <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">Klik untuk pilih file PDF/Word/PPT/PPTX</p>
+                )}
+              </div>
+              <input ref={fileInputRef} type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="hidden" />
+            </label>
           </div>
-          <RangeModeToggle {...exportRange} />
-        </div>
 
-        <div className="mt-5">
-          {loading ? (
-            <div className="flex items-center justify-center py-14">
-              <Loader2 size={22} className="animate-spin text-[#0082FB]" />
-            </div>
-          ) : exportRange.range.mode === "harian" ? (
-            own ? (
-              <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/40">
-                <span className="rounded-full px-3 py-1.5 text-sm font-bold" style={{
-                  backgroundColor: own.status ? STATUS_CFG[own.status].bg : "#F1F5F8",
-                  color: own.status ? STATUS_CFG[own.status].clr : "#94a3b8",
-                }}>
-                  {own.status ? STATUS_CFG[own.status].label : "Belum Absen"}
-                </span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Hadir: {own.waktuAbsen ?? "—"}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Pulang: {own.waktuPulang ?? "—"}</span>
-              </div>
-            ) : (
-              <p className="py-8 text-center text-sm text-slate-400">Tidak ada data untuk tanggal ini</p>
-            )
-          ) : ownRange ? (
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl font-extrabold" style={{ color: ownRange.summary.persentaseKehadiran >= 70 ? STATUS_CFG.HADIR.clr : STATUS_CFG.ALPA.clr }}>
-                  {ownRange.summary.persentaseKehadiran}%
-                </span>
-                <div className="h-2 flex-1 rounded-full bg-slate-100 dark:bg-slate-700">
-                  <div className="h-2 rounded-full transition-all" style={{
-                    width: `${Math.min(100, ownRange.summary.persentaseKehadiran)}%`,
-                    backgroundColor: ownRange.summary.persentaseKehadiran >= 70 ? STATUS_CFG.HADIR.clr : STATUS_CFG.ALPA.clr,
-                  }} />
-                </div>
-              </div>
-              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-                Hadir {ownRange.summary.HADIR} · Izin {ownRange.summary.IZIN} · Sakit {ownRange.summary.SAKIT} · Alpa {ownRange.summary.ALPA} · dari {ownRange.summary.totalHariEfektif} hari efektif
-              </p>
-            </div>
-          ) : (
-            <p className="py-8 text-center text-sm text-slate-400">Tidak ada data untuk periode ini</p>
-          )}
-        </div>
+          <div className="mt-3">
+            <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
+              placeholder="Catatan (opsional)..."
+              className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100" />
+          </div>
 
-        <div className="mt-5 flex gap-2 border-t border-slate-100 pt-4 dark:border-slate-700">
-          <button type="button" onClick={() => handleExport("pdf")} disabled={!!exporting}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" }}>
-            {exporting === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />} Unduh PDF
-          </button>
-          <button type="button" onClick={() => handleExport("excel")} disabled={!!exporting}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-            style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" }}>
-            {exporting === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />} Unduh Excel
+          <button type="button" onClick={handleSubmit} disabled={submitting || !file}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md disabled:opacity-50"
+            style={{ background: "#0082FB" }}>
+            {submitting ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+            {submitting ? "Mengirim..." : laporan ? "Kirim Ulang" : "Kirim Laporan"}
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

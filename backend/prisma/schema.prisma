@@ -161,6 +161,7 @@ model Siswa {
   absensiMagang     AbsensiMagang[]
   izinMagang        IzinMagang[]
   laporDiriMagang   LaporDiriMagang[]
+  laporanAkhirMagang LaporanAkhirMagang[]
   absensiUkk        AbsensiUjianUKK[]
   berkasJawaban     BerkasJawabanUKK[]
   nilaiUkk          NilaiUKK[]
@@ -454,9 +455,10 @@ model TempatMagang {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  penempatan PenempatanMagang[]
-  absensi    AbsensiMagang[]
-  laporDiri  LaporDiriMagang[]
+  penempatan   PenempatanMagang[]
+  absensi      AbsensiMagang[]
+  laporDiri    LaporDiriMagang[]
+  laporanAkhir LaporanAkhirMagang[]
 
   @@map("tempat_magang")
 }
@@ -476,9 +478,10 @@ model PenempatanMagang {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  absensi   AbsensiMagang[]
-  izin      IzinMagang[]
-  laporDiri LaporDiriMagang[]
+  absensi      AbsensiMagang[]
+  izin         IzinMagang[]
+  laporDiri    LaporDiriMagang[]
+  laporanAkhir LaporanAkhirMagang?
 
   @@unique([siswaId, tempatMagangId])
   @@map("penempatan_magang")
@@ -505,6 +508,35 @@ model LaporDiriMagang {
 
   @@unique([penempatanId, periode])
   @@map("lapor_diri_magang")
+}
+
+enum StatusLaporanAkhirMagang {
+  TERKIRIM
+  DITERIMA
+  REVISI
+}
+
+// Laporan akhir PKL — 1 file (PDF/Word/PPT) per penempatan, dikirim sekali
+// lalu direview admin/guru (Terima/Revisi). Beda dari LaporDiriMagang yang
+// bulanan & tanpa review — ini satu dokumen final yang perlu di-acc.
+model LaporanAkhirMagang {
+  id             String                    @id @default(cuid())
+  siswaId        String
+  siswa          Siswa                     @relation(fields: [siswaId], references: [id])
+  penempatanId   String                    @unique
+  penempatan     PenempatanMagang          @relation(fields: [penempatanId], references: [id])
+  tempatMagangId String
+  tempatMagang   TempatMagang              @relation(fields: [tempatMagangId], references: [id])
+  fileUrl        String
+  fileName       String
+  catatan        String?
+  pesanRevisi    String?
+  status         StatusLaporanAkhirMagang  @default(TERKIRIM)
+
+  submittedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("laporan_akhir_magang")
 }
 
 // Sengaja dibuat semirip mungkin dengan AbsensiHarian (1 baris per siswa per

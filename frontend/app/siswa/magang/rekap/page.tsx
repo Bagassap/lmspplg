@@ -5,19 +5,36 @@ import { FileBarChart, FileUp, BarChart3, CheckCircle2, XCircle } from "lucide-r
 import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
 import type { LaporDiriStatusSaya } from "@/components/magang/lapor-diri-types";
+import type { LaporanAkhirStatusSaya } from "@/components/magang/laporan-akhir-types";
 
 type Category = "lapor-diri" | "laporan";
+
+const LAPORAN_AKHIR_LABEL: Record<string, string> = {
+  TERKIRIM: "Menunggu review",
+  DITERIMA: "Laporan diterima",
+  REVISI: "Perlu direvisi",
+};
 
 export default function SiswaMagangRekapPage() {
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [status, setStatus] = useState<LaporDiriStatusSaya | null>(null);
+  const [laporanAkhir, setLaporanAkhir] = useState<LaporanAkhirStatusSaya | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/magang/lapor-diri/saya").then((r) => r.json()).then(setStatus).catch(() => {}).finally(() => setLoading(false));
+    Promise.all([
+      fetch("/api/magang/lapor-diri/saya").then((r) => r.json()).catch(() => null),
+      fetch("/api/magang/laporan-akhir/saya").then((r) => r.json()).catch(() => null),
+    ]).then(([lapor, laporan]) => {
+      setStatus(lapor);
+      setLaporanAkhir(laporan);
+    }).finally(() => setLoading(false));
   }, []);
 
   const sudahLapor = status?.hasPenempatan ? status.sudahLapor : false;
+  const laporanAkhirSubtitle = laporanAkhir?.hasPenempatan
+    ? laporanAkhir.laporan ? LAPORAN_AKHIR_LABEL[laporanAkhir.laporan.status] : "Belum kirim laporan akhir"
+    : "Kirim laporan akhir PKL-mu";
 
   return (
     <div className="space-y-6">
@@ -33,7 +50,7 @@ export default function SiswaMagangRekapPage() {
             <div>
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap PKL</h1>
-              <p className="mt-0.5 text-sm text-white/70">Lapor diri bulanan dan rekap kehadiran PKL-mu</p>
+              <p className="mt-0.5 text-sm text-white/70">Lapor diri bulanan dan laporan akhir PKL-mu</p>
             </div>
           </div>
           {status?.hasPenempatan && (
@@ -87,7 +104,7 @@ export default function SiswaMagangRekapPage() {
               </div>
               <div className="relative">
                 <p className="text-xl font-black leading-tight">Laporan</p>
-                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">Rekap kehadiran PKL-mu</p>
+                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">{loading ? "…" : laporanAkhirSubtitle}</p>
               </div>
             </button>
           </div>

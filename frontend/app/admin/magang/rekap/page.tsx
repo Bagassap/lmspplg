@@ -1,27 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FileBarChart, FileUp, BarChart3, Building2 } from "lucide-react";
+import { FileBarChart, FileUp, BarChart3, ClipboardCheck } from "lucide-react";
 import { AdminLaporDiriPanel } from "@/components/magang/AdminLaporDiriPanel";
 import { AdminLaporanPanel } from "@/components/magang/AdminLaporanPanel";
+import type { LaporanAkhirRow } from "@/components/magang/laporan-akhir-types";
 
 type Category = "lapor-diri" | "laporan";
 
 export default function AdminMagangRekapPage() {
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [summary, setSummary] = useState({ sudahLapor: 0, belumLapor: 0, total: 0 });
-  const [tempatCount, setTempatCount] = useState(0);
+  const [laporanRows, setLaporanRows] = useState<LaporanAkhirRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       fetch("/api/magang/lapor-diri").then((r) => r.json()).catch(() => null),
-      fetch("/api/magang/tempat").then((r) => r.json()).catch(() => null),
-    ]).then(([lapor, tempat]) => {
+      fetch("/api/magang/laporan-akhir").then((r) => r.json()).catch(() => null),
+    ]).then(([lapor, laporan]) => {
       if (lapor?.summary) setSummary(lapor.summary);
-      if (Array.isArray(tempat)) setTempatCount(tempat.length);
+      if (Array.isArray(laporan)) setLaporanRows(laporan);
     }).finally(() => setLoading(false));
   }, []);
+
+  const menungguReview = laporanRows.filter((r) => r.laporan?.status === "TERKIRIM").length;
+  const diterima = laporanRows.filter((r) => r.laporan?.status === "DITERIMA").length;
 
   return (
     <div className="space-y-6">
@@ -40,14 +44,14 @@ export default function AdminMagangRekapPage() {
                 <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
               </div>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap &amp; Laporan PKL</h1>
-              <p className="mt-0.5 text-sm text-white/70">Pantau lapor diri bulanan dan rekap kehadiran siswa PKL</p>
+              <p className="mt-0.5 text-sm text-white/70">Pantau lapor diri bulanan dan review laporan akhir siswa PKL</p>
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             {[
               { icon: FileUp, label: "Sudah Lapor", val: summary.sudahLapor },
-              { icon: FileUp, label: "Belum Lapor", val: summary.belumLapor },
-              { icon: Building2, label: "Tempat PKL", val: tempatCount },
+              { icon: ClipboardCheck, label: "Menunggu Review", val: menungguReview },
+              { icon: BarChart3, label: "Diterima", val: diterima },
             ].map(({ icon: Icon, label, val }) => (
               <div key={label} className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-[64px]">
                 <Icon size={13} className="text-white/70 mb-1" />
@@ -96,7 +100,7 @@ export default function AdminMagangRekapPage() {
               </div>
               <div className="relative">
                 <p className="text-xl font-black leading-tight">Laporan</p>
-                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">{tempatCount} tempat PKL</p>
+                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">{menungguReview} menunggu review</p>
               </div>
             </button>
           </div>

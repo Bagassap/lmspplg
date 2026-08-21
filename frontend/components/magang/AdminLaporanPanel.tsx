@@ -1,146 +1,76 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Briefcase, FileText } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { RangeModeToggle } from "@/components/absensi-harian/ExportButtons";
-import { useExportRange } from "@/components/absensi-harian/useExportRange";
-import { WALLET_GRADIENTS, WALLET_ON_TEXT, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
-import { ExportButtons } from "@/components/absensi-magang/ExportButtons";
-import { RekapMagangHarianTable, RekapMagangRangeTable } from "@/components/absensi-magang/RekapMagangTable";
-import type { SiswaAbsensi, RekapTempat, RekapRangeData, TempatMagang } from "@/components/absensi-magang/types";
+import { LaporanAkhirTable } from "./LaporanAkhirTable";
+import { LaporanAkhirReviewModal } from "./LaporanAkhirReviewModal";
+import type { LaporanAkhirRow } from "./laporan-akhir-types";
 
 export function AdminLaporanPanel() {
   const toast = useToast();
-  const [tempatList, setTempatList] = useState<TempatMagang[]>([]);
-  const [selectedId, setSelectedId] = useState("");
-  const tanggal = todayJakarta();
-  const exportRange = useExportRange(tanggal);
+  const [rows, setRows] = useState<LaporanAkhirRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<LaporanAkhirRow | null>(null);
 
-  const [roster, setRoster] = useState<SiswaAbsensi[]>([]);
-  const [rekapHarian, setRekapHarian] = useState<RekapTempat | null>(null);
-  const [rekapRange, setRekapRange] = useState<RekapRangeData | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/magang/tempat").then((r) => r.json()).then((d) => {
-      const list = Array.isArray(d) ? d : [];
-      setTempatList(list);
-      if (list.length > 0) setSelectedId((prev) => prev || list[0].id);
-    }).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if (!selectedId) { setRoster([]); return; }
-    fetch(`/api/magang/absensi?tempatMagangId=${selectedId}&tanggal=${tanggal}`)
-      .then((r) => r.json())
-      .then((d) => setRoster(Array.isArray(d) && d[0] ? d[0].siswa : []))
-      .catch(() => setRoster([]));
-  }, [selectedId, tanggal]);
-
-  const loadRekap = useCallback(async () => {
-    if (!selectedId) return;
+  const load = useCallback(async () => {
     setLoading(true);
     try {
-      const qs = new URLSearchParams({ tempatMagangId: selectedId, mode: exportRange.range.mode });
-      if (exportRange.range.mode === "harian") qs.set("tanggal", exportRange.range.tanggal);
-      else if (exportRange.range.mode === "mingguan") {
-        qs.set("tanggalMulai", exportRange.range.tanggalMulai);
-        qs.set("tanggalSelesai", exportRange.range.tanggalSelesai);
-      } else {
-        qs.set("bulan", String(exportRange.range.bulan));
-        qs.set("tahun", String(exportRange.range.tahun));
-      }
-      const res = await fetch(`/api/magang/absensi/rekap?${qs}`);
+      const res = await fetch("/api/magang/laporan-akhir", { cache: "no-store" });
       const json = await res.json().catch(() => null);
-      if (exportRange.range.mode === "harian") { setRekapHarian(json); setRekapRange(null); }
-      else { setRekapRange(json); setRekapHarian(null); }
+      setRows(Array.isArray(json) ? json : []);
     } catch {
-      toast.error("Gagal memuat rekap PKL", "");
+      toast.error("Gagal memuat data laporan akhir PKL", "");
     } finally {
       setLoading(false);
     }
-  }, [selectedId, exportRange.range]);
+  }, []);
 
-  useEffect(() => { loadRekap(); }, [loadRekap]);
+  useEffect(() => { load(); }, [load]);
 
-  const selectedTempat = tempatList.find((t) => t.id === selectedId);
+  const filtered = rows.filter((r) => {
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return (r.siswa.nama ?? "").toLowerCase().includes(q) || r.siswa.nis.toLowerCase().includes(q);
+  });
 
-  if (tempatList.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-slate-100 bg-white py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
-          <Briefcase size={24} className="text-slate-300 dark:text-slate-500" />
-        </div>
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Belum ada tempat PKL</p>
-      </div>
-    );
+  async function handleReview(penempatanId: string, status: "DITERIMA" | "REVISI", pesanRevisi?: string) {
+    const res = await fetch(`/api/magang/laporan-akhir/${penempatanId}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status, pesanRevisi }),
+    });
+    if (res.ok) {
+      toast.success(status === "DITERIMA" ? "Laporan diterima" : "Revisi terkirim", "");
+      load();
+    } else {
+      const d = await res.json().catch(() => null);
+      toast.error(d?.message ?? "Gagal memperbarui status", "");
+    }
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <p className="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Tempat PKL</p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {tempatList.map((t, idx) => {
-            const isSelected = t.id === selectedId;
-            const bg = WALLET_GRADIENTS[idx % WALLET_GRADIENTS.length];
-            const onText = WALLET_ON_TEXT[idx % WALLET_ON_TEXT.length];
-            return (
-              <button type="button" key={t.id} onClick={() => setSelectedId(t.id)}
-                className="relative flex items-center gap-2.5 overflow-hidden rounded-2xl p-3.5 text-left transition-all"
-                style={{
-                  background: bg, color: onText, boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
-                  outline: isSelected ? `3px solid ${onText}` : "3px solid transparent", outlineOffset: isSelected ? "2px" : "0",
-                }}>
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${onText}40` }}>
-                  <Briefcase size={14} />
-                </span>
-                <p className="truncate text-sm font-bold">{t.namaTempat}</p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-slate-800 dark:text-white">
-                Rekap {selectedTempat?.namaTempat ?? ""}
-              </p>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
-                {exportRange.range.mode === "harian" ? formatTgl(exportRange.range.tanggal)
-                  : exportRange.range.mode === "mingguan" ? `${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`
-                  : `Bulan ${exportRange.bulan}/${exportRange.tahun}`}
-              </p>
-            </div>
-            <RangeModeToggle {...exportRange} />
-          </div>
-
-          <div className="mt-4">
-            {exportRange.range.mode === "harian" ? (
-              <RekapMagangHarianTable loading={loading} siswa={rekapHarian?.siswa ?? []} />
-            ) : (
-              <RekapMagangRangeTable loading={loading} siswa={rekapRange?.siswa ?? []} />
-            )}
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="mb-3 flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
-              <FileText size={18} />
+      <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "#0082FB" }}>
+              <Filter size={14} className="text-white" />
             </span>
-            <div>
-              <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap ke PDF/Excel</p>
-            </div>
+            <p className="text-sm font-bold text-slate-800 dark:text-white">Daftar Laporan Akhir <span className="font-medium text-slate-400">({filtered.length})</span></p>
           </div>
-          <ExportButtons tempatMagangId={selectedId} tempatNama={selectedTempat?.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={roster} />
+          <div className="relative">
+            <Search size={13} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama/NIS..."
+              className="w-48 rounded-xl border border-slate-200 bg-slate-50 py-2 pl-8 pr-3 text-xs text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+          </div>
         </div>
+
+        <LaporanAkhirTable loading={loading} rows={filtered} showPembimbing onOpen={setSelected} />
       </div>
+
+      <LaporanAkhirReviewModal row={selected} onClose={() => setSelected(null)} onReview={handleReview} />
     </div>
   );
 }
