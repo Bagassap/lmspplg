@@ -79,7 +79,7 @@ export function MateriListPage({
     return list.filter((m) =>
       m.judul.toLowerCase().includes(q) ||
       m.mapel.toLowerCase().includes(q) ||
-      (m.kelas?.nama ?? "").toLowerCase().includes(q)
+      m.kelasList.some((k) => k.nama.toLowerCase().includes(q))
     );
   }, [list, search]);
 
@@ -220,7 +220,19 @@ export function MateriListPage({
                           <GraduationCap size={10} /> {m.mapel}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{m.kelas?.nama ?? "Semua Kelas"}</td>
+                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
+                        {m.kelasList.length ? (
+                          <div className="flex flex-wrap gap-1">
+                            {m.kelasList.map((k) => (
+                              <span key={k.id} className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                                {k.nama}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          "Semua Kelas"
+                        )}
+                      </td>
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{m.createdBy.nama}</td>
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
                         <span className="flex items-center gap-1"><CalendarDays size={11} />{formatDate(m.createdAt)}</span>

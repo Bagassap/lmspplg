@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, Upload, File as FileIcon } from "lucide-react";
+import { X, BookOpen, Loader2, Upload, File as FileIcon, Check } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 export type MateriItem = {
@@ -10,8 +10,7 @@ export type MateriItem = {
   judul: string;
   deskripsi: string | null;
   mapel: string;
-  kelasId: string | null;
-  kelas: { id: string; nama: string } | null;
+  kelasList: { id: string; nama: string }[];
   fileUrl: string | null;
   fileName: string | null;
   createdBy: { id: string; nama: string; role: string };
@@ -42,8 +41,8 @@ export function MateriFormModal({
   const [judul, setJudul] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [mapel, setMapel] = useState("");
-  const [kelasId, setKelasId] = useState("");
-  const [kelasList, setKelasList] = useState<KelasOption[]>([]);
+  const [selectedKelasIds, setSelectedKelasIds] = useState<string[]>([]);
+  const [kelasOptions, setKelasOptions] = useState<KelasOption[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -53,13 +52,17 @@ export function MateriFormModal({
       setJudul(materi?.judul ?? "");
       setDeskripsi(materi?.deskripsi ?? "");
       setMapel(materi?.mapel ?? "");
-      setKelasId(materi?.kelasId ?? "");
+      setSelectedKelasIds(materi?.kelasList?.map((k) => k.id) ?? []);
       setFile(null);
       setError("");
       if (fileInputRef.current) fileInputRef.current.value = "";
-      fetch("/api/kelas").then((r) => r.json()).then((d) => setKelasList(Array.isArray(d) ? d : [])).catch(() => {});
+      fetch("/api/kelas").then((r) => r.json()).then((d) => setKelasOptions(Array.isArray(d) ? d : [])).catch(() => {});
     }
   }, [open, materi]);
+
+  function toggleKelas(id: string) {
+    setSelectedKelasIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,7 +77,7 @@ export function MateriFormModal({
       fd.append("judul", judul);
       fd.append("deskripsi", deskripsi);
       fd.append("mapel", mapel);
-      fd.append("kelasId", kelasId);
+      fd.append("kelasIds", JSON.stringify(selectedKelasIds));
       if (file) fd.append("file", file);
 
       const url = isEdit ? `/api/materi/${materi!.id}` : "/api/materi";
@@ -167,11 +170,39 @@ export function MateriFormModal({
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">Kelas Target</label>
-                <select value={kelasId} onChange={(e) => setKelasId(e.target.value)} className={INPUT_CLS}>
-                  <option value="">Semua Kelas</option>
-                  {kelasList.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
-                </select>
+                <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
+                  Kelas Target
+                  <span className="ml-1.5 font-normal text-gray-400">
+                    {selectedKelasIds.length === 0 ? "(Semua Kelas)" : `(${selectedKelasIds.length} kelas dipilih)`}
+                  </span>
+                </label>
+                <div className="flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-slate-600 dark:bg-slate-700/40">
+                  {kelasOptions.length === 0 && (
+                    <p className="text-sm text-gray-400 dark:text-slate-500">Memuat daftar kelas…</p>
+                  )}
+                  {kelasOptions.map((k) => {
+                    const active = selectedKelasIds.includes(k.id);
+                    return (
+                      <button
+                        key={k.id}
+                        type="button"
+                        onClick={() => toggleKelas(k.id)}
+                        className={
+                          "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors " +
+                          (active
+                            ? "border-[#0082FB] bg-[#0082FB] text-white"
+                            : "border-gray-200 bg-white text-gray-600 hover:border-[#0082FB]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")
+                        }
+                      >
+                        {active && <Check size={12} />}
+                        {k.nama}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-1.5 text-[11px] text-gray-400 dark:text-slate-500">
+                  Tidak memilih kelas berarti materi ini terlihat oleh semua kelas.
+                </p>
               </div>
 
               <div>

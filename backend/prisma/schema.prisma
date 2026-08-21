@@ -223,7 +223,7 @@ model Kelas {
 
   siswa         Siswa[]
   absensiHarian AbsensiHarian[]
-  materi        Materi[]
+  materiList    Materi[]
   tugas         Tugas[]
 
   @@map("kelas")
@@ -298,8 +298,10 @@ model Materi {
   judul       String
   deskripsi   String? @db.Text
   mapel       String
-  kelasId     String?
-  kelas       Kelas?  @relation(fields: [kelasId], references: [id])
+  // Kelas target materi ini — kosong (tidak ada relasi) berarti "Semua Kelas".
+  // Dulu relasi 1 kelas per materi (kelasId), sekarang bisa banyak kelas
+  // sekaligus (lihat migrasi 20260821_materi_multi_kelas).
+  kelasList   Kelas[]
   fileUrl     String?
   fileName    String?
   createdById String

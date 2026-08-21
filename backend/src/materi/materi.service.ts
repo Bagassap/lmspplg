@@ -8,7 +8,7 @@ import { UpdateMateriDto } from './dto/update-materi.dto';
 type Actor = { id: string; role: string };
 
 const INCLUDE_CREATED_BY = { select: { id: true, nama: true, role: true } } as const;
-const INCLUDE_KELAS = { select: { id: true, nama: true } } as const;
+const INCLUDE_KELAS_LIST = { select: { id: true, nama: true }, orderBy: { nama: 'asc' as const } };
 
 @Injectable()
 export class MateriService {
@@ -22,9 +22,11 @@ export class MateriService {
     return siswa?.kelasId ?? null;
   }
 
-  private async notifySiswaBaru(kelasId: string | null, title: string, message: string) {
+  // kelasIds kosong ([]) berarti materi ini untuk "Semua Kelas" — notifikasi
+  // dikirim ke seluruh siswa, bukan hanya kelas tertentu.
+  private async notifySiswaBaru(kelasIds: string[], title: string, message: string) {
     const siswaUsers = await this.prisma.siswa.findMany({
-      where: { userId: { not: null }, ...(kelasId ? { kelasId } : {}) },
+      where: { userId: { not: null }, ...(kelasIds.length ? { kelasId: { in: kelasIds } } : {}) },
       select: { userId: true },
     });
     await this.notificationService.createMany(
@@ -56,46 +58,54 @@ export class MateriService {
     if (actor.role === 'SISWA') {
       const kelasId = await this.siswaKelasId(actor.id);
       return this.prisma.materi.findMany({
-        where: kelasId ? { OR: [{ kelasId: null }, { kelasId }] } : { kelasId: null },
+        where: {
+          OR: [
+            { kelasList: { none: {} } },
+            ...(kelasId ? [{ kelasList: { some: { id: kelasId } } }] : []),
+          ],
+        },
         orderBy: [{ mapel: 'asc' }, { createdAt: 'desc' }],
-        include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
+        include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
       });
     }
     return this.prisma.materi.findMany({
       orderBy: [{ mapel: 'asc' }, { createdAt: 'desc' }],
-      include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
+      include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
     });
   }
 
   async findOne(id: string, actor: Actor) {
     const materi = await this.prisma.materi.findUnique({
       where: { id },
-      include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
+      include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
     });
     if (!materi) throw new NotFoundException('Materi tidak ditemukan');
 
-    if (actor.role === 'SISWA' && materi.kelasId) {
+    if (actor.role === 'SISWA' && materi.kelasList.length > 0) {
       const kelasId = await this.siswaKelasId(actor.id);
-      if (kelasId !== materi.kelasId) throw new ForbiddenException('Materi ini bukan untuk kelasmu');
+      if (!kelasId || !materi.kelasList.some((k) => k.id === kelasId)) {
+        throw new ForbiddenException('Materi ini bukan untuk kelasmu');
+      }
     }
     return materi;
   }
 
   async create(dto: CreateMateriDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
     await this.assertGuruMapel(actor, dto.mapel);
+    const kelasIds = dto.kelasIds ?? [];
     const materi = await this.prisma.materi.create({
       data: {
         judul: dto.judul,
         deskripsi: dto.deskripsi,
         mapel: dto.mapel,
-        kelasId: dto.kelasId || null,
+        kelasList: kelasIds.length ? { connect: kelasIds.map((id) => ({ id })) } : undefined,
         fileUrl,
         fileName,
         createdById: actor.id,
       },
-      include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
+      include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
     });
-    await this.notifySiswaBaru(materi.kelasId, 'Materi baru', `${materi.mapel} — ${materi.judul}`);
+    await this.notifySiswaBaru(kelasIds, 'Materi baru', `${materi.mapel} — ${materi.judul}`);
     return materi;
   }
 
@@ -111,10 +121,10 @@ export class MateriService {
         ...(dto.judul !== undefined ? { judul: dto.judul } : {}),
         ...(dto.deskripsi !== undefined ? { deskripsi: dto.deskripsi } : {}),
         ...(dto.mapel !== undefined ? { mapel: dto.mapel } : {}),
-        ...(dto.kelasId !== undefined ? { kelasId: dto.kelasId || null } : {}),
+        ...(dto.kelasIds !== undefined ? { kelasList: { set: dto.kelasIds.map((id) => ({ id })) } } : {}),
         ...(fileUrl ? { fileUrl, fileName } : {}),
       },
-      include: { createdBy: INCLUDE_CREATED_BY, kelas: INCLUDE_KELAS },
+      include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
     });
   }
 
