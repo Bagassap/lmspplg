@@ -6,9 +6,10 @@ import { PenempatanService } from './penempatan.service';
 import { AbsensiMagangController } from './absensi-magang.controller';
 import { AbsensiMagangService } from './absensi-magang.service';
 import { NotificationModule } from '../notification/notification.module';
+import { AbsensiHarianModule } from '../absensi-harian/absensi-harian.module';
 
 @Module({
-  imports: [NotificationModule],
+  imports: [NotificationModule, AbsensiHarianModule],
   controllers: [TempatMagangController, PenempatanController, AbsensiMagangController],
   providers: [TempatMagangService, PenempatanService, AbsensiMagangService],
 })

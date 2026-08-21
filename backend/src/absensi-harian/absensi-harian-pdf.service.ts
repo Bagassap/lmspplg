@@ -147,7 +147,11 @@ function formatTanggalShort(tanggal: string): string {
 
 @Injectable()
 export class AbsensiHarianPdfService {
-  async build(rekap: RekapKelasData): Promise<Buffer> {
+  async build(rekap: RekapKelasData, opts: { title?: string; entityLabel?: string; emptyMessage?: string } = {}): Promise<Buffer> {
+    const title = opts.title ?? 'LAPORAN ABSENSI HARIAN';
+    const entityLabel = opts.entityLabel ?? 'Kelas';
+    const emptyMessage = opts.emptyMessage ?? 'Tidak ada siswa di kelas ini.';
+
     const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true, autoFirstPage: false });
     registerFonts(doc);
     const chunks: Buffer[] = [];
@@ -163,11 +167,11 @@ export class AbsensiHarianPdfService {
 
     if (siswaList.length === 0) {
       doc.addPage();
-      doc.fontSize(14).fillColor('#64748b').text('Tidak ada siswa di kelas ini.', 40, 40);
+      doc.fontSize(14).fillColor('#64748b').text(emptyMessage, 40, 40);
     } else {
       for (let i = 0; i < siswaList.length; i++) {
         doc.addPage();
-        await this.renderPage(doc, siswaList[i], kelasNama, tglFmt, i, siswaList.length);
+        await this.renderPage(doc, siswaList[i], kelasNama, tglFmt, i, siswaList.length, title, entityLabel);
       }
     }
 
@@ -183,7 +187,10 @@ export class AbsensiHarianPdfService {
   // (GPS stays a Maps link — a thumbnail per row for that too would be too
   // much). A month tops out around ~23 rows, which comfortably fits one A4
   // page alongside the header/summary — no pagination-within-student.
-  async buildRange(rekap: RekapRangeData): Promise<Buffer> {
+  async buildRange(rekap: RekapRangeData, opts: { entityLabel?: string; emptyMessage?: string } = {}): Promise<Buffer> {
+    const entityLabel = opts.entityLabel ?? 'Kelas';
+    const emptyMessage = opts.emptyMessage ?? 'Tidak ada siswa di kelas ini.';
+
     const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true, autoFirstPage: false });
     registerFonts(doc);
     const chunks: Buffer[] = [];
@@ -198,11 +205,11 @@ export class AbsensiHarianPdfService {
 
     if (rekap.siswa.length === 0) {
       doc.addPage();
-      doc.fontSize(14).fillColor('#64748b').text('Tidak ada siswa di kelas ini.', 40, 40);
+      doc.fontSize(14).fillColor('#64748b').text(emptyMessage, 40, 40);
     } else {
       for (let i = 0; i < rekap.siswa.length; i++) {
         doc.addPage();
-        await this.renderRangePage(doc, rekap.siswa[i], kelasNama, periodeLabel, rekap.tanggalList, i, rekap.siswa.length);
+        await this.renderRangePage(doc, rekap.siswa[i], kelasNama, periodeLabel, rekap.tanggalList, i, rekap.siswa.length, entityLabel);
       }
     }
 
@@ -218,6 +225,7 @@ export class AbsensiHarianPdfService {
     tanggalList: string[],
     idx: number,
     total: number,
+    entityLabel: string,
   ) {
     const margin = 40;
     const pageWidth = doc.page.width;
@@ -234,7 +242,7 @@ export class AbsensiHarianPdfService {
     doc.font('Satoshi-Bold').fontSize(20).fillColor('#1C2B33').text(s.nama || '-', margin, y, { width: contentWidth });
     doc.font('Satoshi');
     y = doc.y + 4;
-    doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   Kelas: ${kelasNama}`, margin, y, { width: contentWidth });
+    doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   ${entityLabel}: ${kelasNama}`, margin, y, { width: contentWidth });
     y = doc.y + 2;
     doc.fontSize(11).fillColor('#64748b').text(`Periode: ${periodeLabel}`, margin, y, { width: contentWidth });
     y = doc.y + 12;
@@ -379,13 +387,15 @@ export class AbsensiHarianPdfService {
     tglFmt: string,
     idx: number,
     total: number,
+    title: string,
+    entityLabel: string,
   ) {
     const margin = 40;
     const pageWidth = doc.page.width;
     const contentWidth = pageWidth - margin * 2;
     let y = margin;
 
-    doc.font('Satoshi-Bold').fontSize(9).fillColor('#94a3b8').text('LAPORAN ABSENSI HARIAN', margin, y, { characterSpacing: 0.6 });
+    doc.font('Satoshi-Bold').fontSize(9).fillColor('#94a3b8').text(title, margin, y, { characterSpacing: 0.6 });
     doc.fontSize(9).fillColor('#94a3b8').text(`${idx + 1} / ${total}`, margin, y, { width: contentWidth, align: 'right' });
     doc.font('Satoshi');
     y += 20;
@@ -393,7 +403,7 @@ export class AbsensiHarianPdfService {
     doc.font('Satoshi-Bold').fontSize(20).fillColor('#1C2B33').text(s.nama || '-', margin, y, { width: contentWidth });
     doc.font('Satoshi');
     y = doc.y + 4;
-    doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   Kelas: ${kelasNama}`, margin, y, { width: contentWidth });
+    doc.fontSize(11).fillColor('#64748b').text(`NIS: ${s.nis ?? '-'}   ·   ${entityLabel}: ${kelasNama}`, margin, y, { width: contentWidth });
     y = doc.y + 2;
     doc.fontSize(11).fillColor('#64748b').text(`Tanggal: ${tglFmt}`, margin, y, { width: contentWidth });
     y = doc.y + 12;

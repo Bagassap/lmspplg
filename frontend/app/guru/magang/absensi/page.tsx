@@ -5,15 +5,17 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Briefcase,
   ArrowRight,
-  Users, TrendingUp, LogOut, PieChart,
+  Users, TrendingUp, LogOut, PieChart, FileText, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { AbsensiMagangTable } from "@/components/absensi-magang/AbsensiMagangTable";
+import { ExportButtons } from "@/components/absensi-magang/ExportButtons";
+import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
 
 // Same shape/size as the clickable tempat pill (icon badge + 2-line text),
@@ -153,6 +155,7 @@ export default function GuruMagangAbsensiPage() {
   const toast = useToast();
   const [selectedId, setSelectedId] = useState<string>("");
   const [tanggal, setTanggal] = useState(() => todayJakarta());
+  const exportRange = useExportRange(tanggal);
   const [rekapAll, setRekapAll] = useState<RekapTempat[]>([]);
   const [loading, setLoading] = useState(false);
   const [dokumenSiswa, setDokumenSiswa] = useState<SiswaAbsensi | null>(null);
@@ -296,76 +299,132 @@ export default function GuruMagangAbsensiPage() {
           </div>
         </div>
 
-        <div id="status-kehadiran-hari-ini" className="mb-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-slate-800 dark:text-white">
-                Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
-              </p>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 dark:text-white">
+                  Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
+                </p>
+                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
+                <CalendarDays size={14} className="shrink-0 text-slate-400" />
+                <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+                  className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
+              </div>
             </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
-              <CalendarDays size={14} className="shrink-0 text-slate-400" />
-              <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
-            </div>
-          </div>
 
-          <div className="mt-6 mb-2 flex flex-wrap items-center gap-2.5 border-t border-slate-100 pt-6 pb-2 dark:border-slate-700">
-            <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
-            {filterOptions.map((opt) => {
-              const active = activeFilter === opt.key;
-              return (
-                <button key={String(opt.key)} type="button"
-                  onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                  className="rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors"
-                  style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
-                  <span className={`flex items-center gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
-                    <opt.icon size={16} />
-                    {opt.label}
-                    <span className={`rounded-md px-2 py-0.5 text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
-                      {opt.count}
+            <div className="mt-6 mb-2 flex flex-wrap items-center gap-2.5 border-t border-slate-100 pt-6 pb-2 dark:border-slate-700">
+              <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
+              {filterOptions.map((opt) => {
+                const active = activeFilter === opt.key;
+                return (
+                  <button key={String(opt.key)} type="button"
+                    onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
+                    className="rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors"
+                    style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
+                    <span className={`flex items-center gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
+                      <opt.icon size={16} />
+                      {opt.label}
+                      <span className={`rounded-md px-2 py-0.5 text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                        {opt.count}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <Users size={12} className="text-[#0082FB]" />
+                Total {total} siswa
+              </span>
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <TrendingUp size={12} className="text-[#0082FB]" />
+                Kehadiran {hadirPct}%
+              </span>
+              <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+                <LogOut size={12} className="text-[#0082FB]" />
+                Sudah pulang {pulangCount} siswa
+              </span>
+            </div>
+
+            <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
+              <AbsensiMagangTable
+                loading={loading}
+                hasSiswa={siswaList.length > 0}
+                filteredSiswa={filteredSiswa}
+                pagedSiswa={pagedSiswa}
+                tableStart={tableStart}
+                tableEnd={tableEnd}
+                activeFilter={activeFilter}
+                tablePage={tablePage}
+                setTablePage={setTablePage}
+                tablePageCount={tablePageCount}
+                tablePageSize={tablePageSize}
+                setTablePageSize={setTablePageSize}
+                onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
+                tempatMagangId={selectedId}
+                tanggal={tanggal}
+                onStatusUpdated={loadRekap}
+              />
+            </div>
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
-            <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-              <Users size={12} className="text-[#0082FB]" />
-              Total {total} siswa
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-              <TrendingUp size={12} className="text-[#0082FB]" />
-              Kehadiran {hadirPct}%
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-              <LogOut size={12} className="text-[#0082FB]" />
-              Sudah pulang {pulangCount} siswa
-            </span>
-          </div>
+          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                <FileText size={18} />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {RANGE_MODE_CARDS.map((opt) => {
+                const active = exportRange.rangeMode === opt.key;
+                const fg = reportCardFg(opt.gradient);
+                return (
+                  <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
+                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm transition-all"
+                    style={{ background: opt.gradient, color: fg, opacity: active ? 1 : 0.55, outline: active ? `2px solid ${fg}` : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
+                    <opt.icon size={16} />
+                    <span className="text-[11px] font-bold">{opt.label}</span>
+                    <span className="text-[9px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-          <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
-            <AbsensiMagangTable
-              loading={loading}
-              hasSiswa={siswaList.length > 0}
-              filteredSiswa={filteredSiswa}
-              pagedSiswa={pagedSiswa}
-              tableStart={tableStart}
-              tableEnd={tableEnd}
-              activeFilter={activeFilter}
-              tablePage={tablePage}
-              setTablePage={setTablePage}
-              tablePageCount={tablePageCount}
-              tablePageSize={tablePageSize}
-              setTablePageSize={setTablePageSize}
-              onOpenDokumen={(s, source) => { setDokumenSiswa(s); setDokumenSource(source); }}
-              tempatMagangId={selectedId}
-              tanggal={tanggal}
-              onStatusUpdated={loadRekap}
-            />
+            {exportRange.rangeMode === "mingguan" && (
+              <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
+                title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+            )}
+
+            {exportRange.rangeMode === "bulanan" && (
+              <div className="mt-2 flex items-center gap-1.5">
+                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                </select>
+                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            )}
+
+            <div className="mt-3">
+              <ExportButtons tempatMagangId={selectedId} tempatNama={selectedTempat?.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={siswaList} />
+            </div>
+            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+              <Download size={11} className="shrink-0 text-[#0082FB]" />
+              Pilih rentang waktu, lalu klik salah satu tombol ekspor
+            </p>
           </div>
         </div>
       </div>

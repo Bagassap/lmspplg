@@ -2,10 +2,30 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException 
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
-import { todayJakarta as todayStr } from '../common/utils/jakarta-date.util';
+import { todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange } from '../common/utils/jakarta-date.util';
 import { isValidGpsLokasi } from '../common/utils/gps.util';
 
 type BimbinganPenempatan = { id: string; siswaId: string; tempatMagangId: string };
+
+export type RangeSiswaSummary = { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
+export type RangeSiswaRow = {
+  siswaId: string;
+  nama: string | null;
+  nis: string | null;
+  byTanggal: Record<string, {
+    status: string | null; waktuAbsen: string | null; waktuPulang: string | null;
+    foto: string | null; ttd: string | null; lokasi: string | null;
+    fotoPulang: string | null; ttdPulang: string | null; lokasiPulang: string | null;
+  }>;
+  summary: RangeSiswaSummary;
+};
+export type RekapRangeData = {
+  tempatMagang: { namaTempat: string } | null;
+  tanggalMulai: string;
+  tanggalSelesai: string;
+  tanggalList: string[];
+  siswa: RangeSiswaRow[];
+};
 
 @Injectable()
 export class AbsensiMagangService {
@@ -254,5 +274,182 @@ export class AbsensiMagangService {
     );
 
     return result;
+  }
+
+  // Guru pembimbing hanya boleh mengekspor tempat yang punya minimal satu
+  // siswa bimbingannya di sana — sama seperti pola akses baca (getForActor).
+  private async assertTempatAccessible(tempatMagangId: string, userId: string, role: string): Promise<string[] | undefined> {
+    if (role !== 'GURU') return undefined;
+    const bimbingan = await this.getBimbinganAktif(userId);
+    const siswaIds = bimbingan.filter((b) => b.tempatMagangId === tempatMagangId).map((b) => b.siswaId);
+    if (siswaIds.length === 0) throw new ForbiddenException('Anda bukan pembimbing PKL untuk siswa di tempat ini');
+    return siswaIds;
+  }
+
+  async getRekapTempatForExport(tempatMagangId: string, tanggal: string, userId: string, role: string) {
+    const onlySiswaIds = await this.assertTempatAccessible(tempatMagangId, userId, role);
+    return this.getRekapTempat(tempatMagangId, tanggal, onlySiswaIds);
+  }
+
+  private resolveRange(
+    mode: 'mingguan' | 'bulanan',
+    tanggalMulai?: string,
+    tanggalSelesai?: string,
+    bulan?: string,
+    tahun?: string,
+  ): { start: string; end: string } {
+    if (mode === 'bulanan') {
+      const b = Number(bulan);
+      const t = Number(tahun);
+      if (!Number.isInteger(b) || b < 1 || b > 12 || !Number.isInteger(t)) {
+        throw new BadRequestException('bulan/tahun tidak valid');
+      }
+      return monthToDateRange(b, t);
+    }
+    if (!tanggalMulai || !tanggalSelesai) {
+      throw new BadRequestException('tanggalMulai/tanggalSelesai wajib diisi untuk mode mingguan');
+    }
+    if (tanggalMulai > tanggalSelesai) {
+      throw new BadRequestException('tanggalMulai harus sebelum atau sama dengan tanggalSelesai');
+    }
+    return { start: tanggalMulai, end: tanggalSelesai };
+  }
+
+  private buildRangeSiswaRow(
+    siswaId: string,
+    nama: string | null,
+    nis: string | null,
+    tanggalList: string[],
+    recMap: Map<string, {
+      status: string | null; waktuAbsen: string | null; waktuPulang: string | null;
+      foto?: string | null; ttd?: string | null; lokasi?: string | null;
+      fotoPulang?: string | null; ttdPulang?: string | null; lokasiPulang?: string | null;
+    }>,
+  ): RangeSiswaRow {
+    const byTanggal: RangeSiswaRow['byTanggal'] = {};
+    const tally = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+    for (const tgl of tanggalList) {
+      const rec = recMap.get(`${siswaId}|${tgl}`);
+      const status = rec?.status ?? null;
+      byTanggal[tgl] = {
+        status, waktuAbsen: rec?.waktuAbsen ?? null, waktuPulang: rec?.waktuPulang ?? null,
+        foto: rec?.foto ?? null, ttd: rec?.ttd ?? null, lokasi: rec?.lokasi ?? null,
+        fotoPulang: rec?.fotoPulang ?? null, ttdPulang: rec?.ttdPulang ?? null, lokasiPulang: rec?.lokasiPulang ?? null,
+      };
+      const tallyKey = (status ?? 'ALPA') as keyof typeof tally;
+      if (tallyKey in tally) tally[tallyKey]++;
+    }
+    const totalHariEfektif = tanggalList.length;
+    const persentaseKehadiran = totalHariEfektif > 0 ? Math.round((tally.HADIR / totalHariEfektif) * 1000) / 10 : 0;
+    return { siswaId, nama, nis, byTanggal, summary: { ...tally, totalHariEfektif, persentaseKehadiran } };
+  }
+
+  async getRekapTempatRangeForExport(
+    tempatMagangId: string,
+    mode: 'mingguan' | 'bulanan',
+    userId: string,
+    role: string,
+    opts: { tanggalMulai?: string; tanggalSelesai?: string; bulan?: string; tahun?: string },
+  ): Promise<RekapRangeData> {
+    const onlySiswaIds = await this.assertTempatAccessible(tempatMagangId, userId, role);
+    const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId } });
+    if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
+
+    const { start, end } = this.resolveRange(mode, opts.tanggalMulai, opts.tanggalSelesai, opts.bulan, opts.tahun);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    const penempatanList = await this.prisma.penempatanMagang.findMany({
+      where: { tempatMagangId, status: 'AKTIF', ...(onlySiswaIds ? { siswaId: { in: onlySiswaIds } } : {}) },
+      include: { siswa: { include: { user: { select: { nama: true } } } } },
+      orderBy: { siswa: { nama: 'asc' } },
+    });
+    const records = tanggalList.length && penempatanList.length
+      ? await this.prisma.absensiMagang.findMany({ where: { penempatanId: { in: penempatanList.map((p) => p.id) }, tanggal: { in: tanggalList } } })
+      : [];
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+
+    const siswa = penempatanList.map((p) =>
+      this.buildRangeSiswaRow(p.siswaId, p.siswa.user?.nama ?? p.siswa.nama, p.siswa.nis, tanggalList, recMap),
+    );
+
+    return { tempatMagang: { namaTempat: tempat.namaTempat }, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa };
+  }
+
+  private async assertSiswaAccessible(siswaId: string, userId: string, role: string) {
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { id: siswaId },
+      include: { user: { select: { nama: true } } },
+    });
+    if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
+    if (role === 'GURU') {
+      const bimbingan = await this.getBimbinganAktif(userId);
+      if (!bimbingan.some((b) => b.siswaId === siswaId)) {
+        throw new ForbiddenException('Anda bukan pembimbing PKL untuk siswa ini');
+      }
+    }
+    return siswa;
+  }
+
+  async getSiswaAbsensiForExport(siswaId: string, tanggal: string, userId: string, role: string) {
+    const siswa = await this.assertSiswaAccessible(siswaId, userId, role);
+    const penempatan = await this.prisma.penempatanMagang.findFirst({
+      where: { siswaId, status: 'AKTIF' },
+      include: { tempatMagang: true },
+    });
+    const doc = penempatan
+      ? await this.prisma.absensiMagang.findUnique({ where: { penempatanId_tanggal: { penempatanId: penempatan.id, tanggal } } })
+      : null;
+    return {
+      tempatMagang: penempatan ? { namaTempat: penempatan.tempatMagang.namaTempat } : null,
+      tanggal,
+      siswa: [
+        {
+          siswaId: siswa.id,
+          nama: siswa.user?.nama ?? siswa.nama,
+          nis: siswa.nis,
+          status: doc?.status ?? null,
+          waktuAbsen: doc?.waktuAbsen ?? null,
+          lokasi: doc?.lokasi ?? null,
+          foto: doc?.foto ?? null,
+          ttd: doc?.ttd ?? null,
+          catatan: doc?.catatan ?? null,
+          waktuPulang: doc?.waktuPulang ?? null,
+          lokasiPulang: doc?.lokasiPulang ?? null,
+          fotoPulang: doc?.fotoPulang ?? null,
+          ttdPulang: doc?.ttdPulang ?? null,
+          catatanPulang: doc?.catatanPulang ?? null,
+        },
+      ],
+    };
+  }
+
+  async getSiswaAbsensiRangeForExport(
+    siswaId: string,
+    mode: 'mingguan' | 'bulanan',
+    userId: string,
+    role: string,
+    opts: { tanggalMulai?: string; tanggalSelesai?: string; bulan?: string; tahun?: string },
+  ): Promise<RekapRangeData> {
+    const siswa = await this.assertSiswaAccessible(siswaId, userId, role);
+    const { start, end } = this.resolveRange(mode, opts.tanggalMulai, opts.tanggalSelesai, opts.bulan, opts.tahun);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    const penempatan = await this.prisma.penempatanMagang.findFirst({
+      where: { siswaId, status: 'AKTIF' },
+      include: { tempatMagang: true },
+    });
+    const records = tanggalList.length && penempatan
+      ? await this.prisma.absensiMagang.findMany({ where: { penempatanId: penempatan.id, tanggal: { in: tanggalList } } })
+      : [];
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+    const row = this.buildRangeSiswaRow(siswa.id, siswa.user?.nama ?? siswa.nama, siswa.nis, tanggalList, recMap);
+
+    return {
+      tempatMagang: penempatan ? { namaTempat: penempatan.tempatMagang.namaTempat } : null,
+      tanggalMulai: start,
+      tanggalSelesai: end,
+      tanggalList,
+      siswa: [row],
+    };
   }
 }

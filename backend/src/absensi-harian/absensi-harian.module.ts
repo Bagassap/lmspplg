@@ -10,5 +10,6 @@ import { NotificationModule } from '../notification/notification.module';
   imports: [KelasModule, NotificationModule],
   controllers: [AbsensiHarianController],
   providers: [AbsensiHarianService, AbsensiHarianPdfService, AbsensiHarianExcelService],
+  exports: [AbsensiHarianPdfService, AbsensiHarianExcelService],
 })
 export class AbsensiHarianModule {}
