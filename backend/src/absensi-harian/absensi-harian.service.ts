@@ -4,6 +4,7 @@ import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 import { jakartaParts, todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange, addDaysUTC } from '../common/utils/jakarta-date.util';
+import { isValidGpsLokasi } from '../common/utils/gps.util';
 
 export type RangeSiswaSummary = { HADIR: number; IZIN: number; SAKIT: number; ALPA: number; totalHariEfektif: number; persentaseKehadiran: number };
 export type RangeSiswaRow = {
@@ -102,21 +103,6 @@ function pulangWindowLabel(override: JadwalOverrideRow): string {
   const isOverridden = override != null && (override.pulangStartMinutes != null || override.pulangEndMinutes != null);
   const note = isOverridden ? `, hari ini disesuaikan${override?.keterangan ? ` (${override.keterangan})` : ''}` : '';
   return `${minutesLabel(pulangStart)}-${minutesLabel(pulangEnd)} WIB (${isFriday ? 'Jumat' : 'Senin-Kamis'}${note})`;
-}
-
-// GPS is mandatory for Hadir/Pulang — a truthy check alone lets a client
-// (buggy, stale-cached, or a direct API call bypassing the UI entirely)
-// submit a placeholder string like "GPS tidak tersedia" as if it were a
-// real location. Require an actual "lat,lng" pair within valid ranges.
-function isValidGpsLokasi(lokasi?: string): boolean {
-  if (!lokasi) return false;
-  const parts = lokasi.split(',');
-  if (parts.length !== 2) return false;
-  const lat = Number(parts[0].trim());
-  const lng = Number(parts[1].trim());
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
-  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return false;
-  return true;
 }
 
 @Injectable()

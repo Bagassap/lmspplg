@@ -199,7 +199,7 @@ export class DashboardService {
         orderBy: { tanggalMulai: 'desc' },
         include: {
           tempatMagang: { select: { namaTempat: true } },
-          absensi: { select: { tipe: true } },
+          absensi: { select: { status: true } },
         },
       }),
     ]);
@@ -216,7 +216,7 @@ export class DashboardService {
       : {
           status: penempatanMagang.status,
           tempat: penempatanMagang.tempatMagang.namaTempat,
-          hadir: penempatanMagang.absensi.filter((a) => a.tipe === 'MASUK').length,
+          hadir: penempatanMagang.absensi.filter((a) => a.status === 'HADIR').length,
         };
 
     return {

@@ -14,11 +14,6 @@ enum Role {
   SISWA
 }
 
-enum TipeAbsensi {
-  MASUK
-  PULANG
-}
-
 enum StatusPenempatan {
   AKTIF
   SELESAI
@@ -459,6 +454,7 @@ model TempatMagang {
   updatedAt DateTime @updatedAt
 
   penempatan PenempatanMagang[]
+  absensi    AbsensiMagang[]
 
   @@map("tempat_magang")
 }
@@ -485,24 +481,36 @@ model PenempatanMagang {
   @@map("penempatan_magang")
 }
 
+// Sengaja dibuat semirip mungkin dengan AbsensiHarian (1 baris per siswa per
+// hari, status HADIR/IZIN/SAKIT/ALPA + pasangan field *Pulang) supaya pola UI
+// & komponen frontend-nya bisa dipakai ulang - bedanya di-scope oleh
+// TempatMagang/PenempatanMagang, bukan Kelas.
 model AbsensiMagang {
   id             String           @id @default(cuid())
-  penempatanId   String
-  penempatan     PenempatanMagang @relation(fields: [penempatanId], references: [id])
   siswaId        String
   siswa          Siswa            @relation(fields: [siswaId], references: [id])
-  tanggal        DateTime         @db.Date
-  tipe           TipeAbsensi
-  waktu          DateTime
-  fotoUrl        String?
-  latitude       Float?
-  longitude      Float?
-  tandaTanganUrl String?
-  keterangan     String?
+  penempatanId   String
+  penempatan     PenempatanMagang @relation(fields: [penempatanId], references: [id])
+  tempatMagangId String
+  tempatMagang   TempatMagang     @relation(fields: [tempatMagangId], references: [id])
+  tanggal        String
+  status         String?
+  waktuAbsen     String?
+  lokasi         String?
+  foto           String?
+  ttd            String?          @db.Text
+  catatan        String?
+
+  waktuPulang   String?
+  lokasiPulang  String?
+  fotoPulang    String?
+  ttdPulang     String? @db.Text
+  catatanPulang String?
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([penempatanId, tipe, tanggal])
+  @@unique([penempatanId, tanggal])
   @@map("absensi_magang")
 }
 
