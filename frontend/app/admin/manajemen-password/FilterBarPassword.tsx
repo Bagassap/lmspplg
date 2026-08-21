@@ -98,23 +98,29 @@ export function FilterBarPassword({
       </div>
 
       {wali && (
-        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-[#0082FB] bg-[#0082FB]/50 p-3 dark:border-[#0064E0]/30 dark:bg-[#0064E0]/10">
+        <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-slate-200 p-3.5 dark:border-slate-700">
           <div className="flex min-w-0 items-center gap-2.5">
             <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="#0082FB" textClassName="text-xs font-bold" />
             <div className="min-w-0">
-              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-[#0082FB] dark:text-[#0082FB]">
+              <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 <UserCheck size={11} /> Wali Kelas
               </p>
               <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{wali.nama}</p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${wali.mustChangePassword ? "bg-red-500 text-white" : "bg-emerald-500 text-white"}`}>
-              {wali.mustChangePassword ? "Belum Ganti" : "Sudah Ganti"}
-            </span>
+            {wali.mustChangePassword ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-[10px] font-semibold text-white">
+                Belum Ganti
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+                Sudah Ganti
+              </span>
+            )}
             <button onClick={onResetWali}
-              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm hover:brightness-95"
-              style={{ background: "#0064E0" }}>
+              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm transition-colors hover:brightness-95"
+              style={{ background: REF_PRIMARY }}>
               <KeyRound size={11} /> Reset
             </button>
           </div>
