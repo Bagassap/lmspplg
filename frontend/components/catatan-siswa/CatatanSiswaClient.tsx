@@ -278,7 +278,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
 
           <div className="flex flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#EF4444" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0064E0" }}>
                 <Download size={18} />
               </span>
               <div>
@@ -288,15 +288,15 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
             </div>
 
             <div className="mb-3 grid grid-cols-2 gap-2">
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm" style={{ background: "#C3F84A", color: "#1C2B33" }}>
+              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "#0064E0" }}>
                 <UserIcon size={15} />
                 <span className="text-base font-extrabold">{loading ? "—" : inKelas.length}</span>
-                <span className="text-[9px] font-semibold uppercase tracking-wide" style={{ color: "#1C2B33BF" }}>Siswa Kelas Ini</span>
+                <span className="text-[9px] font-semibold uppercase tracking-wide text-white/80">Siswa Kelas Ini</span>
               </div>
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "#EF4444" }}>
+              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm" style={{ background: "#C3F84A", color: "#1C2B33" }}>
                 <NotebookPen size={15} />
                 <span className="text-base font-extrabold">{loading ? "—" : kelasTotalCatatan}</span>
-                <span className="text-[9px] font-semibold uppercase tracking-wide text-white/80">Catatan Kelas Ini</span>
+                <span className="text-[9px] font-semibold uppercase tracking-wide" style={{ color: "#1C2B33BF" }}>Catatan Kelas Ini</span>
               </div>
             </div>
 
@@ -313,7 +313,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
               </a>
             </div>
             <p className="mt-2.5 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={10} className="shrink-0 text-[#EF4444]" />
+              <Download size={10} className="shrink-0 text-[#0064E0]" />
               Rekap {selectedKelas?.nama ?? "kelas ini"} beserta seluruh catatannya
             </p>
           </div>
