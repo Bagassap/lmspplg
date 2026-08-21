@@ -1,20 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { FileUp, Users, CheckCircle2, XCircle, Search, Filter, Briefcase } from "lucide-react";
+import { Users, CheckCircle2, XCircle, Search, Filter, Briefcase } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LaporDiriTable } from "@/components/magang/LaporDiriTable";
-import { BackToHubLink } from "@/components/magang/BackToHubLink";
-import type { LaporDiriResponse, LaporDiriRow } from "@/components/magang/lapor-diri-types";
+import { LaporDiriTable } from "./LaporDiriTable";
+import type { LaporDiriResponse, LaporDiriRow } from "./lapor-diri-types";
 
 const STAT_GRADIENTS = ["#0064E0", "#00D67F", "#EF4444"];
 
-function periodeLabel(periode: string): string {
-  const [y, m] = periode.split("-").map(Number);
-  return new Date(y, m - 1, 1).toLocaleDateString("id-ID", { month: "long", year: "numeric" });
-}
-
-export default function GuruLaporDiriPage() {
+export function GuruLaporDiriPanel() {
   const toast = useToast();
   const [data, setData] = useState<LaporDiriResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,55 +50,18 @@ export default function GuruLaporDiriPage() {
 
   if (!loading && rows.length === 0) {
     return (
-      <div className="space-y-5 p-1">
-        <BackToHubLink href="/guru/magang/rekap" />
-        <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
-          <div className="relative flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <FileUp size={22} className="text-white sm:hidden" />
-              <FileUp size={26} className="hidden text-white sm:block" />
-            </div>
-            <div>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Lapor Diri</h1>
-              <p className="mt-0.5 text-sm text-white/70">Status laporan bulanan siswa PKL bimbingan Anda</p>
-            </div>
-          </div>
+      <div className="flex flex-col items-center gap-3 rounded-3xl border border-slate-100 bg-white py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
+          <Briefcase size={24} className="text-slate-300 dark:text-slate-500" />
         </div>
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-100 bg-white py-20 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
-            <Briefcase size={24} className="text-slate-300 dark:text-slate-500" />
-          </div>
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Anda belum menjadi guru pembimbing PKL siswa manapun</p>
-          <p className="max-w-sm text-xs text-slate-400">Hubungi admin untuk ditetapkan sebagai pembimbing saat siswa ditempatkan PKL.</p>
-        </div>
+        <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Anda belum menjadi guru pembimbing PKL siswa manapun</p>
+        <p className="max-w-sm text-xs text-slate-400">Hubungi admin untuk ditetapkan sebagai pembimbing saat siswa ditempatkan PKL.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-5 p-1">
-      <BackToHubLink href="/guru/magang/rekap" />
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-        <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-            <FileUp size={22} className="text-white sm:hidden" />
-            <FileUp size={26} className="hidden text-white sm:block" />
-          </div>
-          <div>
-            <div className="mb-1 flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Laporan Bulanan PKL</span>
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
-            </div>
-            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Lapor Diri</h1>
-            <p className="mt-0.5 text-sm text-white/70">
-              {data?.periode ? `Status laporan bulanan periode ${periodeLabel(data.periode)}` : "Status laporan bulanan siswa bimbingan Anda"}
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {STATS.map((s, i) => (
           <div key={s.label} className="relative overflow-hidden rounded-2xl p-4" style={{ background: STAT_GRADIENTS[i], color: "#FFFFFF", boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}>

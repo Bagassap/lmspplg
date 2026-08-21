@@ -1,21 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { FileUp, Users, CheckCircle2, XCircle, Search, Filter } from "lucide-react";
+import { Users, CheckCircle2, XCircle, Search, Filter } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LaporDiriTable } from "@/components/magang/LaporDiriTable";
-import { BackToHubLink } from "@/components/magang/BackToHubLink";
-import type { LaporDiriResponse, LaporDiriRow } from "@/components/magang/lapor-diri-types";
+import { LaporDiriTable } from "./LaporDiriTable";
+import type { LaporDiriResponse, LaporDiriRow } from "./lapor-diri-types";
 
 const STAT_GRADIENTS = ["#0064E0", "#00D67F", "#EF4444"];
-const STAT_ON_TEXT = ["#FFFFFF", "#FFFFFF", "#FFFFFF"];
 
-function periodeLabel(periode: string): string {
-  const [y, m] = periode.split("-").map(Number);
-  return new Date(y, m - 1, 1).toLocaleDateString("id-ID", { month: "long", year: "numeric" });
-}
-
-export default function AdminLaporDiriPage() {
+export function AdminLaporDiriPanel() {
   const toast = useToast();
   const [data, setData] = useState<LaporDiriResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,32 +49,10 @@ export default function AdminLaporDiriPage() {
   ];
 
   return (
-    <div className="space-y-5 p-1">
-      <BackToHubLink href="/admin/magang/rekap" />
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-        <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-            <FileUp size={22} className="text-white sm:hidden" />
-            <FileUp size={26} className="hidden text-white sm:block" />
-          </div>
-          <div>
-            <div className="mb-1 flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Laporan Bulanan PKL</span>
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
-            </div>
-            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Lapor Diri</h1>
-            <p className="mt-0.5 text-sm text-white/70">
-              {data?.periode ? `Status laporan bulanan periode ${periodeLabel(data.periode)}` : "Status laporan bulanan siswa PKL"}
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {STATS.map((s, i) => (
-          <div key={s.label} className="relative overflow-hidden rounded-2xl p-4" style={{ background: STAT_GRADIENTS[i], color: STAT_ON_TEXT[i], boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}>
+          <div key={s.label} className="relative overflow-hidden rounded-2xl p-4" style={{ background: STAT_GRADIENTS[i], color: "#FFFFFF", boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}>
             <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.2)" }}>
               <s.icon size={16} />
             </span>
