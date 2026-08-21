@@ -28,7 +28,7 @@ const ROW_PALETTES = [
   { bar: "#0082FB", gradient: "#0082FB" },
   { bar: "#00D67F", gradient: "#00D67F" },
   { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
   { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -153,7 +153,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                            <FileText size={13} className="text-white" />
+                            <FileText size={13} style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }} />
                           </div>
                           <p className="max-w-[220px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
                         </div>

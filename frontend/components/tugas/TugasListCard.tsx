@@ -17,7 +17,7 @@ const ROW_PALETTES = [
   { bar: "#0082FB", gradient: "#0082FB" },
   { bar: "#00D67F", gradient: "#00D67F" },
   { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
   { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -55,14 +55,14 @@ export function TugasListCard({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#C3F84A" }}>
-              <ClipboardList size={14} className="text-white" />
+              <ClipboardList size={14} className="text-[#1C2B33]" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas</p>
           </div>
           {canCreate && (
             <button onClick={onAddTugas}
-              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
-              style={{ background: "#C3F84A" }}>
+              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm"
+              style={{ background: "#C3F84A", color: "#1C2B33" }}>
               <Plus size={13} /> Tambah Tugas
             </button>
           )}
@@ -118,7 +118,7 @@ export function TugasListCard({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold text-white">{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                       </div>

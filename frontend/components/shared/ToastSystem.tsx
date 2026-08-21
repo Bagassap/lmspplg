@@ -303,8 +303,8 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             whileHover={{ scale: 1.03, boxShadow: theme.btnShadow }}
             whileTap={{ scale: 0.97 }}
             onClick={() => onDismiss(toast.id)}
-            className="mt-5 w-full rounded-2xl py-3 text-sm font-bold text-white"
-            style={{ background: theme.btnBg, boxShadow: `0 6px 20px ${theme.blob1}` }}
+            className="mt-5 w-full rounded-2xl py-3 text-sm font-bold"
+            style={{ background: theme.btnBg, color: theme.btnBg === "#C3F84A" ? "#1C2B33" : "#FFFFFF", boxShadow: `0 6px 20px ${theme.blob1}` }}
           >
             Tutup
           </motion.button>

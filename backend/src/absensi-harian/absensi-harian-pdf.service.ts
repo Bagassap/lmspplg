@@ -55,7 +55,7 @@ const STATUS_LABEL: Record<string, string> = {
 const STATUS_COLOR: Record<string, string> = {
   HADIR: '#00D67F',
   IZIN: '#0082FB',
-  SAKIT: '#C3F84A',
+  SAKIT: '#8A9E1F',
   ALPA: '#EF4444',
 };
 const STATUS_BG: Record<string, string> = {

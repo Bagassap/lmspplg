@@ -51,21 +51,21 @@ export function TugasJawabanViewerModal({
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ type: "spring", damping: 24, stiffness: 320 }}
             className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                {isPg ? <ListChecks size={18} className="text-white" /> : <PenLine size={18} className="text-white" />}
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#1C2B33" : "#FFFFFF" }}>
+              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#1C2B331A" : "#FFFFFF1A" }} />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
+                {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-extrabold text-white">{judul}</h2>
-                <p className="text-xs text-white/70">
+                <h2 className="truncate text-base font-extrabold">{judul}</h2>
+                <p className="text-xs" style={{ opacity: 0.75 }}>
                   {isPg ? `${benar}/${sorted.length} benar` : `${sorted.length} soal esai`}
                 </p>
               </div>
               {isPg && nilaiAkhir !== null && (
-                <div className="shrink-0 rounded-xl bg-white/15 px-3 py-1.5 text-center">
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Nilai</p>
-                  <p className="text-lg font-black leading-none text-white">{nilaiAkhir}</p>
+                <div className="shrink-0 rounded-xl px-3 py-1.5 text-center" style={{ backgroundColor: "#1C2B3326" }}>
+                  <p className="text-[9px] font-bold uppercase tracking-widest" style={{ opacity: 0.65 }}>Nilai</p>
+                  <p className="text-lg font-black leading-none">{nilaiAkhir}</p>
                 </div>
               )}
               {!isPg && nilai != null && (
@@ -75,7 +75,8 @@ export function TugasJawabanViewerModal({
                 </div>
               )}
               <button onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
+                style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
                 <X size={16} />
               </button>
             </div>

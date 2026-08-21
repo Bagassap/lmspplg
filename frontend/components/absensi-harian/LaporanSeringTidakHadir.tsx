@@ -38,7 +38,7 @@ function RankBadge({ index }: { index: number }) {
 // amber under 75%, blue otherwise.
 function severityColor(pct: number) {
   if (pct < 50) return "#EF4444";
-  if (pct < 75) return "#C3F84A";
+  if (pct < 75) return "#8A9E1F"; // lime — varian gelap supaya kontras sebagai warna teks
   return "#0082FB";
 }
 

@@ -24,7 +24,7 @@ const PALETTE = [
   { bg: "#EAF3FF", text: "#0082FB",  bar: "#0082FB",  gradient: "#0082FB" },
   { bg: "#E3FBF0", text: "#00D67F",  bar: "#00D67F",  gradient: "#00D67F" },
   { bg: "#FEE9EA", text: "#EF4444",  bar: "#EF4444",  gradient: "#EF4444" },
-  { bg: "#F1F5F8", text: "#C3F84A",  bar: "#C3F84A",  gradient: "#C3F84A" },
+  { bg: "#F1F5F8", text: "#8A9E1F",  bar: "#8A9E1F",  gradient: "#C3F84A" }, // lime — text/bar dipakaikan varian gelap supaya kontras
   { bg: "#EAF3FF", text: "#0064E0",  bar: "#0064E0",  gradient: "#0082FB" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
@@ -37,7 +37,7 @@ interface Submisi { id: string; fileUrl: string; fileName: string; catatan?: str
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
   if (s === "DITERIMA") return { bg: "#E3FBF0", text: "#00D67F", icon: <CheckCircle size={10} /> };
-  if (s === "REVISI")   return { bg: "#F1F5F8", text: "#C3F84A", icon: <AlertCircle size={10} /> };
+  if (s === "REVISI")   return { bg: "#F1F5F8", text: "#8A9E1F", icon: <AlertCircle size={10} /> };
   return { bg: "#EAF3FF", text: "#0082FB", icon: <Clock size={10} /> };
 }
 function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#0082FB", GURU: "#0082FB", SISWA: "#00D67F" }; return m[role] ?? "#64748b"; }
@@ -325,11 +325,11 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, s
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={(e)=>e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{background: warna}}>
-              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
+            <div className="relative px-6 py-5 overflow-hidden" style={{background: warna, color: warna === "#C3F84A" ? "#1C2B33" : "#FFFFFF"}}>
+              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full pointer-events-none" style={{backgroundColor: warna === "#C3F84A" ? "#1C2B331A" : "#FFFFFF1A"}}/>
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-extrabold text-white">{title}</h2>
-                <button onClick={onClose} className="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center text-white hover:bg-white/25">
+                <h2 className="text-base font-extrabold">{title}</h2>
+                <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-80" style={{backgroundColor: warna === "#C3F84A" ? "#1C2B3326" : "#FFFFFF26"}}>
                   <X size={14}/>
                 </button>
               </div>
@@ -380,8 +380,8 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, s
                   Batal
                 </button>
                 <button type="submit" disabled={saving || !file || (showTahapan ? !tahapanId : false)}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-60"
-                  style={{background: warna}}>
+                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-60"
+                  style={{background: warna, color: warna === "#C3F84A" ? "#1C2B33" : "#FFFFFF"}}>
                   {saving ? "Mengupload..." : "Upload"}
                 </button>
               </div>
@@ -901,7 +901,7 @@ export default function AdminJadwalSoalPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2.5">
                               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
-                                <span className="text-xs font-bold text-white">{idx+1}</span>
+                                <span className="text-xs font-bold" style={{color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF"}}>{idx+1}</span>
                               </div>
                               <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                             </div>
@@ -1060,8 +1060,8 @@ export default function AdminJadwalSoalPage() {
                               <CheckCircle size={12}/> Terima
                             </button>
                             <button onClick={() => { setRevisiTarget(s); setPesanRevisi(""); }}
-                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                              style={{background:"#C3F84A"}}>
+                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-transform hover:scale-105"
+                              style={{background:"#C3F84A", color:"#1C2B33"}}>
                               <AlertCircle size={12}/> Revisi
                             </button>
                           </div>
@@ -1133,15 +1133,15 @@ export default function AdminJadwalSoalPage() {
               onClick={(e)=>e.stopPropagation()}>
 
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background:"#C3F84A"}}>
-                <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
+                style={{background:"#C3F84A", color:"#1C2B33"}}>
+                <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#1C2B33]/10 pointer-events-none"/>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <AlertCircle size={18} className="text-white"/>
+                  <div className="w-10 h-10 rounded-xl bg-[#1C2B33]/15 flex items-center justify-center shrink-0">
+                    <AlertCircle size={18} className="text-[#1C2B33]"/>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Kirim Revisi</p>
-                    <h3 className="text-base font-extrabold text-white leading-snug">{revisiTarget.siswa?.nama ?? revisiTarget.siswa?.user?.nama}</h3>
+                    <p className="text-[10px] font-bold tracking-widest text-[#1C2B33]/70 uppercase">Kirim Revisi</p>
+                    <h3 className="text-base font-extrabold text-[#1C2B33] leading-snug">{revisiTarget.siswa?.nama ?? revisiTarget.siswa?.user?.nama}</h3>
                   </div>
                 </div>
               </div>
@@ -1175,8 +1175,8 @@ export default function AdminJadwalSoalPage() {
                   Batal
                 </button>
                 <button onClick={kirimRevisi} disabled={!pesanRevisi.trim()}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all hover:brightness-110"
-                  style={{background:"#C3F84A"}}>
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110"
+                  style={{background:"#C3F84A", color:"#1C2B33"}}>
                   <span className="flex items-center justify-center gap-2">
                     <AlertCircle size={14}/> Kirim Revisi
                   </span>

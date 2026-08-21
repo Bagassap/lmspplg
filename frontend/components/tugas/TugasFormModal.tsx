@@ -296,9 +296,9 @@ export function TugasFormModal({
                   {TIPE_OPTIONS.map((opt) => (
                     <button key={opt.value} type="button" onClick={() => setTipe(opt.value)}
                       className={`flex flex-col items-center justify-center gap-1 rounded-lg px-2 py-2.5 text-xs font-bold transition-all ${
-                        tipe === opt.value ? "text-white shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400"
+                        tipe === opt.value ? "shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400"
                       }`}
-                      style={tipe === opt.value ? { background: opt.gradient } : {}}>
+                      style={tipe === opt.value ? { background: opt.gradient, color: opt.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" } : {}}>
                       <opt.icon size={14} /> {opt.label}
                     </button>
                   ))}

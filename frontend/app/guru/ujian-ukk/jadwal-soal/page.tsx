@@ -30,7 +30,7 @@ const ROW_PALETTES = [
   { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
   { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
   { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
-  { bg:"#F1F5F8", text:"#C3F84A",  bar:"#C3F84A",  gradient:"#C3F84A" },
+  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" }, // lime — text/bar gelap supaya kontras
   { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -350,7 +350,7 @@ export default function GuruJadwalSoalPage() {
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-2.5">
                                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
-                                    <span className="text-xs font-bold text-white">{idx+1}</span>
+                                    <span className="text-xs font-bold" style={{color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF"}}>{idx+1}</span>
                                   </div>
                                   <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                                 </div>

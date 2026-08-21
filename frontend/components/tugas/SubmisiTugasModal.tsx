@@ -201,8 +201,8 @@ export function SubmisiTugasModal({
                             <CheckCircle size={12} /> Terima
                           </button>
                           <button onClick={() => onRevisi(s)}
-                            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "#C3F84A" }}>
+                            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-transform hover:scale-105"
+                            style={{ background: "#C3F84A", color: "#1C2B33" }}>
                             <AlertCircle size={12} /> Revisi
                           </button>
                         </div>

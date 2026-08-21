@@ -17,7 +17,7 @@ const ROW_PALETTES = [
   { bar: "#0082FB", gradient: "#0082FB" },
   { bar: "#00D67F", gradient: "#00D67F" },
   { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#C3F84A", gradient: "#C3F84A" },
+  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
   { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -43,7 +43,7 @@ export function TugasListCardSiswa({
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#C3F84A" }}>
-            <ClipboardList size={14} className="text-white" />
+            <ClipboardList size={14} className="text-[#1C2B33]" />
           </div>
           <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas Saya</p>
         </div>
@@ -99,7 +99,7 @@ export function TugasListCardSiswa({
                 const btn = isDiterima
                   ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onLihatDetail(mySubmisi!, t) }
                   : isRevisi
-                  ? { label: "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#C3F84A", border: "#C3F84A", onClick: () => onLihatDetail(mySubmisi!, t) }
+                  ? { label: "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#8A9E1F", border: "#8A9E1F", onClick: () => onLihatDetail(mySubmisi!, t) }
                   : isTerkirim
                   ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#EAF3FF", clr: "#0064E0", border: "#0064E0", onClick: () => onLihatDetail(mySubmisi!, t) }
                   : overdue
@@ -111,7 +111,7 @@ export function TugasListCardSiswa({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold text-white">{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                       </div>

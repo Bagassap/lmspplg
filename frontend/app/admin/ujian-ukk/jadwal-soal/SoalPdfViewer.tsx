@@ -98,8 +98,8 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(195,248,74,0.4)" }}
           whileTap={{ scale: 0.96 }}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shrink-0"
-          style={{ background: "#C3F84A" }}>
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shrink-0"
+          style={{ background: "#C3F84A", color: "#1C2B33" }}>
           <Download size={14} /> Unduh PDF
         </motion.a>
       </div>

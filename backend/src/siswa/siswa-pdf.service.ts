@@ -125,7 +125,7 @@ export class SiswaPdfService {
   private rowValues(s: SiswaExportRow, no: number): [string, string][] {
     const jk = s.jenisKelamin === 'Perempuan' ? 'P' : s.jenisKelamin === 'Laki-laki' ? 'L' : '-';
     const status = s.user?.mustChangePassword === false ? 'Sudah ganti' : 'Belum ganti';
-    const statusColor = s.user?.mustChangePassword === false ? '#00D67F' : '#C3F84A';
+    const statusColor = s.user?.mustChangePassword === false ? '#00D67F' : '#8A9E1F';
     return [
       [String(no), '#334155'],
       [s.nama || '-', '#1C2B33'],

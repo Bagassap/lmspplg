@@ -28,7 +28,7 @@ function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", {
 
 function statusInfo(s: "TERKIRIM"|"DITERIMA"|"REVISI") {
   if (s === "DITERIMA") return { bg:"#E3FBF0", color:"#00D67F", label:"Diterima",      icon: <CheckCircle size={10}/> };
-  if (s === "REVISI")   return { bg:"#F1F5F8", color:"#C3F84A", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
+  if (s === "REVISI")   return { bg:"#F1F5F8", color:"#8A9E1F", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
   return                       { bg:"#EAF3FF", color:"#0082FB", label:"Menunggu Review", icon: <Clock size={10}/> };
 }
 
@@ -36,7 +36,7 @@ const ROW_PALETTES = [
   { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
   { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
   { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
-  { bg:"#F1F5F8", text:"#C3F84A",  bar:"#C3F84A",  gradient:"#C3F84A" },
+  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" }, // lime — text/bar gelap supaya kontras
   { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -516,7 +516,7 @@ export default function SiswaJadwalSoalPage() {
                         const btn = isDiterima
                           ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#E3FBF0", clr:"#00D67F", border:"#00D67F", onClick:()=>setDetailTarget(myS!) }
                           : isRevisi
-                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F1F5F8", clr:"#C3F84A", border:"#C3F84A", onClick:()=>setRevisiModal(myS!) }
+                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F1F5F8", clr:"#8A9E1F", border:"#8A9E1F", onClick:()=>setRevisiModal(myS!) }
                           : isTerkirim
                           ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#EAF3FF", clr:"#0082FB", border:"#0082FB", onClick:()=>setDetailTarget(myS!) }
                           : { label:"Kirim", icon:<Send size={11}/>, bg:"#E3FBF0", clr:"#00D67F", border:"#00D67F", onClick:()=>globalSoal && setSubmitSoal(globalSoal) };
@@ -526,7 +526,7 @@ export default function SiswaJadwalSoalPage() {
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2.5">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background: rp.gradient}}>
-                                  <span className="text-xs font-bold text-white">{idx+1}</span>
+                                  <span className="text-xs font-bold" style={{color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF"}}>{idx+1}</span>
                                 </div>
                                 <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                               </div>
@@ -539,7 +539,7 @@ export default function SiswaJadwalSoalPage() {
                                 <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                                   <div className="h-full rounded-full" style={{width:`${pct}%`, background: isDiterima?"#00D67F":isRevisi?"#C3F84A":rp.gradient}}/>
                                 </div>
-                                <span className="text-xs font-bold" style={{color: isDiterima?"#00D67F":isRevisi?"#C3F84A":rp.bar}}>{pct}%</span>
+                                <span className="text-xs font-bold" style={{color: isDiterima?"#00D67F":isRevisi?"#8A9E1F":rp.bar}}>{pct}%</span>
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 text-right">
@@ -646,19 +646,19 @@ export default function SiswaJadwalSoalPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background:"#C3F84A"}}>
-                <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
+                style={{background:"#C3F84A", color:"#1C2B33"}}>
+                <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#1C2B33]/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                      <AlertCircle size={18} className="text-white"/>
+                    <div className="w-10 h-10 rounded-xl bg-[#1C2B33]/15 flex items-center justify-center">
+                      <AlertCircle size={18} className="text-[#1C2B33]"/>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Perlu Revisi</p>
-                      <p className="text-base font-extrabold text-white leading-tight">{revisiModal.soal?.judul}</p>
+                      <p className="text-[10px] font-bold text-[#1C2B33]/70 uppercase tracking-widest">Perlu Revisi</p>
+                      <p className="text-base font-extrabold text-[#1C2B33] leading-tight">{revisiModal.soal?.judul}</p>
                     </div>
                   </div>
-                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30">
+                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-[#1C2B33]/15 flex items-center justify-center text-[#1C2B33] hover:bg-[#1C2B33]/25">
                     <X size={15}/>
                   </button>
                 </div>
@@ -693,8 +693,8 @@ export default function SiswaJadwalSoalPage() {
                   Tutup
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2"
-                  style={{background:"#C3F84A"}}>
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2"
+                  style={{background:"#C3F84A", color:"#1C2B33"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

@@ -256,19 +256,20 @@ function SubmitSoalModal({
       <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
         transition={{ type: "spring", damping: 24, stiffness: 320 }}
         className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna }}>
-          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-            {isPg ? <ListChecks size={18} className="text-white" /> : <PenLine size={18} className="text-white" />}
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#1C2B33" : "#FFFFFF" }}>
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#1C2B331A" : "#FFFFFF1A" }} />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
+            {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-base font-extrabold text-white">{tugas.judul}</h2>
-            <p className="flex items-center gap-1.5 text-xs text-white/70">
+            <h2 className="truncate text-base font-extrabold">{tugas.judul}</h2>
+            <p className="flex items-center gap-1.5 text-xs" style={{ opacity: 0.75 }}>
               <CalendarClock size={11} /> Deadline {formatTgl(tugas.deadline)} · {answeredCount}/{soalList.length} terjawab
             </p>
           </div>
           <button onClick={onClose}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
+            style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
             <X size={16} />
           </button>
         </div>
@@ -300,7 +301,7 @@ function SubmitSoalModal({
                               active ? "border-[#C3F84A] bg-[#F1F5F8] dark:bg-[#1C2B33]/20" : "border-slate-200 hover:border-[#F1F5F8] dark:border-slate-600"
                             }`}>
                             <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                              active ? "bg-[#C3F84A] text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                              active ? "bg-[#C3F84A] text-[#1C2B33]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>
                           </button>

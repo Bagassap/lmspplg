@@ -132,20 +132,21 @@ export function MateriTugasSiswaPage() {
             </button>
 
             <button type="button" onClick={() => setCategory("tugas")}
-              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
                 background: "#C3F84A",
+                color: "#1C2B33",
                 boxShadow: category === "tugas" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
                 outline: category === "tugas" ? "2px solid #C3F84A" : "none",
                 outlineOffset: "3px",
               }}>
-              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
                 <Send size={16} />
               </div>
               <div className="relative">
                 <p className="text-xl font-black leading-tight">Tugas</p>
-                <p className="mt-0.5 text-[11px] font-medium text-white/75">
+                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">
                   {tugasList.length} tugas · {perluDikerjakan > 0 ? `${perluDikerjakan} belum dikerjakan` : "semua sudah dikumpulkan"}
                 </p>
               </div>

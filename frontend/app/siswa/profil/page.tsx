@@ -279,13 +279,13 @@ function SectionCard({
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1C2B33]">
       <div
         className="flex items-center justify-between px-5 py-3.5"
-        style={{ background: gradient, borderBottom: "1px solid rgba(255,255,255,0.15)" }}
+        style={{ background: gradient, color: gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF", borderBottom: "1px solid rgba(255,255,255,0.15)" }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20">
-            <Icon size={14} className="text-white" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: gradient === "#C3F84A" ? "#1C2B331A" : "#FFFFFF33" }}>
+            <Icon size={14} />
           </div>
-          <span className="text-sm font-semibold text-white">{title}</span>
+          <span className="text-sm font-semibold">{title}</span>
         </div>
         {action}
       </div>
@@ -297,14 +297,15 @@ function SectionCard({
 function MiniStat({
   label, value, gradient, icon: Icon,
 }: { label: string; value: string; gradient: string; icon: React.ElementType }) {
+  const fg = gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF";
   return (
-    <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient }}>
-      <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full bg-white/10" />
+    <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient, color: fg }}>
+      <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
       <div className="relative flex items-center justify-center gap-1">
-        <Icon size={11} className="text-white/70" />
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-white/70">{label}</p>
+        <Icon size={11} style={{ color: `${fg}B3` }} />
+        <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: `${fg}B3` }}>{label}</p>
       </div>
-      <p className="relative mt-0.5 text-sm font-extrabold text-white leading-tight">{value}</p>
+      <p className="relative mt-0.5 text-sm font-extrabold leading-tight">{value}</p>
     </div>
   );
 }

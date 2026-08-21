@@ -37,21 +37,21 @@ export function SubmisiSayaModal({
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{ background: isDiterima ? "#00D67F" : isRevisi ? "#C3F84A" : "#0064E0" }}>
-              <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10" />
+              style={{ background: isDiterima ? "#00D67F" : isRevisi ? "#C3F84A" : "#0064E0", color: isRevisi ? "#1C2B33" : "#FFFFFF" }}>
+              <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full" style={{ backgroundColor: isRevisi ? "#1C2B3319" : "#FFFFFF1A" }} />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                    {isRevisi ? <AlertCircle size={18} className="text-white" /> : <CheckCircle size={18} className="text-white" />}
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: isRevisi ? "#1C2B3326" : "#FFFFFF33" }}>
+                    {isRevisi ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                    <p className="text-[10px] font-bold uppercase tracking-widest" style={{ opacity: 0.7 }}>
                       {isDiterima ? "Tugas Diterima ✓" : isRevisi ? "Perlu Revisi" : "Tugas Terkirim"}
                     </p>
-                    <p className="text-base font-extrabold text-white leading-tight">{judul ?? "Tugas"}</p>
+                    <p className="text-base font-extrabold leading-tight">{judul ?? "Tugas"}</p>
                   </div>
                 </div>
-                <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30">
+                <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:opacity-80" style={{ backgroundColor: isRevisi ? "#1C2B3326" : "#FFFFFF33" }}>
                   <X size={15} />
                 </button>
               </div>
@@ -115,8 +115,8 @@ export function SubmisiSayaModal({
               )}
               {isRevisi && (
                 <button onClick={onKirimUlang}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#C3F84A" }}>
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold"
+                  style={{ background: "#C3F84A", color: "#1C2B33" }}>
                   <Send size={13} /> Kirim Ulang Tugas
                 </button>
               )}
