@@ -16,12 +16,16 @@ import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
+// Kartu pengumuman berjejer (>1) — sengaja tidak memakai lime seperti
+// dashboard/absensi/PKL, karena lime dikhususkan sebagai warna sorot
+// pengumuman "disematkan" (lihat isPinned di bawah). Warna kategori
+// lainnya tetap dari palet: biru, biru terang, merah.
 const KATEGORI_GRADIENT: Record<string, string> = {
   Umum:     "#0082FB",
   Akademik: "#0064E0",
   Magang:   "#0082FB",
   Ujian:    "#EF4444",
-  Lainnya:  "#C3F84A",
+  Lainnya:  "#EF4444",
 };
 
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -167,7 +171,7 @@ function AccordionCard({
   onPin: () => void;
 }) {
   const gradient = p.isPinned
-    ? "#C3F84A"
+    ? "#EF4444"
     : (KATEGORI_GRADIENT[p.kategori] ?? KATEGORI_GRADIENT.Lainnya);
 
   function timeAgo(iso: string): string {
@@ -296,8 +300,8 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-[#F1F5F8] text-[#C3F84A] dark:bg-[#1C2B33]/20"
-                            : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#C3F84A] dark:hover:bg-[#1C2B33]/20"
+                            ? "bg-[#F1F5F8] text-[#EF4444] dark:bg-[#1C2B33]/20"
+                            : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#EF4444] dark:hover:bg-[#1C2B33]/20"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">

@@ -48,27 +48,28 @@ export const CARD_GRADIENTS = [
 export const CARD_ACCENT = ["#0082FB", "#EF4444", "#C3F84A", "#00D67F", "#0064E0", "#1C2B33"];
 
 // Rotasi warna yang sama dengan kartu "Akses Cepat" di dashboard admin/guru/
-// siswa — 4 warna berbeda dari palet (bukan gradasi satu hue).
+// siswa — 4 warna dari palet: biru, lime (utama), merah, biru terang.
 export const DASHBOARD_GRADIENTS = [
-  "#0082FB", // blue
-  "#00D67F", // green
-  "#C3F84A", // lime
-  "#0064E0", // navy
+  "#0064E0", // blue
+  "#C3F84A", // lime (utama)
+  "#EF4444", // red
+  "#0082FB", // biru terang
 ];
-export const DASHBOARD_ACCENT = ["#0082FB", "#00D67F", "#8A9E1F", "#0064E0"];
-export const DASHBOARD_PASTEL = ["#EAF3FF", "#E3FBF0", "#F4FFD9", "#DCEBFF"];
+export const DASHBOARD_ACCENT = ["#0064E0", "#8A9E1F", "#EF4444", "#0082FB"];
+export const DASHBOARD_PASTEL = ["#DCEBFF", "#F4FFD9", "#FEE9EA", "#EAF3FF"];
 
 // Teks/ikon di atas tiap WALLET_GRADIENTS — putih untuk warna gelap (biru/
-// navy/hijau), tinta gelap untuk lime yang terlalu terang buat teks putih.
-export const WALLET_ON_TEXT = ["#FFFFFF", "#FFFFFF", "#1C2B33", "#FFFFFF"];
+// merah/biru terang), tinta gelap untuk lime yang terlalu terang buat teks putih.
+export const WALLET_ON_TEXT = ["#FFFFFF", "#1C2B33", "#FFFFFF", "#FFFFFF"];
 
 // Wallet-card style palette for the "Kelas" row on the admin Absensi Harian
-// page — order/colors match DASHBOARD_GRADIENTS di atas, cycling by kelas index.
+// page — order/colors match DASHBOARD_GRADIENTS di atas: biru, lime (utama),
+// merah, biru terang — cycling by kelas index.
 export const WALLET_GRADIENTS = [
-  "#0082FB", // blue
-  "#00D67F", // green
-  "#C3F84A", // lime
-  "#0064E0", // navy
+  "#0064E0", // blue
+  "#C3F84A", // lime (utama)
+  "#EF4444", // red
+  "#0082FB", // biru terang
 ];
 
 // Subtle repeating wave-line texture drawn straight into each wallet card's

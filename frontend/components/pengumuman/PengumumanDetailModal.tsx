@@ -15,16 +15,18 @@ import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
+// Pengumuman sengaja tidak memakai lime (beda dari dashboard/absensi/PKL)
+// — lime diganti merah di sini, termasuk untuk badge prioritas & sematkan.
 const KATEGORI_WARNA: Record<string, string> = {
   Umum:     "#0064E0",
   Akademik: "#0082FB",
   Magang:   "#0082FB",
   Ujian:    "#EF4444",
-  Lainnya:  "#C3F84A",
+  Lainnya:  "#EF4444",
 };
 
 const PRIORITAS_BADGE: Record<string, { cls: string; label: string }> = {
-  PENTING:  { cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#C3F84A]",   label: "Penting"  },
+  PENTING:  { cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#EF4444]",   label: "Penting"  },
   MENDESAK: { cls: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",           label: "Mendesak" },
 };
 
@@ -247,7 +249,7 @@ export default function PengumumanDetailModal({
                         disabled={pinning}
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                         className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold text-white backdrop-blur-sm transition-colors ${
-                          pengumuman.isPinned ? "bg-[#C3F84A]/30 hover:bg-[#C3F84A]/40" : "bg-white/15 hover:bg-white/25"
+                          pengumuman.isPinned ? "bg-[#EF4444]/30 hover:bg-[#EF4444]/40" : "bg-white/15 hover:bg-white/25"
                         }`}
                       >
                         {pinning ? <Loader2 size={12} className="animate-spin" /> : <Pin size={12} />}

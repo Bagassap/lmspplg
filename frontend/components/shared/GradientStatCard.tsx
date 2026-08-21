@@ -7,12 +7,13 @@ type Tone = "blue" | "navy" | "green" | "lime" | "red" | "ink";
 
 // Hanya 5 warna utama palet (+ tinta netral #1C2B33) — tidak ada gradient,
 // tiap tone adalah warna solid tunggal. Saat dipakai berjejer (>1 kartu),
-// beda-bedakan tone tiap kartu supaya kelima warna terpakai bergantian.
+// rotasi standar dipakai: navy ("blue"), lime (utama), red, blue ("biru
+// terang") — lihat pemakaian di admin/magang/penempatan/page.tsx.
 const TONE_BG: Record<Tone, string> = {
-  blue: "bg-[#0082FB]",
-  navy: "bg-[#0064E0]",
+  blue: "bg-[#0082FB]",  // biru terang
+  navy: "bg-[#0064E0]",  // blue
   green: "bg-[#00D67F]",
-  lime: "bg-[#C3F84A]",
+  lime: "bg-[#C3F84A]",  // utama
   red: "bg-[#EF4444]",
   ink: "bg-[#1C2B33]",
 };

@@ -22,11 +22,12 @@ const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = 
   SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#00D67F" },
 };
 
+// Pengumuman tidak memakai lime — merah menggantikan slot lime di sini juga.
 const AVATAR_PALETTE = [
   "#0082FB",
   "#EF4444",
-  "#0082FB",
-  "#C3F84A",
+  "#0064E0",
+  "#EF4444",
   "#0082FB",
   "#00D67F",
 ];

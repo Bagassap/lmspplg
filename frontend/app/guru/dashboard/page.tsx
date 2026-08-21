@@ -149,7 +149,7 @@ export default function GuruDashboardPage() {
       label: "Absensi Harian",
       value: data.kehadiran.hadir,
       suffix: " hadir",
-      gradient: "#0082FB",
+      gradient: "#0064E0", // blue
       icon: ClipboardCheck,
     },
     {
@@ -157,7 +157,7 @@ export default function GuruDashboardPage() {
       label: "Siswa Diampu",
       value: data.siswaAmpu,
       suffix: " siswa",
-      gradient: "#0064E0",
+      gradient: "#C3F84A", // lime (utama)
       icon: Users,
     },
     {
@@ -165,7 +165,7 @@ export default function GuruDashboardPage() {
       label: "Kelas Wali",
       value: kelasWali.length,
       suffix: " kelas",
-      gradient: "#0082FB",
+      gradient: "#0082FB", // biru terang
       icon: GraduationCap,
     },
     {
@@ -173,7 +173,7 @@ export default function GuruDashboardPage() {
       label: "Pengumuman",
       value: data.pengumuman.length,
       suffix: " info",
-      gradient: "#1C2B33",
+      gradient: "#EF4444", // pengumuman tidak pakai lime — merah
       icon: Megaphone,
     },
   ] as const;
@@ -237,24 +237,27 @@ export default function GuruDashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {CARDS.map((card, i) => (
+        {CARDS.map((card, i) => {
+          const onDark = card.gradient !== "#C3F84A";
+          const fg = onDark ? "#FFFFFF" : "#1C2B33";
+          return (
           <motion.div key={card.label}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             whileHover={{ y: -4, scale: 1.01 }}
             transition={{ duration: 0.35, delay: 0.4 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link href={card.href}
-              className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5 text-white"
-              style={{ background: card.gradient, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+              className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5"
+              style={{ background: card.gradient, color: fg, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
             >
-              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-              <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
+              <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full" style={{ backgroundColor: `${fg}14` }} />
               <div className="relative flex items-start justify-between">
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-white/70">Akses Cepat</p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest" style={{ color: `${fg}B3` }}>Akses Cepat</p>
                   <p className="mt-0.5 text-sm font-bold">{card.label}</p>
                 </div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `${fg}33` }}>
                   <card.icon size={17} />
                 </div>
               </div>
@@ -263,17 +266,18 @@ export default function GuruDashboardPage() {
               </div>
               <div className="relative flex items-end justify-between">
                 <div>
-                  <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">TA</p>
+                  <p className="text-[9px] font-medium uppercase tracking-wider" style={{ color: `${fg}99` }}>TA</p>
                   <p className="text-[11px] font-semibold">2026/2027</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[9px] font-medium uppercase tracking-wider text-white/60">Guru</p>
+                  <p className="text-[9px] font-medium uppercase tracking-wider" style={{ color: `${fg}99` }}>Guru</p>
                   <p className="max-w-25 truncate text-[11px] font-semibold">{user.nama}</p>
                 </div>
               </div>
             </Link>
           </motion.div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-12 gap-4 md:gap-5">

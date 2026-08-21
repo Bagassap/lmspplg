@@ -191,8 +191,8 @@ export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
 
   const belumHadir = siswaList.filter((s) => !s.status || s.status === "ALPA");
   const belumPulang = siswaList.filter((s) => !s.waktuPulang);
-  const hadirIdx = 3;
-  const pulangIdx = 1;
+  const hadirIdx = 3; // biru terang
+  const pulangIdx = 2; // red — indeks 1 (lime) dihindari karena badge ikonnya teks putih tetap
 
   return (
     <>
