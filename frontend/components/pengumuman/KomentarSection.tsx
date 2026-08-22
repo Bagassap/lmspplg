@@ -123,7 +123,7 @@ function KomentarBubble({
             <div className="px-4 py-3 pt-3.5">
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
                 <span className="text-[13px] font-bold text-slate-900 dark:text-white">{k.author.nama}</span>
-                <span className={`rounded-full px-2 py-0.5 text-[9px] font-extrabold tracking-wide ${badge.cls}`}>
+                <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold tracking-wide ${badge.cls}`}>
                   {badge.label}
                 </span>
                 <span className="text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(k.createdAt)}</span>

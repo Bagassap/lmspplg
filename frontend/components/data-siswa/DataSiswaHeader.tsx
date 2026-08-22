@@ -27,7 +27,7 @@ export function DataSiswaHeader({
           <div>
             <div className="mb-1 flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Data Siswa</span>
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
+              <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
             </div>
             <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">{title}</h1>
             <p className="mt-0.5 text-sm text-white/70">{subtitle}</p>
@@ -36,7 +36,7 @@ export function DataSiswaHeader({
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex flex-wrap items-center gap-2">
             {stats.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+              <div key={label} className="flex items-center gap-2 rounded-lg bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
                 <Icon size={12} className="text-white/70" />
                 {label}
               </div>

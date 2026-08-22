@@ -113,7 +113,7 @@ export function MateriListPage({
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Manajemen Materi</span>
-                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
+                  <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">{roleBadge}</span>
                 </div>
                 <h1 className="text-2xl font-extrabold leading-tight text-white">Materi Pembelajaran</h1>
                 <p className="mt-0.5 text-sm text-white/70">Kelola modul pembelajaran per mata pelajaran</p>
@@ -152,7 +152,7 @@ export function MateriListPage({
                 <BookOpen size={14} className="text-white" />
               </div>
               <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-              <span className="ml-1 rounded-full bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
+              <span className="ml-1 rounded-lg bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
             </div>
             {canCreate && (
               <button onClick={() => { setEditItem(null); setModalOpen(true); }}
@@ -229,7 +229,7 @@ export function MateriListPage({
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3.5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                           <GraduationCap size={10} /> {m.mapel}
                         </span>
                       </td>
@@ -237,7 +237,7 @@ export function MateriListPage({
                         {m.kelasList.length ? (
                           <div className="flex flex-wrap gap-1">
                             {m.kelasList.map((k) => (
-                              <span key={k.id} className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                              <span key={k.id} className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                                 {k.nama}
                               </span>
                             ))}

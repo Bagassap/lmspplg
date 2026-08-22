@@ -252,7 +252,7 @@ export default function SiswaJadwalSoalPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Siswa</span>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Siswa</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
                   <p className="text-sm text-white/70 mt-0.5">Lihat jadwal, download soal, dan kirim project</p>
@@ -294,7 +294,7 @@ export default function SiswaJadwalSoalPage() {
                         <CalendarDays size={22} className="text-white"/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Jadwal UKK</span>
+                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Jadwal UKK</span>
                         <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
@@ -342,7 +342,7 @@ export default function SiswaJadwalSoalPage() {
                         <FileText size={22} className="text-white"/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Soal UKK</span>
+                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Soal UKK</span>
                         <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
@@ -466,19 +466,19 @@ export default function SiswaJadwalSoalPage() {
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="all"?"border-slate-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="all"?{color:"#64748B"}:{}}>
                     Semua
-                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#64748B"}}>{tahapanList.length}</span>}
+                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#64748B"}}>{tahapanList.length}</span>}
                   </button>
                   <button onClick={()=>setTab("active")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="active"?"border-blue-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="active"?{color:"#0082FB"}:{}}>
                     Active Task
-                    {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
+                    {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
                   </button>
                   <button onClick={()=>setTab("completed")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed"?"border-emerald-500":"text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="completed"?{color:"#00D67F"}:{}}>
                     Completed
-                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
+                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
                   </button>
                 </div>
               </div>
@@ -544,7 +544,7 @@ export default function SiswaJadwalSoalPage() {
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 text-right">
                               <button onClick={btn.onClick}
-                                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"
+                                className="inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"
                                 style={{borderColor:btn.border, color:btn.clr, backgroundColor:btn.bg}}>
                                 {btn.icon}{btn.label}
                               </button>
@@ -605,7 +605,7 @@ export default function SiswaJadwalSoalPage() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
                     <span className="text-xs text-slate-500">Status</span>
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg"
                       style={{backgroundColor: detailTarget.status==="DITERIMA"?"#E3FBF0":"#EAF3FF",
                               color: detailTarget.status==="DITERIMA"?"#00D67F":"#0082FB"}}>
                       {detailTarget.status==="DITERIMA" ? "Diterima" : "Menunggu Review"}

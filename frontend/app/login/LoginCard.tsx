@@ -115,7 +115,7 @@ export function LoginCard() {
             </p>
 
             <div className="mt-5 hidden sm:flex sm:justify-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/[0.07] px-3.5 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/75">
+              <span className="inline-flex items-center gap-2 rounded-lg border border-white/18 bg-white/[0.07] px-3.5 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/75">
                 <span className="h-1 w-1 shrink-0 rounded-full bg-[#0082FB]/70" />
                 SMK Ma&apos;arif NU 01 Limpung
               </span>

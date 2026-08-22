@@ -73,14 +73,14 @@ export function SiswaTableRow({
           <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
         ) : sudahGanti ? (
           <span
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
+            className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium"
             style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}
           >
             <CheckCircle2 size={12} />
             Sudah Ganti
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
             <XCircle size={12} />
             Masih NIS
           </span>

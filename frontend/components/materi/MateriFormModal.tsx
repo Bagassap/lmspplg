@@ -188,7 +188,7 @@ export function MateriFormModal({
                         type="button"
                         onClick={() => toggleKelas(k.id)}
                         className={
-                          "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors " +
+                          "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " +
                           (active
                             ? "border-[#0082FB] bg-[#0082FB] text-white"
                             : "border-gray-200 bg-white text-gray-600 hover:border-[#0082FB]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")

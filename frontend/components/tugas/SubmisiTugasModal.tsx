@@ -77,10 +77,10 @@ export function SubmisiTugasModal({
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold text-white">
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/20 text-xs font-semibold text-white">
                     {tugas.mapel}
                   </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold text-white">
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/20 text-xs font-semibold text-white">
                     Kelas: {tugas.kelas?.nama ?? "Semua Kelas"}
                   </span>
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
@@ -141,7 +141,7 @@ export function SubmisiTugasModal({
                           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
                           {s.kelas && <p className="text-xs text-slate-400">{s.kelas.nama}</p>}
                         </div>
-                        <span className="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
+                        <span className="shrink-0 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
                           Belum Kumpul
                         </span>
                       </div>
@@ -167,23 +167,23 @@ export function SubmisiTugasModal({
                         <p className="text-xs text-slate-400 truncate">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
                       </div>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
-                        <span className="shrink-0 rounded-full bg-[#F1F5F8] px-2.5 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                        <span className="shrink-0 rounded-lg bg-[#F1F5F8] px-2.5 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
                           Nilai {s.nilai}
                         </span>
                       )}
                       {isLockdown && !!s.jumlahPercobaan && (
-                        <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                        <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
                           s.terkunci ? "bg-red-50 text-red-500 dark:bg-red-900/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
                         }`}>
                           Percobaan {s.jumlahPercobaan}/{MAKSIMAL_PERCOBAAN}
                         </span>
                       )}
                       {s.dipaksaKeluar && (
-                        <span className="flex shrink-0 items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
+                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
                           <ShieldAlert size={11} /> Dipaksa Keluar
                         </span>
                       )}
-                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
                         {isDone ? "✓ Diterima" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
                       </span>
                       {isLockdown && !!s.jumlahPercobaan && onResetPercobaan && (

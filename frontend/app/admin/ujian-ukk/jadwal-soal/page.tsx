@@ -616,7 +616,7 @@ export default function AdminJadwalSoalPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Admin</span>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Admin</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
                   <p className="text-xs sm:text-sm text-white/70 mt-0.5 hidden sm:block">Kelola jadwal, soal, dan pantau pengumpulan siswa</p>
@@ -661,7 +661,7 @@ export default function AdminJadwalSoalPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Jadwal UKK</span>
+                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Jadwal UKK</span>
                         {allSoal.length > 1 && <span className="text-[10px] text-white/60">{soalJadwalIdx+1} / {allSoal.length}</span>}
                       </div>
                       <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
@@ -741,7 +741,7 @@ export default function AdminJadwalSoalPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Soal UKK</span>
+                              <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Soal UKK</span>
                               {allSoal.length > 1 && <span className="text-[10px] text-white/60">{soalSoalIdx+1} / {allSoal.length}</span>}
                             </div>
                             <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
@@ -860,13 +860,13 @@ export default function AdminJadwalSoalPage() {
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="active" ? "border-blue-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
                   style={tab==="active"?{color:"#0082FB"}:{}}>
                   Active Task
-                  {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
+                  {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
                 </button>
                 <button onClick={() => setTab("completed")}
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-emerald-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
                   style={tab==="completed"?{color:"#00D67F"}:{}}>
                   Completed
-                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
+                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
                 </button>
               </div>
             </div>
@@ -920,12 +920,12 @@ export default function AdminJadwalSoalPage() {
                           <td className="whitespace-nowrap px-4 py-3">
                             <div className="flex items-center justify-end gap-1">
                               <button onClick={() => setSubmisiModalTahapan(t)}
-                                className="flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-all"
+                                className="flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                 style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
                                 <BookOpen size={11}/>
                                 Lihat
                                 {sudahKumpul > 0 && (
-                                  <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white" style={{backgroundColor:rp.bar}}>{sudahKumpul}</span>
+                                  <span className="rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-white" style={{backgroundColor:rp.bar}}>{sudahKumpul}</span>
                                 )}
                               </button>
                               <button onClick={() => { setEditTarget(t); setOpenTahapan(true); }}
@@ -985,11 +985,11 @@ export default function AdminJadwalSoalPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold text-white">
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
                       <MapPin size={10}/>{sm.lokasi}
                     </span>
                     {sm.penguji && (
-                      <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold text-white">
+                      <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
                         <User size={10}/>{sm.penguji}
                       </span>
                     )}
@@ -1037,7 +1037,7 @@ export default function AdminJadwalSoalPage() {
                           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
                           <p className="text-xs text-slate-400 truncate">{s.soal?.judul ?? "—"} · {formatTgl(s.submittedAt)}</p>
                         </div>
-                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0"
+                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0"
                           style={{backgroundColor: sc.bg, color: sc.text}}>
                           {isDone ? "✓ UKK Selesai" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
                         </span>

@@ -109,7 +109,7 @@ export default function GuruJadwalSoalPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Guru</span>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Guru</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal &amp; Soal UKK</h1>
                   <p className="text-sm text-white/70 mt-0.5">Lihat jadwal, soal, dan pantau pengumpulan siswa</p>
@@ -150,7 +150,7 @@ export default function GuruJadwalSoalPage() {
                         <CalendarDays size={22} className="text-white"/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Jadwal UKK</span>
+                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Jadwal UKK</span>
                         <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
@@ -206,7 +206,7 @@ export default function GuruJadwalSoalPage() {
                         <FileText size={22} className="text-white"/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Soal UKK</span>
+                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Soal UKK</span>
                         <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
@@ -300,19 +300,19 @@ export default function GuruJadwalSoalPage() {
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="all" ? "border-slate-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="all"?{color:"#64748B"}:{}}>
                     Semua
-                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#64748B"}}>{tahapanList.length}</span>}
+                    {tab==="all" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#64748B"}}>{tahapanList.length}</span>}
                   </button>
                   <button onClick={()=>setTab("active")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="active" ? "border-blue-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="active"?{color:"#0082FB"}:{}}>
                     Aktif
-                    {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
+                    {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#0082FB"}}>{active.length}</span>}
                   </button>
                   <button onClick={()=>setTab("completed")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-emerald-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
                     style={tab==="completed"?{color:"#00D67F"}:{}}>
                     Selesai
-                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
+                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#00D67F"}}>{completed.length}</span>}
                   </button>
                 </div>
               </div>
@@ -368,12 +368,12 @@ export default function GuruJadwalSoalPage() {
                               </td>
                               <td className="whitespace-nowrap px-4 py-3 text-right">
                                 <button onClick={()=>toggleExpand(t.id)}
-                                  className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-all"
+                                  className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                   style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
                                   <BookOpen size={11}/>
                                   Lihat
                                   {sudahKumpul > 0 && (
-                                    <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white" style={{backgroundColor:rp.bar}}>{sudahKumpul}</span>
+                                    <span className="rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-white" style={{backgroundColor:rp.bar}}>{sudahKumpul}</span>
                                   )}
                                 </button>
                               </td>
@@ -408,7 +408,7 @@ export default function GuruJadwalSoalPage() {
                                               </p>
                                               <p className="text-[10px] text-slate-400">{s.fileName}</p>
                                             </div>
-                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0"
                                               style={{color:cfg.color, backgroundColor:cfg.bg}}>{cfg.label}</span>
                                             <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
                                               target="_blank" rel="noopener noreferrer"

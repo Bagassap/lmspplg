@@ -67,11 +67,11 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       {cfg ? (
-                        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                        <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                           <cfg.icon size={10} /> {cfg.label}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
                           Belum Ada
                         </span>
                       )}

@@ -85,7 +85,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-sm font-extrabold leading-tight text-white">{siswa.nama}</h2>
                 <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                  <span className="rounded-full px-2 py-0.5 text-[9px] font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
+                  <span className="rounded-lg px-2 py-0.5 text-[9px] font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
                     {theme.label}
                   </span>
                   <span className="text-[10px] text-white/70">{kelas} · {formatTgl(tanggal)}</span>
@@ -116,10 +116,10 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                 </div>
               </div>
               <h2 className="mt-4 text-sm font-extrabold leading-tight text-white">{siswa.nama}</h2>
-              <div className="mt-2 rounded-full px-3 py-1 text-xs font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
+              <div className="mt-2 rounded-lg px-3 py-1 text-xs font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
                 {theme.label}
               </div>
-              <div className="mt-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-white/80" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <div className="mt-1 rounded-lg px-2.5 py-0.5 text-[10px] font-semibold text-white/80" style={{ background: "rgba(255,255,255,0.12)" }}>
                 {kelas}
               </div>
               <div className="my-4 h-px w-full bg-white/20" />

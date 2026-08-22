@@ -64,7 +64,7 @@ export default function SiswaMagangPenempatanPage() {
                 {aktif.tempatMagang.bidangUsaha && <p className="text-[11px] text-slate-400">{aktif.tempatMagang.bidangUsaha}</p>}
               </div>
             </div>
-            <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[aktif.status].bg, color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>
+            <span className="shrink-0 rounded-lg px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[aktif.status].bg, color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>
               {STATUS_PENEMPATAN_CFG[aktif.status].label}
             </span>
           </div>
@@ -118,7 +118,7 @@ export default function SiswaMagangPenempatanPage() {
                   <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
                   <p className="text-[11px] text-slate-400">{fmt(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmt(p.tanggalSelesai)}` : ""}</p>
                 </div>
-                <span className="rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
+                <span className="rounded-lg px-2.5 py-1 text-[10px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   {STATUS_PENEMPATAN_CFG[p.status].label}
                 </span>
               </div>

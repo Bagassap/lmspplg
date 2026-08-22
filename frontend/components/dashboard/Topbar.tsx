@@ -301,7 +301,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 md:flex"
+            className="hidden items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 md:flex"
           >
             <Search size={14} className="shrink-0 text-slate-500 dark:text-slate-400" />
             <span className="w-32 text-sm text-slate-500 dark:text-slate-400">Cari sesuatu...</span>
@@ -374,7 +374,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllRead}
-                        className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary hover:bg-primary/20"
+                        className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary hover:bg-primary/20"
                       >
                         <CheckCheck size={10} />
                         Tandai semua
@@ -437,7 +437,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
-              className="flex items-center gap-2 rounded-full bg-slate-100 py-1.5 pl-1.5 pr-3 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
+              className="flex items-center gap-2 rounded-xl bg-slate-100 py-1.5 pl-1.5 pr-3 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
             >
               <Avatar
                 src={user.fotoProfil}

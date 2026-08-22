@@ -174,7 +174,7 @@ export default function ManajemenPasswordClient() {
             <div>
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Manajemen Password</span>
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Superadmin</span>
+                <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Superadmin</span>
               </div>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Manajemen Password</h1>
               <p className="mt-0.5 text-sm text-white/70">Kelola status password & permintaan reset</p>

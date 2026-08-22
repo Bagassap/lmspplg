@@ -137,7 +137,7 @@ export function FilterBar({
                 <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
                   <BookOpen size={12} />
                   {opt.label}
-                  <span className={`rounded-full px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                  <span className={`rounded-lg px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                     {jurusanCount(opt.value)}
                   </span>
                 </span>
@@ -156,20 +156,20 @@ export function FilterBar({
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onFilterGender(opt.value)}
-                className="relative rounded-full px-3.5 py-1.5 text-xs font-semibold"
+                className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
               >
                 {active && (
                   <motion.span
                     layoutId="gender-pill-active"
                     transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                    className="absolute inset-0 rounded-full shadow-sm"
+                    className="absolute inset-0 rounded-md shadow-sm"
                     style={{ backgroundColor: REF_SUCCESS }}
                   />
                 )}
                 <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
                   <OptIcon size={12} />
                   {opt.label}
-                  <span className={`rounded-full px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                  <span className={`rounded-lg px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                     {genderCount(opt.value)}
                   </span>
                 </span>
@@ -211,19 +211,19 @@ export function FilterBar({
             Filter aktif:
           </span>
           {search && (
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <Search size={12} /> &ldquo;{search}&rdquo;
               <button type="button" onClick={() => onSearch("")}><X size={12} /></button>
             </span>
           )}
           {filterJurusan && (
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <BookOpen size={12} /> {JURUSAN_PILLS.find((j) => j.value === filterJurusan)?.label ?? filterJurusan}
               <button type="button" onClick={() => onFilterJurusan("")}><X size={12} /></button>
             </span>
           )}
           {filterGender && (
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_SUCCESS}1a`, color: REF_SUCCESS }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_SUCCESS}1a`, color: REF_SUCCESS }}>
               {filterGender === "Laki-laki" ? <Mars size={12} /> : <Venus size={12} />} {filterGender}
               <button type="button" onClick={() => onFilterGender("")}><X size={12} /></button>
             </span>

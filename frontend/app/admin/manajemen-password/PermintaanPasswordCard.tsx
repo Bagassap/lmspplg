@@ -181,7 +181,7 @@ export function PermintaanPasswordCard({
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <p className="text-sm font-semibold text-slate-800 dark:text-white">{r.namaPengaju}</p>
-                              <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-500 dark:bg-slate-600 dark:text-slate-300">{r.loginIdDiajukan}</span>
+                              <span className="rounded-lg bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-500 dark:bg-slate-600 dark:text-slate-300">{r.loginIdDiajukan}</span>
                             </div>
                             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
                               Diajukan {formatWaktu(r.createdAt)}

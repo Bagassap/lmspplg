@@ -98,7 +98,7 @@ export function MateriTugasSiswaPage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white/90">Siswa</span>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Siswa</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
               <p className="text-xs sm:text-sm text-white/70 mt-0.5 hidden sm:block">Unduh materi, praktikkan kode, dan kumpulkan tugas</p>

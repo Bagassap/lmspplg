@@ -91,7 +91,7 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.15 }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 backdrop-blur-sm"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1 backdrop-blur-sm"
             >
               <Lock size={10} className="text-white/90" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-white/90">Belum Aktif</span>

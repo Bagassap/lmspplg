@@ -210,11 +210,11 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
                           ) : <span className="text-slate-300 dark:text-slate-600">Belum ada catatan</span>}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-center">
-                          <span className="inline-flex items-center justify-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
+                          <span className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-center">
                           {s.totalPoin > 0 ? (
-                            <span className="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
+                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
                           ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-right">
@@ -489,7 +489,7 @@ function CatatanDetailModal({
                   <div className="mb-1.5 flex items-start justify-between gap-2">
                     <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                     {c.poin != null && (
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
+                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
                     )}
                   </div>
                   <p className="whitespace-pre-wrap text-xs leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>

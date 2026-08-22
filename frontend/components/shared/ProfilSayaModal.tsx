@@ -94,7 +94,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className="min-w-0">
                   <h2 className="truncate text-lg font-extrabold leading-tight text-white">{me.nama}</h2>
-                  <span className="mt-1 inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+                  <span className="mt-1 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                     {ROLE_LABEL[me.role] ?? me.role}
                   </span>
                 </div>

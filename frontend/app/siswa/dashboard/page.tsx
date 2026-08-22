@@ -217,7 +217,7 @@ export default function SiswaDashboardPage() {
             action={
               <div className="flex items-center gap-2">
                 {data.pengumuman.length > 0 &&
-                  <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold"
                     style={{ background: `${P}18`, color: P }}>{data.pengumuman.length}</span>
                 }
                 <ViewAll href="/siswa/pengumuman" />
@@ -249,7 +249,7 @@ export default function SiswaDashboardPage() {
                         <span>{p.author.nama} · {timeAgo(p.createdAt)}</span>
                       </div>
                     </div>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold"
+                    <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"
                       style={{ background: `${kColor(p.kategori)}18`, color: kColor(p.kategori) }}>{p.kategori}</span>
                   </motion.li>
                 ))}

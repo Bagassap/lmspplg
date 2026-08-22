@@ -172,7 +172,7 @@ function DetailModal({
                         </p>
                       )}
                     </div>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: headerBg, color: iconColor }}>
+                    <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: headerBg, color: iconColor }}>
                       {s.nis ?? "—"}
                     </span>
                   </div>

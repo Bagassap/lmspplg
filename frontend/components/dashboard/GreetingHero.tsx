@@ -91,11 +91,11 @@ export default function GreetingHero({
                 {text},{" "}
                 <span className="text-white/90">{firstName}!</span>
               </h1>
-              <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${badge.cls}`}>
+              <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${badge.cls}`}>
                 {badge.label}
               </span>
               {kelas && (
-                <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-semibold text-white/80">
+                <span className="rounded-lg bg-white/15 px-2.5 py-0.5 text-[10px] font-semibold text-white/80">
                   {kelas}
                 </span>
               )}

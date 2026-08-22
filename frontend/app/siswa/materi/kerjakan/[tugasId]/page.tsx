@@ -342,11 +342,11 @@ export default function KerjakanTugasPage() {
           </p>
         )}
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+          <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             Percobaan ke-{percobaanKe} dari {MAKSIMAL_PERCOBAAN}
           </span>
           {tugas.durasiMenit ? (
-            <span className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+            <span className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
               <Timer size={11} /> {tugas.durasiMenit} menit
             </span>
           ) : null}
@@ -388,7 +388,7 @@ export default function KerjakanTugasPage() {
           </p>
         </div>
         {sisaMs != null && (
-          <span className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-black tabular-nums ${habisSebentarLagi ? "animate-pulse" : ""}`}
+          <span className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-black tabular-nums ${habisSebentarLagi ? "animate-pulse" : ""}`}
             style={{ backgroundColor: habisSebentarLagi ? "#EF4444" : (isPg ? "#1C2B3326" : "#FFFFFF26"), color: habisSebentarLagi ? "#FFFFFF" : textOnWarna }}>
             <Timer size={12} /> {formatSisaWaktu(sisaMs)}
           </span>

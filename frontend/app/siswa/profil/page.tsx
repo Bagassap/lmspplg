@@ -375,7 +375,7 @@ export default function SiswaProfilPage() {
             <div className="min-w-0">
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
+                <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
               </div>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Profil Saya</h1>
               <p className="mt-0.5 text-sm text-white/70">Informasi data diri kamu</p>
@@ -393,7 +393,7 @@ export default function SiswaProfilPage() {
       >
         <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1C2B33]">
           <div className="relative h-24" style={{ background: kelasGrad }}>
-            <span className="absolute right-3 top-3 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+            <span className="absolute right-3 top-3 rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
               {kelasShort(profil.kelas.nama)}
             </span>
           </div>
@@ -421,7 +421,7 @@ export default function SiswaProfilPage() {
             </div>
 
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
-            <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-blue-600/10 px-3.5 py-1.5 dark:bg-blue-400/15">
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-blue-600/10 px-3.5 py-1.5 dark:bg-blue-400/15">
               <IdCard size={14} className="text-blue-600 dark:text-blue-300" />
               <span className="font-mono text-sm font-extrabold tracking-wide text-blue-600 dark:text-blue-300">
                 NIS {profil.nis}
@@ -435,7 +435,7 @@ export default function SiswaProfilPage() {
             )}
 
             {profil.jenisKelamin && (
-              <span className={`mt-3 rounded-full px-3.5 py-1.5 text-[11px] font-bold ${
+              <span className={`mt-3 rounded-lg px-3.5 py-1.5 text-[11px] font-bold ${
                 isP
                   ? "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"
                   : "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"

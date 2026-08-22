@@ -64,11 +64,11 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false }: {
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       {r.sudahLapor ? (
-                        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "#E3FBF0", color: "#00D67F" }}>
+                        <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "#E3FBF0", color: "#00D67F" }}>
                           <CheckCircle2 size={10} /> Sudah Lapor
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-500 dark:bg-red-900/20">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-500 dark:bg-red-900/20">
                           <XCircle size={10} /> Belum Lapor
                         </span>
                       )}

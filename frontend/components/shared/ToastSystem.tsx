@@ -261,7 +261,7 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28 }}
-            className="mt-5 rounded-full px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
+            className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
               background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
               color: isDark ? theme.dotColor : theme.dotColor,
@@ -432,7 +432,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28 }}
-            className="mt-5 rounded-full px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
+            className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
               background: isDark ? "rgba(255,255,255,0.08)" : "rgba(239,68,68,0.10)",
               color: "#EF4444",

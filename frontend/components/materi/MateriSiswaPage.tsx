@@ -107,7 +107,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
               <BookOpen size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-            <span className="ml-1 rounded-full bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
+            <span className="ml-1 rounded-lg bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -159,7 +159,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3.5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                           <GraduationCap size={10} /> {m.mapel}
                         </span>
                       </td>

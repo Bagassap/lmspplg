@@ -58,13 +58,13 @@ export function TugasListCardSiswa({
             className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "active" ? "border-blue-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
             style={tab === "active" ? { color: "#0082FB" } : {}}>
             Aktif
-            {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{ backgroundColor: "#0082FB" }}>{active.length}</span>}
+            {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#0082FB" }}>{active.length}</span>}
           </button>
           <button onClick={() => setTab("completed")}
             className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-emerald-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
             style={tab === "completed" ? { color: "#00D67F" } : {}}>
             Selesai
-            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full text-white font-bold" style={{ backgroundColor: "#00D67F" }}>{completed.length}</span>}
+            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#00D67F" }}>{completed.length}</span>}
           </button>
         </div>
       </div>
@@ -122,11 +122,11 @@ export function TugasListCardSiswa({
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="flex items-center gap-1.5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                           <GraduationCap size={10} /> {t.mapel}
                         </span>
                         {TIPE_BADGE[t.tipe] && (
-                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold ${TIPE_BADGE[t.tipe].cls}`}>
+                          <span className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold ${TIPE_BADGE[t.tipe].cls}`}>
                             {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={10} />; })()} {tipeLabel(t.tipe)}
                           </span>
                         )}
@@ -138,12 +138,12 @@ export function TugasListCardSiswa({
                     <td className="px-4 py-3 text-right">
                       <div className="flex flex-wrap items-center justify-end gap-1.5">
                         {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && mySubmisi?.nilai !== null && mySubmisi?.nilai !== undefined && (
-                          <span className="inline-flex items-center rounded-full bg-[#F1F5F8] px-2 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                          <span className="inline-flex items-center rounded-lg bg-[#F1F5F8] px-2 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
                             Nilai {mySubmisi.nilai}
                           </span>
                         )}
                         {isLockdown && !!mySubmisi?.jumlahPercobaan && !isDiterima && (
-                          <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                          <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-400">
                             Percobaan {mySubmisi.jumlahPercobaan}/{MAKSIMAL_PERCOBAAN}
                           </span>
                         )}
@@ -154,7 +154,7 @@ export function TugasListCardSiswa({
                           </a>
                         )}
                         <button onClick={btn.onClick} disabled={"disabled" in btn && btn.disabled}
-                          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+                          className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
                           style={{ borderColor: btn.border, color: btn.clr, backgroundColor: btn.bg }}>
                           {btn.icon}{btn.label}
                         </button>

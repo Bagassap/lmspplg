@@ -85,7 +85,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               <div className="min-w-0">
                 <h2 className="break-words text-[19px] font-extrabold leading-tight text-white">{displayNama}</h2>
                 <p className="mt-1 font-mono text-xs text-white/70">NIS: {siswa.nis}</p>
-                <span className="mt-2 inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+                <span className="mt-2 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                   {kelasShort(siswa.kelas.nama)}
                 </span>
               </div>

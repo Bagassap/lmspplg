@@ -37,7 +37,7 @@ export default function GuruMagangPenempatanPage() {
           <div>
             <div className="mb-1 flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
+              <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
             </div>
             <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Siswa Bimbingan PKL</h1>
             <p className="mt-0.5 text-sm text-white/70">
@@ -73,7 +73,7 @@ export default function GuruMagangPenempatanPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{nama}</p>
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                         {cfg.label}
                       </span>
                     </div>

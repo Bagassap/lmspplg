@@ -236,7 +236,7 @@ export function Splash() {
 
         <motion.div variants={fadeUp} className="mt-5">
           <span
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 text-[9.5px] font-medium uppercase tracking-widest text-white/72"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-1.5 text-[9.5px] font-medium uppercase tracking-widest text-white/72"
             style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}
           >
             <span

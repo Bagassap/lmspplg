@@ -197,15 +197,15 @@ export default function PengumumanDetailModal({
 
                   <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
                     {pengumuman.isPinned && (
-                      <span className="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
+                      <span className="flex items-center gap-1 rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
                         <Pin size={9} />Disematkan
                       </span>
                     )}
-                    <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
+                    <span className="rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
                       {pengumuman.kategori}
                     </span>
                     {pb && (
-                      <span className={`flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white ${pengumuman.prioritas === "MENDESAK" ? "animate-pulse" : ""}`}>
+                      <span className={`flex items-center gap-1 rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white ${pengumuman.prioritas === "MENDESAK" ? "animate-pulse" : ""}`}>
                         <AlertCircle size={9} />{pb.label}
                       </span>
                     )}
@@ -225,7 +225,7 @@ export default function PengumumanDetailModal({
                         textClassName="text-[8px] font-bold"
                       />
                       <span className="font-semibold text-white/85">{pengumuman.author.nama}</span>
-                      <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[8px] font-bold text-white">
+                      <span className="rounded-lg bg-white/15 px-1.5 py-0.5 text-[8px] font-bold text-white">
                         {pengumuman.author.role === "ADMIN" ? "Admin" : "Guru"}
                       </span>
                     </div>

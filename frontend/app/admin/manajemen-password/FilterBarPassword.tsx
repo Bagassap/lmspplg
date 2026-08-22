@@ -110,11 +110,11 @@ export function FilterBarPassword({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {wali.mustChangePassword ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-[10px] font-semibold text-white">
+              <span className="inline-flex items-center gap-1 rounded-lg bg-red-500 px-2.5 py-1 text-[10px] font-semibold text-white">
                 Belum Ganti
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+              <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-semibold" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
                 Sudah Ganti
               </span>
             )}
@@ -137,20 +137,20 @@ export function FilterBarPassword({
               type="button"
               whileTap={{ scale: 0.95 }}
               onClick={() => onStatusFilter(opt.value)}
-              className="relative rounded-full px-3.5 py-1.5 text-xs font-semibold"
+              className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
             >
               {active && (
                 <motion.span
                   layoutId="password-status-pill-active"
                   transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                  className="absolute inset-0 rounded-full shadow-sm"
+                  className="absolute inset-0 rounded-md shadow-sm"
                   style={{ backgroundColor: REF_SUCCESS }}
                 />
               )}
               <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
                 <Icon size={12} />
                 {opt.label}
-                <span className={`rounded-full px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                <span className={`rounded-lg px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                   {opt.count}
                 </span>
               </span>

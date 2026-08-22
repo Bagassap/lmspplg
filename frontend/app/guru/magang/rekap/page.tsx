@@ -41,7 +41,7 @@ export default function GuruMagangRekapPage() {
             <div>
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
+                <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
               </div>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap &amp; Laporan PKL</h1>
               <p className="mt-0.5 text-sm text-white/70">Pantau lapor diri bulanan dan review laporan akhir siswa bimbingan</p>
