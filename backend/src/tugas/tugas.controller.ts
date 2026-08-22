@@ -10,6 +10,7 @@ import { TugasService } from './tugas.service';
 import { CreateTugasDto } from './dto/create-tugas.dto';
 import { UpdateTugasDto } from './dto/update-tugas.dto';
 import { SubmitTugasDto } from './dto/submit-tugas.dto';
+import { SubmitPercobaanDto } from './dto/percobaan-tugas.dto';
 import { UpdateNilaiSubmisiDto } from './dto/update-nilai-submisi.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -79,6 +80,39 @@ export class TugasController {
   @Put('submisi/:id/nilai')
   updateNilai(@Param('id') id: string, @Body() dto: UpdateNilaiSubmisiDto) {
     return this.service.updateNilaiSubmisi(id, dto.nilai);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Put('submisi/:id/reset-percobaan')
+  resetPercobaan(@Param('id') id: string, @Request() req: any) {
+    return this.service.resetPercobaan(id, { id: req.user.id, role: req.user.role });
+  }
+
+  // Membuka lembar pengerjaan lockdown — mengonsumsi 1 percobaan.
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post(':id/mulai-percobaan')
+  mulaiPercobaan(@Param('id') id: string, @Request() req: any) {
+    return this.service.mulaiPercobaan(req.user.id, id);
+  }
+
+  // Submit normal (klik "Selesai") dari lembar pengerjaan.
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post(':id/submit-percobaan')
+  submitPercobaan(@Param('id') id: string, @Body() dto: SubmitPercobaanDto, @Request() req: any) {
+    return this.service.submitPercobaan(req.user.id, id, { ...dto, dipaksa: false });
+  }
+
+  // Submit paksa — dipanggil otomatis oleh frontend (sendBeacon/fetch
+  // keepalive) begitu terdeteksi siswa meninggalkan halaman lembar
+  // pengerjaan. Selalu dipaksa=true terlepas dari body yang dikirim klien.
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post(':id/paksa-keluar')
+  paksaKeluar(@Param('id') id: string, @Body() dto: SubmitPercobaanDto, @Request() req: any) {
+    return this.service.submitPercobaan(req.user.id, id, { ...dto, dipaksa: true });
   }
 
   @Get()

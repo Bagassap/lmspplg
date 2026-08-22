@@ -5,6 +5,7 @@ import { NotificationType } from '../../generated/prisma/client';
 import { CreateTugasDto } from './dto/create-tugas.dto';
 import { UpdateTugasDto } from './dto/update-tugas.dto';
 import { SubmitTugasDto } from './dto/submit-tugas.dto';
+import { SubmitPercobaanDto } from './dto/percobaan-tugas.dto';
 
 type Actor = { id: string; role: string };
 
@@ -40,6 +41,22 @@ function parseJsonArray<T>(raw: string | undefined, label: string): T[] {
 }
 
 const NEEDS_SOAL = new Set(['PILIHAN_GANDA', 'ESSAY']);
+const LOCKDOWN_TIPE = new Set(['PRAKTIK', 'PILIHAN_GANDA', 'ESSAY']);
+const MAKSIMAL_PERCOBAAN = 2;
+
+// Durasi wajib diisi (menit, bilangan bulat positif) untuk PILIHAN_GANDA/
+// ESSAY karena timer berjalan di lembar pengerjaan; opsional untuk PRAKTIK
+// (lockdown tetap aktif tanpa timer bila tidak diisi); diabaikan untuk SUBMIT.
+function parseDurasiMenit(tipe: string, raw: string | undefined): number | null {
+  if (!NEEDS_SOAL.has(tipe) && tipe !== 'PRAKTIK') return null;
+  if (raw === undefined || raw === '') {
+    if (NEEDS_SOAL.has(tipe)) throw new BadRequestException('Durasi pengerjaan wajib diisi untuk tugas Pilihan Ganda/Essay');
+    return null;
+  }
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1) throw new BadRequestException('Durasi pengerjaan harus berupa bilangan menit positif');
+  return n;
+}
 
 @Injectable()
 export class TugasService {
@@ -145,7 +162,14 @@ export class TugasService {
       if (kelasId !== tugas.kelasId) throw new ForbiddenException('Tugas ini bukan untuk kelasmu');
     }
     if (actor.role === 'SISWA') {
-      return { ...tugas, soal: tugas.soal.map(({ jawabanBenar: _jawabanBenar, ...rest }) => rest) };
+      const siswa = await this.prisma.siswa.findUnique({ where: { userId: actor.id }, select: { id: true } });
+      const submisi = siswa
+        ? await this.prisma.tugasSubmisi.findMany({
+            where: { tugasId: id, siswaId: siswa.id },
+            include: { jawaban: { include: { soal: true } } },
+          })
+        : [];
+      return { ...tugas, submisi, soal: tugas.soal.map(({ jawabanBenar: _jawabanBenar, ...rest }) => rest) };
     }
     return tugas;
   }
@@ -153,6 +177,7 @@ export class TugasService {
   async create(dto: CreateTugasDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
     await this.assertGuruMapel(actor, dto.mapel);
     const tipe = dto.tipe || 'SUBMIT';
+    const durasiMenit = parseDurasiMenit(tipe, dto.durasiMenit);
     const tugas = await this.prisma.tugas.create({
       data: {
         mapel: dto.mapel,
@@ -166,6 +191,7 @@ export class TugasService {
         starterHtml: dto.starterHtml,
         starterCss: dto.starterCss,
         starterJs: dto.starterJs,
+        durasiMenit,
         createdById: actor.id,
       },
     });
@@ -183,6 +209,11 @@ export class TugasService {
     this.assertOwnerOrAdmin(actor, existing.createdById);
     if (dto.mapel !== undefined) await this.assertGuruMapel(actor, dto.mapel);
 
+    const effectiveTipe = dto.tipe ?? existing.tipe;
+    const durasiMenit = dto.durasiMenit !== undefined || dto.tipe !== undefined
+      ? parseDurasiMenit(effectiveTipe, dto.durasiMenit ?? (existing.durasiMenit != null ? String(existing.durasiMenit) : undefined))
+      : undefined;
+
     const tugas = await this.prisma.tugas.update({
       where: { id },
       data: {
@@ -195,6 +226,7 @@ export class TugasService {
         ...(dto.starterHtml !== undefined ? { starterHtml: dto.starterHtml } : {}),
         ...(dto.starterCss !== undefined ? { starterCss: dto.starterCss } : {}),
         ...(dto.starterJs !== undefined ? { starterJs: dto.starterJs } : {}),
+        ...(durasiMenit !== undefined ? { durasiMenit } : {}),
         ...(fileUrl ? { fileUrl, fileName } : {}),
       },
     });
@@ -385,5 +417,177 @@ export class TugasService {
       });
     }
     return updated;
+  }
+
+  // Membuka lembar pengerjaan (lockdown) — mengonsumsi 1 dari maksimal 2
+  // percobaan SEKARANG (bukan saat submit), supaya membuka halaman lalu
+  // langsung keluar tanpa menjawab apa pun tetap terhitung sebagai 1 upaya.
+  // Jawaban/kode dari percobaan sebelumnya dibersihkan supaya siswa mulai
+  // dari kosong, bukan melanjutkan percobaan yang sudah gagal/dipaksa keluar.
+  async mulaiPercobaan(userId: string, tugasId: string) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
+    if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
+    const tugas = await this.prisma.tugas.findUnique({ where: { id: tugasId }, include: { soal: SOAL_ORDER } });
+    if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
+    if (!LOCKDOWN_TIPE.has(tugas.tipe)) {
+      throw new BadRequestException('Tugas ini tidak menggunakan mode lembar pengerjaan');
+    }
+    if (tugas.kelasId && siswa.kelasId !== tugas.kelasId) {
+      throw new ForbiddenException('Tugas ini bukan untuk kelasmu');
+    }
+
+    const existing = await this.prisma.tugasSubmisi.findUnique({
+      where: { tugasId_siswaId: { tugasId, siswaId: siswa.id } },
+    });
+    if (existing?.status === 'DITERIMA') {
+      throw new ForbiddenException('Tugas ini sudah diterima, tidak bisa dikerjakan lagi');
+    }
+    const percobaanKe = (existing?.jumlahPercobaan ?? 0) + 1;
+    if (existing?.terkunci || percobaanKe > MAKSIMAL_PERCOBAAN) {
+      throw new ForbiddenException(`Percobaan Anda untuk tugas ini sudah habis (maksimal ${MAKSIMAL_PERCOBAAN}x). Hubungi guru untuk mengulang.`);
+    }
+
+    const now = new Date();
+    const deadlineWaktu = tugas.durasiMenit ? new Date(now.getTime() + tugas.durasiMenit * 60_000) : null;
+
+    const submisi = await this.prisma.tugasSubmisi.upsert({
+      where: { tugasId_siswaId: { tugasId, siswaId: siswa.id } },
+      create: {
+        tugasId,
+        siswaId: siswa.id,
+        jumlahPercobaan: 1,
+        waktuMulai: now,
+        deadlineWaktu,
+      },
+      update: {
+        jumlahPercobaan: percobaanKe,
+        waktuMulai: now,
+        deadlineWaktu,
+        dipaksaKeluar: false,
+        status: 'TERKIRIM',
+        pesanRevisi: null,
+        submittedHtml: null,
+        submittedCss: null,
+        submittedJs: null,
+      },
+    });
+    await this.prisma.tugasJawaban.deleteMany({ where: { submisiId: submisi.id } });
+
+    return {
+      submisiId: submisi.id,
+      percobaanKe,
+      maksimalPercobaan: MAKSIMAL_PERCOBAAN,
+      waktuMulai: submisi.waktuMulai,
+      deadlineWaktu: submisi.deadlineWaktu,
+      tugas: {
+        id: tugas.id,
+        judul: tugas.judul,
+        deskripsi: tugas.deskripsi,
+        tipe: tugas.tipe,
+        mapel: tugas.mapel,
+        starterHtml: tugas.starterHtml,
+        starterCss: tugas.starterCss,
+        starterJs: tugas.starterJs,
+        soal: tugas.soal.map(({ jawabanBenar: _jawabanBenar, ...rest }) => rest),
+      },
+    };
+  }
+
+  // Submit dari lembar pengerjaan — dipanggil baik saat siswa klik "Selesai"
+  // (dipaksa=false) maupun otomatis saat sistem mendeteksi siswa meninggalkan
+  // halaman (dipaksa=true, lihat POST /tugas/:id/paksa-keluar di controller).
+  async submitPercobaan(userId: string, tugasId: string, dto: SubmitPercobaanDto) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
+    if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
+    const tugas = await this.prisma.tugas.findUnique({ where: { id: tugasId } });
+    if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
+
+    const submisi = await this.prisma.tugasSubmisi.findUnique({
+      where: { tugasId_siswaId: { tugasId, siswaId: siswa.id } },
+    });
+    if (!submisi || !submisi.waktuMulai) {
+      throw new BadRequestException('Anda belum memulai percobaan untuk tugas ini');
+    }
+    if (submisi.terkunci) {
+      throw new ForbiddenException('Percobaan Anda untuk tugas ini sudah habis');
+    }
+
+    const isPraktik = tugas.tipe === 'PRAKTIK';
+    const isSoalBased = NEEDS_SOAL.has(tugas.tipe);
+    const terkunciBaru = submisi.jumlahPercobaan >= MAKSIMAL_PERCOBAAN;
+
+    const updated = await this.prisma.tugasSubmisi.update({
+      where: { id: submisi.id },
+      data: {
+        ...(isPraktik
+          ? { submittedHtml: dto.submittedHtml ?? '', submittedCss: dto.submittedCss ?? '', submittedJs: dto.submittedJs ?? '' }
+          : {}),
+        catatan: dto.catatan,
+        status: 'TERKIRIM',
+        dipaksaKeluar: !!dto.dipaksa,
+        terkunci: terkunciBaru,
+        waktuMulai: null,
+        deadlineWaktu: null,
+      },
+    });
+
+    if (isSoalBased) {
+      const jawaban = parseJsonArray<JawabanInput>(dto.jawaban, 'jawaban');
+      await this.prisma.tugasJawaban.deleteMany({ where: { submisiId: updated.id } });
+      if (jawaban.length > 0) {
+        await this.prisma.tugasJawaban.createMany({
+          data: jawaban
+            .filter((j) => j.soalId)
+            .map((j) => ({
+              submisiId: updated.id,
+              soalId: j.soalId,
+              jawabanPilihan: j.jawabanPilihan,
+              jawabanEssay: j.jawabanEssay,
+            })),
+        });
+      }
+
+      if (tugas.tipe === 'PILIHAN_GANDA') {
+        const soalList = await this.prisma.tugasSoal.findMany({
+          where: { tugasId: tugas.id },
+          select: { id: true, jawabanBenar: true },
+        });
+        const totalSoal = soalList.length;
+        const jumlahBenar = soalList.filter((s) => {
+          const j = jawaban.find((x) => x.soalId === s.id);
+          return !!s.jawabanBenar && j?.jawabanPilihan === s.jawabanBenar;
+        }).length;
+        const nilai = totalSoal > 0 ? Math.round((jumlahBenar / totalSoal) * 100) : 0;
+        await this.prisma.tugasSubmisi.update({ where: { id: updated.id }, data: { nilai } });
+      }
+    }
+
+    await this.notificationService.create({
+      userId: tugas.createdById,
+      title: dto.dipaksa ? 'Tugas otomatis dikumpulkan' : 'Tugas dikumpulkan',
+      message: dto.dipaksa
+        ? `${siswa.nama ?? 'Siswa'} terdeteksi keluar dari lembar pengerjaan "${tugas.judul}", jawaban otomatis tersimpan`
+        : `${siswa.nama ?? 'Siswa'} mengumpulkan tugas "${tugas.judul}"`,
+      type: NotificationType.TUGAS,
+      link: '/materi?tab=tugas',
+    });
+
+    return this.prisma.tugasSubmisi.findUnique({
+      where: { id: updated.id },
+      include: { tugas: { select: { id: true, judul: true } }, jawaban: { include: { soal: true } } },
+    });
+  }
+
+  // Reset jatah percobaan siswa (admin/guru pengampu) — dipakai kalau siswa
+  // ke-auto-logout karena masalah teknis (mati listrik, jaringan putus, dst.)
+  // dan wajar diberi kesempatan ulang di luar 2x jatah normal.
+  async resetPercobaan(id: string, actor: Actor) {
+    const submisi = await this.prisma.tugasSubmisi.findUnique({ where: { id }, include: { tugas: true } });
+    if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
+    return this.prisma.tugasSubmisi.update({
+      where: { id },
+      data: { jumlahPercobaan: 0, terkunci: false, dipaksaKeluar: false, waktuMulai: null, deadlineWaktu: null },
+    });
   }
 }

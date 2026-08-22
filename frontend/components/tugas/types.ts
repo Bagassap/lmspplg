@@ -1,6 +1,10 @@
 export type StatusTugas = "TERKIRIM" | "DITERIMA" | "REVISI";
 export type TugasTipe = "SUBMIT" | "PRAKTIK" | "PILIHAN_GANDA" | "ESSAY";
 
+// Tipe yang memakai lembar pengerjaan lockdown (halaman penuh, bukan modal).
+export const LOCKDOWN_TIPE = new Set<string>(["PRAKTIK", "PILIHAN_GANDA", "ESSAY"]);
+export const MAKSIMAL_PERCOBAAN = 2;
+
 export type TugasKelasRef = { id: string; nama: string };
 
 export type TugasSoalItem = {
@@ -45,6 +49,12 @@ export type TugasSubmisiItem = {
   tugas?: { id: string; judul: string; tipe?: string; mapel?: string };
   siswa?: { id: string; nama: string | null; user?: { id: string; nama: string } | null };
   jawaban?: TugasJawabanItem[];
+  // Lockdown/exam-mode (PRAKTIK/PILIHAN_GANDA/ESSAY) — maksimal 2 percobaan.
+  jumlahPercobaan?: number;
+  terkunci?: boolean;
+  dipaksaKeluar?: boolean;
+  waktuMulai?: string | null;
+  deadlineWaktu?: string | null;
 };
 
 export type TugasItem = {
@@ -61,6 +71,9 @@ export type TugasItem = {
   starterHtml: string | null;
   starterCss: string | null;
   starterJs: string | null;
+  // Durasi pengerjaan (menit) untuk lembar pengerjaan lockdown — wajib untuk
+  // PILIHAN_GANDA/ESSAY, opsional untuk PRAKTIK, null untuk SUBMIT.
+  durasiMenit?: number | null;
   createdBy: { id: string; nama: string; role: string };
   createdAt: string;
   updatedAt: string;

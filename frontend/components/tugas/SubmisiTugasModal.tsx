@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX } from "lucide-react";
+import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX, RotateCcw, ShieldAlert } from "lucide-react";
 import type { TugasItem, TugasSubmisiItem } from "./types";
-import { formatTgl, formatTglJam, statusInfo } from "./types";
+import { formatTgl, formatTglJam, statusInfo, LOCKDOWN_TIPE, MAKSIMAL_PERCOBAAN } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
 
@@ -16,7 +16,7 @@ type BelumSiswa = {
 };
 
 export function SubmisiTugasModal({
-  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai,
+  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai, onResetPercobaan,
 }: {
   tugas: TugasItem | null;
   submisi: TugasSubmisiItem[];
@@ -24,6 +24,7 @@ export function SubmisiTugasModal({
   onTerima: (id: string) => void;
   onRevisi: (s: TugasSubmisiItem) => void;
   onSimpanNilai: (submisiId: string, nilai: number) => Promise<void>;
+  onResetPercobaan?: (submisiId: string) => Promise<void>;
 }) {
   const [viewCodeTarget, setViewCodeTarget] = useState<TugasSubmisiItem | null>(null);
   const [viewJawabanTarget, setViewJawabanTarget] = useState<TugasSubmisiItem | null>(null);
@@ -32,6 +33,7 @@ export function SubmisiTugasModal({
   const [belumLoading, setBelumLoading] = useState(false);
   const isPraktik = tugas?.tipe === "PRAKTIK";
   const isSoalBased = tugas?.tipe === "PILIHAN_GANDA" || tugas?.tipe === "ESSAY";
+  const isLockdown = !!tugas && LOCKDOWN_TIPE.has(tugas.tipe);
 
   useEffect(() => {
     if (!tugas) return;
@@ -169,9 +171,27 @@ export function SubmisiTugasModal({
                           Nilai {s.nilai}
                         </span>
                       )}
+                      {isLockdown && !!s.jumlahPercobaan && (
+                        <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                          s.terkunci ? "bg-red-50 text-red-500 dark:bg-red-900/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+                        }`}>
+                          Percobaan {s.jumlahPercobaan}/{MAKSIMAL_PERCOBAAN}
+                        </span>
+                      )}
+                      {s.dipaksaKeluar && (
+                        <span className="flex shrink-0 items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
+                          <ShieldAlert size={11} /> Dipaksa Keluar
+                        </span>
+                      )}
                       <span className="text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
                         {isDone ? "✓ Diterima" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
                       </span>
+                      {isLockdown && !!s.jumlahPercobaan && onResetPercobaan && (
+                        <button onClick={() => onResetPercobaan(s.id)}
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400">
+                          <RotateCcw size={12} /> Reset Percobaan
+                        </button>
+                      )}
                       {isPraktik ? (
                         <button onClick={() => setViewCodeTarget(s)}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"

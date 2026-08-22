@@ -339,6 +339,9 @@ model Tugas {
   starterHtml String?  @db.Text
   starterCss  String?  @db.Text
   starterJs   String?  @db.Text
+  // Durasi pengerjaan (menit) untuk mode lockdown — wajib diisi FE untuk
+  // PILIHAN_GANDA/ESSAY, opsional untuk PRAKTIK, diabaikan untuk SUBMIT.
+  durasiMenit Int?
   createdById String
   createdBy   User     @relation(fields: [createdById], references: [id])
 
@@ -394,6 +397,18 @@ model TugasSubmisi {
   nilai         Int?
   submittedAt   DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  // Lockdown/exam-mode tracking untuk tugas PRAKTIK/PILIHAN_GANDA/ESSAY —
+  // maksimal 2 percobaan (jumlahPercobaan bertambah setiap kali siswa
+  // membuka lembar pengerjaan, bukan setiap submit). Begitu terkunci=true,
+  // siswa tidak bisa membuka lembar pengerjaan lagi kecuali di-reset guru/
+  // admin. waktuMulai/deadlineWaktu dihitung & disimpan server-side supaya
+  // timer tidak bisa dimanipulasi dari sisi klien.
+  jumlahPercobaan Int      @default(0)
+  terkunci        Boolean  @default(false)
+  dipaksaKeluar   Boolean  @default(false)
+  waktuMulai      DateTime?
+  deadlineWaktu   DateTime?
 
   jawaban TugasJawaban[]
 

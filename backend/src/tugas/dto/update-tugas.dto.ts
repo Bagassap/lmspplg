@@ -41,4 +41,8 @@ export class UpdateTugasDto {
   @IsString()
   @IsOptional()
   soal?: string;
+
+  @IsString()
+  @IsOptional()
+  durasiMenit?: string;
 }

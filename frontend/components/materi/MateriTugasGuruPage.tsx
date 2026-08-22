@@ -107,6 +107,13 @@ export function MateriTugasGuruPage() {
     }
   }
 
+  async function resetPercobaan(submisiId: string) {
+    if (!await toast.confirm("Reset percobaan siswa ini?", "Jatah percobaan akan kembali menjadi 0/2 dan siswa bisa mengerjakan dari awal lagi.")) return;
+    const res = await fetch(`/api/tugas/submisi/${submisiId}/reset-percobaan`, { method: "PUT" });
+    if (res.ok) { toast.success("Percobaan direset", ""); loadAll(); }
+    else toast.error("Gagal mereset percobaan");
+  }
+
   const perluReview = submisiList.filter((s) => s.status === "TERKIRIM").length;
 
   return (
@@ -225,6 +232,7 @@ export function MateriTugasGuruPage() {
         onTerima={(id) => updateStatus(id, "DITERIMA")}
         onRevisi={(s) => setRevisiTarget(s)}
         onSimpanNilai={simpanNilai}
+        onResetPercobaan={resetPercobaan}
       />
 
       <RevisiFormModal target={revisiTarget} onClose={() => setRevisiTarget(null)} onSend={kirimRevisi} />

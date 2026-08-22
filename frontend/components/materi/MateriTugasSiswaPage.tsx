@@ -1,20 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { BookOpen, ClipboardList, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriSiswaPage } from "./MateriSiswaPage";
 import { TugasListCardSiswa } from "@/components/tugas/TugasListCardSiswa";
 import { SubmitTugasModal } from "@/components/tugas/SubmitTugasModal";
 import { SubmisiSayaModal } from "@/components/tugas/SubmisiSayaModal";
-import { isTugasActive } from "@/components/tugas/types";
+import { isTugasActive, LOCKDOWN_TIPE } from "@/components/tugas/types";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 
 type Category = "materi" | "tugas";
 
 export function MateriTugasSiswaPage() {
   const toast = useToast();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [materiCount, setMateriCount] = useState(0);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
@@ -46,6 +47,16 @@ export function MateriTugasSiswaPage() {
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
+
+  // Tugas PRAKTIK/PILIHAN_GANDA/ESSAY dikerjakan di lembar pengerjaan lockdown
+  // (halaman penuh), bukan modal — SUBMIT (kirim file) tetap pakai modal biasa.
+  function handleKumpulkan(t: TugasItem) {
+    if (LOCKDOWN_TIPE.has(t.tipe)) {
+      router.push(`/siswa/materi/kerjakan/${t.id}`);
+      return;
+    }
+    setSubmitTarget(t);
+  }
 
   async function doSubmit(fd: FormData) {
     const res = await fetch("/api/tugas/submisi", { method: "POST", body: fd });
@@ -160,7 +171,7 @@ export function MateriTugasSiswaPage() {
           <TugasListCardSiswa
             tugasList={tugasList}
             loading={loading}
-            onKumpulkan={(t) => setSubmitTarget(t)}
+            onKumpulkan={handleKumpulkan}
             onLihatDetail={(s, t) => setDetailTarget({ s, t })}
           />
         )}
@@ -176,7 +187,7 @@ export function MateriTugasSiswaPage() {
         onKirimUlang={() => {
           const t = detailTarget?.t;
           setDetailTarget(null);
-          if (t) setSubmitTarget(t);
+          if (t) handleKumpulkan(t);
         }}
       />
     </div>
