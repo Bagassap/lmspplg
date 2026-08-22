@@ -102,16 +102,47 @@ export class PenempatanService {
       }
     }
 
-    return this.prisma.penempatanMagang.update({
-      where: { id },
-      data: {
-        ...(dto.tempatMagangId !== undefined ? { tempatMagangId: dto.tempatMagangId } : {}),
-        ...(dto.guruPembimbingId !== undefined ? { guruPembimbingId: dto.guruPembimbingId } : {}),
-        ...(dto.tanggalMulai !== undefined ? { tanggalMulai: new Date(dto.tanggalMulai) } : {}),
-        ...(dto.tanggalSelesai !== undefined ? { tanggalSelesai: new Date(dto.tanggalSelesai) } : {}),
-        ...(dto.status !== undefined ? { status: dto.status } : {}),
-      },
-      include: INCLUDE_DETAIL,
+    // Kalau status diubah (kembali) jadi AKTIF, pastikan siswa ini tidak
+    // sedang punya penempatan AKTIF lain — kalau dibiarkan, lookup "penempatan
+    // aktif saat ini" yang dipakai di absensi/lapor-diri/laporan-akhir jadi
+    // ambigu (bisa salah pilih penempatan).
+    if (dto.status === 'AKTIF' && existing.status !== 'AKTIF') {
+      const sedangAktif = await this.prisma.penempatanMagang.findFirst({
+        where: { siswaId: existing.siswaId, status: 'AKTIF', id: { not: id } },
+      });
+      if (sedangAktif) {
+        throw new BadRequestException('Siswa ini masih memiliki penempatan PKL aktif lain. Selesaikan/batalkan dulu sebelum mengaktifkan penempatan ini.');
+      }
+    }
+
+    const tempatBerubah = dto.tempatMagangId !== undefined && dto.tempatMagangId !== existing.tempatMagangId;
+
+    return this.prisma.$transaction(async (tx) => {
+      const updated = await tx.penempatanMagang.update({
+        where: { id },
+        data: {
+          ...(dto.tempatMagangId !== undefined ? { tempatMagangId: dto.tempatMagangId } : {}),
+          ...(dto.guruPembimbingId !== undefined ? { guruPembimbingId: dto.guruPembimbingId } : {}),
+          ...(dto.tanggalMulai !== undefined ? { tanggalMulai: new Date(dto.tanggalMulai) } : {}),
+          ...(dto.tanggalSelesai !== undefined ? { tanggalSelesai: new Date(dto.tanggalSelesai) } : {}),
+          ...(dto.status !== undefined ? { status: dto.status } : {}),
+        },
+        include: INCLUDE_DETAIL,
+      });
+
+      // Absensi/lapor-diri/laporan-akhir menyimpan tempatMagangId secara
+      // denormalisasi (untuk query rekap tanpa join) — kalau tempat magang
+      // penempatan ini diganti, catatan lama yang sudah ada juga harus ikut
+      // disamakan, supaya tidak "hilang" saat rekap difilter per tempat baru.
+      if (tempatBerubah && dto.tempatMagangId) {
+        await Promise.all([
+          tx.absensiMagang.updateMany({ where: { penempatanId: id }, data: { tempatMagangId: dto.tempatMagangId } }),
+          tx.laporDiriMagang.updateMany({ where: { penempatanId: id }, data: { tempatMagangId: dto.tempatMagangId } }),
+          tx.laporanAkhirMagang.updateMany({ where: { penempatanId: id }, data: { tempatMagangId: dto.tempatMagangId } }),
+        ]);
+      }
+
+      return updated;
     });
   }
 

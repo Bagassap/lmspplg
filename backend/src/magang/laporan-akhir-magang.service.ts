@@ -12,7 +12,14 @@ export class LaporanAkhirMagangService {
   ) {}
 
   async getForActor(userId: string, role: string, tempatMagangId?: string) {
-    const where: Prisma.PenempatanMagangWhereInput = { status: 'AKTIF' };
+    // Penempatan AKTIF selalu tampil (supaya kelihatan siapa yang belum
+    // lapor), TAPI penempatan yang sudah SELESAI/BATAL pun tetap harus
+    // muncul kalau siswanya sudah pernah kirim laporan akhir — kalau tidak,
+    // begitu admin menandai penempatan selesai, laporan yang sedang
+    // menunggu review jadi tidak bisa ditemukan lagi lewat halaman ini.
+    const where: Prisma.PenempatanMagangWhereInput = {
+      OR: [{ status: 'AKTIF' }, { laporanAkhir: { isNot: null } }],
+    };
 
     if (role === 'GURU') {
       const guru = await this.prisma.guru.findUnique({ where: { userId } });
