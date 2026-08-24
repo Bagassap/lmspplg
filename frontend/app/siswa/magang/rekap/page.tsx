@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FileBarChart, FileUp, BarChart3, CheckCircle2, XCircle } from "lucide-react";
+import { FileBarChart, FileUp, BarChart3 } from "lucide-react";
 import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
 import type { LaporDiriStatusSaya } from "@/components/magang/lapor-diri-types";
@@ -41,27 +41,15 @@ export default function SiswaMagangRekapPage() {
       <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <FileBarChart size={22} className="text-white sm:hidden" />
-              <FileBarChart size={26} className="hidden text-white sm:block" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap PKL</h1>
-              <p className="mt-0.5 text-sm text-white/70">Lapor diri bulanan dan laporan akhir PKL-mu</p>
-            </div>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+            <FileBarChart size={22} className="text-white sm:hidden" />
+            <FileBarChart size={26} className="hidden text-white sm:block" />
           </div>
-          {status?.hasPenempatan && (
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-[64px]">
-                {sudahLapor ? <CheckCircle2 size={13} className="text-white/70 mb-1" /> : <XCircle size={13} className="text-white/70 mb-1" />}
-                <p className="text-[11px] font-extrabold text-white leading-none">{loading ? "—" : sudahLapor ? "Sudah" : "Belum"}</p>
-                <p className="text-[10px] text-white/60 font-semibold mt-0.5">Lapor Diri</p>
-              </div>
-            </div>
-          )}
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
+            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap PKL</h1>
+          </div>
         </div>
       </div>
 

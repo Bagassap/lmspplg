@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FileBarChart, FileUp, BarChart3, ClipboardCheck } from "lucide-react";
+import { FileBarChart, FileUp, BarChart3 } from "lucide-react";
 import { GuruLaporDiriPanel } from "@/components/magang/GuruLaporDiriPanel";
 import { GuruLaporanPanel } from "@/components/magang/GuruLaporanPanel";
 import type { LaporanAkhirRow } from "@/components/magang/laporan-akhir-types";
@@ -12,7 +12,7 @@ export default function GuruMagangRekapPage() {
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [summary, setSummary] = useState({ sudahLapor: 0, belumLapor: 0, total: 0 });
   const [laporanRows, setLaporanRows] = useState<LaporanAkhirRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -25,40 +25,20 @@ export default function GuruMagangRekapPage() {
   }, []);
 
   const menungguReview = laporanRows.filter((r) => r.laporan?.status === "TERKIRIM").length;
-  const diterima = laporanRows.filter((r) => r.laporan?.status === "DITERIMA").length;
 
   return (
     <div className="space-y-6">
       <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <FileBarChart size={22} className="text-white sm:hidden" />
-              <FileBarChart size={26} className="hidden text-white sm:block" />
-            </div>
-            <div>
-              <div className="mb-1 flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-                <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
-              </div>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap &amp; Laporan PKL</h1>
-              <p className="mt-0.5 text-sm text-white/70">Pantau lapor diri bulanan dan review laporan akhir siswa bimbingan</p>
-            </div>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+            <FileBarChart size={22} className="text-white sm:hidden" />
+            <FileBarChart size={26} className="hidden text-white sm:block" />
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {[
-              { icon: FileUp, label: "Sudah Lapor", val: summary.sudahLapor },
-              { icon: ClipboardCheck, label: "Menunggu Review", val: menungguReview },
-              { icon: BarChart3, label: "Diterima", val: diterima },
-            ].map(({ icon: Icon, label, val }) => (
-              <div key={label} className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-[64px]">
-                <Icon size={13} className="text-white/70 mb-1" />
-                <p className="text-lg sm:text-xl font-extrabold text-white leading-none">{loading ? "—" : val}</p>
-                <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
-              </div>
-            ))}
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
+            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Rekap &amp; Laporan PKL</h1>
           </div>
         </div>
       </div>

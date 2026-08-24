@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   CalendarDays, FileText, Send, BookOpen, Loader2,
-  ChevronLeft, ChevronRight, X, Upload, Search,
+  ChevronLeft, ChevronRight, X, Search,
   MapPin, Clock, User, CheckCircle, AlertCircle, Link2, ExternalLink, PieChart,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -243,34 +243,14 @@ export default function SiswaJadwalSoalPage() {
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
             <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
-            <div className="relative flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-                  <FileText size={22} className="text-white sm:hidden"/>
-                  <FileText size={26} className="text-white hidden sm:block"/>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Siswa</span>
-                  </div>
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
-                  <p className="text-sm text-white/70 mt-0.5">Lihat jadwal, download soal, dan kirim project</p>
-                </div>
+            <div className="relative flex items-center gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+                <FileText size={22} className="text-white sm:hidden"/>
+                <FileText size={26} className="text-white hidden sm:block"/>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                {[
-                  { icon: CalendarDays,  label:"Task",  val: tahapanList.length },
-                  { icon: FileText,      label:"Soal",     val: totalSoal },
-                  { icon: Upload,        label:"Terkirim", val: mySubmisi.length },
-                  { icon: CheckCircle,   label:"Diterima", val: diterima },
-                ].map(({ icon: Icon, label, val }) => (
-                  <div key={label} className="flex flex-col items-center px-4 py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-16">
-                    <Icon size={14} className="text-white/70 mb-1"/>
-                    <p className="text-xl font-extrabold text-white leading-none">{val}</p>
-                    <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
-                  </div>
-                ))}
+              <div>
+                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
               </div>
             </div>
           </div>

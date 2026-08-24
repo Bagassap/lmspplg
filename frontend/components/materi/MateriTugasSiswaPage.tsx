@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { BookOpen, ClipboardList, Send } from "lucide-react";
+import { BookOpen, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriSiswaPage } from "./MateriSiswaPage";
 import { TugasListCardSiswa } from "@/components/tugas/TugasListCardSiswa";
@@ -79,7 +79,6 @@ export function MateriTugasSiswaPage() {
   }
 
   const active = tugasList.filter((t) => isTugasActive(t));
-  const diterimaCount = tugasList.filter((t) => t.submisi?.[0]?.status === "DITERIMA").length;
   const perluDikerjakan = active.filter((t) => !t.submisi || t.submisi.length === 0).length;
 
   return (
@@ -89,33 +88,14 @@ export function MateriTugasSiswaPage() {
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6" />
-        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-              <BookOpen size={22} className="text-white sm:hidden" />
-              <BookOpen size={26} className="text-white hidden sm:block" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Siswa</span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
-              <p className="text-xs sm:text-sm text-white/70 mt-0.5 hidden sm:block">Unduh materi, praktikkan kode, dan kumpulkan tugas</p>
-            </div>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+            <BookOpen size={22} className="text-white sm:hidden" />
+            <BookOpen size={26} className="text-white hidden sm:block" />
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {[
-              { icon: BookOpen, label: "Materi", val: materiCount },
-              { icon: ClipboardList, label: "Tugas", val: tugasList.length },
-              { icon: Send, label: "Diterima", val: diterimaCount },
-            ].map(({ icon: Icon, label, val }) => (
-              <div key={label} className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-16">
-                <Icon size={13} className="text-white/70 mb-1" />
-                <p className="text-lg sm:text-xl font-extrabold text-white leading-none">{loading ? "—" : val}</p>
-                <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
-              </div>
-            ))}
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
           </div>
         </div>
       </div>

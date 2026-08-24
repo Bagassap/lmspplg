@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { BookOpen, ClipboardList, Send } from "lucide-react";
+import { BookOpen, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriListPage } from "./MateriListPage";
 import { TugasFormModal } from "@/components/tugas/TugasFormModal";
@@ -124,33 +124,14 @@ export function MateriTugasGuruPage() {
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6" />
 
-        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-              <BookOpen size={22} className="text-white sm:hidden" />
-              <BookOpen size={26} className="text-white hidden sm:block" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Guru</span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
-              <p className="text-xs sm:text-sm text-white/70 mt-0.5 hidden sm:block">Berikan materi dan tugas untuk mata pelajaran yang Anda ampu</p>
-            </div>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+            <BookOpen size={22} className="text-white sm:hidden" />
+            <BookOpen size={26} className="text-white hidden sm:block" />
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {[
-              { icon: BookOpen, label: "Materi", val: materiList.length },
-              { icon: ClipboardList, label: "Tugas", val: tugasList.length },
-              { icon: Send, label: "Kumpul", val: submisiList.length },
-            ].map(({ icon: Icon, label, val }) => (
-              <div key={label} className="flex flex-col items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-[56px] sm:min-w-[64px]">
-                <Icon size={13} className="text-white/70 mb-1" />
-                <p className="text-lg sm:text-xl font-extrabold text-white leading-none">{loading ? "—" : val}</p>
-                <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
-              </div>
-            ))}
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
           </div>
         </div>
       </div>
@@ -203,7 +184,6 @@ export function MateriTugasGuruPage() {
         {category === "materi" ? (
           <MateriListPage
             embedded
-            roleBadge="Guru"
             currentUserId={currentUserId}
             currentUserRole={currentUserRole}
             mapelOptions={mapelOptions}

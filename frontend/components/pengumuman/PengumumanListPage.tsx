@@ -484,20 +484,14 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
         <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
-        <div className="relative flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-              <Megaphone size={22} className="text-white sm:hidden"/>
-              <Megaphone size={26} className="text-white hidden sm:block"/>
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Papan Informasi</span>
-                {canManage && <span className="text-[9px] font-bold px-2 py-0.5 rounded-lg bg-white/20 text-white/90">Admin</span>}
-              </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Pengumuman</h1>
-              <p className="text-sm text-white/70 mt-0.5">Kelola dan pantau semua pengumuman sekolah</p>
-            </div>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+            <Megaphone size={22} className="text-white sm:hidden"/>
+            <Megaphone size={26} className="text-white hidden sm:block"/>
+          </div>
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Papan Informasi</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Pengumuman</h1>
           </div>
         </div>
       </div>

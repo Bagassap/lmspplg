@@ -37,7 +37,6 @@ export default function SiswaMagangPenempatanPage() {
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
             <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Penempatan PKL Saya</h1>
-            <p className="mt-0.5 text-sm text-white/70">Lokasi & guru pembimbing selama Praktik Kerja Lapangan</p>
           </div>
         </div>
       </div>

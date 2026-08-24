@@ -23,8 +23,6 @@ export default function GuruMagangPenempatanPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const aktif = list.filter((p) => p.status === "AKTIF");
-
   return (
     <div className="space-y-5 p-1">
       <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
@@ -35,14 +33,8 @@ export default function GuruMagangPenempatanPage() {
             <Briefcase size={26} className="hidden text-white sm:block" />
           </div>
           <div>
-            <div className="mb-1 flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-              <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Guru Pembimbing</span>
-            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
             <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Siswa Bimbingan PKL</h1>
-            <p className="mt-0.5 text-sm text-white/70">
-              {loading ? "Memuat…" : `${aktif.length} siswa sedang aktif PKL di bawah bimbingan Anda`}
-            </p>
           </div>
         </div>
       </div>
