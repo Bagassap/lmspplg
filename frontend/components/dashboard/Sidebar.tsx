@@ -43,7 +43,7 @@ const MENUS: Record<string, MenuItem[]> = {
         { href: "/admin/magang/rekap",      label: "Rekap & Laporan", icon: FileBarChart },
       ],
     },
-    { key: "ujian-ukk", href: "/admin/ujian-ukk/jadwal-soal", label: "Jadwal & Soal UKK", icon: FileText },
+    { key: "ujian-ukk", href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText },
   ],
   GURU: [
     { key: "dashboard",    href: "/guru/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
@@ -60,7 +60,7 @@ const MENUS: Record<string, MenuItem[]> = {
         { href: "/guru/magang/rekap",      label: "Rekap & Laporan",icon: FileBarChart },
       ],
     },
-    { key: "ujian-ukk", href: "/guru/ujian-ukk/jadwal-soal", label: "Jadwal & Soal UKK", icon: FileText },
+    { key: "ujian-ukk", href: "/guru/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText },
   ],
   SISWA: [
     { key: "dashboard",    href: "/siswa/dashboard",    label: "Dashboard",   icon: LayoutDashboard },

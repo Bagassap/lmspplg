@@ -390,34 +390,34 @@ export default function SiswaJadwalSoalPage() {
               </button>
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{ background: "#C3F84A", color: "#1C2B33", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-[#1C2B33]/8" />
 
                 <div className="relative flex items-start justify-between">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
                     <FileText size={15} />
                   </div>
                   <div className="text-right">
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/60">Kategori</p>
-                    <p className="text-lg font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#1C2B33]/60">Kategori</p>
+                    <p className="text-lg font-black leading-tight">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
                   </div>
                 </div>
 
                 <div className="relative flex items-baseline gap-2">
                   <span className="text-5xl font-black leading-none tabular-nums">{totalSoal}</span>
-                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/70">soal<br />tersedia</span>
+                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-[#1C2B33]/70">soal<br />tersedia</span>
                 </div>
 
 
                 <div className="relative flex items-end justify-between pt-2">
                   <div>
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">TA</p>
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#1C2B33]/60">TA</p>
                     <p className="text-base font-black leading-none">2026/2027</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">Status</p>
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#1C2B33]/60">Status</p>
                     <p className="text-[10px] font-semibold">{diterima > 0 ? "Diterima" : "Berjalan"}</p>
                   </div>
                 </div>

@@ -32,7 +32,7 @@ const PAGE_TITLES: Record<string, [string, string]> = {
   "nilai-saya":   ["Nilai Saya",         "Hasil ujian kompetensi Anda"],
   magang:         ["PKL",                "Program praktik kerja lapangan"],
   "ujian-ukk":    ["UKK",               "Ujian Kompetensi Keahlian"],
-  "jadwal-soal":  ["Jadwal dan Soal",   "Kelola jadwal, soal, dan pantau pengumpulan siswa"],
+  "jadwal-soal":  ["UKK",   "Kelola jadwal, soal, dan pantau pengumpulan siswa"],
 };
 
 function getPageInfo(pathname: string) {
