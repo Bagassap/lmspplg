@@ -31,7 +31,7 @@ function jakartaNow() {
   };
 }
 
-export function LiveClock({ variant = "header" }: { variant?: "header" | "compact" }) {
+export function LiveClock({ variant = "header" }: { variant?: "header" | "compact" | "topbar" }) {
   const [now, setNow] = useState<ReturnType<typeof jakartaNow> | null>(null);
 
   useEffect(() => {
@@ -49,6 +49,21 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
       <div className="flex items-center gap-2 rounded-xl bg-white/12 px-3 py-1.5 backdrop-blur-sm">
         <Clock size={11} className="shrink-0 animate-pulse text-[#0082FB]" />
         <span className="text-xs font-bold tabular-nums text-white">{jam}</span>
+      </div>
+    );
+  }
+
+  if (variant === "topbar") {
+    const hariT    = HARI[now.dayOfWeek];
+    const tanggalT = now.day;
+    const bulanT   = BULAN[now.month - 1];
+    return (
+      <div className="hidden items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-slate-500 dark:bg-slate-700/50 dark:text-slate-400 lg:flex">
+        <CalendarDays size={13} className="shrink-0 text-[#0082FB]" />
+        <span className="text-xs font-medium">{hariT}, {tanggalT} {bulanT}</span>
+        <div className="h-3 w-px bg-slate-300 dark:bg-slate-600" />
+        <Clock size={13} className="shrink-0 animate-pulse text-[#0082FB]" />
+        <span className="text-xs font-bold tabular-nums">{jam}</span>
       </div>
     );
   }

@@ -1,17 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LiveClock } from "@/components/shared/LiveClock";
-
-const MOTIVASI = [
-  "Semangat mengajar hari ini!",
-  "Hari yang baik untuk belajar hal baru.",
-  "Produktivitas dimulai dari langkah pertama.",
-  "Setiap hari adalah kesempatan untuk berkembang.",
-  "Bersama membangun generasi yang unggul.",
-  "Ilmu yang diajarkan dengan hati selalu berbekas.",
-  "Tetap semangat — pelajar Indonesia butuh yang terbaik.",
-];
 
 const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
   ADMIN: { label: "Admin",  cls: "bg-white/20 text-white" },
@@ -19,18 +8,11 @@ const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
   SISWA: { label: "Siswa",  cls: "bg-white/20 text-white" },
 };
 
-// Dibaca eksplisit sebagai jam WIB (Asia/Jakarta) via Intl, bukan getHours()/
-// getDay() lokal — komponen ini render duluan di server saat SSR, dan server
+// Dibaca eksplisit sebagai jam WIB (Asia/Jakarta) via Intl, bukan getHours()
+// lokal — komponen ini render duluan di server saat SSR, dan server
 // berjalan di UTC, jadi getter lokal biasa akan salah beberapa jam.
-const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-
 function jakartaHour(): number {
   return Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", hour: "2-digit", hourCycle: "h23" }).format(new Date()));
-}
-
-function jakartaWeekday(): number {
-  const short = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date());
-  return WEEKDAY_NUM[short] ?? 0;
 }
 
 function getGreeting(): { emoji: string; text: string } {
@@ -58,7 +40,6 @@ export default function GreetingHero({
   const { emoji, text } = getGreeting();
   const firstName   = getFirstName(nama);
   const badge       = ROLE_BADGE[role] ?? ROLE_BADGE.SISWA;
-  const motivasi    = MOTIVASI[jakartaWeekday() % MOTIVASI.length];
 
   return (
     <div
@@ -101,25 +82,7 @@ export default function GreetingHero({
               )}
             </motion.div>
           </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="mt-1.5 text-xs text-white/65 sm:text-sm"
-          >
-            {motivasi}
-          </motion.p>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
-          className="shrink-0 self-start"
-        >
-          <LiveClock variant="header" />
-        </motion.div>
       </div>
     </div>
   );

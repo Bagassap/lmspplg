@@ -13,6 +13,7 @@ import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
+import { LiveClock } from "@/components/shared/LiveClock";
 
 
 const PAGE_TITLES: Record<string, [string, string]> = {
@@ -317,6 +318,8 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
         </div>
 
         <div className="flex-1" />
+
+        <LiveClock variant="topbar" />
 
         <div className="flex items-center gap-2">
 

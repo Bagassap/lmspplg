@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Users, User, School, ArrowUpCircle, ChevronRight } from "lucide-react";
+import { ArrowUpCircle, ChevronRight } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
@@ -11,7 +11,7 @@ import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { KenaikanKelasModal } from "@/components/data-siswa/KenaikanKelasModal";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
-import { type SiswaCardData, type KelasRef, getNama, toTitleCase, hasGenderData } from "@/components/data-siswa/shared";
+import { type SiswaCardData, type KelasRef, getNama, toTitleCase } from "@/components/data-siswa/shared";
 
 export default function AdminDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<SiswaCardData[]>([]);
@@ -77,25 +77,11 @@ export default function AdminDataSiswaPage() {
   }
 
   const isFiltered = !!(search || filterJurusan || filterGender);
-  const totalL = siswaList.filter((s) => s.jenisKelamin === "Laki-laki").length;
-  const totalP = siswaList.filter((s) => s.jenisKelamin === "Perempuan").length;
-  const genderKnown = hasGenderData(siswaList);
-  const kelasSet = new Set(siswaList.map((s) => s.kelas.nama));
   const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
     <div className="space-y-5">
-      <DataSiswaHeader
-        roleBadge="Admin"
-        title="Data Siswa"
-        subtitle="Kelola data seluruh peserta didik"
-        stats={[
-          { icon: Users, label: `${loading ? "—" : siswaList.length} Total` },
-          { icon: User, label: `${loading ? "—" : genderKnown ? totalL : "–"} Laki-laki` },
-          { icon: User, label: `${loading ? "—" : genderKnown ? totalP : "–"} Perempuan` },
-          { icon: School, label: `${loading ? "—" : kelasSet.size} Kelas` },
-        ]}
-      />
+      <DataSiswaHeader title="Data Siswa" />
 
       <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
         <KartuPelajarBanner />

@@ -8,7 +8,6 @@ import {
   Users, TrendingUp, LogOut, FileText, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { AbsensiMagangTable } from "@/components/absensi-magang/AbsensiMagangTable";
@@ -120,15 +119,10 @@ export default function AdminMagangAbsensiPage() {
                 <ClipboardCheck size={26} className="hidden text-white sm:block" />
               </div>
               <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi PKL</span>
-                  <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
-                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi PKL</span>
                 <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi PKL</h1>
-                <p className="mt-0.5 text-sm text-white/70">Pantau kehadiran siswa di setiap tempat PKL</p>
               </div>
             </div>
-            <LiveClock />
           </div>
         </div>
 

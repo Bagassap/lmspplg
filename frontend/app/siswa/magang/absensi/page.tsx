@@ -7,7 +7,6 @@ import {
   FileSignature, MessageSquareText, LogIn, LogOut, Briefcase, AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi } from "@/components/absensi-magang/types";
@@ -217,16 +216,7 @@ export default function SiswaMagangAbsensiPage() {
             <div className="min-w-0">
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi PKL</span>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi PKL</h1>
-              <p className="mt-0.5 text-sm text-white/70">{formatTgl(today)}</p>
             </div>
-          </div>
-          <div className="flex shrink-0 flex-wrap items-center gap-2 self-start sm:self-center">
-            {data?.tempatMagang && (
-              <span className="flex items-center gap-1.5 rounded-xl bg-white/15 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-sm">
-                <Briefcase size={11} /> {data.tempatMagang.namaTempat}
-              </span>
-            )}
-            <LiveClock />
           </div>
         </div>
       </motion.div>
@@ -250,6 +240,15 @@ export default function SiswaMagangAbsensiPage() {
           <div className="grid grid-cols-12 gap-4 md:gap-5">
 
             <div className="col-span-12 xl:col-span-7">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="text-xs text-slate-400 dark:text-slate-500">{formatTgl(today)}</span>
+                {data?.tempatMagang && (
+                  <span className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                    <Briefcase size={11} /> {data.tempatMagang.namaTempat}
+                  </span>
+                )}
+              </div>
+
               <div className="mb-4 flex gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
                 {TABS.map((t) => {
                   const active = activeTab === t.key;

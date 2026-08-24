@@ -8,7 +8,6 @@ import {
   Users, TrendingUp, LogOut, FileText, Download, PieChart, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
@@ -345,15 +344,10 @@ export default function GuruAbsensiHarianPage() {
                 <ClipboardCheck size={26} className="hidden text-white sm:block" />
               </div>
               <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
-                  <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Wali Kelas</span>
-                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
                 <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
-                <p className="mt-0.5 text-sm text-white/70">Catat kehadiran siswa di kelas yang Anda wali-i</p>
               </div>
             </div>
-            <LiveClock />
           </div>
         </div>
 

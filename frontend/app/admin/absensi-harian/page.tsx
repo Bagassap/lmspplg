@@ -8,7 +8,6 @@ import {
   Users, TrendingUp, LogOut, FileText, Download,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
@@ -131,20 +130,9 @@ export default function AdminAbsensiHarianPage() {
                 <ClipboardCheck size={26} className="hidden text-white sm:block" />
               </div>
               <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
-                  <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Admin</span>
-                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
                 <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
-                <p className="mt-0.5 text-sm text-white/70">Pantau kehadiran seluruh siswa setiap kelas</p>
               </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <button onClick={() => setShowKelola(true)}
-                className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-sm hover:bg-white/25">
-                <Settings2 size={14} /> Kelola Kelas
-              </button>
-              <LiveClock />
             </div>
           </div>
         </div>
@@ -155,6 +143,10 @@ export default function AdminAbsensiHarianPage() {
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
                 <div className="flex items-center gap-2">
+                  <button onClick={() => setShowKelola(true)}
+                    className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
+                    <Settings2 size={12} /> Kelola Kelas
+                  </button>
                   {kelasPageCount > 1 && (
                     <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
                   )}

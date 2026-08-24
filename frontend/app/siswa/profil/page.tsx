@@ -6,7 +6,6 @@ import {
   User, Phone, MapPin, BookOpen, Calendar,
   Users, Pencil, Check, X, GraduationCap, Mail, Hash, IdCard, Camera,
 } from "lucide-react";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { createPortal } from "react-dom";
 import { useToast } from "@/components/shared/ToastSystem";
 import { formatAlamatLengkap } from "@/components/data-siswa/shared";
@@ -373,15 +372,10 @@ export default function SiswaProfilPage() {
               <User size={26} className="hidden text-white sm:block" />
             </div>
             <div className="min-w-0">
-              <div className="mb-1 flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
-                <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[9px] font-bold text-white/90">Siswa</span>
-              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
               <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Profil Saya</h1>
-              <p className="mt-0.5 text-sm text-white/70">Informasi data diri kamu</p>
             </div>
           </div>
-          <LiveClock />
         </div>
       </motion.div>
 

@@ -44,7 +44,7 @@ function todayInput() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string; subtitle: string }) {
+export function CatatanSiswaClient() {
   const toast = useToast();
   const [list, setList] = useState<SummaryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,8 +90,6 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
 
   const { pageItems, pageCount, start, end } = paginate(displayed, page, pageSize);
 
-  const totalCatatan = list.reduce((sum, s) => sum + s.jumlahCatatan, 0);
-  const siswaTercatat = list.filter((s) => s.jumlahCatatan > 0).length;
   const kelasTercatat = inKelas.filter((s) => s.jumlahCatatan > 0).length;
   const kelasTotalPoin = inKelas.reduce((sum, s) => sum + s.totalPoin, 0);
   const kelasTotalCatatan = inKelas.reduce((sum, s) => sum + s.jumlahCatatan, 0);
@@ -99,15 +97,7 @@ export function CatatanSiswaClient({ roleBadge, subtitle }: { roleBadge: string;
 
   return (
     <div className="space-y-5">
-      <DataSiswaHeader
-        roleBadge={roleBadge}
-        title="Catatan Siswa"
-        subtitle={subtitle}
-        stats={[
-          { icon: UserIcon, label: `${loading ? "—" : siswaTercatat} Siswa Tercatat` },
-          { icon: NotebookPen, label: `${loading ? "—" : totalCatatan} Total Catatan` },
-        ]}
-      />
+      <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
