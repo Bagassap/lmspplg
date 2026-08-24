@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { KeyRound, UserPlus, FileSpreadsheet, GraduationCap } from "lucide-react";
-import { motion } from "framer-motion";
+import { KeyRound } from "lucide-react";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
@@ -180,30 +179,6 @@ export default function ManajemenPasswordClient() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-3">
-        <motion.button
-          onClick={() => setKelolaGuruOpen(true)}
-          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-sm shrink-0 border border-slate-200 dark:border-slate-700 dark:bg-slate-800"
-          style={{ color: "#0082FB" }}>
-          <GraduationCap size={15} /> Kelola Guru
-        </motion.button>
-        <motion.button
-          onClick={() => setImportSiswaOpen(true)}
-          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-sm shrink-0 border border-slate-200 dark:border-slate-700 dark:bg-slate-800"
-          style={{ color: "#0082FB" }}>
-          <FileSpreadsheet size={15} /> Impor Massal
-        </motion.button>
-        <motion.button
-          onClick={() => setCreateAccountOpen(true)}
-          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0"
-          style={{ background: "#0082FB" }}>
-          <UserPlus size={15} /> Buat Akun
-        </motion.button>
-      </div>
-
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <FilterBarPassword
@@ -216,6 +191,9 @@ export default function ManajemenPasswordClient() {
             search={search} onSearch={setSearch}
             statusFilter={statusFilter} onStatusFilter={setStatusFilter}
             total={siswaItems.length} sudahCount={sudahCount} belumCount={belumCount} displayedCount={displayed.length}
+            onKelolaGuru={() => setKelolaGuruOpen(true)}
+            onImportSiswa={() => setImportSiswaOpen(true)}
+            onCreateAccount={() => setCreateAccountOpen(true)}
           />
         </div>
 

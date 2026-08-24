@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown } from "lucide-react";
+import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown, GraduationCap, FileSpreadsheet, UserPlus } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { kelasShort } from "@/components/data-siswa/shared";
 
@@ -25,6 +25,7 @@ export function FilterBarPassword({
   search, onSearch,
   statusFilter, onStatusFilter,
   total, sudahCount, belumCount, displayedCount,
+  onKelolaGuru, onImportSiswa, onCreateAccount,
 }: {
   kelasList: KelasOption[]; selectedKelasId: string; onSelectKelas: (id: string) => void;
   kelasNama?: string;
@@ -33,6 +34,7 @@ export function FilterBarPassword({
   search: string; onSearch: (v: string) => void;
   statusFilter: StatusFilter; onStatusFilter: (v: StatusFilter) => void;
   total: number; sudahCount: number; belumCount: number; displayedCount: number;
+  onKelolaGuru: () => void; onImportSiswa: () => void; onCreateAccount: () => void;
 }) {
   const STATUS_PILLS: { value: StatusFilter; label: string; icon: typeof Users; count: number }[] = [
     { value: "", label: "Semua", icon: Users, count: total },
@@ -47,6 +49,30 @@ export function FilterBarPassword({
         className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
         style={{ backgroundImage: `radial-gradient(circle, ${REF_PRIMARY} 1px, transparent 1px)`, backgroundSize: "18px 18px" }}
       />
+
+      <div className="relative mb-4 flex flex-wrap items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-700/50">
+        <motion.button
+          onClick={onKelolaGuru}
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          style={{ color: REF_PRIMARY }}>
+          <GraduationCap size={13} /> Kelola Guru
+        </motion.button>
+        <motion.button
+          onClick={onImportSiswa}
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          style={{ color: REF_PRIMARY }}>
+          <FileSpreadsheet size={13} /> Impor Massal
+        </motion.button>
+        <motion.button
+          onClick={onCreateAccount}
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-sm"
+          style={{ background: REF_PRIMARY }}>
+          <UserPlus size={13} /> Buat Akun
+        </motion.button>
+      </div>
 
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
