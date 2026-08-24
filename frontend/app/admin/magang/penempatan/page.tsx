@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, Briefcase, Building2, CheckCircle2, ClipboardList, Wallet } from "lucide-react";
+import { Briefcase, Building2, ClipboardList, Wallet } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
@@ -136,46 +136,46 @@ export default function AdminMagangPenempatanPage() {
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
           <GradientStatCard
+            eyebrow="PKL"
             tone="navy"
             label="Tempat Magang"
             value={loading ? "—" : tempatList.length}
-            caption={`${kuotaTerisi}/${totalKuota} kuota terisi`}
             icon={Building2}
-            secondaryLabel={tempatFavorit ? `Terbanyak: ${tempatFavorit.namaTempat}` : "Belum ada data"}
-            secondaryIcon={Award}
+            footerLeftLabel="Kuota" footerLeftValue={`${kuotaTerisi}/${totalKuota}`}
+            footerRightLabel="Terbanyak" footerRightValue={tempatFavorit ? tempatFavorit.namaTempat : "—"}
           />
         </div>
         <div className="lg:col-span-4">
           <GradientStatCard
+            eyebrow="PKL"
             tone="lime"
             label="Siswa PKL Aktif"
             value={loading ? "—" : jumlahAktif}
-            caption={`${jumlahSelesai} sudah selesai`}
             icon={Briefcase}
-            secondaryLabel={`${jumlahBatal} dibatalkan`}
-            secondaryIcon={CheckCircle2}
+            footerLeftLabel="Selesai" footerLeftValue={String(jumlahSelesai)}
+            footerRightLabel="Dibatalkan" footerRightValue={String(jumlahBatal)}
           />
         </div>
         <div className="lg:col-span-2">
           <GradientStatCard
+            eyebrow="PKL"
             tone="red"
             label="Total Kuota"
             value={loading ? "—" : totalKuota}
-            caption={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}% terisi`}
             icon={Wallet}
-            secondaryLabel={`Sisa ${Math.max(0, totalKuota - kuotaTerisi)} kuota`}
-            secondaryIcon={Award}
+            footerLeftLabel="Terisi" footerLeftValue={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}%`}
+            footerRightLabel="Sisa" footerRightValue={String(Math.max(0, totalKuota - kuotaTerisi))}
           />
         </div>
         <div className="lg:col-span-3">
           <GradientStatCard
+            eyebrow="PKL"
             tone="blue"
             label="Total Riwayat Penempatan"
             value={loading ? "—" : penempatanList.length}
-            caption="Sepanjang periode PKL"
             icon={ClipboardList}
-            secondaryLabel="Aktif, selesai, & batal"
-            secondaryIcon={ClipboardList}
+            footerLeftLabel="Periode" footerLeftValue="Sepanjang PKL"
+            footerRightLabel="Kategori" footerRightValue="Aktif · Selesai · Batal"
           />
         </div>
       </motion.div>
