@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { KeyRound, Users, CheckCircle2, AlertTriangle, Clock, UserPlus, FileSpreadsheet, GraduationCap } from "lucide-react";
+import { KeyRound, UserPlus, FileSpreadsheet, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -43,7 +43,7 @@ export default function ManajemenPasswordClient() {
   const toast = useToast();
   const [kelasList, setKelasList] = useState<KelasWithWali[]>([]);
   const [accountList, setAccountList] = useState<AccountStatus[]>([]);
-  const [loadingHeader, setLoadingHeader] = useState(true);
+  const [, setLoadingHeader] = useState(true);
 
   const [selectedKelasId, setSelectedKelasId] = useState<string>("");
   const [siswaPage, setSiswaPage] = useState<SiswaPageResponse | null>(null);
@@ -131,9 +131,6 @@ export default function ManajemenPasswordClient() {
     }
   }
 
-  const totalCount = accountList.length;
-  const sudahGantiCount = accountList.filter((u) => !u.mustChangePassword).length;
-  const belumGantiCount = accountList.filter((u) => u.mustChangePassword).length;
 
   const accountById = useMemo(() => {
     const map: Record<string, AccountStatus> = {};
@@ -180,56 +177,31 @@ export default function ManajemenPasswordClient() {
               <p className="mt-0.5 text-sm text-white/70">Kelola status password & permintaan reset</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <Users size={14} className="text-white/70" />
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loadingHeader ? "—" : totalCount}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Total Akun</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <CheckCircle2 size={14} className="text-emerald-300" />
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loadingHeader ? "—" : sudahGantiCount}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Sudah Ganti</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <AlertTriangle size={14} className="text-[#C3F84A]" />
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loadingHeader ? "—" : belumGantiCount}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Belum Ganti</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <Clock size={14} className="text-white/70" />
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loadingPermintaan ? "—" : pending.length}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Permintaan Pending</p>
-              </div>
-            </div>
-            <motion.button
-              onClick={() => setKelolaGuruOpen(true)}
-              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-1.5 rounded-xl bg-white/15 px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0 backdrop-blur-sm hover:bg-white/25">
-              <GraduationCap size={15} /> Kelola Guru
-            </motion.button>
-            <motion.button
-              onClick={() => setImportSiswaOpen(true)}
-              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-1.5 rounded-xl bg-white/15 px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0 backdrop-blur-sm hover:bg-white/25">
-              <FileSpreadsheet size={15} /> Impor Massal
-            </motion.button>
-            <motion.button
-              onClick={() => setCreateAccountOpen(true)}
-              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-lg shrink-0"
-              style={{ color: "#0082FB" }}>
-              <UserPlus size={15} /> Buat Akun
-            </motion.button>
-          </div>
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        <motion.button
+          onClick={() => setKelolaGuruOpen(true)}
+          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-sm shrink-0 border border-slate-200 dark:border-slate-700 dark:bg-slate-800"
+          style={{ color: "#0082FB" }}>
+          <GraduationCap size={15} /> Kelola Guru
+        </motion.button>
+        <motion.button
+          onClick={() => setImportSiswaOpen(true)}
+          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-sm shrink-0 border border-slate-200 dark:border-slate-700 dark:bg-slate-800"
+          style={{ color: "#0082FB" }}>
+          <FileSpreadsheet size={15} /> Impor Massal
+        </motion.button>
+        <motion.button
+          onClick={() => setCreateAccountOpen(true)}
+          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shrink-0"
+          style={{ background: "#0082FB" }}>
+          <UserPlus size={15} /> Buat Akun
+        </motion.button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

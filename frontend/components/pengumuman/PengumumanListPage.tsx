@@ -475,10 +475,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   });
 
   const announcementDates = new Set(list.map((p) => jakartaYMD(p.createdAt)));
-  const pinnedCount  = list.filter((p) => p.isPinned).length;
-  const todayStr     = (() => { const t = jakartaToday(); return `${t.year}-${String(t.month + 1).padStart(2, "0")}-${String(t.date).padStart(2, "0")}`; })();
-  const todayCount   = list.filter((p) => jakartaYMD(p.createdAt) === todayStr).length;
-  const totalKomentar = list.reduce((s, p) => s + p._count.komentar, 0);
 
   return (
     <div className="space-y-5">
@@ -503,35 +499,21 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
               <p className="text-sm text-white/70 mt-0.5">Kelola dan pantau semua pengumuman sekolah</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 shrink-0 flex-wrap">
-            {[
-              { icon: Megaphone,      label: "Total",      val: list.length },
-              { icon: Pin,            label: "Disematkan", val: pinnedCount },
-              { icon: MessageCircle,  label: "Komentar",   val: totalKomentar },
-              { icon: Bell,           label: "Hari Ini",   val: todayCount },
-            ].map(({ icon: Icon, label, val }) => (
-              <div key={label} className="flex flex-col items-center px-4 py-2.5 rounded-xl bg-white/15 backdrop-blur-sm min-w-15">
-                <Icon size={13} className="text-white/70 mb-1"/>
-                <p className="text-xl font-extrabold text-white leading-none">{loading ? "—" : val}</p>
-                <p className="text-[10px] text-white/60 font-semibold mt-0.5">{label}</p>
-              </div>
-            ))}
-            {canManage && (
-              <motion.button
-                onClick={() => { setEditItem(null); setModalOpen(true); }}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-[13px] font-bold shadow-lg shrink-0"
-                style={{ color: "#0082FB" }}>
-                <Plus size={15}/> Buat Pengumuman
-              </motion.button>
-            )}
-          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
 
       <div className="space-y-4">
+        {canManage && (
+          <motion.button
+            onClick={() => { setEditItem(null); setModalOpen(true); }}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="flex w-full items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white shadow-md shrink-0"
+            style={{ background: "#0082FB" }}>
+            <Plus size={15}/> Buat Pengumuman
+          </motion.button>
+        )}
         <MiniCalendar announcementDates={announcementDates} />
       </div>
 
