@@ -68,7 +68,10 @@ export class MateriService {
         include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
       });
     }
+    // Guru hanya melihat materi buatan sendiri — meski kelasnya sama, materi
+    // guru lain tidak boleh terlihat. ADMIN tetap melihat semua.
     return this.prisma.materi.findMany({
+      where: actor.role === 'GURU' ? { createdById: actor.id } : undefined,
       orderBy: [{ mapel: 'asc' }, { createdAt: 'desc' }],
       include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
     });
@@ -81,6 +84,9 @@ export class MateriService {
     });
     if (!materi) throw new NotFoundException('Materi tidak ditemukan');
 
+    if (actor.role === 'GURU' && materi.createdById !== actor.id) {
+      throw new ForbiddenException('Materi ini bukan buatan Anda');
+    }
     if (actor.role === 'SISWA' && materi.kelasList.length > 0) {
       const kelasId = await this.siswaKelasId(actor.id);
       if (!kelasId || !materi.kelasList.some((k) => k.id === kelasId)) {

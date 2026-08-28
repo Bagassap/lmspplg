@@ -55,13 +55,22 @@ export type TugasSubmisiItem = {
   dipaksaKeluar?: boolean;
   waktuMulai?: string | null;
   deadlineWaktu?: string | null;
+  // Tambahan percobaan di luar jatah normal (mis. HP siswa mati 2x tanpa
+  // sengaja) — diberikan guru/admin lewat tombol "Tambah 1x Percobaan".
+  // Batas efektif = MAKSIMAL_PERCOBAAN + bonusPercobaan, lihat maksimalPercobaanEfektif().
+  bonusPercobaan?: number;
 };
+
+export function maksimalPercobaanEfektif(s?: { bonusPercobaan?: number } | null) {
+  return MAKSIMAL_PERCOBAAN + (s?.bonusPercobaan ?? 0);
+}
 
 export type TugasItem = {
   id: string;
   mapel: string;
-  kelasId: string | null;
-  kelas: TugasKelasRef | null;
+  // Kelas target tugas ini — kosong berarti "Semua Kelas" (bisa lebih dari 1
+  // kelas sekaligus, sama seperti Materi.kelasList).
+  kelasList: TugasKelasRef[];
   judul: string;
   deskripsi: string | null;
   deadline: string;

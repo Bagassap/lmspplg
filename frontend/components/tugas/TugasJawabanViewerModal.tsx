@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ListChecks, PenLine, CheckCircle, XCircle, Save } from "lucide-react";
+import { X, ListChecks, PenLine, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { TugasJawabanItem } from "./types";
 import { nilaiPilihanGanda } from "./types";
+import { PercobaanBar } from "./PercobaanBar";
 
 export function TugasJawabanViewerModal({
-  open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai,
+  open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai, isDone,
+  jumlahPercobaan, maksimalPercobaan, terkunci, dipaksaKeluar, bonusPercobaan,
+  onTambahPercobaan, onResetPercobaan,
 }: {
   open: boolean;
   onClose: () => void;
@@ -16,22 +19,44 @@ export function TugasJawabanViewerModal({
   jawaban: TugasJawabanItem[];
   nilai?: number | null;
   canGrade?: boolean;
+  // Simpan nilai = langsung diterima (tidak ada tombol Terima/Revisi
+  // terpisah di sini) — begitu guru simpan nilai, backend otomatis
+  // menandai submisi DITERIMA.
   onSaveNilai?: (nilai: number) => Promise<void>;
+  isDone?: boolean;
+  // Info + aksi percobaan (lockdown) — lihat PercobaanBar.
+  jumlahPercobaan?: number;
+  maksimalPercobaan?: number;
+  terkunci?: boolean;
+  dipaksaKeluar?: boolean;
+  bonusPercobaan?: number;
+  onTambahPercobaan?: () => void;
+  onResetPercobaan?: () => void;
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
   const warna = isPg ? "#C3F84A" : "#0064E0";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
   const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
+  // PG sudah dihitung otomatis saat submit — tetap dipakai sebagai nilai awal
+  // di kolom input (bisa ditimpa manual kalau guru mau koreksi).
+  const nilaiAwal = nilai ?? nilaiAkhir;
 
-  const [nilaiInput, setNilaiInput] = useState(nilai != null ? String(nilai) : "");
+  const [nilaiInput, setNilaiInput] = useState(nilaiAwal != null ? String(nilaiAwal) : "");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (open) setNilaiInput(nilai != null ? String(nilai) : "");
-  }, [open, nilai]);
+    if (open) setNilaiInput(nilaiAwal != null ? String(nilaiAwal) : "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, nilaiAwal]);
 
+  // Tidak ada tombol "Simpan Nilai" — nilai otomatis tersimpan (langsung
+  // menerima submisi) begitu kolom ini kehilangan fokus atau guru menekan
+  // Enter, tanpa langkah klik terpisah. Tetap dikirim walau angkanya sama
+  // dengan nilai awal (mis. Pilihan Ganda yang sudah otomatis benar) —
+  // itulah satu-satunya cara menandai submisi ini diterima.
   async function handleSaveNilai() {
+    if (nilaiInput === "" || saving) return;
     const parsed = Math.round(Number(nilaiInput));
     if (!Number.isFinite(parsed) || parsed < 0 || parsed > 100) return;
     setSaving(true);
@@ -80,6 +105,16 @@ export function TugasJawabanViewerModal({
                 <X size={16} />
               </button>
             </div>
+
+            <PercobaanBar
+              jumlahPercobaan={jumlahPercobaan ?? 0}
+              maksimalPercobaan={maksimalPercobaan ?? 0}
+              terkunci={!!terkunci}
+              dipaksaKeluar={dipaksaKeluar}
+              bonusPercobaan={bonusPercobaan}
+              onTambahPercobaan={onTambahPercobaan}
+              onResetPercobaan={onResetPercobaan}
+            />
 
             <div className="flex-1 overflow-y-auto p-5">
               {sorted.length === 0 ? (
@@ -146,19 +181,25 @@ export function TugasJawabanViewerModal({
               )}
             </div>
 
-            {!isPg && canGrade && (
+            {canGrade && !isDone && (
               <div className="flex shrink-0 flex-wrap items-center gap-3 border-t border-slate-100 px-5 py-4 dark:border-slate-700">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Nilai (0–100)</label>
-                <input type="number" min={0} max={100} step={1} value={nilaiInput}
-                  onChange={(e) => setNilaiInput(e.target.value)}
-                  placeholder="0-100"
-                  className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
-                <button onClick={handleSaveNilai} disabled={saving || nilaiInput === ""}
-                  className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "#0082FB" }}>
-                  <Save size={13} /> {saving ? "Menyimpan…" : "Simpan Nilai"}
-                </button>
-                {nilai != null && <span className="text-[11px] text-slate-400">Nilai tersimpan: {nilai}</span>}
+                <div className="relative">
+                  <input type="number" min={0} max={100} step={1} value={nilaiInput} disabled={saving}
+                    onChange={(e) => setNilaiInput(e.target.value)}
+                    onBlur={handleSaveNilai}
+                    onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+                    placeholder="0-100"
+                    className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                  {saving && (
+                    <Loader2 size={14} className="absolute right-2 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />
+                  )}
+                </div>
+                <span className="text-[11px] text-slate-400">
+                  {isPg
+                    ? "Nilai otomatis dari jawaban benar — klik di luar kolom untuk langsung menerima."
+                    : "Isi nilai lalu klik di luar kolom (atau Enter) untuk langsung menerima."}
+                </span>
               </div>
             )}
           </motion.div>

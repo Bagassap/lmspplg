@@ -221,7 +221,7 @@ model Kelas {
   siswa         Siswa[]
   absensiHarian AbsensiHarian[]
   materiList    Materi[]
-  tugas         Tugas[]
+  tugasList     Tugas[]
 
   @@map("kelas")
 }
@@ -317,9 +317,11 @@ enum StatusTugas {
 }
 
 // Tugas independen dari Materi — di-scope langsung lewat mapel (teks bebas,
-// sama seperti Materi.mapel) dan kelasId (null berarti berlaku untuk semua
-// kelas). deadline dipakai utnuk membedakan tugas Aktif/Selesai di tampilan,
-// mengikuti pola tahapan_ukk pada fitur Jadwal & Soal UKK.
+// sama seperti Materi.mapel) dan kelasList (kosong berarti berlaku untuk
+// semua kelas — dulu relasi 1 kelas per tugas lewat kelasId, sekarang bisa
+// banyak kelas sekaligus, sama seperti Materi.kelasList). deadline dipakai
+// utnuk membedakan tugas Aktif/Selesai di tampilan, mengikuti pola
+// tahapan_ukk pada fitur Jadwal & Soal UKK.
 // tipe: "SUBMIT" (guru kirim PDF, siswa unggah balik file jawaban tanpa mode
 // pengerjaan apapun), "PRAKTIK" (siswa mengetik HTML/CSS/JS langsung di
 // canvas LMS — starterHtml/Css/Js adalah kode awal), "PILIHAN_GANDA" (soal
@@ -328,8 +330,7 @@ enum StatusTugas {
 model Tugas {
   id          String   @id @default(cuid())
   mapel       String
-  kelasId     String?
-  kelas       Kelas?   @relation(fields: [kelasId], references: [id])
+  kelasList   Kelas[]
   judul       String
   deskripsi   String?  @db.Text
   deadline    DateTime
@@ -409,6 +410,12 @@ model TugasSubmisi {
   dipaksaKeluar   Boolean  @default(false)
   waktuMulai      DateTime?
   deadlineWaktu   DateTime?
+  // Tambahan percobaan di luar jatah normal (mis. HP siswa mati 2x tanpa
+  // sengaja sampai kehabisan jatah) — diberikan guru/admin lewat tombol
+  // "Tambah 1x Percobaan", BEDA dari reset penuh (resetPercobaan) yang
+  // mengembalikan jumlahPercobaan ke 0. Batas efektif = MAKSIMAL_PERCOBAAN +
+  // bonusPercobaan.
+  bonusPercobaan  Int      @default(0)
 
   jawaban TugasJawaban[]
 

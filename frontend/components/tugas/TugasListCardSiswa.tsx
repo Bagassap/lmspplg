@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download, Lock,
 } from "lucide-react";
-import { formatTgl, isTugasActive, tipeLabel, LOCKDOWN_TIPE, MAKSIMAL_PERCOBAAN } from "./types";
+import { formatTgl, isTugasActive, tipeLabel, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
@@ -97,6 +97,10 @@ export function TugasListCardSiswa({
                 const overdue = !isTugasActive(t) && !mySubmisi;
                 const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
                 const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
+                // Terkena paksa-keluar (pelanggaran) tapi kesempatan masih tersisa —
+                // siswa boleh mencoba lagi, beda dengan "Terkirim" biasa yang cuma
+                // menunggu review guru.
+                const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci && !!mySubmisi?.dipaksaKeluar;
 
                 const btn = isTerkunci
                   ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#F1F5F8", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
@@ -104,6 +108,8 @@ export function TugasListCardSiswa({
                   ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onLihatDetail(mySubmisi!, t) }
                   : isRevisi
                   ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#8A9E1F", border: "#8A9E1F", onClick: () => onKumpulkan(t) }
+                  : bisaCobaLagi
+                  ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#FEF3E2", clr: "#F59E0B", border: "#F59E0B", onClick: () => onKumpulkan(t) }
                   : isTerkirim
                   ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#EAF3FF", clr: "#0064E0", border: "#0064E0", onClick: () => onLihatDetail(mySubmisi!, t) }
                   : overdue
@@ -144,7 +150,7 @@ export function TugasListCardSiswa({
                         )}
                         {isLockdown && !!mySubmisi?.jumlahPercobaan && !isDiterima && (
                           <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-                            Percobaan {mySubmisi.jumlahPercobaan}/{MAKSIMAL_PERCOBAAN}
+                            Percobaan {mySubmisi.jumlahPercobaan}/{maksimalPercobaanEfektif(mySubmisi)}
                           </span>
                         )}
                         {t.fileUrl && (

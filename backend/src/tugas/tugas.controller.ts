@@ -43,8 +43,8 @@ export class TugasController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('submisi')
-  findAllSubmisi() {
-    return this.service.findAllSubmisi();
+  findAllSubmisi(@Request() req: any) {
+    return this.service.findAllSubmisi({ id: req.user.id, role: req.user.role });
   }
 
   @UseGuards(RolesGuard)
@@ -70,16 +70,17 @@ export class TugasController {
   updateStatus(
     @Param('id') id: string,
     @Body('status') status: 'TERKIRIM' | 'DITERIMA' | 'REVISI',
+    @Request() req: any,
     @Body('pesanRevisi') pesanRevisi?: string,
   ) {
-    return this.service.updateStatusSubmisi(id, status, pesanRevisi);
+    return this.service.updateStatusSubmisi(id, status, { id: req.user.id, role: req.user.role }, pesanRevisi);
   }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Put('submisi/:id/nilai')
-  updateNilai(@Param('id') id: string, @Body() dto: UpdateNilaiSubmisiDto) {
-    return this.service.updateNilaiSubmisi(id, dto.nilai);
+  updateNilai(@Param('id') id: string, @Body() dto: UpdateNilaiSubmisiDto, @Request() req: any) {
+    return this.service.updateNilaiSubmisi(id, dto.nilai, { id: req.user.id, role: req.user.role });
   }
 
   @UseGuards(RolesGuard)
@@ -87,6 +88,13 @@ export class TugasController {
   @Put('submisi/:id/reset-percobaan')
   resetPercobaan(@Param('id') id: string, @Request() req: any) {
     return this.service.resetPercobaan(id, { id: req.user.id, role: req.user.role });
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Put('submisi/:id/tambah-percobaan')
+  tambahPercobaan(@Param('id') id: string, @Request() req: any) {
+    return this.service.tambahPercobaan(id, { id: req.user.id, role: req.user.role });
   }
 
   // Membuka lembar pengerjaan lockdown — mengonsumsi 1 percobaan.
@@ -123,8 +131,8 @@ export class TugasController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get(':id/belum-mengumpulkan')
-  findBelumMengumpulkan(@Param('id') id: string) {
-    return this.service.findBelumMengumpulkan(id);
+  findBelumMengumpulkan(@Param('id') id: string, @Request() req: any) {
+    return this.service.findBelumMengumpulkan(id, { id: req.user.id, role: req.user.role });
   }
 
   @Get(':id')

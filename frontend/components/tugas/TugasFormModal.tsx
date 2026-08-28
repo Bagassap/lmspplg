@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ClipboardList, Loader2, Upload, File as FileIcon, CalendarClock, Send, Code2,
-  ListChecks, PenLine, Plus, Trash2, CheckCircle2, Timer, ShieldAlert,
+  ListChecks, PenLine, Plus, Trash2, CheckCircle2, Timer, ShieldAlert, ChevronDown,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
@@ -85,8 +85,10 @@ export function TugasFormModal({
   }
 
   const [mapel, setMapel] = useState("");
-  const [kelasId, setKelasId] = useState("");
+  const [kelasIds, setKelasIds] = useState<string[]>([]);
   const [kelasList, setKelasList] = useState<KelasOption[]>([]);
+  const [kelasDropdownOpen, setKelasDropdownOpen] = useState(false);
+  const kelasDropdownRef = useRef<HTMLDivElement>(null);
   const [judul, setJudul] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [deadline, setDeadline] = useState(toLocalInputValue());
@@ -103,7 +105,8 @@ export function TugasFormModal({
   useEffect(() => {
     if (open) {
       setMapel(tugas?.mapel ?? "");
-      setKelasId(tugas?.kelasId ?? "");
+      setKelasIds(tugas?.kelasList?.map((k) => k.id) ?? []);
+      setKelasDropdownOpen(false);
       setJudul(tugas?.judul ?? "");
       setDeskripsi(tugas?.deskripsi ?? "");
       setDeadline(toLocalInputValue(tugas?.deadline));
@@ -128,6 +131,21 @@ export function TugasFormModal({
       fetch("/api/kelas").then((r) => r.json()).then((d) => setKelasList(Array.isArray(d) ? d : [])).catch(() => {});
     }
   }, [open, tugas]);
+
+  useEffect(() => {
+    if (!kelasDropdownOpen) return;
+    function onClickOutside(e: MouseEvent) {
+      if (kelasDropdownRef.current && !kelasDropdownRef.current.contains(e.target as Node)) {
+        setKelasDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [kelasDropdownOpen]);
+
+  function toggleKelas(id: string) {
+    setKelasIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
 
   function updateSoal(idx: number, patch: Partial<SoalDraft>) {
     setSoalList((prev) => prev.map((s, i) => (i === idx ? { ...s, ...patch } : s)));
@@ -170,7 +188,7 @@ export function TugasFormModal({
     try {
       const fd = new FormData();
       fd.append("mapel", mapel);
-      fd.append("kelasId", kelasId);
+      fd.append("kelasIds", JSON.stringify(kelasIds));
       fd.append("judul", judul);
       fd.append("deskripsi", deskripsi);
       fd.append("deadline", wibInputToIso(deadline));
@@ -265,10 +283,44 @@ export function TugasFormModal({
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">Kelas Target</label>
-                  <select value={kelasId} onChange={(e) => setKelasId(e.target.value)} className={INPUT_CLS}>
-                    <option value="">Semua Kelas</option>
-                    {kelasList.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
-                  </select>
+                  <div className="relative" ref={kelasDropdownRef}>
+                    <button type="button" onClick={() => setKelasDropdownOpen((v) => !v)}
+                      className={INPUT_CLS + " flex items-center justify-between gap-2 text-left"}>
+                      <span className={`truncate ${kelasIds.length ? "" : "text-gray-400"}`}>
+                        {kelasIds.length === 0
+                          ? "Semua Kelas"
+                          : kelasList.filter((k) => kelasIds.includes(k.id)).map((k) => k.nama).join(", ")}
+                      </span>
+                      <ChevronDown size={14} className={`shrink-0 text-gray-400 transition-transform ${kelasDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    <AnimatePresence>
+                      {kelasDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute z-20 mt-1.5 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-700"
+                        >
+                          {kelasList.length === 0 && (
+                            <p className="px-3 py-2 text-xs text-gray-400 dark:text-slate-500">Memuat daftar kelas…</p>
+                          )}
+                          {kelasList.map((k) => {
+                            const active = kelasIds.includes(k.id);
+                            return (
+                              <label key={k.id}
+                                className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-slate-200 dark:hover:bg-slate-600">
+                                <input type="checkbox" checked={active} onChange={() => toggleKelas(k.id)}
+                                  className="h-3.5 w-3.5 rounded border-gray-300 text-[#0082FB] focus:ring-[#0082FB] dark:border-slate-500" />
+                                {k.nama}
+                              </label>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-gray-400 dark:text-slate-500">
+                    {kelasIds.length === 0 ? "Semua Kelas" : `${kelasIds.length} kelas dipilih`}
+                  </p>
                 </div>
               </div>
 

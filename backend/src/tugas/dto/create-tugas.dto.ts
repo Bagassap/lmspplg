@@ -1,10 +1,41 @@
-import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+
+// Dikirim lewat multipart/form-data (satu form dengan file upload) sebagai
+// string JSON — mis. fd.append('kelasIds', JSON.stringify(['id1','id2'])) —
+// karena field berulang di FormData tidak konsisten diparse jadi array oleh
+// multer. Kosong/tidak diisi berarti "Semua Kelas". Sama seperti pola di
+// CreateMateriDto.
+function parseKelasIds(value: unknown): string[] | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
 
 export class CreateTugasDto {
   @IsString()
   @IsNotEmpty({ message: 'Mata pelajaran tidak boleh kosong' })
   mapel: string;
 
+  @Transform(({ value }) => parseKelasIds(value))
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  kelasIds?: string[];
+
+  // Field lama (satu kelas) dari sebelum tugas mendukung multi-kelas — tetap
+  // diterima (tapi diabaikan kalau kelasIds sudah ada) supaya tab browser
+  // guru yang masih menjalankan bundle frontend lama saat deploy tidak
+  // langsung gagal simpan gara-gara forbidNonWhitelisted. Lihat penanganannya
+  // di TugasService.create.
   @IsString()
   @IsOptional()
   kelasId?: string;

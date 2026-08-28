@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX, RotateCcw, ShieldAlert } from "lucide-react";
+import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX, ShieldAlert } from "lucide-react";
 import type { TugasItem, TugasSubmisiItem } from "./types";
-import { formatTgl, formatTglJam, statusInfo, LOCKDOWN_TIPE, MAKSIMAL_PERCOBAAN } from "./types";
+import { formatTgl, formatTglJam, statusInfo, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
+import { TugasFileViewerModal } from "./TugasFileViewerModal";
 
 type BelumSiswa = {
   id: string;
@@ -16,7 +17,7 @@ type BelumSiswa = {
 };
 
 export function SubmisiTugasModal({
-  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai, onResetPercobaan,
+  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai, onResetPercobaan, onTambahPercobaan,
 }: {
   tugas: TugasItem | null;
   submisi: TugasSubmisiItem[];
@@ -25,9 +26,13 @@ export function SubmisiTugasModal({
   onRevisi: (s: TugasSubmisiItem) => void;
   onSimpanNilai: (submisiId: string, nilai: number) => Promise<void>;
   onResetPercobaan?: (submisiId: string) => Promise<void>;
+  // Tambah 1x percobaan TANPA reset penuh — dipakai untuk kasus seperti HP
+  // siswa mati 2x tanpa sengaja sampai kehabisan jatah normal.
+  onTambahPercobaan?: (submisiId: string) => Promise<void>;
 }) {
   const [viewCodeTarget, setViewCodeTarget] = useState<TugasSubmisiItem | null>(null);
   const [viewJawabanTarget, setViewJawabanTarget] = useState<TugasSubmisiItem | null>(null);
+  const [viewFileTarget, setViewFileTarget] = useState<TugasSubmisiItem | null>(null);
   const [tab, setTab] = useState<"sudah" | "belum">("sudah");
   const [belumList, setBelumList] = useState<BelumSiswa[]>([]);
   const [belumLoading, setBelumLoading] = useState(false);
@@ -81,7 +86,7 @@ export function SubmisiTugasModal({
                     {tugas.mapel}
                   </span>
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/20 text-xs font-semibold text-white">
-                    Kelas: {tugas.kelas?.nama ?? "Semua Kelas"}
+                    Kelas: {tugas.kelasList.length ? tugas.kelasList.map((k) => k.nama).join(", ") : "Semua Kelas"}
                   </span>
                   <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
                     <CalendarClock size={10} /> Deadline {formatTgl(tugas.deadline)}
@@ -167,15 +172,20 @@ export function SubmisiTugasModal({
                         <p className="text-xs text-slate-400 truncate">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
                       </div>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
-                        <span className="shrink-0 rounded-lg bg-[#F1F5F8] px-2.5 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
-                          Nilai {s.nilai}
+                        <span className="shrink-0 rounded-xl px-3 py-1.5 text-sm font-black shadow-sm"
+                          style={{
+                            background: s.nilai >= 80 ? "#00D67F" : s.nilai >= 60 ? "#F59E0B" : "#EF4444",
+                            color: "#FFFFFF",
+                          }}>
+                          {s.nilai}
                         </span>
                       )}
                       {isLockdown && !!s.jumlahPercobaan && (
                         <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
                           s.terkunci ? "bg-red-50 text-red-500 dark:bg-red-900/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
                         }`}>
-                          Percobaan {s.jumlahPercobaan}/{MAKSIMAL_PERCOBAAN}
+                          Percobaan {s.jumlahPercobaan}/{maksimalPercobaanEfektif(s)}
+                          {!!s.bonusPercobaan && ` (+${s.bonusPercobaan})`}
                         </span>
                       )}
                       {s.dipaksaKeluar && (
@@ -183,14 +193,10 @@ export function SubmisiTugasModal({
                           <ShieldAlert size={11} /> Dipaksa Keluar
                         </span>
                       )}
-                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
-                        {isDone ? "✓ Diterima" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
-                      </span>
-                      {isLockdown && !!s.jumlahPercobaan && onResetPercobaan && (
-                        <button onClick={() => onResetPercobaan(s.id)}
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400">
-                          <RotateCcw size={12} /> Reset Percobaan
-                        </button>
+                      {(isDone || s.status === "REVISI") && (
+                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
+                          {isDone ? "✓ Diterima" : "⚠ Perlu Revisi"}
+                        </span>
                       )}
                       {isPraktik ? (
                         <button onClick={() => setViewCodeTarget(s)}
@@ -204,28 +210,15 @@ export function SubmisiTugasModal({
                           style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
                           {tugas.tipe === "PILIHAN_GANDA" ? <ListChecks size={12} /> : <PenLine size={12} />} Lihat Jawaban
                         </button>
-                      ) : s.fileUrl && (
-                        <a href={s.fileUrl} target="_blank" rel="noopener noreferrer"
+                      ) : (
+                        <button onClick={() => setViewFileTarget(s)}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
                           style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
                           <Download size={12} /> File
-                        </a>
+                        </button>
                       )}
-                      {isDone ? (
+                      {isDone && (
                         <span className="text-xs font-bold text-emerald-500 shrink-0">Selesai ✓</span>
-                      ) : (
-                        <div className="flex gap-2 shrink-0">
-                          <button onClick={() => onTerima(s.id)}
-                            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "#00D67F" }}>
-                            <CheckCircle size={12} /> Terima
-                          </button>
-                          <button onClick={() => onRevisi(s)}
-                            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-transform hover:scale-105"
-                            style={{ background: "#C3F84A", color: "#1C2B33" }}>
-                            <AlertCircle size={12} /> Revisi
-                          </button>
-                        </div>
                       )}
                     </div>
                   );
@@ -234,8 +227,7 @@ export function SubmisiTugasModal({
 
               <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/60">
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  <span className="font-semibold text-[#C3F84A]">Revisi</span> → siswa kirim ulang ·{" "}
-                  <span className="font-semibold text-emerald-500">Terima</span> → tugas selesai
+                  Buka <span className="font-semibold text-[#0082FB]">Lihat Kode/Jawaban/File</span> untuk menerima atau minta revisi tiap submisi.
                 </p>
                 <button onClick={onClose}
                   className="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shrink-0 transition-colors">
@@ -255,6 +247,29 @@ export function SubmisiTugasModal({
       html={viewCodeTarget?.submittedHtml ?? ""}
       css={viewCodeTarget?.submittedCss ?? ""}
       js={viewCodeTarget?.submittedJs ?? ""}
+      isDone={viewCodeTarget?.status === "DITERIMA"}
+      onTerima={viewCodeTarget ? () => { onTerima(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
+      onRevisi={viewCodeTarget ? () => { onRevisi(viewCodeTarget); setViewCodeTarget(null); } : undefined}
+      jumlahPercobaan={viewCodeTarget?.jumlahPercobaan}
+      maksimalPercobaan={viewCodeTarget ? maksimalPercobaanEfektif(viewCodeTarget) : undefined}
+      terkunci={viewCodeTarget?.terkunci}
+      dipaksaKeluar={viewCodeTarget?.dipaksaKeluar}
+      bonusPercobaan={viewCodeTarget?.bonusPercobaan}
+      onTambahPercobaan={viewCodeTarget && onTambahPercobaan ? () => { onTambahPercobaan(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
+      onResetPercobaan={viewCodeTarget && onResetPercobaan ? () => { onResetPercobaan(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
+    />
+    <TugasFileViewerModal
+      open={!!viewFileTarget}
+      onClose={() => setViewFileTarget(null)}
+      title={(viewFileTarget?.siswa?.user?.nama || viewFileTarget?.siswa?.nama) ?? "Siswa"}
+      subtitle={tugas?.judul}
+      fileUrl={viewFileTarget?.fileUrl ?? null}
+      fileName={viewFileTarget?.fileName ?? null}
+      catatan={viewFileTarget?.catatan ?? null}
+      submittedAt={viewFileTarget?.submittedAt}
+      isDone={viewFileTarget?.status === "DITERIMA"}
+      onTerima={viewFileTarget ? () => { onTerima(viewFileTarget.id); setViewFileTarget(null); } : undefined}
+      onRevisi={viewFileTarget ? () => { onRevisi(viewFileTarget); setViewFileTarget(null); } : undefined}
     />
     <TugasJawabanViewerModal
       open={!!viewJawabanTarget}
@@ -264,11 +279,19 @@ export function SubmisiTugasModal({
       jawaban={viewJawabanTarget?.jawaban ?? []}
       nilai={viewJawabanTarget?.nilai}
       canGrade
+      isDone={viewJawabanTarget?.status === "DITERIMA"}
       onSaveNilai={async (nilai) => {
         if (!viewJawabanTarget) return;
         await onSimpanNilai(viewJawabanTarget.id, nilai);
-        setViewJawabanTarget((prev) => (prev ? { ...prev, nilai, status: "DITERIMA", pesanRevisi: null } : prev));
+        setViewJawabanTarget(null);
       }}
+      jumlahPercobaan={viewJawabanTarget?.jumlahPercobaan}
+      maksimalPercobaan={viewJawabanTarget ? maksimalPercobaanEfektif(viewJawabanTarget) : undefined}
+      terkunci={viewJawabanTarget?.terkunci}
+      dipaksaKeluar={viewJawabanTarget?.dipaksaKeluar}
+      bonusPercobaan={viewJawabanTarget?.bonusPercobaan}
+      onTambahPercobaan={viewJawabanTarget && onTambahPercobaan ? () => { onTambahPercobaan(viewJawabanTarget.id); setViewJawabanTarget(null); } : undefined}
+      onResetPercobaan={viewJawabanTarget && onResetPercobaan ? () => { onResetPercobaan(viewJawabanTarget.id); setViewJawabanTarget(null); } : undefined}
     />
     </>
   );

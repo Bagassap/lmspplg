@@ -24,7 +24,7 @@ interface JawabanInput {
   jawabanEssay?: string;
 }
 
-const INCLUDE_KELAS = { select: { id: true, nama: true } } as const;
+const INCLUDE_KELAS_LIST = { select: { id: true, nama: true }, orderBy: { nama: 'asc' as const } };
 const INCLUDE_CREATED_BY = { select: { id: true, nama: true, role: true } } as const;
 const SOAL_ORDER = { orderBy: { urutan: 'asc' as const } };
 
@@ -70,9 +70,11 @@ export class TugasService {
     return siswa?.kelasId ?? null;
   }
 
-  private async notifySiswaBaru(kelasId: string | null, title: string, message: string) {
+  // kelasIds kosong ([]) berarti tugas ini untuk "Semua Kelas" — notifikasi
+  // dikirim ke seluruh siswa, bukan hanya kelas tertentu.
+  private async notifySiswaBaru(kelasIds: string[], title: string, message: string) {
     const siswaUsers = await this.prisma.siswa.findMany({
-      where: { userId: { not: null }, ...(kelasId ? { kelasId } : {}) },
+      where: { userId: { not: null }, ...(kelasIds.length ? { kelasId: { in: kelasIds } } : {}) },
       select: { userId: true },
     });
     await this.notificationService.createMany(
@@ -100,23 +102,100 @@ export class TugasService {
     }
   }
 
+  // Update di tempat berdasarkan posisi (urutan), BUKAN delete-semua-lalu-
+  // buat-ulang. TugasJawaban.soalId punya onDelete: Cascade ke TugasSoal —
+  // delete+recreate berarti id soal lama hilang, jadi setiap guru edit tugas
+  // (walau cuma benerin typo satu soal) diam-diam menghapus permanen jawaban
+  // SEMUA siswa yang sudah submit untuk tugas itu, dan submisi yang sedang
+  // "in-flight" (sudah buka lembar pengerjaan sebelum edit ini) akan gagal
+  // submit dengan foreign key error karena soalId yang dikirim sudah tidak
+  // ada. Dengan update di tempat, id soal yang masih ada tetap sama →
+  // jawaban lama & submisi yang sedang berjalan tidak ikut rusak. Soal baru
+  // (kalau nambah) ditambahkan di akhir; soal yang dihapus (kalau
+  // mengurangi) baru di-cascade di baris paling akhir.
   private async replaceSoal(tugasId: string, tipe: string, soalJson: string | undefined) {
     if (!NEEDS_SOAL.has(tipe)) return;
     const soal = parseJsonArray<SoalInput>(soalJson, 'soal');
-    await this.prisma.tugasSoal.deleteMany({ where: { tugasId } });
-    if (soal.length === 0) return;
-    await this.prisma.tugasSoal.createMany({
-      data: soal.map((s, i) => ({
-        tugasId,
-        urutan: i,
-        pertanyaan: s.pertanyaan,
-        pilihanA: s.pilihanA,
-        pilihanB: s.pilihanB,
-        pilihanC: s.pilihanC,
-        pilihanD: s.pilihanD,
-        jawabanBenar: s.jawabanBenar,
-      })),
+    const existing = await this.prisma.tugasSoal.findMany({ where: { tugasId }, orderBy: { urutan: 'asc' } });
+
+    const updateCount = Math.min(existing.length, soal.length);
+    for (let i = 0; i < updateCount; i++) {
+      const s = soal[i];
+      await this.prisma.tugasSoal.update({
+        where: { id: existing[i].id },
+        data: {
+          urutan: i,
+          pertanyaan: s.pertanyaan,
+          pilihanA: s.pilihanA,
+          pilihanB: s.pilihanB,
+          pilihanC: s.pilihanC,
+          pilihanD: s.pilihanD,
+          jawabanBenar: s.jawabanBenar,
+        },
+      });
+    }
+
+    if (soal.length > existing.length) {
+      await this.prisma.tugasSoal.createMany({
+        data: soal.slice(existing.length).map((s, i) => ({
+          tugasId,
+          urutan: existing.length + i,
+          pertanyaan: s.pertanyaan,
+          pilihanA: s.pilihanA,
+          pilihanB: s.pilihanB,
+          pilihanC: s.pilihanC,
+          pilihanD: s.pilihanD,
+          jawabanBenar: s.jawabanBenar,
+        })),
+      });
+    } else if (existing.length > soal.length) {
+      await this.prisma.tugasSoal.deleteMany({
+        where: { id: { in: existing.slice(soal.length).map((s) => s.id) } },
+      });
+    }
+  }
+
+  // Dipakai oleh submitTugas & submitPercobaan — disatukan supaya perbaikan
+  // di sini otomatis berlaku untuk keduanya. Query ulang soal yang BENAR-
+  // BENAR masih ada sekarang & saring jawaban ke soalId yang valid saja:
+  // kalau guru mengedit tugas ini persis di antara siswa membuka lembar
+  // pengerjaan dan submit, soalId yang dikirim klien bisa merujuk ke
+  // TugasSoal yang sudah tidak ada lagi — tanpa penyaringan ini,
+  // createMany gagal foreign key dan submisi siswa nyangkut TERKIRIM tanpa
+  // nilai (lihat replaceSoal untuk perbaikan akar masalahnya).
+  private async simpanJawabanSoal(tugasId: string, submisiId: string, tipe: string, jawabanJson: string | undefined) {
+    const jawaban = parseJsonArray<JawabanInput>(jawabanJson, 'jawaban');
+    const soalList = await this.prisma.tugasSoal.findMany({
+      where: { tugasId },
+      select: { id: true, jawabanBenar: true },
     });
+    const soalIds = new Set(soalList.map((s) => s.id));
+    const jawabanValid = jawaban.filter((j) => j.soalId && soalIds.has(j.soalId));
+
+    await this.prisma.tugasJawaban.deleteMany({ where: { submisiId } });
+    if (jawabanValid.length > 0) {
+      await this.prisma.tugasJawaban.createMany({
+        data: jawabanValid.map((j) => ({
+          submisiId,
+          soalId: j.soalId,
+          jawabanPilihan: j.jawabanPilihan,
+          jawabanEssay: j.jawabanEssay,
+        })),
+      });
+    }
+
+    // Pilihan ganda dinilai otomatis 0-100 (dibulatkan, tidak pernah koma) —
+    // tipe soal-based lain (ESSAY) tetap butuh penilaian manual guru lewat
+    // kunci jawaban, jadi nilai-nya dibiarkan null.
+    if (tipe === 'PILIHAN_GANDA') {
+      const totalSoal = soalList.length;
+      const jumlahBenar = soalList.filter((s) => {
+        const j = jawabanValid.find((x) => x.soalId === s.id);
+        return !!s.jawabanBenar && j?.jawabanPilihan === s.jawabanBenar;
+      }).length;
+      const nilai = totalSoal > 0 ? Math.round((jumlahBenar / totalSoal) * 100) : 0;
+      await this.prisma.tugasSubmisi.update({ where: { id: submisiId }, data: { nilai } });
+    }
   }
 
   async findAll(actor: Actor) {
@@ -124,10 +203,15 @@ export class TugasService {
       const kelasId = await this.siswaKelasId(actor.id);
       const siswa = await this.prisma.siswa.findUnique({ where: { userId: actor.id }, select: { id: true } });
       const list = await this.prisma.tugas.findMany({
-        where: kelasId ? { OR: [{ kelasId: null }, { kelasId }] } : { kelasId: null },
+        where: {
+          OR: [
+            { kelasList: { none: {} } },
+            ...(kelasId ? [{ kelasList: { some: { id: kelasId } } }] : []),
+          ],
+        },
         orderBy: [{ deadline: 'asc' }],
         include: {
-          kelas: INCLUDE_KELAS,
+          kelasList: INCLUDE_KELAS_LIST,
           createdBy: INCLUDE_CREATED_BY,
           submisi: siswa ? { where: { siswaId: siswa.id }, include: { jawaban: { include: { soal: true } } } } : false,
           soal: {
@@ -139,10 +223,13 @@ export class TugasService {
       });
       return list;
     }
+    // Guru hanya melihat tugas buatan sendiri — meski kelasnya sama, tugas
+    // guru lain tidak boleh terlihat. ADMIN tetap melihat semua.
     return this.prisma.tugas.findMany({
+      where: actor.role === 'GURU' ? { createdById: actor.id } : undefined,
       orderBy: [{ deadline: 'asc' }],
       include: {
-        kelas: INCLUDE_KELAS,
+        kelasList: INCLUDE_KELAS_LIST,
         createdBy: INCLUDE_CREATED_BY,
         soal: SOAL_ORDER,
         _count: { select: { submisi: true } },
@@ -153,13 +240,18 @@ export class TugasService {
   async findOne(id: string, actor: Actor) {
     const tugas = await this.prisma.tugas.findUnique({
       where: { id },
-      include: { kelas: INCLUDE_KELAS, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
+      include: { kelasList: INCLUDE_KELAS_LIST, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
     });
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
 
-    if (actor.role === 'SISWA' && tugas.kelasId) {
+    if (actor.role === 'GURU' && tugas.createdById !== actor.id) {
+      throw new ForbiddenException('Tugas ini bukan buatan Anda');
+    }
+    if (actor.role === 'SISWA' && tugas.kelasList.length > 0) {
       const kelasId = await this.siswaKelasId(actor.id);
-      if (kelasId !== tugas.kelasId) throw new ForbiddenException('Tugas ini bukan untuk kelasmu');
+      if (!kelasId || !tugas.kelasList.some((k) => k.id === kelasId)) {
+        throw new ForbiddenException('Tugas ini bukan untuk kelasmu');
+      }
     }
     if (actor.role === 'SISWA') {
       const siswa = await this.prisma.siswa.findUnique({ where: { userId: actor.id }, select: { id: true } });
@@ -178,10 +270,13 @@ export class TugasService {
     await this.assertGuruMapel(actor, dto.mapel);
     const tipe = dto.tipe || 'SUBMIT';
     const durasiMenit = parseDurasiMenit(tipe, dto.durasiMenit);
+    // dto.kelasId (tunggal) adalah fallback dari bundle frontend lama — lihat
+    // catatan di CreateTugasDto.
+    const kelasIds = dto.kelasIds ?? (dto.kelasId ? [dto.kelasId] : []);
     const tugas = await this.prisma.tugas.create({
       data: {
         mapel: dto.mapel,
-        kelasId: dto.kelasId || null,
+        kelasList: kelasIds.length ? { connect: kelasIds.map((id) => ({ id })) } : undefined,
         judul: dto.judul,
         deskripsi: dto.deskripsi,
         deadline: new Date(dto.deadline),
@@ -196,10 +291,10 @@ export class TugasService {
       },
     });
     await this.replaceSoal(tugas.id, tipe, dto.soal);
-    await this.notifySiswaBaru(tugas.kelasId, 'Tugas baru', `${dto.mapel} — ${dto.judul}`);
+    await this.notifySiswaBaru(kelasIds, 'Tugas baru', `${dto.mapel} — ${dto.judul}`);
     return this.prisma.tugas.findUnique({
       where: { id: tugas.id },
-      include: { kelas: INCLUDE_KELAS, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
+      include: { kelasList: INCLUDE_KELAS_LIST, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
     });
   }
 
@@ -218,7 +313,14 @@ export class TugasService {
       where: { id },
       data: {
         ...(dto.mapel !== undefined ? { mapel: dto.mapel } : {}),
-        ...(dto.kelasId !== undefined ? { kelasId: dto.kelasId || null } : {}),
+        // dto.kelasId (tunggal) adalah fallback dari bundle frontend lama —
+        // lihat catatan di UpdateTugasDto — hanya dipakai kalau kelasIds
+        // (field baru) tidak dikirim sama sekali.
+        ...(dto.kelasIds !== undefined
+          ? { kelasList: { set: dto.kelasIds.map((id) => ({ id })) } }
+          : dto.kelasId !== undefined
+          ? { kelasList: { set: dto.kelasId ? [{ id: dto.kelasId }] : [] } }
+          : {}),
         ...(dto.judul !== undefined ? { judul: dto.judul } : {}),
         ...(dto.deskripsi !== undefined ? { deskripsi: dto.deskripsi } : {}),
         ...(dto.deadline !== undefined ? { deadline: new Date(dto.deadline) } : {}),
@@ -235,7 +337,7 @@ export class TugasService {
     }
     return this.prisma.tugas.findUnique({
       where: { id: tugas.id },
-      include: { kelas: INCLUDE_KELAS, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
+      include: { kelasList: INCLUDE_KELAS_LIST, createdBy: INCLUDE_CREATED_BY, soal: SOAL_ORDER },
     });
   }
 
@@ -246,13 +348,17 @@ export class TugasService {
     return this.prisma.tugas.delete({ where: { id } });
   }
 
-  async findBelumMengumpulkan(id: string) {
-    const tugas = await this.prisma.tugas.findUnique({ where: { id } });
+  async findBelumMengumpulkan(id: string, actor: Actor) {
+    const tugas = await this.prisma.tugas.findUnique({ where: { id }, include: { kelasList: { select: { id: true } } } });
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
+    if (actor.role === 'GURU' && tugas.createdById !== actor.id) {
+      throw new ForbiddenException('Tugas ini bukan buatan Anda');
+    }
+    const kelasIds = tugas.kelasList.map((k) => k.id);
 
     const [target, submisi] = await Promise.all([
       this.prisma.siswa.findMany({
-        where: tugas.kelasId ? { kelasId: tugas.kelasId } : {},
+        where: kelasIds.length ? { kelasId: { in: kelasIds } } : {},
         select: {
           id: true,
           nama: true,
@@ -267,8 +373,11 @@ export class TugasService {
     return target.filter((s) => !sudahMengumpulkan.has(s.id));
   }
 
-  findAllSubmisi() {
+  // Guru hanya melihat submisi untuk tugas buatan sendiri — mencegah guru
+  // lain membaca jawaban/menilai tugas yang bukan buatannya. ADMIN melihat semua.
+  findAllSubmisi(actor: Actor) {
     return this.prisma.tugasSubmisi.findMany({
+      where: actor.role === 'GURU' ? { tugas: { createdById: actor.id } } : undefined,
       orderBy: { submittedAt: 'desc' },
       include: {
         tugas: { select: { id: true, judul: true, tipe: true, mapel: true } },
@@ -320,37 +429,7 @@ export class TugasService {
     });
 
     if (isSoalBased) {
-      const jawaban = parseJsonArray<JawabanInput>(dto.jawaban, 'jawaban');
-      await this.prisma.tugasJawaban.deleteMany({ where: { submisiId: submisi.id } });
-      if (jawaban.length > 0) {
-        await this.prisma.tugasJawaban.createMany({
-          data: jawaban
-            .filter((j) => j.soalId)
-            .map((j) => ({
-              submisiId: submisi.id,
-              soalId: j.soalId,
-              jawabanPilihan: j.jawabanPilihan,
-              jawabanEssay: j.jawabanEssay,
-            })),
-        });
-      }
-
-      // Pilihan ganda dinilai otomatis 0-100 (dibulatkan, tidak pernah koma) —
-      // tipe soal-based lain (ESSAY) tetap butuh penilaian manual guru lewat
-      // kunci jawaban, jadi nilai-nya dibiarkan null.
-      if (tugas.tipe === 'PILIHAN_GANDA') {
-        const soalList = await this.prisma.tugasSoal.findMany({
-          where: { tugasId: tugas.id },
-          select: { id: true, jawabanBenar: true },
-        });
-        const totalSoal = soalList.length;
-        const jumlahBenar = soalList.filter((s) => {
-          const j = jawaban.find((x) => x.soalId === s.id);
-          return !!s.jawabanBenar && j?.jawabanPilihan === s.jawabanBenar;
-        }).length;
-        const nilai = totalSoal > 0 ? Math.round((jumlahBenar / totalSoal) * 100) : 0;
-        await this.prisma.tugasSubmisi.update({ where: { id: submisi.id }, data: { nilai } });
-      }
+      await this.simpanJawabanSoal(tugas.id, submisi.id, tugas.tipe, dto.jawaban);
     }
 
     await this.notificationService.create({
@@ -367,12 +446,13 @@ export class TugasService {
     });
   }
 
-  async updateStatusSubmisi(id: string, status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', pesanRevisi?: string) {
+  async updateStatusSubmisi(id: string, status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', actor: Actor, pesanRevisi?: string) {
     const submisi = await this.prisma.tugasSubmisi.findUnique({
       where: { id },
-      include: { siswa: { select: { userId: true } }, tugas: { select: { judul: true } } },
+      include: { siswa: { select: { userId: true } }, tugas: { select: { judul: true, createdById: true } } },
     });
     if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
     const updated = await this.prisma.tugasSubmisi.update({
       where: { id },
       data: {
@@ -395,12 +475,13 @@ export class TugasService {
   // Nilai manual (0-100, integer) untuk tugas essay — guru mengisi ini setelah
   // membaca jawaban siswa dan membandingkan dengan kunci jawaban. Pilihan ganda
   // tidak pernah lewat sini karena sudah dinilai otomatis saat submit.
-  async updateNilaiSubmisi(id: string, nilai: number) {
+  async updateNilaiSubmisi(id: string, nilai: number, actor: Actor) {
     const submisi = await this.prisma.tugasSubmisi.findUnique({
       where: { id },
-      include: { siswa: { select: { userId: true } }, tugas: { select: { judul: true } } },
+      include: { siswa: { select: { userId: true } }, tugas: { select: { judul: true, createdById: true } } },
     });
     if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
     // Memberi nilai = selesai menilai — otomatis DITERIMA, tidak perlu klik
     // tombol Terima terpisah lagi.
     const updated = await this.prisma.tugasSubmisi.update({
@@ -427,12 +508,15 @@ export class TugasService {
   async mulaiPercobaan(userId: string, tugasId: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
-    const tugas = await this.prisma.tugas.findUnique({ where: { id: tugasId }, include: { soal: SOAL_ORDER } });
+    const tugas = await this.prisma.tugas.findUnique({
+      where: { id: tugasId },
+      include: { soal: SOAL_ORDER, kelasList: { select: { id: true } } },
+    });
     if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
     if (!LOCKDOWN_TIPE.has(tugas.tipe)) {
       throw new BadRequestException('Tugas ini tidak menggunakan mode lembar pengerjaan');
     }
-    if (tugas.kelasId && siswa.kelasId !== tugas.kelasId) {
+    if (tugas.kelasList.length > 0 && !tugas.kelasList.some((k) => k.id === siswa.kelasId)) {
       throw new ForbiddenException('Tugas ini bukan untuk kelasmu');
     }
 
@@ -442,9 +526,10 @@ export class TugasService {
     if (existing?.status === 'DITERIMA') {
       throw new ForbiddenException('Tugas ini sudah diterima, tidak bisa dikerjakan lagi');
     }
+    const maksimalEfektif = MAKSIMAL_PERCOBAAN + (existing?.bonusPercobaan ?? 0);
     const percobaanKe = (existing?.jumlahPercobaan ?? 0) + 1;
-    if (existing?.terkunci || percobaanKe > MAKSIMAL_PERCOBAAN) {
-      throw new ForbiddenException(`Percobaan Anda untuk tugas ini sudah habis (maksimal ${MAKSIMAL_PERCOBAAN}x). Hubungi guru untuk mengulang.`);
+    if (existing?.terkunci || percobaanKe > maksimalEfektif) {
+      throw new ForbiddenException(`Percobaan Anda untuk tugas ini sudah habis (maksimal ${maksimalEfektif}x). Hubungi guru untuk mengulang.`);
     }
 
     const now = new Date();
@@ -476,7 +561,7 @@ export class TugasService {
     return {
       submisiId: submisi.id,
       percobaanKe,
-      maksimalPercobaan: MAKSIMAL_PERCOBAAN,
+      maksimalPercobaan: maksimalEfektif,
       waktuMulai: submisi.waktuMulai,
       deadlineWaktu: submisi.deadlineWaktu,
       tugas: {
@@ -514,7 +599,7 @@ export class TugasService {
 
     const isPraktik = tugas.tipe === 'PRAKTIK';
     const isSoalBased = NEEDS_SOAL.has(tugas.tipe);
-    const terkunciBaru = submisi.jumlahPercobaan >= MAKSIMAL_PERCOBAAN;
+    const terkunciBaru = submisi.jumlahPercobaan >= MAKSIMAL_PERCOBAAN + submisi.bonusPercobaan;
 
     const updated = await this.prisma.tugasSubmisi.update({
       where: { id: submisi.id },
@@ -532,34 +617,7 @@ export class TugasService {
     });
 
     if (isSoalBased) {
-      const jawaban = parseJsonArray<JawabanInput>(dto.jawaban, 'jawaban');
-      await this.prisma.tugasJawaban.deleteMany({ where: { submisiId: updated.id } });
-      if (jawaban.length > 0) {
-        await this.prisma.tugasJawaban.createMany({
-          data: jawaban
-            .filter((j) => j.soalId)
-            .map((j) => ({
-              submisiId: updated.id,
-              soalId: j.soalId,
-              jawabanPilihan: j.jawabanPilihan,
-              jawabanEssay: j.jawabanEssay,
-            })),
-        });
-      }
-
-      if (tugas.tipe === 'PILIHAN_GANDA') {
-        const soalList = await this.prisma.tugasSoal.findMany({
-          where: { tugasId: tugas.id },
-          select: { id: true, jawabanBenar: true },
-        });
-        const totalSoal = soalList.length;
-        const jumlahBenar = soalList.filter((s) => {
-          const j = jawaban.find((x) => x.soalId === s.id);
-          return !!s.jawabanBenar && j?.jawabanPilihan === s.jawabanBenar;
-        }).length;
-        const nilai = totalSoal > 0 ? Math.round((jumlahBenar / totalSoal) * 100) : 0;
-        await this.prisma.tugasSubmisi.update({ where: { id: updated.id }, data: { nilai } });
-      }
+      await this.simpanJawabanSoal(tugas.id, updated.id, tugas.tipe, dto.jawaban);
     }
 
     await this.notificationService.create({
@@ -578,16 +636,30 @@ export class TugasService {
     });
   }
 
-  // Reset jatah percobaan siswa (admin/guru pengampu) — dipakai kalau siswa
-  // ke-auto-logout karena masalah teknis (mati listrik, jaringan putus, dst.)
-  // dan wajar diberi kesempatan ulang di luar 2x jatah normal.
+  // Reset PENUH jatah percobaan siswa (admin/guru pengampu) — jumlahPercobaan
+  // kembali ke 0 seolah belum pernah mencoba sama sekali. Dipakai untuk kasus
+  // yang wajar diberi kesempatan ulang penuh dari awal.
   async resetPercobaan(id: string, actor: Actor) {
     const submisi = await this.prisma.tugasSubmisi.findUnique({ where: { id }, include: { tugas: true } });
     if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
     this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
     return this.prisma.tugasSubmisi.update({
       where: { id },
-      data: { jumlahPercobaan: 0, terkunci: false, dipaksaKeluar: false, waktuMulai: null, deadlineWaktu: null },
+      data: { jumlahPercobaan: 0, bonusPercobaan: 0, terkunci: false, dipaksaKeluar: false, waktuMulai: null, deadlineWaktu: null },
+    });
+  }
+
+  // Tambah 1x jatah percobaan TANPA menghapus riwayat percobaan sebelumnya —
+  // beda dari resetPercobaan (reset penuh ke 0). Dipakai untuk kasus seperti
+  // HP siswa mati 2x tanpa sengaja sampai kehabisan jatah normal: guru cukup
+  // menambah 1 kesempatan lagi, bukan mengembalikan seolah belum mencoba.
+  async tambahPercobaan(id: string, actor: Actor) {
+    const submisi = await this.prisma.tugasSubmisi.findUnique({ where: { id }, include: { tugas: true } });
+    if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
+    return this.prisma.tugasSubmisi.update({
+      where: { id },
+      data: { bonusPercobaan: { increment: 1 }, terkunci: false },
     });
   }
 }

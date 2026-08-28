@@ -135,7 +135,19 @@ export function TugasListCard({
                         )}
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.kelas?.nama ?? "Semua Kelas"}</td>
+                    <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400">
+                      {t.kelasList.length ? (
+                        <div className="flex flex-wrap gap-1">
+                          {t.kelasList.map((k) => (
+                            <span key={k.id} className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                              {k.nama}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "Semua Kelas"
+                      )}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">
                       <span className="flex items-center gap-1"><CalendarClock size={11} />{formatTgl(t.deadline)}</span>
                     </td>
