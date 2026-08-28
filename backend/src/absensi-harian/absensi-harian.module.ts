@@ -3,13 +3,14 @@ import { AbsensiHarianController } from './absensi-harian.controller';
 import { AbsensiHarianService } from './absensi-harian.service';
 import { AbsensiHarianPdfService } from './absensi-harian-pdf.service';
 import { AbsensiHarianExcelService } from './absensi-harian-excel.service';
+import { AbsensiHarianRetensiService } from './absensi-harian-retensi.service';
 import { KelasModule } from '../kelas/kelas.module';
 import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [KelasModule, NotificationModule],
   controllers: [AbsensiHarianController],
-  providers: [AbsensiHarianService, AbsensiHarianPdfService, AbsensiHarianExcelService],
+  providers: [AbsensiHarianService, AbsensiHarianPdfService, AbsensiHarianExcelService, AbsensiHarianRetensiService],
   exports: [AbsensiHarianPdfService, AbsensiHarianExcelService],
 })
 export class AbsensiHarianModule {}
