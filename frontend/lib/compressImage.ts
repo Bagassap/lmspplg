@@ -113,6 +113,38 @@ async function compressOnce(file: File, options: CompressOptions, decodeResizeCa
   }
 }
 
+/**
+ * Same as compressImage(), but keeps re-encoding at progressively lower
+ * quality/dimension until the result fits under `maxBytes` (or the smallest
+ * step is reached, whichever comes first — returned as a best-effort even if
+ * still slightly over, rather than throwing). Each attempt re-decodes from
+ * the original `file`, not the previous attempt's output, so quality loss
+ * never compounds across steps.
+ *
+ * Dimension is only stepped down after every quality step at the current
+ * dimension has been tried — resolution has more visual impact on a face
+ * crop than a moderate quality drop, so it's the last thing sacrificed.
+ */
+export async function compressToMaxBytes(file: File, maxBytes: number, options: CompressOptions = {}): Promise<File> {
+  const startDim = options.maxDim ?? DEFAULTS.maxDim;
+  const startQuality = options.quality ?? DEFAULTS.quality;
+  const dims = [...new Set([startDim, 1024, 800, 640])].sort((a, b) => b - a);
+  const qualities = [...new Set([startQuality, 0.7, 0.55, 0.4])].sort((a, b) => b - a);
+
+  let best: File | null = null;
+  for (const maxDim of dims) {
+    for (const quality of qualities) {
+      const attempt = await compressImage(file, { ...options, maxDim, quality });
+      if (!best || attempt.size < best.size) best = attempt;
+      if (attempt.size <= maxBytes) return attempt;
+    }
+  }
+  // Every combination still exceeded maxBytes (an extremely detailed/large
+  // source image) — return the smallest one we actually produced rather
+  // than failing the upload outright.
+  return best ?? file;
+}
+
 function loadImageElement(file: File): Promise<{ img: HTMLImageElement; url: string }> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);

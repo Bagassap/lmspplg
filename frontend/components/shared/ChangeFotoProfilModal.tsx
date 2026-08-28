@@ -6,6 +6,9 @@ import { createPortal } from "react-dom";
 import Cropper, { type Area } from "react-easy-crop";
 import { Loader2, Upload, RotateCcw, ImagePlus, X, Camera } from "lucide-react";
 import { getCroppedImg } from "@/lib/getCroppedImg";
+import { compressToMaxBytes, describePhotoError } from "@/lib/compressImage";
+
+const MAX_UPLOAD_BYTES = 1024 * 1024; // 1MB
 
 export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => void; gradient: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,8 +50,17 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
     setLoading(true);
     setError(null);
 
+    let file: File;
     try {
-      const file = await getCroppedImg(imageSrc, croppedAreaPixels);
+      const cropped = await getCroppedImg(imageSrc, croppedAreaPixels);
+      file = await compressToMaxBytes(cropped, MAX_UPLOAD_BYTES);
+    } catch {
+      setError(describePhotoError().detail);
+      setLoading(false);
+      return;
+    }
+
+    try {
       const formData = new FormData();
       formData.append("foto", file);
 
@@ -106,7 +118,6 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
               ref={inputRef}
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              capture="user"
               className="hidden"
               onChange={handleFile}
             />
