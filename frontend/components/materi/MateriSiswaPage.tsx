@@ -1,24 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen, Search, FileText, AlertCircle, GraduationCap, CalendarDays, Loader2,
+  BookOpen, Search, FileText, AlertCircle, GraduationCap, CalendarDays,
 } from "lucide-react";
 import type { MateriItem } from "./MateriFormModal";
-
-// react-pdf touches browser-only Canvas APIs (DOMMatrix) at module-eval time,
-// which crashes during SSR — load it client-side only, same as the UKK PDF
-// viewer (app/*/ujian-ukk/jadwal-soal/SoalPdfViewer.tsx) does.
-const MateriPdfViewerModal = dynamic(
-  () => import("./MateriPdfViewerModal").then((m) => m.MateriPdfViewerModal),
-  { ssr: false, loading: () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <Loader2 size={28} className="animate-spin text-white" />
-    </div>
-  ) },
-);
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -34,11 +22,11 @@ const ROW_PALETTES = [
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
 export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {}) {
+  const router = useRouter();
   const [list, setList] = useState<MateriItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [viewerMateri, setViewerMateri] = useState<MateriItem | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -155,7 +143,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
                       <td className="whitespace-nowrap px-5 py-3.5">
                         <div className="flex items-center justify-end">
                           {m.fileUrl ? (
-                            <button onClick={() => setViewerMateri(m)}
+                            <button onClick={() => router.push(`/siswa/materi/${m.id}`)}
                               className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-105"
                               style={{ background: "#0082FB" }}>
                               <BookOpen size={12} /> Buka Modul
@@ -173,8 +161,6 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
           )}
         </div>
       </div>
-
-      {viewerMateri && <MateriPdfViewerModal materi={viewerMateri} onClose={() => setViewerMateri(null)} />}
     </div>
   );
 }

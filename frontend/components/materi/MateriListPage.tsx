@@ -1,25 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen, Plus, Search, FileText, Download, Pencil, Trash2, Eye,
-  AlertCircle, GraduationCap, CalendarDays, Loader2,
+  AlertCircle, GraduationCap, CalendarDays,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriFormModal, type MateriItem } from "./MateriFormModal";
-
-// react-pdf touches browser-only Canvas APIs (DOMMatrix) at module-eval time,
-// yang crash saat SSR — muat khusus client, sama seperti di MateriSiswaPage.
-const MateriPdfViewerModal = dynamic(
-  () => import("./MateriPdfViewerModal").then((m) => m.MateriPdfViewerModal),
-  { ssr: false, loading: () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <Loader2 size={28} className="animate-spin text-white" />
-    </div>
-  ) },
-);
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -49,6 +38,11 @@ export function MateriListPage({
   canCreate?: boolean;
 } = {}) {
   const toast = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
+  // MateriListPage dipakai bareng oleh halaman Admin & Guru — tentukan route
+  // "Lihat materi" berdasarkan prefix path saat ini, bukan prop terpisah.
+  const rolePrefix = pathname?.startsWith("/admin") ? "/admin" : "/guru";
   const canEdit = (m: MateriItem) => !currentUserRole || currentUserRole === "ADMIN" || m.createdBy.id === currentUserId;
   const [list, setList] = useState<MateriItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +50,6 @@ export function MateriListPage({
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<MateriItem | null>(null);
-  const [viewerMateri, setViewerMateri] = useState<MateriItem | null>(null);
 
   const fetchList = useCallback(async () => {
     setLoading(true);
@@ -222,7 +215,7 @@ export function MateriListPage({
                       </td>
                       <td className="whitespace-nowrap px-5 py-3.5">
                         <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => setViewerMateri(m)} title="Lihat materi"
+                          <button onClick={() => router.push(`${rolePrefix}/materi/${m.id}`)} title="Lihat materi"
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
                             <Eye size={14} />
                           </button>
@@ -267,8 +260,6 @@ export function MateriListPage({
           });
         }}
       />
-
-      {viewerMateri && <MateriPdfViewerModal materi={viewerMateri} onClose={() => setViewerMateri(null)} />}
     </div>
   );
 }
