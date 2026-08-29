@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   NotebookPen, Search, X, Loader2, Pencil, Trash2, Plus,
-  User as UserIcon, Calendar, School, ChevronDown, ChevronLeft, ChevronRight, Filter, Users,
+  User as UserIcon, Calendar, School, ChevronDown, ChevronLeft, ChevronRight, Filter,
   FileSpreadsheet, FileText, Download, AlertTriangle,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -243,69 +243,59 @@ export function CatatanSiswaClient() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <p className="mb-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <Users size={12} /> Ringkasan {selectedKelas?.nama ?? "Kelas"}
-            </p>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "#0064E0" }}>
-                <UserIcon size={16} className="shrink-0" />
-                <span className="text-sm font-extrabold">{inKelas.length}</span>
-                <span className="text-[10px] font-semibold text-white/80">Total Siswa</span>
-              </div>
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 shadow-sm" style={{ background: "#C3F84A", color: "#1C2B33" }}>
-                <NotebookPen size={16} className="shrink-0" />
-                <span className="text-sm font-extrabold">{kelasTercatat}</span>
-                <span className="text-[10px] font-semibold" style={{ color: "#1C2B33BF" }}>Siswa Tercatat</span>
-              </div>
-              <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-white shadow-sm" style={{ background: "#EF4444" }}>
-                <AlertTriangle size={16} className="shrink-0" />
-                <span className="text-sm font-extrabold">{kelasTotalPoin}</span>
-                <span className="text-[10px] font-semibold text-white/80">Total Poin</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0064E0" }}>
-                <Download size={18} />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap catatan siswa</p>
+          <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            {/* Zona Ringkasan — angka ditonjolkan, ikon cuma aksen lingkaran
+                lembut (bukan blok warna penuh) supaya tidak berkesan kotak-kotak. */}
+            <div className="p-5">
+              <p className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
+                Ringkasan {selectedKelas?.nama ?? "Kelas"}
+              </p>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+                {[
+                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0064E0" },
+                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#8A9E1F" },
+                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#8B5CF6" },
+                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#EF4444" },
+                ].map((st, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                      style={{ backgroundColor: `${st.color}1A`, color: st.color }}>
+                      <st.icon size={15} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-lg font-extrabold leading-none text-slate-800 dark:text-white">{st.val}</p>
+                      <p className="mt-1 text-[10px] font-semibold text-slate-400 dark:text-slate-500">{st.label}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="mb-3 grid grid-cols-2 gap-2">
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-white shadow-sm" style={{ background: "#0064E0" }}>
-                <UserIcon size={15} />
-                <span className="text-base font-extrabold">{loading ? "—" : inKelas.length}</span>
-                <span className="text-[9px] font-semibold uppercase tracking-wide text-white/80">Siswa Kelas Ini</span>
+            {/* Zona Laporan — dipisah jelas dari Ringkasan lewat garis + latar
+                berbeda, bukan cuma disambung langsung di bawahnya. */}
+            <div className="border-t border-slate-100 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-900/40">
+              <div className="mb-3 flex items-center gap-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm" style={{ background: "#0064E0" }}>
+                  <Download size={16} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Rekap {selectedKelas?.nama ?? "kelas ini"} beserta seluruh catatannya</p>
+                </div>
               </div>
-              <div className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm" style={{ background: "#C3F84A", color: "#1C2B33" }}>
-                <NotebookPen size={15} />
-                <span className="text-base font-extrabold">{loading ? "—" : kelasTotalCatatan}</span>
-                <span className="text-[9px] font-semibold uppercase tracking-wide" style={{ color: "#1C2B33BF" }}>Catatan Kelas Ini</span>
+              <div className="flex gap-2">
+                <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
+                  style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" }}>
+                  <FileText size={13} /> PDF
+                </a>
+                <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
+                  style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" }}>
+                  <FileSpreadsheet size={13} /> Excel
+                </a>
               </div>
             </div>
-
-            <div className="flex gap-1.5">
-              <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
-                className="flex flex-1 items-center justify-center gap-1 rounded-xl border px-2 py-2 text-[11px] font-bold transition-all hover:brightness-95"
-                style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" }}>
-                <FileText size={12} /> PDF
-              </a>
-              <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
-                className="flex flex-1 items-center justify-center gap-1 rounded-xl border px-2 py-2 text-[11px] font-bold transition-all hover:brightness-95"
-                style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" }}>
-                <FileSpreadsheet size={12} /> Excel
-              </a>
-            </div>
-            <p className="mt-2.5 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={10} className="shrink-0 text-[#0064E0]" />
-              Rekap {selectedKelas?.nama ?? "kelas ini"} beserta seluruh catatannya
-            </p>
           </div>
         </div>
       </div>
