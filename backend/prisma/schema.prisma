@@ -789,3 +789,19 @@ model NilaiUKK {
   @@unique([jadwalId, siswaId])
   @@map("nilai_ukk")
 }
+
+// Satu baris singleton (id tetap "singleton") menyimpan saklar aktif/
+// nonaktif menu PKL & UKK untuk siswa kelas XII. Periode PKL/UKK berbeda
+// tiap tahun ajaran dan tanggalnya tidak bisa di-hardcode, jadi admin
+// menyalakannya manual dari menu Pengaturan begitu jadwal resmi tahun itu
+// dimulai — bukan berdasarkan tanggal. Guru/Admin tidak terpengaruh saklar
+// ini (selalu akses penuh, lihat Sidebar.tsx), siswa kelas X/XI juga tidak
+// terpengaruh (tetap terkunci apa pun nilai saklar ini).
+model PengaturanSistem {
+  id          String   @id
+  magangAktif Boolean  @default(false)
+  ukkAktif    Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@map("pengaturan_sistem")
+}

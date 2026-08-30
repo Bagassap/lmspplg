@@ -10,7 +10,7 @@ import {
   FileText, ChevronRight, ChevronDown,
   ChevronsLeft, ChevronsRight, Lock, KeyRound,
   Building2, ClipboardCheck, FileBarChart,
-  CalendarDays, Trophy, NotebookPen, BookOpen,
+  CalendarDays, Trophy, NotebookPen, BookOpen, Settings,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
@@ -44,6 +44,7 @@ const MENUS: Record<string, MenuItem[]> = {
       ],
     },
     { key: "ujian-ukk", href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText },
+    { key: "pengaturan", href: "/admin/pengaturan", label: "Pengaturan", icon: Settings },
   ],
   GURU: [
     { key: "dashboard",    href: "/guru/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
@@ -167,6 +168,25 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [isSiswa]);
 
+  // Selain kelas XII, menu Magang/UKK juga butuh saklar admin menyala (menu
+  // Pengaturan) — periode PKL/UKK beda tiap tahun ajaran & tidak berdasarkan
+  // tanggal tetap, jadi kelas XII saja tidak cukup untuk membuka menunya.
+  // Default false (terkunci) selama belum dikonfirmasi, sama seperti
+  // siswaKelasXII di atas.
+  const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
+  useEffect(() => {
+    if (!isSiswa) return;
+    let cancelled = false;
+    fetch("/api/pengaturan", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { magangAktif?: boolean; ukkAktif?: boolean } | null) => {
+        if (cancelled || !d) return;
+        setPengaturan({ magangAktif: !!d.magangAktif, ukkAktif: !!d.ukkAktif });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isSiswa]);
+
   const items = (MENUS[user.role] ?? [])
     .filter((item) => {
       if (item.key === "manajemen-password") return isSuperAdmin;
@@ -175,7 +195,8 @@ export function Sidebar({
     })
     .map((item) => {
       if (!isSiswa || (item.key !== "magang" && item.key !== "ujian-ukk")) return item;
-      if (siswaKelasXII) return { ...item, locked: false, href: undefined };
+      const fiturAktif = item.key === "magang" ? pengaturan.magangAktif : pengaturan.ukkAktif;
+      if (siswaKelasXII && fiturAktif) return { ...item, locked: false, href: undefined };
       return { ...item, locked: true, href: item.key === "magang" ? "/siswa/magang" : "/siswa/ujian-ukk" };
     });
 
