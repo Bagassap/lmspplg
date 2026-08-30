@@ -125,6 +125,16 @@ export function formatTgl(tgl?: string) {
   return new Date(tgl).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
+// Native <input type="date"> menampilkan formatnya sendiri mengikuti locale
+// browser (sering jadi mm/dd/yyyy di browser ber-locale en-US) — helper ini
+// dipakai untuk label overlay custom bergaya Indonesia (dd/mm/yyyy) di atas
+// input asli yang tetap berfungsi sebagai trigger kalender.
+export function formatTglSlash(tgl: string): string {
+  const [y, m, d] = tgl.split("-");
+  if (!y || !m || !d) return tgl;
+  return `${d}/${m}/${y}`;
+}
+
 export type ExportRangeMode = "harian" | "mingguan" | "bulanan";
 export type ExportRange =
   | { mode: "harian"; tanggal: string }
