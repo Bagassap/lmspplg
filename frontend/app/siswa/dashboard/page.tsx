@@ -11,6 +11,7 @@ import {
 import GreetingHero from "@/components/dashboard/GreetingHero";
 import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
 import StatsCard from "@/components/dashboard/StatsCard";
+import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 import { timeAgo } from "@/components/dashboard/ActivityList";
@@ -140,36 +141,44 @@ export default function SiswaDashboardPage() {
     {
       href: "/siswa/absensi-harian",
       label: "Absensi Harian",
-      display: `${absensi.persentase}% hadir`,
+      value: `${absensi.persentase}% hadir`,
       small: false,
+      validThru: data.kelas,
+      holder: user.nama,
       gradient: "#0064E0", // blue
       icon: ClipboardCheck,
     },
     {
       href: "/siswa/absensi-harian",
       label: "Total Hadir",
-      display: `${absensi.hadir}x`,
+      value: `${absensi.hadir}x`,
       small: false,
+      validThru: data.kelas,
+      holder: user.nama,
       gradient: "#C3F84A", // lime (utama)
       icon: CheckCircle,
     },
     {
       href: "/siswa/pengumuman",
       label: "Pengumuman",
-      display: `${data.pengumuman.length} info`,
+      value: `${data.pengumuman.length} info`,
       small: false,
+      validThru: data.kelas,
+      holder: user.nama,
       gradient: "#EF4444", // pengumuman tidak pakai lime — merah
       icon: Megaphone,
     },
     {
       href: "/siswa/magang",
       label: "PKL",
-      display: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
+      value: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
       small: belumMagang,
+      validThru: data.kelas,
+      holder: user.nama,
       gradient: "#0082FB", // biru terang
       icon: GraduationCap,
     },
-  ] as const;
+  ];
 
   return (
     <>
@@ -181,7 +190,7 @@ export default function SiswaDashboardPage() {
 
         <KartuPelajarBanner description="Cek & cetak kartu pelajarmu lewat portal e-Kartu" />
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatsCard icon={CheckCircle} label="Hadir"     value={absensi.hadir}      sub="Hari tercatat hadir" index={0} delay={0.05} />
           <StatsCard icon={Thermometer} label="Sakit"     value={absensi.sakit}      sub="Hari izin sakit" index={1} delay={0.10} />
           <StatsCard icon={XCircle}     label="Alpa"      value={absensi.alpa}       sub="Hari tanpa keterangan" index={2} delay={0.15} />
@@ -258,49 +267,7 @@ export default function SiswaDashboardPage() {
           </SectionCard>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {CARDS.map((card, i) => {
-            const onDark = card.gradient !== "#C3F84A";
-            const fg = onDark ? "#FFFFFF" : "#1C2B33";
-            return (
-            <motion.div key={card.label}
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              transition={{ duration: 0.35, delay: 0.4 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Link href={card.href}
-                className="relative flex h-44 flex-col justify-between overflow-hidden rounded-2xl p-5"
-                style={{ background: card.gradient, color: fg, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
-              >
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
-                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full" style={{ backgroundColor: `${fg}14` }} />
-                <div className="relative flex items-start justify-between">
-                  <div>
-                    <p className="text-[10px] font-medium uppercase tracking-widest" style={{ color: `${fg}B3` }}>Akses Cepat</p>
-                    <p className="mt-0.5 text-sm font-bold">{card.label}</p>
-                  </div>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `${fg}33` }}>
-                    <card.icon size={17} />
-                  </div>
-                </div>
-                <div className="relative">
-                  <p className={`font-bold tabular-nums ${card.small ? "text-xl" : "text-3xl"}`}>{card.display}</p>
-                </div>
-                <div className="relative flex items-end justify-between">
-                  <div>
-                    <p className="text-[9px] font-medium uppercase tracking-wider" style={{ color: `${fg}99` }}>Kelas</p>
-                    <p className="text-[11px] font-semibold">{data.kelas}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[9px] font-medium uppercase tracking-wider" style={{ color: `${fg}99` }}>Siswa</p>
-                    <p className="max-w-25 truncate text-[11px] font-semibold">{user.nama}</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-            );
-          })}
-        </div>
+        <QuickAccessGrid cards={CARDS.map((c) => ({ ...c, footerLeftLabel: "Kelas", footerRightLabel: "Siswa" }))} />
 
       </div>
 

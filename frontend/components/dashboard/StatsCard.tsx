@@ -31,7 +31,6 @@ export interface StatsCardProps {
   index?: number;
   from?: string;
   to?: string;
-  compact?: boolean;
 }
 
 export default function StatsCard({
@@ -52,24 +51,25 @@ export default function StatsCard({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(0,0,0,0.10)" }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] cursor-default"
+      className="flex items-center gap-2.5 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] cursor-default sm:gap-4 sm:rounded-2xl sm:p-5"
     >
       <div
-        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full sm:h-14 sm:w-14"
         style={{ backgroundColor: theme.iconBg }}
       >
-        <Icon size={26} style={{ color: theme.icon }} strokeWidth={1.8} />
+        <Icon size={16} style={{ color: theme.icon }} strokeWidth={1.8} className="sm:hidden" />
+        <Icon size={26} style={{ color: theme.icon }} strokeWidth={1.8} className="hidden sm:block" />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-1">
-          <motion.span className="text-3xl font-bold text-slate-800 tabular-nums dark:text-white">
+          <motion.span className="text-lg font-bold text-slate-800 tabular-nums dark:text-white sm:text-3xl">
             {count}
           </motion.span>
-          {suffix && <span className="text-base font-semibold text-slate-400">{suffix}</span>}
+          {suffix && <span className="text-[11px] font-semibold text-slate-400 sm:text-base">{suffix}</span>}
         </div>
-        <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{label}</p>
-        {sub && <p className="mt-1.5 text-[11px] text-slate-400 dark:text-slate-500">{sub}</p>}
+        <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400 sm:text-sm">{label}</p>
+        {sub && <p className="mt-0.5 truncate text-[9px] text-slate-400 dark:text-slate-500 sm:mt-1.5 sm:text-[11px]">{sub}</p>}
       </div>
     </motion.div>
   );
