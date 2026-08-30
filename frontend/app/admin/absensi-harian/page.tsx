@@ -288,7 +288,6 @@ export default function AdminAbsensiHarianPage() {
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
                   Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
               </div>
               <div className="relative flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
                 <CalendarDays size={14} className="shrink-0 text-slate-400" />
