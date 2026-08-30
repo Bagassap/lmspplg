@@ -108,7 +108,41 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
             </div>
           )}
           {!loading && filtered.length > 0 && (
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/40 sm:hidden">
+              {filtered.map((m, idx) => {
+                const rp = rowPalette(idx);
+                return (
+                  <div key={m.id} className="flex items-center gap-2.5 px-4 py-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                      <FileText size={14} style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          <GraduationCap size={9} /> {m.mapel}
+                        </span>
+                        <span className="flex items-center gap-1 text-[9px] text-slate-400 dark:text-slate-500">
+                          <CalendarDays size={9} />{formatDate(m.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                    {m.fileUrl ? (
+                      <button onClick={() => router.push(`/siswa/materi/${m.id}`)} title="Buka Modul"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white shadow-sm"
+                        style={{ background: "#0082FB" }}>
+                        <BookOpen size={14} />
+                      </button>
+                    ) : (
+                      <span className="shrink-0 text-xs text-slate-300 dark:text-slate-600">—</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {!loading && filtered.length > 0 && (
+            <table className="hidden w-full min-w-[720px] text-left text-sm sm:table">
               <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
                 <tr>
                   <th className="whitespace-nowrap px-5 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Materi</th>

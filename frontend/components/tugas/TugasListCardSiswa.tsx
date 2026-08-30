@@ -22,6 +22,38 @@ const ROW_PALETTES = [
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
+// Dipakai bareng oleh render kartu (mobile) dan tabel (desktop) supaya logika
+// status/tombol tidak dobel-tulis di dua tempat.
+function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDetail: (s: TugasSubmisiItem, t: TugasItem) => void) {
+  const mySubmisi = t.submisi?.[0];
+  const isDiterima = mySubmisi?.status === "DITERIMA";
+  const isRevisi = mySubmisi?.status === "REVISI";
+  const isTerkirim = mySubmisi?.status === "TERKIRIM";
+  const overdue = !isTugasActive(t) && !mySubmisi;
+  const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
+  const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
+  // Terkena paksa-keluar (pelanggaran) tapi kesempatan masih tersisa —
+  // siswa boleh mencoba lagi, beda dengan "Terkirim" biasa yang cuma
+  // menunggu review guru.
+  const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci && !!mySubmisi?.dipaksaKeluar;
+
+  const btn = isTerkunci
+    ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#F1F5F8", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
+    : isDiterima
+    ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onLihatDetail(mySubmisi!, t) }
+    : isRevisi
+    ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#8A9E1F", border: "#8A9E1F", onClick: () => onKumpulkan(t) }
+    : bisaCobaLagi
+    ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#FEF3E2", clr: "#F59E0B", border: "#F59E0B", onClick: () => onKumpulkan(t) }
+    : isTerkirim
+    ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#EAF3FF", clr: "#0064E0", border: "#0064E0", onClick: () => onLihatDetail(mySubmisi!, t) }
+    : overdue
+    ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#FEE9EA", clr: "#EF4444", border: "#EF4444", onClick: () => onKumpulkan(t) }
+    : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onKumpulkan(t) };
+
+  return { mySubmisi, isDiterima, isRevisi, isTerkirim, overdue, isLockdown, isTerkunci, bisaCobaLagi, btn };
+}
+
 export function TugasListCardSiswa({
   tugasList, loading, onKumpulkan, onLihatDetail,
 }: {
@@ -78,7 +110,60 @@ export function TugasListCardSiswa({
           </div>
         )}
         {!loading && shown.length > 0 && (
-          <table className="w-full min-w-170 text-left text-sm">
+          <div className="divide-y divide-slate-100 dark:divide-slate-700/40 sm:hidden">
+            {shown.map((t, idx) => {
+              const rp = rowPalette(idx);
+              const d = rowStatus(t, onKumpulkan, onLihatDetail);
+              return (
+                <div key={t.id} className="flex flex-col gap-2 px-4 py-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                      <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          <GraduationCap size={9} /> {t.mapel}
+                        </span>
+                        {TIPE_BADGE[t.tipe] && (
+                          <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9px] font-bold ${TIPE_BADGE[t.tipe].cls}`}>
+                            {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={9} />; })()} {tipeLabel(t.tipe)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pl-[42px]">
+                    <span className="flex shrink-0 items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400">
+                      <CalendarClock size={10} />{formatTgl(t.deadline)}
+                    </span>
+                    <div className="flex flex-wrap items-center justify-end gap-1">
+                      {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && d.mySubmisi?.nilai !== null && d.mySubmisi?.nilai !== undefined && (
+                        <span className="inline-flex items-center rounded-lg bg-[#F1F5F8] px-1.5 py-1 text-[10px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                          {d.mySubmisi.nilai}
+                        </span>
+                      )}
+                      {t.fileUrl && (
+                        <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
+                          <Download size={12} />
+                        </a>
+                      )}
+                      <button onClick={d.btn.onClick} disabled={"disabled" in d.btn && d.btn.disabled}
+                        className="inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[10px] font-semibold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+                        style={{ borderColor: d.btn.border, color: d.btn.clr, backgroundColor: d.btn.bg }}>
+                        {d.btn.icon}{d.btn.label}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {!loading && shown.length > 0 && (
+          <table className="hidden w-full min-w-170 text-left text-sm sm:table">
             <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
               <tr>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tugas</th>
@@ -90,31 +175,7 @@ export function TugasListCardSiswa({
             <tbody>
               {shown.map((t, idx) => {
                 const rp = rowPalette(idx);
-                const mySubmisi = t.submisi?.[0];
-                const isDiterima = mySubmisi?.status === "DITERIMA";
-                const isRevisi = mySubmisi?.status === "REVISI";
-                const isTerkirim = mySubmisi?.status === "TERKIRIM";
-                const overdue = !isTugasActive(t) && !mySubmisi;
-                const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
-                const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
-                // Terkena paksa-keluar (pelanggaran) tapi kesempatan masih tersisa —
-                // siswa boleh mencoba lagi, beda dengan "Terkirim" biasa yang cuma
-                // menunggu review guru.
-                const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci && !!mySubmisi?.dipaksaKeluar;
-
-                const btn = isTerkunci
-                  ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#F1F5F8", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
-                  : isDiterima
-                  ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onLihatDetail(mySubmisi!, t) }
-                  : isRevisi
-                  ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#8A9E1F", border: "#8A9E1F", onClick: () => onKumpulkan(t) }
-                  : bisaCobaLagi
-                  ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#FEF3E2", clr: "#F59E0B", border: "#F59E0B", onClick: () => onKumpulkan(t) }
-                  : isTerkirim
-                  ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#EAF3FF", clr: "#0064E0", border: "#0064E0", onClick: () => onLihatDetail(mySubmisi!, t) }
-                  : overdue
-                  ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#FEE9EA", clr: "#EF4444", border: "#EF4444", onClick: () => onKumpulkan(t) }
-                  : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onKumpulkan(t) };
+                const { mySubmisi, isDiterima, isLockdown, btn } = rowStatus(t, onKumpulkan, onLihatDetail);
 
                 return (
                   <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
