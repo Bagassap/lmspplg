@@ -164,7 +164,7 @@ export default function AdminAbsensiHarianPage() {
               {kelasList.length === 0 ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-52 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                    <div key={i} className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
                   ))}
                 </div>
               ) : (
@@ -177,34 +177,32 @@ export default function AdminAbsensiHarianPage() {
                     const onText = WALLET_ON_TEXT[idx];
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left transition-all"
+                        className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-4 py-4 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                         style={{
                           background: bg,
                           color: onText,
-                          boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
-                          outline: isSelected ? `3px solid ${onText}` : "3px solid transparent",
-                          outlineOffset: isSelected ? "2px" : "0",
+                          boxShadow: isSelected ? `0 8px 24px ${bg}59` : "0 8px 24px rgba(0,0,0,0.15)",
+                          outline: isSelected ? `2px solid ${onText}` : "2px solid transparent",
+                          outlineOffset: "3px",
                         }}>
-                        <div className="relative flex items-center gap-2">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${onText}40` }}>
-                            <BookOpen size={14} />
+                        <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full" style={{ backgroundColor: `${onText}1a` }} />
+
+                        <div className="relative flex items-center justify-between">
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: `${onText}33` }}>
+                            <BookOpen size={16} />
                           </span>
-                          <p className="truncate text-sm font-bold">{k.nama}</p>
+                          <span className="text-[11px] font-bold tabular-nums" style={{ color: `${onText}CC` }}>{s.pct}%</span>
                         </div>
 
                         <div className="relative">
-                          <p className="text-2xl font-extrabold tabular-nums">
-                            {s.hd}<span className="text-sm font-semibold" style={{ color: `${onText}B3` }}>/{s.tt}</span>
+                          <p className="truncate text-lg font-black leading-tight">{k.nama}</p>
+                          <p className="mt-0.5 truncate text-[11px] font-medium" style={{ color: `${onText}BF` }}>
+                            {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
                           </p>
-                          <p className="text-[11px] font-semibold" style={{ color: `${onText}CC` }}>Hadir · {s.pct}%</p>
-                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}40` }}>
+                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}33` }}>
                             <div className="h-1.5 rounded-full transition-all" style={{ width: `${s.pct}%`, backgroundColor: onText }} />
                           </div>
                         </div>
-
-                        <p className="relative text-[10px] font-medium" style={{ color: `${onText}B3` }}>
-                          Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                        </p>
                       </button>
                     );
                   })}
