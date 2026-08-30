@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Megaphone, Plus, Pin, MessageCircle,
   AlertCircle, ChevronRight, ChevronLeft,
-  Clock, BookOpen, Bell, ChevronDown, Loader2,
+  Clock, BookOpen, Bell, ChevronDown, Loader2, Trash2,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { PengumumanItem } from "./PengumumanFormModal";
@@ -185,9 +185,16 @@ function AccordionCard({
   }
 
   return (
-    <div className={`overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1C2B33] ${
+    <div className={`relative overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1C2B33] ${
       isOpen ? "shadow-[0_4px_20px_rgba(0,0,0,0.12)]" : ""
     }`}>
+
+      {canManage && !isOpen && (
+        <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(); }} title="Hapus pengumuman"
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-white backdrop-blur-sm transition-all hover:bg-red-500/60">
+          <Trash2 size={13} />
+        </button>
+      )}
 
       <button
         type="button"
@@ -308,7 +315,7 @@ function AccordionCard({
                         <BookOpen size={13} /></button>
                       <button onClick={onDelete} title="Hapus"
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
-                        <AlertCircle size={13} /></button>
+                        <Trash2 size={13} /></button>
                     </div>
                   )}
                 </div>
