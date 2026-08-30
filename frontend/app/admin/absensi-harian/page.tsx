@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, BookOpen,
   Settings2, ArrowRight, ChevronLeft, ChevronRight,
-  Users, TrendingUp, LogOut, FileText, Download,
+  Users, TrendingUp, LogOut, FileText, Download, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
@@ -19,6 +19,58 @@ import { KelolaKelasModal, type Guru } from "@/components/absensi-harian/KelolaK
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
+
+// Klik ini benar-benar mengirim notifikasi in-app (lonceng Topbar) ke tiap
+// siswa yang belum tercatat absen — bukan cuma dekorasi — lewat endpoint
+// backend /absensi-harian/kirim-pengingat (role ADMIN sudah diizinkan di
+// guard-nya), sekaligus menyalin nama-nama itu ke clipboard untuk ditempel
+// manual sebagai pengingat WA. Sama persis dengan tombol di halaman Guru.
+function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
+  const toast = useToast();
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const belum = siswaList.filter((s) => !s.status || s.status === "ALPA");
+
+  async function kirim() {
+    if (belum.length === 0 || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/absensi-harian/kirim-pengingat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kelasId, tanggal }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
+
+      const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
+      try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
+
+      setSent(true);
+      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
+      setTimeout(() => setSent(false), 2000);
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
+      className="flex w-full items-center gap-2.5 rounded-2xl border-2 border-transparent bg-red-50 px-4 py-3 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EF4444] text-white">
+        {sent ? <Check size={15} /> : <Bell size={15} />}
+      </span>
+      <div className="min-w-0">
+        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat Absen"}</p>
+        <p className="truncate text-[11px] font-semibold text-red-400 dark:text-red-500/80">
+          {belum.length > 0 ? `${belum.length} siswa belum absen di kelas ini` : "Semua siswa di kelas ini sudah absen"}
+        </p>
+      </div>
+    </button>
+  );
+}
 
 export default function AdminAbsensiHarianPage() {
   const toast = useToast();
@@ -206,6 +258,12 @@ export default function AdminAbsensiHarianPage() {
                       </button>
                     );
                   })}
+                </div>
+              )}
+
+              {selectedId && (
+                <div className="mt-4">
+                  <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
                 </div>
               )}
             </div>
