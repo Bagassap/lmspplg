@@ -9,6 +9,7 @@ import type { SiswaCardData } from "@/components/data-siswa/shared";
 import { GradientStatCard } from "@/components/shared/GradientStatCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TempatkanSiswaModal } from "@/components/magang/TempatkanSiswaModal";
+import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { PenempatanTable } from "@/components/magang/PenempatanTable";
 import type { TempatMagang, PenempatanMagang, StatusPenempatan } from "@/components/magang/types";
@@ -26,6 +27,7 @@ export default function AdminMagangPenempatanPage() {
   const [loading, setLoading] = useState(true);
   const [showKelolaTempat, setShowKelolaTempat] = useState(false);
   const [showTempatkan, setShowTempatkan] = useState(false);
+  const [editTarget, setEditTarget] = useState<PenempatanMagang | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<PenempatanStatusFilter>("");
@@ -180,6 +182,7 @@ export default function AdminMagangPenempatanPage() {
         list={displayList}
         busyId={busyId}
         onUbahStatus={ubahStatus}
+        onEdit={setEditTarget}
         onHapus={hapus}
       />
 
@@ -198,6 +201,15 @@ export default function AdminMagangPenempatanPage() {
             guruList={guruList}
             penempatanList={penempatanList}
             onClose={() => setShowTempatkan(false)}
+            onSaved={() => { loadPenempatan(); loadTempat(); }}
+          />
+        )}
+        {editTarget && (
+          <EditPenempatanModal
+            penempatan={editTarget}
+            tempatList={tempatList}
+            guruList={guruList}
+            onClose={() => setEditTarget(null)}
             onSaved={() => { loadPenempatan(); loadTempat(); }}
           />
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Trash2, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Trash2, Users } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -14,13 +14,16 @@ function fmtTgl(iso: string): string {
 }
 
 export function PenempatanTable({
-  loading, list, busyId, onUbahStatus, onHapus,
+  loading, list, busyId, canManage = true, onUbahStatus, onEdit, onHapus,
 }: {
   loading: boolean;
   list: PenempatanMagang[];
-  busyId: string | null;
-  onUbahStatus: (p: PenempatanMagang, status: StatusPenempatan) => void;
-  onHapus: (p: PenempatanMagang) => void;
+  busyId?: string | null;
+  // false = tabel guru pembimbing, hanya lihat (tanpa ubah status/edit/hapus).
+  canManage?: boolean;
+  onUbahStatus?: (p: PenempatanMagang, status: StatusPenempatan) => void;
+  onEdit?: (p: PenempatanMagang) => void;
+  onHapus?: (p: PenempatanMagang) => void;
 }) {
   const [page, setPage] = useState(0);
   useEffect(() => setPage(0), [list]);
@@ -56,10 +59,13 @@ export function PenempatanTable({
               <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
                 <tr>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
-                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Tempat &amp; Pembimbing</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Tempat</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Pembimbing</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Periode</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Status</th>
-                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Aksi</th>
+                  {canManage && (
+                    <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Aksi</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -80,26 +86,42 @@ export function PenempatanTable({
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
-                        <p className="text-[11px] text-slate-400">Pembimbing: {toTitleCase(p.guruPembimbing.user.nama)}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{toTitleCase(p.guruPembimbing.user.nama)}</p>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 dark:text-slate-400">
                         {fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
-                        <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus(p, e.target.value as StatusPenempatan)}
-                          className="rounded-lg border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
-                          style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
-                          <option value="AKTIF">Aktif</option>
-                          <option value="SELESAI">Selesai</option>
-                          <option value="BATAL">Batal</option>
-                        </select>
+                        {canManage ? (
+                          <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
+                            className="rounded-lg border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
+                            style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                            <option value="AKTIF">Aktif</option>
+                            <option value="SELESAI">Selesai</option>
+                            <option value="BATAL">Batal</option>
+                          </select>
+                        ) : (
+                          <span className="rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                            {cfg.label}
+                          </span>
+                        )}
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <button onClick={() => onHapus(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
-                          <Trash2 size={12} /> Hapus
-                        </button>
-                      </td>
+                      {canManage && (
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <div className="flex items-center gap-1.5">
+                            <button onClick={() => onEdit?.(p)} disabled={busy}
+                              className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-[#0082FB] shadow-sm transition-colors hover:bg-blue-100 disabled:opacity-40 dark:bg-blue-900/20">
+                              <Pencil size={12} /> Edit
+                            </button>
+                            <button onClick={() => onHapus?.(p)} disabled={busy}
+                              className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
+                              <Trash2 size={12} /> Hapus
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
