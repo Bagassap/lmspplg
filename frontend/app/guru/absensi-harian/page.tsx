@@ -144,7 +144,7 @@ function RingkasanKehadiranCard({
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
         <div className="flex flex-1 flex-col gap-2.5">
-          <div className="grid grid-cols-[repeat(auto-fit,140px)] items-stretch justify-start gap-2.5">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] items-stretch justify-start gap-2.5">
             {kelasList.map((k) => {
               const s = kelasStat(k);
               const isSelected = k.id === selectedId;
@@ -176,15 +176,15 @@ function RingkasanKehadiranCard({
             <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
           </div>
 
-          <div className="grid grid-cols-[repeat(auto-fit,140px)] justify-start gap-2.5">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] justify-start gap-2.5">
             <div style={{ gridColumn: `1 / span ${kelasList.length + 2}` }}>
               <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-6 lg:flex-1 lg:justify-between">
-          <div className="flex flex-col gap-2.5 lg:flex-1 lg:items-center">
+        <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
+          <div className="flex flex-col gap-2.5">
             {segments.map((s) => (
               <div key={s.key} className="flex items-center gap-2 text-left">
                 <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
