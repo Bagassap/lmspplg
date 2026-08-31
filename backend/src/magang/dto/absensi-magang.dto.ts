@@ -44,3 +44,11 @@ export class UpsertAbsensiMagangDto {
   @Type(() => AbsensiMagangItemDto)
   absensi!: AbsensiMagangItemDto[];
 }
+
+export class KirimPengingatMagangDto {
+  @IsString()
+  tempatMagangId!: string;
+
+  @IsString()
+  tanggal!: string;
+}

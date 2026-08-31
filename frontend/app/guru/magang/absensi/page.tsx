@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Briefcase,
   ArrowRight,
-  Users, TrendingUp, LogOut, PieChart, FileText, Download,
+  Users, TrendingUp, LogOut, PieChart, FileText, Download, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
@@ -34,13 +34,64 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
   );
 }
 
+// Sama persis dengan KirimPengingatCard di app/guru/absensi-harian/page.tsx
+// — mengirim notifikasi in-app ke siswa PKL bimbingan yang belum absen hari
+// ini di tempat magang terpilih, lewat endpoint /magang/absensi/kirim-pengingat.
+function KirimPengingatCard({ tempatMagangId, tanggal, siswaList }: { tempatMagangId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
+  const toast = useToast();
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const belum = siswaList.filter((s) => !s.status || s.status === "ALPA");
+
+  async function kirim() {
+    if (belum.length === 0 || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/magang/absensi/kirim-pengingat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tempatMagangId, tanggal }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
+
+      const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
+      try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
+
+      setSent(true);
+      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
+      setTimeout(() => setSent(false), 2000);
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
+      className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-red-50 px-3 py-2.5 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#EF4444] text-white">
+        {sent ? <Check size={14} /> : <Bell size={14} />}
+      </span>
+      <div className="min-w-0">
+        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+        <p className="truncate text-[10px] font-semibold text-red-400 dark:text-red-500/80">
+          {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
+        </p>
+      </div>
+    </button>
+  );
+}
+
 function RingkasanKehadiranCard({
-  tempatList, selectedId, onSelectTempat, tempatStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, tempatNama,
+  tempatList, selectedId, onSelectTempat, tempatStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, tempatNama, tanggal,
 }: {
   tempatList: TempatMagang[]; selectedId: string; onSelectTempat: (id: string) => void;
   tempatStat: (t: TempatMagang) => { hd: number; tt: number; pct: number };
   siswaList: SiswaAbsensi[];
   rekap: RekapTempat["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; tempatNama?: string;
+  tanggal: string;
 }) {
   const segments = [
     { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
@@ -106,6 +157,12 @@ function RingkasanKehadiranCard({
 
             <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
             <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] justify-start gap-2.5">
+            <div style={{ gridColumn: `1 / span ${tempatList.length + 2}` }}>
+              <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+            </div>
           </div>
         </div>
 
@@ -277,7 +334,8 @@ export default function GuruMagangAbsensiPage() {
               <RingkasanKehadiranCard
                 tempatList={tempatList} selectedId={selectedId} onSelectTempat={setSelectedId} tempatStat={tempatStat}
                 siswaList={siswaList} rekap={rekap} hadirPct={hadirPct} total={total}
-                pulangCount={pulangCount} belumAbsen={total - sudahAbsen} tempatNama={selectedTempat?.namaTempat} />
+                pulangCount={pulangCount} belumAbsen={total - sudahAbsen} tempatNama={selectedTempat?.namaTempat}
+                tanggal={tanggal} />
             </div>
 
             <div className="flex flex-col">

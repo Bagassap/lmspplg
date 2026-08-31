@@ -9,7 +9,7 @@ import type { Response } from 'express';
 import { AbsensiMagangService } from './absensi-magang.service';
 import { AbsensiHarianPdfService } from '../absensi-harian/absensi-harian-pdf.service';
 import { AbsensiHarianExcelService } from '../absensi-harian/absensi-harian-excel.service';
-import { AbsenSendiriMagangDto, UpsertAbsensiMagangDto } from './dto/absensi-magang.dto';
+import { AbsenSendiriMagangDto, UpsertAbsensiMagangDto, KirimPengingatMagangDto } from './dto/absensi-magang.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -310,5 +310,12 @@ export class AbsensiMagangController {
   @Post()
   upsertAbsensi(@Body() dto: UpsertAbsensiMagangDto, @Request() req: any) {
     return this.service.upsertAbsensi(dto.tempatMagangId, dto.tanggal, dto.absensi, req.user.id, req.user.role);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Post('kirim-pengingat')
+  kirimPengingat(@Body() dto: KirimPengingatMagangDto, @Request() req: any) {
+    return this.service.kirimPengingatBelumAbsen(dto.tempatMagangId, dto.tanggal, req.user.id, req.user.role);
   }
 }

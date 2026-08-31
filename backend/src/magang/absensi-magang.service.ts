@@ -291,6 +291,59 @@ export class AbsensiMagangService {
     return this.getRekapTempat(tempatMagangId, tanggal, onlySiswaIds);
   }
 
+  // Dipanggil dari tombol "Kirim Pengingat" admin/guru pembimbing — mengirim
+  // notifikasi in-app ke siswa PKL yang belum tercatat absen (status kosong
+  // atau ALPA) di tempat magang & tanggal terpilih. Mirror dari
+  // kirimPengingatBelumAbsen di absensi-harian.service.ts.
+  async kirimPengingatBelumAbsen(
+    tempatMagangId: string,
+    tanggal: string,
+    actorUserId: string,
+    actorRole: string,
+  ) {
+    const onlySiswaIds = await this.assertTempatAccessible(tempatMagangId, actorUserId, actorRole);
+
+    const tempat = await this.prisma.tempatMagang.findUnique({
+      where: { id: tempatMagangId },
+      select: { namaTempat: true },
+    });
+    if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
+
+    const penempatanList = await this.prisma.penempatanMagang.findMany({
+      where: {
+        tempatMagangId,
+        status: 'AKTIF',
+        ...(onlySiswaIds ? { siswaId: { in: onlySiswaIds } } : {}),
+      },
+      select: { id: true, siswa: { select: { userId: true } } },
+    });
+    const existing = penempatanList.length
+      ? await this.prisma.absensiMagang.findMany({
+          where: { penempatanId: { in: penempatanList.map((p) => p.id) }, tanggal },
+          select: { penempatanId: true, status: true },
+        })
+      : [];
+    const statusMap = new Map(existing.map((a) => [a.penempatanId, a.status]));
+    const belumAbsenUserIds = penempatanList
+      .filter((p) => {
+        const status = statusMap.get(p.id) ?? null;
+        return status === null || status === 'ALPA';
+      })
+      .map((p) => p.siswa.userId)
+      .filter((id): id is string => !!id);
+
+    if (belumAbsenUserIds.length === 0) return { count: 0 };
+
+    await this.notificationService.createMany(belumAbsenUserIds, {
+      title:   'Pengingat Absen PKL',
+      message: `Kamu belum tercatat absen PKL hari ini di ${tempat.namaTempat}. Segera lakukan presensi.`,
+      type:    NotificationType.ABSENSI,
+      link:    '/magang/absensi',
+    });
+
+    return { count: belumAbsenUserIds.length };
+  }
+
   private resolveRange(
     mode: 'mingguan' | 'bulanan',
     tanggalMulai?: string,
