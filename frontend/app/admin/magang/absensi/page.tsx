@@ -14,7 +14,7 @@ import { AbsensiMagangTable } from "@/components/absensi-magang/AbsensiMagangTab
 import { ExportButtons } from "@/components/absensi-magang/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl, formatTglSlash } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
 
 export default function AdminMagangAbsensiPage() {
@@ -149,7 +149,7 @@ export default function AdminMagangAbsensiPage() {
               {tempatList.length === 0 ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-52 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+                    <div key={i} className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
                   ))}
                 </div>
               ) : (
@@ -162,34 +162,32 @@ export default function AdminMagangAbsensiPage() {
                     const onText = WALLET_ON_TEXT[idx];
                     return (
                       <button type="button" key={t.id} onClick={() => setSelectedId(t.id)}
-                        className="relative flex h-52 flex-col justify-between overflow-hidden rounded-3xl p-4 text-left transition-all"
+                        className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-4 py-4 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                         style={{
                           background: bg,
                           color: onText,
-                          boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
-                          outline: isSelected ? `3px solid ${onText}` : "3px solid transparent",
-                          outlineOffset: isSelected ? "2px" : "0",
+                          boxShadow: isSelected ? `0 8px 24px ${bg}59` : "0 8px 24px rgba(0,0,0,0.15)",
+                          outline: isSelected ? `2px solid ${onText}` : "2px solid transparent",
+                          outlineOffset: "3px",
                         }}>
-                        <div className="relative flex items-center gap-2">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${onText}40` }}>
-                            <Briefcase size={14} />
+                        <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full" style={{ backgroundColor: `${onText}1a` }} />
+
+                        <div className="relative flex items-center justify-between">
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: `${onText}33` }}>
+                            <Briefcase size={16} />
                           </span>
-                          <p className="truncate text-sm font-bold">{t.namaTempat}</p>
+                          <span className="text-[11px] font-bold tabular-nums" style={{ color: `${onText}CC` }}>{s.pct}%</span>
                         </div>
 
                         <div className="relative">
-                          <p className="text-2xl font-extrabold tabular-nums">
-                            {s.hd}<span className="text-sm font-semibold" style={{ color: `${onText}B3` }}>/{s.tt}</span>
+                          <p className="truncate text-lg font-black leading-tight">{t.namaTempat}</p>
+                          <p className="mt-0.5 truncate text-[11px] font-medium" style={{ color: `${onText}BF` }}>
+                            {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
                           </p>
-                          <p className="text-[11px] font-semibold" style={{ color: `${onText}CC` }}>Hadir · {s.pct}%</p>
-                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}40` }}>
+                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}33` }}>
                             <div className="h-1.5 rounded-full transition-all" style={{ width: `${s.pct}%`, backgroundColor: onText }} />
                           </div>
                         </div>
-
-                        <p className="relative text-[10px] font-medium" style={{ color: `${onText}B3` }}>
-                          Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                        </p>
                       </button>
                     );
                   })}
@@ -217,28 +215,32 @@ export default function AdminMagangAbsensiPage() {
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
                   Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
+              <div className="relative flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
                 <CalendarDays size={14} className="shrink-0 text-slate-400" />
+                <span className="pointer-events-none w-full min-w-0 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  {formatTglSlash(tanggal)}
+                </span>
                 <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                  className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
+                  aria-label="Pilih tanggal"
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
               </div>
             </div>
 
-            <div className="mt-6 mb-2 flex flex-wrap items-center gap-2.5 border-t border-slate-100 pt-6 pb-2 dark:border-slate-700">
+            <div className="mt-6 mb-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-6 pb-2 dark:border-slate-700 sm:gap-2.5">
               <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
                 return (
                   <button key={String(opt.key)} type="button"
                     onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                    className="rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors"
+                    className="rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-5 sm:py-2.5 sm:text-sm"
                     style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
-                    <span className={`flex items-center gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
-                      <opt.icon size={16} />
+                    <span className={`flex items-center gap-1 sm:gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
+                      <opt.icon size={13} className="sm:hidden" />
+                      <opt.icon size={16} className="hidden sm:block" />
                       {opt.label}
-                      <span className={`rounded-md px-2 py-0.5 text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] sm:px-2 sm:text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                         {opt.count}
                       </span>
                     </span>

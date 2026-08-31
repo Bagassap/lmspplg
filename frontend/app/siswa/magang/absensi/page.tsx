@@ -337,13 +337,19 @@ export default function SiswaMagangAbsensiPage() {
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.25 }}
                 className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-5">
-                <h2 className="flex items-center gap-2 text-base font-bold text-slate-800 dark:text-white">
-                  <Briefcase size={16} className="text-[#0082FB]" /> Tempat PKL
-                </h2>
-                <p className="mt-2 text-sm font-bold text-slate-700 dark:text-slate-200">{data.tempatMagang.namaTempat}</p>
-                <p className="mt-1 flex items-start gap-1.5 text-xs text-slate-400 dark:text-slate-500">
-                  <MapPin size={12} className="mt-0.5 shrink-0" /> {data.tempatMagang.alamat}
-                </p>
+                <h2 className="text-base font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
+                <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#EAF3FF" }}>
+                    <Briefcase size={18} style={{ color: "#0082FB" }} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{data.tempatMagang.namaTempat}</p>
+                    <p className="mt-0.5 flex items-start gap-1.5 text-xs text-slate-400 dark:text-slate-500">
+                      <MapPin size={12} className="mt-0.5 shrink-0" /> {data.tempatMagang.alamat}
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             )}
           </div>
