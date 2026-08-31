@@ -101,8 +101,6 @@ export default function AdminMagangPenempatanPage() {
   const jumlahSelesai = penempatanList.filter((p) => p.status === "SELESAI").length;
   const jumlahBatal = penempatanList.filter((p) => p.status === "BATAL").length;
   const totalKuota = tempatList.reduce((sum, t) => sum + t.kuota, 0);
-  const kuotaTerisi = tempatList.reduce((sum, t) => sum + (t._count?.penempatan ?? 0), 0);
-  const tempatFavorit = [...tempatList].sort((a, b) => (b._count?.penempatan ?? 0) - (a._count?.penempatan ?? 0))[0] ?? null;
 
   const displayList = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -136,46 +134,34 @@ export default function AdminMagangPenempatanPage() {
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
           <GradientStatCard
-            eyebrow="PKL"
             tone="navy"
             label="Tempat Magang"
             value={loading ? "—" : tempatList.length}
             icon={Building2}
-            footerLeftLabel="Kuota" footerLeftValue={`${kuotaTerisi}/${totalKuota}`}
-            footerRightLabel="Terbanyak" footerRightValue={tempatFavorit ? tempatFavorit.namaTempat : "—"}
           />
         </div>
         <div className="lg:col-span-4">
           <GradientStatCard
-            eyebrow="PKL"
             tone="lime"
             label="Siswa PKL Aktif"
             value={loading ? "—" : jumlahAktif}
             icon={Briefcase}
-            footerLeftLabel="Selesai" footerLeftValue={String(jumlahSelesai)}
-            footerRightLabel="Dibatalkan" footerRightValue={String(jumlahBatal)}
           />
         </div>
         <div className="lg:col-span-2">
           <GradientStatCard
-            eyebrow="PKL"
             tone="red"
             label="Total Kuota"
             value={loading ? "—" : totalKuota}
             icon={Wallet}
-            footerLeftLabel="Terisi" footerLeftValue={`${totalKuota > 0 ? Math.round((kuotaTerisi / totalKuota) * 100) : 0}%`}
-            footerRightLabel="Sisa" footerRightValue={String(Math.max(0, totalKuota - kuotaTerisi))}
           />
         </div>
         <div className="lg:col-span-3">
           <GradientStatCard
-            eyebrow="PKL"
             tone="blue"
             label="Total Riwayat Penempatan"
             value={loading ? "—" : penempatanList.length}
             icon={ClipboardList}
-            footerLeftLabel="Periode" footerLeftValue="Sepanjang PKL"
-            footerRightLabel="Kategori" footerRightValue="Aktif · Selesai · Batal"
           />
         </div>
       </motion.div>
