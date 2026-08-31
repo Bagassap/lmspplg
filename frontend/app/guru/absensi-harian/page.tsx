@@ -176,8 +176,10 @@ function RingkasanKehadiranCard({
             <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
           </div>
 
-          <div className="w-full">
-            <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+          <div className="grid grid-cols-[repeat(auto-fit,140px)] justify-start gap-2.5">
+            <div style={{ gridColumn: `1 / span ${kelasList.length + 2}` }}>
+              <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+            </div>
           </div>
         </div>
 
