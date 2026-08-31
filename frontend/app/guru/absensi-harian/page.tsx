@@ -183,7 +183,15 @@ function RingkasanKehadiranCard({
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-6 lg:flex-1 lg:justify-between">
+          <div className="flex flex-col gap-2.5 lg:flex-1 lg:items-center">
+            {segments.map((s) => (
+              <div key={s.key} className="flex items-center gap-2 text-left">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+              </div>
+            ))}
+          </div>
           <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
             <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
               <circle cx="50" cy="50" r={r} stroke="#F1F5F8" strokeWidth="12" fill="none" />
@@ -202,14 +210,6 @@ function RingkasanKehadiranCard({
               <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
               <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
             </div>
-          </div>
-          <div className="flex flex-col gap-2.5">
-            {segments.map((s) => (
-              <div key={s.key} className="flex items-center gap-2 text-left">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
-              </div>
-            ))}
           </div>
         </div>
       </div>
