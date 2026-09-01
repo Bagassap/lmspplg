@@ -17,10 +17,13 @@ import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl, formatTglSlash } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
 
-// Sama persis dengan KirimPengingatCard di app/admin/absensi-harian/page.tsx
-// — mengirim notifikasi in-app ke siswa PKL yang belum absen hari ini di
-// tempat magang terpilih, lewat endpoint backend /magang/absensi/kirim-pengingat.
-function KirimPengingatCard({ tempatMagangId, tanggal, siswaList }: { tempatMagangId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
+// Khusus admin, tombol ini SENGAJA menjangkau SEMUA tempat PKL sekaligus
+// (bukan cuma tempat yang sedang dipilih di grid kartu) — tempatMagangId
+// tidak dikirim sama sekali, backend menganggap request tanpa tempatMagangId
+// dari role ADMIN sebagai "semua tempat". Guru tetap dibatasi ke tempat
+// magang siswa bimbingannya (lihat versi KirimPengingatCard di halaman
+// Guru, yang masih mengirim tempatMagangId).
+function KirimPengingatCard({ tanggal, siswaList }: { tanggal: string; siswaList: SiswaAbsensi[] }) {
   const toast = useToast();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -33,7 +36,7 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList }: { tempatMaga
       const res = await fetch("/api/magang/absensi/kirim-pengingat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tempatMagangId, tanggal }),
+        body: JSON.stringify({ tanggal }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
@@ -42,7 +45,7 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList }: { tempatMaga
       try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
 
       setSent(true);
-      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
+      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa di seluruh tempat PKL · daftar nama juga disalin untuk WA`);
       setTimeout(() => setSent(false), 2000);
     } catch {
       toast.error("Server tidak dapat dijangkau", "");
@@ -58,9 +61,9 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList }: { tempatMaga
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat Absen PKL"}</p>
+        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat Absen PKL (Semua Tempat)"}</p>
         <p className="truncate text-[11px] font-semibold text-red-400 dark:text-red-500/80">
-          {belum.length > 0 ? `${belum.length} siswa belum absen di tempat ini` : "Semua siswa di tempat ini sudah absen"}
+          {belum.length > 0 ? `${belum.length} siswa belum absen di seluruh tempat PKL` : "Semua siswa PKL sudah absen"}
         </p>
       </div>
     </button>
@@ -244,9 +247,9 @@ export default function AdminMagangAbsensiPage() {
                 </div>
               )}
 
-              {selectedId && (
+              {rekapAll.length > 0 && (
                 <div className="mt-4">
-                  <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+                  <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
                 </div>
               )}
             </div>

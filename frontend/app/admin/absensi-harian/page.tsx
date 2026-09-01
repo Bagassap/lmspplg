@@ -22,10 +22,13 @@ import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/component
 
 // Klik ini benar-benar mengirim notifikasi in-app (lonceng Topbar) ke tiap
 // siswa yang belum tercatat absen — bukan cuma dekorasi — lewat endpoint
-// backend /absensi-harian/kirim-pengingat (role ADMIN sudah diizinkan di
-// guard-nya), sekaligus menyalin nama-nama itu ke clipboard untuk ditempel
-// manual sebagai pengingat WA. Sama persis dengan tombol di halaman Guru.
-function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
+// backend /absensi-harian/kirim-pengingat. Khusus admin, ini SENGAJA
+// menjangkau SEMUA kelas sekaligus (bukan cuma kelas yang sedang dipilih di
+// grid kartu kelas) — kelasId tidak dikirim sama sekali, backend lalu
+// menganggap request tanpa kelasId dari role ADMIN sebagai "semua kelas".
+// Guru tetap dibatasi ke kelas yang benar-benar diwalikannya (lihat versi
+// KirimPengingatCard di halaman Guru, yang masih mengirim kelasId).
+function KirimPengingatCard({ tanggal, siswaList }: { tanggal: string; siswaList: SiswaAbsensi[] }) {
   const toast = useToast();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -38,7 +41,7 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
       const res = await fetch("/api/absensi-harian/kirim-pengingat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kelasId, tanggal }),
+        body: JSON.stringify({ tanggal }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
@@ -47,7 +50,7 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
       try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
 
       setSent(true);
-      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
+      toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa di seluruh kelas · daftar nama juga disalin untuk WA`);
       setTimeout(() => setSent(false), 2000);
     } catch {
       toast.error("Server tidak dapat dijangkau", "");
@@ -63,9 +66,9 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat Absen"}</p>
+        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
         <p className="truncate text-[11px] font-semibold text-red-400 dark:text-red-500/80">
-          {belum.length > 0 ? `${belum.length} siswa belum absen di kelas ini` : "Semua siswa di kelas ini sudah absen"}
+          {belum.length > 0 ? `${belum.length} siswa belum absen di seluruh kelas` : "Semua siswa di seluruh kelas sudah absen"}
         </p>
       </div>
     </button>
@@ -261,9 +264,9 @@ export default function AdminAbsensiHarianPage() {
                 </div>
               )}
 
-              {selectedId && (
+              {rekapAll.length > 0 && (
                 <div className="mt-4">
-                  <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+                  <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
                 </div>
               )}
             </div>

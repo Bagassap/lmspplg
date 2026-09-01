@@ -46,8 +46,12 @@ export class UpsertAbsensiMagangDto {
 }
 
 export class KirimPengingatMagangDto {
+  // Kosong (tidak dikirim) khusus dari ADMIN berarti "semua tempat PKL" —
+  // GURU wajib selalu mengisi ini (divalidasi di service, dibatasi ke
+  // siswa bimbingannya).
   @IsString()
-  tempatMagangId!: string;
+  @IsOptional()
+  tempatMagangId?: string;
 
   @IsString()
   tanggal!: string;

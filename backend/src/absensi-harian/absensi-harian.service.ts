@@ -595,31 +595,38 @@ export class AbsensiHarianService {
     return result;
   }
 
-  // Dipanggil dari tombol "Kirim Pengingat" wali kelas — mengirim notifikasi
-  // in-app (muncul di lonceng notifikasi siswa) ke siswa yang belum tercatat
-  // hadir (status kosong atau ALPA) di kelas & tanggal terpilih.
+  // Dipanggil dari tombol "Kirim Pengingat" — mengirim notifikasi in-app
+  // (muncul di lonceng notifikasi siswa) ke siswa yang belum tercatat hadir
+  // (status kosong atau ALPA) hari ini. ADMIN sengaja tidak perlu memilih
+  // kelas — kelasId kosong dari ADMIN berarti "semua kelas sekaligus".
+  // GURU tetap wajib mengisi kelasId dan dibatasi ke kelas yang benar-benar
+  // diwalikannya.
   async kirimPengingatBelumAbsen(
-    kelasId: string,
+    kelasId: string | undefined,
     tanggal: string,
     actorUserId: string,
     actorRole: string,
   ) {
-    if (actorRole === 'GURU') {
+    const isAdmin = actorRole === 'ADMIN';
+
+    let kelasNama: string | null = null;
+    if (!isAdmin) {
+      if (!kelasId) throw new BadRequestException('kelasId wajib diisi');
       const myKelasIds = await this.kelasService.getGuruKelasIds(actorUserId);
       if (!myKelasIds.includes(kelasId)) {
         throw new ForbiddenException('Anda bukan wali kelas untuk kelas ini');
       }
+      const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId }, select: { nama: true } });
+      if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
+      kelasNama = kelas.nama;
     }
 
-    const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId }, select: { nama: true } });
-    if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
-
     const siswaList = await this.prisma.siswa.findMany({
-      where: { kelasId, userId: { not: null } },
+      where: isAdmin ? { userId: { not: null } } : { kelasId, userId: { not: null } },
       select: { id: true, userId: true },
     });
     const existing = await this.prisma.absensiHarian.findMany({
-      where: { kelasId, tanggal },
+      where: isAdmin ? { tanggal } : { kelasId, tanggal },
       select: { siswaId: true, status: true },
     });
     const statusMap = new Map(existing.map((a) => [a.siswaId, a.status]));
@@ -634,7 +641,9 @@ export class AbsensiHarianService {
 
     await this.notificationService.createMany(belumAbsenUserIds, {
       title:   'Pengingat Absen',
-      message: `Kamu belum tercatat absen hari ini di kelas ${kelas.nama}. Segera lakukan presensi.`,
+      message: isAdmin
+        ? 'Kamu belum tercatat absen hari ini. Segera lakukan presensi.'
+        : `Kamu belum tercatat absen hari ini di kelas ${kelasNama}. Segera lakukan presensi.`,
       type:    NotificationType.ABSENSI,
       link:    '/absensi-harian',
     });
