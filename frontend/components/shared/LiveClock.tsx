@@ -58,12 +58,13 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
     const tanggalT = now.day;
     const bulanT   = BULAN[now.month - 1];
     return (
-      <div className="hidden items-center gap-2.5 rounded-xl bg-slate-100 px-4 py-2 text-slate-500 dark:bg-slate-700/50 dark:text-slate-400 lg:flex">
-        <CalendarDays size={14} className="shrink-0 text-[#0082FB]" />
-        <span className="text-sm font-medium">{hariT}, {tanggalT} {bulanT}</span>
-        <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
-        <Clock size={14} className="shrink-0 animate-pulse text-[#0082FB]" />
-        <span className="text-sm font-bold tabular-nums">{jam}</span>
+      <div className="hidden items-center gap-2.5 rounded-xl px-4 py-2 text-white shadow-[0_4px_14px_rgba(0,130,251,0.35)] md:flex"
+        style={{ background: "#0082FB" }}>
+        <CalendarDays size={14} className="shrink-0" />
+        <span className="text-sm font-semibold">{hariT}, {tanggalT} {bulanT}</span>
+        <div className="h-4 w-px bg-white/30" />
+        <Clock size={14} className="shrink-0 animate-pulse" />
+        <span className="text-sm font-bold tabular-nums">{jam} WIB</span>
       </div>
     );
   }
