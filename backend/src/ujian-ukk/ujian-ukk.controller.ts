@@ -1,6 +1,6 @@
 import {
   Controller, Get, Post, Put, Delete, Param, Body,
-  UseGuards, Request, Res, UseInterceptors, UploadedFile,
+  UseGuards, Request, Res, UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -111,8 +111,21 @@ export class UjianUkkController {
     @Body() dto: SubmitProjectDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    const fileUrl  = file ? `/uploads/ukk-submisi/${file.filename}` : (dto.driveUrl ?? '');
+    const fileUrl  = file ? `/uploads/ukk-submisi/${file.filename}` : (dto.driveUrl ?? '').trim();
     const fileName = file ? file.originalname : 'Google Drive';
+
+    // Siswa hanya diberi opsi "Link Google Drive" di UI (tanpa upload file),
+    // jadi wajibkan & validasi formatnya di sini juga — supaya tidak bisa
+    // dilewati dengan memanggil endpoint ini langsung (mis. lewat API client
+    // lain), bukan cuma ditolak oleh validasi di sisi frontend
+    // (isValidDriveUrl() di jadwal-soal/page.tsx).
+    if (!file) {
+      if (!fileUrl) throw new BadRequestException('Link Google Drive wajib diisi');
+      if (!/^https:\/\/(drive|docs)\.google\.com\//.test(fileUrl)) {
+        throw new BadRequestException('Link harus dari Google Drive (drive.google.com atau docs.google.com)');
+      }
+    }
+
     return this.service.submitProject(req.user.id, dto, fileUrl, fileName);
   }
 
