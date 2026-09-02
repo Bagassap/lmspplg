@@ -29,5 +29,9 @@ export const imageUploadOptions: Pick<MulterOptions, 'fileFilter' | 'limits'> = 
 
 export const documentUploadOptions: Pick<MulterOptions, 'fileFilter' | 'limits'> = {
   fileFilter: mimeFileFilter(DOCUMENT_MIME_TYPES),
-  limits: { fileSize: 20 * 1024 * 1024 },
+  // PPT/PPTX dengan gambar/video tertanam rutin lebih besar dari 20MB —
+  // dinaikkan ke 50MB (samakan dengan client_max_body_size Nginx di
+  // deploy/nginx-lms.conf, yang diberi headroom lebih untuk overhead
+  // multipart).
+  limits: { fileSize: 50 * 1024 * 1024 },
 };

@@ -59,22 +59,26 @@ export function MateriTugasSiswaPage() {
   }
 
   async function doSubmit(fd: FormData) {
-    const res = await fetch("/api/tugas/submisi", { method: "POST", body: fd });
-    if (res.ok) {
-      const submisi: TugasSubmisiItem = await res.json();
-      const tugas = submitTarget;
-      if (tugas?.tipe === "PILIHAN_GANDA" && typeof submisi.nilai === "number") {
-        toast.success(`Nilai kamu: ${submisi.nilai}`, submisi.nilai === 100 ? "Semua jawaban benar!" : "Tugas berhasil dikumpulkan dan langsung dinilai.");
-        setSubmitTarget(null);
-        setDetailTarget({ s: submisi, t: tugas });
+    try {
+      const res = await fetch("/api/tugas/submisi", { method: "POST", body: fd });
+      if (res.ok) {
+        const submisi: TugasSubmisiItem = await res.json();
+        const tugas = submitTarget;
+        if (tugas?.tipe === "PILIHAN_GANDA" && typeof submisi.nilai === "number") {
+          toast.success(`Nilai kamu: ${submisi.nilai}`, submisi.nilai === 100 ? "Semua jawaban benar!" : "Tugas berhasil dikumpulkan dan langsung dinilai.");
+          setSubmitTarget(null);
+          setDetailTarget({ s: submisi, t: tugas });
+        } else {
+          toast.success("Tugas berhasil dikumpulkan!", "Guru/Admin akan mereview tugasmu.");
+          setSubmitTarget(null);
+        }
+        loadAll();
       } else {
-        toast.success("Tugas berhasil dikumpulkan!", "Guru/Admin akan mereview tugasmu.");
-        setSubmitTarget(null);
+        const d = await res.json().catch(() => ({}));
+        toast.error("Gagal mengumpulkan", d.message ?? "Coba lagi");
       }
-      loadAll();
-    } else {
-      const d = await res.json().catch(() => ({}));
-      toast.error("Gagal mengumpulkan", d.message ?? "Coba lagi");
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "Periksa koneksi internet dan coba lagi. Kalau file cukup besar, coba jaringan yang lebih stabil.");
     }
   }
 

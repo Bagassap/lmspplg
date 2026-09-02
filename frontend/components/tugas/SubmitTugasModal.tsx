@@ -48,14 +48,17 @@ function SubmitPraktikModal({
 
   async function submit() {
     setSaving(true);
-    const fd = new FormData();
-    fd.append("tugasId", tugas.id);
-    fd.append("submittedHtml", code.html);
-    fd.append("submittedCss", code.css);
-    fd.append("submittedJs", code.js);
-    if (catatan.trim()) fd.append("catatan", catatan.trim());
-    await onSubmit(fd);
-    setSaving(false);
+    try {
+      const fd = new FormData();
+      fd.append("tugasId", tugas.id);
+      fd.append("submittedHtml", code.html);
+      fd.append("submittedCss", code.css);
+      fd.append("submittedJs", code.js);
+      if (catatan.trim()) fd.append("catatan", catatan.trim());
+      await onSubmit(fd);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -136,12 +139,15 @@ function SubmitFileModal({
     e.preventDefault();
     if (!file) return;
     setSaving(true);
-    const fd = new FormData();
-    fd.append("tugasId", tugas.id);
-    if (catatan.trim()) fd.append("catatan", catatan.trim());
-    fd.append("file", file);
-    await onSubmit(fd);
-    setSaving(false);
+    try {
+      const fd = new FormData();
+      fd.append("tugasId", tugas.id);
+      if (catatan.trim()) fd.append("catatan", catatan.trim());
+      fd.append("file", file);
+      await onSubmit(fd);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -235,16 +241,19 @@ function SubmitSoalModal({
 
   async function submit() {
     setSaving(true);
-    const fd = new FormData();
-    fd.append("tugasId", tugas.id);
-    const payload = soalList.map((s) => ({
-      soalId: s.id,
-      ...(isPg ? { jawabanPilihan: jawaban[s.id] ?? "" } : { jawabanEssay: jawaban[s.id] ?? "" }),
-    }));
-    fd.append("jawaban", JSON.stringify(payload));
-    if (catatan.trim()) fd.append("catatan", catatan.trim());
-    await onSubmit(fd);
-    setSaving(false);
+    try {
+      const fd = new FormData();
+      fd.append("tugasId", tugas.id);
+      const payload = soalList.map((s) => ({
+        soalId: s.id,
+        ...(isPg ? { jawabanPilihan: jawaban[s.id] ?? "" } : { jawabanEssay: jawaban[s.id] ?? "" }),
+      }));
+      fd.append("jawaban", JSON.stringify(payload));
+      if (catatan.trim()) fd.append("catatan", catatan.trim());
+      await onSubmit(fd);
+    } finally {
+      setSaving(false);
+    }
   }
 
   const answeredCount = soalList.filter((s) => (jawaban[s.id] ?? "").trim()).length;

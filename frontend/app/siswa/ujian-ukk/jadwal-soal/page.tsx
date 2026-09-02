@@ -61,12 +61,15 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
     if (!driveUrl.trim()) { setUrlError("Link Google Drive wajib diisi"); return; }
     if (!isValidDriveUrl(driveUrl.trim())) { setUrlError("Link harus dari Google Drive (drive.google.com atau docs.google.com)"); return; }
     setSaving(true);
-    const fd = new FormData();
-    fd.append("soalId", soal.id);
-    fd.append("driveUrl", driveUrl.trim());
-    if (catatan.trim()) fd.append("catatan", catatan.trim());
-    await onSubmit(fd);
-    setSaving(false);
+    try {
+      const fd = new FormData();
+      fd.append("soalId", soal.id);
+      fd.append("driveUrl", driveUrl.trim());
+      if (catatan.trim()) fd.append("catatan", catatan.trim());
+      await onSubmit(fd);
+    } finally {
+      setSaving(false);
+    }
   }
   if (!soal) return null;
 
@@ -206,9 +209,13 @@ export default function SiswaJadwalSoalPage() {
   useEffect(() => { loadAll(); }, [loadAll]);
 
   async function doSubmit(fd: FormData) {
-    const r = await fetch("/api/ujian-ukk/submisi", { method:"POST", body: fd });
-    if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); loadAll(); }
-    else toast.error("Gagal mengirim", "Coba lagi");
+    try {
+      const r = await fetch("/api/ujian-ukk/submisi", { method:"POST", body: fd });
+      if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); loadAll(); }
+      else toast.error("Gagal mengirim", "Coba lagi");
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "Periksa koneksi internet dan coba lagi.");
+    }
   }
 
   const now      = new Date();
