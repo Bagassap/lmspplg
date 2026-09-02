@@ -137,25 +137,25 @@ export function KelolaGuruModal({
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
 
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0082FB] dark:bg-[#0064E0]/30">
-                  <GraduationCap size={16} className="text-[#0082FB]" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">Kelola Guru</h2>
-                  <p className="text-[11px] text-slate-400">Mapel yang diampu, wali kelas, & status akun</p>
-                </div>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
+              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
+              <div className="pointer-events-none absolute -bottom-6 right-20 h-16 w-16 rounded-full bg-white/8" />
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+                <GraduationCap size={18} className="text-white" />
               </div>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setKelolaKelasOpen(true)}
-                  className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300">
-                  <School size={13} /> Atur Wali Kelas
-                </button>
-                <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <X size={16} className="text-slate-400" />
-                </button>
+              <div className="relative min-w-0 flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Superadmin</p>
+                <h2 className="truncate text-base font-extrabold text-white">Kelola Guru</h2>
+                <p className="truncate text-[11px] text-white/70">Mapel yang diampu, wali kelas, & status akun</p>
               </div>
+              <button onClick={() => setKelolaKelasOpen(true)}
+                className="relative flex shrink-0 items-center gap-1.5 rounded-xl bg-white/15 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/25">
+                <School size={13} /> <span className="hidden sm:inline">Atur Wali Kelas</span>
+              </button>
+              <button onClick={onClose}
+                className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                <X size={15} />
+              </button>
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto p-5">
@@ -173,7 +173,13 @@ export function KelolaGuruModal({
                     const nama = toTitleCase(g.nama);
                     const busy = busyId === g.id;
                     return (
-                      <div key={g.id} className="rounded-2xl border border-slate-100 p-3.5 dark:border-slate-700/50">
+                      <div key={g.id}
+                        className={`relative overflow-hidden rounded-2xl border p-3.5 pl-4 transition-colors ${
+                          g.isActive
+                            ? "border-slate-100 dark:border-slate-700/50"
+                            : "border-red-100 bg-red-50/30 dark:border-red-900/30 dark:bg-red-900/5"
+                        }`}>
+                        <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#00D67F]" : "bg-red-400"}`} />
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex min-w-0 items-center gap-2.5">
                             <Avatar src={g.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
@@ -225,7 +231,7 @@ export function KelolaGuruModal({
                             <span className="text-[11px] text-slate-400">Bukan wali kelas</span>
                           ) : (
                             g.guru!.kelasWali.map((k) => (
-                              <span key={k.id} className="rounded-lg bg-[#0082FB] px-2.5 py-1 text-[11px] font-semibold text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]">
+                              <span key={k.id} className="rounded-lg bg-[#0082FB] px-2.5 py-1 text-[11px] font-semibold text-white">
                                 {k.nama}
                               </span>
                             ))

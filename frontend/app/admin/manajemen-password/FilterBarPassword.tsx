@@ -49,14 +49,14 @@ export function FilterBarPassword({
           onClick={onKelolaGuru}
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
           className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
-          style={{ background: "#0064E0" }}>
+          style={{ background: REF_PRIMARY }}>
           <GraduationCap size={16} /> Kelola Guru
         </motion.button>
         <motion.button
           onClick={onImportSiswa}
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
           className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
-          style={{ background: "#00D67F" }}>
+          style={{ background: REF_PRIMARY }}>
           <FileSpreadsheet size={16} /> Impor Massal
         </motion.button>
         <motion.button
