@@ -78,17 +78,17 @@ export function PermintaanPasswordCard({
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
-          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-            <Clock size={11} className="text-[#C3F84A]" /> Pending
+        <div className="rounded-2xl p-3" style={{ background: "#EF4444" }}>
+          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-white/80">
+            <Clock size={11} /> Pending
           </p>
-          <p className="mt-1 text-lg font-bold text-slate-800 dark:text-white">{loading ? "—" : pending.length}</p>
+          <p className="mt-1 text-lg font-bold text-white">{loading ? "—" : pending.length}</p>
         </div>
-        <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
-          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-            <CheckCircle2 size={11} className="text-emerald-500" /> Selesai Hari Ini
+        <div className="rounded-2xl p-3" style={{ background: "#C3F84A" }}>
+          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#1C2B33]/70">
+            <CheckCircle2 size={11} /> Selesai Hari Ini
           </p>
-          <p className="mt-1 text-lg font-bold text-slate-800 dark:text-white">{loading ? "—" : selesaiHariIni}</p>
+          <p className="mt-1 text-lg font-bold text-[#1C2B33]">{loading ? "—" : selesaiHariIni}</p>
         </div>
       </div>
 

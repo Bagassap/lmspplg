@@ -43,38 +43,32 @@ export function FilterBarPassword({
   ];
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-        style={{ backgroundImage: `radial-gradient(circle, ${REF_PRIMARY} 1px, transparent 1px)`, backgroundSize: "18px 18px" }}
-      />
-
-      <div className="relative mb-4 flex flex-wrap items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-700/50">
+    <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
+      <div className="mb-4 grid grid-cols-1 gap-2 border-b border-slate-100 pb-4 dark:border-slate-700/50 sm:grid-cols-3">
         <motion.button
           onClick={onKelolaGuru}
-          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold shadow-sm dark:border-slate-700 dark:bg-slate-800"
-          style={{ color: REF_PRIMARY }}>
-          <GraduationCap size={13} /> Kelola Guru
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
+          style={{ background: "#0064E0" }}>
+          <GraduationCap size={16} /> Kelola Guru
         </motion.button>
         <motion.button
           onClick={onImportSiswa}
-          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold shadow-sm dark:border-slate-700 dark:bg-slate-800"
-          style={{ color: REF_PRIMARY }}>
-          <FileSpreadsheet size={13} /> Impor Massal
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
+          style={{ background: "#00D67F" }}>
+          <FileSpreadsheet size={16} /> Impor Massal
         </motion.button>
         <motion.button
           onClick={onCreateAccount}
-          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-sm"
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
           style={{ background: REF_PRIMARY }}>
-          <UserPlus size={13} /> Buat Akun
+          <UserPlus size={16} /> Buat Akun
         </motion.button>
       </div>
 
-      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
