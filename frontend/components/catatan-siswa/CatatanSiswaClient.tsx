@@ -106,9 +106,12 @@ export function CatatanSiswaClient() {
     <div className="space-y-5">
       <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
         {/* KIRI: satu card putih polos — filter, ringkasan, dan unduh
-            laporan sebagai zona-zona yang dipisah lewat garis saja. */}
+            laporan sebagai zona-zona yang dipisah lewat garis saja.
+            items-start di grid induk supaya card ini tetap tinggi
+            alaminya sendiri, tidak ikut meregang setinggi card tabel
+            di sebelah kanan. */}
         <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           {/* Zona Filter — 1 baris, kelas & pencarian berdampingan */}
           <div className="p-4 sm:p-5">
@@ -183,11 +186,13 @@ export function CatatanSiswaClient() {
             </div>
             <div className="flex gap-2">
               <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95"
+                style={{ background: "#EF4444" }}>
                 <FileText size={13} /> PDF
               </a>
               <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95"
+                style={{ background: "#00D67F" }}>
                 <FileSpreadsheet size={13} /> Excel
               </a>
             </div>
