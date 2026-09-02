@@ -154,14 +154,14 @@ export function CatatanSiswaClient() {
             <p className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
               Ringkasan {selectedKelas?.nama ?? "Kelas"}
             </p>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+            <div className="grid grid-cols-2 gap-2.5">
               {[
                 { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0064E0" },
                 { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#8A9E1F" },
                 { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#8B5CF6" },
                 { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#EF4444" },
               ].map((st, i) => (
-                <div key={i} className="flex items-center gap-2.5">
+                <div key={i} className="flex items-center gap-2.5 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
                     style={{ backgroundColor: `${st.color}1A`, color: st.color }}>
                     <st.icon size={15} />
