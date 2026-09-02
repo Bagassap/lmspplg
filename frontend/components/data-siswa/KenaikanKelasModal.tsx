@@ -113,8 +113,8 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
   async function submit() {
     if (!kelasId || !jumlah) return;
     const ok = await toast.confirm(
-      "Luluskan seluruh kelas ini?",
-      `${jumlah} siswa dari "${nama}" akan ditandai LULUS dan akun login mereka akan DINONAKTIFKAN. Data & riwayat mereka tetap tersimpan, tapi tidak akan muncul lagi di Data Siswa aktif. Lanjutkan?`,
+      "Luluskan & hapus permanen seluruh kelas ini?",
+      `${jumlah} siswa dari "${nama}" beserta SELURUH riwayatnya (absensi, tugas, PKL, UKK) dan akun login mereka akan DIHAPUS PERMANEN dari sistem. Aksi ini TIDAK BISA DIBATALKAN. Lanjutkan?`,
     );
     if (!ok) return;
     setSaving(true);
@@ -126,7 +126,11 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) { toast.error("Gagal meluluskan kelas", data?.message ?? ""); return; }
-      toast.success("Kelulusan berhasil dicatat!", `${data.jumlahSiswa} siswa dari ${data.kelas} sekarang berstatus Lulus`);
+      if (Array.isArray(data.gagal) && data.gagal.length > 0) {
+        toast.error("Sebagian gagal dihapus", `${data.jumlahSiswa} siswa berhasil dihapus, tapi gagal untuk: ${data.gagal.join(", ")}`);
+      } else {
+        toast.success("Siswa berhasil dihapus permanen!", `${data.jumlahSiswa} siswa dari ${data.kelas} beserta seluruh riwayatnya telah dihapus dari sistem`);
+      }
       setKelasId("");
       onDone();
     } finally {
@@ -136,9 +140,9 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-2 rounded-xl bg-[#F1F5F8] px-4 py-3 text-xs text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+      <div className="flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700 dark:bg-red-900/20 dark:text-red-400">
         <AlertTriangle size={14} className="mt-0.5 shrink-0" />
-        <span>Aksi ini menonaktifkan akun login semua siswa di kelas terpilih. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
+        <span>Aksi ini menghapus PERMANEN seluruh data (absensi, tugas, PKL, UKK) dan akun login semua siswa di kelas terpilih — tidak bisa dibatalkan. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
       </div>
       <div>
         <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Kelas yang Lulus</label>

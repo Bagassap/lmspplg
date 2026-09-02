@@ -1,5 +1,7 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as fs from 'fs/promises';
+import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSiswaDto } from './dto/update-siswa.dto';
 import { UpdateProfilSiswaDto } from './dto/update-profil-siswa.dto';
@@ -16,6 +18,8 @@ const INCLUDE_USER = {
 
 @Injectable()
 export class SiswaService {
+  private readonly logger = new Logger(SiswaService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
@@ -213,52 +217,139 @@ export class SiswaService {
     return { jumlahSiswa: result.count, dariKelas: dari.nama, keKelas: ke.nama };
   }
 
-  // Kelulusan: tandai semua siswa AKTIF di satu kelas (biasanya kelas XII)
-  // sebagai LULUS. Data siswa & seluruh riwayatnya TETAP disimpan, cuma
-  // otomatis hilang dari Data Siswa aktif — dan akun login mereka (kalau
-  // ada) dinonaktifkan supaya alumni tidak bisa login lagi.
+  // Kumpulkan path file fisik (foto absensi/tugas/PKL/UKK) milik satu siswa
+  // SEBELUM baris-baris riwayatnya dihapus, supaya file-nya bisa ikut
+  // dibersihkan dari disk setelah transaksi database sukses. ttd/ttdPulang
+  // sengaja tidak ikut — itu data URI base64 inline, bukan path file.
+  private async collectFilePaths(siswaId: string): Promise<string[]> {
+    const [absensiHarian, tugasSubmisi, absensiMagang, laporDiri, laporanAkhir, submisiUkk, absensiUjianUkk, berkasJawabanUkk] =
+      await Promise.all([
+        this.prisma.absensiHarian.findMany({ where: { siswaId }, select: { foto: true, fotoPulang: true } }),
+        this.prisma.tugasSubmisi.findMany({ where: { siswaId }, select: { fileUrl: true } }),
+        this.prisma.absensiMagang.findMany({ where: { siswaId }, select: { foto: true, fotoPulang: true } }),
+        this.prisma.laporDiriMagang.findMany({ where: { siswaId }, select: { fileUrl: true } }),
+        this.prisma.laporanAkhirMagang.findMany({ where: { siswaId }, select: { fileUrl: true } }),
+        this.prisma.submisiProjectUKK.findMany({ where: { siswaId }, select: { fileUrl: true } }),
+        this.prisma.absensiUjianUKK.findMany({ where: { siswaId }, select: { tandaTanganUrl: true } }),
+        this.prisma.berkasJawabanUKK.findMany({ where: { siswaId }, select: { fileUrl: true } }),
+      ]);
+    return [
+      ...absensiHarian.flatMap((a) => [a.foto, a.fotoPulang]),
+      ...tugasSubmisi.map((t) => t.fileUrl),
+      ...absensiMagang.flatMap((a) => [a.foto, a.fotoPulang]),
+      ...laporDiri.map((l) => l.fileUrl),
+      ...laporanAkhir.map((l) => l.fileUrl),
+      ...submisiUkk.map((s) => s.fileUrl),
+      ...absensiUjianUkk.map((a) => a.tandaTanganUrl),
+      ...berkasJawabanUkk.map((b) => b.fileUrl),
+    ].filter((p): p is string => !!p && p.startsWith('/uploads/'));
+  }
+
+  private async hapusFile(url: string) {
+    const filePath = join(process.cwd(), url.replace(/^\//, ''));
+    try {
+      await fs.unlink(filePath);
+    } catch (err: unknown) {
+      const code = (err as NodeJS.ErrnoException)?.code;
+      if (code !== 'ENOENT') {
+        this.logger.warn(`Gagal hapus file ${filePath}: ${(err as Error)?.message ?? err}`);
+      }
+    }
+  }
+
+  // Hapus PERMANEN satu siswa beserta SELURUH riwayatnya (absensi harian,
+  // tugas, PKL, UKK) dan akun login-nya (kalau ada) — atas permintaan
+  // eksplisit sekolah, BUKAN sekadar soft-delete/ubah status. TIDAK BISA
+  // DIBATALKAN. Dipanggil oleh keluarkanSiswa() (satu siswa) maupun
+  // luluskanKelas() (satu kelas sekaligus).
+  //
+  // Urutan penghapusan wajib begini karena FK Restrict (default Prisma/
+  // Postgres untuk relasi wajib tanpa onDelete eksplisit) menolak hapus
+  // parent selama masih ada child yang menunjuknya:
+  //   1. Anak-anak PenempatanMagang (AbsensiMagang/IzinMagang/LaporDiri/
+  //      LaporanAkhir) dulu — mereka punya FK penempatanId ke
+  //      PenempatanMagang, baru PenempatanMagang sendiri.
+  //   2. AbsensiHarian, TugasSubmisi (TugasJawaban ikut cascade otomatis),
+  //      SubmisiProjectUKK, AbsensiUjianUKK, BerkasJawabanUKK, NilaiUKK.
+  //   3. Kalau siswa punya akun (userId): KomentarPengumuman & DiskusiUKK
+  //      Restrict ke User (bukan ke Siswa) — wajib dihapus dulu sebelum User
+  //      dihapus. Ini otomatis ikut menghapus balasan siswa/guru LAIN pada
+  //      komentar/diskusi milik siswa ini (parentId-nya onDelete: Cascade)
+  //      — konsekuensi yang diterima demi penghapusan total.
+  //   4. Baris Siswa (CatatanSiswa & PesertaUKK sudah onDelete: Cascade di
+  //      skema, otomatis ikut terhapus di sini tanpa langkah manual).
+  //   5. Baris User (kalau ada) — Notification ikut cascade otomatis,
+  //      PasswordResetRequest otomatis di-SetNull.
+  private async hardDeleteSatuSiswa(siswaId: string): Promise<{ id: string; nama: string | null } | null> {
+    const siswa = await this.prisma.siswa.findUnique({ where: { id: siswaId } });
+    if (!siswa) return null;
+
+    const filePaths = await this.collectFilePaths(siswaId);
+    const userId = siswa.userId;
+
+    await this.prisma.$transaction([
+      this.prisma.absensiMagang.deleteMany({ where: { siswaId } }),
+      this.prisma.izinMagang.deleteMany({ where: { siswaId } }),
+      this.prisma.laporDiriMagang.deleteMany({ where: { siswaId } }),
+      this.prisma.laporanAkhirMagang.deleteMany({ where: { siswaId } }),
+      this.prisma.penempatanMagang.deleteMany({ where: { siswaId } }),
+
+      this.prisma.absensiHarian.deleteMany({ where: { siswaId } }),
+      this.prisma.tugasSubmisi.deleteMany({ where: { siswaId } }),
+
+      this.prisma.submisiProjectUKK.deleteMany({ where: { siswaId } }),
+      this.prisma.absensiUjianUKK.deleteMany({ where: { siswaId } }),
+      this.prisma.berkasJawabanUKK.deleteMany({ where: { siswaId } }),
+      this.prisma.nilaiUKK.deleteMany({ where: { siswaId } }),
+
+      ...(userId
+        ? [
+            this.prisma.komentarPengumuman.deleteMany({ where: { authorId: userId } }),
+            this.prisma.diskusiUKK.deleteMany({ where: { userId } }),
+          ]
+        : []),
+
+      this.prisma.siswa.delete({ where: { id: siswaId } }),
+
+      ...(userId ? [this.prisma.user.delete({ where: { id: userId } })] : []),
+    ]);
+
+    for (const p of filePaths) await this.hapusFile(p);
+
+    return { id: siswaId, nama: siswa.nama };
+  }
+
+  // Siswa keluar/pindah sekolah: hapus permanen (lihat hardDeleteSatuSiswa).
+  async keluarkanSiswa(id: string) {
+    const result = await this.hardDeleteSatuSiswa(id);
+    if (!result) throw new NotFoundException('Siswa tidak ditemukan');
+    return result;
+  }
+
+  // Kelulusan: hapus permanen semua siswa AKTIF di satu kelas (biasanya
+  // kelas XII) satu per satu (lihat hardDeleteSatuSiswa) — bukan lagi
+  // ditandai status LULUS. Kalau satu siswa gagal dihapus (mis. state tak
+  // terduga), siswa lain tetap lanjut diproses; nama yang gagal dilaporkan
+  // balik di `gagal` supaya admin tahu siapa yang perlu ditangani manual.
   async luluskanKelas(kelasId: string) {
     const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId } });
     if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');
 
     const siswaList = await this.prisma.siswa.findMany({
       where: { kelasId, status: 'AKTIF' },
-      select: { id: true, userId: true },
+      select: { id: true, nama: true },
     });
-    const userIds = siswaList.filter((s) => s.userId).map((s) => s.userId!);
 
-    await this.prisma.$transaction([
-      this.prisma.siswa.updateMany({
-        where: { id: { in: siswaList.map((s) => s.id) } },
-        data: { status: 'LULUS', lulusPada: new Date() },
-      }),
-      ...(userIds.length > 0
-        ? [this.prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isActive: false } })]
-        : []),
-    ]);
+    const gagal: string[] = [];
+    for (const s of siswaList) {
+      try {
+        await this.hardDeleteSatuSiswa(s.id);
+      } catch (err) {
+        this.logger.error(`Gagal hapus permanen siswa ${s.nama ?? s.id}: ${(err as Error)?.message ?? err}`);
+        gagal.push(s.nama ?? s.id);
+      }
+    }
 
-    return { jumlahSiswa: siswaList.length, kelas: kelas.nama };
-  }
-
-  // Siswa keluar/pindah sekolah: tandai status KELUAR, BUKAN hard-delete —
-  // hampir semua tabel riwayat (absensi, tugas, PKL, UKK) punya FK wajib ke
-  // Siswa tanpa onDelete Cascade (default Restrict di Postgres/Prisma),
-  // jadi hard delete akan gagal begitu siswa punya riwayat apa pun. Data &
-  // riwayatnya tetap tersimpan, cuma otomatis hilang dari Data Siswa aktif
-  // (findAll selalu filter status: 'AKTIF') dan akun login (kalau ada)
-  // dinonaktifkan supaya siswa yang sudah keluar tidak bisa login lagi.
-  async keluarkanSiswa(id: string) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { id } });
-    if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
-    if (siswa.status === 'KELUAR') throw new BadRequestException('Siswa ini sudah ditandai keluar');
-
-    await this.prisma.$transaction([
-      this.prisma.siswa.update({ where: { id }, data: { status: 'KELUAR' } }),
-      ...(siswa.userId
-        ? [this.prisma.user.update({ where: { id: siswa.userId }, data: { isActive: false } })]
-        : []),
-    ]);
-
-    return { id, nama: siswa.nama };
+    return { jumlahSiswa: siswaList.length - gagal.length, kelas: kelas.nama, gagal };
   }
 }

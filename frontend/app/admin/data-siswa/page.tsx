@@ -76,23 +76,23 @@ export default function AdminDataSiswaPage() {
     }
   }
 
-  // Siswa keluar/pindah sekolah: tandai status KELUAR (bukan hard-delete —
-  // data & seluruh riwayatnya tetap tersimpan) supaya otomatis hilang dari
-  // Data Siswa aktif dan akun login (kalau ada) tidak bisa dipakai lagi.
+  // Siswa keluar/pindah sekolah: HAPUS PERMANEN — seluruh riwayat (absensi,
+  // tugas, PKL, UKK) dan akun login (kalau ada) dihapus dari sistem, bukan
+  // sekadar ditandai status. Tidak bisa dibatalkan.
   async function handleKeluarkan(s: SiswaCardData) {
     const nama = toTitleCase(getNama(s));
     const ok = await toast.confirm(
-      "Keluarkan siswa ini?",
-      `"${nama}" akan ditandai keluar dan akun loginnya (kalau ada) dinonaktifkan. Data & riwayatnya tetap tersimpan, tapi siswa ini akan hilang dari Data Siswa aktif.`,
+      "Hapus siswa ini secara permanen?",
+      `"${nama}" beserta SELURUH riwayatnya (absensi, tugas, PKL, UKK) dan akun login (kalau ada) akan DIHAPUS PERMANEN dari sistem. Aksi ini TIDAK BISA DIBATALKAN.`,
     );
     if (!ok) return;
     const res = await fetch(`/api/siswa/${s.id}/keluarkan`, { method: "PATCH" });
     if (res.ok) {
-      toast.success("Siswa ditandai keluar", nama);
+      toast.success("Siswa dihapus permanen", nama);
       fetchData();
     } else {
       const d = await res.json().catch(() => null);
-      toast.error(d?.message ?? "Gagal menandai siswa keluar", "");
+      toast.error(d?.message ?? "Gagal menghapus siswa", "");
     }
   }
 

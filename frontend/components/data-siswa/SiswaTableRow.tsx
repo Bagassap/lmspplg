@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap, MessageCircle, UserX } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap, MessageCircle, Trash2 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
@@ -167,11 +167,11 @@ export function SiswaTableRow({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => onKeluarkan(siswa)}
-              title="Keluarkan siswa (siswa pindah/keluar sekolah)"
-              className="flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-red-900/20"
+              title="Hapus permanen (siswa keluar/pindah sekolah)"
+              className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 dark:bg-red-900/20"
             >
-              <UserX size={12} />
-              Keluarkan
+              <Trash2 size={12} />
+              Hapus
             </motion.button>
           )}
         </div>
