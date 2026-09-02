@@ -107,97 +107,101 @@ export function CatatanSiswaClient() {
       <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {/* KIRI: filter di atas, lalu Ringkasan + Unduh Laporan */}
-        <div className="flex flex-col gap-4">
-          <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
-            <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                <Filter size={13} />
+        {/* KIRI: satu card — header biru solid, lalu filter, ringkasan, dan
+            unduh laporan sebagai zona-zona yang dipisah jelas di dalamnya. */}
+        <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="relative overflow-hidden px-5 py-5" style={{ background: "#0082FB" }}>
+            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
+            <div className="pointer-events-none absolute -bottom-6 right-16 h-20 w-20 rounded-full bg-white/8" />
+            <div className="relative flex items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm">
+                <NotebookPen size={20} className="text-white" />
               </span>
-              Filter Catatan Siswa
-            </p>
-            <div className="space-y-2">
-              <div className="relative">
-                <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
-                  className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                  {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
-                </select>
-                <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Ringkasan &amp; Filter</p>
+                <h2 className="truncate text-base font-extrabold text-white">{selectedKelas?.nama ?? "Pilih Kelas"}</h2>
               </div>
+            </div>
+          </div>
 
-              <div className="relative">
-                <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input value={search} onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari nama atau NIS..."
-                  className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500" />
-                {search && (
-                  <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
+          {/* Zona Filter */}
+          <div className="space-y-2 border-b border-slate-100 p-4 dark:border-slate-700/50">
+            <div className="relative">
+              <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
+                className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
+              </select>
+              <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            </div>
+
+            <div className="relative">
+              <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari nama atau NIS..."
+                className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:placeholder:text-slate-500" />
+              {search && (
+                <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  <X size={14} />
+                </button>
+              )}
             </div>
 
             {!loading && (
-              <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+              <p className="pt-1 text-[11px] font-medium text-slate-400 dark:text-slate-500">
                 Menampilkan {displayed.length} dari {inKelas.length} siswa
               </p>
             )}
           </div>
 
-          <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            {/* Zona Ringkasan — angka ditonjolkan, ikon cuma aksen lingkaran
-                lembut (bukan blok warna penuh) supaya tidak berkesan kotak-kotak. */}
-            <div className="p-5">
-              <p className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
-                Ringkasan {selectedKelas?.nama ?? "Kelas"}
-              </p>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-                {[
-                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0064E0" },
-                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#8A9E1F" },
-                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#8B5CF6" },
-                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#EF4444" },
-                ].map((st, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: `${st.color}1A`, color: st.color }}>
-                      <st.icon size={15} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-lg font-extrabold leading-none text-slate-800 dark:text-white">{st.val}</p>
-                      <p className="mt-1 text-[10px] font-semibold text-slate-400 dark:text-slate-500">{st.label}</p>
-                    </div>
-                  </div>
-                ))}
+          {/* Zona Ringkasan — kartu bertona warna, bukan cuma ikon+teks polos. */}
+          <div className="p-4">
+            <p className="mb-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              <Filter size={11} /> Ringkasan
+            </p>
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0064E0" },
+                { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#8A9E1F" },
+                { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#8B5CF6" },
+                { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#EF4444" },
+              ].map((st, i) => (
+                <motion.div key={i} whileHover={{ y: -2 }}
+                  className="rounded-2xl p-3 transition-shadow hover:shadow-md" style={{ backgroundColor: `${st.color}0F` }}>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: `${st.color}22`, color: st.color }}>
+                    <st.icon size={14} />
+                  </span>
+                  <p className="mt-2.5 text-xl font-extrabold leading-none text-slate-800 dark:text-white">{st.val}</p>
+                  <p className="mt-1 truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{st.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Zona Laporan — dipisah jelas dari Ringkasan lewat garis + latar
+              berbeda, bukan cuma disambung langsung di bawahnya. */}
+          <div className="border-t border-slate-100 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/40">
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm" style={{ background: "#0064E0" }}>
+                <Download size={16} />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">Rekap {selectedKelas?.nama ?? "kelas ini"} & seluruh catatannya</p>
               </div>
             </div>
-
-            {/* Zona Laporan — dipisah jelas dari Ringkasan lewat garis + latar
-                berbeda, bukan cuma disambung langsung di bawahnya. */}
-            <div className="border-t border-slate-100 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-900/40">
-              <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm" style={{ background: "#0064E0" }}>
-                  <Download size={16} />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Rekap {selectedKelas?.nama ?? "kelas ini"} beserta seluruh catatannya</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
-                  style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" }}>
-                  <FileText size={13} /> PDF
-                </a>
-                <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
-                  style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" }}>
-                  <FileSpreadsheet size={13} /> Excel
-                </a>
-              </div>
+            <div className="flex gap-2">
+              <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
+                style={{ backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" }}>
+                <FileText size={13} /> PDF
+              </a>
+              <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all hover:brightness-95"
+                style={{ backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" }}>
+                <FileSpreadsheet size={13} /> Excel
+              </a>
             </div>
           </div>
         </div>
