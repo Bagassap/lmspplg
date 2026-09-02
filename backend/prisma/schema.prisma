@@ -29,6 +29,7 @@ enum StatusIzin {
 enum StatusSiswa {
   AKTIF
   LULUS
+  KELUAR
 }
 
 enum NotificationType {

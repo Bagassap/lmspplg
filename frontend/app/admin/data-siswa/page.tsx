@@ -76,6 +76,26 @@ export default function AdminDataSiswaPage() {
     }
   }
 
+  // Siswa keluar/pindah sekolah: tandai status KELUAR (bukan hard-delete —
+  // data & seluruh riwayatnya tetap tersimpan) supaya otomatis hilang dari
+  // Data Siswa aktif dan akun login (kalau ada) tidak bisa dipakai lagi.
+  async function handleKeluarkan(s: SiswaCardData) {
+    const nama = toTitleCase(getNama(s));
+    const ok = await toast.confirm(
+      "Keluarkan siswa ini?",
+      `"${nama}" akan ditandai keluar dan akun loginnya (kalau ada) dinonaktifkan. Data & riwayatnya tetap tersimpan, tapi siswa ini akan hilang dari Data Siswa aktif.`,
+    );
+    if (!ok) return;
+    const res = await fetch(`/api/siswa/${s.id}/keluarkan`, { method: "PATCH" });
+    if (res.ok) {
+      toast.success("Siswa ditandai keluar", nama);
+      fetchData();
+    } else {
+      const d = await res.json().catch(() => null);
+      toast.error(d?.message ?? "Gagal menandai siswa keluar", "");
+    }
+  }
+
   const isFiltered = !!(search || filterJurusan || filterGender);
   const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
@@ -130,6 +150,7 @@ export default function AdminDataSiswaPage() {
         onEdit={setEditTarget}
         onResetPassword={setResetTarget}
         onImpersonate={handleImpersonate}
+        onKeluarkan={handleKeluarkan}
       />
 
       <KenaikanKelasModal

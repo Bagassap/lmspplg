@@ -239,4 +239,26 @@ export class SiswaService {
 
     return { jumlahSiswa: siswaList.length, kelas: kelas.nama };
   }
+
+  // Siswa keluar/pindah sekolah: tandai status KELUAR, BUKAN hard-delete —
+  // hampir semua tabel riwayat (absensi, tugas, PKL, UKK) punya FK wajib ke
+  // Siswa tanpa onDelete Cascade (default Restrict di Postgres/Prisma),
+  // jadi hard delete akan gagal begitu siswa punya riwayat apa pun. Data &
+  // riwayatnya tetap tersimpan, cuma otomatis hilang dari Data Siswa aktif
+  // (findAll selalu filter status: 'AKTIF') dan akun login (kalau ada)
+  // dinonaktifkan supaya siswa yang sudah keluar tidak bisa login lagi.
+  async keluarkanSiswa(id: string) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { id } });
+    if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
+    if (siswa.status === 'KELUAR') throw new BadRequestException('Siswa ini sudah ditandai keluar');
+
+    await this.prisma.$transaction([
+      this.prisma.siswa.update({ where: { id }, data: { status: 'KELUAR' } }),
+      ...(siswa.userId
+        ? [this.prisma.user.update({ where: { id: siswa.userId }, data: { isActive: false } })]
+        : []),
+    ]);
+
+    return { id, nama: siswa.nama };
+  }
 }

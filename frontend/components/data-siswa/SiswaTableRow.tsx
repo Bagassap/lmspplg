@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap, MessageCircle } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, CheckCircle2, XCircle, GraduationCap, MessageCircle, UserX } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
@@ -31,7 +31,7 @@ export function SiswaTableHead() {
 }
 
 export function SiswaTableRow({
-  siswa, index, onEdit, onResetPassword, onImpersonate, onViewDetail,
+  siswa, index, onEdit, onResetPassword, onImpersonate, onViewDetail, onKeluarkan,
 }: {
   siswa: SiswaCardData;
   index: number;
@@ -39,6 +39,7 @@ export function SiswaTableRow({
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
   onViewDetail: (s: SiswaCardData) => void;
+  onKeluarkan?: (s: SiswaCardData) => void;
 }) {
   const displayNama = toTitleCase(getNama(siswa));
   const accent = avatarColorFor(siswa.id || displayNama);
@@ -159,6 +160,18 @@ export function SiswaTableRow({
             >
               <KeyRound size={12} />
               Reset
+            </motion.button>
+          )}
+          {onKeluarkan && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => onKeluarkan(siswa)}
+              title="Keluarkan siswa (siswa pindah/keluar sekolah)"
+              className="flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-red-900/20"
+            >
+              <UserX size={12} />
+              Keluarkan
             </motion.button>
           )}
         </div>

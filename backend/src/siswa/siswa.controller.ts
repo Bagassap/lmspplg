@@ -139,4 +139,11 @@ export class SiswaController {
   update(@Param('id') id: string, @Body() dto: UpdateSiswaDto) {
     return this.service.update(id, dto);
   }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Patch(':id/keluarkan')
+  keluarkanSiswa(@Param('id') id: string) {
+    return this.service.keluarkanSiswa(id);
+  }
 }

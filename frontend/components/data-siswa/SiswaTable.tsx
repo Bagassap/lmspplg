@@ -13,6 +13,7 @@ type ActionProps = {
   onResetPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
   onViewDetail: (s: SiswaCardData) => void;
+  onKeluarkan?: (s: SiswaCardData) => void;
 };
 
 function LoadingSkeleton() {
@@ -68,7 +69,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
 }
 
 export function SiswaTable({
-  loading, siswas, onEdit, onResetPassword, onImpersonate,
+  loading, siswas, onEdit, onResetPassword, onImpersonate, onKeluarkan,
 }: Omit<ActionProps, "onViewDetail"> & {
   loading: boolean;
   siswas: SiswaCardData[];
@@ -77,7 +78,7 @@ export function SiswaTable({
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(10);
   useEffect(() => setPage(0), [siswas]);
-  const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa };
+  const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa, onKeluarkan };
 
   const { pageItems, pageCount, start, end } = paginate(siswas, page, pageSize);
 
