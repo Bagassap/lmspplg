@@ -10,6 +10,13 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColor } from "@/components/absensi-harian/shared";
+
+// Grid kolom tabel catatan — meniru pola AbsensiHarianTable (baris nomor +
+// avatar + header gelap #1C2B33), supaya bahasa visual senada dengan tabel
+// Absensi Harian.
+const GRID_COLS = "28px 40px 1.9fr 1.6fr 90px 110px 120px";
 
 type SummaryItem = {
   siswaId: string;
@@ -100,149 +107,45 @@ export function CatatanSiswaClient() {
       <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
-          <div className="p-4 sm:p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    <Filter size={13} />
-                  </span>
-                  Catatan Siswa <span className="font-medium text-slate-400 dark:text-slate-500">({displayed.length})</span>
-                </p>
-                <p className="mt-1 ml-9 text-xs text-slate-500 dark:text-slate-400">Cari dan saring siswa di kelas ini</p>
+        {/* KIRI: filter di atas, lalu Ringkasan + Unduh Laporan */}
+        <div className="flex flex-col gap-4">
+          <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
+            <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <Filter size={13} />
+              </span>
+              Filter Catatan Siswa
+            </p>
+            <div className="space-y-2">
+              <div className="relative">
+                <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
+                  className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                  {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                </select>
+                <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
               </div>
 
-              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                <div className="relative shrink-0 sm:w-44">
-                  <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
-                    className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                    {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
-                  </select>
-                  <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                </div>
-
-                <div className="relative w-full sm:max-w-xs">
-                  <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input value={search} onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari nama atau NIS..."
-                    className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500" />
-                  {search && (
-                    <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
+              <div className="relative">
+                <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input value={search} onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari nama atau NIS..."
+                  className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500" />
+                {search && (
+                  <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                    <X size={14} />
+                  </button>
+                )}
               </div>
             </div>
 
             {!loading && (
-              <p className="mt-4 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
-                Menampilkan {displayed.length} siswa di kelas ini
+              <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+                Menampilkan {displayed.length} dari {inKelas.length} siswa
               </p>
             )}
           </div>
 
-          {loading && (
-            <div className="space-y-3 border-t border-slate-100 p-6 dark:border-slate-700">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="h-9 w-9 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
-                  <div className="h-4 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-700" />
-                  <div className="h-7 w-24 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
-                </div>
-              ))}
-            </div>
-          )}
-          {!loading && displayed.length === 0 && (
-            <div className="flex flex-col items-center border-t border-slate-100 py-16 text-center dark:border-slate-700">
-              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                <NotebookPen size={24} className="text-slate-300 dark:text-slate-600" />
-              </div>
-              <p className="text-sm font-medium text-slate-400 dark:text-slate-500">Tidak ada siswa yang ditemukan</p>
-            </div>
-          )}
-          {!loading && displayed.length > 0 && (
-            <>
-              <div className="overflow-x-auto border-t border-slate-100 dark:border-slate-700">
-                <table className="w-full min-w-170 text-left text-sm">
-                  <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
-                    <tr>
-                      <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Nama Siswa</th>
-                      <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Catatan Terakhir</th>
-                      <th className="whitespace-nowrap px-4 py-3 text-center text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Jumlah</th>
-                      <th className="whitespace-nowrap px-4 py-3 text-center text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Total Poin</th>
-                      <th className="whitespace-nowrap px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Aksi</th>
-                    </tr>
-                  </thead>
-                  <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
-                    {pageItems.map((s) => (
-                      <motion.tr key={s.siswaId} variants={{ hidden: { opacity: 0, y: 4 }, visible: { opacity: 1, y: 0 } }}
-                        className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
-                        <td className="whitespace-nowrap px-4 py-3">
-                          <div className="flex items-center gap-2.5">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: "#0082FB" }}>
-                              {(s.nama ?? "?")[0]?.toUpperCase()}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-semibold text-slate-800 dark:text-white">{s.nama ?? "-"}</p>
-                              <p className="font-mono text-xs text-slate-400 dark:text-slate-500">{s.nis}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-xs">
-                          {s.catatanTerakhir ? (
-                            <div>
-                              <p className="max-w-[220px] truncate font-medium text-slate-700 dark:text-slate-200">{s.catatanTerakhir.judul}</p>
-                              <p className="text-[10px] text-slate-400 dark:text-slate-500">{formatTgl(s.catatanTerakhir.tanggal)}</p>
-                            </div>
-                          ) : <span className="text-slate-300 dark:text-slate-600">Belum ada catatan</span>}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-center">
-                          <span className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-center">
-                          {s.totalPoin > 0 ? (
-                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
-                          ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-right">
-                          <button onClick={() => setDetailId(s.siswaId)}
-                            className="rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
-                            style={{ background: "#0082FB" }}>
-                            Lihat &amp; Catat
-                          </button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </motion.tbody>
-                </table>
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
-                <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {displayed.length}</span>
-                <div className="flex items-center gap-2.5">
-                  <PageSizeToggle value={pageSize} onChange={(n) => { setPageSize(n); setPage(0); }} />
-                  {pageCount > 1 && (
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={() => setPage((p) => p - 1)} disabled={page === 0}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                        <ChevronLeft size={14} />
-                      </button>
-                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{page + 1}/{pageCount}</span>
-                      <button onClick={() => setPage((p) => p + 1)} disabled={page >= pageCount - 1}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-                        <ChevronRight size={14} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-4">
           <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
             {/* Zona Ringkasan — angka ditonjolkan, ikon cuma aksen lingkaran
                 lembut (bukan blok warna penuh) supaya tidak berkesan kotak-kotak. */}
@@ -297,6 +200,120 @@ export function CatatanSiswaClient() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* KANAN: hanya tabel catatan, gaya senada AbsensiHarianTable
+            (header gelap #1C2B33, nomor baris, avatar, hover row). */}
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+          {loading && (
+            <div className="space-y-3 p-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="h-9 w-9 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
+                  <div className="h-4 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-700" />
+                  <div className="h-7 w-24 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
+                </div>
+              ))}
+            </div>
+          )}
+          {!loading && displayed.length === 0 && (
+            <div className="flex flex-col items-center py-16 text-center">
+              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                <NotebookPen size={24} className="text-slate-300 dark:text-slate-600" />
+              </div>
+              <p className="text-sm font-medium text-slate-400 dark:text-slate-500">Tidak ada siswa yang ditemukan</p>
+            </div>
+          )}
+          {!loading && displayed.length > 0 && (
+            <>
+              <div className="overflow-x-auto">
+                <div className="min-w-170">
+                  <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
+                    <span />
+                    <span />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white">Catatan Terakhir</span>
+                    <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Jumlah</span>
+                    <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Total Poin</span>
+                    <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
+                  </div>
+                  <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
+                    {pageItems.map((s, idx) => (
+                      <motion.div key={s.siswaId}
+                        initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
+                        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                        style={{ gridTemplateColumns: GRID_COLS }}>
+                        <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{start + idx}</span>
+                        <Avatar src={null} nama={s.nama ?? "?"} sizePx={36} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-[10px] font-extrabold" />
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama ?? "-"}</p>
+                          <p className="truncate font-mono text-xs text-slate-400 dark:text-slate-500">{s.nis}</p>
+                        </div>
+                        <div className="min-w-0">
+                          {s.catatanTerakhir ? (
+                            <div>
+                              <p className="truncate text-xs font-medium text-slate-700 dark:text-slate-200">{s.catatanTerakhir.judul}</p>
+                              <p className="text-[10px] text-slate-400 dark:text-slate-500">{formatTgl(s.catatanTerakhir.tanggal)}</p>
+                            </div>
+                          ) : <span className="text-xs text-slate-300 dark:text-slate-600">Belum ada catatan</span>}
+                        </div>
+                        <div className="flex justify-center">
+                          <span className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
+                        </div>
+                        <div className="flex justify-center">
+                          {s.totalPoin > 0 ? (
+                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
+                          ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
+                        </div>
+                        <div className="flex justify-end">
+                          <button onClick={() => setDetailId(s.siswaId)}
+                            className="rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
+                            style={{ background: "#0082FB" }}>
+                            Lihat &amp; Catat
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
+                <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {displayed.length}</span>
+                <div className="flex items-center gap-2.5">
+                  <PageSizeToggle value={pageSize} onChange={(n) => { setPageSize(n); setPage(0); }} />
+                  {pageCount > 1 && (
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setPage((p) => Math.max(0, p - 1))} disabled={page === 0}
+                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+                        <ChevronLeft size={14} />
+                      </button>
+                      {Array.from({ length: pageCount }, (_, i) => i)
+                        .filter((i) => i === 0 || i === pageCount - 1 || Math.abs(i - page) <= 1)
+                        .map((i, idx, arr) => (
+                          <span key={i} className="flex items-center">
+                            {idx > 0 && arr[idx - 1] !== i - 1 && (
+                              <span className="px-1 text-xs font-semibold text-slate-300 dark:text-slate-600">…</span>
+                            )}
+                            <button onClick={() => setPage(i)}
+                              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                                i === page
+                                  ? "bg-[#0082FB] text-white shadow-sm"
+                                  : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
+                              }`}>
+                              {i + 1}
+                            </button>
+                          </span>
+                        ))}
+                      <button onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1}
+                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+                        <ChevronRight size={14} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
