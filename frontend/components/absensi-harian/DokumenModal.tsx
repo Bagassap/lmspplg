@@ -58,7 +58,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }}
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
-          className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-3xl flex-col overflow-y-auto rounded-3xl shadow-2xl sm:mx-0 sm:flex-row sm:overflow-hidden">
+          className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-y-auto rounded-3xl shadow-2xl sm:mx-0 sm:flex-row sm:overflow-hidden">
 
           <button onClick={onClose}
             className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-800/90 dark:text-slate-300 dark:hover:bg-slate-800">
@@ -147,7 +147,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Dokumen Kehadiran</p>
             </div>
             <div className="flex-1 sm:min-h-0 sm:overflow-y-auto">
-              <div className="space-y-2.5 p-3 sm:space-y-3 sm:p-4">
+              <div className="grid grid-cols-1 gap-2.5 p-3 sm:grid-cols-3 sm:gap-3 sm:p-4">
                 {fotoSrc && (
                   <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
                     <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/50 px-4 py-2.5 sm:py-3">
@@ -157,7 +157,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                       <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{fotoLabel}</span>
                     </div>
                     <button onClick={() => setImgOverlay(fotoSrc)} className="group block w-full overflow-hidden">
-                      <img src={fotoSrc} alt={fotoLabel} className="max-h-32 w-full object-cover group-hover:brightness-90 transition-all duration-200 sm:max-h-52" />
+                      <img src={fotoSrc} alt={fotoLabel} className="h-32 w-full object-cover group-hover:brightness-90 transition-all duration-200" />
                     </button>
                   </div>
                 )}
@@ -168,17 +168,17 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0082FB18" }}>
                           <PenTool size={13} style={{ color: "#0082FB" }} />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tanda Tangan Digital</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tanda Tangan</span>
                       </div>
                       <button onClick={() => setImgOverlay(ttdSrc)}
                         className="flex items-center gap-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 px-2.5 py-1 text-[10px] font-bold text-slate-500 dark:text-slate-300 hover:bg-slate-200">
                         <Download size={10} /> Simpan
                       </button>
                     </div>
-                    <div className="flex items-center justify-center bg-white dark:bg-slate-900/40 p-2.5 sm:p-4">
+                    <div className="flex h-32 items-center justify-center bg-white dark:bg-slate-900/40 p-2.5">
                       <button onClick={() => setImgOverlay(ttdSrc)}
-                        className="group relative w-full overflow-hidden rounded-xl border border-dashed border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 hover:shadow-md transition-shadow sm:p-3">
-                        <img src={ttdSrc} alt="TTD" className="h-14 w-full object-contain group-hover:scale-105 transition-transform duration-300 sm:h-20" />
+                        className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 hover:shadow-md transition-shadow">
+                        <img src={ttdSrc} alt="TTD" className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300" />
                       </button>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#0082FB18" }}>
                           <MapPin size={13} style={{ color: "#0082FB" }} />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi Absensi</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi</span>
                       </div>
                       <a href={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}`} target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold hover:opacity-80" style={{ background: "#EAF3FF", color: "#0082FB" }}>
@@ -198,21 +198,21 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                       </a>
                     </div>
                     <iframe src={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}&output=embed`}
-                      className="h-24 w-full border-0 sm:h-40" loading="lazy" title="Lokasi" />
-                    <div className="flex items-center gap-2 px-4 py-2 sm:py-2.5">
+                      className="h-32 w-full border-0" loading="lazy" title="Lokasi" />
+                    <div className="flex items-center gap-2 px-4 py-2">
                       <MapPin size={11} className="shrink-0" style={{ color: "#0064E0" }} />
-                      <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400">{lokasi.lat}, {lokasi.lng}</span>
+                      <span className="truncate font-mono text-[11px] text-slate-500 dark:text-slate-400">{lokasi.lat}, {lokasi.lng}</span>
                     </div>
                   </div>
                 )}
                 {rawLokasi && !lokasi && (
-                  <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm p-4">
+                  <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm p-4 sm:col-span-3">
                     <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Lokasi Absensi</p>
                     <p className="text-sm text-slate-600 dark:text-slate-300">{rawLokasi}</p>
                   </div>
                 )}
                 {!fotoSrc && !ttdSrc && !rawLokasi && (
-                  <div className="flex flex-col items-center gap-2 py-8 text-center sm:gap-3 sm:py-16">
+                  <div className="flex flex-col items-center gap-2 py-8 text-center sm:col-span-3 sm:gap-3 sm:py-16">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 sm:h-14 sm:w-14">
                       <PenTool size={20} className="text-slate-300 dark:text-slate-600" />
                     </div>
