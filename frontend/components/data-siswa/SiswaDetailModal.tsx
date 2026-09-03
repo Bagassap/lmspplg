@@ -20,26 +20,26 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
 }) {
   return (
-    <div className={full ? "sm:col-span-2" : undefined}>
-      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
-        <Icon size={12} className="shrink-0" />
-        <p className="text-[10px] font-bold uppercase tracking-wider">{label}</p>
+    <div className={`flex items-start gap-1.5 ${full ? "sm:col-span-2" : ""}`}>
+      <Icon size={12} className="mt-0.5 shrink-0 text-slate-400 dark:text-slate-500" />
+      <div className="min-w-0">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{label}</p>
+        {href ? (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Kirim pesan WhatsApp"
+            className="mt-1.5 inline-block break-words text-[15px] font-bold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+          >
+            {value}
+          </a>
+        ) : (
+          <p className="mt-1.5 break-words text-[15px] font-bold text-slate-800 dark:text-white">
+            {value || "—"}
+          </p>
+        )}
       </div>
-      {href ? (
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Kirim pesan WhatsApp"
-          className="mt-1.5 inline-block break-words text-[15px] font-bold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          {value}
-        </a>
-      ) : (
-        <p className="mt-1.5 break-words text-[15px] font-bold text-slate-800 dark:text-white">
-          {value || "—"}
-        </p>
-      )}
     </div>
   );
 }
