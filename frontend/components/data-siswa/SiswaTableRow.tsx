@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, GraduationCap, MessageCircle, Trash2 } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, Trash2 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
@@ -12,7 +12,7 @@ import { ProgressRing } from "./ProgressRing";
 const REF_PRIMARY = "#0082FB";
 const REF_DANGER = "#EF4444";
 
-export const GRID_COLS = "28px 40px 2.1fr 1.5fr 1.15fr 1.35fr 2.1fr";
+export const GRID_COLS = "28px 40px 2.0fr 1.8fr 1.1fr 1.1fr 1.8fr";
 
 export function SiswaTableHead() {
   return (
@@ -58,8 +58,7 @@ export function SiswaTableRow({
 
       <div className="min-w-0">
         <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100" title={displayNama}>{displayNama}</p>
-        <p className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
-          <GraduationCap size={11} />
+        <p className="truncate text-xs text-slate-400 dark:text-slate-500">
           Siswa &middot; <span className="font-mono">{siswa.nis}</span>
         </p>
       </div>
@@ -74,9 +73,8 @@ export function SiswaTableRow({
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             title="Kirim pesan WhatsApp"
-            className="inline-flex items-center gap-1.5 truncate text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+            className="block truncate text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
           >
-            <MessageCircle size={13} className="shrink-0" />
             {siswa.noHp}
           </a>
         ) : (
@@ -84,32 +82,30 @@ export function SiswaTableRow({
         )}
       </div>
 
-      <div className="flex items-center gap-2.5">
-        <div className="flex items-center gap-2">
-          <ProgressRing percent={pct} />
-          <span className="text-xs text-slate-400 dark:text-slate-500">{pct}%</span>
-        </div>
+      <div className="flex items-center gap-2">
+        <ProgressRing percent={pct} />
+        <span className="text-xs text-slate-400 dark:text-slate-500">{pct}%</span>
         <button
           onClick={() => onViewDetail(siswa)}
-          className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:brightness-95"
+          title="Lihat data lengkap"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors hover:brightness-95"
           style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}
         >
-          <Eye size={12} />
-          Lihat
+          <Eye size={13} />
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-1.5">
         {onEdit && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => onEdit(siswa)}
-            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+            title="Edit data siswa"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm transition-colors hover:brightness-95"
             style={{ backgroundColor: REF_PRIMARY }}
           >
-            <Pencil size={12} />
-            Edit
+            <Pencil size={13} />
           </motion.button>
         )}
         {onImpersonate && siswa.user && (
@@ -117,10 +113,10 @@ export function SiswaTableRow({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => onImpersonate(siswa)}
-            className="flex items-center gap-1 rounded-lg bg-[#C3F84A] px-2.5 py-1.5 text-xs font-bold text-[#1C2B33] shadow-sm transition-colors hover:brightness-95"
+            title="Pantau akun siswa"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#C3F84A] text-[#1C2B33] shadow-sm transition-colors hover:brightness-95"
           >
-            <ScanEye size={12} />
-            Pantau
+            <ScanEye size={13} />
           </motion.button>
         )}
         {onResetPassword && siswa.user && (
@@ -128,11 +124,11 @@ export function SiswaTableRow({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => onResetPassword(siswa)}
-            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
+            title="Reset password"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm transition-colors hover:brightness-95"
             style={{ backgroundColor: REF_DANGER }}
           >
-            <KeyRound size={12} />
-            Reset
+            <KeyRound size={13} />
           </motion.button>
         )}
         {onKeluarkan && (
@@ -141,10 +137,9 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onKeluarkan(siswa)}
             title="Hapus permanen (siswa keluar/pindah sekolah)"
-            className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 dark:bg-red-900/20"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 shadow-sm transition-colors hover:bg-red-100 dark:bg-red-900/20"
           >
-            <Trash2 size={12} />
-            Hapus
+            <Trash2 size={13} />
           </motion.button>
         )}
       </div>

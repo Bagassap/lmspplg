@@ -54,8 +54,8 @@ export default function GuruDataSiswaPage() {
     <div className="space-y-5">
       <DataSiswaHeader title="Data Siswa" />
 
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-4">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-3">
           <FilterBar
             search={search} onSearch={setSearch}
             filterGender={filterGender} onFilterGender={setFilterGender}

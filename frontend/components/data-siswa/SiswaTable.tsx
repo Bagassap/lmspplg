@@ -104,7 +104,7 @@ export function SiswaTable({
     return (
       <>
         <div className="overflow-x-auto">
-          <div className="min-w-220">
+          <div className="min-w-160">
             <SiswaTableHead />
             <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
               {pageItems.map((s, i) => (
