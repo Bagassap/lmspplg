@@ -19,7 +19,6 @@ export default function AdminDataSiswaPage() {
   const [loading, setLoading] = useState(true);
   const [selectedKelasId, setSelectedKelasId] = useState("");
   const [search, setSearch] = useState("");
-  const [filterJurusan, setFilterJurusan] = useState("");
   const [filterGender, setFilterGender] = useState("");
   const [editTarget, setEditTarget] = useState<SiswaCardData | null>(null);
   const [resetTarget, setResetTarget] = useState<SiswaCardData | null>(null);
@@ -54,7 +53,6 @@ export default function AdminDataSiswaPage() {
   );
 
   const displayed = inKelas
-    .filter((s) => (filterJurusan ? s.jurusan === filterJurusan : true))
     .filter((s) => (filterGender ? s.jenisKelamin === filterGender : true))
     .filter((s) => (search ? (getNama(s).toLowerCase().includes(search.toLowerCase()) || s.nis.includes(search)) : true));
 
@@ -96,62 +94,67 @@ export default function AdminDataSiswaPage() {
     }
   }
 
-  const isFiltered = !!(search || filterJurusan || filterGender);
+  const isFiltered = !!(search || filterGender);
   const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
     <div className="space-y-5">
       <DataSiswaHeader title="Data Siswa" />
 
-      <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
-        <KartuPelajarBanner />
-
-        <button onClick={() => setKenaikanOpen(true)}
-          className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/40">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
-              <ArrowUpCircle size={18} />
-            </span>
-            <div>
-              <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500">Naikkan siswa antar kelas, atau luluskan satu kelas sekaligus (akhir tahun ajaran)</p>
-            </div>
-          </div>
-          <ChevronRight size={16} className="shrink-0 text-slate-300" />
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
           <FilterBar
             search={search} onSearch={setSearch}
-            filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
             filterGender={filterGender} onFilterGender={setFilterGender}
             kelasList={kelasList} selectedKelasId={selectedKelasId} onSelectKelas={setSelectedKelasId}
             siswaList={inKelas}
             isFiltered={isFiltered}
-            onReset={() => { setSearch(""); setFilterJurusan(""); setFilterGender(""); }}
+            onReset={() => { setSearch(""); setFilterGender(""); }}
             loading={loading}
             totalCount={inKelas.length}
             displayedCount={displayed.length}
           />
+          <div className="border-t border-slate-100 dark:border-slate-700/50">
+            <SiswaTable
+              loading={loading}
+              siswas={displayed}
+              onEdit={setEditTarget}
+              onResetPassword={setResetTarget}
+              onImpersonate={handleImpersonate}
+              onKeluarkan={handleKeluarkan}
+            />
+          </div>
         </div>
 
-        <UnduhDataSiswaCard
-          kelasId={selectedKelasId || undefined}
-          kelasNama={selectedKelas?.nama}
-          jurusan={filterJurusan || undefined}
-        />
-      </div>
+        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="p-5">
+            <KartuPelajarBanner />
+          </div>
 
-      <SiswaTable
-        loading={loading}
-        siswas={displayed}
-        onEdit={setEditTarget}
-        onResetPassword={setResetTarget}
-        onImpersonate={handleImpersonate}
-        onKeluarkan={handleKeluarkan}
-      />
+          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
+            <UnduhDataSiswaCard
+              kelasId={selectedKelasId || undefined}
+              kelasNama={selectedKelas?.nama}
+            />
+          </div>
+
+          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
+            <button onClick={() => setKenaikanOpen(true)}
+              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 text-left transition-colors hover:border-blue-200 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/40">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                  <ArrowUpCircle size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Naikkan siswa antar kelas, atau luluskan satu kelas sekaligus (akhir tahun ajaran)</p>
+                </div>
+              </div>
+              <ChevronRight size={16} className="shrink-0 text-slate-300" />
+            </button>
+          </div>
+        </div>
+      </div>
 
       <KenaikanKelasModal
         open={kenaikanOpen}

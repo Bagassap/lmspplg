@@ -1,43 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Download, Users, School, BookOpen } from "lucide-react";
+import { FileText, Download, Users, School } from "lucide-react";
 import { kelasShort } from "./shared";
 import { reportCardFg } from "@/components/absensi-harian/shared";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
-type Scope = "semua" | "kelas" | "jurusan";
+type Scope = "semua" | "kelas";
 
 const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
   { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#0064E0" },
   { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#C3F84A" },
-  { key: "jurusan", label: "Jurusan Ini", caption: "Satu jurusan", icon: BookOpen, gradient: "#EF4444" },
 ];
 
 export function UnduhDataSiswaCard({
-  kelasId, kelasNama, jurusan,
+  kelasId, kelasNama,
 }: {
-  kelasId?: string; kelasNama?: string; jurusan?: string;
+  kelasId?: string; kelasNama?: string;
 }) {
   const [scope, setScope] = useState<Scope>("semua");
 
-  // Kalau filter kelas/jurusan yang jadi acuan scope aktif dikosongkan dari
+  // Kalau filter kelas yang jadi acuan scope aktif dikosongkan dari
   // FilterBar, scope ini otomatis jatuh balik ke "semua" - mencegah tombol
   // ekspor diam-diam mengunduh berdasarkan cakupan yang sudah tidak ada.
   useEffect(() => {
     if (scope === "kelas" && !kelasId) setScope("semua");
-    if (scope === "jurusan" && !jurusan) setScope("semua");
-  }, [kelasId, jurusan, scope]);
+  }, [kelasId, scope]);
 
-  const caption =
-    scope === "kelas" && kelasNama
-      ? kelasShort(kelasNama)
-      : scope === "jurusan" && jurusan
-        ? jurusan
-        : "Semua kelas";
+  const caption = scope === "kelas" && kelasNama ? kelasShort(kelasNama) : "Semua kelas";
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+    <div className="flex flex-1 flex-col">
       <div className="mb-3 flex items-center gap-2.5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
           <FileText size={18} />
@@ -48,9 +41,9 @@ export function UnduhDataSiswaCard({
         </div>
       </div>
 
-      <div className="grid flex-1 grid-cols-3 content-center gap-3">
+      <div className="grid flex-1 grid-cols-2 content-center gap-3">
         {SCOPE_CARDS.map((opt) => {
-          const disabled = (opt.key === "kelas" && !kelasId) || (opt.key === "jurusan" && !jurusan);
+          const disabled = opt.key === "kelas" && !kelasId;
           const active = scope === opt.key;
           const fg = reportCardFg(opt.gradient);
           return (
@@ -86,7 +79,6 @@ export function UnduhDataSiswaCard({
         <DataSiswaExportButtons
           kelasId={scope === "kelas" ? kelasId : undefined}
           kelasNama={scope === "kelas" ? kelasNama : undefined}
-          jurusan={scope === "jurusan" ? jurusan : undefined}
         />
       </div>
 

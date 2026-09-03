@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, Hash,
+  CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, XCircle, Hash, KeyRound,
 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
@@ -14,6 +14,7 @@ import { ProgressRing } from "./ProgressRing";
 const HEADER_GRADIENT = "#0082FB";
 // Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
 const REF_PRIMARY = "#0082FB";
+const REF_SUCCESS = "#00D67F";
 
 function FieldItem({ icon: Icon, label, value, full, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
@@ -52,6 +53,7 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
   const alamatLengkap = formatAlamatLengkap(siswa);
   const pct = completeness(siswa);
   const missing = missingFields(siswa);
+  const sudahGanti = siswa.user ? siswa.user.mustChangePassword === false : null;
 
   return (
     <AnimatePresence>
@@ -122,6 +124,26 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
               </div>
 
               <div className="space-y-4">
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/30">
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-white">
+                    <KeyRound size={14} style={{ color: REF_PRIMARY }} />
+                    Status Password
+                  </div>
+                  {sudahGanti === null ? (
+                    <span className="text-xs text-slate-400 dark:text-slate-500">Belum ada akun</span>
+                  ) : sudahGanti ? (
+                    <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+                      <CheckCircle2 size={12} />
+                      Sudah Ganti
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                      <XCircle size={12} />
+                      Masih NIS
+                    </span>
+                  )}
+                </div>
+
                 <div className="flex items-center gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/30">
                   <ProgressRing percent={pct} size={40} />
                   <div className="min-w-0 flex-1">

@@ -14,7 +14,6 @@ export default function GuruDataSiswaPage() {
   const [loading, setLoading] = useState(true);
   const [selectedKelasId, setSelectedKelasId] = useState("");
   const [search, setSearch] = useState("");
-  const [filterJurusan, setFilterJurusan] = useState("");
   const [filterGender, setFilterGender] = useState("");
 
   useEffect(() => {
@@ -45,46 +44,50 @@ export default function GuruDataSiswaPage() {
   );
 
   const displayed = inKelas
-    .filter((s) => (filterJurusan ? s.jurusan === filterJurusan : true))
     .filter((s) => (filterGender ? s.jenisKelamin === filterGender : true))
     .filter((s) => (search ? (getNama(s).toLowerCase().includes(search.toLowerCase()) || s.nis.includes(search)) : true));
 
-  const isFiltered = !!(search || filterJurusan || filterGender);
+  const isFiltered = !!(search || filterGender);
   const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
     <div className="space-y-5">
       <DataSiswaHeader title="Data Siswa" />
 
-      <KartuPelajarBanner />
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
           <FilterBar
             search={search} onSearch={setSearch}
-            filterJurusan={filterJurusan} onFilterJurusan={setFilterJurusan}
             filterGender={filterGender} onFilterGender={setFilterGender}
             kelasList={kelasList} selectedKelasId={selectedKelasId} onSelectKelas={setSelectedKelasId}
             siswaList={inKelas}
             isFiltered={isFiltered}
-            onReset={() => { setSearch(""); setFilterJurusan(""); setFilterGender(""); }}
+            onReset={() => { setSearch(""); setFilterGender(""); }}
             loading={loading}
             totalCount={inKelas.length}
             displayedCount={displayed.length}
           />
+          <div className="border-t border-slate-100 dark:border-slate-700/50">
+            <SiswaTable
+              loading={loading}
+              siswas={displayed}
+            />
+          </div>
         </div>
 
-        <UnduhDataSiswaCard
-          kelasId={selectedKelasId || undefined}
-          kelasNama={selectedKelas?.nama}
-          jurusan={filterJurusan || undefined}
-        />
-      </div>
+        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="p-5">
+            <KartuPelajarBanner />
+          </div>
 
-      <SiswaTable
-        loading={loading}
-        siswas={displayed}
-      />
+          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
+            <UnduhDataSiswaCard
+              kelasId={selectedKelasId || undefined}
+              kelasNama={selectedKelas?.nama}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

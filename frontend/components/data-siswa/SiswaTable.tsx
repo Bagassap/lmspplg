@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
-import { SiswaTableHead, SiswaTableRow } from "./SiswaTableRow";
+import { SiswaTableHead, SiswaTableRow, GRID_COLS } from "./SiswaTableRow";
 import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData } from "./shared";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
@@ -51,14 +50,30 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
       <div className="flex items-center gap-2.5">
         <PageSizeToggle value={pageSize} onChange={onPageSize} />
         {pageCount > 1 && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <button onClick={() => onPage(page - 1)} disabled={page === 0}
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+              className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
               <ChevronLeft size={14} />
             </button>
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{page + 1}/{pageCount}</span>
+            {Array.from({ length: pageCount }, (_, i) => i)
+              .filter((i) => i === 0 || i === pageCount - 1 || Math.abs(i - page) <= 1)
+              .map((i, idx, arr) => (
+                <span key={i} className="flex items-center">
+                  {idx > 0 && arr[idx - 1] !== i - 1 && (
+                    <span className="px-1 text-xs font-semibold text-slate-300 dark:text-slate-600">…</span>
+                  )}
+                  <button onClick={() => onPage(i)}
+                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                      i === page
+                        ? "bg-[#0082FB] text-white shadow-sm"
+                        : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
+                    }`}>
+                    {i + 1}
+                  </button>
+                </span>
+              ))}
             <button onClick={() => onPage(page + 1)} disabled={page >= pageCount - 1}
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+              className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
               <ChevronRight size={14} />
             </button>
           </div>
@@ -89,16 +104,14 @@ export function SiswaTable({
     return (
       <>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-170 text-left text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
-              <SiswaTableHead />
-            </thead>
-            <motion.tbody initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}>
+          <div className="min-w-220">
+            <SiswaTableHead />
+            <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
               {pageItems.map((s, i) => (
                 <SiswaTableRow key={s.id} siswa={s} index={start - 1 + i} {...actions} />
               ))}
-            </motion.tbody>
-          </table>
+            </div>
+          </div>
         </div>
         <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage}
           pageSize={pageSize} onPageSize={(n) => { setPageSize(n); setPage(0); }} />
@@ -108,9 +121,7 @@ export function SiswaTable({
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        {content}
-      </div>
+      {content}
       {detailSiswa && (
         <SiswaDetailModal
           siswa={detailSiswa}
