@@ -7,7 +7,7 @@ import {
   User, ChevronDown, GraduationCap, BookOpen, Phone, MapPin, CalendarDays, Sparkles, X,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { type SiswaCardData, type KelasRef, getNama, toTitleCase } from "./shared";
+import { type SiswaCardData, type KelasRef, getNama, toTitleCase, formatTglShort } from "./shared";
 
 const JURUSAN_OPTIONS = [
   "Pengembangan Perangkat Lunak dan Gim",
@@ -153,6 +153,11 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                 </Field>
                 <Field label="Tanggal Lahir" optional icon={CalendarDays}>
                   <input type="date" autoComplete="off" value={form.tanggalLahir} onChange={(e) => set("tanggalLahir", e.target.value)} className={INPUT} />
+                  {form.tanggalLahir && (
+                    <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                      {formatTglShort(form.tanggalLahir)} <span className="text-slate-300 dark:text-slate-600">(tgl/bln/thn)</span>
+                    </p>
+                  )}
                 </Field>
               </div>
               <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5 dark:border-slate-700/50 dark:bg-white/3">

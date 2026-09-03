@@ -77,7 +77,7 @@ export default function GuruDataSiswaPage() {
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="p-5">
-            <KartuPelajarBanner />
+            <KartuPelajarBanner compact />
           </div>
 
           <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
