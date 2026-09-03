@@ -101,9 +101,15 @@ export function FilterBar({
         </div>
       </div>
 
-      <div className="relative mt-4 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4 dark:border-slate-700/50">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {GENDER_PILLS.map((opt) => {
+      <div className="relative mt-4 flex flex-col gap-3 border-t border-slate-100 pt-4 dark:border-slate-700/50 sm:flex-row sm:items-stretch">
+        <div className="flex flex-col gap-1.5 sm:shrink-0">
+          {!loading && !isFiltered && (
+            <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+              Menampilkan {totalCount} siswa di kelas ini
+            </p>
+          )}
+          <div className="flex flex-wrap content-start items-center gap-1.5">
+            {GENDER_PILLS.map((opt) => {
             const active = filterGender === opt.value;
             const OptIcon = opt.icon;
             return (
@@ -131,34 +137,35 @@ export function FilterBar({
                 </span>
               </motion.button>
             );
-          })}
+            })}
+          </div>
         </div>
-      </div>
 
-      {total > 0 && (
-        <div className="relative mt-4 flex flex-1 flex-col justify-center rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/20">
-          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-            <Users size={11} />
-            Ringkasan Jenis Kelamin
-          </p>
-          <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
-            {lPct > 0 && <div style={{ width: `${lPct}%`, backgroundColor: REF_MALE }} />}
-            {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: REF_FEMALE }} />}
+        {total > 0 && (
+          <div className="flex flex-1 flex-col justify-center rounded-2xl bg-slate-50 p-3 dark:bg-slate-700/20">
+            <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+              <Users size={11} />
+              Ringkasan Jenis Kelamin
+            </p>
+            <div className="flex h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
+              {lPct > 0 && <div style={{ width: `${lPct}%`, backgroundColor: REF_MALE }} />}
+              {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: REF_FEMALE }} />}
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_MALE }} />
+                Laki-laki <span className="font-bold text-slate-800 dark:text-white">{lCount}</span>
+                <span className="text-slate-400 dark:text-slate-500">({lPct}%)</span>
+              </span>
+              <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_FEMALE }} />
+                Perempuan <span className="font-bold text-slate-800 dark:text-white">{pCount}</span>
+                <span className="text-slate-400 dark:text-slate-500">({pPct}%)</span>
+              </span>
+            </div>
           </div>
-          <div className="mt-2.5 flex flex-wrap items-center gap-4">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_MALE }} />
-              Laki-laki <span className="font-bold text-slate-800 dark:text-white">{lCount}</span>
-              <span className="text-slate-400 dark:text-slate-500">({lPct}%)</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_FEMALE }} />
-              Perempuan <span className="font-bold text-slate-800 dark:text-white">{pCount}</span>
-              <span className="text-slate-400 dark:text-slate-500">({pPct}%)</span>
-            </span>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {isFiltered && (
         <div className="relative mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/50">
@@ -186,12 +193,6 @@ export function FilterBar({
             Clear all
           </button>
         </div>
-      )}
-
-      {!loading && !isFiltered && (
-        <p className="relative mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
-          Menampilkan {totalCount} siswa di kelas ini
-        </p>
       )}
     </div>
   );
