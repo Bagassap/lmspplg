@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown, GraduationCap, FileSpreadsheet, UserPlus } from "lucide-react";
+import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { kelasShort } from "@/components/data-siswa/shared";
 
@@ -25,7 +25,6 @@ export function FilterBarPassword({
   search, onSearch,
   statusFilter, onStatusFilter,
   total, sudahCount, belumCount, displayedCount,
-  onKelolaGuru, onImportSiswa, onCreateAccount,
 }: {
   kelasList: KelasOption[]; selectedKelasId: string; onSelectKelas: (id: string) => void;
   kelasNama?: string;
@@ -34,7 +33,6 @@ export function FilterBarPassword({
   search: string; onSearch: (v: string) => void;
   statusFilter: StatusFilter; onStatusFilter: (v: StatusFilter) => void;
   total: number; sudahCount: number; belumCount: number; displayedCount: number;
-  onKelolaGuru: () => void; onImportSiswa: () => void; onCreateAccount: () => void;
 }) {
   const STATUS_PILLS: { value: StatusFilter; label: string; icon: typeof Users; count: number }[] = [
     { value: "", label: "Semua", icon: Users, count: total },
@@ -43,31 +41,7 @@ export function FilterBarPassword({
   ];
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
-      <div className="mb-4 grid grid-cols-1 gap-2 border-b border-slate-100 pb-4 dark:border-slate-700/50 sm:grid-cols-3">
-        <motion.button
-          onClick={onKelolaGuru}
-          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
-          style={{ background: REF_PRIMARY }}>
-          <GraduationCap size={16} /> Kelola Guru
-        </motion.button>
-        <motion.button
-          onClick={onImportSiswa}
-          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
-          style={{ background: REF_PRIMARY }}>
-          <FileSpreadsheet size={16} /> Impor Massal
-        </motion.button>
-        <motion.button
-          onClick={onCreateAccount}
-          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-          className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:brightness-105"
-          style={{ background: REF_PRIMARY }}>
-          <UserPlus size={16} /> Buat Akun
-        </motion.button>
-      </div>
-
+    <div className="flex flex-col p-4 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
@@ -179,7 +153,7 @@ export function FilterBarPassword({
         })}
       </div>
 
-      <p className="relative mt-auto border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+      <p className="relative mt-4 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
         Menampilkan {displayedCount} dari {total} siswa di kelas ini
       </p>
     </div>

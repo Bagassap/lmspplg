@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { KeyRound } from "lucide-react";
+import { motion } from "framer-motion";
+import { KeyRound, GraduationCap, FileSpreadsheet, UserPlus } from "lucide-react";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
@@ -173,8 +174,8 @@ export default function ManajemenPasswordClient() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
           <FilterBarPassword
             kelasList={kelasList}
             selectedKelasId={selectedKelasId}
@@ -185,27 +186,59 @@ export default function ManajemenPasswordClient() {
             search={search} onSearch={setSearch}
             statusFilter={statusFilter} onStatusFilter={setStatusFilter}
             total={siswaItems.length} sudahCount={sudahCount} belumCount={belumCount} displayedCount={displayed.length}
-            onKelolaGuru={() => setKelolaGuruOpen(true)}
-            onImportSiswa={() => setImportSiswaOpen(true)}
-            onCreateAccount={() => setCreateAccountOpen(true)}
           />
+          <div className="border-t border-slate-100 dark:border-slate-700/50">
+            <SiswaPasswordTable
+              loading={loadingSiswa}
+              siswas={displayed}
+              onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
+            />
+          </div>
         </div>
 
-        <PermintaanPasswordCard
-          pending={pending}
-          riwayat={riwayat}
-          loading={loadingPermintaan}
-          busyId={busyId}
-          onProcess={(r) => r.user && setResetTarget({ id: r.user.id, nama: r.namaPengaju, nis: r.user.siswa?.nis, mustChangePassword: true, sourceRequestId: r.id })}
-          onAbaikan={handleAbaikan}
-        />
-      </div>
+        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="grid grid-cols-3 gap-2 p-5">
+            <motion.button
+              onClick={() => setKelolaGuruOpen(true)}
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              title="Kelola Guru"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-white shadow-sm transition-all hover:brightness-105"
+              style={{ background: "#0082FB" }}>
+              <GraduationCap size={18} />
+              <span className="text-[10px] font-bold leading-tight">Kelola Guru</span>
+            </motion.button>
+            <motion.button
+              onClick={() => setImportSiswaOpen(true)}
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              title="Impor Massal"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-white shadow-sm transition-all hover:brightness-105"
+              style={{ background: "#0082FB" }}>
+              <FileSpreadsheet size={18} />
+              <span className="text-[10px] font-bold leading-tight">Impor Massal</span>
+            </motion.button>
+            <motion.button
+              onClick={() => setCreateAccountOpen(true)}
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              title="Buat Akun"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-white shadow-sm transition-all hover:brightness-105"
+              style={{ background: "#0082FB" }}>
+              <UserPlus size={18} />
+              <span className="text-[10px] font-bold leading-tight">Buat Akun</span>
+            </motion.button>
+          </div>
 
-      <SiswaPasswordTable
-        loading={loadingSiswa}
-        siswas={displayed}
-        onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
-      />
+          <div className="border-t border-slate-100 dark:border-slate-700/50">
+            <PermintaanPasswordCard
+              pending={pending}
+              riwayat={riwayat}
+              loading={loadingPermintaan}
+              busyId={busyId}
+              onProcess={(r) => r.user && setResetTarget({ id: r.user.id, nama: r.namaPengaju, nis: r.user.siswa?.nis, mustChangePassword: true, sourceRequestId: r.id })}
+              onAbaikan={handleAbaikan}
+            />
+          </div>
+        </div>
+      </div>
 
       {resetTarget && (
         <ResetPasswordModal
