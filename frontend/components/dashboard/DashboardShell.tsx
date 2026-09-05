@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import { MobileBottomNav } from "./MobileBottomNav";
 import { ImpersonationBanner } from "./ImpersonationBanner";
 import type { UserPayload } from "@/lib/auth";
 
@@ -13,7 +14,6 @@ export function DashboardShell({
   user: UserPayload;
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
@@ -26,20 +26,14 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen">
+      {/* Sidebar khusus desktop — di mobile navigasi lewat MobileBottomNav */}
       <Sidebar
         user={user}
-        open={sidebarOpen}
+        open={false}
         collapsed={sidebarCollapsed}
-        onClose={() => setSidebarOpen(false)}
+        onClose={() => {}}
         onToggleCollapse={() => setSidebarCollapsed((v) => !v)}
       />
-
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
 
       <div
         className={[
@@ -48,9 +42,11 @@ export function DashboardShell({
         ].join(" ")}
       >
         <ImpersonationBanner impersonatedBy={user.impersonatedBy} nama={user.nama} />
-        <Topbar user={user} onMenuClick={() => setSidebarOpen(true)} />
-        <main className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">{children}</main>
+        <Topbar user={user} />
+        <main className="mx-auto w-full max-w-screen-2xl p-4 pb-24 md:p-6 lg:pb-6 2xl:p-10">{children}</main>
       </div>
+
+      <MobileBottomNav user={user} />
     </div>
   );
 }

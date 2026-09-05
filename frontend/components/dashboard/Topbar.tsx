@@ -2,9 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Menu, Search, Sun, Moon, Bell, ChevronDown, LogOut, X,
+  Search, Sun, Moon, Bell, ChevronDown, LogOut, X,
   LayoutDashboard, Calendar, Users, FileText, Briefcase,
   MessageSquare, UserCircle, CheckCircle2, Info, AlertTriangle,
   CheckCheck, Clock,
@@ -119,7 +120,7 @@ const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?:
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 
 
-export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: () => void }) {
+export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
@@ -302,13 +303,16 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-white px-4 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-colors duration-200 dark:bg-[#1C2B33] md:px-5 2xl:px-10">
-        <button
-          onClick={onMenuClick}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 lg:hidden"
-        >
-          <Menu size={20} />
-        </button>
+      <header className="sticky top-0 z-30 flex items-center gap-3 bg-surface px-4 py-4 transition-colors duration-200 dark:bg-[#1C2B33] lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10">
+        <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: "#0082FB" }}>
+            <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto" />
+          </div>
+          <span className="flex items-baseline gap-1">
+            <span className="text-[15px] font-black tracking-tight text-[#0082FB]">LMS</span>
+            <span className="text-[9px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">PPLG</span>
+          </span>
+        </div>
 
         <div className="hidden xl:block">
           <h1 className="mb-0.5 text-lg font-bold text-slate-800 dark:text-slate-200">{title}</h1>
@@ -325,7 +329,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
 
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 md:flex"
+            className="hidden items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 lg:flex"
           >
             <Search size={14} className="shrink-0 text-slate-500 dark:text-slate-400" />
             <span className="w-32 text-sm text-slate-500 dark:text-slate-400">Cari sesuatu...</span>
@@ -334,14 +338,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             </span>
           </button>
 
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 md:hidden"
-          >
-            <Search size={16} />
-          </button>
-
-          <div className="flex items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700/50">
+          <div className="hidden items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700/50 lg:flex">
             <button
               onClick={toggleDark}
               title="Mode terang"
@@ -370,7 +367,7 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
             <button
               onClick={() => router.push("/admin/manajemen-password")}
               title="Permintaan reset password"
-              className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+              className="relative hidden h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white lg:flex"
             >
               <Clock size={16} />
               {pendingResetCount > 0 && (
@@ -507,6 +504,26 @@ export function Topbar({ user, onMenuClick }: { user: UserPayload; onMenuClick: 
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.nama}</p>
                     <p className="text-xs text-gray-400 dark:text-slate-400">{ROLE_LABEL[user.role]}</p>
                   </div>
+
+                  {/* Cari & mode gelap punya ikon sendiri di topbar desktop —
+                      di mobile keduanya dipindah ke sini supaya topbar cuma
+                      berisi nama aplikasi, notifikasi, dan profil. */}
+                  <button
+                    onClick={() => { setDropdownOpen(false); setSearchOpen(true); }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50 lg:hidden"
+                  >
+                    <Search size={14} />
+                    Cari
+                  </button>
+                  <button
+                    onClick={toggleDark}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50 lg:hidden"
+                  >
+                    {darkMounted && isDark ? <Sun size={14} /> : <Moon size={14} />}
+                    {darkMounted && isDark ? "Mode Terang" : "Mode Gelap"}
+                  </button>
+                  <div className="my-1 border-b border-gray-200 dark:border-slate-700 lg:hidden" />
+
                   <button
                     onClick={() => {
                       setDropdownOpen(false);
