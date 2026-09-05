@@ -361,14 +361,24 @@ export default function SiswaJadwalSoalPage() {
           <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
             <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-                <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-40 lg:px-5 lg:py-5"
                 style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-white/8" />
+                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-white/8 lg:block" />
 
-                <div className="relative flex items-start justify-between">
+                {/* Versi ringkas mobile — konten lengkap (angka besar +
+                    baris TA/Status) kepanjangan untuk kotak sekecil ini */}
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:hidden">
+                  <CalendarDays size={14} />
+                </div>
+                <div className="relative min-w-0 lg:hidden">
+                  <p className="truncate text-sm font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
+                </div>
+
+                <div className="relative hidden items-start justify-between lg:flex">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
                     <CalendarDays size={15} />
                   </div>
@@ -378,13 +388,12 @@ export default function SiswaJadwalSoalPage() {
                   </div>
                 </div>
 
-                <div className="relative flex items-baseline gap-2">
+                <div className="relative hidden items-baseline gap-2 lg:flex">
                   <span className="text-5xl font-black leading-none tabular-nums">{jadwalFiles.length}</span>
                   <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/70">file<br />jadwal</span>
                 </div>
 
-
-                <div className="relative flex items-end justify-between pt-2">
+                <div className="relative hidden items-end justify-between pt-2 lg:flex">
                   <div>
                     <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">TA</p>
                     <p className="text-base font-black leading-none">2026/2027</p>
@@ -397,12 +406,20 @@ export default function SiswaJadwalSoalPage() {
               </button>
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-40 lg:px-5 lg:py-5"
                 style={{ background: "#C3F84A", color: "#1C2B33", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
-                <div className="pointer-events-none absolute -bottom-4 right-12 h-20 w-20 rounded-full bg-[#1C2B33]/8" />
+                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
+                <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-[#1C2B33]/8 lg:block" />
 
-                <div className="relative flex items-start justify-between">
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:hidden">
+                  <FileText size={14} />
+                </div>
+                <div className="relative min-w-0 lg:hidden">
+                  <p className="truncate text-sm font-black leading-tight">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75">{totalSoal} soal tersedia</p>
+                </div>
+
+                <div className="relative hidden items-start justify-between lg:flex">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
                     <FileText size={15} />
                   </div>
@@ -412,13 +429,12 @@ export default function SiswaJadwalSoalPage() {
                   </div>
                 </div>
 
-                <div className="relative flex items-baseline gap-2">
+                <div className="relative hidden items-baseline gap-2 lg:flex">
                   <span className="text-5xl font-black leading-none tabular-nums">{totalSoal}</span>
                   <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-[#1C2B33]/70">soal<br />tersedia</span>
                 </div>
 
-
-                <div className="relative flex items-end justify-between pt-2">
+                <div className="relative hidden items-end justify-between pt-2 lg:flex">
                   <div>
                     <p className="text-[8px] font-medium uppercase tracking-wider text-[#1C2B33]/60">TA</p>
                     <p className="text-base font-black leading-none">2026/2027</p>

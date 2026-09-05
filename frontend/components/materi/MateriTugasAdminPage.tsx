@@ -143,27 +143,28 @@ export function MateriTugasAdminPage() {
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
         <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
           <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
             <button type="button" onClick={() => setCategory("materi")}
-              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
               style={{
                 background: "#0082FB",
                 boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
                 outline: category === "materi" ? "2px solid #0082FB" : "none",
                 outlineOffset: "3px",
               }}>
-              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
-                <BookOpen size={16} />
+              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
+              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
+                <BookOpen size={14} className="lg:hidden" />
+                <BookOpen size={16} className="hidden lg:block" />
               </div>
-              <div className="relative">
-                <p className="text-xl font-black leading-tight">Materi</p>
-                <p className="mt-0.5 text-[11px] font-medium text-white/75">{materiList.length} materi tersedia</p>
+              <div className="relative min-w-0">
+                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Materi</p>
+                <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 sm:text-[10px] lg:text-[11px]">{materiList.length} materi tersedia</p>
               </div>
             </button>
 
             <button type="button" onClick={() => setCategory("tugas")}
-              className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
               style={{
                 background: "#C3F84A",
                 color: "#1C2B33",
@@ -171,13 +172,14 @@ export function MateriTugasAdminPage() {
                 outline: category === "tugas" ? "2px solid #C3F84A" : "none",
                 outlineOffset: "3px",
               }}>
-              <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
-                <Send size={16} />
+              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
+              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:h-9 lg:w-9 lg:rounded-2xl">
+                <Send size={14} className="lg:hidden" />
+                <Send size={16} className="hidden lg:block" />
               </div>
-              <div className="relative">
-                <p className="text-xl font-black leading-tight">Tugas</p>
-                <p className="mt-0.5 text-[11px] font-medium text-[#1C2B33]/75">
+              <div className="relative min-w-0">
+                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Tugas</p>
+                <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75 sm:text-[10px] lg:text-[11px]">
                   {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}
                 </p>
               </div>
