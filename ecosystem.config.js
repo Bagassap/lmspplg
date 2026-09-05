@@ -28,7 +28,9 @@ module.exports = {
       name: "lms-frontend",
       cwd: path.join(ROOT, "frontend"),
       script: "node_modules/next/dist/bin/next",
-      args: "start -p 3000",
+      // -H 127.0.0.1: bind ke loopback saja supaya tidak bisa diakses langsung
+      // dari luar lewat http://<ip>:3000 (harus lewat Nginx di :80).
+      args: "start -H 127.0.0.1 -p 3000",
       instances: 1,
       exec_mode: "fork",
       env: {

@@ -45,7 +45,12 @@ async function bootstrap() {
   });
 
   const port = process.env.PORT || 3001;
-  await app.listen(port);
-  console.log(`Backend berjalan di http://localhost:${port}/api`);
+  // Bind ke loopback saja — Nginx (di host yang sama) yang jadi satu-satunya
+  // pintu publik lewat proxy_pass ke 127.0.0.1. Tanpa ini Nest listen di
+  // 0.0.0.0 dan bisa diakses langsung dari luar lewat http://<ip>:3001,
+  // melewati semua proteksi/limit yang cuma ada di layer Nginx.
+  const host = process.env.HOST || '127.0.0.1';
+  await app.listen(port, host);
+  console.log(`Backend berjalan di http://${host}:${port}/api`);
 }
 bootstrap();
