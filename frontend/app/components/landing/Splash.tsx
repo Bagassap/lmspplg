@@ -58,7 +58,7 @@ const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const DOT_COLORS = ["#0082FB", "#0082FB", "#ffffff"] as const;
+const DOT_COLORS = ["#ffffff", "#C3F84A", "#ffffff"] as const;
 
 export function Splash() {
   const router = useRouter();
@@ -214,13 +214,7 @@ export function Splash() {
           </motion.span>
           <motion.span
             variants={slideRight}
-            className="text-[1.65rem] font-bold leading-tight sm:text-[2rem]"
-            style={{
-              background: "#0082FB",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-[1.65rem] font-bold leading-tight text-white sm:text-[2rem]"
           >
             Pembelajaran
           </motion.span>

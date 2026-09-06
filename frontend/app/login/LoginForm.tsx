@@ -2,8 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Eye, EyeOff, Loader2, User, Lock } from "lucide-react";
+import { BrandedLoadingOverlay } from "@/components/shared/BrandedLoadingOverlay";
 
 const container: Variants = {
   hidden: {},
@@ -25,6 +26,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -55,12 +57,16 @@ export function LoginForm() {
       }
 
       sessionStorage.setItem("lms_session", "1");
+      const namaDepan = (data.user?.nama as string | undefined)?.split(" ")[0] ?? "";
+      const greeting = namaDepan ? `Selamat datang, ${namaDepan}!` : "Selamat datang!";
       if (data.user?.mustChangePassword) {
-        window.location.replace("/change-password");
+        setRedirecting(greeting);
+        setTimeout(() => window.location.replace("/change-password"), 1600);
         return;
       }
       const role = (data.user?.role as string)?.toLowerCase() ?? "siswa";
-      window.location.replace(`/${role}/dashboard`);
+      setRedirecting(greeting);
+      setTimeout(() => window.location.replace(`/${role}/dashboard`), 1600);
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
       setLoading(false);
@@ -68,12 +74,13 @@ export function LoginForm() {
   }
 
   return (
+    <>
     <motion.form
       onSubmit={handleSubmit}
       initial="hidden"
       animate="visible"
       variants={container}
-      className="mt-8 flex flex-col gap-5"
+      className="mt-4 flex flex-col gap-3 sm:mt-8 sm:gap-5"
     >
       <motion.div variants={item} className="flex flex-col gap-1.5">
         <label htmlFor="login" className="text-sm font-medium text-black/70">
@@ -169,5 +176,10 @@ export function LoginForm() {
         </Link>
       </motion.div>
     </motion.form>
+
+    <AnimatePresence>
+      {redirecting && <BrandedLoadingOverlay greeting={redirecting} />}
+    </AnimatePresence>
+    </>
   );
 }
