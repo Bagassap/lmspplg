@@ -223,44 +223,55 @@ export default function SiswaDashboardPage() {
           </span>
         </Link>
 
-        <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="grid grid-cols-5 gap-1.5">
           {[
             { href: "/siswa/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
             { href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#EF4444", badge: data.pengumuman.length },
             { href: "/siswa/magang", label: "PKL", icon: GraduationCap, color: "#00D67F" },
             { href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
             { href: "/siswa/catatan-siswa", label: "Catatan", icon: NotebookPen, color: "#0064E0" },
-          ].map((s) => (
-            <Link key={s.href} href={s.href} className="flex shrink-0 flex-col items-center gap-1.5">
-              <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: `${s.color}18` }}>
-                <s.icon size={22} style={{ color: s.dark ? "#8A9E1F" : s.color }} />
-                {!!s.badge && (
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
-                    {s.badge}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-300">{s.label}</span>
-            </Link>
+          ].map((s, i) => (
+            <motion.div key={s.href}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.35 + i * 0.05 }}
+              whileTap={{ scale: 0.92 }}
+            >
+              <Link href={s.href} className="flex flex-col items-center gap-1.5">
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl" style={{ backgroundColor: `${s.color}18` }}>
+                  <s.icon size={19} style={{ color: s.dark ? "#8A9E1F" : s.color }} />
+                  {!!s.badge && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                      {s.badge}
+                    </span>
+                  )}
+                </span>
+                <span className="text-center text-[9.5px] font-semibold leading-tight text-slate-600 dark:text-slate-300">{s.label}</span>
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="grid grid-cols-2 gap-2.5">
           {[
             { icon: CheckCircle, label: "Hadir", value: absensi.hadir, color: "#00D67F" },
             { icon: Thermometer, label: "Sakit", value: absensi.sakit, color: "#0082FB" },
             { icon: XCircle, label: "Alpa", value: absensi.alpa, color: "#EF4444" },
             { icon: TrendingUp, label: "Kehadiran", value: `${absensi.persentase}%`, color: "#0064E0" },
-          ].map((s) => (
-            <div key={s.label} className="flex w-28 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-[#1C2B33]">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ backgroundColor: `${s.color}18` }}>
-                <s.icon size={15} style={{ color: s.color }} />
+          ].map((s, i) => (
+            <motion.div key={s.label}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.4 + i * 0.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-[#1C2B33]"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${s.color}18` }}>
+                <s.icon size={16} style={{ color: s.color }} />
               </span>
-              <div>
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">{s.value}</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400">{s.label}</p>
+              <div className="flex min-w-0 items-baseline gap-1.5">
+                <p className="text-sm font-extrabold leading-none text-slate-800 dark:text-white">{s.value}</p>
+                <p className="truncate text-[10px] leading-none text-slate-500 dark:text-slate-400">{s.label}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
