@@ -111,7 +111,7 @@ export function LoginCard() {
 
       <div className="relative z-10 flex shrink-0 flex-col rounded-t-3xl bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 sm:flex-1 sm:rounded-3xl sm:px-12 sm:py-14">
         <h2 className="text-xl font-semibold text-black sm:text-2xl">Selamat Datang</h2>
-        <p className="mt-1.5 text-xs text-black/55 sm:mt-2 sm:text-sm">
+        <p className="mt-2 hidden text-sm text-black/55 sm:block">
           Masuk ke akun Anda untuk mengakses sistem pembelajaran
         </p>
 
