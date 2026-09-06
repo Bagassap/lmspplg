@@ -12,7 +12,6 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
 const HEADER_GRADIENT = "#0082FB";
-// Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
 const REF_PRIMARY = "#0082FB";
 const REF_SUCCESS = "#00D67F";
 
@@ -64,7 +63,6 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
           transition={{ type: "spring", damping: 26, stiffness: 300 }}
           className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-y-auto rounded-3xl bg-white shadow-2xl dark:bg-slate-800 sm:mx-0">
 
-          {/* Bagian 1 — header profil (~30%) */}
           <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: HEADER_GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
@@ -94,7 +92,6 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
             </div>
           </div>
 
-          {/* Bagian 2 — detail informasi (~70%) */}
           <div className="px-4 py-5 sm:px-6">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div className="space-y-4">

@@ -8,7 +8,6 @@ import {
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
-// Warna persis dari referensi Nasabah - lihat catatan yang sama di FilterBar.tsx.
 const REF_PRIMARY = "#0082FB";
 const REF_DANGER = "#EF4444";
 

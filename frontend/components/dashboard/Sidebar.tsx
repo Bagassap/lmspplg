@@ -34,8 +34,6 @@ const GREETINGS = [
   "Terus berkarya dan berkembang!",
 ];
 
-// Baca hari eksplisit dalam WIB (Asia/Jakarta), bukan getDay() lokal — server SSR
-// berjalan di UTC sehingga getter lokal biasa bisa salah hari di sekitar tengah malam.
 const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 function jakartaWeekday(): number {
   const short = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", weekday: "short" }).format(new Date());

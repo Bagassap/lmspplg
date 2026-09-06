@@ -8,13 +8,14 @@ import {
   Search, Sun, Moon, Bell, ChevronDown, LogOut, X,
   LayoutDashboard, Calendar, Users, FileText, Briefcase,
   MessageSquare, UserCircle, CheckCircle2, Info, AlertTriangle,
-  CheckCheck, Clock,
+  CheckCheck, Clock, CreditCard,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
 import { LiveClock } from "@/components/shared/LiveClock";
+import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 
 
 const PAGE_TITLES: Record<string, [string, string]> = {
@@ -196,14 +197,8 @@ export function Topbar({ user }: { user: UserPayload }) {
   const [unreadCount,    setUnreadCount]    = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  // Jumlah permintaan reset password yang masih menunggu (dipindah dari
-  // header halaman Manajemen Password ke Topbar) — hanya relevan untuk Admin.
   const [pendingResetCount, setPendingResetCount] = useState(0);
 
-  // A 401 here means the session cookie is gone or no longer verifiable (expired,
-  // or signed under a JWT_SECRET that's since been rotated) — bounce to /login
-  // instead of leaving the badge/dropdown silently and permanently empty with
-  // nothing in the UI to explain why.
   function handleSessionExpired() {
     window.location.href = "/login";
   }
@@ -505,9 +500,6 @@ export function Topbar({ user }: { user: UserPayload }) {
                     <p className="text-xs text-gray-400 dark:text-slate-400">{ROLE_LABEL[user.role]}</p>
                   </div>
 
-                  {/* Cari & mode gelap punya ikon sendiri di topbar desktop —
-                      di mobile keduanya dipindah ke sini supaya topbar cuma
-                      berisi nama aplikasi, notifikasi, dan profil. */}
                   <button
                     onClick={() => { setDropdownOpen(false); setSearchOpen(true); }}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50 lg:hidden"
@@ -535,6 +527,18 @@ export function Topbar({ user }: { user: UserPayload }) {
                     <UserCircle size={14} />
                     Profil Saya
                   </button>
+                  {user.role === "SISWA" && (
+                    <a
+                      href={KARTU_PELAJAR_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50"
+                    >
+                      <CreditCard size={14} />
+                      Kartu Pelajar Digital
+                    </a>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"

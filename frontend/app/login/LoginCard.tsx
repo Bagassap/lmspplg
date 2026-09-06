@@ -31,8 +31,6 @@ export function LoginCard() {
       variants={cardVariants}
       className="relative z-10 flex h-[100dvh] w-full flex-col overflow-hidden bg-transparent shadow-none sm:h-auto sm:max-w-235 sm:flex-row-reverse sm:gap-4 sm:rounded-[36px] sm:bg-white sm:p-5 sm:shadow-[0_0_0_1px_rgba(0,130,251,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(0,100,224,0.12),0_40px_100px_rgba(0,130,251,0.07)]"
     >
-      {/* Panel biru — di mobile jadi area atas penuh (seperti splash app),
-          di desktop kembali jadi sidebar kartu seperti semula. */}
       <div
         className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-8 sm:w-[320px] sm:shrink-0 sm:flex-none sm:rounded-3xl sm:px-10 sm:py-12"
         style={{ backgroundColor: "#0082FB" }}
@@ -111,8 +109,6 @@ export function LoginCard() {
         </div>
       </div>
 
-      {/* Sheet putih — nempel di bawah layar (rounded cuma di atas) ala
-          bottom sheet aplikasi mobile; di desktop kembali jadi kartu biasa. */}
       <div className="relative z-10 flex shrink-0 flex-col rounded-t-3xl bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 sm:flex-1 sm:rounded-3xl sm:px-12 sm:py-14">
         <h2 className="text-xl font-semibold text-black sm:text-2xl">Selamat Datang</h2>
         <p className="mt-1.5 text-xs text-black/55 sm:mt-2 sm:text-sm">

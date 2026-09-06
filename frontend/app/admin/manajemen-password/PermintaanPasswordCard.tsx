@@ -34,8 +34,6 @@ function formatWaktu(iso: string): string {
   const formatted = new Date(iso).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
   return `${formatted} WIB`;
 }
-// Dibandingkan sebagai tanggal WIB (Asia/Jakarta), bukan getter lokal — server
-// berjalan di UTC sehingga getDate()/getMonth() biasa bisa salah hari.
 function jakartaYMD(d: Date): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(d);
 }

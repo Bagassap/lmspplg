@@ -4,14 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, Users, Mars, Venus, Filter, Sparkles, School, ChevronDown } from "lucide-react";
 import { kelasShort, type SiswaCardData, type KelasRef } from "./shared";
 
-// #0082FB = referensi Nasabah's "primary" (dipakai literal di dot-grid pattern
-// & JENIS_COLOR.siswa di file referensi), sengaja di-hardcode di sini alih-alih
-// pakai token --color-primary bawaan (#0082FB) karena token itu dipakai luas
-// di luar Data Siswa (sidebar, topbar, dll) dan tidak boleh ikut berubah.
 const REF_PRIMARY = "#0082FB";
-// Warna khusus jenis kelamin - sengaja dibedakan satu sama lain supaya
-// Laki-laki & Perempuan tidak lagi kembar warna di Ringkasan Jenis Kelamin
-// (sebelumnya keduanya sama-sama #0082FB).
 const REF_MALE = "#0082FB";
 const REF_FEMALE = "#EC4899";
 

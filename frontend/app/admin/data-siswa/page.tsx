@@ -74,9 +74,6 @@ export default function AdminDataSiswaPage() {
     }
   }
 
-  // Siswa keluar/pindah sekolah: HAPUS PERMANEN — seluruh riwayat (absensi,
-  // tugas, PKL, UKK) dan akun login (kalau ada) dihapus dari sistem, bukan
-  // sekadar ditandai status. Tidak bisa dibatalkan.
   async function handleKeluarkan(s: SiswaCardData) {
     const nama = toTitleCase(getNama(s));
     const ok = await toast.confirm(

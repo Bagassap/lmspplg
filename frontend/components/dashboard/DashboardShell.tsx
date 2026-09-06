@@ -26,7 +26,6 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar khusus desktop — di mobile navigasi lewat MobileBottomNav */}
       <Sidebar
         user={user}
         open={false}

@@ -368,8 +368,6 @@ export default function SiswaJadwalSoalPage() {
                 <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
                 <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-white/8 lg:block" />
 
-                {/* Versi ringkas mobile — konten lengkap (angka besar +
-                    baris TA/Status) kepanjangan untuk kotak sekecil ini */}
                 <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:hidden">
                   <CalendarDays size={14} />
                 </div>

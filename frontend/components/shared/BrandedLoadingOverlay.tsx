@@ -5,9 +5,6 @@ import { motion } from "framer-motion";
 
 const DOT_COLORS = ["#ffffff", "#C3F84A", "#ffffff"] as const;
 
-// Overlay transisi setelah login berhasil, sebelum masuk dashboard — sengaja
-// dibuat identik dengan Splash awal (logo bercahaya + titik memuat) supaya
-// identitas LMS PPLG konsisten terlihat di kedua momen ini.
 export function BrandedLoadingOverlay({
   greeting,
   message = "Menyiapkan dashboard...",

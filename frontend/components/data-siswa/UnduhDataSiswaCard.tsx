@@ -20,9 +20,6 @@ export function UnduhDataSiswaCard({
 }) {
   const [scope, setScope] = useState<Scope>("semua");
 
-  // Kalau filter kelas yang jadi acuan scope aktif dikosongkan dari
-  // FilterBar, scope ini otomatis jatuh balik ke "semua" - mencegah tombol
-  // ekspor diam-diam mengunduh berdasarkan cakupan yang sudah tidak ada.
   useEffect(() => {
     if (scope === "kelas" && !kelasId) setScope("semua");
   }, [kelasId, scope]);

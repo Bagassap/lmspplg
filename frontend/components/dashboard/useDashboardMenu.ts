@@ -20,8 +20,6 @@ export type MenuItem = {
   locked?: boolean;
 };
 
-// Sumber tunggal daftar menu per role — dipakai Sidebar (desktop) & bottom
-// nav mobile supaya keduanya tidak pernah drift satu sama lain.
 export const MENUS: Record<string, MenuItem[]> = {
   ADMIN: [
     { key: "dashboard",    href: "/admin/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
@@ -88,9 +86,6 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
   const isGuru = user.role === "GURU";
   const isSiswa = user.role === "SISWA";
 
-  // null = belum diketahui (belum selesai fetch) — selama itu menu Materi
-  // tetap ditampilkan agar tidak flicker untuk mayoritas guru yang punya mapel;
-  // baru disembunyikan begitu terkonfirmasi guru ini tidak diampu mapel apa pun.
   const [guruHasMapel, setGuruHasMapel] = useState<boolean | null>(null);
   useEffect(() => {
     if (!isGuru) return;
@@ -104,13 +99,6 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     return () => { cancelled = true; };
   }, [isGuru]);
 
-  // PKL & UKK cuma relevan buat siswa kelas XII — kelas X/XI tetap lihat menu
-  // ini (biar tahu fiturnya ada) tapi terkunci ke halaman "Coming Soon", lalu
-  // otomatis kebuka sendiri begitu siswa naik ke XII (kenaikan kelas ganti
-  // kelasId-nya, tidak perlu toggle manual apa pun). Default false (terkunci)
-  // selama status kelas belum dikonfirmasi, supaya X/XI tidak sempat kelihatan
-  // submenu asli walau sekejap. Tidak berlaku untuk guru/admin — sisi admin
-  // (mis. Tempatkan Siswa) tetap menampilkan siswa dari semua kelas.
   const [siswaKelasXII, setSiswaKelasXII] = useState(false);
   useEffect(() => {
     if (!isSiswa) return;
@@ -126,11 +114,6 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     return () => { cancelled = true; };
   }, [isSiswa]);
 
-  // Selain kelas XII, menu Magang/UKK juga butuh saklar admin menyala (menu
-  // Pengaturan) — periode PKL/UKK beda tiap tahun ajaran & tidak berdasarkan
-  // tanggal tetap, jadi kelas XII saja tidak cukup untuk membuka menunya.
-  // Default false (terkunci) selama belum dikonfirmasi, sama seperti
-  // siswaKelasXII di atas.
   const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
   useEffect(() => {
     if (!isSiswa) return;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { NotebookPen, Calendar, User as UserIcon } from "lucide-react";
+import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 
 type CatatanItem = {
   id: string;
@@ -37,37 +38,25 @@ export default function SiswaCatatanSayaPage() {
 
   return (
     <div className="space-y-5">
-      <div className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm sm:h-14 sm:w-14">
-              <NotebookPen size={22} className="text-white sm:hidden" />
-              <NotebookPen size={26} className="hidden text-white sm:block" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Catatan Saya</span>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Catatan Saya</h1>
-              <p className="mt-0.5 text-sm text-white/70">Riwayat catatan dari guru dan admin</p>
-            </div>
+      <DataSiswaHeader title="Catatan Saya" eyebrow="Catatan Saya" />
+
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">
+        <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#0082FB1a", color: "#0082FB" }}>
+            <NotebookPen size={16} />
+          </span>
+          <div className="leading-tight">
+            <p className="text-sm font-extrabold text-slate-800 dark:text-white">{loading ? "—" : data?.catatan.length ?? 0}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Total Catatan</p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <NotebookPen size={14} className="text-white/70" />
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loading ? "—" : data?.catatan.length ?? 0}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Total Catatan</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2 backdrop-blur-sm">
-              <span className="text-[10px] font-black text-white/70">±</span>
-              <div className="leading-tight">
-                <p className="text-sm font-extrabold text-white">{loading ? "—" : data?.totalPoin ?? 0}</p>
-                <p className="text-[9px] font-semibold uppercase tracking-wide text-white/60">Total Poin</p>
-              </div>
-            </div>
+        </div>
+        <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#EF44441a", color: "#EF4444" }}>
+            ±
+          </span>
+          <div className="leading-tight">
+            <p className="text-sm font-extrabold text-slate-800 dark:text-white">{loading ? "—" : data?.totalPoin ?? 0}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Total Poin</p>
           </div>
         </div>
       </div>

@@ -3,13 +3,8 @@
 import { CreditCard, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-const KARTU_PELAJAR_URL = "https://e-kartu.smklimpung.id";
+export const KARTU_PELAJAR_URL = "https://e-kartu.smklimpung.id";
 
-// Sengaja dibuat sebagai strip promo yang ramping dan ringan (bukan blok
-// hero besar seperti header dashboard/Data Siswa) — bila keduanya memakai
-// bentuk yang sama (rounded besar, background solid penuh, dekorasi
-// lingkaran blur), banner ini akan terkesan menyaingi header alih-alih
-// jadi elemen sekunder. Dipakai di Data Siswa (Admin/Guru) & Dashboard Siswa.
 export function KartuPelajarBanner({
   description = "Cek & cetak kartu pelajar siswa lewat portal e-Kartu",
   compact = false,
@@ -17,10 +12,6 @@ export function KartuPelajarBanner({
   description?: string;
   compact?: boolean;
 }) {
-  // Varian ringkas untuk konteks sempit (mis. sidebar Data Siswa) - badge
-  // "Baru", deskripsi, dan label tombol dibuang karena di kolom sempit
-  // layout flex-row (sm:) tetap dipaksa aktif oleh breakpoint viewport,
-  // bukan lebar container, jadi versi lengkap selalu terlihat rumpek di sana.
   if (compact) {
     return (
       <motion.a

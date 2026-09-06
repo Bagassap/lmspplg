@@ -9,7 +9,6 @@ import {
   Thermometer, Calendar, Megaphone, Clock, ClipboardCheck, GraduationCap,
 } from "lucide-react";
 import GreetingHero from "@/components/dashboard/GreetingHero";
-import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
@@ -145,7 +144,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#0064E0", // blue
+      gradient: "#0064E0",
       icon: ClipboardCheck,
     },
     {
@@ -155,7 +154,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#C3F84A", // lime (utama)
+      gradient: "#C3F84A",
       icon: CheckCircle,
     },
     {
@@ -165,7 +164,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#EF4444", // pengumuman tidak pakai lime — merah
+      gradient: "#EF4444",
       icon: Megaphone,
     },
     {
@@ -175,7 +174,7 @@ export default function SiswaDashboardPage() {
       small: belumMagang,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#0082FB", // biru terang
+      gradient: "#0082FB",
       icon: GraduationCap,
     },
   ];
@@ -187,8 +186,6 @@ export default function SiswaDashboardPage() {
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <GreetingHero nama={user.nama} role={user.role} kelas={data.kelas} />
         </motion.div>
-
-        <KartuPelajarBanner description="Cek & cetak kartu pelajarmu lewat portal e-Kartu" />
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatsCard icon={CheckCircle} label="Hadir"     value={absensi.hadir}      sub="Hari tercatat hadir" index={0} delay={0.05} />

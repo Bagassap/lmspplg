@@ -8,8 +8,6 @@ import { LayoutGrid, X, Lock, ChevronRight } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { useDashboardMenu, type MenuItem } from "./useDashboardMenu";
 
-// 4 slot tetap di bottom nav (sisanya masuk sheet "Lainnya") — sama di semua
-// role supaya siswa/guru/admin/superadmin punya letak jempol yang konsisten.
 const PINNED_KEYS = ["dashboard", "absensi-harian", "materi", "pengumuman"];
 const PINNED_LABELS: Record<string, string> = {
   dashboard: "Dashboard",

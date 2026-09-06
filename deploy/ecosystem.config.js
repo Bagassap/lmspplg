@@ -1,6 +1,3 @@
-// Taruh file ini di ROOT repo di dalam container (bukan di dalam deploy/),
-// supaya __dirname menunjuk ke root repo dan path backend/frontend benar.
-// install.sh melakukan ini otomatis (copy ke ../ecosystem.config.js).
 const path = require("path");
 
 const ROOT = __dirname;
@@ -10,8 +7,6 @@ module.exports = {
     {
       name: "lms-backend",
       cwd: path.join(ROOT, "backend"),
-      // nest-cli.json: sourceRoot "src" -> hasil build ada di dist/src/main.js
-      // (BUKAN dist/main.js seperti di package.json "start:prod" bawaan).
       script: "dist/src/main.js",
       node_args: "--enable-source-maps",
       instances: 1,
@@ -28,8 +23,6 @@ module.exports = {
       name: "lms-frontend",
       cwd: path.join(ROOT, "frontend"),
       script: "node_modules/next/dist/bin/next",
-      // -H 127.0.0.1: bind ke loopback saja supaya tidak bisa diakses langsung
-      // dari luar lewat http://<ip>:3000 (harus lewat Nginx di :80).
       args: "start -H 127.0.0.1 -p 3000",
       instances: 1,
       exec_mode: "fork",
