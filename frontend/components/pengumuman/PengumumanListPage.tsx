@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Megaphone, Plus, Pin, MessageCircle,
   AlertCircle, ChevronRight, ChevronLeft,
-  Clock, BookOpen, Bell, ChevronDown, Loader2, Trash2,
+  Clock, BookOpen, Bell, ChevronDown, Loader2, Trash2, CalendarDays,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { PengumumanItem } from "./PengumumanFormModal";
@@ -386,6 +386,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const [editItem,      setEditItem]      = useState<PengumumanItem | null>(null);
   const [error,         setError]         = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
+  const [showCalendar,  setShowCalendar]  = useState(false);
 
   const [openSlug,    setOpenSlug]    = useState<string | null>(null);
   const [detailCache, setDetailCache] = useState<Record<string, PengumumanDetail>>({});
@@ -486,7 +487,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   return (
     <div className="space-y-5">
 
-      <div className="relative overflow-hidden rounded-2xl p-6"
+      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block"
         style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
@@ -503,7 +504,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
+      <div className="hidden gap-5 lg:grid lg:grid-cols-[280px_1fr]">
 
       <div className="space-y-4">
         {canManage && (
@@ -580,6 +581,94 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         )}
       </div>
 
+      </div>
+
+      <div className="relative isolate -mx-4 space-y-4 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_35%)] px-4 py-4 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_35%)] lg:hidden">
+        <div className="pointer-events-none absolute -right-16 -top-16 -z-10 h-56 w-56 rounded-full bg-[#0082FB]/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-14 top-72 -z-10 h-44 w-44 rounded-full bg-[#EF4444]/15 blur-3xl" />
+
+        {canManage && (
+          <motion.button
+            onClick={() => { setEditItem(null); setModalOpen(true); }}
+            whileTap={{ scale: 0.97 }}
+            className="flex w-full items-center justify-center gap-1.5 rounded-2xl py-3 text-sm font-bold text-white shadow-md"
+            style={{ background: "#0082FB" }}>
+            <Plus size={16} /> Buat Pengumuman
+          </motion.button>
+        )}
+
+        <button type="button" onClick={() => setShowCalendar((v) => !v)}
+          className="flex w-full items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33] dark:text-slate-200">
+          <span className="flex items-center gap-2"><CalendarDays size={16} style={{ color: "#0082FB" }} /> Kalender Pengumuman</span>
+          <ChevronDown size={16} className={`transition-transform ${showCalendar ? "rotate-180" : ""}`} />
+        </button>
+        <AnimatePresence initial={false}>
+          {showCalendar && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }} className="overflow-hidden">
+              <MiniCalendar announcementDates={announcementDates} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {error && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
+              <AlertCircle size={14} className="shrink-0" />{error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-28 animate-pulse rounded-2xl bg-white/60 dark:bg-slate-800/60"
+                style={{ animationDelay: `${i * 70}ms` }} />
+            ))}
+          </div>
+        ) : sorted.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
+              <Bell size={24} style={{ color: "#0082FB" }} />
+            </div>
+            <p className="font-bold text-slate-600 dark:text-slate-300">Belum ada pengumuman</p>
+            <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">Pengumuman akan muncul di sini</p>
+            {canManage && (
+              <motion.button
+                onClick={() => { setEditItem(null); setModalOpen(true); }}
+                whileTap={{ scale: 0.97 }}
+                className="mt-5 flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-white"
+                style={{ background: "#0082FB" }}>
+                <Plus size={14} /> Buat Pertama
+              </motion.button>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {sorted.map((p, idx) => (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: idx * 0.04 }}
+              >
+                <AccordionCard
+                  p={p}
+                  isOpen={openSlug === p.slug}
+                  detail={detailCache[p.slug] ?? null}
+                  detailLoading={loadingSlug === p.slug}
+                  canManage={canManage}
+                  currentUserId={currentUserId}
+                  onToggle={() => handleToggle(p.slug)}
+                  onEdit={() => { setEditItem(p); setModalOpen(true); }}
+                  onDelete={() => handleDelete(p)}
+                  onPin={() => handleTogglePin(p)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       <PengumumanFormModal
