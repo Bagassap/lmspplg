@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
-  CheckCircle, XCircle, TrendingUp,
+  CheckCircle, CheckCircle2, XCircle, MinusCircle, TrendingUp,
   Bell, AlertCircle, RefreshCw, ChevronRight, ArrowRight,
   Thermometer, Calendar, Megaphone, Clock, ClipboardCheck, GraduationCap,
   BookOpen, NotebookPen, FileText,
@@ -15,6 +15,7 @@ import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 import { timeAgo } from "@/components/dashboard/ActivityList";
+import { WALLET_GRADIENTS, WALLET_ON_TEXT } from "@/components/absensi-harian/shared";
 
 
 interface Pengumuman {
@@ -253,26 +254,32 @@ export default function SiswaDashboardPage() {
 
         <div className="grid grid-cols-2 gap-2.5">
           {[
-            { icon: CheckCircle, label: "Hadir", value: absensi.hadir, color: "#00D67F" },
-            { icon: Thermometer, label: "Sakit", value: absensi.sakit, color: "#0082FB" },
-            { icon: XCircle, label: "Alpa", value: absensi.alpa, color: "#EF4444" },
-            { icon: TrendingUp, label: "Kehadiran", value: `${absensi.persentase}%`, color: "#0064E0" },
-          ].map((s, i) => (
-            <motion.div key={s.label}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.4 + i * 0.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-[#1C2B33]"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${s.color}18` }}>
-                <s.icon size={16} style={{ color: s.color }} />
-              </span>
-              <div className="flex min-w-0 items-baseline gap-1.5">
-                <p className="text-sm font-extrabold leading-none text-slate-800 dark:text-white">{s.value}</p>
-                <p className="truncate text-[10px] leading-none text-slate-500 dark:text-slate-400">{s.label}</p>
-              </div>
-            </motion.div>
-          ))}
+            { icon: CheckCircle2, label: "Hadir", value: absensi.hadir },
+            { icon: Thermometer, label: "Sakit", value: absensi.sakit },
+            { icon: MinusCircle, label: "Alpa", value: absensi.alpa },
+            { icon: TrendingUp, label: "Kehadiran", value: `${absensi.persentase}%` },
+          ].map((s, i) => {
+            const bg = WALLET_GRADIENTS[i];
+            const onText = WALLET_ON_TEXT[i];
+            return (
+              <motion.div key={s.label}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.4 + i * 0.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="relative flex items-center gap-2.5 overflow-hidden rounded-2xl p-3 shadow-[0_6px_16px_-6px_rgba(0,0,0,0.25)]"
+                style={{ background: bg, color: onText }}
+              >
+                <div className="pointer-events-none absolute -right-3 -top-3 h-14 w-14 rounded-full" style={{ backgroundColor: `${onText}26` }} />
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
+                  <s.icon size={16} style={{ color: onText }} />
+                </span>
+                <div className="relative flex min-w-0 items-baseline gap-1.5">
+                  <p className="text-sm font-extrabold leading-none">{s.value}</p>
+                  <p className="truncate text-[10px] leading-none" style={{ color: `${onText}D9` }}>{s.label}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
