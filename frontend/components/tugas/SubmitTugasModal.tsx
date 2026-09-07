@@ -152,11 +152,12 @@ function SubmitFileModal({
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <motion.div initial={{ scale: 0.95, opacity: 0, y: 16 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 16 }}
-        transition={{ type: "spring", damping: 26, stiffness: 340 }}
-        className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+      <motion.div initial={{ y: "100%", opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: "100%", opacity: 0 }}
+        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        className="w-full max-w-md overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-2xl"
+        style={{ maxHeight: "92vh" }}
         onClick={(e) => e.stopPropagation()}>
         <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#00D67F" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10" />
@@ -178,7 +179,7 @@ function SubmitFileModal({
             <CalendarClock size={11} /> Deadline {formatTgl(tugas.deadline)}
           </p>
         </div>
-        <form onSubmit={submit} className="p-6 space-y-4">
+        <form onSubmit={submit} className="space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]" style={{ maxHeight: "calc(92vh - 84px)" }}>
           <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
             <div className="rounded-xl bg-slate-50 dark:bg-slate-700/40 px-3.5 py-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">

@@ -37,14 +37,6 @@ const P = "#0082FB";
 const R = "#EF4444";
 const G = "#00D67F";
 
-function jakartaGreetingWord(): string {
-  const h = Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", hour: "2-digit", hourCycle: "h23" }).format(new Date()));
-  if (h < 11) return "Selamat Pagi";
-  if (h < 15) return "Selamat Siang";
-  if (h < 18) return "Selamat Sore";
-  return "Selamat Malam";
-}
-
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
 }
@@ -145,7 +137,6 @@ export default function SiswaDashboardPage() {
 
   const { absensi, magang } = data;
   const belumMagang = magang.status === "BELUM_MAGANG";
-  const greetingWord = jakartaGreetingWord();
 
   const CARDS = [
     {
@@ -192,64 +183,73 @@ export default function SiswaDashboardPage() {
 
   return (
     <>
-      <div className="space-y-5 lg:hidden">
-        <div>
-          <p className="text-lg font-extrabold text-slate-800 dark:text-white">
-            {greetingWord}, <span style={{ color: P }}>{user.nama.split(" ")[0]}</span> 👋
-          </p>
-          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-            {data.kelas} · Wali: {data.waliKelas ?? "—"}
-          </p>
-        </div>
+      <div className="-m-4 space-y-5 p-4 lg:hidden"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(0,130,251,0.07) 1px, transparent 1px)",
+          backgroundSize: "18px 18px",
+        }}>
+        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          {data.kelas} · Wali: {data.waliKelas ?? "—"}
+        </p>
 
-        <Link
-          href="/siswa/absensi-harian"
-          className="relative flex flex-col overflow-hidden rounded-3xl p-5 text-white"
-          style={{ background: `linear-gradient(135deg, ${P}, #0064E0)` }}
-        >
-          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
-          <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
-          <div className="relative flex items-center justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20">
-              <ClipboardCheck size={20} />
+        <div className="rounded-3xl bg-white p-3 shadow-[0_2px_10px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+          <Link
+            href="/siswa/absensi-harian"
+            className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
+            style={{ background: `linear-gradient(135deg, ${P}, #0064E0)` }}
+          >
+            <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
+            <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />
+            <div className="relative flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20">
+                <ClipboardCheck size={17} />
+              </div>
+              <span className="rounded-full bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
+                Absensi Harian
+              </span>
             </div>
-            <span className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wide">
-              Absensi Harian
-            </span>
-          </div>
-          <p className="relative mt-5 text-3xl font-black tabular-nums">{absensi.persentase}%</p>
-          <p className="relative mt-1 text-xs text-white/75">Kehadiranmu bulan ini — {absensi.hadir} hari hadir</p>
-          <span className="relative mt-4 flex w-fit items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold" style={{ color: P }}>
-            Lihat Detail <ArrowRight size={13} />
-          </span>
-        </Link>
+            <div className="relative mt-3 flex items-end justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-2xl font-black leading-none tabular-nums">{absensi.persentase}%</p>
+                <p className="mt-1 truncate text-[10.5px] text-white/75">{absensi.hadir} hari hadir bulan ini</p>
+              </div>
+              <span className="flex shrink-0 items-center gap-1 rounded-xl bg-white px-3 py-2 text-xs font-bold" style={{ color: P }}>
+                Detail <ArrowRight size={12} />
+              </span>
+            </div>
+          </Link>
 
-        <div className="grid grid-cols-5 gap-1.5">
-          {[
-            { href: "/siswa/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
-            { href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#EF4444", badge: data.pengumuman.length },
-            { href: "/siswa/magang", label: "PKL", icon: GraduationCap, color: "#00D67F" },
-            { href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
-            { href: "/siswa/catatan-siswa", label: "Catatan", icon: NotebookPen, color: "#0064E0" },
-          ].map((s, i) => (
-            <motion.div key={s.href}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.35 + i * 0.05 }}
-              whileTap={{ scale: 0.92 }}
-            >
-              <Link href={s.href} className="flex flex-col items-center gap-1.5">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl" style={{ backgroundColor: `${s.color}18` }}>
-                  <s.icon size={19} style={{ color: s.dark ? "#8A9E1F" : s.color }} />
-                  {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
-                      {s.badge}
-                    </span>
-                  )}
-                </span>
-                <span className="text-center text-[9.5px] font-semibold leading-tight text-slate-600 dark:text-slate-300">{s.label}</span>
-              </Link>
-            </motion.div>
-          ))}
+          <div className="grid grid-cols-5 gap-1.5 pt-4">
+            {[
+              { href: "/siswa/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
+              { href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#EF4444", badge: data.pengumuman.length },
+              { href: "/siswa/magang", label: "PKL", icon: GraduationCap, color: "#00D67F" },
+              { href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
+              { href: "/siswa/catatan-siswa", label: "Catatan", icon: NotebookPen, color: "#0064E0" },
+            ].map((s, i) => (
+              <motion.div key={s.href}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.35 + i * 0.05 }}
+                whileTap={{ scale: 0.92 }}
+              >
+                <Link href={s.href} className="flex flex-col items-center gap-1.5">
+                  <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl"
+                    style={{
+                      background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), ${s.color}`,
+                      boxShadow: `0 5px 10px -3px ${s.color}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
+                    }}>
+                    <s.icon size={19} style={{ color: s.dark ? "#1C2B33" : "#fff" }} />
+                    {!!s.badge && (
+                      <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-sm">
+                        {s.badge}
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-center text-[9.5px] font-semibold leading-tight text-slate-600 dark:text-slate-300">{s.label}</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">

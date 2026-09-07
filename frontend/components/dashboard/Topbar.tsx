@@ -37,6 +37,14 @@ const PAGE_TITLES: Record<string, [string, string]> = {
   "jadwal-soal":  ["UKK",   "Kelola jadwal, soal, dan pantau pengumpulan siswa"],
 };
 
+function jakartaGreetingWord(): string {
+  const h = Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", hour: "2-digit", hourCycle: "h23" }).format(new Date()));
+  if (h < 11) return "Selamat Pagi";
+  if (h < 15) return "Selamat Siang";
+  if (h < 18) return "Selamat Sore";
+  return "Selamat Malam";
+}
+
 function getPageInfo(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
   const last = segments[segments.length - 1] ?? "";
@@ -299,14 +307,21 @@ export function Topbar({ user }: { user: UserPayload }) {
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center gap-3 bg-surface px-4 py-4 transition-colors duration-200 dark:bg-[#1C2B33] lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10">
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex min-w-0 items-center gap-2 lg:hidden">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: "#0082FB" }}>
             <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto" />
           </div>
-          <span className="flex items-baseline gap-1">
-            <span className="text-[15px] font-black tracking-tight text-[#0082FB]">LMS</span>
-            <span className="text-[9px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">PPLG</span>
-          </span>
+          <div className="min-w-0">
+            <span className="flex items-baseline gap-1">
+              <span className="text-[15px] font-black tracking-tight text-[#0082FB]">LMS</span>
+              <span className="text-[9px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">PPLG</span>
+            </span>
+            {pathname === "/siswa/dashboard" && (
+              <p className="truncate text-[10px] font-semibold leading-tight text-slate-500 dark:text-slate-400">
+                {jakartaGreetingWord()}, {user.nama.split(" ")[0]} 👋
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="hidden xl:block">

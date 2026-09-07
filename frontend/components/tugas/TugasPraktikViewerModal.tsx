@@ -33,16 +33,16 @@ export function TugasPraktikViewerModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose}
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ type: "spring", damping: 24, stiffness: 320 }}
-            className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800"
+            initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
               style={{ background: "#0064E0" }}>

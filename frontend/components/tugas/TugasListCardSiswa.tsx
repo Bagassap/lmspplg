@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download, Lock,
 } from "lucide-react";
@@ -14,16 +15,13 @@ const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
 };
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "#0082FB" },
-  { bar: "#00D67F", gradient: "#00D67F" },
-  { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
-  { bar: "#0064E0", gradient: "#0064E0" },
+  { bar: "#0082FB", gradient: "#0082FB", tint: "#EAF3FF" },
+  { bar: "#0064E0", gradient: "#0064E0", tint: "#DCEBFF" },
+  { bar: "#EF4444", gradient: "#EF4444", tint: "#FEE9EA" },
+  { bar: "#8A9E1F", gradient: "#C3F84A", tint: "#F4FFD9" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
-// Dipakai bareng oleh render kartu (mobile) dan tabel (desktop) supaya logika
-// status/tombol tidak dobel-tulis di dua tempat.
 function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDetail: (s: TugasSubmisiItem, t: TugasItem) => void) {
   const mySubmisi = t.submisi?.[0];
   const isDiterima = mySubmisi?.status === "DITERIMA";
@@ -32,9 +30,6 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
   const overdue = !isTugasActive(t) && !mySubmisi;
   const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
   const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
-  // Terkena paksa-keluar (pelanggaran) tapi kesempatan masih tersisa —
-  // siswa boleh mencoba lagi, beda dengan "Terkirim" biasa yang cuma
-  // menunggu review guru.
   const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci && !!mySubmisi?.dipaksaKeluar;
 
   const btn = isTerkunci
@@ -71,7 +66,8 @@ export function TugasListCardSiswa({
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
 
   return (
-    <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+    <div>
+    <div className="hidden flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:flex">
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#C3F84A" }}>
@@ -234,6 +230,121 @@ export function TugasListCardSiswa({
           </table>
         )}
       </div>
+    </div>
+
+    <div className="space-y-3 lg:hidden">
+      <div className="relative">
+        <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
+        <input value={search} onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari nama tugas atau mapel..."
+          className="w-full rounded-2xl border border-slate-100 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 shadow-[0_2px_8px_rgba(0,0,0,0.05)] outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-700 dark:bg-[#1C2B33] dark:text-slate-200" />
+      </div>
+
+      <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+        <button type="button" onClick={() => setTab("active")}
+          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-colors"
+          style={{ color: tab === "active" ? "#fff" : "#94a3b8" }}>
+          {tab === "active" && (
+            <motion.span layoutId="tugasTabPill" className="absolute inset-0 rounded-xl"
+              style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+          )}
+          <span className="relative z-10">Aktif</span>
+          <span className="relative z-10 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+            style={tab === "active" ? { background: "rgba(255,255,255,0.25)" } : { background: "#E2E8F0" }}>
+            {active.length}
+          </span>
+        </button>
+        <button type="button" onClick={() => setTab("completed")}
+          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-colors"
+          style={{ color: tab === "completed" ? "#fff" : "#94a3b8" }}>
+          {tab === "completed" && (
+            <motion.span layoutId="tugasTabPill" className="absolute inset-0 rounded-xl"
+              style={{ background: "#00D67F" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+          )}
+          <span className="relative z-10">Selesai</span>
+          <span className="relative z-10 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+            style={tab === "completed" ? { background: "rgba(255,255,255,0.25)" } : { background: "#E2E8F0" }}>
+            {completed.length}
+          </span>
+        </button>
+      </div>
+
+      {loading && (
+        <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+          <p className="text-sm text-slate-400">Memuat data...</p>
+        </div>
+      )}
+      {!loading && shown.length === 0 && (
+        <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#C3F84A30" }}>
+            <ClipboardList size={24} style={{ color: "#8A9E1F" }} />
+          </div>
+          <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : "Belum ada tugas tersedia"}</p>
+        </div>
+      )}
+      {!loading && shown.length > 0 && (
+        <div className="space-y-2.5">
+          {shown.map((t, idx) => {
+            const accent = idx % 2 === 0;
+            const d = rowStatus(t, onKumpulkan, onLihatDetail);
+            return (
+              <motion.div key={t.id}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.03 }}
+                className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
+                style={accent ? { backgroundColor: "#0082FB" } : undefined}>
+                {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
+                <div className="relative flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xs font-bold"
+                    style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18", color: accent ? "#fff" : "#0082FB" }}>
+                    {idx + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                      <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
+                        <GraduationCap size={9} /> {t.mapel}
+                      </span>
+                      {TIPE_BADGE[t.tipe] && (
+                        <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-bold ${accent ? "bg-white/20 text-white" : TIPE_BADGE[t.tipe].cls}`}>
+                          {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={9} />; })()} {tipeLabel(t.tipe)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className={`relative mt-3 flex items-center justify-between gap-2 border-t pt-3 ${accent ? "border-white/20" : "border-black/[0.06] dark:border-slate-700/50"}`}>
+                  <span className={`flex shrink-0 items-center gap-1 text-[10.5px] ${accent ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
+                    <CalendarClock size={11} />{formatTgl(t.deadline)}
+                  </span>
+                  <div className="flex flex-wrap items-center justify-end gap-1.5">
+                    {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && d.mySubmisi?.nilai !== null && d.mySubmisi?.nilai !== undefined && (
+                      <span className={`inline-flex items-center rounded-lg px-1.5 py-1 text-[10px] font-bold ${accent ? "bg-white/20 text-white" : "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]"}`}>
+                        {d.mySubmisi.nilai}
+                      </span>
+                    )}
+                    {t.fileUrl && (
+                      <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
+                        className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${accent ? "text-white/80 hover:bg-white/20 hover:text-white" : "text-slate-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20"}`}>
+                        <Download size={12} />
+                      </a>
+                    )}
+                    <button onClick={d.btn.onClick} disabled={"disabled" in d.btn && d.btn.disabled}
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
+                      style={{
+                        borderColor: d.btn.border, color: d.btn.clr, backgroundColor: d.btn.bg,
+                        boxShadow: "disabled" in d.btn && d.btn.disabled ? undefined : `0 4px 10px -3px ${d.btn.clr}55`,
+                      }}>
+                      {d.btn.icon}{d.btn.label}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </div>
     </div>
   );
 }
