@@ -306,7 +306,7 @@ export function Topbar({ user }: { user: UserPayload }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-surface px-4 py-4 transition-colors duration-200 dark:bg-[#1C2B33] lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10">
+      <header className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 dark:bg-[#1C2B33] lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10 ${pathname === "/siswa/dashboard" ? "bg-[#EAF3FF]" : "bg-surface"}`}>
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: "#0082FB" }}>
             <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto" />

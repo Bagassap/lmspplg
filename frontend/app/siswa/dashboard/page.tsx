@@ -183,14 +183,10 @@ export default function SiswaDashboardPage() {
 
   return (
     <>
-      <div className="-m-4 space-y-5 p-4 lg:hidden"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(0,130,251,0.07) 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
-        }}>
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-          {data.kelas} · Wali: {data.waliKelas ?? "—"}
-        </p>
+      <div className="relative isolate -m-4 space-y-5 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_55%)] p-4 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_55%)] lg:hidden">
+        <div className="pointer-events-none absolute -right-16 -top-16 -z-10 h-64 w-64 rounded-full bg-[#0082FB]/25 blur-3xl dark:bg-[#0082FB]/25" />
+        <div className="pointer-events-none absolute -left-16 top-64 -z-10 h-48 w-48 rounded-full bg-[#C3F84A]/25 blur-3xl dark:bg-[#C3F84A]/15" />
+        <div className="pointer-events-none absolute -right-10 bottom-10 -z-10 h-40 w-40 rounded-full bg-[#0064E0]/20 blur-3xl dark:bg-[#0064E0]/25" />
 
         <div className="rounded-3xl bg-white p-3 shadow-[0_2px_10px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
           <Link
