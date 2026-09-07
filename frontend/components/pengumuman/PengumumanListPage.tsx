@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Megaphone, Plus, Pin, MessageCircle,
   AlertCircle, ChevronRight, ChevronLeft,
-  Clock, BookOpen, Bell, ChevronDown, Loader2, Trash2, CalendarDays,
+  Clock, BookOpen, Bell, ChevronDown, Loader2, Trash2,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { PengumumanItem } from "./PengumumanFormModal";
@@ -386,7 +386,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const [editItem,      setEditItem]      = useState<PengumumanItem | null>(null);
   const [error,         setError]         = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
-  const [showCalendar,  setShowCalendar]  = useState(false);
 
   const [openSlug,    setOpenSlug]    = useState<string | null>(null);
   const [detailCache, setDetailCache] = useState<Record<string, PengumumanDetail>>({});
@@ -583,9 +582,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       </div>
 
-      <div className="relative isolate -mx-4 space-y-4 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_35%)] px-4 py-4 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_35%)] lg:hidden">
-        <div className="pointer-events-none absolute -right-16 -top-16 -z-10 h-56 w-56 rounded-full bg-[#0082FB]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -left-14 top-72 -z-10 h-44 w-44 rounded-full bg-[#EF4444]/15 blur-3xl" />
+      <div className="relative isolate -mx-4 space-y-4 overflow-hidden bg-[#F1F5F8] px-4 py-4 dark:bg-[#1C2B33] lg:hidden">
 
         {canManage && (
           <motion.button
@@ -596,20 +593,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             <Plus size={16} /> Buat Pengumuman
           </motion.button>
         )}
-
-        <button type="button" onClick={() => setShowCalendar((v) => !v)}
-          className="flex w-full items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33] dark:text-slate-200">
-          <span className="flex items-center gap-2"><CalendarDays size={16} style={{ color: "#0082FB" }} /> Kalender Pengumuman</span>
-          <ChevronDown size={16} className={`transition-transform ${showCalendar ? "rotate-180" : ""}`} />
-        </button>
-        <AnimatePresence initial={false}>
-          {showCalendar && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }} className="overflow-hidden">
-              <MiniCalendar announcementDates={announcementDates} />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <AnimatePresence>
           {error && (

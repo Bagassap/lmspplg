@@ -147,8 +147,7 @@ export function MateriTugasSiswaPage() {
             </div>
           </div>
 
-          <div className="relative -mx-4 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_100%)] px-4 py-3 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_100%)] lg:hidden">
-            <div className="pointer-events-none absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full bg-[#0082FB]/20 blur-3xl" />
+          <div className="relative -mx-4 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
             <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
               <button type="button" onClick={() => setCategory("materi")}
                 className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"

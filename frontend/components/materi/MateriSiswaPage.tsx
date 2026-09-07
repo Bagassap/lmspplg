@@ -201,9 +201,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
       </div>
       </div>
 
-      <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_35%)] px-4 py-3 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_35%)] lg:hidden">
-        <div className="pointer-events-none absolute -right-14 top-0 -z-10 h-48 w-48 rounded-full bg-[#0082FB]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -left-14 bottom-0 -z-10 h-40 w-40 rounded-full bg-[#C3F84A]/20 blur-3xl dark:bg-[#C3F84A]/15" />
+      <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
         <div className="relative">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
           <input value={search} onChange={(e) => setSearch(e.target.value)}

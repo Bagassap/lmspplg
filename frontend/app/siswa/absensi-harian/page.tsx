@@ -403,10 +403,7 @@ export default function SiswaAbsensiHarianPage() {
             )}
           </div>
 
-          <div className="relative isolate -m-4 space-y-4 overflow-hidden bg-[linear-gradient(180deg,#EAF3FF_0%,#F1F5F8_55%)] p-4 dark:bg-[linear-gradient(180deg,#16232B_0%,#1C2B33_55%)] lg:hidden">
-            <div className="pointer-events-none absolute -right-16 -top-16 -z-10 h-64 w-64 rounded-full bg-[#0082FB]/25 blur-3xl" />
-            <div className="pointer-events-none absolute -left-16 top-64 -z-10 h-48 w-48 rounded-full bg-[#C3F84A]/25 blur-3xl dark:bg-[#C3F84A]/15" />
-            <div className="pointer-events-none absolute -right-10 bottom-10 -z-10 h-40 w-40 rounded-full bg-[#0064E0]/20 blur-3xl dark:bg-[#0064E0]/25" />
+          <div className="relative isolate -m-4 space-y-4 overflow-hidden bg-[#F1F5F8] p-4 dark:bg-[#1C2B33] lg:hidden">
 
             <div className="rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
               <div className="relative grid grid-cols-2 divide-x divide-white/20 overflow-hidden rounded-2xl" style={{ background: BRAND_GRADIENT }}>
