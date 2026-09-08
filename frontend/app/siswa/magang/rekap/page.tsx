@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { FileBarChart, FileUp, BarChart3 } from "lucide-react";
+import { FileBarChart, FileUp, BarChart3, ChevronLeft } from "lucide-react";
 import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
 import type { LaporDiriStatusSaya } from "@/components/magang/lapor-diri-types";
@@ -17,6 +18,7 @@ const LAPORAN_AKHIR_LABEL: Record<string, string> = {
 };
 
 export default function SiswaMagangRekapPage() {
+  const router = useRouter();
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [status, setStatus] = useState<LaporDiriStatusSaya | null>(null);
   const [laporanAkhir, setLaporanAkhir] = useState<LaporanAkhirStatusSaya | null>(null);
@@ -100,8 +102,14 @@ export default function SiswaMagangRekapPage() {
             </div>
           </div>
 
-          <div className="relative -mx-4 lg:hidden" style={{ background: "#0082FB" }}>
-            <div className="h-6" />
+          <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+            <div className="relative flex items-center px-4 pb-3 pt-4">
+              <button type="button" onClick={() => router.push("/siswa/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Rekap PKL</h1>
+            </div>
             <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
             <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
               <button type="button" onClick={() => setCategory("lapor-diri")}

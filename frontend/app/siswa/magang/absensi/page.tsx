@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, MapPin, Camera, CheckCircle2, Loader2, Clock, RefreshCw,
@@ -39,6 +40,7 @@ type Tab = "DATANG" | "PULANG";
 const INSECURE_CONTEXT_MSG = "Akses GPS memerlukan koneksi aman. Silakan buka melalui https://pplg.smklimpung.id, jangan menggunakan alamat IP langsung.";
 
 export default function SiswaMagangAbsensiPage() {
+  const router = useRouter();
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const today = todayJakarta();
@@ -248,15 +250,24 @@ export default function SiswaMagangAbsensiPage() {
               Anda belum memiliki penempatan PKL yang aktif. Hubungi admin untuk ditempatkan di tempat PKL terlebih dahulu.
             </p>
           </div>
-          <div className="relative isolate -m-4 overflow-hidden bg-[#F1F5F8] p-4 dark:bg-[#1C2B33] lg:hidden">
-            <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
-                <AlertCircle size={26} className="text-red-500" />
+          <div className="relative isolate -m-4 overflow-hidden lg:hidden" style={{ background: BRAND_GRADIENT }}>
+            <div className="relative flex items-center px-4 pb-3 pt-4">
+              <button type="button" onClick={() => router.push("/siswa/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
+            </div>
+            <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+              <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+                  <AlertCircle size={26} className="text-red-500" />
+                </div>
+                <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
+                <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
+                  Anda belum memiliki penempatan PKL yang aktif. Hubungi admin untuk ditempatkan di tempat PKL terlebih dahulu.
+                </p>
               </div>
-              <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
-              <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
-                Anda belum memiliki penempatan PKL yang aktif. Hubungi admin untuk ditempatkan di tempat PKL terlebih dahulu.
-              </p>
             </div>
           </div>
         </>
@@ -380,7 +391,13 @@ export default function SiswaMagangAbsensiPage() {
           </div>
 
           <div className="relative isolate -m-4 lg:hidden" style={{ background: BRAND_GRADIENT }}>
-            <div className="h-6" />
+            <div className="relative flex items-center px-4 pb-3 pt-4">
+              <button type="button" onClick={() => router.push("/siswa/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
+            </div>
             <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
 
             <div className="rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">

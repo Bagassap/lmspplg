@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
@@ -167,7 +168,8 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
 
 
 export default function SiswaJadwalSoalPage() {
-  const [tahapanList, setTahapanList] = useState<Tahapan[]>([]); 
+  const router = useRouter();
+  const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [mySubmisi,   setMySubmisi]   = useState<MySubmisi[]>([]);
   const [loading,     setLoading]     = useState(true);
@@ -259,6 +261,16 @@ export default function SiswaJadwalSoalPage() {
                 <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
                 <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Jadwal dan Soal</h1>
               </div>
+            </div>
+          </div>
+
+          <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+            <div className="relative flex items-center px-4 pb-4 pt-4">
+              <button type="button" onClick={() => router.push("/siswa/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
             </div>
           </div>
 
@@ -560,7 +572,7 @@ export default function SiswaJadwalSoalPage() {
             </div>
           </div>
 
-          <div className="relative isolate -mx-4 lg:hidden" style={{ background: "#0082FB" }}>
+          <div className="relative isolate -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
             <div className="h-6" />
             <div className="space-y-3 rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
             <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">

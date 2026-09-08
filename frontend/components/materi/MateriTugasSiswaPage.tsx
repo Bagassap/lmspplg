@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BookOpen, Search, Send } from "lucide-react";
+import { BookOpen, ChevronLeft, Search, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriSiswaPage } from "./MateriSiswaPage";
 import { TugasListCardSiswa } from "@/components/tugas/TugasListCardSiswa";
@@ -149,8 +149,14 @@ export function MateriTugasSiswaPage() {
             </div>
           </div>
 
-          <div className="relative -mx-4 lg:hidden" style={{ background: "#0082FB" }}>
-            <div className="h-6" />
+          <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+            <div className="relative flex items-center px-4 pb-3 pt-4">
+              <button type="button" onClick={() => router.push("/siswa/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Materi & Tugas</h1>
+            </div>
             <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
             <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
               <div className="relative">

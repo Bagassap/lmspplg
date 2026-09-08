@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Briefcase, Building2, CalendarDays, MapPin, Phone, User, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Briefcase, Building2, CalendarDays, ChevronLeft, MapPin, Phone, User, Users } from "lucide-react";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
 import type { PenempatanMagang } from "@/components/magang/types";
@@ -11,6 +12,7 @@ function fmt(iso: string) {
 }
 
 export default function SiswaMagangPenempatanPage() {
+  const router = useRouter();
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -129,7 +131,13 @@ export default function SiswaMagangPenempatanPage() {
       </div>
 
       <div className="relative isolate -m-4 lg:hidden" style={{ background: "#0082FB" }}>
-        <div className="h-6" />
+        <div className="relative flex items-center px-4 pb-3 pt-4">
+          <button type="button" onClick={() => router.push("/siswa/dashboard")}
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            <ChevronLeft size={18} />
+          </button>
+          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Penempatan PKL</h1>
+        </div>
         <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
         {loading ? (
           <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1C2B33]" />
