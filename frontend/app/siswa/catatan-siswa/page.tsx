@@ -103,29 +103,29 @@ export default function SiswaCatatanSayaPage() {
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Catatan Saya</h1>
         </div>
         <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
-        <div className="overflow-hidden rounded-[28px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-          <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-slate-700/40">
-            <div className="flex items-center gap-2.5 p-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#0082FB18", color: "#0082FB" }}>
-                <NotebookPen size={18} />
+        <div className="space-y-3 rounded-[28px] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#0082FB" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
+                <NotebookPen size={18} className="text-white" />
               </span>
               <div className="min-w-0 leading-tight">
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">{loading ? "—" : data?.catatan.length ?? 0}</p>
-                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Total Catatan</p>
+                <p className="text-base font-extrabold text-white">{loading ? "—" : data?.catatan.length ?? 0}</p>
+                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-white/70">Total Catatan</p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 p-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black" style={{ backgroundColor: "#EF444418", color: "#EF4444" }}>
+            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#EF4444" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-white bg-white/20">
                 ±
               </span>
               <div className="min-w-0 leading-tight">
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">{loading ? "—" : data?.totalPoin ?? 0}</p>
-                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Total Poin</p>
+                <p className="text-base font-extrabold text-white">{loading ? "—" : data?.totalPoin ?? 0}</p>
+                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-white/70">Total Poin</p>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-slate-100 dark:border-slate-700/40">
+          <div className="overflow-hidden rounded-2xl bg-[#F1F5F8] dark:bg-slate-900/30">
             {loading && (
               <p className="py-14 text-center text-sm text-slate-400">Memuat catatan...</p>
             )}
@@ -138,7 +138,7 @@ export default function SiswaCatatanSayaPage() {
               </div>
             )}
             {!loading && data && data.catatan.length > 0 && (
-              <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+              <div className="divide-y divide-white dark:divide-slate-700/40">
                 {data.catatan.map((c) => {
                   const accent = c.poin != null ? "#EF4444" : "#0082FB";
                   return (
