@@ -36,7 +36,7 @@ const ROW_PALETTES = [
   { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
   { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
   { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
-  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" }, // lime — text/bar gelap supaya kontras
+  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" },
   { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -245,7 +245,7 @@ export default function SiswaJadwalSoalPage() {
 
         <div className="flex-1 min-w-0 space-y-6">
 
-          <div className="relative overflow-hidden rounded-2xl p-6"
+          <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block"
             style={{background:"#0082FB"}}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
@@ -446,7 +446,7 @@ export default function SiswaJadwalSoalPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6">
+              <div className="hidden flex-col gap-6 lg:flex">
 
           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
               <div className="px-5 pt-5 pb-0" style={{background:"rgba(0,130,251,0.05)"}}>
@@ -558,6 +558,119 @@ export default function SiswaJadwalSoalPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
+            <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+              <div className="relative">
+                <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
+                <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)}
+                  placeholder="Cari nama task..."
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+              </div>
+              <div className="flex items-center gap-4 border-b border-slate-200 px-1 dark:border-slate-700">
+                <button type="button" onClick={()=>setTab("all")}
+                  className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+                  style={tab==="all"?{borderColor:"#64748B",color:"#64748B"}:{borderColor:"transparent",color:"#94a3b8"}}>
+                  Semua
+                  <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                    style={tab==="all"?{background:"#64748B18",color:"#64748B"}:{background:"#E2E8F0",color:"#94a3b8"}}>
+                    {tahapanList.length}
+                  </span>
+                </button>
+                <button type="button" onClick={()=>setTab("active")}
+                  className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+                  style={tab==="active"?{borderColor:"#0082FB",color:"#0082FB"}:{borderColor:"transparent",color:"#94a3b8"}}>
+                  Aktif
+                  <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                    style={tab==="active"?{background:"#0082FB18",color:"#0082FB"}:{background:"#E2E8F0",color:"#94a3b8"}}>
+                    {active.length}
+                  </span>
+                </button>
+                <button type="button" onClick={()=>setTab("completed")}
+                  className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+                  style={tab==="completed"?{borderColor:"#00D67F",color:"#00D67F"}:{borderColor:"transparent",color:"#94a3b8"}}>
+                  Selesai
+                  <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                    style={tab==="completed"?{background:"#00D67F18",color:"#00D67F"}:{background:"#E2E8F0",color:"#94a3b8"}}>
+                    {completed.length}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {loading && (
+              <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+                <p className="text-sm text-slate-400">Memuat data...</p>
+              </div>
+            )}
+            {!loading && shown.length === 0 && (
+              <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
+                  <CalendarDays size={24} style={{ color: "#0082FB" }} />
+                </div>
+                <p className="mt-4 text-sm text-slate-400">{taskSearch.trim() ? `Tidak ada task dengan nama "${taskSearch.trim()}"` : tab==="active" ? "Tidak ada task aktif" : tab==="completed" ? "Tidak ada task selesai" : "Belum ada task tersedia"}</p>
+              </div>
+            )}
+            {!loading && shown.length > 0 && (
+              <div className="space-y-2.5">
+                {shown.map((t, idx) => {
+                  const accent = idx % 2 === 0;
+                  const globalSoal = soalFiles[0] ?? null;
+                  const myS       = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                  const isDiterima = myS?.status === "DITERIMA";
+                  const isRevisi   = myS?.status === "REVISI";
+                  const isTerkirim = myS?.status === "TERKIRIM";
+                  const pct        = myS ? 100 : 0;
+                  const barColor   = isDiterima ? "#00D67F" : isRevisi ? "#C3F84A" : "#0082FB";
+
+                  const btn = isDiterima
+                    ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#E3FBF0", clr: accent ? "#fff" : "#00D67F", onClick:()=>setDetailTarget(myS!) }
+                    : isRevisi
+                    ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1F5F8", clr: accent ? "#fff" : "#8A9E1F", onClick:()=>setRevisiModal(myS!) }
+                    : isTerkirim
+                    ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#EAF3FF", clr: accent ? "#fff" : "#0082FB", onClick:()=>setDetailTarget(myS!) }
+                    : { label:"Kirim", icon:<Send size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#E3FBF0", clr: accent ? "#fff" : "#00D67F", onClick:()=>globalSoal && setSubmitSoal(globalSoal) };
+
+                  return (
+                    <motion.div key={t.id}
+                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: idx * 0.03 }}
+                      className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
+                      style={accent ? { backgroundColor: "#0082FB" } : undefined}>
+                      {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
+                      <div className="relative flex items-center gap-3">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-bold"
+                          style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18", color: accent ? "#fff" : "#0082FB" }}>
+                          {idx + 1}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
+                          <div className={`mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] font-medium ${accent ? "text-white/75" : "text-slate-500 dark:text-slate-400"}`}>
+                            <span className="flex items-center gap-1"><CalendarDays size={9} />{formatTgl(t.tanggal)}</span>
+                            <span className="flex items-center gap-1"><Clock size={9} />{t.jamMulai}–{t.jamSelesai}</span>
+                            <span className="flex items-center gap-1"><MapPin size={9} />{t.lokasi}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="relative mt-3 flex items-center justify-between gap-2">
+                        <div className="flex flex-1 items-center gap-2">
+                          <div className="h-1.5 flex-1 max-w-24 overflow-hidden rounded-full" style={{ background: accent ? "rgba(255,255,255,0.25)" : "#F1F5F8" }}>
+                            <div className="h-full rounded-full" style={{ width: `${pct}%`, background: accent ? "#fff" : barColor }} />
+                          </div>
+                          <span className={`text-[10px] font-bold ${accent ? "text-white" : ""}`} style={accent ? undefined : { color: barColor }}>{pct}%</span>
+                        </div>
+                        <button onClick={btn.onClick}
+                          className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
+                          style={{ backgroundColor: btn.bg, color: btn.clr }}>
+                          {btn.icon}{btn.label}
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           </div>
 
