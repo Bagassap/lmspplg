@@ -50,15 +50,16 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
 }
 
 export function TugasListCardSiswa({
-  tugasList, loading, onKumpulkan, onLihatDetail,
+  tugasList, loading, onKumpulkan, onLihatDetail, search, onSearchChange,
 }: {
   tugasList: TugasItem[];
   loading: boolean;
   onKumpulkan: (t: TugasItem) => void;
   onLihatDetail: (s: TugasSubmisiItem, t: TugasItem) => void;
+  search: string;
+  onSearchChange: (v: string) => void;
 }) {
   const [tab, setTab] = useState<"active" | "completed">("active");
-  const [search, setSearch] = useState("");
 
   const active = tugasList.filter((t) => isTugasActive(t));
   const completed = tugasList.filter((t) => !isTugasActive(t));
@@ -77,7 +78,7 @@ export function TugasListCardSiswa({
         </div>
         <div className="relative mb-3">
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)}
+          <input value={search} onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Cari nama tugas atau mapel..."
             className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#C3F84A] focus:ring-2 focus:ring-[#F1F5F8] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#1C2B33]/30" />
         </div>
@@ -233,13 +234,6 @@ export function TugasListCardSiswa({
     </div>
 
     <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
-      <div className="relative">
-        <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
-        <input value={search} onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari nama tugas atau mapel..."
-          className="w-full rounded-2xl border border-slate-100 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 shadow-[0_2px_8px_rgba(0,0,0,0.05)] outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-700 dark:bg-[#1C2B33] dark:text-slate-200" />
-      </div>
-
       <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
         <button type="button" onClick={() => setTab("active")}
           className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-colors"

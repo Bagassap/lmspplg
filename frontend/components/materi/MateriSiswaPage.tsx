@@ -20,12 +20,11 @@ const ROW_PALETTES = [
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
-export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {}) {
+export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { embedded?: boolean; search: string; onSearchChange: (v: string) => void }) {
   const router = useRouter();
   const [list, setList] = useState<MateriItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
   const [mapelFilter, setMapelFilter] = useState<string | null>(null);
 
   useEffect(() => {
@@ -88,7 +87,7 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
-            <input value={search} onChange={(e) => setSearch(e.target.value)}
+            <input value={search} onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Cari judul materi, mapel, atau deskripsi..."
               className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-blue-900/30" />
           </div>
@@ -202,15 +201,8 @@ export function MateriSiswaPage({ embedded = false }: { embedded?: boolean } = {
       </div>
 
       <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
-        <div className="relative">
-          <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari judul materi, mapel..."
-            className="w-full rounded-2xl border border-slate-100 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 shadow-[0_2px_8px_rgba(0,0,0,0.05)] outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-700 dark:bg-[#1C2B33] dark:text-slate-200" />
-        </div>
-
         {uniqueMapel.length > 1 && (
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button type="button" onClick={() => setMapelFilter(null)}
               className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-[0_2px_6px_rgba(0,0,0,0.05)] transition-colors"
               style={mapelFilter === null ? { background: "#0082FB", color: "#fff" } : { background: "#fff", color: "#64748b" }}>

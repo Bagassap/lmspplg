@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { FileBarChart, FileUp, BarChart3 } from "lucide-react";
 import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
@@ -38,7 +39,7 @@ export default function SiswaMagangRekapPage() {
 
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
+      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
         <div className="relative flex items-center gap-3 sm:gap-4">
@@ -53,50 +54,73 @@ export default function SiswaMagangRekapPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
-        <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-          <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
-            <button type="button" onClick={() => setCategory("lapor-diri")}
-              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
-              style={{
-                background: "#0082FB",
-                boxShadow: category === "lapor-diri" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "lapor-diri" ? "2px solid #0082FB" : "none",
-                outlineOffset: "3px",
-              }}>
-              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
-                <FileUp size={14} className="lg:hidden" />
-                <FileUp size={16} className="hidden lg:block" />
-              </div>
-              <div className="relative min-w-0">
-                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Lapor Diri</p>
-                <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 sm:text-[10px] lg:text-[11px]">
-                  {status?.hasPenempatan ? (sudahLapor ? "Sudah lapor bulan ini" : "Belum lapor bulan ini") : "Unggah laporan bulananmu"}
-                </p>
-              </div>
-            </button>
+      <div className="grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[1fr_2.3fr]">
+        <div>
+          <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
+            <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
+            <div className="flex flex-col gap-4">
+              <button type="button" onClick={() => setCategory("lapor-diri")}
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background: "#0082FB",
+                  boxShadow: category === "lapor-diri" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "lapor-diri" ? "2px solid #0082FB" : "none",
+                  outlineOffset: "3px",
+                }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                  <FileUp size={16} />
+                </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-xl font-black leading-tight">Lapor Diri</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">
+                    {status?.hasPenempatan ? (sudahLapor ? "Sudah lapor bulan ini" : "Belum lapor bulan ini") : "Unggah laporan bulananmu"}
+                  </p>
+                </div>
+              </button>
 
-            <button type="button" onClick={() => setCategory("laporan")}
-              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
-              style={{
-                background: "#C3F84A",
-                color: "#1C2B33",
-                boxShadow: category === "laporan" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "laporan" ? "2px solid #C3F84A" : "none",
-                outlineOffset: "3px",
-              }}>
-              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:h-9 lg:w-9 lg:rounded-2xl">
-                <BarChart3 size={14} className="lg:hidden" />
-                <BarChart3 size={16} className="hidden lg:block" />
-              </div>
-              <div className="relative min-w-0">
-                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Laporan</p>
-                <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75 sm:text-[10px] lg:text-[11px]">{loading ? "…" : laporanAkhirSubtitle}</p>
-              </div>
-            </button>
+              <button type="button" onClick={() => setCategory("laporan")}
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background: "#C3F84A",
+                  color: "#1C2B33",
+                  boxShadow: category === "laporan" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "laporan" ? "2px solid #C3F84A" : "none",
+                  outlineOffset: "3px",
+                }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
+                  <BarChart3 size={16} />
+                </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-xl font-black leading-tight">Laporan</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#1C2B33]/75">{loading ? "…" : laporanAkhirSubtitle}</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="relative -mx-4 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
+            <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+              <button type="button" onClick={() => setCategory("lapor-diri")}
+                className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                style={{ color: category === "lapor-diri" ? "#fff" : "#94a3b8" }}>
+                {category === "lapor-diri" && (
+                  <motion.span layoutId="rekapPklTabPill" className="absolute inset-0 rounded-xl"
+                    style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5"><FileUp size={15} /> Lapor Diri</span>
+              </button>
+              <button type="button" onClick={() => setCategory("laporan")}
+                className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                style={{ color: category === "laporan" ? "#1C2B33" : "#94a3b8" }}>
+                {category === "laporan" && (
+                  <motion.span layoutId="rekapPklTabPill" className="absolute inset-0 rounded-xl"
+                    style={{ background: "#C3F84A" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5"><BarChart3 size={15} /> Laporan</span>
+              </button>
+            </div>
           </div>
         </div>
 

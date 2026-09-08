@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BookOpen, Send } from "lucide-react";
+import { BookOpen, Search, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriSiswaPage } from "./MateriSiswaPage";
 import { TugasListCardSiswa } from "@/components/tugas/TugasListCardSiswa";
@@ -22,6 +22,8 @@ export function MateriTugasSiswaPage() {
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category>(() => (searchParams.get("tab") === "tugas" ? "tugas" : "materi"));
+  const [searchMateri, setSearchMateri] = useState("");
+  const [searchTugas, setSearchTugas] = useState("");
 
   const [submitTarget, setSubmitTarget] = useState<TugasItem | null>(null);
   const [detailTarget, setDetailTarget] = useState<{ s: TugasSubmisiItem; t: TugasItem } | null>(null);
@@ -148,42 +150,59 @@ export function MateriTugasSiswaPage() {
           </div>
 
           <div className="relative -mx-4 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
-            <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
-              <button type="button" onClick={() => setCategory("materi")}
-                className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
-                style={{ color: category === "materi" ? "#fff" : "#94a3b8" }}>
-                {category === "materi" && (
-                  <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
-                    style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+            <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+              <div className="relative">
+                <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
+                {category === "materi" ? (
+                  <input value={searchMateri} onChange={(e) => setSearchMateri(e.target.value)}
+                    placeholder="Cari judul materi, mapel..."
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+                ) : (
+                  <input value={searchTugas} onChange={(e) => setSearchTugas(e.target.value)}
+                    placeholder="Cari nama tugas atau mapel..."
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
                 )}
-                <span className="relative z-10 flex items-center gap-1.5"><BookOpen size={15} /> Materi</span>
-              </button>
-              <button type="button" onClick={() => setCategory("tugas")}
-                className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
-                style={{ color: category === "tugas" ? "#1C2B33" : "#94a3b8" }}>
-                {category === "tugas" && (
-                  <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
-                    style={{ background: "#C3F84A" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
-                )}
-                <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
-                {perluDikerjakan > 0 && (
-                  <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
-                    {perluDikerjakan}
-                  </span>
-                )}
-              </button>
+              </div>
+
+              <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+                <button type="button" onClick={() => setCategory("materi")}
+                  className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                  style={{ color: category === "materi" ? "#fff" : "#94a3b8" }}>
+                  {category === "materi" && (
+                    <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
+                      style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5"><BookOpen size={15} /> Materi</span>
+                </button>
+                <button type="button" onClick={() => setCategory("tugas")}
+                  className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                  style={{ color: category === "tugas" ? "#1C2B33" : "#94a3b8" }}>
+                  {category === "tugas" && (
+                    <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
+                      style={{ background: "#C3F84A" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
+                  {perluDikerjakan > 0 && (
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                      {perluDikerjakan}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         {category === "materi" ? (
-          <MateriSiswaPage embedded />
+          <MateriSiswaPage embedded search={searchMateri} onSearchChange={setSearchMateri} />
         ) : (
           <TugasListCardSiswa
             tugasList={tugasList}
             loading={loading}
             onKumpulkan={handleKumpulkan}
             onLihatDetail={(s, t) => setDetailTarget({ s, t })}
+            search={searchTugas}
+            onSearchChange={setSearchTugas}
           />
         )}
       </div>
