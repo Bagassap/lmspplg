@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download, Lock,
+  SlidersHorizontal, X,
 } from "lucide-react";
 import { formatTgl, isTugasActive, tipeLabel, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
@@ -60,10 +61,15 @@ export function TugasListCardSiswa({
   onSearchChange: (v: string) => void;
 }) {
   const [tab, setTab] = useState<"active" | "completed">("active");
+  const [mapelFilter, setMapelFilter] = useState<string | null>(null);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
+
+  const uniqueMapel = useMemo(() => Array.from(new Set(tugasList.map((t) => t.mapel))).sort(), [tugasList]);
 
   const active = tugasList.filter((t) => isTugasActive(t));
   const completed = tugasList.filter((t) => !isTugasActive(t));
   const shown = (tab === "active" ? active : completed)
+    .filter((t) => !mapelFilter || t.mapel === mapelFilter)
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
 
   return (
@@ -234,33 +240,36 @@ export function TugasListCardSiswa({
     </div>
 
     <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
-      <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
-        <button type="button" onClick={() => setTab("active")}
-          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-colors"
-          style={{ color: tab === "active" ? "#fff" : "#94a3b8" }}>
-          {tab === "active" && (
-            <motion.span layoutId="tugasTabPill" className="absolute inset-0 rounded-xl"
-              style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
-          )}
-          <span className="relative z-10">Aktif</span>
-          <span className="relative z-10 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-            style={tab === "active" ? { background: "rgba(255,255,255,0.25)" } : { background: "#E2E8F0" }}>
-            {active.length}
-          </span>
-        </button>
-        <button type="button" onClick={() => setTab("completed")}
-          className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-colors"
-          style={{ color: tab === "completed" ? "#fff" : "#94a3b8" }}>
-          {tab === "completed" && (
-            <motion.span layoutId="tugasTabPill" className="absolute inset-0 rounded-xl"
-              style={{ background: "#00D67F" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
-          )}
-          <span className="relative z-10">Selesai</span>
-          <span className="relative z-10 rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-            style={tab === "completed" ? { background: "rgba(255,255,255,0.25)" } : { background: "#E2E8F0" }}>
-            {completed.length}
-          </span>
-        </button>
+      <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-1 dark:border-slate-700">
+        <div className="flex items-center gap-5">
+          <button type="button" onClick={() => setTab("active")}
+            className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+            style={tab === "active" ? { borderColor: "#0082FB", color: "#0082FB" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            Aktif
+            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+              style={tab === "active" ? { background: "#0082FB18", color: "#0082FB" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+              {active.length}
+            </span>
+          </button>
+          <button type="button" onClick={() => setTab("completed")}
+            className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+            style={tab === "completed" ? { borderColor: "#00D67F", color: "#00D67F" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            Selesai
+            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+              style={tab === "completed" ? { background: "#00D67F18", color: "#00D67F" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+              {completed.length}
+            </span>
+          </button>
+        </div>
+
+        {uniqueMapel.length > 1 && (
+          <button type="button" onClick={() => setShowFilterSheet(true)}
+            className="relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+            style={mapelFilter ? { background: "#0082FB18", color: "#0082FB" } : { background: "#F1F5F9", color: "#94a3b8" }}>
+            <SlidersHorizontal size={14} />
+            {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#0082FB" }} />}
+          </button>
+        )}
       </div>
 
       {loading && (
@@ -339,6 +348,49 @@ export function TugasListCardSiswa({
         </div>
       )}
     </div>
+
+    <AnimatePresence>
+      {showFilterSheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center lg:hidden">
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowFilterSheet(false)}
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            className="relative z-10 w-full overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+            style={{ maxHeight: "80vh" }}
+          >
+            <div className="flex items-center justify-between px-5 pt-5">
+              <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Filter Mata Pelajaran</h3>
+              <button type="button" onClick={() => setShowFilterSheet(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                <X size={15} />
+              </button>
+            </div>
+            <div className="max-h-[60vh] space-y-1.5 overflow-y-auto px-5 py-5">
+              <button type="button" onClick={() => { setMapelFilter(null); setShowFilterSheet(false); }}
+                className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
+                style={mapelFilter === null ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                Semua Mapel
+                {mapelFilter === null && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+              </button>
+              {uniqueMapel.map((mp) => (
+                <button key={mp} type="button" onClick={() => { setMapelFilter(mp); setShowFilterSheet(false); }}
+                  className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
+                  style={mapelFilter === mp ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                  {mp}
+                  {mapelFilter === mp && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
     </div>
   );
 }
