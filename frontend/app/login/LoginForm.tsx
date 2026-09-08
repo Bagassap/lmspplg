@@ -80,7 +80,7 @@ export function LoginForm() {
       initial="hidden"
       animate="visible"
       variants={container}
-      className="mt-4 flex flex-col gap-3 sm:mt-8 sm:gap-5"
+      className="mt-0 flex flex-col gap-2.5 sm:mt-8 sm:gap-5"
     >
       <motion.div variants={item} className="flex flex-col gap-1.5">
         <label htmlFor="login" className="text-sm font-medium text-black/70">
@@ -154,7 +154,7 @@ export function LoginForm() {
         disabled={loading}
         whileHover={!loading ? { scale: 1.02 } : undefined}
         whileTap={!loading ? { scale: 0.98 } : undefined}
-        className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-2"
+        className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-2"
         style={{ background: "#0082FB" }}
       >
         {loading ? (
@@ -170,7 +170,7 @@ export function LoginForm() {
       <motion.div variants={item} className="text-center">
         <Link
           href="/lupa-password"
-          className="text-sm text-black/40 transition-colors hover:text-black/70"
+          className="text-sm font-medium text-[#EF4444] transition-colors hover:text-[#EF4444]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
         >
           Lupa Password?
         </Link>
