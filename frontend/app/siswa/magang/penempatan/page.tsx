@@ -128,7 +128,9 @@ export default function SiswaMagangPenempatanPage() {
         )}
       </div>
 
-      <div className="relative isolate -m-4 space-y-4 overflow-hidden bg-[#F1F5F8] p-4 dark:bg-[#1C2B33] lg:hidden">
+      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="h-6" />
+        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
         {loading ? (
           <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1C2B33]" />
         ) : !aktif ? (
@@ -216,6 +218,7 @@ export default function SiswaMagangPenempatanPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

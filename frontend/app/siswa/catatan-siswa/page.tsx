@@ -92,7 +92,9 @@ export default function SiswaCatatanSayaPage() {
         )}
       </div>
 
-      <div className="-m-4 space-y-4 bg-[#F1F5F8] p-4 dark:bg-[#1C2B33] lg:hidden">
+      <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="h-6" />
+        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-center gap-2.5 rounded-2xl bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#0082FB18", color: "#0082FB" }}>
@@ -157,6 +159,7 @@ export default function SiswaCatatanSayaPage() {
             })}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

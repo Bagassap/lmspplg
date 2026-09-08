@@ -16,10 +16,6 @@ import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
-// Kartu pengumuman berjejer (>1) — sengaja tidak memakai lime seperti
-// dashboard/absensi/PKL, karena lime dikhususkan sebagai warna sorot
-// pengumuman "disematkan" (lihat isPinned di bawah). Warna kategori
-// lainnya tetap dari palet: biru, biru terang, merah.
 const KATEGORI_GRADIENT: Record<string, string> = {
   Umum:     "#0082FB",
   Akademik: "#0064E0",
@@ -31,10 +27,6 @@ const KATEGORI_GRADIENT: Record<string, string> = {
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const DAY_ID   = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
 
-// "Hari ini" dan tanggal pengumuman dibaca eksplisit dalam WIB (Asia/Jakarta),
-// bukan Date getter lokal / slice mentah ISO string (yang berarti UTC) — SSR
-// pertama kali render di server (UTC), jadi cara lama bisa salah tanggal
-// terutama untuk pengumuman yang dibuat larut malam WIB.
 function jakartaYMDParts(d: Date) {
   const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
   const get = (t: string) => Number(parts.find((p) => p.type === t)?.value ?? 0);
@@ -582,7 +574,11 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       </div>
 
-      <div className="relative isolate -mx-4 space-y-4 overflow-hidden bg-[#F1F5F8] px-4 py-4 dark:bg-[#1C2B33] lg:hidden">
+      <div className="relative isolate -mx-4 lg:hidden" style={canManage ? undefined : { background: "#0082FB" }}>
+        {!canManage && <div className="h-6" />}
+        <div
+          className={`space-y-4 px-4 py-4 ${canManage ? "bg-[#F1F5F8] dark:bg-[#1C2B33]" : "rounded-t-[28px] bg-[#F1F5F8] dark:bg-[#1C2B33]"}`}
+        >
 
         {canManage && (
           <motion.button
@@ -652,6 +648,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             ))}
           </div>
         )}
+        </div>
       </div>
 
       <PengumumanFormModal

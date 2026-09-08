@@ -560,7 +560,9 @@ export default function SiswaJadwalSoalPage() {
             </div>
           </div>
 
-          <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
+          <div className="relative isolate -mx-4 lg:hidden" style={{ background: "#0082FB" }}>
+            <div className="h-6" />
+            <div className="space-y-3 rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
             <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
               <div className="relative">
                 <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -671,6 +673,7 @@ export default function SiswaJadwalSoalPage() {
                 })}
               </div>
             )}
+          </div>
           </div>
           </div>
 

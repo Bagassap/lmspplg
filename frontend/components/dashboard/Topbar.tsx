@@ -133,6 +133,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
+  const blueHeader = pathname.startsWith("/siswa/");
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -306,18 +307,25 @@ export function Topbar({ user }: { user: UserPayload }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-surface px-4 py-4 transition-colors duration-200 dark:bg-[#1C2B33] lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10">
+      <header
+        className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10 ${
+          blueHeader ? "bg-[#0082FB]" : "bg-surface dark:bg-[#1C2B33]"
+        }`}
+      >
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: "#0082FB" }}>
+          <div
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm"
+            style={{ background: blueHeader ? "rgba(255,255,255,0.2)" : "#0082FB" }}
+          >
             <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto" />
           </div>
           <div className="min-w-0">
             <span className="flex items-baseline gap-1">
-              <span className="text-[15px] font-black tracking-tight text-[#0082FB]">LMS</span>
-              <span className="text-[9px] font-bold tracking-[0.15em] text-slate-400 dark:text-slate-500">PPLG</span>
+              <span className={`text-[15px] font-black tracking-tight ${blueHeader ? "text-white" : "text-[#0082FB]"}`}>LMS</span>
+              <span className={`text-[9px] font-bold tracking-[0.15em] ${blueHeader ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>PPLG</span>
             </span>
             {pathname === "/siswa/dashboard" && (
-              <p className="truncate text-[10px] font-semibold leading-tight text-slate-500 dark:text-slate-400">
+              <p className={`truncate text-[10px] font-semibold leading-tight ${blueHeader ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
                 {jakartaGreetingWord()}, {user.nama.split(" ")[0]} 👋
               </p>
             )}
@@ -391,7 +399,11 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen((v) => !v)}
-              className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
+                blueHeader
+                  ? "bg-white/15 text-white hover:bg-white/25 lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700/50 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+              }`}
             >
               <Bell size={16} />
               {unreadCount > 0 && (
@@ -483,7 +495,11 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
-              className="flex items-center gap-2 rounded-xl bg-slate-100 py-1.5 pl-1.5 pr-3 transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
+              className={`flex items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors ${
+                blueHeader
+                  ? "bg-white/15 hover:bg-white/25 lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700"
+                  : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
+              }`}
             >
               <Avatar
                 src={user.fotoProfil}
@@ -492,12 +508,14 @@ export function Topbar({ user }: { user: UserPayload }) {
                 fallbackBg="#0082FB"
                 textClassName="text-[11px] font-bold"
               />
-              <span className="hidden text-sm font-medium text-gray-700 dark:text-slate-200 sm:block">
+              <span className={`hidden text-sm font-medium sm:block ${blueHeader ? "text-white lg:text-gray-700 lg:dark:text-slate-200" : "text-gray-700 dark:text-slate-200"}`}>
                 {user.nama.split(" ")[0]}
               </span>
               <ChevronDown
                 size={13}
-                className={`shrink-0 text-gray-400 transition-transform duration-200 dark:text-slate-400 ${dropdownOpen ? "rotate-180" : ""}`}
+                className={`shrink-0 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""} ${
+                  blueHeader ? "text-white/70 lg:text-gray-400 lg:dark:text-slate-400" : "text-gray-400 dark:text-slate-400"
+                }`}
               />
             </button>
 

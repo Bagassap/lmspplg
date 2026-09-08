@@ -45,9 +45,6 @@ export function LupaPasswordForm() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        // 409 = a request for this student is already pending — this isn't a
-        // validation error to fix and resubmit, it's a "you already did this"
-        // state, so it gets its own screen instead of an inline error.
         if (res.status === 409) {
           setAlreadyPending(true);
           setLoading(false);
@@ -124,7 +121,7 @@ export function LupaPasswordForm() {
       initial="hidden"
       animate="visible"
       variants={container}
-      className="mt-8 flex flex-col gap-5"
+      className="mt-3 flex flex-col gap-2.5 sm:mt-8 sm:gap-5"
     >
       <motion.div variants={item} className="flex flex-col gap-1.5">
         <label htmlFor="loginId" className="text-sm font-medium text-black/70">
@@ -188,7 +185,7 @@ export function LupaPasswordForm() {
             value={keterangan}
             onChange={(e) => setKeterangan(e.target.value)}
             placeholder="Alasan lupa password, atau info tambahan lain..."
-            className="w-full resize-none rounded-xl border border-black/10 bg-black/3 px-4 py-3 pl-11 text-sm text-black placeholder:text-black/35 outline-none transition-all focus:border-blue focus:bg-white focus:ring-2 focus:ring-blue/15"
+            className="h-14 w-full resize-none rounded-xl border border-black/10 bg-black/3 px-4 py-3 pl-11 text-sm text-black placeholder:text-black/35 outline-none transition-all focus:border-blue focus:bg-white focus:ring-2 focus:ring-blue/15 sm:h-auto"
           />
         </div>
       </motion.div>
