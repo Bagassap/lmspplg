@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   Users, Calendar, GraduationCap,
-  Bell, AlertCircle, RefreshCw, ChevronRight,
-  TrendingUp, Megaphone, Clock, ClipboardCheck,
+  Bell, AlertCircle, RefreshCw, ChevronRight, ArrowRight,
+  TrendingUp, Megaphone, Clock, ClipboardCheck, BookOpen, Briefcase, FileText,
 } from "lucide-react";
 import GreetingHero from "@/components/dashboard/GreetingHero";
 import StatsCard from "@/components/dashboard/StatsCard";
@@ -15,6 +15,7 @@ import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
+import { WALLET_GRADIENTS, WALLET_ON_TEXT } from "@/components/absensi-harian/shared";
 
 
 interface Pengumuman {
@@ -152,7 +153,7 @@ export default function GuruDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#0064E0", // blue
+      gradient: "#0064E0",
       icon: ClipboardCheck,
     },
     {
@@ -162,7 +163,7 @@ export default function GuruDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#C3F84A", // lime (utama)
+      gradient: "#C3F84A",
       icon: Users,
     },
     {
@@ -172,7 +173,7 @@ export default function GuruDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#0082FB", // biru terang
+      gradient: "#0082FB",
       icon: GraduationCap,
     },
     {
@@ -182,13 +183,14 @@ export default function GuruDashboardPage() {
       suffix: " info",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#EF4444", // pengumuman tidak pakai lime — merah
+      gradient: "#EF4444",
       icon: Megaphone,
     },
   ];
 
   return (
-    <div className="space-y-5">
+    <>
+    <div className="hidden space-y-5 lg:block">
 
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <GreetingHero nama={user.nama} role={user.role} />
@@ -317,12 +319,168 @@ export default function GuruDashboardPage() {
         </SectionCard>
       </div>
 
+    </div>
+
+    <div className="relative isolate -m-4 overflow-hidden lg:hidden">
+      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#0082FB" }} />
+
+      <div className="relative z-10 space-y-5 p-4">
+
+      <div className="rounded-3xl bg-white p-3 shadow-[0_10px_28px_-10px_rgba(0,130,251,0.35)] dark:bg-[#1C2B33]">
+        <Link
+          href="/guru/absensi-harian"
+          className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
+          style={{ background: `linear-gradient(135deg, ${P}, #0064E0)` }}
+        >
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
+          <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />
+          <div className="relative flex items-center justify-between">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20">
+              <ClipboardCheck size={17} />
+            </div>
+            <span className="rounded-full bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
+              Absensi Harian
+            </span>
+          </div>
+          <div className="relative mt-3 flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-2xl font-black leading-none tabular-nums">{data.kehadiran.persen}%</p>
+              <p className="mt-1 truncate text-[10.5px] text-white/75">{data.kehadiran.hadir} siswa hadir hari ini</p>
+            </div>
+            <span className="flex shrink-0 items-center gap-1 rounded-xl bg-white px-3 py-2 text-xs font-bold" style={{ color: P }}>
+              Detail <ArrowRight size={12} />
+            </span>
+          </div>
+        </Link>
+
+        <div className="grid grid-cols-5 gap-1.5 pt-4">
+          {[
+            { href: "/guru/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
+            { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, color: "#EF4444" },
+            { href: "/guru/magang/penempatan", label: "PKL", icon: Briefcase, color: "#00D67F" },
+            { href: "/guru/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
+            { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#0064E0", badge: data.pengumuman.length },
+          ].map((s, i) => (
+            <motion.div key={s.href}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.35 + i * 0.05 }}
+              whileTap={{ scale: 0.92 }}
+            >
+              <Link href={s.href} className="flex flex-col items-center gap-1.5">
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl"
+                  style={{
+                    background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), ${s.color}`,
+                    boxShadow: `0 5px 10px -3px ${s.color}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
+                  }}>
+                  <s.icon size={19} style={{ color: s.dark ? "#1C2B33" : "#fff" }} />
+                  {!!s.badge && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-sm">
+                      {s.badge}
+                    </span>
+                  )}
+                </span>
+                <span className="text-center text-[9.5px] font-semibold leading-tight text-slate-600 dark:text-slate-300">{s.label}</span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2.5">
+        {[
+          { icon: Users, label: "Siswa Diampu", value: data.siswaAmpu },
+          { icon: GraduationCap, label: "Kelas Wali", value: kelasWali.length },
+          { icon: TrendingUp, label: "Hadir", value: hadirCount },
+          { icon: Calendar, label: "% Hadir", value: `${data.kehadiran.persen}%` },
+        ].map((s, i) => {
+          const bg = WALLET_GRADIENTS[i];
+          const onText = WALLET_ON_TEXT[i];
+          return (
+            <motion.div key={s.label}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.4 + i * 0.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="relative flex items-center gap-2.5 overflow-hidden rounded-2xl p-3 shadow-[0_6px_16px_-6px_rgba(0,0,0,0.25)]"
+              style={{ background: bg, color: onText }}
+            >
+              <div className="pointer-events-none absolute -right-3 -top-3 h-14 w-14 rounded-full" style={{ backgroundColor: `${onText}26` }} />
+              <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
+                <s.icon size={16} style={{ color: onText }} />
+              </span>
+              <div className="relative flex min-w-0 items-baseline gap-1.5">
+                <p className="text-sm font-extrabold leading-none">{s.value}</p>
+                <p className="truncate text-[10px] leading-none" style={{ color: `${onText}D9` }}>{s.label}</p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+        <h2 className="text-sm font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
+        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi absensi kelas wali hari ini</p>
+        <StatisticRainbow
+          hadir={hadirCount} sakit={sakit} izin={izin} alpha={alpha}
+          total={data.kehadiran.total}
+        />
+      </div>
+
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+        <div className="flex items-center justify-between px-5 pt-5">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-white">Kelas Wali Saya</h2>
+        </div>
+        {kelasWali.length === 0 ? (
+          <p className="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">Anda belum menjadi wali kelas</p>
+        ) : (
+          <ul className="mt-2 divide-y divide-slate-100 dark:divide-slate-700/40">
+            {kelasWali.map((k) => (
+              <li key={k.id} className="flex items-center gap-3 px-5 py-3.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
+                  style={{ background: "#0082FB" }}>
+                  {k.nama.charAt(0)}
+                </div>
+                <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{k.nama}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+        <div className="flex items-center justify-between px-5 pt-5">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-white">Pengumuman Terbaru</h2>
+          <ViewAll href="/guru/pengumuman" />
+        </div>
+        {data.pengumuman.length === 0 ? (
+          <p className="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada pengumuman</p>
+        ) : (
+          <ul className="mt-2 divide-y divide-slate-100 dark:divide-slate-700/40">
+            {data.pengumuman.slice(0, 3).map((p) => (
+              <li key={p.id}
+                onClick={() => setSelectedSlug(p.slug)}
+                className="flex cursor-pointer items-center gap-3 px-5 py-3.5 active:bg-slate-50 dark:active:bg-slate-700/20">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${kColor(p.kategori)}18` }}>
+                  <Bell size={14} style={{ color: kColor(p.kategori) }} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-1 text-[13px] font-semibold text-slate-800 dark:text-white">{p.judul}</p>
+                  <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{p.author.nama} · {timeAgo(p.createdAt)}</p>
+                </div>
+                <ChevronRight size={15} className="shrink-0 text-slate-300" />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      </div>
+    </div>
+
       <AnimatePresence>
         {selectedSlug && (
           <PengumumanDetailModal key={selectedSlug} slug={selectedSlug} canManage={false} currentUserId={user.id}
             onClose={() => setSelectedSlug(null)} />
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }

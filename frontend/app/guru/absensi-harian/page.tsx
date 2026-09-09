@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
-  ArrowRight,
+  ArrowRight, ChevronLeft, Eye,
   Users, TrendingUp, LogOut, FileText, Download, PieChart, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -14,14 +15,15 @@ import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { AbsensiHarianTable } from "@/components/absensi-harian/AbsensiHarianTable";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
 import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
+import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
+import { Avatar } from "@/components/shared/Avatar";
 import { paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl } from "@/components/absensi-harian/shared";
-import type { Kelas, RekapKelas, SiswaAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
+import {
+  STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl,
+  WALLET_GRADIENTS, WALLET_ON_TEXT, avatarColor,
+} from "@/components/absensi-harian/shared";
+import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
-// Same shape/size as the clickable kelas pill (icon badge + 2-line text),
-// but static (a div, not a button) with a muted icon — reads as a stat
-// display rather than an action, while still lining up visually in the
-// same flex-wrap row as the kelas pills.
 function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
     <div className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-slate-50 px-3 py-2.5 dark:bg-slate-700/30">
@@ -36,12 +38,6 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
   );
 }
 
-// Klik ini benar-benar mengirim notifikasi in-app (lonceng Topbar) ke tiap
-// siswa yang belum tercatat absen — bukan cuma dekorasi — lewat endpoint
-// backend /absensi-harian/kirim-pengingat, sekaligus menyalin nama-nama itu
-// ke clipboard (pola yang sama dengan BelumAbsenPanel) untuk ditempel manual
-// sebagai pengingat WA. Merah karena ini aksi mendesak/menegur, senada
-// dengan warna status Alpa di halaman ini.
 function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
   const toast = useToast();
   const [sending, setSending] = useState(false);
@@ -61,7 +57,7 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
       if (!res.ok) { toast.error("Gagal mengirim pengingat", data?.message ?? ""); return; }
 
       const text = belum.map((s, i) => `${i + 1}. ${s.nama}${s.nis ? ` (${s.nis})` : ""}`).join("\n");
-      try { await navigator.clipboard.writeText(text); } catch { /* clipboard opsional, notifikasi tetap terkirim */ }
+      try { await navigator.clipboard.writeText(text); } catch {}
 
       setSent(true);
       toast.success("Pengingat terkirim!", `Notifikasi masuk ke ${data.count} siswa · daftar nama juga disalin untuk WA`);
@@ -224,7 +220,191 @@ function RingkasanKehadiranCard({
   );
 }
 
+function MobileKelasChip({ k, idx, isSelected, onSelect, stat }: {
+  k: Kelas; idx: number; isSelected: boolean; onSelect: () => void;
+  stat: { hd: number; tt: number; pct: number };
+}) {
+  const bg = WALLET_GRADIENTS[idx % WALLET_GRADIENTS.length];
+  const onText = WALLET_ON_TEXT[idx % WALLET_ON_TEXT.length];
+  return (
+    <button type="button" onClick={onSelect}
+      className="relative flex h-24 w-36 shrink-0 flex-col justify-between overflow-hidden rounded-2xl px-3.5 py-3 text-left transition-transform active:scale-[0.98]"
+      style={{ background: bg, color: onText, outline: isSelected ? `2px solid ${onText}` : "2px solid transparent", outlineOffset: "2px", boxShadow: "0 8px 20px rgba(0,0,0,0.12)" }}>
+      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full" style={{ backgroundColor: `${onText}1a` }} />
+      <div className="relative flex items-center justify-between">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
+          <BookOpen size={13} />
+        </span>
+        <span className="text-[10px] font-bold tabular-nums" style={{ color: `${onText}CC` }}>{stat.pct}%</span>
+      </div>
+      <div className="relative">
+        <p className="truncate text-sm font-black leading-tight">{k.nama}</p>
+        <p className="mt-0.5 truncate text-[10px] font-medium" style={{ color: `${onText}BF` }}>{stat.hd}/{stat.tt} hadir</p>
+      </div>
+    </button>
+  );
+}
+
+function MobileRingkasanCard({ rekap, hadirPct, total, kelasNama }: {
+  rekap: RekapKelas["rekap"]; hadirPct: number; total: number; kelasNama?: string;
+}) {
+  const segments = [
+    { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
+    { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
+    { key: "SAKIT", value: rekap.SAKIT, color: STATUS_CFG.SAKIT.clr, label: STATUS_CFG.SAKIT.label },
+    { key: "ALPA", value: rekap.ALPA, color: STATUS_CFG.ALPA.clr, label: STATUS_CFG.ALPA.label },
+  ];
+  const r = 40;
+  const circumference = 2 * Math.PI * r;
+  let cumulative = 0;
+  return (
+    <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+          <PieChart size={18} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-sm font-bold text-slate-800 dark:text-white">Ringkasan Kehadiran</p>
+          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
+            Distribusi status siswa hari ini{kelasNama ? ` · ${kelasNama}` : ""}
+          </p>
+        </div>
+      </div>
+      <div className="mt-4 flex flex-col items-center gap-4">
+        <div className="relative flex h-36 w-36 shrink-0 items-center justify-center">
+          <svg viewBox="0 0 100 100" className="h-36 w-36 -rotate-90">
+            <circle cx="50" cy="50" r={r} stroke="#F1F5F8" strokeWidth="12" fill="none" />
+            {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
+              const pct = s.value / total;
+              const dash = pct * circumference;
+              const offset = circumference * (1 - cumulative);
+              cumulative += pct;
+              return (
+                <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
+                  strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
+              );
+            })}
+          </svg>
+          <div className="absolute flex flex-col items-center">
+            <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
+          </div>
+        </div>
+        <div className="grid w-full grid-cols-2 gap-2">
+          {segments.map((s) => (
+            <div key={s.key} className="flex items-center gap-2 rounded-xl bg-slate-50 px-2.5 py-2 dark:bg-slate-700/30">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+              <span className="truncate text-xs font-semibold text-slate-500 dark:text-slate-400">
+                {s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileSiswaCard({
+  s, isPulangView, kelasId, tanggal, onStatusUpdated, onOpenDokumen,
+}: {
+  s: SiswaAbsensi; isPulangView: boolean;
+  kelasId?: string; tanggal?: string; onStatusUpdated?: () => void;
+  onOpenDokumen: (s: SiswaAbsensi, source: "hadir" | "pulang") => void;
+}) {
+  const toast = useToast();
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const canEdit = !!kelasId && !!tanggal && !isPulangView;
+  const ac = avatarColor(s.nama);
+  const waktu = isPulangView ? s.waktuPulang : s.waktuAbsen;
+  const lokasiRaw = isPulangView ? s.lokasiPulang : s.lokasi;
+  const fotoRaw = isPulangView ? s.fotoPulang : s.foto;
+  const ttdRaw = isPulangView ? s.ttdPulang : s.ttd;
+  const hasDok = !!(ttdRaw || lokasiRaw || fotoRaw);
+  const openDokumen = () => onOpenDokumen(s, isPulangView ? "pulang" : "hadir");
+
+  async function saveStatus(status: StatusAbsensi) {
+    if (!kelasId || !tanggal) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/absensi-harian", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kelasId, tanggal, absensi: [{ siswaId: s.siswaId, status }] }),
+      });
+      if (res.ok) {
+        toast.success("Status kehadiran diperbarui", "");
+        onStatusUpdated?.();
+      } else {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ?? "Gagal memperbarui status", "");
+      }
+    } catch {
+      toast.error("Server tidak dapat dijangkau", "");
+    } finally {
+      setSaving(false);
+      setEditing(false);
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-3 px-3 py-3">
+      <Avatar src={s.fotoProfil} nama={s.nama} sizePx={38} fallbackBg={ac} textClassName="text-[10px] font-extrabold" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama}</p>
+        <div className="mt-0.5 flex items-center gap-1.5">
+          <span className="text-[10.5px] font-medium tabular-nums text-slate-400 dark:text-slate-500">{s.nis ?? "—"}</span>
+          {waktu && <span className="text-[10.5px] font-semibold tabular-nums text-slate-400 dark:text-slate-500">· {waktu}</span>}
+        </div>
+        {editing && (
+          <div className="mt-2 flex flex-wrap items-center gap-1">
+            {(["HADIR", "IZIN", "SAKIT", "ALPA"] as StatusAbsensi[]).map((st) => {
+              const cfg = STATUS_CFG[st];
+              const active = s.status === st;
+              return (
+                <button key={st} type="button" disabled={saving} onClick={() => saveStatus(st)}
+                  className="rounded-lg border px-2 py-1 text-[10px] font-bold transition-all disabled:cursor-wait disabled:opacity-50"
+                  style={{
+                    backgroundColor: active ? cfg.bg : "transparent",
+                    color: active ? cfg.clr : "#94a3b8",
+                    borderColor: active ? cfg.clr + "60" : "#e2e8f040",
+                  }}>
+                  {cfg.label}
+                </button>
+              );
+            })}
+            <button type="button" onClick={() => setEditing(false)}
+              className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400">
+              <Check size={12} />
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="flex shrink-0 flex-col items-end gap-1.5">
+        {isPulangView ? (
+          <span className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold"
+            style={{ backgroundColor: PULANG_CFG.bg, color: PULANG_CFG.clr }}>
+            <PULANG_CFG.icon size={9} /> Pulang
+          </span>
+        ) : (
+          <button type="button" onClick={() => canEdit && setEditing((v) => !v)} disabled={!canEdit}>
+            <StatusBadge status={s.status} />
+          </button>
+        )}
+        {hasDok && (
+          <button onClick={openDokumen}
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-white" style={{ background: "#0082FB" }}>
+            <Eye size={10} /> Lihat
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function GuruAbsensiHarianPage() {
+  const router = useRouter();
   const toast = useToast();
   const [kelasList, setKelasList] = useState<Kelas[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
@@ -248,10 +428,6 @@ export default function GuruAbsensiHarianPage() {
       .catch(() => {});
   }, []);
 
-  // Ambil rekap SEMUA kelas wali guru sekaligus (bukan cuma kelas terpilih)
-  // — sama seperti pola admin — supaya tiap kartu kelas bisa menampilkan
-  // statistik asli (hadir/total, persen, izin/sakit/alpa) tanpa syarat
-  // terpilih dulu, senada dengan desain kartu di halaman Admin.
   const loadRekap = useCallback(async () => {
     setLoading(true);
     try {
@@ -307,34 +483,55 @@ export default function GuruAbsensiHarianPage() {
 
   if (kelasList.length === 0) {
     return (
-      <div className="space-y-5 p-1">
-        <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0082FB" }}>
-          <div className="relative flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <ClipboardCheck size={22} className="text-white sm:hidden" />
-              <ClipboardCheck size={26} className="hidden text-white sm:block" />
+      <>
+        <div className="hidden space-y-5 p-1 lg:block">
+          <div className="relative overflow-hidden rounded-2xl p-6"
+            style={{ background: "#0082FB" }}>
+            <div className="relative flex items-center gap-3 sm:gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
+                <ClipboardCheck size={22} className="text-white sm:hidden" />
+                <ClipboardCheck size={26} className="hidden text-white sm:block" />
+              </div>
+              <div>
+                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
+                <p className="mt-0.5 text-sm text-white/70">Presensi kehadiran harian siswa</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
-              <p className="mt-0.5 text-sm text-white/70">Presensi kehadiran harian siswa</p>
+          </div>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-100 bg-white py-20 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
+              <GraduationCap size={24} className="text-slate-300 dark:text-slate-500" />
+            </div>
+            <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Anda belum menjadi wali kelas manapun</p>
+            <p className="max-w-sm text-xs text-slate-400">Hubungi admin untuk ditetapkan sebagai wali kelas agar dapat mengelola absensi harian.</p>
+          </div>
+        </div>
+
+        <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+          <div className="relative flex items-center px-4 pb-3 pt-4">
+            <button type="button" onClick={() => router.push("/guru/dashboard")}
+              className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+              <ChevronLeft size={18} />
+            </button>
+            <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi Harian</h1>
+          </div>
+          <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+            <div className="flex flex-col items-center gap-3 rounded-3xl bg-white py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
+                <GraduationCap size={24} className="text-slate-300 dark:text-slate-500" />
+              </div>
+              <p className="px-6 text-sm font-semibold text-slate-500 dark:text-slate-300">Anda belum menjadi wali kelas manapun</p>
+              <p className="max-w-xs px-6 text-xs text-slate-400">Hubungi admin untuk ditetapkan sebagai wali kelas agar dapat mengelola absensi harian.</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-100 bg-white py-20 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
-            <GraduationCap size={24} className="text-slate-300 dark:text-slate-500" />
-          </div>
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">Anda belum menjadi wali kelas manapun</p>
-          <p className="max-w-sm text-xs text-slate-400">Hubungi admin untuk ditetapkan sebagai wali kelas agar dapat mengelola absensi harian.</p>
-        </div>
-      </div>
+      </>
     );
   }
 
   return (
     <>
-      <div className="space-y-5 p-1">
+      <div className="hidden space-y-5 p-1 lg:block">
         <div className="relative overflow-hidden rounded-2xl p-6"
           style={{ background: "#0082FB" }}>
           <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
@@ -506,6 +703,186 @@ export default function GuruAbsensiHarianPage() {
 
             <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
           </div>
+        </div>
+      </div>
+
+      <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="relative flex items-center px-4 pb-3 pt-4">
+          <button type="button" onClick={() => router.push("/guru/dashboard")}
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            <ChevronLeft size={18} />
+          </button>
+          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi Harian</h1>
+        </div>
+
+        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+
+          <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3.5 py-3 dark:border-slate-700 dark:bg-[#22323B]">
+            <CalendarDays size={15} className="shrink-0 text-slate-400" />
+            <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+              className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
+          </div>
+
+          <div className="-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1">
+            {kelasList.map((k, idx) => (
+              <MobileKelasChip key={k.id} k={k} idx={idx} isSelected={k.id === selectedId}
+                onSelect={() => setSelectedId(k.id)} stat={kelasStat(k)} />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            {[
+              { icon: ClipboardCheck, label: `Progres absen · ${total > 0 ? Math.round((sudahAbsen / total) * 100) : 0}%`, value: `${sudahAbsen}/${total}` },
+              { icon: LogOut, label: "Sudah pulang", value: pulangCount },
+            ].map((s, i) => {
+              const bg = WALLET_GRADIENTS[i];
+              const onText = WALLET_ON_TEXT[i];
+              return (
+                <div key={s.label} className="flex items-center gap-2.5 rounded-2xl p-3.5" style={{ background: bg }}>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
+                    <s.icon size={16} style={{ color: onText }} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-extrabold" style={{ color: onText }}>{s.value}</p>
+                    <p className="truncate text-[10px] font-semibold" style={{ color: `${onText}CC` }}>{s.label}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+
+          <MobileRingkasanCard rekap={rekap} hadirPct={hadirPct} total={total} kelasNama={selectedKelas?.nama} />
+
+          <BelumAbsenPanel siswaList={siswaList} />
+
+          <div className="rounded-3xl bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-bold text-slate-800 dark:text-white">
+                Status Kehadiran <span className="font-medium text-slate-400">({total})</span>
+              </p>
+              <span className="text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</span>
+            </div>
+
+            <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+              {filterOptions.map((opt) => {
+                const active = activeFilter === opt.key;
+                return (
+                  <button key={String(opt.key)} type="button"
+                    onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
+                    className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors"
+                    style={active ? { backgroundColor: opt.color, color: "#fff" } : { backgroundColor: "#F1F5F8" }}>
+                    <opt.icon size={13} className={active ? "text-white" : "text-slate-400"} />
+                    <span className={active ? "text-white" : "text-slate-500 dark:text-slate-300"}>{opt.label}</span>
+                    <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${active ? "bg-white/20" : "bg-white dark:bg-slate-700"}`}>
+                      {opt.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-3 -mx-4 overflow-hidden rounded-b-3xl">
+              {loading ? (
+                <div className="space-y-3 p-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="h-9 w-9 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
+                      <div className="h-4 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-700" />
+                    </div>
+                  ))}
+                </div>
+              ) : filteredSiswa.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-12 text-center">
+                  <Users size={22} className="text-slate-300 dark:text-slate-600" />
+                  <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
+                    {siswaList.length === 0 ? "Belum ada siswa di kelas ini" : "Tidak ada siswa dengan status ini"}
+                  </p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 px-4 dark:divide-slate-700/40">
+                  {pagedSiswa.map((s) => (
+                    <MobileSiswaCard key={s.siswaId} s={s} isPulangView={activeFilter === "PULANG"}
+                      kelasId={selectedId} tanggal={tanggal} onStatusUpdated={loadRekap} onOpenDokumen={(sw, source) => { setDokumenSiswa(sw); setDokumenSource(source); }} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {filteredSiswa.length > 0 && tablePageCount > 1 && (
+              <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/40">
+                <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                    <ChevronLeft size={14} />
+                  </button>
+                  <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
+                  <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                <FileText size={18} />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {RANGE_MODE_CARDS.map((opt) => {
+                const active = exportRange.rangeMode === opt.key;
+                const fg = reportCardFg(opt.gradient);
+                return (
+                  <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
+                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm transition-all"
+                    style={{ background: opt.gradient, color: fg, opacity: active ? 1 : 0.55, outline: active ? `2px solid ${fg}` : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
+                    <opt.icon size={16} />
+                    <span className="text-[11px] font-bold">{opt.label}</span>
+                    <span className="text-[9px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {exportRange.rangeMode === "mingguan" && (
+              <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
+                title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+            )}
+
+            {exportRange.rangeMode === "bulanan" && (
+              <div className="mt-2 flex items-center gap-1.5">
+                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                </select>
+                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            )}
+
+            <div className="mt-3">
+              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+            </div>
+            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+              <Download size={11} className="shrink-0 text-[#0082FB]" />
+              Pilih rentang waktu, lalu klik salah satu tombol ekspor
+            </p>
+          </div>
+
+          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
         </div>
       </div>
 

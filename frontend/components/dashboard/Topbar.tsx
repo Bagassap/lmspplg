@@ -133,7 +133,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
-  const blueHeader = pathname.startsWith("/siswa/");
+  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian";
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -324,7 +324,7 @@ export function Topbar({ user }: { user: UserPayload }) {
               <span className={`text-[15px] font-black tracking-tight ${blueHeader ? "text-white" : "text-[#0082FB]"}`}>LMS</span>
               <span className={`text-[9px] font-bold tracking-[0.15em] ${blueHeader ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>PPLG</span>
             </span>
-            {pathname === "/siswa/dashboard" && (
+            {(pathname === "/siswa/dashboard" || pathname === "/guru/dashboard") && (
               <p className={`truncate text-[10px] font-semibold leading-tight ${blueHeader ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
                 {jakartaGreetingWord()}, {user.nama.split(" ")[0]} 👋
               </p>
