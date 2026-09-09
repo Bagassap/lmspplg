@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -847,7 +848,7 @@ function MobileFormAbsen({
     setStep((s) => Math.max(0, s - 1));
   }
 
-  return (
+  return createPortal(
     <AnimatePresence>
         {open && (
           <div className="fixed inset-0 z-50 flex items-end justify-center">
@@ -1048,7 +1049,8 @@ function MobileFormAbsen({
             </motion.div>
           </div>
         )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
@@ -1110,7 +1112,7 @@ function AttendanceTile({
 }
 
 function MobileDetailModal({ onClose, accent, children }: { onClose: () => void; accent: string; children: React.ReactNode }) {
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1132,6 +1134,7 @@ function MobileDetailModal({ onClose, accent, children }: { onClose: () => void;
           {children}
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 }
