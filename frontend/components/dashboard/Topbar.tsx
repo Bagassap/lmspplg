@@ -133,7 +133,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
-  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian";
+  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman";
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);

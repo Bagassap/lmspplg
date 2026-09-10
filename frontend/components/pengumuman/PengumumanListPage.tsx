@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Megaphone, Plus, Pin, MessageCircle,
@@ -373,6 +373,8 @@ function AccordionCard({
 
 export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const dashboardHref = pathname.startsWith("/guru/") ? "/guru/dashboard" : "/siswa/dashboard";
   const toast = useToast();
   const [list,          setList]          = useState<PengumumanItem[]>([]);
   const [loading,       setLoading]       = useState(true);
@@ -579,7 +581,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
       <div className={`relative isolate lg:hidden ${canManage ? "-mx-4" : "-m-4"}`} style={canManage ? undefined : { background: "#0082FB" }}>
         {!canManage && (
           <div className="relative flex items-center px-4 pb-3 pt-4">
-            <button type="button" onClick={() => router.push("/siswa/dashboard")}
+            <button type="button" onClick={() => router.push(dashboardHref)}
               className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
               <ChevronLeft size={18} />
             </button>

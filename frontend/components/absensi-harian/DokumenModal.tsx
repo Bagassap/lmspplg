@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, MapPin, Download, Camera, PenTool, ExternalLink,
@@ -26,7 +27,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   const ThemeIcon = theme.icon;
   const ac = avatarColor(siswa.nama);
 
-  return (
+  return createPortal(
     <>
       <AnimatePresence>
         {imgOverlay && (
@@ -230,6 +231,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           </div>
         </motion.div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

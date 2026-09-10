@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, GraduationCap, BookOpen,
-  ArrowRight, ChevronLeft, Eye,
+  ArrowRight, ChevronLeft, ChevronDown, Eye, X,
   Users, TrendingUp, LogOut, FileText, Download, PieChart, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -20,7 +21,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import {
   STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl,
-  WALLET_GRADIENTS, WALLET_ON_TEXT, avatarColor,
+  avatarColor,
 } from "@/components/absensi-harian/shared";
 import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
@@ -38,7 +39,7 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
   );
 }
 
-function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[] }) {
+function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: string; tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
   const toast = useToast();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -67,6 +68,24 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList }: { kelasId: string; 
     } finally {
       setSending(false);
     }
+  }
+
+  if (bold) {
+    return (
+      <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
+        className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
+        style={{ background: "#EF4444" }}>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#EF4444]">
+          {sent ? <Check size={16} /> : <Bell size={16} />}
+        </span>
+        <div className="mt-2 min-w-0">
+          <p className="truncate text-sm font-extrabold text-white">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+          <p className="truncate text-[10.5px] font-semibold text-white">
+            {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
+          </p>
+        </div>
+      </button>
+    );
   }
 
   return (
@@ -220,86 +239,85 @@ function RingkasanKehadiranCard({
   );
 }
 
-function MobileKelasChip({ k, idx, isSelected, onSelect, stat }: {
-  k: Kelas; idx: number; isSelected: boolean; onSelect: () => void;
-  stat: { hd: number; tt: number; pct: number };
-}) {
-  const bg = WALLET_GRADIENTS[idx % WALLET_GRADIENTS.length];
-  const onText = WALLET_ON_TEXT[idx % WALLET_ON_TEXT.length];
+function MobileDatePill({ value, onChange, light }: { value: string; onChange: (v: string) => void; light?: boolean }) {
+  const d = new Date(`${value}T00:00:00`);
+  const label = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
   return (
-    <button type="button" onClick={onSelect}
-      className="relative flex h-24 w-36 shrink-0 flex-col justify-between overflow-hidden rounded-2xl px-3.5 py-3 text-left transition-transform active:scale-[0.98]"
-      style={{ background: bg, color: onText, outline: isSelected ? `2px solid ${onText}` : "2px solid transparent", outlineOffset: "2px", boxShadow: "0 8px 20px rgba(0,0,0,0.12)" }}>
-      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full" style={{ backgroundColor: `${onText}1a` }} />
-      <div className="relative flex items-center justify-between">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
-          <BookOpen size={13} />
-        </span>
-        <span className="text-[10px] font-bold tabular-nums" style={{ color: `${onText}CC` }}>{stat.pct}%</span>
+    <label className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 ${
+      light
+        ? "bg-white text-[#0082FB]"
+        : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+    }`}>
+      <CalendarDays size={13} className={light ? "text-[#0082FB]" : "text-slate-400"} />
+      <span className="text-xs font-bold">{label}</span>
+      <ChevronDown size={12} className={light ? "text-[#0082FB]" : "text-slate-400"} />
+      <input type="date" value={value} onChange={(e) => onChange(e.target.value)}
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
+    </label>
+  );
+}
+
+function KehadiranSlimCard({ hadirPct, kelasNama, onClick }: { hadirPct: number; kelasNama?: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick}
+      className="flex w-full flex-col rounded-3xl bg-white p-4 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98] dark:bg-[#1C2B33]">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+            Kehadiran Hari Ini{kelasNama ? ` · ${kelasNama}` : ""}
+          </p>
+          <p className="mt-0.5 text-2xl font-black text-slate-800 dark:text-white">{hadirPct}%</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl text-white" style={{ background: "#0082FB" }}>
+            <TrendingUp size={18} />
+          </span>
+          <ArrowRight size={16} className="text-slate-300" />
+        </div>
       </div>
-      <div className="relative">
-        <p className="truncate text-sm font-black leading-tight">{k.nama}</p>
-        <p className="mt-0.5 truncate text-[10px] font-medium" style={{ color: `${onText}BF` }}>{stat.hd}/{stat.tt} hadir</p>
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+        <div className="h-full rounded-full transition-all" style={{ width: `${hadirPct}%`, background: "#0082FB" }} />
       </div>
     </button>
   );
 }
 
-function MobileRingkasanCard({ rekap, hadirPct, total, kelasNama }: {
-  rekap: RekapKelas["rekap"]; hadirPct: number; total: number; kelasNama?: string;
+function StatusRingRow({ label, icon: Icon, value, total, color, onClick }: {
+  label: string; icon: React.ElementType; value: number; total: number; color: string; onClick: () => void;
 }) {
-  const segments = [
-    { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
-    { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
-    { key: "SAKIT", value: rekap.SAKIT, color: STATUS_CFG.SAKIT.clr, label: STATUS_CFG.SAKIT.label },
-    { key: "ALPA", value: rekap.ALPA, color: STATUS_CFG.ALPA.clr, label: STATUS_CFG.ALPA.label },
-  ];
-  const r = 40;
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  const r = 15;
   const circumference = 2 * Math.PI * r;
-  let cumulative = 0;
+  const dash = (pct / 100) * circumference;
   return (
-    <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-      <div className="flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
-          <PieChart size={18} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-sm font-bold text-slate-800 dark:text-white">Ringkasan Kehadiran</p>
-          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
-            Distribusi status siswa hari ini{kelasNama ? ` · ${kelasNama}` : ""}
-          </p>
-        </div>
+    <button type="button" onClick={onClick} className="flex w-full items-center gap-3 py-2 text-left">
+      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center">
+        <svg viewBox="0 0 36 36" className="h-10 w-10 -rotate-90">
+          <circle cx="18" cy="18" r={r} stroke="#F1F5F8" strokeWidth="4" fill="none" />
+          <circle cx="18" cy="18" r={r} stroke={color} strokeWidth="4" fill="none"
+            strokeDasharray={`${dash} ${circumference - dash}`} strokeLinecap="round" />
+        </svg>
+        <Icon size={13} className="absolute" style={{ color }} />
       </div>
-      <div className="mt-4 flex flex-col items-center gap-4">
-        <div className="relative flex h-36 w-36 shrink-0 items-center justify-center">
-          <svg viewBox="0 0 100 100" className="h-36 w-36 -rotate-90">
-            <circle cx="50" cy="50" r={r} stroke="#F1F5F8" strokeWidth="12" fill="none" />
-            {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
-              const pct = s.value / total;
-              const dash = pct * circumference;
-              const offset = circumference * (1 - cumulative);
-              cumulative += pct;
-              return (
-                <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
-                  strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
-              );
-            })}
-          </svg>
-          <div className="absolute flex flex-col items-center">
-            <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
-            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
-          </div>
-        </div>
-        <div className="grid w-full grid-cols-2 gap-2">
-          {segments.map((s) => (
-            <div key={s.key} className="flex items-center gap-2 rounded-xl bg-slate-50 px-2.5 py-2 dark:bg-slate-700/30">
-              <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-              <span className="truncate text-xs font-semibold text-slate-500 dark:text-slate-400">
-                {s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span>
-              </span>
-            </div>
-          ))}
-        </div>
+      <span className="flex-1 text-[13px] font-semibold text-slate-700 dark:text-slate-200">{label}</span>
+      <span className="text-sm font-bold text-slate-800 dark:text-white">
+        {value}<span className="font-medium text-slate-400 dark:text-slate-500">/{total}</span>
+      </span>
+    </button>
+  );
+}
+
+function FlatStatTile({ icon: Icon, value, label, bg, fg }: {
+  icon: React.ElementType; value: string | number; label: string; bg: string; fg: string;
+}) {
+  return (
+    <div className="flex h-full flex-col justify-between rounded-3xl p-4" style={{ background: bg }}>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white" style={{ color: bg }}>
+        <Icon size={16} />
+      </span>
+      <div className="mt-2 min-w-0">
+        <p className="truncate text-sm font-extrabold" style={{ color: fg }}>{value}</p>
+        <p className="truncate text-[10.5px] font-semibold" style={{ color: fg }}>{label}</p>
       </div>
     </div>
   );
@@ -417,6 +435,8 @@ export default function GuruAbsensiHarianPage() {
   const [activeFilter, setActiveFilter] = useState<FilterAbsensi | null>(null);
   const [tablePage, setTablePage] = useState(0);
   const [tablePageSize, setTablePageSize] = useState<number>(10);
+  const [laporanOpen, setLaporanOpen] = useState(false);
+  const [statusPageOpen, setStatusPageOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -707,184 +727,216 @@ export default function GuruAbsensiHarianPage() {
       </div>
 
       <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
-        <div className="relative flex items-center px-4 pb-3 pt-4">
+        <div className="relative flex items-center justify-between px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/guru/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi Harian</h1>
+          <MobileDatePill value={tanggal} onChange={setTanggal} light />
         </div>
 
         <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
 
-          <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3.5 py-3 dark:border-slate-700 dark:bg-[#22323B]">
-            <CalendarDays size={15} className="shrink-0 text-slate-400" />
-            <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-              className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
-          </div>
-
-          <div className="-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1">
-            {kelasList.map((k, idx) => (
-              <MobileKelasChip key={k.id} k={k} idx={idx} isSelected={k.id === selectedId}
-                onSelect={() => setSelectedId(k.id)} stat={kelasStat(k)} />
-            ))}
-          </div>
+          <KehadiranSlimCard hadirPct={hadirPct} kelasNama={selectedKelas?.nama} onClick={() => setStatusPageOpen(true)} />
 
           <div className="grid grid-cols-2 gap-2.5">
-            {[
-              { icon: ClipboardCheck, label: `Progres absen · ${total > 0 ? Math.round((sudahAbsen / total) * 100) : 0}%`, value: `${sudahAbsen}/${total}` },
-              { icon: LogOut, label: "Sudah pulang", value: pulangCount },
-            ].map((s, i) => {
-              const bg = WALLET_GRADIENTS[i];
-              const onText = WALLET_ON_TEXT[i];
-              return (
-                <div key={s.label} className="flex items-center gap-2.5 rounded-2xl p-3.5" style={{ background: bg }}>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
-                    <s.icon size={16} style={{ color: onText }} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-base font-extrabold" style={{ color: onText }}>{s.value}</p>
-                    <p className="truncate text-[10px] font-semibold" style={{ color: `${onText}CC` }}>{s.label}</p>
-                  </div>
-                </div>
-              );
-            })}
+            <FlatStatTile icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label="Progres Absen"
+              bg="#0064E0" fg="#FFFFFF" />
+            <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} bold />
           </div>
-
-          <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
-
-          <MobileRingkasanCard rekap={rekap} hadirPct={hadirPct} total={total} kelasNama={selectedKelas?.nama} />
-
-          <BelumAbsenPanel siswaList={siswaList} />
 
           <div className="rounded-3xl bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-bold text-slate-800 dark:text-white">
-                Status Kehadiran <span className="font-medium text-slate-400">({total})</span>
-              </p>
-              <span className="text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</span>
+            <p className="text-[12.5px] font-bold text-slate-800 dark:text-white">Rincian Status</p>
+            <div className="mt-1 divide-y divide-slate-100 dark:divide-slate-700/40">
+              <StatusRingRow label="Hadir" icon={STATUS_CFG.HADIR.icon} value={rekap.HADIR} total={total}
+                color={STATUS_CFG.HADIR.clr} onClick={() => setActiveFilter("HADIR")} />
+              <StatusRingRow label="Izin" icon={STATUS_CFG.IZIN.icon} value={rekap.IZIN} total={total}
+                color={STATUS_CFG.IZIN.clr} onClick={() => setActiveFilter("IZIN")} />
+              <StatusRingRow label="Sakit" icon={STATUS_CFG.SAKIT.icon} value={rekap.SAKIT} total={total}
+                color={STATUS_CFG.SAKIT.clr} onClick={() => setActiveFilter("SAKIT")} />
+              <StatusRingRow label="Alpa" icon={STATUS_CFG.ALPA.icon} value={rekap.ALPA} total={total}
+                color={STATUS_CFG.ALPA.clr} onClick={() => setActiveFilter("ALPA")} />
             </div>
-
-            <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
-              {filterOptions.map((opt) => {
-                const active = activeFilter === opt.key;
-                return (
-                  <button key={String(opt.key)} type="button"
-                    onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                    className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors"
-                    style={active ? { backgroundColor: opt.color, color: "#fff" } : { backgroundColor: "#F1F5F8" }}>
-                    <opt.icon size={13} className={active ? "text-white" : "text-slate-400"} />
-                    <span className={active ? "text-white" : "text-slate-500 dark:text-slate-300"}>{opt.label}</span>
-                    <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${active ? "bg-white/20" : "bg-white dark:bg-slate-700"}`}>
-                      {opt.count}
-                    </span>
-                  </button>
-                );
-              })}
+            <div className="mt-2 border-t border-slate-100 pt-3 dark:border-slate-700/40">
+              <BelumAbsenPanel siswaList={siswaList} compact />
             </div>
-
-            <div className="mt-3 -mx-4 overflow-hidden rounded-b-3xl">
-              {loading ? (
-                <div className="space-y-3 p-4">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="h-9 w-9 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
-                      <div className="h-4 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-700" />
-                    </div>
-                  ))}
-                </div>
-              ) : filteredSiswa.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-12 text-center">
-                  <Users size={22} className="text-slate-300 dark:text-slate-600" />
-                  <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
-                    {siswaList.length === 0 ? "Belum ada siswa di kelas ini" : "Tidak ada siswa dengan status ini"}
-                  </p>
-                </div>
-              ) : (
-                <div className="divide-y divide-slate-100 px-4 dark:divide-slate-700/40">
-                  {pagedSiswa.map((s) => (
-                    <MobileSiswaCard key={s.siswaId} s={s} isPulangView={activeFilter === "PULANG"}
-                      kelasId={selectedId} tanggal={tanggal} onStatusUpdated={loadRekap} onOpenDokumen={(sw, source) => { setDokumenSiswa(sw); setDokumenSource(source); }} />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {filteredSiswa.length > 0 && tablePageCount > 1 && (
-              <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/40">
-                <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
-                <div className="flex items-center gap-1">
-                  <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
-                    <ChevronLeft size={14} />
-                  </button>
-                  <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
-                  <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
-                <FileText size={18} />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
-              </div>
-            </div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {RANGE_MODE_CARDS.map((opt) => {
-                const active = exportRange.rangeMode === opt.key;
-                const fg = reportCardFg(opt.gradient);
-                return (
-                  <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
-                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm transition-all"
-                    style={{ background: opt.gradient, color: fg, opacity: active ? 1 : 0.55, outline: active ? `2px solid ${fg}` : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
-                    <opt.icon size={16} />
-                    <span className="text-[11px] font-bold">{opt.label}</span>
-                    <span className="text-[9px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {exportRange.rangeMode === "mingguan" && (
-              <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
-                title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
-            )}
-
-            {exportRange.rangeMode === "bulanan" && (
-              <div className="mt-2 flex items-center gap-1.5">
-                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
-                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
-                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
-              </div>
-            )}
-
-            <div className="mt-3">
-              <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
-            </div>
-            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={11} className="shrink-0 text-[#0082FB]" />
-              Pilih rentang waktu, lalu klik salah satu tombol ekspor
-            </p>
-          </div>
-
-          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
+          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} cta />
         </div>
       </div>
+
+      {createPortal(
+        <AnimatePresence>
+          {statusPageOpen && (
+            <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed inset-0 z-50 flex flex-col bg-[#F1F5F8] dark:bg-[#1C2B33]">
+              <div className="shrink-0 pb-3 pt-4" style={{ background: "#0082FB" }}>
+                <div className="relative flex items-center justify-between px-4">
+                  <button type="button" onClick={() => setStatusPageOpen(false)}
+                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    <ChevronLeft size={18} />
+                  </button>
+                  <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">
+                    Status Kehadiran <span className="font-medium text-white/70">({total})</span>
+                  </h1>
+                  <button type="button" onClick={() => setLaporanOpen(true)}
+                    className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 active:scale-95" style={{ color: "#0082FB" }}>
+                    <Download size={12} />
+                    <span className="text-[11px] font-bold">Unduh</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {filterOptions.map((opt) => {
+                    const active = activeFilter === opt.key;
+                    return (
+                      <button key={String(opt.key)} type="button"
+                        onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
+                        className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors"
+                        style={active ? { backgroundColor: opt.color, color: "#fff" } : { backgroundColor: "#fff" }}>
+                        <opt.icon size={13} className={active ? "text-white" : "text-slate-400"} />
+                        <span className={active ? "text-white" : "text-slate-500 dark:text-slate-300"}>{opt.label}</span>
+                        <span className="rounded-md bg-white px-1.5 py-0.5 text-[10px] font-bold dark:bg-slate-700"
+                          style={active ? { color: opt.color } : undefined}>
+                          {opt.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-3 overflow-hidden rounded-3xl bg-white dark:bg-[#1C2B33]">
+                  {loading ? (
+                    <div className="space-y-3 p-4">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <div className="h-9 w-9 animate-pulse rounded-full bg-slate-100 dark:bg-slate-700" />
+                          <div className="h-4 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-700" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : filteredSiswa.length === 0 ? (
+                    <div className="flex flex-col items-center gap-2 py-12 text-center">
+                      <Users size={22} className="text-slate-300 dark:text-slate-600" />
+                      <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
+                        {siswaList.length === 0 ? "Belum ada siswa di kelas ini" : "Tidak ada siswa dengan status ini"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-slate-100 px-4 dark:divide-slate-700/40">
+                      {pagedSiswa.map((s) => (
+                        <MobileSiswaCard key={s.siswaId} s={s} isPulangView={activeFilter === "PULANG"}
+                          kelasId={selectedId} tanggal={tanggal} onStatusUpdated={loadRekap} onOpenDokumen={(sw, source) => { setDokumenSiswa(sw); setDokumenSource(source); }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {filteredSiswa.length > 0 && tablePageCount > 1 && (
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-2xl bg-white px-4 py-3 dark:bg-[#1C2B33]">
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
+                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                        <ChevronLeft size={14} />
+                      </button>
+                      <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
+                      <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
+                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {createPortal(
+        <AnimatePresence>
+          {laporanOpen && (
+            <div className="fixed inset-0 z-50 flex items-end justify-center">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setLaporanOpen(false)} />
+              <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 28, stiffness: 300 }}
+                className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+                style={{ maxHeight: "88vh" }}>
+                <div className="flex items-center justify-between px-5 pt-5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                      <FileText size={16} />
+                    </span>
+                    <div>
+                      <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Unduh Laporan</h3>
+                      <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
+                    </div>
+                  </div>
+                  <button type="button" onClick={() => setLaporanOpen(false)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    <X size={15} />
+                  </button>
+                </div>
+
+                <div className="overflow-y-auto px-5 pb-6 pt-4">
+                  <div className="grid grid-cols-3 gap-2">
+                    {RANGE_MODE_CARDS.map((opt) => {
+                      const active = exportRange.rangeMode === opt.key;
+                      const fg = reportCardFg(opt.gradient);
+                      return (
+                        <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
+                          className={`flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center transition-all ${active ? "shadow-sm" : "bg-slate-100 dark:bg-slate-700/50"}`}
+                          style={active ? { background: opt.gradient, color: fg } : { color: "#94A3B8" }}>
+                          <opt.icon size={16} />
+                          <span className="text-[11px] font-bold">{opt.label}</span>
+                          <span className="text-[9px] leading-tight" style={active ? { color: fg } : { color: "#94A3B8" }}>{opt.caption}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {exportRange.rangeMode === "mingguan" && (
+                    <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
+                      title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
+                      className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                  )}
+
+                  {exportRange.rangeMode === "bulanan" && (
+                    <div className="mt-3 flex items-center gap-1.5">
+                      <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                      </select>
+                      <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="mt-4">
+                    <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
+                  </div>
+                  <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+                    <Download size={11} className="shrink-0 text-[#0082FB]" />
+                    Pilih rentang waktu, lalu ketuk salah satu tombol ekspor
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
       <AnimatePresence>
         {dokumenSiswa && (

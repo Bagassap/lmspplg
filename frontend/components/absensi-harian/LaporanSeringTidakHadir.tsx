@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingDown, ShieldCheck, Medal, AlertTriangle, Flame, Gauge, X, ArrowRight } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
@@ -34,8 +35,6 @@ function RankBadge({ index }: { index: number }) {
   );
 }
 
-// Bar color varies with how bad the attendance actually is — red under 50%,
-// amber under 75%, blue otherwise.
 function severityColor(pct: number) {
   if (pct < 50) return "#EF4444";
   if (pct < 75) return "#8A9E1F"; // lime — varian gelap supaya kontras sebagai warna teks
@@ -65,7 +64,7 @@ function StatPill({
   );
 }
 
-export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: string; kelasNama?: string }) {
+export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { kelasId: string; kelasNama?: string; compact?: boolean; cta?: boolean }) {
   const [periode, setPeriode] = useState<PeriodeLaporan>("mingguan");
   const [data, setData] = useState<LaporanData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -94,6 +93,36 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
 
   return (
     <>
+      {cta ? (
+        <button type="button" onClick={() => setShowModal(true)}
+          className="flex w-full items-center gap-3 rounded-3xl p-4 text-left transition-transform active:scale-[0.98]"
+          style={{ background: "#C3F84A" }}>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white">
+            <TrendingDown size={18} className="text-[#1C2B33]" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-extrabold text-[#1C2B33]">Siswa Bermasalah</p>
+            <p className="truncate text-[10.5px] font-semibold text-[#1C2B33]">
+              {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
+            </p>
+          </div>
+          <ArrowRight size={16} className="shrink-0 text-[#1C2B33]" />
+        </button>
+      ) : compact ? (
+        <button type="button" onClick={() => setShowModal(true)}
+          className="flex w-full items-center gap-3 rounded-2xl p-3 text-left" style={{ backgroundColor: "#FEE9EA" }}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: "#EF4444" }}>
+            <TrendingDown size={14} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[12.5px] font-bold" style={{ color: "#EF4444" }}>Siswa Bermasalah</p>
+            <p className="truncate text-[10px] font-semibold" style={{ color: "#EF4444" }}>
+              {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
+            </p>
+          </div>
+          <ArrowRight size={14} className="shrink-0" style={{ color: "#EF4444" }} />
+        </button>
+      ) : (
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -159,8 +188,10 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
           </button>
         )}
       </div>
+      )}
 
-      <AnimatePresence>
+      {createPortal(
+        <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -272,7 +303,9 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama }: { kelasId: strin
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }

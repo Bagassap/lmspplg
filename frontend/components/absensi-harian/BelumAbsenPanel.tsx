@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PartyPopper, Search, Copy, Check, X, Clock, Info, MinusCircle, AlertCircle, Users } from "lucide-react";
 import { avatarColorFor } from "@/components/data-siswa/shared";
@@ -9,30 +10,43 @@ import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
 
-// waktuAbsen is stored as an already-formatted "HH.mm" clock string (set via
-// toLocaleTimeString at check-in time, see app/siswa/absensi-harian/page.tsx),
-// not an ISO datetime — re-parsing it with `new Date()` produces Invalid Date.
 function formatJam(waktu?: string | null) {
   return waktu && waktu.trim() ? waktu : "-";
 }
 
-// Small white stat-card trigger, matching the reference's "Trading Fees"
-// cards: gradient circular icon badge on the left, big count + small label
-// on the right. Still clickable (opens the same DetailModal as before) —
-// only the visual shell changed, not the underlying interaction.
 function StatTrigger({
-  title, icon: Icon, gradient, accent, items, total, hint, onOpen,
+  title, compactTitle, icon: Icon, gradient, accent, pastel, items, total, hint, onOpen, compact,
 }: {
   title: string;
+  compactTitle?: string;
   icon: React.ElementType;
   gradient: string;
   accent: string;
+  pastel: string;
   items: SiswaAbsensi[];
   total: number;
   hint: string;
   onOpen: () => void;
+  compact?: boolean;
 }) {
   const pct = total > 0 ? Math.round((items.length / total) * 100) : 0;
+
+  if (compact) {
+    return (
+      <motion.button type="button" onClick={onOpen}
+        whileTap={{ scale: 0.97 }}
+        className="flex items-center gap-2.5 rounded-2xl p-3 text-left" style={{ backgroundColor: pastel }}>
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: accent }}>
+          <Icon size={14} />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-base font-extrabold" style={{ color: accent }}>{items.length}</p>
+          <p className="truncate text-[9.5px] font-semibold" style={{ color: accent }}>{compactTitle ?? title}</p>
+        </div>
+      </motion.button>
+    );
+  }
+
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
@@ -92,7 +106,7 @@ function DetailModal({
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
@@ -182,40 +196,47 @@ function DetailModal({
           </>
         )}
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
-export function BelumAbsenPanel({ siswaList }: { siswaList: SiswaAbsensi[] }) {
+export function BelumAbsenPanel({ siswaList, compact }: { siswaList: SiswaAbsensi[]; compact?: boolean }) {
   const [activeModal, setActiveModal] = useState<"hadir" | "pulang" | null>(null);
 
   const belumHadir = siswaList.filter((s) => !s.status || s.status === "ALPA");
   const belumPulang = siswaList.filter((s) => !s.waktuPulang);
-  const hadirIdx = 3; // biru terang
-  const pulangIdx = 2; // red — indeks 1 (lime) dihindari karena badge ikonnya teks putih tetap
+  const hadirIdx = 3;
+  const pulangIdx = 2;
 
   return (
     <>
-      <div className="flex h-full flex-col justify-center gap-3">
+      <div className={compact ? "grid grid-cols-2 gap-2.5" : "flex h-full flex-col justify-center gap-3"}>
         <StatTrigger
           title="Belum Absen Hadir"
+          compactTitle="Belum Hadir"
           icon={Clock}
           gradient={DASHBOARD_GRADIENTS[hadirIdx]}
           accent={DASHBOARD_ACCENT[hadirIdx]}
+          pastel={DASHBOARD_PASTEL[hadirIdx]}
           items={belumHadir}
           total={siswaList.length}
           hint="Perlu tindak lanjut segera →"
           onOpen={() => setActiveModal("hadir")}
+          compact={compact}
         />
         <StatTrigger
           title="Belum Absen Pulang"
+          compactTitle="Belum Pulang"
           icon={PULANG_CFG.icon}
           gradient={DASHBOARD_GRADIENTS[pulangIdx]}
           accent={DASHBOARD_ACCENT[pulangIdx]}
+          pastel={DASHBOARD_PASTEL[pulangIdx]}
           items={belumPulang}
           total={siswaList.length}
           hint="Klik untuk kirim pengingat →"
           onOpen={() => setActiveModal("pulang")}
+          compact={compact}
         />
       </div>
 
