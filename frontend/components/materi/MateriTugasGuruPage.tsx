@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { BookOpen, Send } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { BookOpen, ChevronLeft, Search, Send } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MateriListPage } from "./MateriListPage";
 import { TugasFormModal } from "@/components/tugas/TugasFormModal";
@@ -16,12 +17,15 @@ type Category = "materi" | "tugas";
 
 export function MateriTugasGuruPage() {
   const toast = useToast();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [materiList, setMateriList] = useState<MateriRef[]>([]);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
   const [submisiList, setSubmisiList] = useState<TugasSubmisiItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category>(() => (searchParams.get("tab") === "tugas" ? "tugas" : "materi"));
+  const [searchMateri, setSearchMateri] = useState("");
+  const [searchTugas, setSearchTugas] = useState("");
 
   const [currentUserId, setCurrentUserId] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
@@ -50,7 +54,7 @@ export function MateriTugasGuruPage() {
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
-  useEffect(() => { if (category === "tugas") loadAll(); }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (category === "tugas") loadAll(); }, [category]);
 
   useEffect(() => {
     fetch("/api/auth/me").then((r) => r.json()).then((d) => {
@@ -62,9 +66,6 @@ export function MateriTugasGuruPage() {
     }).catch(() => {}).finally(() => setMapelLoaded(true));
   }, []);
 
-  // Selama mapel.saya belum selesai dimuat, jangan tampilkan tombol Tambah
-  // dulu — mencegah kedip "boleh tambah" lalu langsung disembunyikan begitu
-  // ternyata guru ini tidak diampu mapel apa pun.
   const canCreate = mapelLoaded && mapelOptions.length > 0;
 
   async function deleteTugas(id: string) {
@@ -125,7 +126,7 @@ export function MateriTugasGuruPage() {
 
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-2xl p-6"
+      <div className="hidden overflow-hidden rounded-2xl p-6 lg:block"
         style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
@@ -143,66 +144,122 @@ export function MateriTugasGuruPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
-        <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-          <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
-            <button type="button" onClick={() => setCategory("materi")}
-              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
-              style={{
-                background: "#0082FB",
-                boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "materi" ? "2px solid #0082FB" : "none",
-                outlineOffset: "3px",
-              }}>
-              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
-                <BookOpen size={14} className="lg:hidden" />
-                <BookOpen size={16} className="hidden lg:block" />
-              </div>
-              <div className="relative min-w-0">
-                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Materi</p>
-                <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 sm:text-[10px] lg:text-[11px]">{materiList.length} materi tersedia</p>
-              </div>
-            </button>
+      <div className="grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[1fr_2.3fr]">
+        <div>
+          <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
+            <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
+            <div className="flex flex-col gap-4">
+              <button type="button" onClick={() => setCategory("materi")}
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background: "#0082FB",
+                  boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "materi" ? "2px solid #0082FB" : "none",
+                  outlineOffset: "3px",
+                }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                  <BookOpen size={16} />
+                </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-xl font-black leading-tight">Materi</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{materiList.length} materi tersedia</p>
+                </div>
+              </button>
 
-            <button type="button" onClick={() => setCategory("tugas")}
-              className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
-              style={{
-                background: "#C3F84A",
-                color: "#1C2B33",
-                boxShadow: category === "tugas" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                outline: category === "tugas" ? "2px solid #C3F84A" : "none",
-                outlineOffset: "3px",
-              }}>
-              <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:h-9 lg:w-9 lg:rounded-2xl">
-                <Send size={14} className="lg:hidden" />
-                <Send size={16} className="hidden lg:block" />
+              <button type="button" onClick={() => setCategory("tugas")}
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background: "#C3F84A",
+                  color: "#1C2B33",
+                  boxShadow: category === "tugas" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "tugas" ? "2px solid #C3F84A" : "none",
+                  outlineOffset: "3px",
+                }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
+                  <Send size={16} />
+                </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-xl font-black leading-tight">Tugas</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#1C2B33]/75">
+                    {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+            <div className="relative flex items-center px-4 pb-3 pt-4">
+              <button type="button" onClick={() => router.push("/guru/dashboard")}
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Materi & Tugas</h1>
+            </div>
+            <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
+            <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+              <div className="relative">
+                <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
+                {category === "materi" ? (
+                  <input value={searchMateri} onChange={(e) => setSearchMateri(e.target.value)}
+                    placeholder="Cari judul materi, mapel..."
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+                ) : (
+                  <input value={searchTugas} onChange={(e) => setSearchTugas(e.target.value)}
+                    placeholder="Cari nama tugas atau mapel..."
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+                )}
               </div>
-              <div className="relative min-w-0">
-                <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Tugas</p>
-                <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75 sm:text-[10px] lg:text-[11px]">
-                  {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}
-                </p>
+
+              <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+                <button type="button" onClick={() => setCategory("materi")}
+                  className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                  style={{ color: category === "materi" ? "#fff" : "#94a3b8" }}>
+                  {category === "materi" && (
+                    <motion.span layoutId="materiTugasGuruTabPill" className="absolute inset-0 rounded-xl"
+                      style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5"><BookOpen size={15} /> Materi</span>
+                </button>
+                <button type="button" onClick={() => setCategory("tugas")}
+                  className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
+                  style={{ color: category === "tugas" ? "#1C2B33" : "#94a3b8" }}>
+                  {category === "tugas" && (
+                    <motion.span layoutId="materiTugasGuruTabPill" className="absolute inset-0 rounded-xl"
+                      style={{ background: "#C3F84A" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
+                  {perluReview > 0 && (
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                      {perluReview}
+                    </span>
+                  )}
+                </button>
               </div>
-            </button>
+            </div>
+            </div>
           </div>
         </div>
 
         {category === "materi" ? (
           <MateriListPage
             embedded
+            mobileNative
             currentUserId={currentUserId}
             currentUserRole={currentUserRole}
             mapelOptions={mapelOptions}
             canCreate={canCreate}
+            search={searchMateri}
+            onSearchChange={setSearchMateri}
           />
         ) : (
           <TugasListCard
             tugasList={tugasList}
             submisiList={submisiList}
             loading={loading}
+            mobileNative
             currentUserId={currentUserId}
             currentUserRole={currentUserRole}
             canCreate={canCreate}
@@ -210,6 +267,8 @@ export function MateriTugasGuruPage() {
             onEditTugas={(t) => { setEditTarget(t); setTugasFormOpen(true); }}
             onDeleteTugas={deleteTugas}
             onLihatSubmisi={(t) => setSubmisiModalTugas(t)}
+            search={searchTugas}
+            onSearchChange={setSearchTugas}
           />
         )}
       </div>

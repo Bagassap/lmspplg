@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList, Search, Plus, Pencil, Trash2, Send, CalendarClock, GraduationCap, Code2, ListChecks, PenLine,
+  SlidersHorizontal, CheckCircle, X,
 } from "lucide-react";
 import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
@@ -17,7 +19,7 @@ const ROW_PALETTES = [
   { bar: "#0082FB", gradient: "#0082FB" },
   { bar: "#00D67F", gradient: "#00D67F" },
   { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
+  { bar: "#8A9E1F", gradient: "#C3F84A" },
   { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
@@ -25,6 +27,7 @@ function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 export function TugasListCard({
   tugasList, submisiList, loading, onAddTugas, onEditTugas, onDeleteTugas, onLihatSubmisi,
   currentUserId, currentUserRole, canCreate = true,
+  mobileNative = false, search: controlledSearch, onSearchChange: controlledOnSearchChange,
 }: {
   tugasList: TugasItem[];
   submisiList: TugasSubmisiItem[];
@@ -33,24 +36,32 @@ export function TugasListCard({
   onEditTugas: (t: TugasItem) => void;
   onDeleteTugas: (id: string) => void;
   onLihatSubmisi: (t: TugasItem) => void;
-  // Bila diisi, tombol Edit/Hapus per baris hanya tampil untuk tugas milik
-  // sendiri (createdBy.id === currentUserId) — ADMIN tetap bebas ke semua.
   currentUserId?: string;
   currentUserRole?: string;
-  // false = guru belum diampu mapel apa pun — tombol Tambah disembunyikan.
   canCreate?: boolean;
+  mobileNative?: boolean;
+  search?: string;
+  onSearchChange?: (v: string) => void;
 }) {
   const [tab, setTab] = useState<"active" | "completed">("active");
-  const [search, setSearch] = useState("");
+  const [internalSearch, setInternalSearch] = useState("");
+  const search = controlledSearch ?? internalSearch;
+  const setSearch = controlledOnSearchChange ?? setInternalSearch;
+  const [mapelFilter, setMapelFilter] = useState<string | null>(null);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
   const canEdit = (t: TugasItem) => !currentUserRole || currentUserRole === "ADMIN" || t.createdBy.id === currentUserId;
+
+  const uniqueMapel = useMemo(() => Array.from(new Set(tugasList.map((t) => t.mapel))).sort(), [tugasList]);
 
   const active = tugasList.filter((t) => isTugasActive(t));
   const completed = tugasList.filter((t) => !isTugasActive(t));
   const shown = (tab === "active" ? active : completed)
+    .filter((t) => !mapelFilter || t.mapel === mapelFilter)
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
 
   return (
-    <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+    <div>
+    <div className="hidden flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden lg:flex">
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -183,6 +194,178 @@ export function TugasListCard({
           </table>
         )}
       </div>
+    </div>
+
+    {mobileNative && (
+      <div className="relative isolate space-y-3 lg:hidden">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-1 dark:border-slate-700">
+          <div className="flex items-center gap-5">
+            <button type="button" onClick={() => setTab("active")}
+              className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+              style={tab === "active" ? { borderColor: "#0082FB", color: "#0082FB" } : { borderColor: "transparent", color: "#94a3b8" }}>
+              Aktif
+              <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                style={tab === "active" ? { background: "#0082FB18", color: "#0082FB" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+                {active.length}
+              </span>
+            </button>
+            <button type="button" onClick={() => setTab("completed")}
+              className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
+              style={tab === "completed" ? { borderColor: "#00D67F", color: "#00D67F" } : { borderColor: "transparent", color: "#94a3b8" }}>
+              Selesai
+              <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                style={tab === "completed" ? { background: "#00D67F18", color: "#00D67F" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+                {completed.length}
+              </span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {uniqueMapel.length > 1 && (
+              <button type="button" onClick={() => setShowFilterSheet(true)}
+                className="relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                style={mapelFilter ? { background: "#0082FB18", color: "#0082FB" } : { background: "#F1F5F9", color: "#94a3b8" }}>
+                <SlidersHorizontal size={14} />
+                {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#0082FB" }} />}
+              </button>
+            )}
+            {canCreate && (
+              <button type="button" onClick={onAddTugas}
+                className="mb-1.5 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-white shadow-sm"
+                style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                <Plus size={13} /> Tambah
+              </button>
+            )}
+          </div>
+        </div>
+
+        {loading && (
+          <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+            <p className="text-sm text-slate-400">Memuat data...</p>
+          </div>
+        )}
+        {!loading && shown.length === 0 && (
+          <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#C3F84A30" }}>
+              <ClipboardList size={24} style={{ color: "#8A9E1F" }} />
+            </div>
+            <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"}</p>
+          </div>
+        )}
+        {!loading && shown.length > 0 && (
+          <div className="space-y-2.5">
+            {shown.map((t, idx) => {
+              const accent = idx % 2 === 0;
+              const rp = rowPalette(idx);
+              const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
+              return (
+                <motion.div key={t.id}
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: idx * 0.03 }}
+                  className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
+                  style={accent ? { backgroundColor: "#0082FB" } : undefined}>
+                  {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
+                  <div className="relative flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xs font-bold"
+                      style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18", color: accent ? "#fff" : "#0082FB" }}>
+                      {idx + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
+                          <GraduationCap size={9} /> {t.mapel}
+                        </span>
+                        {TIPE_BADGE[t.tipe] && (
+                          <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-bold ${accent ? "bg-white/20 text-white" : TIPE_BADGE[t.tipe].cls}`}>
+                            {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={9} />; })()} {tipeLabel(t.tipe)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`relative mt-3 flex items-center justify-between gap-2 border-t pt-3 ${accent ? "border-white/20" : "border-black/[0.06] dark:border-slate-700/50"}`}>
+                    <span className={`flex shrink-0 items-center gap-1 text-[10.5px] ${accent ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
+                      <CalendarClock size={11} />{formatTgl(t.deadline)}
+                    </span>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <button type="button" onClick={() => onLihatSubmisi(t)}
+                        className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
+                        style={accent
+                          ? { borderColor: "rgba(255,255,255,0.4)", color: "#fff", backgroundColor: "rgba(255,255,255,0.15)" }
+                          : { borderColor: rp.bar, color: rp.bar, backgroundColor: `${rp.bar}14` }}>
+                        <Send size={11} /> Lihat
+                        {cnt > 0 && (
+                          <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold"
+                            style={accent ? { backgroundColor: "#fff", color: "#0082FB" } : { backgroundColor: rp.bar, color: "#fff" }}>
+                            {cnt}
+                          </span>
+                        )}
+                      </button>
+                      {canEdit(t) && (
+                        <>
+                          <button type="button" onClick={() => onEditTugas(t)}
+                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#8A9E1F] dark:hover:bg-[#1C2B33]/20"}`}>
+                            <Pencil size={14} />
+                          </button>
+                          <button type="button" onClick={() => onDeleteTugas(t.id)}
+                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"}`}>
+                            <Trash2 size={14} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    )}
+
+    <AnimatePresence>
+      {showFilterSheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center lg:hidden">
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowFilterSheet(false)}
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            className="relative z-10 w-full overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+            style={{ maxHeight: "80vh" }}
+          >
+            <div className="flex items-center justify-between px-5 pt-5">
+              <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Filter Mata Pelajaran</h3>
+              <button type="button" onClick={() => setShowFilterSheet(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                <X size={15} />
+              </button>
+            </div>
+            <div className="max-h-[60vh] space-y-1.5 overflow-y-auto px-5 py-5">
+              <button type="button" onClick={() => { setMapelFilter(null); setShowFilterSheet(false); }}
+                className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
+                style={mapelFilter === null ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                Semua Mapel
+                {mapelFilter === null && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+              </button>
+              {uniqueMapel.map((mp) => (
+                <button key={mp} type="button" onClick={() => { setMapelFilter(mp); setShowFilterSheet(false); }}
+                  className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
+                  style={mapelFilter === mp ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                  {mp}
+                  {mapelFilter === mp && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
     </div>
   );
 }

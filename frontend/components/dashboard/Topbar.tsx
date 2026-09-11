@@ -308,7 +308,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   return (
     <>
       <header
-        className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] 2xl:px-10 ${
+        className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1C2B33] 2xl:px-10 ${
           blueHeader ? "bg-[#0082FB]" : "bg-surface dark:bg-[#1C2B33]"
         }`}
       >

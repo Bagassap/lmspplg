@@ -18,36 +18,36 @@ const ROW_PALETTES = [
   { bar: "#0082FB", gradient: "#0082FB" },
   { bar: "#00D67F", gradient: "#00D67F" },
   { bar: "#EF4444", gradient: "#EF4444" },
-  { bar: "#8A9E1F", gradient: "#C3F84A" }, // lime — bar dipakaikan varian gelap (badge kecil pakai teks putih)
+  { bar: "#8A9E1F", gradient: "#C3F84A" },
   { bar: "#0064E0", gradient: "#0064E0" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
 export function MateriListPage({
   embedded = false, currentUserId, currentUserRole, mapelOptions, canCreate = true,
+  mobileNative = false, search: controlledSearch, onSearchChange: controlledOnSearchChange,
 }: {
   embedded?: boolean;
-  // Bila diisi, tombol Edit/Hapus per baris hanya tampil untuk materi milik
-  // sendiri (createdBy.id === currentUserId) — ADMIN tetap bebas ke semua.
   currentUserId?: string;
   currentUserRole?: string;
-  // Diteruskan ke MateriFormModal — lihat dokumentasi prop di sana.
   mapelOptions?: string[];
-  // false = guru belum diampu mapel apa pun (tidak ada di mapel.xlsx) —
-  // tombol Tambah disembunyikan dan diganti pesan penjelasan.
   canCreate?: boolean;
+  mobileNative?: boolean;
+  search?: string;
+  onSearchChange?: (v: string) => void;
 } = {}) {
   const toast = useToast();
   const router = useRouter();
   const pathname = usePathname();
-  // MateriListPage dipakai bareng oleh halaman Admin & Guru — tentukan route
-  // "Lihat materi" berdasarkan prefix path saat ini, bukan prop terpisah.
   const rolePrefix = pathname?.startsWith("/admin") ? "/admin" : "/guru";
   const canEdit = (m: MateriItem) => !currentUserRole || currentUserRole === "ADMIN" || m.createdBy.id === currentUserId;
   const [list, setList] = useState<MateriItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
+  const [internalSearch, setInternalSearch] = useState("");
+  const search = controlledSearch ?? internalSearch;
+  const setSearch = controlledOnSearchChange ?? setInternalSearch;
+  const [mapelFilter, setMapelFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<MateriItem | null>(null);
 
@@ -78,18 +78,22 @@ export function MateriListPage({
     }
   }
 
+  const uniqueMapel = useMemo(() => Array.from(new Set(list.map((m) => m.mapel))).sort(), [list]);
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter((m) =>
-      m.judul.toLowerCase().includes(q) ||
-      m.mapel.toLowerCase().includes(q) ||
-      m.kelasList.some((k) => k.nama.toLowerCase().includes(q))
-    );
-  }, [list, search]);
+    return list.filter((m) => {
+      if (mapelFilter && m.mapel !== mapelFilter) return false;
+      if (!q) return true;
+      return m.judul.toLowerCase().includes(q) ||
+        m.mapel.toLowerCase().includes(q) ||
+        m.kelasList.some((k) => k.nama.toLowerCase().includes(q));
+    });
+  }, [list, search, mapelFilter]);
 
   return (
     <div className="space-y-5">
+      <div className="hidden space-y-5 lg:block">
       {!embedded && (
         <div className="relative overflow-hidden rounded-2xl p-6"
           style={{ background: "#0082FB" }}>
@@ -247,6 +251,139 @@ export function MateriListPage({
           )}
         </div>
       </div>
+      </div>
+
+      {mobileNative && (
+        <div className="relative isolate -mx-4 space-y-3 lg:hidden">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{filtered.length} materi</span>
+            {canCreate && (
+              <button type="button" onClick={() => { setEditItem(null); setModalOpen(true); }}
+                className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-white shadow-sm"
+                style={{ background: "#0082FB" }}>
+                <Plus size={13} /> Tambah
+              </button>
+            )}
+          </div>
+
+          {uniqueMapel.length > 1 && (
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button type="button" onClick={() => setMapelFilter(null)}
+                className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-[0_2px_6px_rgba(0,0,0,0.05)] transition-colors"
+                style={mapelFilter === null ? { background: "#0082FB", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
+                Semua
+              </button>
+              {uniqueMapel.map((mp) => (
+                <button key={mp} type="button" onClick={() => setMapelFilter(mp)}
+                  className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-[0_2px_6px_rgba(0,0,0,0.05)] transition-colors"
+                  style={mapelFilter === mp ? { background: "#0082FB", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
+                  {mp}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <AnimatePresence>
+            {!canCreate && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="flex items-center gap-2 rounded-2xl border border-[#F1F5F8] bg-[#F1F5F8] px-4 py-3 text-sm text-[#1C2B33] dark:border-[#1C2B33]/40 dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                <AlertCircle size={14} className="shrink-0" />
+                Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi.
+              </motion.div>
+            )}
+            {error && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="flex items-center gap-2 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
+                <AlertCircle size={14} className="shrink-0" />{error}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {loading && (
+            <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+              <p className="text-sm text-slate-400">Memuat data...</p>
+            </div>
+          )}
+          {!loading && filtered.length === 0 && (
+            <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
+                <BookOpen size={24} style={{ color: "#0082FB" }} />
+              </div>
+              <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada materi dengan kata kunci "${search.trim()}"` : "Belum ada materi"}</p>
+              {!search.trim() && canCreate && (
+                <motion.button onClick={() => { setEditItem(null); setModalOpen(true); }}
+                  whileTap={{ scale: 0.97 }}
+                  className="mt-4 flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold text-white"
+                  style={{ background: "#0082FB" }}>
+                  <Plus size={14} /> Tambah Materi Pertama
+                </motion.button>
+              )}
+            </div>
+          )}
+          {!loading && filtered.length > 0 && (
+            <div className="space-y-2.5">
+              {filtered.map((m, idx) => {
+                const accent = idx % 2 === 0;
+                return (
+                  <motion.div key={m.id}
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, delay: idx * 0.03 }}
+                    className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
+                    style={accent ? { backgroundColor: "#0082FB" } : undefined}>
+                    {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
+                    <div className="relative flex items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+                        style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18" }}>
+                        <FileText size={18} style={{ color: accent ? "#fff" : "#0082FB" }} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{m.judul}</p>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
+                            <GraduationCap size={9} /> {m.mapel}
+                          </span>
+                          <span className={`flex items-center gap-1 text-[9.5px] font-medium ${accent ? "text-white/75" : "text-slate-500 dark:text-slate-400"}`}>
+                            <CalendarDays size={9} />{formatDate(m.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`relative mt-3 flex items-center justify-between gap-2 border-t pt-3 ${accent ? "border-white/20" : "border-black/[0.06] dark:border-slate-700/50"}`}>
+                      <span className={`truncate text-[10.5px] ${accent ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
+                        {m.createdBy.nama}
+                      </span>
+                      <div className="flex shrink-0 items-center gap-1">
+                        <button type="button" onClick={() => router.push(`${rolePrefix}/materi/${m.id}`)} title="Lihat materi"
+                          className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20"}`}>
+                          <Eye size={14} />
+                        </button>
+                        {m.fileUrl && (
+                          <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" title="Unduh file"
+                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20"}`}>
+                            <Download size={14} />
+                          </a>
+                        )}
+                        {canEdit(m) && (
+                          <>
+                            <button type="button" onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
+                              className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#8A9E1F] dark:hover:bg-[#1C2B33]/20"}`}>
+                              <Pencil size={14} />
+                            </button>
+                            <button type="button" onClick={() => handleDelete(m)} title="Hapus"
+                              className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"}`}>
+                              <Trash2 size={14} />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       <MateriFormModal
         open={modalOpen}
