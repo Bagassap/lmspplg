@@ -295,8 +295,8 @@ export class AbsensiHarianController {
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Get('saya/riwayat')
-  getRiwayatSaya(@Query('tipe') tipe: string, @Query('limit') limit: string, @Request() req: any) {
-    return this.service.getRiwayatSaya(req.user.id, tipe === 'PULANG' ? 'PULANG' : 'HADIR', limit ? Number(limit) : 4);
+  getRiwayatSaya(@Query('tipe') tipe: string, @Request() req: any) {
+    return this.service.getRiwayatSaya(req.user.id, tipe === 'PULANG' ? 'PULANG' : 'HADIR');
   }
 
   @UseGuards(RolesGuard)

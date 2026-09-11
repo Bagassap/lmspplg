@@ -4,9 +4,9 @@ import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
-export function MobileDetailModal({ onClose, accent, children }: { onClose: () => void; accent: string; children: React.ReactNode }) {
+export function MobileDetailModal({ onClose, accent, children, className = "" }: { onClose: () => void; accent: string; children: React.ReactNode; className?: string }) {
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className={`fixed inset-0 z-50 flex items-end justify-center ${className}`}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.18 }}
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"

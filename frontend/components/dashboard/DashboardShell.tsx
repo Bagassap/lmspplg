@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { MobileBottomNav } from "./MobileBottomNav";
@@ -15,6 +16,7 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!sessionStorage.getItem("lms_session")) {
@@ -23,6 +25,10 @@ export function DashboardShell({
       });
     }
   }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem("lms_last_path", pathname); } catch {}
+  }, [pathname]);
 
   return (
     <div className="flex min-h-screen">

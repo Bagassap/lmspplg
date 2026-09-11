@@ -133,7 +133,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
-  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman" || pathname === "/guru/materi";
+  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman" || pathname === "/guru/materi" || pathname === "/guru/data-siswa";
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -300,6 +300,7 @@ export function Topbar({ user }: { user: UserPayload }) {
 
   async function handleLogout() {
     sessionStorage.removeItem("lms_session");
+    try { localStorage.removeItem("lms_last_path"); } catch {}
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.replace("/login");
   }
@@ -309,7 +310,7 @@ export function Topbar({ user }: { user: UserPayload }) {
     <>
       <header
         className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1C2B33] 2xl:px-10 ${
-          blueHeader ? "bg-[#0082FB]" : "bg-surface dark:bg-[#1C2B33]"
+          blueHeader ? "bg-[#0082FB] shadow-[0_2px_12px_rgba(0,53,133,0.25)] lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)]" : "bg-surface dark:bg-[#1C2B33]"
         }`}
       >
         <div className="flex min-w-0 items-center gap-2 lg:hidden">

@@ -64,7 +64,12 @@ export function Splash() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => router.push("/login"), 2800);
+    const timer = setTimeout(() => {
+      let lastPath: string | null = null;
+      try { lastPath = localStorage.getItem("lms_last_path"); } catch {}
+      const isResumable = !!lastPath && /^\/(admin|guru|siswa)\//.test(lastPath);
+      router.push(isResumable ? lastPath! : "/login");
+    }, 2800);
     return () => clearTimeout(timer);
   }, [router]);
 

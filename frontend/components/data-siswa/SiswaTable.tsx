@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow, GRID_COLS } from "./SiswaTableRow";
 import { SiswaDetailModal } from "./SiswaDetailModal";
-import { type SiswaCardData } from "./shared";
+import { type SiswaCardData, toTitleCase, getNama, avatarColorFor, completeness } from "./shared";
+import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 
 type ActionProps = {
@@ -84,10 +85,11 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
 }
 
 export function SiswaTable({
-  loading, siswas, onEdit, onResetPassword, onImpersonate, onKeluarkan,
+  loading, siswas, onEdit, onResetPassword, onImpersonate, onKeluarkan, mobileNative = false,
 }: Omit<ActionProps, "onViewDetail"> & {
   loading: boolean;
   siswas: SiswaCardData[];
+  mobileNative?: boolean;
 }) {
   const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
   const [page, setPage] = useState(0);
@@ -103,7 +105,7 @@ export function SiswaTable({
 
     return (
       <>
-        <div className="overflow-x-auto">
+        <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
           <div className="min-w-160">
             <SiswaTableHead />
             <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
@@ -113,6 +115,34 @@ export function SiswaTable({
             </div>
           </div>
         </div>
+
+        {mobileNative && (
+          <div className="p-4 lg:hidden">
+            <div className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-slate-800">
+              {pageItems.map((s) => {
+                const displayNama = toTitleCase(getNama(s));
+                const accent = avatarColorFor(s.id || displayNama);
+                const pct = completeness(s);
+                return (
+                  <button key={s.id} type="button" onClick={() => setDetailSiswa(s)}
+                    className="flex w-full items-center gap-3 p-4 text-left">
+                    <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={40} fallbackBg={accent} textClassName="text-xs font-extrabold" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{displayNama}</p>
+                      <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">NIS {s.nis}</p>
+                    </div>
+                    <span className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold"
+                      style={pct === 100 ? { backgroundColor: "#E3FBF0", color: "#00D67F" } : { backgroundColor: "#F1F5F8", color: "#64748b" }}>
+                      {pct}%
+                    </span>
+                    <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <PaginationBar page={page} pageCount={pageCount} start={start} end={end} total={siswas.length} onPage={setPage}
           pageSize={pageSize} onPageSize={(n) => { setPageSize(n); setPage(0); }} />
       </>

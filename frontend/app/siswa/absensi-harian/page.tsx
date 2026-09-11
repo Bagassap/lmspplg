@@ -138,7 +138,7 @@ export default function SiswaAbsensiHarianPage() {
     let cancelled = false;
     setRiwayatData(null);
     setRiwayatLoading(true);
-    fetch(`/api/absensi-harian/saya/riwayat?tipe=${selectedRiwayatTab === "DATANG" ? "HADIR" : "PULANG"}&limit=4`)
+    fetch(`/api/absensi-harian/saya/riwayat?tipe=${selectedRiwayatTab === "DATANG" ? "HADIR" : "PULANG"}`)
       .then((r) => r.json())
       .then((list) => { if (!cancelled) setRiwayatData(Array.isArray(list) ? list : []); })
       .catch(() => { if (!cancelled) setRiwayatData([]); })
@@ -493,18 +493,16 @@ export default function SiswaAbsensiHarianPage() {
                   <h2 className="text-sm font-bold text-slate-800 dark:text-white">
                     Riwayat Absen {selectedRiwayatTab === "DATANG" ? "Datang" : "Pulang"}
                   </h2>
-                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">4 catatan terakhir</p>
+                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">Catatan hari ini</p>
                 </div>
               </div>
               <div className="mt-3 space-y-2.5">
                 {riwayatLoading ? (
-                  Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
-                  ))
+                  <div className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
                 ) : !riwayatData || riwayatData.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-8 text-center">
                     <Moon size={20} className="text-slate-300" />
-                    <p className="text-xs font-semibold text-slate-400">Belum ada riwayat</p>
+                    <p className="text-xs font-semibold text-slate-400">Belum ada riwayat hari ini</p>
                   </div>
                 ) : (
                   riwayatData.map((row) => {
@@ -574,7 +572,7 @@ export default function SiswaAbsensiHarianPage() {
 
             <AnimatePresence>
               {riwayatDetail && (
-                <MobileDetailModal onClose={() => setRiwayatDetail(null)} accent={riwayatDetail.tab === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT}>
+                <MobileDetailModal onClose={() => setRiwayatDetail(null)} accent="#ffffff">
                   {riwayatDetail.tab === "DATANG" ? (
                     <RingkasanAbsen
                       title={`${riwayatDetail.row.status ? STATUS_CFG[riwayatDetail.row.status].label : "Hadir"} Tercatat`}
@@ -587,6 +585,8 @@ export default function SiswaAbsensiHarianPage() {
                       catatan={riwayatDetail.row.catatan}
                       onReload={() => {}}
                       showMap
+                      onWhite
+                      accentColor={BRAND_GRADIENT}
                     />
                   ) : (
                     <RingkasanAbsen
@@ -599,6 +599,8 @@ export default function SiswaAbsensiHarianPage() {
                       catatan={riwayatDetail.row.catatanPulang}
                       onReload={() => {}}
                       showMap
+                      onWhite
+                      accentColor={PULANG_CFG.clr}
                     />
                   )}
                 </MobileDetailModal>
@@ -614,6 +616,7 @@ export default function SiswaAbsensiHarianPage() {
 
 function RingkasanAbsen({
   title, desc, waktu, foto, fotoLabel = "Foto Selfie", ttd, lokasi, catatan, footnote, onReload, showMap = false,
+  onWhite = false, accentColor = BRAND_GRADIENT,
 }: {
   title: string;
   desc: React.ReactNode;
@@ -626,8 +629,84 @@ function RingkasanAbsen({
   footnote?: string;
   onReload: () => void;
   showMap?: boolean;
+  onWhite?: boolean;
+  accentColor?: string;
 }) {
   const titik = showMap ? parseLokasi(lokasi) : null;
+
+  if (onWhite) {
+    return (
+      <>
+        <div className="relative px-6 py-8 text-center">
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
+            className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg" style={{ background: accentColor }}>
+            <CheckCircle2 size={30} className="text-white" />
+          </motion.div>
+          <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">{title}</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{desc}</p>
+          <div className="mx-auto mt-5 flex max-w-xs items-center justify-center gap-2 rounded-xl bg-slate-50 px-4 py-2.5 dark:bg-slate-800">
+            <Clock size={14} className="text-slate-400" />
+            <span className="font-mono text-xl font-extrabold text-slate-800 dark:text-white">{waktu ?? "—"}</span>
+          </div>
+
+          <div className="relative mx-auto mt-6 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
+            {foto && (
+              <div className="flex flex-col items-center gap-1.5 rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
+                <img src={resolveMediaSrc(foto) ?? undefined} alt={fotoLabel}
+                  className="h-24 w-24 rounded-xl border-2 border-slate-200 object-cover shadow-md dark:border-slate-700" />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{fotoLabel}</span>
+              </div>
+            )}
+            {ttd && (
+              <div className="flex flex-col items-center gap-1.5 rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
+                <img src={resolveMediaSrc(ttd) ?? undefined} alt="Tanda tangan"
+                  className="h-24 w-full rounded-xl border-2 border-slate-200 bg-white object-contain shadow-md" />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Tanda Tangan</span>
+              </div>
+            )}
+          </div>
+
+          {(lokasi || catatan) && (
+            <div className="relative mx-auto mt-4 max-w-md space-y-2 text-left">
+              {lokasi && titik && (
+                <div className="overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-800">
+                  <iframe src={`https://maps.google.com/maps?q=${titik.lat},${titik.lng}&output=embed`}
+                    className="h-32 w-full border-0" loading="lazy" title="Lokasi absen" />
+                  <a href={`https://maps.google.com/maps?q=${titik.lat},${titik.lng}`} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-2 px-3 py-2">
+                    <span className="truncate font-mono text-[10.5px] text-slate-500">{lokasi}</span>
+                    <span className="flex shrink-0 items-center gap-1 text-[10.5px] font-bold" style={{ color: accentColor }}>
+                      <ExternalLink size={10} /> Maps
+                    </span>
+                  </a>
+                </div>
+              )}
+              {lokasi && !titik && (
+                <div className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+                  <MapPin size={13} className="shrink-0 text-slate-400" />
+                  <span className="truncate font-mono text-[11px] text-slate-500">{lokasi}</span>
+                </div>
+              )}
+              {catatan && (
+                <div className="flex items-start gap-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+                  <MessageSquareText size={13} className="mt-0.5 shrink-0 text-slate-400" />
+                  <span className="text-[11px] text-slate-500">{catatan}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {footnote && <p className="relative mt-5 text-[11px] text-slate-400">{footnote}</p>}
+        </div>
+        <div className="border-t border-slate-100 px-6 py-3 text-center dark:border-slate-700">
+          <button onClick={onReload} className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-700">
+            <RefreshCw size={12} /> Muat ulang
+          </button>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="relative px-6 py-8 text-center">
@@ -1187,7 +1266,7 @@ function MobileDetailModal({ onClose, accent, children }: { onClose: () => void;
         style={{ background: accent }}
       >
         <button type="button" onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm">
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300">
           <X size={15} />
         </button>
         <div className="overflow-y-auto" style={{ maxHeight: "92vh" }}>
