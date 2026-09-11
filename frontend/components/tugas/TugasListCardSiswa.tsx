@@ -4,10 +4,17 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download, Lock,
-  SlidersHorizontal, X,
+  SlidersHorizontal, X, ChevronRight,
 } from "lucide-react";
+import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { formatTgl, isTugasActive, tipeLabel, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
+
+function chunkOf4<T>(items: T[]): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += 4) out.push(items.slice(i, i + 4));
+  return out;
+}
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
   PRAKTIK: { icon: Code2, cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" },
@@ -63,6 +70,7 @@ export function TugasListCardSiswa({
   const [tab, setTab] = useState<"active" | "completed">("active");
   const [mapelFilter, setMapelFilter] = useState<string | null>(null);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
+  const [detailItem, setDetailItem] = useState<TugasItem | null>(null);
 
   const uniqueMapel = useMemo(() => Array.from(new Set(tugasList.map((t) => t.mapel))).sort(), [tugasList]);
 
@@ -71,6 +79,8 @@ export function TugasListCardSiswa({
   const shown = (tab === "active" ? active : completed)
     .filter((t) => !mapelFilter || t.mapel === mapelFilter)
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
+  const chunked = useMemo(() => chunkOf4(shown), [shown]);
+  const detail = detailItem ? rowStatus(detailItem, onKumpulkan, onLihatDetail) : null;
 
   return (
     <div>
@@ -287,67 +297,94 @@ export function TugasListCardSiswa({
       )}
       {!loading && shown.length > 0 && (
         <div className="space-y-2.5">
-          {shown.map((t, idx) => {
-            const accent = idx % 2 === 0;
-            const d = rowStatus(t, onKumpulkan, onLihatDetail);
-            return (
-              <motion.div key={t.id}
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: idx * 0.03 }}
-                className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
-                style={accent ? { backgroundColor: "#0082FB" } : undefined}>
-                {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
-                <div className="relative flex items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xs font-bold"
-                    style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18", color: accent ? "#fff" : "#0082FB" }}>
-                    {idx + 1}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
-                        <GraduationCap size={9} /> {t.mapel}
-                      </span>
-                      {TIPE_BADGE[t.tipe] && (
-                        <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-bold ${accent ? "bg-white/20 text-white" : TIPE_BADGE[t.tipe].cls}`}>
-                          {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={9} />; })()} {tipeLabel(t.tipe)}
+          {chunked.map((group, gi) => (
+            <motion.div key={gi}
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, delay: gi * 0.05 }}
+              className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1C2B33]">
+              {group.map((t) => {
+                const d = rowStatus(t, onKumpulkan, onLihatDetail);
+                return (
+                  <button key={t.id} type="button" onClick={() => setDetailItem(t)}
+                    className="flex w-full items-center gap-3 p-4 text-left">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18", color: "#0082FB" }}>
+                      {(() => { const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList; return <Icon size={18} />; })()}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{t.judul}</p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          <GraduationCap size={9} /> {t.mapel}
                         </span>
-                      )}
+                        <span className="flex items-center gap-1 text-[9.5px] font-medium text-slate-500 dark:text-slate-400">
+                          <CalendarClock size={9} />{formatTgl(t.deadline)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className={`relative mt-3 flex items-center justify-between gap-2 border-t pt-3 ${accent ? "border-white/20" : "border-black/[0.06] dark:border-slate-700/50"}`}>
-                  <span className={`flex shrink-0 items-center gap-1 text-[10.5px] ${accent ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
-                    <CalendarClock size={11} />{formatTgl(t.deadline)}
-                  </span>
-                  <div className="flex flex-wrap items-center justify-end gap-1.5">
-                    {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && d.mySubmisi?.nilai !== null && d.mySubmisi?.nilai !== undefined && (
-                      <span className={`inline-flex items-center rounded-lg px-1.5 py-1 text-[10px] font-bold ${accent ? "bg-white/20 text-white" : "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]"}`}>
-                        {d.mySubmisi.nilai}
-                      </span>
-                    )}
-                    {t.fileUrl && (
-                      <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
-                        className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${accent ? "text-white/80 hover:bg-white/20 hover:text-white" : "text-slate-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20"}`}>
-                        <Download size={12} />
-                      </a>
-                    )}
-                    <button onClick={d.btn.onClick} disabled={"disabled" in d.btn && d.btn.disabled}
-                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
-                      style={{
-                        borderColor: d.btn.border, color: d.btn.clr, backgroundColor: d.btn.bg,
-                        boxShadow: "disabled" in d.btn && d.btn.disabled ? undefined : `0 4px 10px -3px ${d.btn.clr}55`,
-                      }}>
-                      {d.btn.icon}{d.btn.label}
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: d.btn.bg, color: d.btn.clr }}>
+                      {d.btn.icon}
+                    </span>
+                    <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
+                  </button>
+                );
+              })}
+            </motion.div>
+          ))}
         </div>
       )}
     </div>
+
+    <AnimatePresence>
+      {detailItem && detail && (
+        <MobileDetailModal onClose={() => setDetailItem(null)} accent="#0082FB">
+          <div className="relative px-6 pb-6 pt-10 text-center">
+            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+            <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
+            <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/25 shadow-lg">
+              {(() => { const Icon = TIPE_BADGE[detailItem.tipe]?.icon ?? ClipboardList; return <Icon size={24} className="text-white" />; })()}
+            </div>
+            <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
+            <p className="relative mt-1 text-sm text-white/80">{detailItem.mapel} · {tipeLabel(detailItem.tipe)}</p>
+          </div>
+
+          <div className="relative mx-auto max-w-md space-y-2 px-6 text-left">
+            <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+              <span className="flex items-center gap-2 text-xs font-semibold text-white/70"><CalendarClock size={13} /> Deadline</span>
+              <span className="text-xs font-bold text-white">{formatTgl(detailItem.deadline)}</span>
+            </div>
+            {(detailItem.tipe === "PILIHAN_GANDA" || detailItem.tipe === "ESSAY") && detail.mySubmisi?.nilai !== null && detail.mySubmisi?.nilai !== undefined && (
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-white/70">Nilai</span>
+                <span className="text-xs font-bold text-white">{detail.mySubmisi.nilai}</span>
+              </div>
+            )}
+            {detail.isLockdown && !!detail.mySubmisi?.jumlahPercobaan && !detail.isDiterima && (
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-white/70">Percobaan</span>
+                <span className="text-xs font-bold text-white">{detail.mySubmisi.jumlahPercobaan}/{maksimalPercobaanEfektif(detail.mySubmisi)}</span>
+              </div>
+            )}
+            {detailItem.fileUrl && (
+              <a href={detailItem.fileUrl} target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="flex items-center gap-2 text-xs font-semibold text-white/70"><Download size={13} /> {detailItem.fileName ?? "Lampiran"}</span>
+                <span className="text-xs font-bold text-white">Unduh</span>
+              </a>
+            )}
+          </div>
+
+          <div className="relative px-6 pb-6 pt-4">
+            <button type="button"
+              disabled={"disabled" in detail.btn && detail.btn.disabled}
+              onClick={() => { setDetailItem(null); detail.btn.onClick(); }}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold shadow-lg disabled:opacity-60"
+              style={{ color: detail.btn.clr }}>
+              {detail.btn.icon}{detail.btn.label}
+            </button>
+          </div>
+        </MobileDetailModal>
+      )}
+    </AnimatePresence>
 
     <AnimatePresence>
       {showFilterSheet && (

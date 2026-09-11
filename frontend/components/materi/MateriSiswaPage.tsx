@@ -6,7 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen, Search, FileText, AlertCircle, GraduationCap, CalendarDays, ChevronRight,
 } from "lucide-react";
+import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import type { MateriItem } from "./MateriFormModal";
+
+function chunkOf4<T>(items: T[]): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += 4) out.push(items.slice(i, i + 4));
+  return out;
+}
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -26,6 +33,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [mapelFilter, setMapelFilter] = useState<string | null>(null);
+  const [detailItem, setDetailItem] = useState<MateriItem | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -55,6 +63,8 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         (m.deskripsi ?? "").toLowerCase().includes(q);
     });
   }, [list, search, mapelFilter]);
+
+  const chunked = useMemo(() => chunkOf4(filtered), [filtered]);
 
   return (
     <div className="space-y-5">
@@ -242,43 +252,82 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         )}
         {!loading && filtered.length > 0 && (
           <div className="space-y-2.5">
-            {filtered.map((m, idx) => {
-              const accent = idx % 2 === 0;
-              return (
-                <motion.button key={m.id} type="button"
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: idx * 0.03 }}
-                  whileTap={m.fileUrl ? { scale: 0.97 } : undefined}
-                  disabled={!m.fileUrl}
-                  onClick={() => m.fileUrl && router.push(`/siswa/materi/${m.id}`)}
-                  className={`relative flex w-full items-center gap-3 overflow-hidden rounded-[22px] p-4 text-left shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] transition-shadow disabled:opacity-60 ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
-                  style={accent ? { backgroundColor: "#0082FB" } : undefined}>
-                  {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
-                  <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18" }}>
-                    <FileText size={19} style={{ color: accent ? "#fff" : "#0082FB" }} />
-                  </span>
-                  <div className="relative min-w-0 flex-1">
-                    <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{m.judul}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
-                        <GraduationCap size={9} /> {m.mapel}
-                      </span>
-                      <span className={`flex items-center gap-1 text-[9.5px] font-medium ${accent ? "text-white/75" : "text-slate-500 dark:text-slate-400"}`}>
-                        <CalendarDays size={9} />{formatDate(m.createdAt)}
-                      </span>
+            {chunked.map((group, gi) => (
+              <motion.div key={gi}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: gi * 0.05 }}
+                className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1C2B33]">
+                {group.map((m) => (
+                  <button key={m.id} type="button" onClick={() => setDetailItem(m)}
+                    className="flex w-full items-center gap-3 p-4 text-left">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18" }}>
+                      <FileText size={18} style={{ color: "#0082FB" }} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{m.judul}</p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          <GraduationCap size={9} /> {m.mapel}
+                        </span>
+                        <span className="flex items-center gap-1 text-[9.5px] font-medium text-slate-500 dark:text-slate-400">
+                          <CalendarDays size={9} />{formatDate(m.createdAt)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  {m.fileUrl && (
-                    <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB14", color: accent ? "#fff" : "#0082FB" }}>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB14", color: "#0082FB" }}>
                       <ChevronRight size={15} />
                     </span>
-                  )}
-                </motion.button>
-              );
-            })}
+                  </button>
+                ))}
+              </motion.div>
+            ))}
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {detailItem && (
+          <MobileDetailModal onClose={() => setDetailItem(null)} accent="#0082FB">
+            <div className="relative px-6 pb-6 pt-10 text-center">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+              <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/25 shadow-lg">
+                <FileText size={24} className="text-white" />
+              </div>
+              <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
+              <p className="relative mt-1 text-sm text-white/80">{detailItem.mapel}</p>
+            </div>
+
+            <div className="relative mx-auto max-w-md space-y-2 px-6 text-left">
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="flex items-center gap-2 text-xs font-semibold text-white/70"><CalendarDays size={13} /> Tanggal Dibuat</span>
+                <span className="text-xs font-bold text-white">{formatDate(detailItem.createdAt)}</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-white/70">Dibuat Oleh</span>
+                <span className="text-xs font-bold text-white">{detailItem.createdBy.nama}</span>
+              </div>
+              {detailItem.deskripsi && (
+                <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <span className="mb-1 block text-xs font-semibold text-white/70">Deskripsi</span>
+                  <p className="text-xs leading-relaxed text-white">{detailItem.deskripsi}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="relative px-6 pb-6 pt-4">
+              {detailItem.fileUrl ? (
+                <button type="button" onClick={() => { setDetailItem(null); router.push(`/siswa/materi/${detailItem.id}`); }}
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold text-[#0082FB] shadow-lg">
+                  <BookOpen size={16} /> Buka Modul
+                </button>
+              ) : (
+                <p className="text-center text-xs font-semibold text-white/70">Belum ada file modul untuk materi ini</p>
+              )}
+            </div>
+          </MobileDetailModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

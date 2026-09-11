@@ -26,8 +26,6 @@ export function SubmisiTugasModal({
   onRevisi: (s: TugasSubmisiItem) => void;
   onSimpanNilai: (submisiId: string, nilai: number) => Promise<void>;
   onResetPercobaan?: (submisiId: string) => Promise<void>;
-  // Tambah 1x percobaan TANPA reset penuh — dipakai untuk kasus seperti HP
-  // siswa mati 2x tanpa sengaja sampai kehabisan jatah normal.
   onTambahPercobaan?: (submisiId: string) => Promise<void>;
 }) {
   const [viewCodeTarget, setViewCodeTarget] = useState<TugasSubmisiItem | null>(null);
@@ -49,7 +47,6 @@ export function SubmisiTugasModal({
       .then((d) => setBelumList(Array.isArray(d) ? d : []))
       .catch(() => setBelumList([]))
       .finally(() => setBelumLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tugas?.id]);
   return (
     <>
@@ -94,7 +91,7 @@ export function SubmisiTugasModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-y-3 shrink-0 border-b border-slate-100 py-3 dark:border-slate-700 sm:grid-cols-5 sm:gap-y-0 sm:py-0">
+              <div className="hidden shrink-0 border-b border-slate-100 dark:border-slate-700 lg:grid lg:grid-cols-5">
                 {[
                   { label: "Total", val: rows.length, color: "#0082FB" },
                   { label: "Diterima", val: cntDiterima, color: "#00D67F" },
@@ -102,9 +99,9 @@ export function SubmisiTugasModal({
                   { label: "Menunggu", val: cntMenunggu, color: "#0082FB" },
                   { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#EF4444" },
                 ].map((st, i) => (
-                  <div key={i} className="p-2.5 text-center sm:border-r sm:border-slate-100 sm:p-4 sm:last:border-r-0 dark:sm:border-slate-700">
-                    <p className="text-xl font-extrabold sm:text-2xl" style={{ color: st.color }}>{st.val}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5 sm:text-[11px]">{st.label}</p>
+                  <div key={i} className="border-r border-slate-100 p-4 text-center last:border-r-0 dark:border-slate-700">
+                    <p className="text-2xl font-extrabold" style={{ color: st.color }}>{st.val}</p>
+                    <p className="mt-0.5 text-[11px] text-slate-400">{st.label}</p>
                   </div>
                 ))}
               </div>
@@ -161,23 +158,17 @@ export function SubmisiTugasModal({
                   const sc = statusInfo(s.status);
                   const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
                   const isDone = s.status === "DITERIMA";
-                  return (
-                    <div key={s.id} className="flex flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                        style={{ backgroundColor: isDone ? "#00D67F" : sc.color }}>
-                        {nama[0]?.toUpperCase() ?? "?"}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
-                        <p className="text-xs text-slate-400 truncate">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
-                      </div>
+                  const actionBtn = isPraktik
+                    ? { icon: <Code2 size={12} />, label: "Lihat Kode", onClick: () => setViewCodeTarget(s) }
+                    : isSoalBased
+                    ? { icon: tugas.tipe === "PILIHAN_GANDA" ? <ListChecks size={12} /> : <PenLine size={12} />, label: "Lihat Jawaban", onClick: () => setViewJawabanTarget(s) }
+                    : { icon: <Download size={12} />, label: "File", onClick: () => setViewFileTarget(s) };
+                  const badges = (
+                    <>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
-                        <span className="shrink-0 rounded-xl px-3 py-1.5 text-sm font-black shadow-sm"
-                          style={{
-                            background: s.nilai >= 80 ? "#00D67F" : s.nilai >= 60 ? "#F59E0B" : "#EF4444",
-                            color: "#FFFFFF",
-                          }}>
-                          {s.nilai}
+                        <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-black text-white"
+                          style={{ background: s.nilai >= 80 ? "#00D67F" : s.nilai >= 60 ? "#F59E0B" : "#EF4444" }}>
+                          Nilai {s.nilai}
                         </span>
                       )}
                       {isLockdown && !!s.jumlahPercobaan && (
@@ -193,33 +184,62 @@ export function SubmisiTugasModal({
                           <ShieldAlert size={11} /> Dipaksa Keluar
                         </span>
                       )}
-                      {(isDone || s.status === "REVISI") && (
-                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
-                          {isDone ? "✓ Diterima" : "⚠ Perlu Revisi"}
-                        </span>
-                      )}
-                      {isPraktik ? (
-                        <button onClick={() => setViewCodeTarget(s)}
+                    </>
+                  );
+                  return (
+                    <div key={s.id}>
+                      <div className="hidden flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors lg:flex">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                          style={{ backgroundColor: isDone ? "#00D67F" : sc.color }}>
+                          {nama[0]?.toUpperCase() ?? "?"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
+                          <p className="text-xs text-slate-400 truncate">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
+                        </div>
+                        {badges}
+                        {(isDone || s.status === "REVISI") && (
+                          <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0" style={{ backgroundColor: sc.bg, color: sc.color }}>
+                            {isDone ? "✓ Diterima" : "⚠ Perlu Revisi"}
+                          </span>
+                        )}
+                        <button onClick={actionBtn.onClick}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
                           style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
-                          <Code2 size={12} /> Lihat Kode
+                          {actionBtn.icon} {actionBtn.label}
                         </button>
-                      ) : isSoalBased ? (
-                        <button onClick={() => setViewJawabanTarget(s)}
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
+                        {isDone && (
+                          <span className="text-xs font-bold text-emerald-500 shrink-0">Selesai ✓</span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-3 px-4 py-4 lg:hidden">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                            style={{ backgroundColor: isDone ? "#00D67F" : sc.color }}>
+                            {nama[0]?.toUpperCase() ?? "?"}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
+                            <p className="truncate text-[11px] text-slate-400">{formatTglJam(s.submittedAt)}{s.catatan ? ` · ${s.catatan}` : ""}</p>
+                          </div>
+                          {(isDone || s.status === "REVISI") && (
+                            <span className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold" style={{ backgroundColor: sc.bg, color: sc.color }}>
+                              {isDone ? "Diterima" : "Revisi"}
+                            </span>
+                          )}
+                        </div>
+
+                        {(((tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null) || (isLockdown && !!s.jumlahPercobaan) || s.dipaksaKeluar) && (
+                          <div className="flex flex-wrap items-center gap-1.5 pl-[52px]">{badges}</div>
+                        )}
+
+                        <button onClick={actionBtn.onClick}
+                          className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold"
                           style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
-                          {tugas.tipe === "PILIHAN_GANDA" ? <ListChecks size={12} /> : <PenLine size={12} />} Lihat Jawaban
+                          {actionBtn.icon} {actionBtn.label}
                         </button>
-                      ) : (
-                        <button onClick={() => setViewFileTarget(s)}
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
-                          <Download size={12} /> File
-                        </button>
-                      )}
-                      {isDone && (
-                        <span className="text-xs font-bold text-emerald-500 shrink-0">Selesai ✓</span>
-                      )}
+                      </div>
                     </div>
                   );
                 })}

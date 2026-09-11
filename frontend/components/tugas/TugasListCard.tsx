@@ -4,10 +4,17 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList, Search, Plus, Pencil, Trash2, Send, CalendarClock, GraduationCap, Code2, ListChecks, PenLine,
-  SlidersHorizontal, CheckCircle, X,
+  SlidersHorizontal, CheckCircle, X, ChevronRight,
 } from "lucide-react";
+import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
+
+function chunkOf4<T>(items: T[]): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += 4) out.push(items.slice(i, i + 4));
+  return out;
+}
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
   PRAKTIK: { icon: Code2, cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" },
@@ -49,6 +56,7 @@ export function TugasListCard({
   const setSearch = controlledOnSearchChange ?? setInternalSearch;
   const [mapelFilter, setMapelFilter] = useState<string | null>(null);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
+  const [detailItem, setDetailItem] = useState<TugasItem | null>(null);
   const canEdit = (t: TugasItem) => !currentUserRole || currentUserRole === "ADMIN" || t.createdBy.id === currentUserId;
 
   const uniqueMapel = useMemo(() => Array.from(new Set(tugasList.map((t) => t.mapel))).sort(), [tugasList]);
@@ -58,6 +66,7 @@ export function TugasListCard({
   const shown = (tab === "active" ? active : completed)
     .filter((t) => !mapelFilter || t.mapel === mapelFilter)
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
+  const chunked = useMemo(() => chunkOf4(shown), [shown]);
 
   return (
     <div>
@@ -254,75 +263,104 @@ export function TugasListCard({
         )}
         {!loading && shown.length > 0 && (
           <div className="space-y-2.5">
-            {shown.map((t, idx) => {
-              const accent = idx % 2 === 0;
-              const rp = rowPalette(idx);
-              const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
-              return (
-                <motion.div key={t.id}
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: idx * 0.03 }}
-                  className={`relative overflow-hidden rounded-[22px] p-4 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] ${accent ? "" : "bg-white dark:bg-[#1C2B33]"}`}
-                  style={accent ? { backgroundColor: "#0082FB" } : undefined}>
-                  {accent && <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />}
-                  <div className="relative flex items-center gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xs font-bold"
-                      style={{ backgroundColor: accent ? "rgba(255,255,255,0.2)" : "#0082FB18", color: accent ? "#fff" : "#0082FB" }}>
-                      {idx + 1}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                        <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-semibold ${accent ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
-                          <GraduationCap size={9} /> {t.mapel}
-                        </span>
-                        {TIPE_BADGE[t.tipe] && (
-                          <span className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-[9.5px] font-bold ${accent ? "bg-white/20 text-white" : TIPE_BADGE[t.tipe].cls}`}>
-                            {(() => { const Icon = TIPE_BADGE[t.tipe].icon; return <Icon size={9} />; })()} {tipeLabel(t.tipe)}
+            {chunked.map((group, gi) => (
+              <motion.div key={gi}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: gi * 0.05 }}
+                className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1C2B33]">
+                {group.map((t) => {
+                  const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
+                  return (
+                    <button key={t.id} type="button" onClick={() => setDetailItem(t)}
+                      className="flex w-full items-center gap-3 p-4 text-left">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18" }}>
+                        {(() => { const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList; return <Icon size={18} style={{ color: "#0082FB" }} />; })()}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{t.judul}</p>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                            <GraduationCap size={9} /> {t.mapel}
                           </span>
-                        )}
+                          <span className="flex items-center gap-1 text-[9.5px] font-medium text-slate-500 dark:text-slate-400">
+                            <CalendarClock size={9} />{formatTgl(t.deadline)}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className={`relative mt-3 flex items-center justify-between gap-2 border-t pt-3 ${accent ? "border-white/20" : "border-black/[0.06] dark:border-slate-700/50"}`}>
-                    <span className={`flex shrink-0 items-center gap-1 text-[10.5px] ${accent ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
-                      <CalendarClock size={11} />{formatTgl(t.deadline)}
-                    </span>
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      <button type="button" onClick={() => onLihatSubmisi(t)}
-                        className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
-                        style={accent
-                          ? { borderColor: "rgba(255,255,255,0.4)", color: "#fff", backgroundColor: "rgba(255,255,255,0.15)" }
-                          : { borderColor: rp.bar, color: rp.bar, backgroundColor: `${rp.bar}14` }}>
-                        <Send size={11} /> Lihat
-                        {cnt > 0 && (
-                          <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold"
-                            style={accent ? { backgroundColor: "#fff", color: "#0082FB" } : { backgroundColor: rp.bar, color: "#fff" }}>
-                            {cnt}
-                          </span>
-                        )}
-                      </button>
-                      {canEdit(t) && (
-                        <>
-                          <button type="button" onClick={() => onEditTugas(t)}
-                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#8A9E1F] dark:hover:bg-[#1C2B33]/20"}`}>
-                            <Pencil size={14} />
-                          </button>
-                          <button type="button" onClick={() => onDeleteTugas(t.id)}
-                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${accent ? "text-white/85 hover:bg-white/20" : "text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"}`}>
-                            <Trash2 size={14} />
-                          </button>
-                        </>
+                      {cnt > 0 && (
+                        <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1.5 text-[10px] font-bold text-white" style={{ backgroundColor: "#0082FB" }}>
+                          {cnt}
+                        </span>
                       )}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                      <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
+                    </button>
+                  );
+                })}
+              </motion.div>
+            ))}
           </div>
         )}
       </div>
     )}
+
+    <AnimatePresence>
+      {detailItem && (() => {
+        const cnt = submisiList.filter((s) => s.tugasId === detailItem.id).length;
+        return (
+          <MobileDetailModal onClose={() => setDetailItem(null)} accent="#0082FB">
+            <div className="relative px-6 pb-6 pt-10 text-center">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+              <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/25 shadow-lg">
+                {(() => { const Icon = TIPE_BADGE[detailItem.tipe]?.icon ?? ClipboardList; return <Icon size={24} className="text-white" />; })()}
+              </div>
+              <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
+              <p className="relative mt-1 text-sm text-white/80">{detailItem.mapel} · {tipeLabel(detailItem.tipe)}</p>
+            </div>
+
+            <div className="relative mx-auto max-w-md space-y-2 px-6 text-left">
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-white/70">Deadline</span>
+                <span className="text-xs font-bold text-white">{formatTgl(detailItem.deadline)}</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-white/70">Terkumpul</span>
+                <span className="text-xs font-bold text-white">{cnt} siswa</span>
+              </div>
+              {detailItem.kelasList.length > 0 && (
+                <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <span className="mb-1.5 block text-xs font-semibold text-white/70">Kelas Target</span>
+                  <div className="flex flex-wrap gap-1">
+                    {detailItem.kelasList.map((k) => (
+                      <span key={k.id} className="rounded-lg bg-white/15 px-2 py-0.5 text-[10px] font-bold text-white">{k.nama}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="relative flex flex-col gap-2 px-6 pb-6 pt-4">
+              <button type="button" onClick={() => { setDetailItem(null); onLihatSubmisi(detailItem); }}
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold text-[#0082FB] shadow-lg">
+                <Send size={16} /> Lihat Submisi{cnt > 0 ? ` (${cnt})` : ""}
+              </button>
+              {canEdit(detailItem) && (
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => { onEditTugas(detailItem); setDetailItem(null); }}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white/15 py-3 text-sm font-bold text-white">
+                    <Pencil size={14} /> Edit
+                  </button>
+                  <button type="button" onClick={() => { onDeleteTugas(detailItem.id); setDetailItem(null); }}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white/15 py-3 text-sm font-bold text-white">
+                    <Trash2 size={14} /> Hapus
+                  </button>
+                </div>
+              )}
+            </div>
+          </MobileDetailModal>
+        );
+      })()}
+    </AnimatePresence>
 
     <AnimatePresence>
       {showFilterSheet && (
