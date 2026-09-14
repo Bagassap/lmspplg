@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Pencil, Trash2, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Trash2, Users, Building2, CalendarClock } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -14,13 +14,13 @@ function fmtTgl(iso: string): string {
 }
 
 export function PenempatanTable({
-  loading, list, busyId, canManage = true, onUbahStatus, onEdit, onHapus,
+  loading, list, busyId, canManage = true, mobileNative = false, onUbahStatus, onEdit, onHapus,
 }: {
   loading: boolean;
   list: PenempatanMagang[];
   busyId?: string | null;
-  // false = tabel guru pembimbing, hanya lihat (tanpa ubah status/edit/hapus).
   canManage?: boolean;
+  mobileNative?: boolean;
   onUbahStatus?: (p: PenempatanMagang, status: StatusPenempatan) => void;
   onEdit?: (p: PenempatanMagang) => void;
   onHapus?: (p: PenempatanMagang) => void;
@@ -54,7 +54,7 @@ export function PenempatanTable({
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
             <table className="w-full min-w-215 text-left text-sm">
               <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
                 <tr>
@@ -128,6 +128,62 @@ export function PenempatanTable({
               </tbody>
             </table>
           </div>
+
+          {mobileNative && (
+            <div className="divide-y divide-slate-100 p-2 lg:hidden dark:divide-slate-700/40">
+              {pageItems.map((p) => {
+                const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+                const cfg = STATUS_PENEMPATAN_CFG[p.status];
+                const busy = busyId === p.id;
+                return (
+                  <div key={p.id} className="flex flex-col gap-2.5 p-3">
+                    <div className="flex items-center gap-2.5">
+                      <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={38} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{nama}</p>
+                        <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
+                      </div>
+                      {canManage ? (
+                        <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
+                          className="shrink-0 rounded-lg border-0 px-2 py-1 text-[10px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
+                          style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                          <option value="AKTIF">Aktif</option>
+                          <option value="SELESAI">Selesai</option>
+                          <option value="BATAL">Batal</option>
+                        </select>
+                      ) : (
+                        <span className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-semibold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                          {cfg.label}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pl-[50px] text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="flex items-center gap-1"><Building2 size={11} className="shrink-0" />{p.tempatMagang.namaTempat}</span>
+                      <span className="flex items-center gap-1">
+                        <CalendarClock size={11} className="shrink-0" />
+                        {fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
+                      </span>
+                    </div>
+
+                    {canManage && (
+                      <div className="flex items-center gap-1.5 pl-[50px]">
+                        <button onClick={() => onEdit?.(p)} disabled={busy}
+                          className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-[#0082FB] shadow-sm transition-colors hover:bg-blue-100 disabled:opacity-40 dark:bg-blue-900/20">
+                          <Pencil size={12} /> Edit
+                        </button>
+                        <button onClick={() => onHapus?.(p)} disabled={busy}
+                          className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
+                          <Trash2 size={12} /> Hapus
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {pageCount > 1 && (
             <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
               <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {list.length}</span>
