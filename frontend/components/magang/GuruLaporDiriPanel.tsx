@@ -76,7 +76,7 @@ export function GuruLaporDiriPanel() {
           </div>
         </div>
 
-        <LaporDiriTable loading={loading} rows={filtered} />
+        <LaporDiriTable loading={loading} rows={filtered} mobileNative />
       </div>
     </div>
   );

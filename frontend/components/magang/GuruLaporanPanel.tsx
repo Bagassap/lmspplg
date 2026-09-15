@@ -79,7 +79,7 @@ export function GuruLaporanPanel() {
           </div>
         </div>
 
-        <LaporanAkhirTable loading={loading} rows={filtered} onOpen={setSelected} />
+        <LaporanAkhirTable loading={loading} rows={filtered} onOpen={setSelected} mobileNative />
       </div>
 
       <LaporanAkhirReviewModal row={selected} onClose={() => setSelected(null)} onReview={handleReview} />
