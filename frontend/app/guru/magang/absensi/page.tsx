@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Briefcase,
-  ArrowRight, ChevronLeft, ChevronDown, Eye, X,
+  ArrowRight, ChevronLeft, Eye, X,
   Users, TrendingUp, LogOut, PieChart, FileText, Download, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -17,6 +17,7 @@ import { ExportButtons } from "@/components/absensi-magang/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
 import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
+import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl, avatarColor } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
@@ -220,24 +221,6 @@ function RingkasanKehadiranCard({
         </span>
       </div>
     </div>
-  );
-}
-
-function MobileDatePill({ value, onChange, light }: { value: string; onChange: (v: string) => void; light?: boolean }) {
-  const d = new Date(`${value}T00:00:00`);
-  const label = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
-  return (
-    <label className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 ${
-      light
-        ? "bg-white text-[#0082FB]"
-        : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-    }`}>
-      <CalendarDays size={13} className={light ? "text-[#0082FB]" : "text-slate-400"} />
-      <span className="text-xs font-bold">{label}</span>
-      <ChevronDown size={12} className={light ? "text-[#0082FB]" : "text-slate-400"} />
-      <input type="date" value={value} onChange={(e) => onChange(e.target.value)}
-        className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
-    </label>
   );
 }
 
@@ -704,7 +687,7 @@ export default function GuruMagangAbsensiPage() {
             <ChevronLeft size={18} />
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
-          <MobileDatePill value={tanggal} onChange={setTanggal} light />
+          <MobileDatePicker value={tanggal} onChange={setTanggal} light />
         </div>
 
         <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
