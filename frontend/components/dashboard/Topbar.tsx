@@ -133,7 +133,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
-  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman" || pathname === "/guru/materi" || pathname === "/guru/data-siswa" || pathname === "/guru/catatan-siswa" || pathname === "/guru/magang/penempatan" || pathname === "/guru/magang/absensi" || pathname === "/guru/magang/rekap" || pathname === "/guru/ujian-ukk/jadwal-soal";
+  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/admin/dashboard" || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman" || pathname === "/guru/materi" || pathname === "/guru/data-siswa" || pathname === "/guru/catatan-siswa" || pathname === "/guru/magang/penempatan" || pathname === "/guru/magang/absensi" || pathname === "/guru/magang/rekap" || pathname === "/guru/ujian-ukk/jadwal-soal";
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -310,7 +310,7 @@ export function Topbar({ user }: { user: UserPayload }) {
     <>
       <header
         className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1C2B33] 2xl:px-10 ${
-          blueHeader ? "bg-[#0082FB] shadow-[0_2px_12px_rgba(0,53,133,0.25)] lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)]" : "bg-surface dark:bg-[#1C2B33]"
+          blueHeader ? "bg-[#0082FB] lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)]" : "bg-surface dark:bg-[#1C2B33]"
         }`}
       >
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
