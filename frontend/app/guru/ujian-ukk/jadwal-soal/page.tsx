@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback, Fragment } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
-  CalendarDays, FileText, FileSpreadsheet, BookOpen, Loader2,
-  ChevronLeft, ChevronRight, X, Download, Search,
-  MapPin, Clock, User, PieChart,
+  CalendarDays, FileText, BookOpen, Loader2,
+  ChevronLeft, ChevronRight, X, Search,
 } from "lucide-react";
-import { useToast } from "@/components/shared/ToastSystem";
 import { todayJakarta } from "@/components/absensi-harian/shared";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
@@ -30,13 +29,56 @@ const ROW_PALETTES = [
   { bg:"#EAF3FF", text:"#0082FB",  bar:"#0082FB",  gradient:"#0082FB" },
   { bg:"#E3FBF0", text:"#00D67F",  bar:"#00D67F",  gradient:"#00D67F" },
   { bg:"#FEE9EA", text:"#EF4444",  bar:"#EF4444",  gradient:"#EF4444" },
-  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" }, // lime — text/bar gelap supaya kontras
+  { bg:"#F1F5F8", text:"#8A9E1F",  bar:"#8A9E1F",  gradient:"#C3F84A" },
   { bg:"#EAF3FF", text:"#0064E0",  bar:"#0064E0",  gradient:"#0082FB" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
+const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: string }> = {
+  DITERIMA: { label: "Diterima", color: "#00D67F", bg: "#E3FBF0" },
+  REVISI: { label: "Revisi", color: "#C3F84A", bg: "#F1F5F8" },
+  TERKIRIM: { label: "Menunggu", color: "#0082FB", bg: "#EAF3FF" },
+};
+
+function SubmisiList({ items }: { items: Submisi[] }) {
+  if (items.length === 0) {
+    return <div className="px-4 py-6 text-center text-xs text-slate-400">Belum ada siswa yang mengumpulkan</div>;
+  }
+  return (
+    <div className="divide-y divide-slate-100 dark:divide-slate-700/30">
+      {items.map((s) => {
+        const cfg = SUBMISI_STATUS_CFG[s.status];
+        return (
+          <div key={s.id} className="flex items-center gap-3 px-4 py-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ background: "#0082FB" }}>
+              {(s.siswa?.user?.nama || s.siswa?.nama)?.[0]?.toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">
+                {s.siswa?.user?.nama || s.siswa?.nama}
+              </p>
+              <p className="text-[10px] text-slate-400">{s.fileName}</p>
+            </div>
+            <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold"
+              style={{ color: cfg.color, backgroundColor: cfg.bg }}>{cfg.label}</span>
+            <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold"
+              style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
+              <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 fill-current"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
+              GDrive
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 
 export default function GuruJadwalSoalPage() {
+  const router = useRouter();
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
   const [loading, setLoading]         = useState(true);
@@ -90,29 +132,26 @@ export default function GuruJadwalSoalPage() {
   const totalSoal = tahapanList.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:")).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
-      <div className="flex flex-col xl:flex-row gap-6">
+    <div className="space-y-6">
 
-        <div className="flex-1 min-w-0 space-y-6">
-
-          <div className="relative overflow-hidden rounded-2xl p-6"
-            style={{background:"#0082FB"}}>
-            <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
-            <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
-            <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
-            <div className="relative flex items-center gap-3 sm:gap-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-                <FileText size={22} className="text-white sm:hidden"/>
-                <FileText size={26} className="text-white hidden sm:block"/>
-              </div>
-              <div>
-                <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">UKK</h1>
-              </div>
-            </div>
+      <div className="hidden overflow-hidden rounded-2xl p-6 lg:block"
+        style={{background:"#0082FB"}}>
+        <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
+        <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
+        <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
+        <div className="relative flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
+            <FileText size={22} className="text-white sm:hidden"/>
+            <FileText size={26} className="text-white hidden sm:block"/>
           </div>
+          <div>
+            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Ujian Kompetensi Keahlian</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">UKK</h1>
+          </div>
+        </div>
+      </div>
 
-          <AnimatePresence>
+      <AnimatePresence>
             {openJadwalModal && (()=>{
               const allSoal = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:"));
               const curSoal = allSoal[soalJadwalIdx] ?? null;
@@ -226,39 +265,77 @@ export default function GuruJadwalSoalPage() {
 
           {(()=>{ const jadwalFiles = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:")); return (
           <>
-          <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
-            <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
+          <div className="mb-8 grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[1fr_2.3fr]">
+            <div>
+            <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-                <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
+                <div className="flex flex-col gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
-                  <CalendarDays size={14} className="lg:hidden" />
-                  <CalendarDays size={16} className="hidden lg:block" />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                  <CalendarDays size={16} />
                 </div>
                 <div className="relative min-w-0">
-                  <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 sm:text-[10px] lg:text-[11px]">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
                 </div>
               </button>
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#C3F84A", color: "#1C2B33", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:h-9 lg:w-9 lg:rounded-2xl">
-                  <FileText size={14} className="lg:hidden" />
-                  <FileText size={16} className="hidden lg:block" />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
+                  <FileText size={16} />
                 </div>
                 <div className="relative min-w-0">
-                  <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75 sm:text-[10px] lg:text-[11px]">{totalSoal} soal diunggah · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#1C2B33]/75">{totalSoal} soal diunggah · TA 2026/2027</p>
                 </div>
               </button>
                 </div>
               </div>
+
+              <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+                <div className="relative flex items-center px-4 pb-3 pt-4">
+                  <button type="button" onClick={() => router.push("/guru/dashboard")}
+                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    <ChevronLeft size={18} />
+                  </button>
+                  <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
+                </div>
+                <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 pb-1 pt-3 dark:bg-[#1C2B33]">
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      style={{ background: "#0082FB" }}>
+                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
+                        <CalendarDays size={14} />
+                      </div>
+                      <div className="relative min-w-0">
+                        <p className="truncate text-sm font-black leading-tight">Jadwal UKK</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
+                      </div>
+                    </button>
+                    <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10" />
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15">
+                        <FileText size={14} />
+                      </div>
+                      <div className="relative min-w-0">
+                        <p className="truncate text-sm font-black leading-tight">Soal UKK</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75">{totalSoal} soal diunggah</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
               <div className="flex flex-col gap-6">
 
@@ -309,6 +386,8 @@ export default function GuruJadwalSoalPage() {
                   </div>
                 )}
                 {!loading && shown.length > 0 && (
+                <>
+                  <div className="hidden overflow-x-auto lg:block">
                   <table className="w-full min-w-170 text-left text-sm">
                     <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
                       <tr>
@@ -368,43 +447,7 @@ export default function GuruJadwalSoalPage() {
                                     <span>Hasil Kerja Siswa</span>
                                     <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
                                   </div>
-                                  {submisiTahapan.length === 0 ? (
-                                    <div className="px-4 py-6 text-center text-xs text-slate-400">Belum ada siswa yang mengumpulkan</div>
-                                  ) : (
-                                    <div className="divide-y divide-slate-100 dark:divide-slate-700/30">
-                                      {submisiTahapan.map(s => {
-                                        const statusCfg: Record<string,{label:string;color:string;bg:string}> = {
-                                          DITERIMA:{ label:"Diterima", color:"#00D67F", bg:"#E3FBF0" },
-                                          REVISI:  { label:"Revisi",   color:"#C3F84A", bg:"#F1F5F8" },
-                                          TERKIRIM:{ label:"Menunggu", color:"#0082FB", bg:"#EAF3FF" },
-                                        };
-                                        const cfg = statusCfg[s.status];
-                                        return (
-                                          <div key={s.id} className="px-4 py-3 flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                                              style={{background:"#0082FB"}}>
-                                              {(s.siswa?.user?.nama || s.siswa?.nama)?.[0]?.toUpperCase()}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                              <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate">
-                                                {s.siswa?.user?.nama || s.siswa?.nama}
-                                              </p>
-                                              <p className="text-[10px] text-slate-400">{s.fileName}</p>
-                                            </div>
-                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0"
-                                              style={{color:cfg.color, backgroundColor:cfg.bg}}>{cfg.label}</span>
-                                            <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
-                                              target="_blank" rel="noopener noreferrer"
-                                              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg shrink-0"
-                                              style={{color:"#0082FB", backgroundColor:"#EAF3FF"}}>
-                                              <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current shrink-0"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
-                                              GDrive
-                                            </a>
-                                          </div>
-                                        );
-                                      })}
-                                    </div>
-                                  )}
+                                  <SubmisiList items={submisiTahapan} />
                                 </td>
                               </tr>
                             )}
@@ -413,6 +456,51 @@ export default function GuruJadwalSoalPage() {
                       })}
                     </tbody>
                   </table>
+                  </div>
+
+                  <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
+                    {shown.map((t, idx) => {
+                      const rp = rowPalette(idx);
+                      const exp = expanded.has(t.id);
+                      const submisiTahapan = submisiList.filter((s) => t.soal.some((so) => so.id === s.soal?.id));
+                      const sudahKumpul = submisiTahapan.length;
+                      const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSoal, 1)) * 100), 100);
+                      return (
+                        <div key={t.id}>
+                          <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                              <span className="text-xs font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
+                              <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                              <div className="mt-1.5 flex items-center gap-2">
+                                <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />
+                                </div>
+                                <span className="text-[11px] font-bold" style={{ color: rp.bar }}>{pct}%</span>
+                              </div>
+                            </div>
+                            <span className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold"
+                              style={{ color: rp.bar, backgroundColor: rp.bg }}>
+                              {sudahKumpul > 0 && sudahKumpul}
+                              <BookOpen size={11} />
+                            </span>
+                          </button>
+                          {exp && (
+                            <div className="border-t border-slate-100 bg-slate-50/50 dark:border-slate-700/40 dark:bg-slate-700/20">
+                              <div className="flex items-center justify-between px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                <span>Hasil Kerja Siswa</span>
+                                <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
+                              </div>
+                              <SubmisiList items={submisiTahapan} />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
                 )}
               </div>
             </div>
@@ -422,8 +510,6 @@ export default function GuruJadwalSoalPage() {
           </>
           )})()}
 
-        </div>
-      </div>
     </div>
   );
 }
