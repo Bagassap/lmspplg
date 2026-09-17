@@ -17,7 +17,7 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-export function MobileDatePicker({ value, onChange, light }: { value: string; onChange: (v: string) => void; light?: boolean }) {
+export function MobileDatePicker({ value, onChange, light, flat }: { value: string; onChange: (v: string) => void; light?: boolean; flat?: boolean }) {
   const [open, setOpen] = useState(false);
   const sel = parseYmd(value);
   const [viewY, setViewY] = useState(sel.y);
@@ -55,10 +55,10 @@ export function MobileDatePicker({ value, onChange, light }: { value: string; on
   return (
     <>
       <button type="button" onClick={openPicker}
-        className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 ${
-          light
-            ? "bg-white text-[#0082FB]"
-            : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        className={`relative z-10 flex shrink-0 items-center gap-1.5 ${
+          flat
+            ? "h-11 rounded-xl bg-slate-50 px-3 text-slate-700 dark:bg-slate-700/40 dark:text-slate-200"
+            : `rounded-full px-3 py-1.5 ${light ? "bg-white text-[#0082FB]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`
         }`}>
         <CalendarDays size={13} className={light ? "text-[#0082FB]" : "text-slate-400"} />
         <span className="text-xs font-bold">{label}</span>

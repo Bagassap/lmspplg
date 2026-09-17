@@ -619,17 +619,17 @@ export default function AdminAbsensiHarianPage() {
 
         <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-3xl bg-white p-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
             <button type="button" onClick={() => setKelasPickerOpen(true)}
-              className="flex min-w-0 flex-1 items-center justify-between rounded-2xl border border-slate-200 bg-white py-3 pl-4 pr-3 text-left shadow-[0_2px_6px_rgba(0,0,0,0.05)] dark:border-slate-700 dark:bg-slate-800">
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-slate-50 px-3 text-left dark:bg-slate-700/40">
               <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
                 {selected ? `${selected.kelas.nama} · ${hadirPct}% hadir` : "Pilih kelas"}
               </span>
               <ChevronDown size={14} className="ml-2 shrink-0 text-slate-400" />
             </button>
-            <MobileDatePicker value={tanggal} onChange={setTanggal} />
+            <MobileDatePicker value={tanggal} onChange={setTanggal} flat />
             <button type="button" onClick={() => setShowKelola(true)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-[0_2px_6px_rgba(0,0,0,0.05)] dark:bg-slate-800 dark:text-slate-300">
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-500 dark:bg-slate-700/40 dark:text-slate-300">
               <Settings2 size={15} />
             </button>
           </div>
