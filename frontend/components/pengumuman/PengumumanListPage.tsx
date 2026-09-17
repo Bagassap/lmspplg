@@ -374,7 +374,7 @@ function AccordionCard({
 export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
-  const dashboardHref = pathname.startsWith("/guru/") ? "/guru/dashboard" : "/siswa/dashboard";
+  const dashboardHref = pathname.startsWith("/guru/") ? "/guru/dashboard" : pathname.startsWith("/admin/") ? "/admin/dashboard" : "/siswa/dashboard";
   const toast = useToast();
   const [list,          setList]          = useState<PengumumanItem[]>([]);
   const [loading,       setLoading]       = useState(true);
@@ -578,19 +578,15 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       </div>
 
-      <div className={`relative isolate lg:hidden ${canManage ? "-mx-4" : "-m-4"}`} style={canManage ? undefined : { background: "#0082FB" }}>
-        {!canManage && (
-          <div className="relative flex items-center px-4 pb-3 pt-4">
-            <button type="button" onClick={() => router.push(dashboardHref)}
-              className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
-              <ChevronLeft size={18} />
-            </button>
-            <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Pengumuman</h1>
-          </div>
-        )}
-        <div
-          className={`space-y-4 px-4 py-4 ${canManage ? "bg-[#F1F5F8] dark:bg-[#1C2B33]" : "rounded-t-[28px] bg-[#F1F5F8] dark:bg-[#1C2B33]"}`}
-        >
+      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="relative flex items-center px-4 pb-3 pt-4">
+          <button type="button" onClick={() => router.push(dashboardHref)}
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            <ChevronLeft size={18} />
+          </button>
+          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Pengumuman</h1>
+        </div>
+        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] px-4 py-4 dark:bg-[#1C2B33]">
 
         {canManage && (
           <motion.button
