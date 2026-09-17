@@ -29,15 +29,18 @@ export function DataSiswaHeader({ title, eyebrow = "Data Siswa" }: { title: stri
   const pathname = usePathname();
   const router = useRouter();
   const isGuru = pathname?.startsWith("/guru/") ?? false;
+  const isAdmin = pathname?.startsWith("/admin/") ?? false;
 
-  if (!isGuru) return <Banner title={title} eyebrow={eyebrow} />;
+  if (!isGuru && !isAdmin) return <Banner title={title} eyebrow={eyebrow} />;
+
+  const dashboardHref = isGuru ? "/guru/dashboard" : "/admin/dashboard";
 
   return (
     <>
       <Banner title={title} eyebrow={eyebrow} className="hidden lg:block" />
       <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
-          <button type="button" onClick={() => router.push("/guru/dashboard")}
+          <button type="button" onClick={() => router.push(dashboardHref)}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
           </button>

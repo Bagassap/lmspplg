@@ -95,10 +95,10 @@ export default function AdminDataSiswaPage() {
   const selectedKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
-    <div className="space-y-5">
+    <div>
       <DataSiswaHeader title="Data Siswa" />
 
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-4">
+      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5 lg:grid-cols-4">
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-3">
           <FilterBar
             search={search} onSearch={setSearch}
@@ -110,6 +110,7 @@ export default function AdminDataSiswaPage() {
             loading={loading}
             totalCount={inKelas.length}
             displayedCount={displayed.length}
+            compact
           />
           <div className="border-t border-slate-100 dark:border-slate-700/50">
             <SiswaTable
@@ -119,6 +120,7 @@ export default function AdminDataSiswaPage() {
               onResetPassword={setResetTarget}
               onImpersonate={handleImpersonate}
               onKeluarkan={handleKeluarkan}
+              mobileNative
             />
           </div>
         </div>

@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, XCircle, Hash, KeyRound,
+  MoreVertical, Eye, Trash2,
 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
@@ -64,9 +66,11 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
   );
 }
 
-export function SiswaDetailModal({ siswa, onEdit, onClose }: {
-  siswa: SiswaCardData; onEdit?: () => void; onClose: () => void;
+export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate, onKeluarkan, onClose }: {
+  siswa: SiswaCardData; onEdit?: () => void; onResetPassword?: () => void; onImpersonate?: () => void; onKeluarkan?: () => void; onClose: () => void;
 }) {
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const hasMobileActions = !!((onResetPassword || onImpersonate) && siswa.user) || !!onKeluarkan;
   const displayNama = toTitleCase(getNama(siswa));
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ?? null;
@@ -223,6 +227,37 @@ export function SiswaDetailModal({ siswa, onEdit, onClose }: {
         <div className="relative px-6 pb-8 pt-10 text-center">
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
+
+          {hasMobileActions && (
+            <>
+              <button type="button" onClick={() => setActionsOpen((v) => !v)}
+                className="absolute right-14 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm">
+                <MoreVertical size={15} />
+              </button>
+              {actionsOpen && (
+                <div className="absolute right-4 top-14 z-30 w-56 overflow-hidden rounded-2xl bg-white text-left shadow-xl dark:bg-slate-800">
+                  {onResetPassword && siswa.user && (
+                    <button type="button" onClick={() => { onResetPassword(); setActionsOpen(false); }}
+                      className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                      <KeyRound size={15} className="text-[#0082FB]" /> Reset Password
+                    </button>
+                  )}
+                  {onImpersonate && siswa.user && (
+                    <button type="button" onClick={() => { onImpersonate(); setActionsOpen(false); }}
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                      <Eye size={15} className="text-[#0082FB]" /> Pantau Akun
+                    </button>
+                  )}
+                  {onKeluarkan && (
+                    <button type="button" onClick={() => { onKeluarkan(); setActionsOpen(false); }}
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-red-500 hover:bg-red-50 dark:border-slate-700/50 dark:hover:bg-red-900/20">
+                      <Trash2 size={15} /> Keluarkan Siswa
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
+          )}
           <div className="relative mx-auto w-fit rounded-full border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
             <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
           </div>

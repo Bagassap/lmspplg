@@ -156,6 +156,9 @@ export function SiswaTable({
         <SiswaDetailModal
           siswa={detailSiswa}
           onEdit={onEdit ? () => { onEdit(detailSiswa); setDetailSiswa(null); } : undefined}
+          onResetPassword={onResetPassword ? () => { onResetPassword(detailSiswa); setDetailSiswa(null); } : undefined}
+          onImpersonate={onImpersonate ? () => { onImpersonate(detailSiswa); setDetailSiswa(null); } : undefined}
+          onKeluarkan={onKeluarkan ? () => { onKeluarkan(detailSiswa); setDetailSiswa(null); } : undefined}
           onClose={() => setDetailSiswa(null)}
         />
       )}
