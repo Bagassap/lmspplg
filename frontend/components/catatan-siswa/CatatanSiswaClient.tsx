@@ -53,6 +53,8 @@ export function CatatanSiswaClient() {
   const toast = useToast();
   const pathname = usePathname();
   const isGuru = pathname?.startsWith("/guru/") ?? false;
+  const isAdmin = pathname?.startsWith("/admin/") ?? false;
+  const isNative = isGuru || isAdmin;
   const [list, setList] = useState<SummaryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedKelasId, setSelectedKelasId] = useState("");
@@ -103,10 +105,10 @@ export function CatatanSiswaClient() {
   const selectedKelas = kelasOptions.find((k) => k.id === selectedKelasId);
 
   return (
-    <div className={isGuru ? "" : "space-y-5"}>
+    <div className={isNative ? "" : "space-y-5"}>
       <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
-      <div className={isGuru ? "mt-0 lg:mt-5" : ""}>
+      <div className={isNative ? "mt-0 lg:mt-5" : ""}>
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
         <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="p-4 sm:p-5">
@@ -138,8 +140,8 @@ export function CatatanSiswaClient() {
                   )}
                 </div>
 
-                {isGuru && (
-                  <div className="flex shrink-0 items-center gap-1.5">
+                {isNative && (
+                  <div className={`flex shrink-0 items-center gap-1.5 ${isAdmin ? "lg:hidden" : ""}`}>
                     <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`} title="Unduh PDF"
                       className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm transition-all hover:brightness-95"
                       style={{ background: "#EF4444" }}>
@@ -163,7 +165,7 @@ export function CatatanSiswaClient() {
           </div>
 
           {!isGuru && (
-            <div className="border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700/50">
+            <div className={`border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700/50 ${isAdmin ? "hidden lg:block" : ""}`}>
               <p className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
                 Ringkasan {selectedKelas?.nama ?? "Kelas"}
               </p>
@@ -190,7 +192,7 @@ export function CatatanSiswaClient() {
           )}
 
           {!isGuru && (
-            <div className="border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700">
+            <div className={`border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700 ${isAdmin ? "hidden lg:block" : ""}`}>
               <div className="mb-3 flex items-center gap-2.5">
                 <Download size={16} className="text-slate-400" />
                 <div className="min-w-0">
@@ -214,7 +216,7 @@ export function CatatanSiswaClient() {
           )}
         </div>
 
-        <div className={`overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2 ${isGuru ? "hidden lg:block" : ""}`}>
+        <div className={`overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2 ${isNative ? "hidden lg:block" : ""}`}>
           {loading && (
             <div className="space-y-3 p-6">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -326,7 +328,7 @@ export function CatatanSiswaClient() {
           )}
         </div>
 
-        {isGuru && (
+        {isNative && (
           <div className="lg:hidden">
             {loading && (
               <div className="space-y-2.5">
