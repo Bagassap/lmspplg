@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { KeyRound, GraduationCap, FileSpreadsheet, UserPlus } from "lucide-react";
+import { KeyRound, GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft } from "lucide-react";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
@@ -40,6 +41,7 @@ function toTitleCase(str: string): string {
 }
 
 export default function ManajemenPasswordClient() {
+  const router = useRouter();
   const toast = useToast();
   const [kelasList, setKelasList] = useState<KelasWithWali[]>([]);
   const [accountList, setAccountList] = useState<AccountStatus[]>([]);
@@ -157,8 +159,8 @@ export default function ManajemenPasswordClient() {
   );
 
   return (
-    <div className="space-y-5">
-      <div className="relative overflow-hidden rounded-2xl p-6"
+    <div>
+      <div className="hidden overflow-hidden rounded-2xl p-6 lg:block"
         style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
@@ -174,7 +176,18 @@ export default function ManajemenPasswordClient() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+      <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="relative flex items-center px-4 pb-3 pt-4">
+          <button type="button" onClick={() => router.push("/admin/dashboard")}
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            <ChevronLeft size={18} />
+          </button>
+          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Manajemen Password</h1>
+        </div>
+        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1C2B33]" />
+      </div>
+
+      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5 lg:grid-cols-3">
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
           <FilterBarPassword
             kelasList={kelasList}
@@ -192,6 +205,7 @@ export default function ManajemenPasswordClient() {
               loading={loadingSiswa}
               siswas={displayed}
               onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
+              mobileNative
             />
           </div>
         </div>

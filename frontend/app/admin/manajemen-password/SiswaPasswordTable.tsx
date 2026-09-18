@@ -31,11 +31,12 @@ function belumGantiLabel(iso: string): string {
 }
 
 export function SiswaPasswordTable({
-  loading, siswas, onReset,
+  loading, siswas, onReset, mobileNative = false,
 }: {
   loading: boolean;
   siswas: SiswaPasswordItem[];
   onReset: (s: SiswaPasswordItem) => void;
+  mobileNative?: boolean;
 }) {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -70,7 +71,7 @@ export function SiswaPasswordTable({
 
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
         <div className="min-w-140">
           <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
             <span />
@@ -127,6 +128,43 @@ export function SiswaPasswordTable({
           </div>
         </div>
       </div>
+
+      {mobileNative && (
+        <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
+          {pageItems.map((s) => {
+            const displayNama = toTitleCase(s.nama);
+            const mustChange = s.user?.mustChangePassword ?? null;
+            return (
+              <div key={s.id} className="flex items-center gap-3 p-3">
+                <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={38} fallbackBg="#0082FB" textClassName="text-[10px] font-extrabold" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{displayNama}</p>
+                  <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{s.nis}</p>
+                  {mustChange === null ? (
+                    <span className="text-[10px] text-slate-300 dark:text-slate-600">Belum ada akun</span>
+                  ) : mustChange ? (
+                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-red-500 px-2 py-0.5 text-[10px] font-semibold text-white">
+                      <XCircle size={9} /> Belum Ganti
+                    </span>
+                  ) : (
+                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-medium" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+                      <CheckCircle2 size={9} /> Sudah Ganti
+                    </span>
+                  )}
+                </div>
+                {s.user && (
+                  <button onClick={() => onReset(s)}
+                    className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm"
+                    style={{ backgroundColor: REF_PRIMARY }}>
+                    <KeyRound size={12} /> Reset
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
         <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {siswas.length}</span>
         <div className="flex items-center gap-2.5">
