@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, ClipboardList, Wallet } from "lucide-react";
+import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
@@ -19,6 +20,7 @@ type GuruOption = { id: string; user: { id: string; nama: string } };
 const statGridVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 
 export default function AdminMagangPenempatanPage() {
+  const router = useRouter();
   const toast = useToast();
   const [tempatList, setTempatList] = useState<TempatMagang[]>([]);
   const [penempatanList, setPenempatanList] = useState<PenempatanMagang[]>([]);
@@ -116,8 +118,8 @@ export default function AdminMagangPenempatanPage() {
   }, [penempatanList, search, statusFilter]);
 
   return (
-    <div className="space-y-5 p-1">
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "#0082FB" }}>
+    <div className="lg:p-1">
+      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block" style={{ background: "#0082FB" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
         <div className="relative flex items-center gap-3 sm:gap-4">
@@ -132,6 +134,18 @@ export default function AdminMagangPenempatanPage() {
         </div>
       </div>
 
+      <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="relative flex items-center px-4 pb-3 pt-4">
+          <button type="button" onClick={() => router.push("/admin/dashboard")}
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            <ChevronLeft size={18} />
+          </button>
+          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Penempatan PKL</h1>
+        </div>
+        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1C2B33]" />
+      </div>
+
+      <div className="mt-0 space-y-5 lg:mt-5">
       <motion.div initial="hidden" animate="visible" variants={statGridVariants}
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
@@ -175,6 +189,7 @@ export default function AdminMagangPenempatanPage() {
         displayedCount={displayList.length}
         onKelolaTempat={() => setShowKelolaTempat(true)}
         onTempatkan={() => setShowTempatkan(true)}
+        mobileNative
       />
 
       <PenempatanTable
@@ -184,7 +199,9 @@ export default function AdminMagangPenempatanPage() {
         onUbahStatus={ubahStatus}
         onEdit={setEditTarget}
         onHapus={hapus}
+        mobileNative
       />
+      </div>
 
       <AnimatePresence>
         {showKelolaTempat && (

@@ -11,12 +11,13 @@ export type PenempatanStatusFilter = StatusPenempatan | "";
 export function PenempatanFilterBar({
   search, onSearch, statusFilter, onStatusFilter,
   total, aktifCount, selesaiCount, batalCount, displayedCount,
-  onKelolaTempat, onTempatkan,
+  onKelolaTempat, onTempatkan, mobileNative = false,
 }: {
   search: string; onSearch: (v: string) => void;
   statusFilter: PenempatanStatusFilter; onStatusFilter: (v: PenempatanStatusFilter) => void;
   total: number; aktifCount: number; selesaiCount: number; batalCount: number; displayedCount: number;
   onKelolaTempat: () => void; onTempatkan: () => void;
+  mobileNative?: boolean;
 }) {
   const STATUS_PILLS: { value: PenempatanStatusFilter; label: string; icon: typeof Users; count: number }[] = [
     { value: "", label: "Semua", icon: Users, count: total },
@@ -45,7 +46,7 @@ export function PenempatanFilterBar({
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <div className="flex shrink-0 items-center gap-2">
+          <div className={`flex shrink-0 items-center gap-2 ${mobileNative ? "hidden lg:flex" : ""}`}>
             <button type="button" onClick={onKelolaTempat}
               className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
               <Building2 size={14} /> Kelola Tempat
@@ -57,26 +58,42 @@ export function PenempatanFilterBar({
             </button>
           </div>
 
-          <div className="relative w-full sm:w-64">
-            <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => onSearch(e.target.value)}
-              placeholder="Cari nama siswa, NIS, atau tempat…"
-              className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
-            />
-            <AnimatePresence>
-              {search && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={() => onSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  <X size={14} />
-                </motion.button>
-              )}
-            </AnimatePresence>
+          <div className="flex w-full items-center gap-2 sm:w-auto">
+            <div className="relative w-full sm:w-64">
+              <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => onSearch(e.target.value)}
+                placeholder="Cari nama siswa, NIS, atau tempat…"
+                className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              />
+              <AnimatePresence>
+                {search && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                    onClick={() => onSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <X size={14} />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {mobileNative && (
+              <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
+                <button type="button" onClick={onKelolaTempat} title="Kelola Tempat"
+                  className="flex h-10.5 w-10.5 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                  <Building2 size={16} />
+                </button>
+                <button type="button" onClick={onTempatkan} title="Tempatkan Siswa"
+                  className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm"
+                  style={{ backgroundColor: REF_PRIMARY }}>
+                  <Plus size={16} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
