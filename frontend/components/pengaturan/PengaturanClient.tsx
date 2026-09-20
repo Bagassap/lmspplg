@@ -63,7 +63,6 @@ export function PengaturanClient() {
       .then((d) => setData({ magangAktif: !!d?.magangAktif, ukkAktif: !!d?.ukkAktif }))
       .catch(() => toast.error("Gagal memuat pengaturan"))
       .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function toggle(key: Key) {
@@ -91,9 +90,10 @@ export function PengaturanClient() {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       <DataSiswaHeader eyebrow="Admin" title="Pengaturan Sistem" />
 
+      <div className="mt-0 space-y-6 lg:mt-5">
       {loading || !data ? (
         <div className="py-16 text-center text-sm font-semibold text-slate-400">Memuat…</div>
       ) : (
@@ -129,6 +129,7 @@ export function PengaturanClient() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }
