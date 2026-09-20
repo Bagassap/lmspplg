@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CalendarDays, FileText, FileSpreadsheet, Download, Trash2, Plus, Clock,
-  MapPin, User, ChevronDown, ChevronUp, Send, CheckCircle,
-  AlertCircle, X, Pencil, Upload, BookOpen, ChevronLeft,
-  ChevronRight, CloudUpload, Loader2, PieChart, Search,
+  CalendarDays, FileText, Trash2, Plus, Clock,
+  MapPin, User, Send, CheckCircle,
+  AlertCircle, X, Pencil, BookOpen, ChevronLeft,
+  ChevronRight, CloudUpload, Loader2, Search,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -24,7 +25,7 @@ const PALETTE = [
   { bg: "#EAF3FF", text: "#0082FB",  bar: "#0082FB",  gradient: "#0082FB" },
   { bg: "#E3FBF0", text: "#00D67F",  bar: "#00D67F",  gradient: "#00D67F" },
   { bg: "#FEE9EA", text: "#EF4444",  bar: "#EF4444",  gradient: "#EF4444" },
-  { bg: "#F1F5F8", text: "#8A9E1F",  bar: "#8A9E1F",  gradient: "#C3F84A" }, // lime — text/bar dipakaikan varian gelap supaya kontras
+  { bg: "#F1F5F8", text: "#8A9E1F",  bar: "#8A9E1F",  gradient: "#C3F84A" },
   { bg: "#EAF3FF", text: "#0064E0",  bar: "#0064E0",  gradient: "#0082FB" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
@@ -43,8 +44,6 @@ function statusBadge(s: StatusSubmisi) {
 function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#0082FB", GURU: "#0082FB", SISWA: "#00D67F" }; return m[role] ?? "#64748b"; }
 
 function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
-  // "Hari ini" dibaca dari todayJakarta() (WIB), bukan new Date() lokal — server
-  // SSR berjalan di UTC, jadi getter lokal biasa bisa salah hari saat dini hari WIB.
   const [tYear, tMonth, tDate] = todayJakarta().split("-").map(Number);
   const today = new Date(tYear, tMonth - 1, tDate);
 
@@ -299,11 +298,6 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, s
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const tid = showTahapan ? tahapanId : (tahapanList[0]?.id ?? "");
-    // Untuk upload berkas umum (showTahapan=false / "Tambah Jadwal" & "Upload
-    // Soal" dari kartu Kategori), tid boleh kosong — backend otomatis
-    // membuatkan wadah hariKe:0 saat instalasi belum pernah punya berkas
-    // umum sama sekali. Hanya alur task-spesifik (showTahapan=true) yang
-    // wajib admin pilih tahapan-nya sendiri.
     if (!file || (showTahapan && !tid)) return;
     setSaving(true);
     const fd = new FormData();
@@ -468,6 +462,7 @@ function UploadSoalModal({ open, onClose, onUpload, tahapanList }: { open: boole
 }
 
 export default function AdminJadwalSoalPage() {
+  const router = useRouter();
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
@@ -601,7 +596,7 @@ export default function AdminJadwalSoalPage() {
 
         <div className="flex-1 min-w-0 space-y-6">
 
-          <div className="relative overflow-hidden rounded-2xl p-6"
+          <div className="hidden overflow-hidden rounded-2xl p-6 lg:block"
             style={{ background: "#0082FB" }}>
             <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
             <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
@@ -780,39 +775,77 @@ export default function AdminJadwalSoalPage() {
             )}
           </AnimatePresence>
 
-          <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_2.3fr]">
-            <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
+          <div className="mb-8 grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[1fr_2.3fr]">
+            <div>
+            <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
-                <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
+                <div className="flex flex-col gap-4">
               <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#0082FB", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
-                  <CalendarDays size={14} className="lg:hidden" />
-                  <CalendarDays size={16} className="hidden lg:block" />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                  <CalendarDays size={16} />
                 </div>
                 <div className="relative min-w-0">
-                  <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 sm:text-[10px] lg:text-[11px]">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
                 </div>
               </button>
 
               <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#C3F84A", color: "#1C2B33", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15 lg:h-9 lg:w-9 lg:rounded-2xl">
-                  <FileText size={14} className="lg:hidden" />
-                  <FileText size={16} className="hidden lg:block" />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
+                  <FileText size={16} />
                 </div>
                 <div className="relative min-w-0">
-                  <p className="truncate text-sm font-black leading-tight sm:text-base lg:text-xl">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75 sm:text-[10px] lg:text-[11px]">{totalSoal} soal diunggah · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Soal<span className="text-[#1C2B33]/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#1C2B33]/75">{totalSoal} soal diunggah · TA 2026/2027</p>
                 </div>
               </button>
                 </div>
               </div>
+
+              <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+                <div className="relative flex items-center px-4 pb-3 pt-4">
+                  <button type="button" onClick={() => router.push("/admin/dashboard")}
+                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    <ChevronLeft size={18} />
+                  </button>
+                  <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
+                </div>
+                <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 pb-1 pt-3 dark:bg-[#1C2B33]">
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      style={{ background: "#0082FB" }}>
+                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
+                        <CalendarDays size={14} />
+                      </div>
+                      <div className="relative min-w-0">
+                        <p className="truncate text-sm font-black leading-tight">Jadwal UKK</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
+                      </div>
+                    </button>
+                    <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#1C2B33]/10" />
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C2B33]/15">
+                        <FileText size={14} />
+                      </div>
+                      <div className="relative min-w-0">
+                        <p className="truncate text-sm font-black leading-tight">Soal UKK</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-[#1C2B33]/75">{totalSoal} soal diunggah</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
               <div className="flex flex-col gap-6">
 
@@ -826,9 +859,9 @@ export default function AdminJadwalSoalPage() {
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                 </div>
                 <button onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl text-white shadow-sm"
+                  className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-white shadow-sm sm:px-4"
                   style={{background:"#0082FB"}}>
-                  <Plus size={13} /> Tambah Task
+                  <Plus size={13} /> <span className="hidden sm:inline">Tambah Task</span>
                 </button>
               </div>
               <div className="relative mb-3">
@@ -862,6 +895,8 @@ export default function AdminJadwalSoalPage() {
                 </div>
               )}
               {!loading && shown.length > 0 && (
+                <>
+                <div className="hidden overflow-x-auto lg:block">
                 <table className="w-full min-w-170 text-left text-sm">
                   <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
                     <tr>
@@ -925,6 +960,49 @@ export default function AdminJadwalSoalPage() {
                     })}
                   </tbody>
                 </table>
+                </div>
+
+                <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
+                  {shown.map((t, idx) => {
+                    const rp = rowPalette(idx);
+                    const sudahKumpul = submisiList.length;
+                    const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
+                    return (
+                      <div key={t.id} className="flex items-center gap-3 p-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
+                          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                          <div className="mt-1.5 flex items-center gap-2">
+                            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />
+                            </div>
+                            <span className="text-[11px] font-bold" style={{ color: rp.bar }}>{pct}%</span>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1">
+                          <button onClick={() => setSubmisiModalTahapan(t)}
+                            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[10px] font-bold"
+                            style={{ color: rp.bar, backgroundColor: rp.bg }}>
+                            <BookOpen size={11} />
+                            {sudahKumpul > 0 && sudahKumpul}
+                          </button>
+                          <button onClick={() => { setEditTarget(t); setOpenTahapan(true); }}
+                            className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
+                            <Pencil size={12} />
+                          </button>
+                          <button onClick={() => deleteTahapan(t.id)}
+                            className="rounded-lg p-1.5 text-slate-300 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                </>
               )}
             </div>
           </div>
@@ -984,14 +1062,14 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 shrink-0 border-b border-slate-100 dark:border-slate-700">
+                <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:grid-cols-4 sm:divide-y-0">
                   {[
                     { label: "Total",    val: rows.length,   color: "#0082FB" },
                     { label: "Diterima", val: cntDiterima,   color: "#00D67F" },
                     { label: "Revisi",   val: cntRevisi,     color: "#C3F84A" },
                     { label: "Menunggu", val: cntMenunggu,   color: "#0082FB" },
                   ].map((st, i) => (
-                    <div key={i} className="p-4 text-center border-r last:border-r-0 border-slate-100 dark:border-slate-700">
+                    <div key={i} className="p-4 text-center">
                       <p className="text-2xl font-extrabold" style={{color:st.color}}>{st.val}</p>
                       <p className="text-[11px] text-slate-400 mt-0.5">{st.label}</p>
                     </div>
@@ -1010,15 +1088,18 @@ export default function AdminJadwalSoalPage() {
                     const nama  = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
                     const isDone = s.status === "DITERIMA";
                     return (
-                      <div key={s.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                          style={{backgroundColor: isDone ? "#00D67F" : sc.text}}>
-                          {nama[0]?.toUpperCase() ?? "?"}
+                      <div key={s.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-6">
+                        <div className="flex items-center gap-3 sm:contents">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                            style={{backgroundColor: isDone ? "#00D67F" : sc.text}}>
+                            {nama[0]?.toUpperCase() ?? "?"}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
+                            <p className="text-xs text-slate-400 truncate">{s.soal?.judul ?? "—"} · {formatTgl(s.submittedAt)}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
-                          <p className="text-xs text-slate-400 truncate">{s.soal?.judul ?? "—"} · {formatTgl(s.submittedAt)}</p>
-                        </div>
+                        <div className="flex flex-wrap items-center gap-2 pl-[52px] sm:contents sm:pl-0">
                         <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0"
                           style={{backgroundColor: sc.bg, color: sc.text}}>
                           {isDone ? "✓ UKK Selesai" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
@@ -1048,6 +1129,7 @@ export default function AdminJadwalSoalPage() {
                             </button>
                           </div>
                         )}
+                        </div>
                       </div>
                     );
                   })}
