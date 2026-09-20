@@ -67,7 +67,7 @@ export function AdminLaporanPanel() {
           </div>
         </div>
 
-        <LaporanAkhirTable loading={loading} rows={filtered} showPembimbing onOpen={setSelected} />
+        <LaporanAkhirTable loading={loading} rows={filtered} showPembimbing onOpen={setSelected} mobileNative />
       </div>
 
       <LaporanAkhirReviewModal row={selected} onClose={() => setSelected(null)} onReview={handleReview} />

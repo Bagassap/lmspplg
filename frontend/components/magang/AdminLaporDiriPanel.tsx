@@ -64,7 +64,7 @@ export function AdminLaporDiriPanel() {
           </div>
         </div>
 
-        <LaporDiriTable loading={loading} rows={filtered} showPembimbing />
+        <LaporDiriTable loading={loading} rows={filtered} showPembimbing mobileNative />
       </div>
     </div>
   );
