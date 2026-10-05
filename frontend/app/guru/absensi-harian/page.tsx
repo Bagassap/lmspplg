@@ -19,7 +19,7 @@ import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeri
 import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
-import { paginate } from "@/components/shared/PageSizeToggle";
+import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import {
   STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl,
   avatarColor,
@@ -820,20 +820,25 @@ export default function GuruAbsensiHarianPage() {
                   )}
                 </div>
 
-                {filteredSiswa.length > 0 && tablePageCount > 1 && (
-                  <div className="mt-3 flex items-center justify-between gap-2 rounded-2xl bg-white px-4 py-3 dark:bg-[#1C2B33]">
-                    <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
-                    <div className="flex items-center gap-1">
-                      <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
-                        <ChevronLeft size={14} />
-                      </button>
-                      <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
-                      <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                        className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
-                        <ArrowRight size={14} />
-                      </button>
+                {filteredSiswa.length > 0 && (
+                  <div className="mt-3 space-y-2 rounded-2xl bg-white px-4 py-3 dark:bg-[#1C2B33]">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
+                      <PageSizeToggle value={tablePageSize} onChange={setTablePageSize} />
                     </div>
+                    {tablePageCount > 1 && (
+                      <div className="flex items-center justify-center gap-1">
+                        <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                          <ChevronLeft size={14} />
+                        </button>
+                        <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
+                        <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
+                          className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
