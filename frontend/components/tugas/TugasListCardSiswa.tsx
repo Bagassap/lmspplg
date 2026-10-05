@@ -38,7 +38,7 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
   const overdue = !isTugasActive(t) && !mySubmisi;
   const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
   const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
-  const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci && !!mySubmisi?.dipaksaKeluar;
+  const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci;
 
   const btn = isTerkunci
     ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#F1F5F8", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
