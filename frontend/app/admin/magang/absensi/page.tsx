@@ -636,7 +636,7 @@ export default function AdminMagangAbsensiPage() {
         </div>
       </div>
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {tempatPickerOpen && (
             <div className="fixed inset-0 z-[60] flex items-end justify-center">
@@ -683,7 +683,7 @@ export default function AdminMagangAbsensiPage() {
         document.body
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {statusPageOpen && (
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
@@ -781,7 +781,7 @@ export default function AdminMagangAbsensiPage() {
         document.body
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {laporanOpen && (
             <div className="fixed inset-0 z-50 flex items-end justify-center">

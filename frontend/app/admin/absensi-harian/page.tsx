@@ -665,7 +665,7 @@ export default function AdminAbsensiHarianPage() {
         </div>
       </div>
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {kelasPickerOpen && (
             <div className="fixed inset-0 z-[60] flex items-end justify-center">
@@ -712,7 +712,7 @@ export default function AdminAbsensiHarianPage() {
         document.body
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {statusPageOpen && (
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
@@ -810,7 +810,7 @@ export default function AdminAbsensiHarianPage() {
         document.body
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {laporanOpen && (
             <div className="fixed inset-0 z-50 flex items-end justify-center">

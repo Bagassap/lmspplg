@@ -750,7 +750,7 @@ export default function GuruAbsensiHarianPage() {
         </div>
       </div>
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {statusPageOpen && (
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
@@ -848,7 +848,7 @@ export default function GuruAbsensiHarianPage() {
         document.body
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {laporanOpen && (
             <div className="fixed inset-0 z-50 flex items-end justify-center">

@@ -14,9 +14,9 @@ const INLINE_LIMIT = 5;
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
 const RANK_STYLE = [
-  { bg: "#F4FFD9", clr: "#8A9E1F" }, // gold (lime)
-  { bg: "#DCEBFF", clr: "#0064E0" }, // silver (navy)
-  { bg: "#E7EAEC", clr: "#1C2B33" }, // bronze (ink)
+  { bg: "#F4FFD9", clr: "#8A9E1F" },
+  { bg: "#DCEBFF", clr: "#0064E0" },
+  { bg: "#E7EAEC", clr: "#1C2B33" },
 ];
 
 function RankBadge({ index }: { index: number }) {
@@ -37,7 +37,7 @@ function RankBadge({ index }: { index: number }) {
 
 function severityColor(pct: number) {
   if (pct < 50) return "#EF4444";
-  if (pct < 75) return "#8A9E1F"; // lime — varian gelap supaya kontras sebagai warna teks
+  if (pct < 75) return "#8A9E1F";
   return "#0082FB";
 }
 
@@ -190,7 +190,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
       </div>
       )}
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">

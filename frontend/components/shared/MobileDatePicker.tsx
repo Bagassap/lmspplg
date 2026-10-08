@@ -65,7 +65,7 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
         <ChevronDown size={12} className={light ? "text-[#0082FB]" : "text-slate-400"} />
       </button>
 
-      {createPortal(
+      {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {open && (
             <div className="fixed inset-0 z-[60] flex items-end justify-center">

@@ -110,6 +110,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   const ThemeIcon = theme.icon;
   const ac = avatarColor(siswa.nama);
 
+  if (typeof document === "undefined") return null;
   return createPortal(
     <>
       <AnimatePresence>

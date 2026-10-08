@@ -1026,6 +1026,7 @@ function MobileFormAbsen({
     setStep((s) => Math.max(0, s - 1));
   }
 
+  if (typeof document === "undefined") return null;
   return createPortal(
     <AnimatePresence>
         {open && (
@@ -1251,6 +1252,7 @@ function RiwayatTabCard({ icon: Icon, label, active, onClick }: {
 }
 
 function MobileDetailModal({ onClose, accent, children }: { onClose: () => void; accent: string; children: React.ReactNode }) {
+  if (typeof document === "undefined") return null;
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <motion.div
