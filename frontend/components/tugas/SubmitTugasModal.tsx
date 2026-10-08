@@ -7,9 +7,6 @@ import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import type { TugasItem } from "./types";
 import { formatTgl } from "./types";
 
-// Lampiran (soal/materi pendukung) yang diunggah guru/admin saat membuat
-// tugas — tampil di setiap mode pengerjaan (Kirim File/Praktik/Pilihan
-// Ganda/Essay) supaya siswa selalu bisa mengunduhnya sebelum mengerjakan.
 function LampiranGuru({ tugas }: { tugas: TugasItem }) {
   if (!tugas.fileUrl) return null;
   return (
@@ -25,8 +22,6 @@ function LampiranGuru({ tugas }: { tugas: TugasItem }) {
   );
 }
 
-// Akun demo/showcase yang dikecualikan dari pembatasan anti-copas mode
-// Praktik Kode — nama harus cocok persis dengan data user di database.
 const PASTE_RESTRICTION_EXEMPT_NAMA = "Bagas Demo";
 
 function SubmitPraktikModal({
@@ -62,12 +57,12 @@ function SubmitPraktikModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ type: "spring", damping: 24, stiffness: 320 }}
-        className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
+      <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
+        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
           style={{ background: "#00D67F" }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
@@ -260,12 +255,12 @@ function SubmitSoalModal({
   const answeredCount = soalList.filter((s) => (jawaban[s.id] ?? "").trim()).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      <motion.div initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ type: "spring", damping: 24, stiffness: 320 }}
-        className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800">
+      <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
+        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#1C2B33" : "#FFFFFF" }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#1C2B331A" : "#FFFFFF1A" }} />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
@@ -354,8 +349,6 @@ export function SubmitTugasModal({
   tugas: TugasItem | null;
   onClose: () => void;
   onSubmit: (fd: FormData) => Promise<void>;
-  // Nama siswa yang sedang login (dari /api/auth/me) — dipakai untuk
-  // mengecualikan akun demo dari pembatasan anti-copas mode Praktik Kode.
   currentUserNama?: string;
 }) {
   const restrictPaste = currentUserNama !== PASTE_RESTRICTION_EXEMPT_NAMA;

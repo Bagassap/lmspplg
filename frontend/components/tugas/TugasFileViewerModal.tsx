@@ -15,7 +15,6 @@ export function TugasFileViewerModal({
   fileName: string | null;
   catatan: string | null;
   submittedAt?: string;
-  // isDone true = sudah diterima, sembunyikan aksi Terima/Revisi (read-only).
   isDone?: boolean;
   onTerima?: () => void;
   onRevisi?: () => void;
@@ -23,16 +22,16 @@ export function TugasFileViewerModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose}
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ type: "spring", damping: 24, stiffness: 320 }}
-            className="relative flex w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800"
+            initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            className="relative flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: "#0082FB" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
@@ -49,7 +48,7 @@ export function TugasFileViewerModal({
               </button>
             </div>
 
-            <div className="flex-1 space-y-4 p-6">
+            <div className="flex-1 space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600">
