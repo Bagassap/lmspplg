@@ -29,9 +29,6 @@ export function MateriFormModal({
   materi?: MateriItem | null;
   onClose: () => void;
   onSaved: (m: MateriItem) => void;
-  // Bila diisi, field Mata Pelajaran jadi dropdown terbatas pada daftar ini
-  // (dipakai di halaman Guru — mapel yang benar-benar diampu, dari mapel.xlsx).
-  // Kosongkan/undefined untuk tetap pakai input teks bebas (halaman Admin).
   mapelOptions?: string[];
 }) {
   const isEdit = !!materi;
@@ -106,7 +103,7 @@ export function MateriFormModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -119,7 +116,7 @@ export function MateriFormModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.93, y: 16 }}
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
-            className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800"
+            className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div
               className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5"

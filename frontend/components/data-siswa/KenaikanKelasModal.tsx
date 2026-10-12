@@ -6,16 +6,8 @@ import { X, ArrowUpCircle, GraduationCap, Loader2, Users, ArrowRight, AlertTrian
 import { useToast } from "@/components/shared/ToastSystem";
 import type { KelasRef } from "./shared";
 
-// dark:[color-scheme:dark] penting di sini — tanpa itu, browser tetap
-// merender popup <option> pakai tema terang bawaan OS meski <select>-nya
-// sendiri sudah gelap (Tailwind dark: tidak bisa menjangkau elemen <option>),
-// sehingga daftar kelas jadi teks gelap di atas background gelap saat dibuka.
 const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#0082FB] focus:bg-white focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
 
-// Jumlah siswa AKTIF di satu kelas — dihitung langsung dari /api/siswa
-// (sudah difilter AKTIF di backend) supaya preview di modal ini selalu
-// akurat, tidak pakai _count.siswa dari /api/kelas yang menghitung semua
-// siswa termasuk yang sudah LULUS.
 function useJumlahSiswaAktif(kelasId: string) {
   const [jumlah, setJumlah] = useState<number | null>(null);
   useEffect(() => {
@@ -181,12 +173,12 @@ export function KenaikanKelasModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
-            className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
+            className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
             <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0082FB] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">

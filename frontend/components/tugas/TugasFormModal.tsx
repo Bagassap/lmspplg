@@ -28,10 +28,6 @@ function emptySoal(): SoalDraft {
 
 const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-700";
 
-// Selalu baca/tulis nilai datetime-local sebagai jam dinding WIB (Asia/Jakarta),
-// bukan timezone lokal browser/OS — server & sebagian browser testing berjalan
-// di UTC, jadi getHours()/getFullYear() bawaan JS bisa salah 7 jam kalau dipakai
-// langsung. Pola ini sama seperti jakartaNow() di LiveClock.tsx.
 function toLocalInputValue(iso?: string | null) {
   const d = iso ? new Date(iso) : new Date(Date.now() + 24 * 3600 * 1000);
   const fmt = new Intl.DateTimeFormat("en-CA", {
@@ -44,9 +40,6 @@ function toLocalInputValue(iso?: string | null) {
   return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
 }
 
-// datetime-local tidak membawa info zona waktu sama sekali — nilainya harus
-// ditafsirkan eksplisit sebagai WIB (+07:00), bukan diserahkan ke `new Date()`
-// yang akan memakainya sebagai timezone lokal runtime (bisa UTC di server/browser testing).
 function wibInputToIso(value: string) {
   return new Date(`${value}:00+07:00`).toISOString();
 }
@@ -65,9 +58,6 @@ export function TugasFormModal({
   tugas?: TugasItem | null;
   onClose: () => void;
   onSaved: (t: TugasItem) => void;
-  // Bila diisi, field Mata Pelajaran jadi dropdown terbatas pada daftar ini
-  // (dipakai di halaman Guru — mapel yang benar-benar diampu, dari mapel.xlsx).
-  // Kosongkan/undefined untuk tetap pakai input teks bebas (halaman Admin).
   mapelOptions?: string[];
 }) {
   const isEdit = !!tugas;
@@ -79,7 +69,7 @@ export function TugasFormModal({
     const el = deadlineInputRef.current;
     if (!el) return;
     if (typeof el.showPicker === "function") {
-      try { el.showPicker(); return; } catch { /* fall through to focus */ }
+      try { el.showPicker(); return; } catch {}
     }
     el.focus();
   }
@@ -237,7 +227,7 @@ export function TugasFormModal({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center p-0 sm:items-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose}
@@ -246,7 +236,7 @@ export function TugasFormModal({
           <motion.div
             initial={{ opacity: 0, scale: 0.93, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.93, y: 16 }}
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
-            className={`relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-800 ${tipe === "PRAKTIK" || isSoalBased ? "max-w-3xl" : "max-w-lg"}`}
+            className={`relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl ${tipe === "PRAKTIK" || isSoalBased ? "max-w-3xl" : "max-w-lg"}`}
           >
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
@@ -336,10 +326,6 @@ export function TugasFormModal({
                   <label className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-gray-700 dark:text-slate-300">
                     <CalendarClock size={12} /> Deadline <span className="text-red-500">*</span>
                   </label>
-                  {/* Widget datetime-local bawaan browser menampilkan angka mentah ala
-                      ISO/UTC (bukan format Indonesia) dan tidak bisa di-restyle — jadi
-                      disembunyikan, tombol ini yang tampil dan menampilkan hasilnya
-                      dalam format Indonesia + WIB, sambil tetap membuka picker native. */}
                   <button type="button" onClick={openDeadlinePicker}
                     className={INPUT_CLS + " flex items-center justify-between text-left"}>
                     <span className={deadline ? "" : "text-gray-400"}>
