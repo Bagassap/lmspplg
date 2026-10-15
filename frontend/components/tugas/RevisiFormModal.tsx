@@ -29,10 +29,10 @@ export function RevisiFormModal({
       {target && (
         <motion.div key="revisi-overlay"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[80] flex items-end justify-center p-0 bg-black/60 backdrop-blur-sm sm:items-center sm:p-4"
           onClick={(e) => { if (e.target === e.currentTarget) { onClose(); setPesan(""); } }}>
           <motion.div initial={{ scale: 0.95, opacity: 0, y: 12 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 12 }}
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+            className="bg-white dark:bg-slate-800 rounded-t-2xl shadow-2xl w-full max-w-md overflow-hidden sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}>
 
             <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#C3F84A", color: "#1C2B33" }}>

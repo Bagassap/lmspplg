@@ -8,7 +8,7 @@ import { Loader2, Upload, RotateCcw, ImagePlus, X, Camera } from "lucide-react";
 import { getCroppedImg } from "@/lib/getCroppedImg";
 import { compressToMaxBytes, describePhotoError } from "@/lib/compressImage";
 
-const MAX_UPLOAD_BYTES = 1024 * 1024; // 1MB
+const MAX_UPLOAD_BYTES = 1024 * 1024;
 
 export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => void; gradient: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,9 +73,6 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
         return;
       }
 
-      // The JWT cookie was reissued with the new fotoProfil claim server-side —
-      // reload so the topbar/sidebar (which read it via getCurrentUser() in the
-      // layout) pick it up immediately instead of showing the stale photo.
       window.location.reload();
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
@@ -86,12 +83,12 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
   const modal = (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-100 flex items-center justify-center p-4"
+        className="fixed inset-0 z-100 flex items-end justify-center p-0 sm:items-center sm:p-4"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={loading ? undefined : onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1C2B33]"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-[#1C2B33] sm:rounded-3xl"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
