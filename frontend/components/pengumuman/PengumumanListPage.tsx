@@ -14,6 +14,11 @@ import { PengumumanFormModal } from "./PengumumanFormModal";
 import type { KomentarItem } from "./KomentarSection";
 import { KomentarSection } from "./KomentarSection";
 import { Avatar } from "@/components/shared/Avatar";
+import PengumumanDetailModal from "./PengumumanDetailModal";
+import { timeAgo as timeAgoShared } from "@/components/dashboard/ActivityList";
+import { AppMobileFrame, AppCard, AppEmpty } from "@/components/app/AppUI";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -377,6 +382,8 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const pathname = usePathname();
   const dashboardHref = pathname.startsWith("/guru/") ? "/guru/dashboard" : pathname.startsWith("/admin/") ? "/admin/dashboard" : "/siswa/dashboard";
   const toast = useToast();
+  const appMode = useIsAppMode();
+  const [appSlug, setAppSlug] = useState<string | null>(null);
   const [list,          setList]          = useState<PengumumanItem[]>([]);
   const [loading,       setLoading]       = useState(true);
   const [modalOpen,     setModalOpen]     = useState(false);
@@ -576,15 +583,75 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       </div>
 
-      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
-        <div className="relative flex items-center px-4 pb-3 pt-4">
-          <button type="button" onClick={() => router.push(dashboardHref)}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
-            <ChevronLeft size={18} />
-          </button>
-          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Pengumuman</h1>
-        </div>
-        <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] px-4 py-4 dark:bg-[#1E293B]">
+      <AppMobileFrame eyebrow="Informasi" title="Pengumuman" backHref={dashboardHref} legacyBodyClass="space-y-4">
+        {appMode ? (
+          <>
+          {canManage && (
+            <motion.button
+              onClick={() => { setEditItem(null); setModalOpen(true); }}
+              whileTap={{ scale: 0.97 }}
+              className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold text-white"
+              style={{ background: "#F26A3D", boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" }}>
+              <Plus size={18} /> Buat Pengumuman
+            </motion.button>
+          )}
+
+          {error && (
+            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{error}</p>
+          )}
+
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+              ))}
+            </div>
+          ) : sorted.length === 0 ? (
+            <AppEmpty icon={Bell} title="Belum ada pengumuman" desc="Pengumuman akan muncul di sini" />
+          ) : (
+            <ul className="space-y-3">
+              {sorted.map((p, idx) => (
+                <li key={p.id}>
+                  <AppCard onClick={() => setAppSlug(p.slug)} className="flex items-center gap-4">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(toneAt(idx))}>
+                      <Megaphone size={26} color="#fff" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                        <span className="rounded-full px-2 py-0.5" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{p.kategori}</span>
+                        {p.isPinned && <span className="flex items-center gap-0.5"><Pin size={10} /> Disematkan</span>}
+                        {p.prioritas === "MENDESAK" && <span className="font-bold" style={{ color: "#F26A3D" }}>Mendesak</span>}
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{p.judul}</p>
+                      <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <span className="truncate">{p.author.nama}</span><span>•</span>
+                        <span className="shrink-0">{timeAgoShared(p.createdAt)}</span><span>•</span>
+                        <span className="flex shrink-0 items-center gap-0.5"><MessageCircle size={10} />{p._count.komentar}</span>
+                      </p>
+                    </div>
+                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                  </AppCard>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <AnimatePresence>
+            {appSlug && (
+              <PengumumanDetailModal
+                key={appSlug}
+                slug={appSlug}
+                canManage={canManage}
+                currentUserId={currentUserId}
+                onClose={() => setAppSlug(null)}
+                onDeleted={(id) => setList((prev) => prev.filter((x) => x.id !== id))}
+                onPinChanged={(id, isPinned) => setList((prev) => prev.map((x) => (x.id === id ? { ...x, isPinned } : x)))}
+              />
+            )}
+          </AnimatePresence>
+          </>
+        ) : (
+          <>
 
         {canManage && (
           <motion.button
@@ -654,8 +721,9 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             ))}
           </div>
         )}
-        </div>
-      </div>
+          </>
+        )}
+      </AppMobileFrame>
 
       <PengumumanFormModal
         open={modalOpen}

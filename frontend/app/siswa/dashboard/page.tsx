@@ -18,6 +18,7 @@ import { timeAgo } from "@/components/dashboard/ActivityList";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { SiswaAppHome } from "@/components/dashboard/SiswaAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 
 
 interface Pengumuman {
@@ -91,6 +92,7 @@ function ViewAll({ href }: { href: string }) {
 
 export default function SiswaDashboardPage() {
   const appMode = useIsAppMode();
+  const fitur = useSiswaFitur();
   const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
   const [data, setData]       = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -173,7 +175,7 @@ export default function SiswaDashboardPage() {
       icon: Megaphone,
     },
     {
-      href: "/siswa/magang",
+      href: fitur.magangHref,
       label: "PKL",
       value: belumMagang ? "Belum PKL" : `${magang.hadir ?? 0}x hadir`,
       small: belumMagang,
@@ -227,8 +229,8 @@ export default function SiswaDashboardPage() {
             {[
               { href: "/siswa/materi", label: "Materi", icon: BookOpen, tone: "indigo" as const },
               { href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "sky" as const, badge: data.pengumuman.length },
-              { href: "/siswa/magang", label: "PKL", icon: GraduationCap, tone: "amber" as const },
-              { href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, tone: "violet" as const },
+              { href: fitur.magangHref, label: "PKL", icon: GraduationCap, tone: "amber" as const },
+              { href: fitur.ukkHref, label: "UKK", icon: FileText, tone: "violet" as const },
               { href: "/siswa/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "emerald" as const },
             ].map((s, i) => (
               <motion.div key={s.href}

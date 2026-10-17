@@ -81,6 +81,46 @@ export const MENUS: Record<string, MenuItem[]> = {
   ],
 };
 
+/**
+ * Status akses fitur siswa: PKL/UKK hanya terbuka untuk kelas XII (ditulis
+ * romawi "XII RPL 1" atau angka "12 PG 1") dan kalau admin sudah mengaktifkannya
+ * di menu Pengaturan.
+ */
+export function useSiswaFitur(enabled = true) {
+  const [kelasXII, setKelasXII] = useState(false);
+  const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((me: { siswa?: { kelas?: { nama?: string } } } | null) => {
+        if (cancelled) return;
+        const namaKelas = me?.siswa?.kelas?.nama?.trim().toUpperCase() ?? "";
+        setKelasXII(namaKelas.startsWith("XII") || /^12(?!\d)/.test(namaKelas));
+      })
+      .catch(() => {});
+    fetch("/api/pengaturan", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { magangAktif?: boolean; ukkAktif?: boolean } | null) => {
+        if (cancelled || !d) return;
+        setPengaturan({ magangAktif: !!d.magangAktif, ukkAktif: !!d.ukkAktif });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [enabled]);
+
+  return {
+    kelasXII,
+    magangAktif: pengaturan.magangAktif,
+    ukkAktif: pengaturan.ukkAktif,
+    /** Tujuan menu PKL: halaman fitur bila aktif, halaman "belum aktif" bila belum. */
+    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/penempatan" : "/siswa/magang",
+    ukkHref: kelasXII && pengaturan.ukkAktif ? "/siswa/ujian-ukk/jadwal-soal" : "/siswa/ujian-ukk",
+  };
+}
+
 export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendingResetCount: number } {
   const isSuperAdmin = user.loginId === SUPER_ADMIN_LOGIN_ID;
   const isGuru = user.role === "GURU";
@@ -99,34 +139,7 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     return () => { cancelled = true; };
   }, [isGuru]);
 
-  const [siswaKelasXII, setSiswaKelasXII] = useState(false);
-  useEffect(() => {
-    if (!isSiswa) return;
-    let cancelled = false;
-    fetch("/api/auth/me", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((me: { siswa?: { kelas?: { nama?: string } } } | null) => {
-        if (cancelled) return;
-        const namaKelas = me?.siswa?.kelas?.nama?.trim().toUpperCase() ?? "";
-        setSiswaKelasXII(namaKelas.startsWith("XII"));
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [isSiswa]);
-
-  const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
-  useEffect(() => {
-    if (!isSiswa) return;
-    let cancelled = false;
-    fetch("/api/pengaturan", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: { magangAktif?: boolean; ukkAktif?: boolean } | null) => {
-        if (cancelled || !d) return;
-        setPengaturan({ magangAktif: !!d.magangAktif, ukkAktif: !!d.ukkAktif });
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [isSiswa]);
+  const { kelasXII: siswaKelasXII, magangAktif, ukkAktif } = useSiswaFitur(isSiswa);
 
   const items = (MENUS[user.role] ?? [])
     .filter((item) => {
@@ -136,7 +149,7 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     })
     .map((item) => {
       if (!isSiswa || (item.key !== "magang" && item.key !== "ujian-ukk")) return item;
-      const fiturAktif = item.key === "magang" ? pengaturan.magangAktif : pengaturan.ukkAktif;
+      const fiturAktif = item.key === "magang" ? magangAktif : ukkAktif;
       if (siswaKelasXII && fiturAktif) return { ...item, locked: false, href: undefined };
       return { ...item, locked: true, href: item.key === "magang" ? "/siswa/magang" : "/siswa/ujian-ukk" };
     });

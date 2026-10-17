@@ -27,6 +27,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const { items, pendingResetCount } = useDashboardMenu(user);
   const [moreOpen, setMoreOpen] = useState(false);
   const appMode = useIsAppMode();
+  const ACT = appMode ? "#F26A3D" : "#3E03B3";
 
   const dashboardItem = items.find((i) => i.key === "dashboard");
   const side = SIDE_KEYS
@@ -67,8 +68,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? "#3E03B3" : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
+              <item.icon size={20} style={{ color: active ? ACT : "#94a3b8" }} />
+              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -79,13 +80,13 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           <Link href={dashboardItem.href ?? "#"} className="relative flex flex-1 flex-col items-center">
             <span
               className="absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1E293B]"
-              style={{ background: "#3E03B3", boxShadow: "0 10px 24px -6px rgba(62,3,179,0.55)" }}
+              style={{ background: ACT, boxShadow: appMode ? "0 10px 24px -6px rgba(242,106,61,0.6)" : "0 10px 24px -6px rgba(62,3,179,0.55)" }}
             >
               <dashboardItem.icon size={22} />
             </span>
             <span
               className="mt-8 text-[10px] font-semibold"
-              style={{ color: dashboardActive ? "#3E03B3" : "#94a3b8" }}
+              style={{ color: dashboardActive ? ACT : "#94a3b8" }}
             >
               Dashboard
             </span>
@@ -100,8 +101,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? "#3E03B3" : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
+              <item.icon size={20} style={{ color: active ? ACT : "#94a3b8" }} />
+              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -112,11 +113,11 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           onClick={() => setMoreOpen(true)}
           className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
         >
-          <LayoutGrid size={20} style={{ color: moreActive ? "#3E03B3" : "#94a3b8" }} />
+          <LayoutGrid size={20} style={{ color: moreActive ? ACT : "#94a3b8" }} />
           {pendingResetCount > 0 && (
             <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#A1F919]" />
           )}
-          <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
+          <span className={`text-[10px] font-semibold ${moreActive ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
           </span>
         </button>

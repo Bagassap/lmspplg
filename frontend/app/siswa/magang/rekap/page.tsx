@@ -8,6 +8,8 @@ import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
 import type { LaporDiriStatusSaya } from "@/components/magang/lapor-diri-types";
 import type { LaporanAkhirStatusSaya } from "@/components/magang/laporan-akhir-types";
+import { AppTabs } from "@/components/app/AppUI";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type Category = "lapor-diri" | "laporan";
 
@@ -19,6 +21,7 @@ const LAPORAN_AKHIR_LABEL: Record<string, string> = {
 
 export default function SiswaMagangRekapPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [status, setStatus] = useState<LaporDiriStatusSaya | null>(null);
   const [laporanAkhir, setLaporanAkhir] = useState<LaporanAkhirStatusSaya | null>(null);
@@ -100,6 +103,15 @@ export default function SiswaMagangRekapPage() {
             </div>
           </div>
 
+          {appMode ? (
+            <div className="space-y-5 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Rekap PKL</h1>
+              </div>
+              <AppTabs tabs={[["lapor-diri", "Lapor Diri"], ["laporan", "Laporan"]] as const} value={category} onChange={setCategory} layoutId="app-rekap-tab" />
+            </div>
+          ) : (
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
@@ -131,6 +143,7 @@ export default function SiswaMagangRekapPage() {
             </div>
             </div>
           </div>
+          )}
         </div>
 
         {category === "lapor-diri" ? <SiswaLaporDiriPanel /> : <SiswaLaporanPanel />}

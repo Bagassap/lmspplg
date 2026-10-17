@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Briefcase, Building2, CalendarDays, ChevronLeft, MapPin, Phone, User, Users } from "lucide-react";
+import { Briefcase, Building2, CalendarDays, MapPin, Phone, User, Users } from "lucide-react";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
 import type { PenempatanMagang } from "@/components/magang/types";
+import { AppMobileFrame, AppBanner, AppCard, AppEmpty, AppInfoRow, AppSectionTitle, APP_ACCENT } from "@/components/app/AppUI";
+import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 export default function SiswaMagangPenempatanPage() {
-  const router = useRouter();
+  const appMode = useIsAppMode();
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -130,15 +132,57 @@ export default function SiswaMagangPenempatanPage() {
         )}
       </div>
 
-      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
-        <div className="relative flex items-center px-4 pb-3 pt-4">
-          <button type="button" onClick={() => router.push("/siswa/dashboard")}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
-            <ChevronLeft size={18} />
-          </button>
-          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Penempatan PKL</h1>
-        </div>
-        <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
+      <AppMobileFrame eyebrow="PKL" title="Penempatan PKL" legacyTitle="Penempatan PKL">
+        {appMode ? (
+          <>
+        {loading ? (
+          <div className="h-40 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />
+        ) : !aktif ? (
+          <AppEmpty icon={Users} title="Kamu belum ditempatkan PKL" desc="Admin akan menempatkan kamu ke tempat magang begitu jadwal PKL dimulai." />
+        ) : (
+          <>
+            <AppBanner>
+              <div className="flex items-center gap-3">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(MENU_TONE.magang)}>
+                  <Building2 size={24} color="#fff" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-lg font-extrabold leading-tight" style={{ color: APP_ACCENT }}>{aktif.tempatMagang.namaTempat}</p>
+                  {aktif.tempatMagang.bidangUsaha && <p className="truncate text-xs text-slate-500">{aktif.tempatMagang.bidangUsaha}</p>}
+                </div>
+              </div>
+              <span className="mt-3 inline-block rounded-full bg-white px-3 py-1 text-xs font-bold" style={{ color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>
+                {STATUS_PENEMPATAN_CFG[aktif.status].label}
+              </span>
+            </AppBanner>
+            <div className="space-y-2.5">
+              <AppInfoRow icon={MapPin} label="Alamat" value={aktif.tempatMagang.alamat} />
+              {aktif.tempatMagang.kontak && <AppInfoRow icon={Phone} label="Kontak" value={aktif.tempatMagang.kontak} />}
+              <AppInfoRow icon={User} label="Guru Pembimbing" value={toTitleCase(aktif.guruPembimbing.user.nama)} />
+              <AppInfoRow icon={CalendarDays} label="Periode" value={`${fmt(aktif.tanggalMulai)}${aktif.tanggalSelesai ? ` – ${fmt(aktif.tanggalSelesai)}` : " – berlangsung"}`} />
+            </div>
+          </>
+        )}
+
+        {riwayat.length > 0 && (
+          <section className="space-y-3">
+            <AppSectionTitle>Riwayat Penempatan</AppSectionTitle>
+            {riwayat.map((p) => (
+              <AppCard key={p.id} className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
+                  <p className="text-[11px] text-slate-500">{fmt(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmt(p.tanggalSelesai)}` : ""}</p>
+                </div>
+                <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
+                  {STATUS_PENEMPATAN_CFG[p.status].label}
+                </span>
+              </AppCard>
+            ))}
+          </section>
+        )}
+          </>
+        ) : (
+          <>
         {loading ? (
           <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1E293B]" />
         ) : !aktif ? (
@@ -226,8 +270,9 @@ export default function SiswaMagangPenempatanPage() {
             </div>
           </div>
         )}
-        </div>
-      </div>
+          </>
+        )}
+      </AppMobileFrame>
     </div>
   );
 }

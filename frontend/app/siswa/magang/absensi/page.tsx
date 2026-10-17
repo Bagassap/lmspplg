@@ -14,6 +14,9 @@ import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta, parseLokasi } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi } from "@/components/absensi-magang/types";
 import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
+import { AppEmpty, AppCard, AppSectionTitle, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
+import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type StatusSaya = {
   hasPenempatan: boolean;
@@ -42,6 +45,7 @@ const INSECURE_CONTEXT_MSG = "Akses GPS memerlukan koneksi aman. Silakan buka me
 
 export default function SiswaMagangAbsensiPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const today = todayJakarta();
@@ -246,6 +250,16 @@ export default function SiswaMagangAbsensiPage() {
               Anda belum memiliki penempatan PKL yang aktif. Hubungi admin untuk ditempatkan di tempat PKL terlebih dahulu.
             </p>
           </div>
+          {appMode && (
+            <div className="space-y-5 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
+              </div>
+              <AppEmpty icon={AlertCircle} title="Belum Ada Penempatan PKL" desc="Anda belum memiliki penempatan PKL yang aktif. Hubungi admin untuk ditempatkan di tempat PKL terlebih dahulu." />
+            </div>
+          )}
+          <div className={appMode ? "hidden" : "contents"}>
           <div className="relative isolate -m-4 overflow-hidden lg:hidden" style={{ background: BRAND_GRADIENT }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
@@ -265,6 +279,7 @@ export default function SiswaMagangAbsensiPage() {
                 </p>
               </div>
             </div>
+          </div>
           </div>
         </>
       ) : (
@@ -386,6 +401,68 @@ export default function SiswaMagangAbsensiPage() {
             )}
           </div>
 
+          {appMode && (
+            <div className="space-y-6 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
+              </div>
+
+              <section className="space-y-3">
+                <AppSectionTitle>Presensi Hari Ini</AppSectionTitle>
+                {([
+                  { tab: "DATANG" as const, label: "Absen Datang", icon: LogIn, tone: MENU_TONE.absensi, done: !!data?.sudahAbsen, doneLabel: cfg.label, waktu: data?.record?.waktuAbsen, actionable: needsActionDatang },
+                  { tab: "PULANG" as const, label: "Absen Pulang", icon: LogOut, tone: MENU_TONE.magang, done: !!data?.sudahPulang, doneLabel: "Pulang", waktu: data?.record?.waktuPulang, actionable: needsActionPulang },
+                ]).map((r) => (
+                  <div key={r.tab} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(r.tone)}>
+                      <r.icon size={26} color="#fff" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[15px] font-bold text-slate-900 dark:text-white">{r.label}</p>
+                      <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        {r.done ? `${r.doneLabel} · Tercatat` : r.actionable ? "Belum absen · Kapan saja" : "Belum tersedia"}
+                      </p>
+                      {r.done && (
+                        <p className="mt-0.5 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: APP_ACCENT }}>
+                          <Clock size={12} /> {r.waktu ?? "—"}
+                        </p>
+                      )}
+                    </div>
+                    {r.done ? (
+                      <button type="button" onClick={() => setDetailTab(r.tab)}
+                        className="shrink-0 rounded-full px-4 py-2 text-xs font-bold" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                        Lihat
+                      </button>
+                    ) : r.actionable ? (
+                      <button type="button" onClick={() => openWizard(r.tab)}
+                        className="shrink-0 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95" style={{ background: APP_ACCENT }}>
+                        Absen
+                      </button>
+                    ) : null}
+                  </div>
+                ))}
+              </section>
+
+              {data?.tempatMagang && (
+                <section className="space-y-3">
+                  <AppSectionTitle>Tempat PKL</AppSectionTitle>
+                  <AppCard className="flex items-center gap-4">
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(MENU_TONE.magang)}>
+                      <Briefcase size={22} color="#fff" />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{data.tempatMagang.namaTempat}</p>
+                      <p className="mt-0.5 flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                        <MapPin size={12} className="mt-0.5 shrink-0" /> {data.tempatMagang.alamat}
+                      </p>
+                    </div>
+                  </AppCard>
+                </section>
+              )}
+            </div>
+          )}
+          <div className={appMode ? "hidden" : "contents"}>
           <div className="relative isolate -m-4 lg:hidden" style={{ background: BRAND_GRADIENT }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
@@ -445,6 +522,10 @@ export default function SiswaMagangAbsensiPage() {
               </motion.div>
             )}
 
+
+            </div>
+          </div>
+          </div>
             <MobileFormAbsen
               open={wizardTab !== null}
               onClose={() => setWizardTab(null)}
@@ -459,10 +540,9 @@ export default function SiswaMagangAbsensiPage() {
               ttd={ttd} setTtd={setTtd}
               submitting={submitting} onSubmit={handleSubmit}
             />
-
             <AnimatePresence>
               {detailTab && (
-                <MobileDetailModal onClose={() => setDetailTab(null)} accent={detailTab === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT}>
+                <MobileDetailModal onClose={() => setDetailTab(null)} accent={appMode ? "#FFFFFF" : detailTab === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT}>
                   {detailTab === "DATANG" ? (
                     <RingkasanAbsen
                       title={`${cfg.label} Tercatat`}
@@ -492,8 +572,6 @@ export default function SiswaMagangAbsensiPage() {
                 </MobileDetailModal>
               )}
             </AnimatePresence>
-            </div>
-          </div>
         </>
       )}
     </div>
@@ -792,6 +870,7 @@ function MobileFormAbsen({
   submitting: boolean;
   onSubmit: () => void;
 }) {
+  const app = useIsAppMode();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
 
@@ -804,7 +883,7 @@ function MobileFormAbsen({
   const lokasiMissing = !lokasi;
   const ttdMissing = !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
-  const accentColor = activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
+  const accentColor = app ? "#F26A3D" : activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
   const fotoLabel = isIzinSakit ? "Foto Surat Izin/Sakit" : "Foto Selfie";
   const titikLokasi = lokasi ? parseLokasi(lokasi) : null;
 
@@ -1021,7 +1100,7 @@ function MobileFormAbsen({
                 )}
                 <motion.button whileTap={{ scale: 0.97 }} type="button" onClick={goNext}
                   disabled={!stepValid || submitting}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white shadow-md disabled:opacity-50"
+                  className={`flex flex-1 items-center justify-center gap-2 py-3.5 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-full" : "rounded-2xl"}`}
                   style={{ background: accentColor }}>
                   {lastStep
                     ? (submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />))

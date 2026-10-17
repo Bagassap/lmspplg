@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { todayJakarta } from "@/components/absensi-harian/shared";
+import { AppTabs, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
@@ -50,6 +53,7 @@ function isValidDriveUrl(url: string) {
 function SubmitModal({ open, onClose, soal, onSubmit }: {
   open: boolean; onClose: () => void; soal: Soal | null; onSubmit: (fd: FormData) => Promise<void>;
 }) {
+  const app = useIsAppMode();
   const [driveUrl, setDriveUrl] = useState("");
   const [catatan, setCatatan]   = useState("");
   const [saving, setSaving]     = useState(false);
@@ -78,14 +82,14 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
     <AnimatePresence>
       {open && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${app ? "items-end" : "items-center p-4"}`}
           onClick={onClose}>
           <motion.div initial={{scale:0.95,opacity:0,y:16}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.95,opacity:0,y:16}}
             transition={{type:"spring",damping:26,stiffness:340}}
-            className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+            className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${app ? "rounded-t-[28px]" : "rounded-2xl"}`}
             onClick={e=>e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{background:"#A1F919"}}>
+              style={{background: app ? "#FFE9E2" : "#A1F919"}}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10"/>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -104,7 +108,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             </div>
             <form onSubmit={submit} className="p-6 space-y-4">
               <div className="flex items-start gap-3 bg-[#F1EDFA] dark:bg-[#000000]/20 rounded-xl p-3.5">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background:"#3E03B3"}}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background: app ? "#F26A3D" : "#3E03B3"}}>
                   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
                 </div>
                 <div>
@@ -117,7 +121,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">
                   Link Google Drive <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
-                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#A1F919]"}`}>
+                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#A1F919]"}${app ? " focus-within:border-[#F26A3D]" : ""}`}>
                   <Link2 size={15} className="text-slate-400 shrink-0"/>
                   <input
                     type="url"
@@ -144,17 +148,17 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
                 <textarea value={catatan} onChange={e=>setCatatan(e.target.value)} rows={2}
                   placeholder="Tambahkan keterangan jika diperlukan..."
-                  className="w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-[#A1F919] placeholder:text-slate-400"/>
+                  className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#F26A3D]" : "focus:border-[#A1F919]"}`}/>
               </div>
 
               <div className="flex gap-3">
                 <button type="button" onClick={onClose}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-full" : "rounded-xl"}`}>
                   Batal
                 </button>
                 <button type="submit" disabled={saving || !driveUrl.trim()}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-black disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{background:"#A1F919"}}>
+                  className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
+                  style={{background: app ? "#F26A3D" : "#A1F919"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
               </div>
@@ -169,6 +173,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
 
 export default function SiswaJadwalSoalPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [mySubmisi,   setMySubmisi]   = useState<MySubmisi[]>([]);
@@ -567,6 +572,77 @@ export default function SiswaJadwalSoalPage() {
             </div>
           </div>
 
+          {appMode && (
+            <div className="space-y-5 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">UKK</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Jadwal &amp; Soal</h1>
+              </div>
+
+              <div className="relative">
+                <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+              </div>
+
+              <AppTabs
+                tabs={[["all", "Semua"], ["active", "Aktif"], ["completed", "Selesai"]] as const}
+                value={tab} onChange={setTab} layoutId="app-ukk-tab" />
+
+              {loading ? (
+                <div className="space-y-3">
+                  {[0, 1].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}
+                </div>
+              ) : shown.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                    <CalendarDays size={24} />
+                  </span>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                    {taskSearch.trim() ? `Tidak ada task dengan nama "${taskSearch.trim()}"` : tab === "active" ? "Tidak ada task aktif" : tab === "completed" ? "Tidak ada task selesai" : "Belum ada task tersedia"}
+                  </p>
+                </div>
+              ) : (
+                <ul className="space-y-3">
+                  {shown.map((t, idx) => {
+                    const globalSoal = soalFiles[0] ?? null;
+                    const myS = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                    const isDiterima = myS?.status === "DITERIMA";
+                    const isRevisi = myS?.status === "REVISI";
+                    const isTerkirim = myS?.status === "TERKIRIM";
+                    const btn = isDiterima
+                      ? { label: "Diterima", icon: <CheckCircle size={12} />, bg: "#EAF8D2", clr: "#5D900F", onClick: () => setDetailTarget(myS!) }
+                      : isRevisi
+                      ? { label: "Revisi", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
+                      : isTerkirim
+                      ? { label: "Terkirim", icon: <CheckCircle size={12} />, bg: "#EEF2FF", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
+                      : { label: "Kirim", icon: <Send size={12} />, bg: APP_ACCENT, clr: "#FFFFFF", onClick: () => globalSoal && setSubmitSoal(globalSoal) };
+                    return (
+                      <li key={t.id} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>
+                          {idx + 1}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
+                            <span className="flex items-center gap-1"><CalendarDays size={10} />{formatTgl(t.tanggal)}</span>
+                            <span className="flex items-center gap-1"><Clock size={10} />{t.jamMulai}–{t.jamSelesai}</span>
+                            <span className="flex items-center gap-1"><MapPin size={10} />{t.lokasi}</span>
+                          </div>
+                          <button onClick={btn.onClick}
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold active:scale-95"
+                            style={{ backgroundColor: btn.bg, color: btn.clr }}>
+                            {btn.icon}{btn.label}
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
+          <div className={appMode ? "hidden" : "contents"}>
           <div className="relative isolate -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="h-6" />
             <div className="space-y-3 rounded-t-[28px] bg-[#FFFFFF] px-4 py-3 dark:bg-[#1E293B]">
@@ -683,6 +759,7 @@ export default function SiswaJadwalSoalPage() {
           </div>
           </div>
           </div>
+          </div>
 
         </div>
       </div>
@@ -693,28 +770,28 @@ export default function SiswaJadwalSoalPage() {
         {detailTarget && (
           <motion.div key="detail-overlay"
             initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
             onClick={()=>setDetailTarget(null)}>
             <motion.div initial={{scale:0.95,opacity:0,y:16}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.95,opacity:0,y:16}}
               transition={{type:"spring",damping:26,stiffness:340}}
-              className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+              className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: detailTarget.status==="DITERIMA" ? "#A1F919" : "#3E03B3"}}>
+                style={{background: appMode ? "#FFE9E2" : detailTarget.status==="DITERIMA" ? "#A1F919" : "#3E03B3"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                      <CheckCircle size={18} className="text-white"/>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                      <CheckCircle size={18}/>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                      <p className={`text-[10px] font-bold uppercase tracking-widest ${appMode ? "text-slate-500" : "text-white/60"}`}>
                         {detailTarget.status==="DITERIMA" ? "Project Diterima ✓" : "Project Terkirim"}
                       </p>
-                      <p className="text-base font-extrabold text-white leading-tight">{detailTarget.soal?.judul}</p>
+                      <p className={`text-base font-extrabold leading-tight ${appMode ? "text-slate-900" : "text-white"}`}>{detailTarget.soal?.judul}</p>
                     </div>
                   </div>
-                  <button onClick={()=>setDetailTarget(null)} className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30">
+                  <button onClick={()=>setDetailTarget(null)} className={`w-8 h-8 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}>
                     <X size={15}/>
                   </button>
                 </div>
@@ -749,8 +826,8 @@ export default function SiswaJadwalSoalPage() {
                   )}
                 </div>
                 <a href={detailTarget.fileUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{background:"#3E03B3"}}>
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${appMode ? "rounded-full" : "rounded-xl"}`}
+                  style={{background: appMode ? "#F26A3D" : "#3E03B3"}}>
                   <ExternalLink size={14}/> Buka Google Drive
                 </a>
               </div>
@@ -763,14 +840,14 @@ export default function SiswaJadwalSoalPage() {
         {revisiModal && (
           <motion.div key="revisi-siswa-overlay"
             initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
             onClick={()=>setRevisiModal(null)}>
             <motion.div initial={{scale:0.95,opacity:0,y:16}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.95,opacity:0,y:16}}
               transition={{type:"spring",damping:26,stiffness:340}}
-              className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+              className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: "#A1F919", color: "#000000"}}>
+                style={{background: appMode ? "#FFE9E2" : "#A1F919", color: "#000000"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -812,12 +889,12 @@ export default function SiswaJadwalSoalPage() {
               </div>
               <div className="px-6 pb-6 flex gap-3">
                 <button onClick={()=>setRevisiModal(null)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700">
+                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 ${appMode ? "rounded-full" : "rounded-xl"}`}>
                   Tutup
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2"
-                  style={{background: "#A1F919", color: "#000000"}}>
+                  className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-full" : "rounded-xl"}`}
+                  style={appMode ? {background: "#F26A3D", color: "#fff"} : {background: "#A1F919", color: "#000000"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

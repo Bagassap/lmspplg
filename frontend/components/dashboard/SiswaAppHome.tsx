@@ -10,6 +10,7 @@ import {
 import { icon3dStyle, MENU_TONE, TONE_ORDER } from "@/components/shared/Icon3D";
 import { formatTgl, isTugasActive, type TugasItem } from "@/components/tugas/types";
 import type { MateriItem } from "@/components/materi/MateriFormModal";
+import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 
 const ACCENT = "#F26A3D";
 const PURPLE = "#3E03B3";
@@ -18,10 +19,10 @@ const MAX_ITEMS = 5;
 type Tab = "materi" | "tugas";
 
 const QUICK_ACTIONS = [
-  { href: "/siswa/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: MENU_TONE.absensi },
-  { href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, tone: MENU_TONE.pengumuman },
-  { href: "/siswa/magang", label: "PKL", icon: GraduationCap, tone: MENU_TONE.magang },
-  { href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, tone: MENU_TONE.ukk },
+  { key: "absensi", href: "/siswa/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: MENU_TONE.absensi },
+  { key: "pengumuman", href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, tone: MENU_TONE.pengumuman },
+  { key: "magang", href: "/siswa/magang", label: "PKL", icon: GraduationCap, tone: MENU_TONE.magang },
+  { key: "ukk", href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, tone: MENU_TONE.ukk },
 ];
 
 function Rocket() {
@@ -93,6 +94,7 @@ function ListSkeleton() {
  * Materi/Tugas.
  */
 export function SiswaAppHome() {
+  const fitur = useSiswaFitur();
   const [tab, setTab] = useState<Tab>("materi");
   const [materi, setMateri] = useState<MateriItem[] | null>(null);
   const [tugas, setTugas] = useState<TugasItem[] | null>(null);
@@ -152,7 +154,7 @@ export function SiswaAppHome() {
               transition={{ duration: 0.35, delay: 0.1 + i * 0.05 }}
               whileTap={{ scale: 0.94 }}
             >
-              <Link href={a.href} className="flex flex-col items-center gap-2">
+              <Link href={a.key === "magang" ? fitur.magangHref : a.key === "ukk" ? fitur.ukkHref : a.href} className="flex flex-col items-center gap-2">
                 <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(a.tone)}>
                   <a.icon size={26} color="#fff" />
                 </span>

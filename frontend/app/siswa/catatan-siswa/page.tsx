@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ChevronLeft, NotebookPen, Calendar, User as UserIcon, ClipboardList } from "lucide-react";
+import { NotebookPen, Calendar, User as UserIcon, ClipboardList } from "lucide-react";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
+import { AppMobileFrame, AppCard, AppEmpty, AppSectionTitle, APP_ACCENT } from "@/components/app/AppUI";
+import { icon3dStyle } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type CatatanItem = {
   id: string;
@@ -27,7 +29,7 @@ function formatTgl(s: string) {
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Admin", GURU: "Guru", SISWA: "Siswa" };
 
 export default function SiswaCatatanSayaPage() {
-  const router = useRouter();
+  const appMode = useIsAppMode();
   const [data, setData] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -94,15 +96,51 @@ export default function SiswaCatatanSayaPage() {
         )}
       </div>
 
-      <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
-        <div className="relative flex items-center px-4 pb-3 pt-4">
-          <button type="button" onClick={() => router.push("/siswa/dashboard")}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
-            <ChevronLeft size={18} />
-          </button>
-          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Catatan Saya</h1>
-        </div>
-        <div className="rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
+      <AppMobileFrame eyebrow="Catatan Saya" title="Catatan Saya" legacyBodyClass="">
+        {appMode ? (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Total Catatan", value: loading ? "—" : data?.catatan.length ?? 0, tone: "indigo" as const, icon: <NotebookPen size={26} color="#fff" /> },
+                { label: "Total Poin", value: loading ? "—" : data?.totalPoin ?? 0, tone: "emerald" as const, icon: <span className="text-2xl font-black text-white">±</span> },
+              ].map((t) => (
+                <div key={t.label} className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(t.tone)}>{t.icon}</span>
+                  <span className="text-xl font-extrabold leading-none text-slate-900 dark:text-white">{t.value}</span>
+                  <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{t.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <section className="space-y-3">
+              <AppSectionTitle>Daftar Catatan</AppSectionTitle>
+              {loading ? (
+                [0, 1].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)
+              ) : !data || data.catatan.length === 0 ? (
+                <AppEmpty icon={NotebookPen} title="Belum ada catatan untukmu" desc="Pertahankan!" />
+              ) : (
+                data.catatan.map((c) => (
+                  <AppCard key={c.id}>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-[15px] font-bold text-slate-900 dark:text-white">{c.judul}</p>
+                      {c.poin != null && (
+                        <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: "#FFE9E2", color: APP_ACCENT }}>
+                          {c.poin} poin
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-500 dark:text-slate-400">{c.catatan}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="flex items-center gap-1"><Calendar size={11} /> {formatTgl(c.tanggal)}</span>
+                      <span className="flex items-center gap-1"><UserIcon size={11} /> {c.dicatatOleh.nama} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
+                    </div>
+                  </AppCard>
+                ))
+              )}
+            </section>
+          </>
+        ) : (
+          <>
         <div className="space-y-3 rounded-[28px] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#3E03B3" }}>
@@ -169,8 +207,9 @@ export default function SiswaCatatanSayaPage() {
             )}
           </div>
         </div>
-        </div>
-      </div>
+          </>
+        )}
+      </AppMobileFrame>
     </div>
   );
 }

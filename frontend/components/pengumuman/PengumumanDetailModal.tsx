@@ -12,6 +12,7 @@ import { KomentarSection }     from "./KomentarSection";
 import type { PengumumanItem } from "./PengumumanFormModal";
 import type { KomentarItem }   from "./KomentarSection";
 import { Avatar } from "@/components/shared/Avatar";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -60,6 +61,7 @@ export default function PengumumanDetailModal({
   onPinChanged?: (id: string, isPinned: boolean) => void;
 }) {
   const toast = useToast();
+  const app = useIsAppMode();
   const [pengumuman, setPengumuman] = useState<PengumumanDetail | null>(null);
   const [loading,    setLoading]    = useState(true);
   const [notFound,   setNotFound]   = useState(false);
@@ -120,7 +122,7 @@ export default function PengumumanDetailModal({
   }
 
   const grad    = pengumuman ? (KATEGORI_WARNA[pengumuman.kategori] ?? KATEGORI_WARNA.Umum) : KATEGORI_WARNA.Umum;
-  const onLime  = grad === "#A1F919";
+  const onLime  = app || grad === "#A1F919";
   const pb      = pengumuman ? PRIORITAS_BADGE[pengumuman.prioritas] : null;
 
   return (
@@ -143,7 +145,7 @@ export default function PengumumanDetailModal({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.93, y: 24 }}
           transition={{ type: "spring", damping: 26, stiffness: 340 }}
-          className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-2xl"
+          className={`relative z-10 flex w-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 sm:rounded-2xl ${app ? "rounded-t-[28px]" : "rounded-t-2xl"}`}
           style={{ maxHeight: "90vh" }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -172,7 +174,7 @@ export default function PengumumanDetailModal({
 
               <div
                 className="relative shrink-0 overflow-hidden px-5 py-4 sm:px-6 sm:py-5"
-                style={{ background: grad }}
+                style={{ background: app ? "#FFE9E2" : grad }}
               >
                 <div className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full ${onLime ? "bg-black/8" : "bg-white/8"}`} />
                 <div className={`pointer-events-none absolute -bottom-10 left-1/3 h-36 w-36 rounded-full ${onLime ? "bg-black/6" : "bg-white/6"}`} />
@@ -270,7 +272,7 @@ export default function PengumumanDetailModal({
 
               <div className="border-b border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-slate-700">
-                  <RotateCcw size={12} className="text-[#00AAFA]" />
+                  <RotateCcw size={12} className={app ? "text-[#F26A3D]" : "text-[#00AAFA]"} />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Isi Pengumuman</span>
                   <span className="ml-auto text-[10px] font-normal text-gray-400 dark:text-slate-500">{formatDate(pengumuman.createdAt)}</span>
                 </div>

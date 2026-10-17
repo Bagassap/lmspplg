@@ -1,4 +1,4 @@
-﻿"use client";
+﻿﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,9 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { formatAlamatLengkap } from "@/components/data-siswa/shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { ChangeFotoProfilModal } from "@/components/shared/ChangeFotoProfilModal";
+import { AppMobileFrame, AppBanner, AppInfoRow, AppSectionTitle, AppPillButton } from "@/components/app/AppUI";
+import { icon3dStyle } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type SiswaProfil = {
   id: string;
@@ -53,8 +56,11 @@ function formatTanggal(iso: string | null): string {
   return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-const INPUT =
+const INPUT_DEFAULT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00AAFA]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+
+const INPUT_APP =
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#F26A3D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F26A3D]/15 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 function EditProfilModal({
   siswa, kelasGradient, onClose, onSave,
@@ -65,6 +71,8 @@ function EditProfilModal({
   onSave: (updated: SiswaProfil) => void;
 }) {
   const toast = useToast();
+  const app = useIsAppMode();
+  const INPUT = app ? INPUT_APP : INPUT_DEFAULT;
   const [jenisKelamin, setJenisKelamin] = useState(siswa.jenisKelamin ?? "");
   const [tempatLahir, setTempatLahir] = useState(siswa.tempatLahir ?? "");
   const [tanggalLahir, setTanggalLahir] = useState(siswa.tanggalLahir ? siswa.tanggalLahir.slice(0, 10) : "");
@@ -119,27 +127,27 @@ function EditProfilModal({
   const modal = (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className={`fixed inset-0 z-50 flex justify-center ${app ? "items-end" : "items-center p-4"}`}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1E293B]"
-          initial={{ scale: 0.92, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.92, opacity: 0 }}
+          className={`relative z-10 w-full max-w-sm overflow-hidden bg-white shadow-2xl dark:bg-[#1E293B] ${app ? "rounded-t-[28px]" : "rounded-3xl"}`}
+          initial={app ? { y: "100%" } : { scale: 0.92, opacity: 0 }}
+          animate={app ? { y: 0 } : { scale: 1, opacity: 1 }}
+          exit={app ? { y: "100%" } : { scale: 0.92, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
         >
-          <div className="flex items-center justify-between px-6 py-4" style={{ background: kelasGradient }}>
+          <div className="flex items-center justify-between px-6 py-4" style={{ background: app ? "#FFE9E2" : kelasGradient }}>
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
-                <Pencil size={15} className="text-white" />
+              <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                <Pencil size={15} />
               </div>
-              <h2 className="text-base font-semibold text-white">Edit Profil</h2>
+              <h2 className={`text-base font-semibold ${app ? "text-slate-900" : "text-white"}`}>Edit Profil</h2>
             </div>
             <button
               onClick={onClose}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30"
+              className={`flex h-7 w-7 items-center justify-center rounded-full transition ${app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}
             >
               <X size={15} />
             </button>
@@ -225,8 +233,8 @@ function EditProfilModal({
               onClick={handleSave} disabled={saving}
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
-              style={{ background: kelasGradient }}
+              className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 ${app ? "rounded-full" : "rounded-xl"}`}
+              style={{ background: app ? "#F26A3D" : kelasGradient }}
             >
               {saving
                 ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -310,6 +318,7 @@ function MiniStat({
 }
 
 export default function SiswaProfilPage() {
+  const appMode = useIsAppMode();
   const [profil, setProfil] = useState<SiswaProfil | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
@@ -327,7 +336,7 @@ export default function SiswaProfilPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#3E03B3] border-t-violet-600" />
+        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#3E03B3] border-t-violet-600" style={appMode ? { borderColor: "#F26A3D", borderTopColor: "transparent" } : undefined} />
       </div>
     );
   }
@@ -357,6 +366,64 @@ export default function SiswaProfilPage() {
 
   return (
     <div className="space-y-5">
+      {appMode && (
+        <>
+      <AppMobileFrame eyebrow="Akun" title="Profil Saya" backHref="/siswa/dashboard">
+        <AppBanner className="flex flex-col items-center text-center">
+          <div className="relative">
+            <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
+              <Avatar src={profil.user?.fotoProfil} nama={nama} sizePx={96} fallbackBg="#F26A3D" textClassName="text-2xl font-extrabold" />
+            </div>
+            <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
+              className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-white shadow-md"
+              style={{ background: "#F26A3D" }}>
+              <Camera size={14} />
+            </button>
+          </div>
+          <h2 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white">{nama}</h2>
+          <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-extrabold" style={{ color: "#F26A3D" }}>
+            <IdCard size={14} /> NIS {profil.nis}
+          </span>
+          {profil.user?.email && <p className="mt-2 text-xs text-slate-500">{profil.user.email}</p>}
+          <span className="mt-2 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-slate-600">{kelasShort(profil.kelas.nama)}</span>
+        </AppBanner>
+
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { label: "Angkatan", value: String(profil.angkatan), tone: "indigo" as const, icon: Calendar },
+            { label: "Jurusan", value: jurusanShort, tone: "sky" as const, icon: BookOpen },
+          ].map((t) => (
+            <div key={t.label} className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+              <span className="flex h-14 w-14 items-center justify-center rounded-[20px]" style={icon3dStyle(t.tone)}>
+                <t.icon size={24} color="#fff" />
+              </span>
+              <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{t.value}</span>
+              <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{t.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <section className="space-y-3">
+          <AppSectionTitle>Informasi Pribadi</AppSectionTitle>
+          <AppInfoRow icon={Users} label="Jenis Kelamin" value={profil.jenisKelamin || "—"} />
+          <AppInfoRow icon={Calendar} label="Tempat, Tgl Lahir" value={tglLahir} />
+          <AppInfoRow icon={GraduationCap} label="Kelas" value={profil.kelas.nama} />
+          <AppInfoRow icon={BookOpen} label="Jurusan" value={profil.jurusan || "—"} />
+          <AppInfoRow icon={Users} label="Nama Orang Tua" value={profil.namaOrtu || "—"} />
+          <AppInfoRow icon={Hash} label="NIS" value={profil.nis} />
+        </section>
+
+        <section className="space-y-3">
+          <AppSectionTitle>Kontak &amp; Lokasi</AppSectionTitle>
+          <AppInfoRow icon={Phone} label="No. HP" value={profil.noHp || "—"} />
+          <AppInfoRow icon={MapPin} label="Alamat Lengkap" value={formatAlamatLengkap(profil) || "—"} />
+        </section>
+
+        <AppPillButton onClick={() => setShowEdit(true)}><Pencil size={16} /> Edit Profil</AppPillButton>
+      </AppMobileFrame>
+        </>
+      )}
+      <div className={appMode ? "hidden space-y-5 lg:block" : "space-y-5"}>
       <motion.div
         initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
@@ -503,6 +570,9 @@ export default function SiswaProfilPage() {
         </div>
       </motion.div>
 
+
+      </div>
+
       {showEdit && (
         <EditProfilModal
           siswa={profil}
@@ -513,7 +583,7 @@ export default function SiswaProfilPage() {
       )}
 
       {showChangeFoto && (
-        <ChangeFotoProfilModal gradient={kelasGrad} onClose={() => setShowChangeFoto(false)} />
+        <ChangeFotoProfilModal gradient={appMode ? "#F26A3D" : kelasGrad} onClose={() => setShowChangeFoto(false)} />
       )}
     </div>
   );
