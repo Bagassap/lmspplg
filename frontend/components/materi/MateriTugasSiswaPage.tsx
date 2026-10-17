@@ -11,6 +11,9 @@ import { SubmitTugasModal } from "@/components/tugas/SubmitTugasModal";
 import { SubmisiSayaModal } from "@/components/tugas/SubmisiSayaModal";
 import { isTugasActive, LOCKDOWN_TIPE } from "@/components/tugas/types";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
+import type { MateriItem } from "./MateriFormModal";
+import { SiswaAppMateriTugas } from "./SiswaAppMateriTugas";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type Category = "materi" | "tugas";
 
@@ -18,7 +21,9 @@ export function MateriTugasSiswaPage() {
   const toast = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [materiCount, setMateriCount] = useState(0);
+  const appMode = useIsAppMode();
+  const [materiList, setMateriList] = useState<MateriItem[]>([]);
+  const materiCount = materiList.length;
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category>(() => (searchParams.get("tab") === "tugas" ? "tugas" : "materi"));
@@ -40,7 +45,7 @@ export function MateriTugasSiswaPage() {
         fetch("/api/materi").then((r) => r.json()),
         fetch("/api/tugas").then((r) => r.json()),
       ]);
-      setMateriCount(Array.isArray(m) ? m.length : 0);
+      setMateriList(Array.isArray(m) ? m : []);
       setTugasList(Array.isArray(t) ? t : []);
     } finally {
       setLoading(false);
@@ -84,7 +89,7 @@ export function MateriTugasSiswaPage() {
   const active = tugasList.filter((t) => isTugasActive(t));
   const perluDikerjakan = active.filter((t) => !t.submisi || t.submisi.length === 0).length;
 
-  return (
+  const classic = (
     <div className="space-y-6">
       <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
@@ -212,6 +217,11 @@ export function MateriTugasSiswaPage() {
         )}
       </div>
 
+    </div>
+  );
+
+  const modals = (
+    <>
       <SubmitTugasModal tugas={submitTarget} onClose={() => setSubmitTarget(null)} onSubmit={doSubmit} currentUserNama={currentUserNama} />
 
       <SubmisiSayaModal
@@ -225,6 +235,25 @@ export function MateriTugasSiswaPage() {
           if (t) handleKumpulkan(t);
         }}
       />
-    </div>
+    </>
+  );
+
+  if (!appMode) return <>{classic}{modals}</>;
+
+  return (
+    <>
+      <div className="lg:hidden">
+        <SiswaAppMateriTugas
+          materi={materiList}
+          tugas={tugasList}
+          loading={loading}
+          initialTab={category}
+          onKumpulkan={handleKumpulkan}
+          onLihatSubmisi={(s, t) => setDetailTarget({ s, t })}
+        />
+      </div>
+      <div className="hidden lg:block">{classic}</div>
+      {modals}
+    </>
   );
 }
