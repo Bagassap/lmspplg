@@ -266,7 +266,7 @@ export default function SiswaJadwalSoalPage() {
             </div>
           </div>
 
-          <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
+          <div className={`relative -m-4 lg:hidden ${appMode ? "hidden" : ""}`} style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-4 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
                 className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -282,34 +282,34 @@ export default function SiswaJadwalSoalPage() {
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                  className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
-                    className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                    className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"#3E03B3"}}>
+                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                        <CalendarDays size={22} className="text-white"/>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                        <CalendarDays size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Jadwal UKK</span>
-                        <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
+                        <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
-                        <p className="mt-0.5 text-[11px] text-white/70">{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
+                        <p className={`mt-0.5 text-[11px] ${appMode ? "text-slate-500" : "text-white/70"}`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40"><ChevronLeft size={16}/></button>
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronLeft size={16}/></button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40"><ChevronRight size={16}/></button>
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronRight size={16}/></button>
                         </>)}
                         <button onClick={()=>setOpenJadwalModal(false)}
-                          className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30"><X size={16}/></button>
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><X size={16}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/> : (
@@ -330,34 +330,34 @@ export default function SiswaJadwalSoalPage() {
               const curSoal = allSoal[soalSoalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                  className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
-                    className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                    className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background:"#3E03B3"}}>
+                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                        <FileText size={22} className="text-white"/>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                        <FileText size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white/95">Soal UKK</span>
-                        <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
+                        <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
-                        <p className="mt-0.5 text-[11px] text-white/70">{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
+                        <p className={`mt-0.5 text-[11px] ${appMode ? "text-slate-500" : "text-white/70"}`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40"><ChevronLeft size={16}/></button>
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronLeft size={16}/></button>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40"><ChevronRight size={16}/></button>
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronRight size={16}/></button>
                         </>)}
                         <button onClick={()=>setOpenSoalModal(false)}
-                          className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30"><X size={16}/></button>
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><X size={16}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenSoalModal(false)}/> : (
@@ -372,7 +372,7 @@ export default function SiswaJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_1fr]">
+          <div className={`mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_1fr] ${appMode ? "max-lg:hidden" : ""}`}>
             <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
@@ -578,6 +578,27 @@ export default function SiswaJadwalSoalPage() {
                 <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">UKK</p>
                 <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Jadwal &amp; Soal</h1>
               </div>
+
+              <section>
+                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Berkas UKK</h2>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {[
+                    { label: "Jadwal UKK", sub: `${jadwalFiles.length} file`, icon: CalendarDays, tone: "sky" as const, onClick: () => { setSoalJadwalIdx(0); setOpenJadwalModal(true); } },
+                    { label: "Soal UKK", sub: `${totalSoal} soal`, icon: FileText, tone: "violet" as const, onClick: () => { setSoalSoalIdx(0); setOpenSoalModal(true); } },
+                  ].map((b) => (
+                    <button key={b.label} type="button" onClick={b.onClick}
+                      className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.97] dark:bg-[#1E293B]">
+                      <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(b.tone)}>
+                        <b.icon size={26} color="#fff" />
+                      </span>
+                      <span className="text-[15px] font-bold text-slate-900 dark:text-white">{b.label}</span>
+                      <span className="-mt-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">{b.sub}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
 
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
