@@ -15,6 +15,8 @@ import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, tod
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
+import { useIsAppMode } from "@/lib/pwaInstall";
+import { AbsensiAppMobile } from "@/components/absensi-harian/AbsensiAppMobile";
 
 type StatusSaya = {
   sudahAbsen: boolean;
@@ -66,6 +68,7 @@ function getWindowInfo(window_: AbsenWindow, pulangLabel: string): { label: stri
 
 export default function SiswaAbsensiHarianPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const today = todayJakarta();
@@ -445,6 +448,16 @@ export default function SiswaAbsensiHarianPage() {
             )}
           </div>
 
+          {appMode ? (
+            <AbsensiAppMobile
+              today={today} jam={jam} data={data} summary={summary}
+              window_={window_} needsActionDatang={needsActionDatang} needsActionPulang={needsActionPulang}
+              selectedRiwayatTab={selectedRiwayatTab} setSelectedRiwayatTab={setSelectedRiwayatTab}
+              riwayatData={riwayatData} riwayatLoading={riwayatLoading}
+              onDetail={(tab, row) => setRiwayatDetail({ tab, row })}
+              onOpenWizard={openWizard}
+            />
+          ) : (
           <div className="relative isolate -m-4 lg:hidden" style={{ background: BRAND_GRADIENT }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
@@ -549,7 +562,13 @@ export default function SiswaAbsensiHarianPage() {
               );
             })()}
 
-            <MobileFormAbsen
+
+
+            </div>
+          </div>
+          )}
+
+          <MobileFormAbsen
               open={wizardTab !== null}
               onClose={() => setWizardTab(null)}
               activeTipe={activeTipe}
@@ -563,7 +582,6 @@ export default function SiswaAbsensiHarianPage() {
               ttd={ttd} setTtd={setTtd}
               submitting={submitting} onSubmit={handleSubmit}
             />
-
 
             <AnimatePresence>
               {riwayatDetail && (
@@ -601,8 +619,6 @@ export default function SiswaAbsensiHarianPage() {
                 </MobileDetailModal>
               )}
             </AnimatePresence>
-            </div>
-          </div>
         </>
       )}
     </div>
