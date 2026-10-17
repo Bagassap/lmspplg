@@ -17,16 +17,16 @@ function chunkOf4<T>(items: T[]): T[][] {
 }
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
-  PRAKTIK: { icon: Code2, cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" },
-  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#C3F84A]" },
-  ESSAY: { icon: PenLine, cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400" },
+  PRAKTIK: { icon: Code2, cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#A1F919]" },
+  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#A1F919]" },
+  ESSAY: { icon: PenLine, cls: "bg-[#F1EDFA] text-[#2D0281] dark:bg-[#000000]/40 dark:text-[#8F6DD3]" },
 };
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "#0082FB", tint: "#EAF3FF" },
-  { bar: "#0064E0", gradient: "#0064E0", tint: "#DCEBFF" },
-  { bar: "#EF4444", gradient: "#EF4444", tint: "#FEE9EA" },
-  { bar: "#8A9E1F", gradient: "#C3F84A", tint: "#F4FFD9" },
+  { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
+  { bar: "#00AAFA", gradient: "#00AAFA", tint: "#F1EDFA" },
+  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
+  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -41,18 +41,18 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
   const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci;
 
   const btn = isTerkunci
-    ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#F1F5F8", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
+    ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#FFFFFF", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
     : isDiterima
-    ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onLihatDetail(mySubmisi!, t) }
+    ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onLihatDetail(mySubmisi!, t) }
     : isRevisi
-    ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F1F5F8", clr: "#8A9E1F", border: "#8A9E1F", onClick: () => onKumpulkan(t) }
+    ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
     : bisaCobaLagi
-    ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#FEF3E2", clr: "#F59E0B", border: "#F59E0B", onClick: () => onKumpulkan(t) }
+    ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onKumpulkan(t) }
     : isTerkirim
-    ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#EAF3FF", clr: "#0064E0", border: "#0064E0", onClick: () => onLihatDetail(mySubmisi!, t) }
+    ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#F1EDFA", clr: "#00AAFA", border: "#00AAFA", onClick: () => onLihatDetail(mySubmisi!, t) }
     : overdue
-    ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#FEE9EA", clr: "#EF4444", border: "#EF4444", onClick: () => onKumpulkan(t) }
-    : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#E3FBF0", clr: "#00D67F", border: "#00D67F", onClick: () => onKumpulkan(t) };
+    ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
+    : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onKumpulkan(t) };
 
   return { mySubmisi, isDiterima, isRevisi, isTerkirim, overdue, isLockdown, isTerkunci, bisaCobaLagi, btn };
 }
@@ -83,12 +83,12 @@ export function TugasListCardSiswa({
   const detail = detailItem ? rowStatus(detailItem, onKumpulkan, onLihatDetail) : null;
 
   return (
-    <div>
+    <div className="min-w-0">
     <div className="hidden flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:flex">
-      <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
+      <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#C3F84A" }}>
-            <ClipboardList size={14} className="text-[#1C2B33]" />
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#A1F919" }}>
+            <ClipboardList size={14} className="text-[#000000]" />
           </div>
           <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas Saya</p>
         </div>
@@ -96,20 +96,20 @@ export function TugasListCardSiswa({
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
           <input value={search} onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Cari nama tugas atau mapel..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#C3F84A] focus:ring-2 focus:ring-[#F1F5F8] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#1C2B33]/30" />
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#A1F919] focus:ring-2 focus:ring-[#FFFFFF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
         </div>
         <div className="flex gap-5 border-b border-slate-100 dark:border-slate-700">
           <button onClick={() => setTab("active")}
-            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "active" ? "border-blue-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
-            style={tab === "active" ? { color: "#0082FB" } : {}}>
+            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "active" ? "border-[#00AAFA]" : "text-slate-400 border-transparent hover:text-slate-600"}`}
+            style={tab === "active" ? { color: "#3E03B3" } : {}}>
             Aktif
-            {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#0082FB" }}>{active.length}</span>}
+            {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#3E03B3" }}>{active.length}</span>}
           </button>
           <button onClick={() => setTab("completed")}
-            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-emerald-500" : "text-slate-400 border-transparent hover:text-slate-600"}`}
-            style={tab === "completed" ? { color: "#00D67F" } : {}}>
+            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}
+            style={tab === "completed" ? { color: "#5D900F" } : {}}>
             Selesai
-            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#00D67F" }}>{completed.length}</span>}
+            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#A1F919" }}>{completed.length}</span>}
           </button>
         </div>
       </div>
@@ -131,7 +131,7 @@ export function TugasListCardSiswa({
                 <div key={t.id} className="flex flex-col gap-2 px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                      <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
+                      <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -153,13 +153,13 @@ export function TugasListCardSiswa({
                     </span>
                     <div className="flex flex-wrap items-center justify-end gap-1">
                       {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && d.mySubmisi?.nilai !== null && d.mySubmisi?.nilai !== undefined && (
-                        <span className="inline-flex items-center rounded-lg bg-[#F1F5F8] px-1.5 py-1 text-[10px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                        <span className="inline-flex items-center rounded-lg bg-[#FFFFFF] px-1.5 py-1 text-[10px] font-bold text-[#000000] dark:bg-[#000000]/20 dark:text-[#A1F919]">
                           {d.mySubmisi.nilai}
                         </span>
                       )}
                       {t.fileUrl && (
                         <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
+                          className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                           <Download size={12} />
                         </a>
                       )}
@@ -195,7 +195,7 @@ export function TugasListCardSiswa({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }}>{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                       </div>
@@ -218,7 +218,7 @@ export function TugasListCardSiswa({
                     <td className="px-4 py-3 text-right">
                       <div className="flex flex-wrap items-center justify-end gap-1.5">
                         {(t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY") && mySubmisi?.nilai !== null && mySubmisi?.nilai !== undefined && (
-                          <span className="inline-flex items-center rounded-lg bg-[#F1F5F8] px-2 py-1 text-[11px] font-bold text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+                          <span className="inline-flex items-center rounded-lg bg-[#FFFFFF] px-2 py-1 text-[11px] font-bold text-[#000000] dark:bg-[#000000]/20 dark:text-[#A1F919]">
                             Nilai {mySubmisi.nilai}
                           </span>
                         )}
@@ -229,7 +229,7 @@ export function TugasListCardSiswa({
                         )}
                         {t.fileUrl && (
                           <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                             <Download size={14} />
                           </a>
                         )}
@@ -249,24 +249,24 @@ export function TugasListCardSiswa({
       </div>
     </div>
 
-    <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
+    <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#FFFFFF] px-4 py-3 dark:bg-[#1E293B] lg:hidden">
       <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-1 dark:border-slate-700">
         <div className="flex items-center gap-5">
           <button type="button" onClick={() => setTab("active")}
             className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
-            style={tab === "active" ? { borderColor: "#0082FB", color: "#0082FB" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            style={tab === "active" ? { borderColor: "#3E03B3", color: "#3E03B3" } : { borderColor: "transparent", color: "#94a3b8" }}>
             Aktif
             <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={tab === "active" ? { background: "#0082FB18", color: "#0082FB" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+              style={tab === "active" ? { background: "#3E03B318", color: "#3E03B3" } : { background: "#E2E8F0", color: "#94a3b8" }}>
               {active.length}
             </span>
           </button>
           <button type="button" onClick={() => setTab("completed")}
             className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
-            style={tab === "completed" ? { borderColor: "#00D67F", color: "#00D67F" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            style={tab === "completed" ? { borderColor: "#A1F919", color: "#5D900F" } : { borderColor: "transparent", color: "#94a3b8" }}>
             Selesai
             <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={tab === "completed" ? { background: "#00D67F18", color: "#00D67F" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+              style={tab === "completed" ? { background: "#A1F91918", color: "#5D900F" } : { background: "#E2E8F0", color: "#94a3b8" }}>
               {completed.length}
             </span>
           </button>
@@ -275,22 +275,22 @@ export function TugasListCardSiswa({
         {uniqueMapel.length > 1 && (
           <button type="button" onClick={() => setShowFilterSheet(true)}
             className="relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-            style={mapelFilter ? { background: "#0082FB18", color: "#0082FB" } : { background: "#F1F5F9", color: "#94a3b8" }}>
+            style={mapelFilter ? { background: "#3E03B318", color: "#3E03B3" } : { background: "#FFFFFF", color: "#94a3b8" }}>
             <SlidersHorizontal size={14} />
-            {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#0082FB" }} />}
+            {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#3E03B3" }} />}
           </button>
         )}
       </div>
 
       {loading && (
-        <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+        <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
           <p className="text-sm text-slate-400">Memuat data...</p>
         </div>
       )}
       {!loading && shown.length === 0 && (
-        <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#C3F84A30" }}>
-            <ClipboardList size={24} style={{ color: "#8A9E1F" }} />
+        <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#A1F91930" }}>
+            <ClipboardList size={24} style={{ color: "#5D900F" }} />
           </div>
           <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : "Belum ada tugas tersedia"}</p>
         </div>
@@ -301,13 +301,13 @@ export function TugasListCardSiswa({
             <motion.div key={gi}
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: gi * 0.05 }}
-              className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1C2B33]">
+              className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1E293B]">
               {group.map((t) => {
                 const d = rowStatus(t, onKumpulkan, onLihatDetail);
                 return (
                   <button key={t.id} type="button" onClick={() => setDetailItem(t)}
                     className="flex w-full items-center gap-3 p-4 text-left">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18", color: "#0082FB" }}>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318", color: "#3E03B3" }}>
                       {(() => { const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList; return <Icon size={18} />; })()}
                     </span>
                     <div className="min-w-0 flex-1">
@@ -336,7 +336,7 @@ export function TugasListCardSiswa({
 
     <AnimatePresence>
       {detailItem && detail && (
-        <MobileDetailModal onClose={() => setDetailItem(null)} accent="#0082FB">
+        <MobileDetailModal onClose={() => setDetailItem(null)} accent="#3E03B3">
           <div className="relative px-6 pb-6 pt-10 text-center">
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
@@ -398,7 +398,7 @@ export function TugasListCardSiswa({
           <motion.div
             initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="relative z-10 w-full overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+            className="relative z-10 w-full overflow-hidden rounded-t-3xl bg-white dark:bg-[#1E293B]"
             style={{ maxHeight: "80vh" }}
           >
             <div className="flex items-center justify-between px-5 pt-5">
@@ -411,16 +411,16 @@ export function TugasListCardSiswa({
             <div className="max-h-[60vh] space-y-1.5 overflow-y-auto px-5 py-5">
               <button type="button" onClick={() => { setMapelFilter(null); setShowFilterSheet(false); }}
                 className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
-                style={mapelFilter === null ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                style={mapelFilter === null ? { borderColor: "#3E03B3", background: "#3E03B318", color: "#3E03B3" } : { borderColor: "#FFFFFF", background: "transparent", color: "#334155" }}>
                 Semua Mapel
-                {mapelFilter === null && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+                {mapelFilter === null && <CheckCircle size={16} style={{ color: "#3E03B3" }} />}
               </button>
               {uniqueMapel.map((mp) => (
                 <button key={mp} type="button" onClick={() => { setMapelFilter(mp); setShowFilterSheet(false); }}
                   className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
-                  style={mapelFilter === mp ? { borderColor: "#0082FB", background: "#0082FB18", color: "#0082FB" } : { borderColor: "#F1F5F9", background: "transparent", color: "#334155" }}>
+                  style={mapelFilter === mp ? { borderColor: "#3E03B3", background: "#3E03B318", color: "#3E03B3" } : { borderColor: "#FFFFFF", background: "transparent", color: "#334155" }}>
                   {mp}
-                  {mapelFilter === mp && <CheckCircle size={16} style={{ color: "#0082FB" }} />}
+                  {mapelFilter === mp && <CheckCircle size={16} style={{ color: "#3E03B3" }} />}
                 </button>
               ))}
             </div>

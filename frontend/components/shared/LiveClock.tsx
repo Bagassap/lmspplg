@@ -7,10 +7,6 @@ const HARI  = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const WEEKDAY_NUM: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 
-// Reads wall-clock WIB (Asia/Jakarta) explicitly via Intl, mirroring
-// jakartaParts() on the backend — a bare `new Date()` reads whatever
-// timezone the viewing device's OS/browser happens to be set to, which
-// this component must never silently relabel as "WIB".
 function jakartaNow() {
   const fmt = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Jakarta",
@@ -47,7 +43,7 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
   if (variant === "compact") {
     return (
       <div className="flex items-center gap-2 rounded-xl bg-white/12 px-3 py-1.5 backdrop-blur-sm">
-        <Clock size={11} className="shrink-0 animate-pulse text-[#0082FB]" />
+        <Clock size={11} className="shrink-0 animate-pulse text-[#3E03B3]" />
         <span className="text-xs font-bold tabular-nums text-white">{jam}</span>
       </div>
     );
@@ -58,8 +54,8 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
     const tanggalT = now.day;
     const bulanT   = BULAN[now.month - 1];
     return (
-      <div className="hidden items-center gap-2.5 rounded-xl px-4 py-2 text-white shadow-[0_4px_14px_rgba(0,130,251,0.35)] md:flex"
-        style={{ background: "#0082FB" }}>
+      <div className="hidden items-center gap-2.5 rounded-xl px-4 py-2 text-white shadow-[0_4px_14px_rgba(62,3,179,0.35)] md:flex"
+        style={{ background: "#3E03B3" }}>
         <CalendarDays size={14} className="shrink-0" />
         <span className="text-sm font-semibold">{hariT}, {tanggalT} {bulanT}</span>
         <div className="h-4 w-px bg-white/30" />
@@ -77,14 +73,14 @@ export function LiveClock({ variant = "header" }: { variant?: "header" | "compac
   return (
     <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 sm:gap-3 sm:px-4 sm:py-2">
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <CalendarDays className="h-3 w-3 shrink-0 text-[#0082FB] sm:h-4 sm:w-4" />
+        <CalendarDays className="h-3 w-3 shrink-0 text-[#3E03B3] sm:h-4 sm:w-4" />
         <span className="text-[11px] font-medium text-white/90 sm:text-sm">{hari}, {tanggal} {bulan} {tahun}</span>
       </div>
 
       <div className="h-3 w-px bg-white/20 sm:h-4" />
 
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <Clock className="h-3 w-3 shrink-0 animate-pulse text-[#0082FB] sm:h-4 sm:w-4" />
+        <Clock className="h-3 w-3 shrink-0 animate-pulse text-[#3E03B3] sm:h-4 sm:w-4" />
         <span className="text-[11px] font-bold tabular-nums text-white sm:text-sm">{jam} WIB</span>
       </div>
     </div>

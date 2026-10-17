@@ -35,9 +35,6 @@ export function getNama(s: SiswaCardData): string {
   return s.nama ?? s.user?.nama ?? "—";
 }
 
-// Ubah nomor HP Indonesia (format lokal 08xx, +62xx, atau 62xx) jadi link
-// wa.me — wa.me butuh kode negara tanpa "0" di depan (mis. 6281234567890).
-// Null kalau nomornya kosong/tidak punya digit sama sekali.
 export function waLink(noHp: string | null | undefined): string | null {
   const digits = (noHp ?? "").replace(/\D/g, "");
   if (!digits) return null;
@@ -90,7 +87,6 @@ type AlamatFields = {
   kabupaten: string | null;
 };
 
-// Format seragam: "Dukuh X, RT 003/RW 005, Desa Y, Kecamatan Z, Kabupaten W"
 export function formatAlamatLengkap(s: AlamatFields): string {
   const parts: string[] = [];
   if (s.dukuh) parts.push(`Dukuh ${s.dukuh}`);
@@ -101,24 +97,8 @@ export function formatAlamatLengkap(s: AlamatFields): string {
   return parts.length > 0 ? parts.join(", ") : "—";
 }
 
-// Palet vivid/solid — dipilih berdasarkan hash nama/id (sum charCode % 8) agar konsisten per siswa.
-// Semua varian biru-ke-tinta dari palet utama, kecuali dua slot hijau/merah
-// yang memang sudah diizinkan (sukses/error) untuk variasi rotasi avatar.
-export const AVATAR_PALETTE = [
-  "#0082FB",
-  "#0064E0",
-  "#0082FB",
-  "#00D67F",
-  "#1C2B33",
-  "#0082FB",
-  "#EF4444",
-  "#0064E0",
-] as const;
-
-export function avatarColorFor(seed: string): string {
-  let sum = 0;
-  for (const c of seed) sum += c.charCodeAt(0);
-  return AVATAR_PALETTE[sum % AVATAR_PALETTE.length];
+export function avatarColorFor(_seed: string): string {
+  return "#3E03B3";
 }
 
 export function hasGenderData(list: { jenisKelamin: string | null }[]): boolean {

@@ -56,7 +56,7 @@ export function GuruLaporDiriPanel() {
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "#0082FB" }}>
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "#3E03B3" }}>
               <Filter size={14} className="text-white" />
             </span>
             <p className="text-sm font-bold text-slate-800 dark:text-white">Daftar Lapor Diri <span className="font-medium text-slate-400">({filtered.length})</span></p>
@@ -65,11 +65,11 @@ export function GuruLaporDiriPanel() {
             <div className="relative">
               <Search size={13} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama/NIS..."
-                className="w-48 rounded-xl border border-slate-200 bg-slate-50 py-2 pl-8 pr-3 text-xs text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                className="w-48 rounded-xl border border-slate-200 bg-slate-50 py-2 pl-8 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
             </div>
             <button type="button" onClick={() => setOnlyBelum((v) => !v)}
               className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${
-                onlyBelum ? "bg-red-500 text-white" : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300"
+                onlyBelum ? "bg-[#A1F919] text-black" : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300"
               }`}>
               <XCircle size={12} /> Belum Lapor
             </button>

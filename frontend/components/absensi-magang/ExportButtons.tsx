@@ -114,8 +114,8 @@ export function ExportButtons({ tempatMagangId, tempatNama, range, siswaList }: 
     }
   }
 
-  const PDF_STYLE = { backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" };
-  const EXCEL_STYLE = { backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" };
+  const PDF_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
+  const EXCEL_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
 
   return (
     <>
@@ -151,7 +151,7 @@ export function ExportButtons({ tempatMagangId, tempatNama, range, siswaList }: 
           <SiswaPickerModal
             siswaList={siswaList}
             title={picker === "pdf" ? "Pilih Siswa — Export PDF" : "Pilih Siswa — Export Excel"}
-            accent={picker === "pdf" ? "#EF4444" : "#00D67F"}
+            accent="#5D900F"
             onPick={(s) => runSiswaExport(picker === "pdf" ? "pdf-siswa" : "excel-siswa", s)}
             onClose={() => setPicker(null)}
           />

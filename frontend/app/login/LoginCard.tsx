@@ -29,11 +29,11 @@ export function LoginCard() {
       initial="hidden"
       animate="visible"
       variants={cardVariants}
-      className="relative z-10 flex h-[100dvh] w-full flex-col overflow-hidden bg-transparent shadow-none sm:h-auto sm:max-w-235 sm:flex-row-reverse sm:gap-4 sm:rounded-[36px] sm:bg-white sm:p-5 sm:shadow-[0_0_0_1px_rgba(0,130,251,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(0,100,224,0.12),0_40px_100px_rgba(0,130,251,0.07)]"
+      className="relative z-10 flex h-[100dvh] w-full flex-col overflow-hidden bg-transparent shadow-none sm:h-auto sm:max-w-235 sm:flex-row-reverse sm:gap-4 sm:rounded-[36px] sm:bg-white sm:p-5 sm:shadow-[0_0_0_1px_rgba(62,3,179,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(0,170,250,0.12),0_40px_100px_rgba(62,3,179,0.07)]"
     >
       <div
         className="relative flex flex-1 min-h-0 flex-col items-center justify-center overflow-hidden px-6 py-8 sm:min-h-0 sm:w-[320px] sm:shrink-0 sm:flex-none sm:rounded-3xl sm:px-10 sm:py-12"
-        style={{ backgroundColor: "#0082FB" }}
+        style={{ backgroundColor: "#3E03B3" }}
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.12]"
@@ -43,8 +43,8 @@ export function LoginCard() {
           }}
         />
 
-        <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-[#0082FB]/50 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -right-16 h-56 w-56 rounded-full bg-[#0082FB]/30 blur-3xl" />
+        <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-[#3E03B3]/50 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -right-16 h-56 w-56 rounded-full bg-[#3E03B3]/30 blur-3xl" />
 
         <div className="relative z-10 flex flex-col items-center text-center">
           <motion.div
@@ -52,7 +52,7 @@ export function LoginCard() {
             className="relative flex shrink-0 items-center justify-center"
           >
             <motion.div
-              className="absolute h-32 w-32 rounded-full bg-[#0082FB]/35 blur-2xl sm:h-48 sm:w-48"
+              className="absolute h-32 w-32 rounded-full bg-[#3E03B3]/35 blur-2xl sm:h-48 sm:w-48"
               animate={{ scale: [1, 1.15, 1], opacity: [0.45, 0.85, 0.45] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -60,7 +60,7 @@ export function LoginCard() {
               className="absolute h-24 w-24 rounded-full blur-xl sm:h-32 sm:w-32"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(0,130,251,0.45), rgba(0,130,251,0.2) 60%, transparent 80%)",
+                  "radial-gradient(circle, rgba(62,3,179,0.45), rgba(62,3,179,0.2) 60%, transparent 80%)",
               }}
             />
             <Image
@@ -72,7 +72,7 @@ export function LoginCard() {
               className="relative h-16 w-auto sm:h-27.5"
               style={{
                 filter:
-                  "drop-shadow(0 0 22px rgba(0,130,251,0.7)) drop-shadow(0 6px 18px rgba(0,0,0,0.55))",
+                  "drop-shadow(0 0 22px rgba(62,3,179,0.7)) drop-shadow(0 6px 18px rgba(0,0,0,0.55))",
               }}
             />
           </motion.div>
@@ -85,12 +85,12 @@ export function LoginCard() {
             <h1 className="mt-0.5 text-xl font-bold leading-[1.2] tracking-wide text-white sm:text-[1.75rem]">
               Sistem
               <br />
-              <span className="text-[#EAF3FF]">Pembelajaran</span>
+              <span className="text-[#F1EDFA]">Pembelajaran</span>
             </h1>
 
             <div
               className="mx-auto mt-3 h-px w-16 sm:mt-4"
-              style={{ background: "rgba(0,130,251,0.8)" }}
+              style={{ background: "rgba(62,3,179,0.8)" }}
             />
 
             <p className="mt-3 text-[11.5px] font-light leading-relaxed text-white/60">
@@ -101,7 +101,7 @@ export function LoginCard() {
 
             <div className="mt-4 flex justify-center sm:mt-5">
               <span className="inline-flex items-center gap-2 rounded-lg border border-white/18 bg-white/[0.07] px-3.5 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/75">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-[#0082FB]/70" />
+                <span className="h-1 w-1 shrink-0 rounded-full bg-[#3E03B3]/70" />
                 SMK Ma&apos;arif NU 01 Limpung
               </span>
             </div>

@@ -65,7 +65,7 @@ export function SubmisiTugasModal({
               transition={{ type: "spring", damping: 28, stiffness: 320 }}
               className="bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl w-full max-w-3xl max-h-[90dvh] flex flex-col overflow-hidden sm:rounded-2xl">
 
-              <div className="relative p-6 shrink-0" style={{ background: "#0082FB" }}>
+              <div className="relative p-6 shrink-0" style={{ background: "#3E03B3" }}>
                 <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
                 <button onClick={onClose} className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors">
                   <X size={16} className="text-white" />
@@ -94,11 +94,11 @@ export function SubmisiTugasModal({
 
               <div className="hidden shrink-0 border-b border-slate-100 dark:border-slate-700 lg:grid lg:grid-cols-5">
                 {[
-                  { label: "Total", val: rows.length, color: "#0082FB" },
-                  { label: "Diterima", val: cntDiterima, color: "#00D67F" },
-                  { label: "Revisi", val: cntRevisi, color: "#C3F84A" },
-                  { label: "Menunggu", val: cntMenunggu, color: "#0082FB" },
-                  { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#EF4444" },
+                  { label: "Total", val: rows.length, color: "#3E03B3" },
+                  { label: "Diterima", val: cntDiterima, color: "#5D900F" },
+                  { label: "Revisi", val: cntRevisi, color: "#5D900F" },
+                  { label: "Menunggu", val: cntMenunggu, color: "#3E03B3" },
+                  { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#5D900F" },
                 ].map((st, i) => (
                   <div key={i} className="border-r border-slate-100 p-4 text-center last:border-r-0 dark:border-slate-700">
                     <p className="text-2xl font-extrabold" style={{ color: st.color }}>{st.val}</p>
@@ -110,13 +110,13 @@ export function SubmisiTugasModal({
               <div className="flex shrink-0 gap-1 border-b border-slate-100 px-4 pt-3 dark:border-slate-700">
                 <button onClick={() => setTab("sudah")}
                   className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2 text-xs font-bold transition-colors ${
-                    tab === "sudah" ? "bg-[#0082FB]/10 text-[#0082FB]" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    tab === "sudah" ? "bg-[#3E03B3]/10 text-[#3E03B3]" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   }`}>
                   <CheckCircle size={13} /> Sudah Mengumpulkan ({rows.length})
                 </button>
                 <button onClick={() => setTab("belum")}
                   className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2 text-xs font-bold transition-colors ${
-                    tab === "belum" ? "bg-red-50 text-red-500 dark:bg-red-900/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    tab === "belum" ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   }`}>
                   <UserX size={13} /> Belum Mengumpulkan ({belumLoading ? "…" : belumList.length})
                 </button>
@@ -130,21 +130,21 @@ export function SubmisiTugasModal({
                     </div>
                   ) : belumList.length === 0 ? (
                     <div className="py-16 text-center">
-                      <CheckCircle size={36} className="mx-auto mb-3 text-emerald-200" />
+                      <CheckCircle size={36} className="mx-auto mb-3 text-[#F6FEE8]" />
                       <p className="text-sm font-semibold text-slate-400">Semua siswa sudah mengumpulkan tugas ini</p>
                     </div>
                   ) : belumList.map((s) => {
                     const nama = s.user?.nama || s.nama || "Siswa";
                     return (
                       <div key={s.id} className="flex flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-sm font-bold text-red-500 dark:bg-red-900/30">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F6FEE8] text-sm font-bold text-[#5D900F] dark:bg-[#48700B]/30">
                           {nama[0]?.toUpperCase() ?? "?"}
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
                           {s.kelas && <p className="text-xs text-slate-400">{s.kelas.nama}</p>}
                         </div>
-                        <span className="shrink-0 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
+                        <span className="shrink-0 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:bg-[#48700B]/20">
                           Belum Kumpul
                         </span>
                       </div>
@@ -168,20 +168,20 @@ export function SubmisiTugasModal({
                     <>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
                         <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-black text-white"
-                          style={{ background: s.nilai >= 80 ? "#00D67F" : s.nilai >= 60 ? "#F59E0B" : "#EF4444" }}>
+                          style={{ background: s.nilai >= 80 ? "#A1F919" : s.nilai >= 60 ? "#A1F919" : "#A1F919" }}>
                           Nilai {s.nilai}
                         </span>
                       )}
                       {isLockdown && !!s.jumlahPercobaan && (
                         <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
-                          s.terkunci ? "bg-red-50 text-red-500 dark:bg-red-900/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+                          s.terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
                         }`}>
                           Percobaan {s.jumlahPercobaan}/{maksimalPercobaanEfektif(s)}
                           {!!s.bonusPercobaan && ` (+${s.bonusPercobaan})`}
                         </span>
                       )}
                       {s.dipaksaKeluar && (
-                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-500 dark:bg-red-900/20">
+                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:bg-[#48700B]/20">
                           <ShieldAlert size={11} /> Dipaksa Keluar
                         </span>
                       )}
@@ -191,7 +191,7 @@ export function SubmisiTugasModal({
                     <div key={s.id}>
                       <div className="hidden flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors lg:flex">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                          style={{ backgroundColor: isDone ? "#00D67F" : sc.color }}>
+                          style={{ backgroundColor: isDone ? "#A1F919" : sc.color }}>
                           {nama[0]?.toUpperCase() ?? "?"}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -206,18 +206,18 @@ export function SubmisiTugasModal({
                         )}
                         <button onClick={actionBtn.onClick}
                           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
+                          style={{ color: "#3E03B3", backgroundColor: "#F1EDFA" }}>
                           {actionBtn.icon} {actionBtn.label}
                         </button>
                         {isDone && (
-                          <span className="text-xs font-bold text-emerald-500 shrink-0">Selesai ✓</span>
+                          <span className="text-xs font-bold text-[#5D900F] shrink-0">Selesai ✓</span>
                         )}
                       </div>
 
                       <div className="flex flex-col gap-3 px-4 py-4 lg:hidden">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                            style={{ backgroundColor: isDone ? "#00D67F" : sc.color }}>
+                            style={{ backgroundColor: isDone ? "#A1F919" : sc.color }}>
                             {nama[0]?.toUpperCase() ?? "?"}
                           </div>
                           <div className="min-w-0 flex-1">
@@ -237,7 +237,7 @@ export function SubmisiTugasModal({
 
                         <button onClick={actionBtn.onClick}
                           className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold"
-                          style={{ color: "#0082FB", backgroundColor: "#EAF3FF" }}>
+                          style={{ color: "#3E03B3", backgroundColor: "#F1EDFA" }}>
                           {actionBtn.icon} {actionBtn.label}
                         </button>
                       </div>
@@ -248,7 +248,7 @@ export function SubmisiTugasModal({
 
               <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/60">
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Buka <span className="font-semibold text-[#0082FB]">Lihat Kode/Jawaban/File</span> untuk menerima atau minta revisi tiap submisi.
+                  Buka <span className="font-semibold text-[#3E03B3]">Lihat Kode/Jawaban/File</span> untuk menerima atau minta revisi tiap submisi.
                 </p>
                 <button onClick={onClose}
                   className="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shrink-0 transition-colors">

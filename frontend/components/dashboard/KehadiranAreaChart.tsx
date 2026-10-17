@@ -11,7 +11,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export function KehadiranAreaChart({ data }: PropsType) {
   const options: ApexOptions = {
     legend: { show: false },
-    colors: ["#0082FB", "#C3F84A"],
+    colors: ["#3E03B3", "#A1F919"],
     chart: {
       type: "line",
       toolbar: { show: false },
@@ -25,7 +25,7 @@ export function KehadiranAreaChart({ data }: PropsType) {
     fill: { type: "solid", opacity: 1 },
     grid: {
       strokeDashArray: 5,
-      borderColor: "#F1F5F8",
+      borderColor: "#FFFFFF",
       yaxis: { lines: { show: true } },
       xaxis: { lines: { show: false } },
     },

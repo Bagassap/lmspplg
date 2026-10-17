@@ -165,7 +165,7 @@ export function LengkapiProfilForm() {
             placeholder="Contoh: 08123456789" className={INPUT_CLASS}
           />
           {values.noHp.trim().length > 0 && !phoneValid && (
-            <p className="text-[11px] text-red-500">Format nomor HP tidak valid.</p>
+            <p className="text-[11px] text-[#5D900F]">Format nomor HP tidak valid.</p>
           )}
         </motion.div>
       </div>
@@ -224,7 +224,7 @@ export function LengkapiProfilForm() {
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border-l-4 border-l-[#EF4444] bg-[#1C2B33] px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg border-l-4 border-l-[#A1F919] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
         >
           {error}
         </motion.p>
@@ -236,8 +236,8 @@ export function LengkapiProfilForm() {
         disabled={!canSubmit}
         whileHover={canSubmit ? { scale: 1.02 } : undefined}
         whileTap={canSubmit ? { scale: 0.98 } : undefined}
-        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ background: "#0082FB" }}
+        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(62,3,179,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(62,3,179,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ background: "#3E03B3" }}
       >
         {loading ? (
           <>

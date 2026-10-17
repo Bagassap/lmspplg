@@ -12,7 +12,7 @@ function ToggleSwitch({ checked, onClick, disabled }: { checked: boolean; onClic
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={onClick} disabled={disabled}
       className="relative h-7 w-12 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-      style={{ background: checked ? "#00D67F" : "#CBD5E1" }}>
+      style={{ background: checked ? "#A1F919" : "#CBD5E1" }}>
       <span className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform"
         style={{ transform: checked ? "translateX(1.25rem)" : "translateX(0.125rem)" }} />
     </button>
@@ -39,7 +39,7 @@ function PengaturanCard({
           </span>
           <div>
             <p className="text-sm font-bold text-slate-800 dark:text-white">{title}</p>
-            <p className="text-[11px] font-semibold" style={{ color: checked ? "#00D67F" : "#94a3b8" }}>
+            <p className="text-[11px] font-semibold" style={{ color: checked ? "#A1F919" : "#94a3b8" }}>
               {checked ? "Aktif" : "Nonaktif"}
             </p>
           </div>
@@ -101,7 +101,7 @@ export function PengaturanClient() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <PengaturanCard
               icon={Briefcase}
-              color="#0064E0"
+              color="#00AAFA"
               title="Menu PKL / Magang"
               description="Kalau aktif, siswa kelas XII bisa membuka menu PKL (Penempatan, Absensi, Rekap). Siswa kelas X/XI tetap terkunci apa pun kondisinya, dan guru/admin selalu bisa mengelola data PKL kapan saja untuk persiapan."
               checked={data.magangAktif}
@@ -110,7 +110,7 @@ export function PengaturanClient() {
             />
             <PengaturanCard
               icon={FileText}
-              color="#8B5CF6"
+              color="#00AAFA"
               title="Menu UKK"
               description="Kalau aktif, siswa kelas XII bisa membuka menu UKK (Jadwal & Soal, Nilai Saya). Siswa kelas X/XI tetap terkunci apa pun kondisinya, dan guru/admin selalu bisa menyiapkan jadwal & soal kapan saja."
               checked={data.ukkAktif}
@@ -119,7 +119,7 @@ export function PengaturanClient() {
             />
           </div>
 
-          <div className="flex items-start gap-2.5 rounded-2xl border border-blue-100 bg-blue-50/60 px-4 py-3.5 text-xs leading-relaxed text-blue-700 dark:border-blue-900/40 dark:bg-blue-900/10 dark:text-blue-300">
+          <div className="flex items-start gap-2.5 rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/60 px-4 py-3.5 text-xs leading-relaxed text-[#2D0281] dark:border-[#000000]/40 dark:bg-[#000000]/10 dark:text-[#8F6DD3]">
             <Info size={15} className="mt-0.5 shrink-0" />
             <p>
               Periode PKL dan UKK berbeda-beda tiap tahun ajaran, jadi tidak diaktifkan otomatis berdasarkan tanggal —

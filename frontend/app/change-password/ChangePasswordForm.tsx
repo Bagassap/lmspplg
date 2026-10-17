@@ -20,13 +20,6 @@ const item: Variants = {
 
 type Field = "newPassword" | "confirmPassword";
 
-// If the nama/tanggalLahir on file is itself wrong (a typo during
-// lengkapi-profil, or bad data from the initial CSV import), the student can
-// NEVER pass this self-service check — only an admin can rescue them (via
-// the "Lewati verifikasi identitas" bypass on reset). Below this threshold,
-// a failure is far more likely to just be an honest typo, so retrying is the
-// right first instinct; past it, we proactively point at the real way out
-// instead of leaving the student to retry the same losing move forever.
 const ESCALATE_AFTER_ATTEMPTS = 2;
 
 const FIELDS: { key: Field; label: string; placeholder: string; autoComplete: string; icon: typeof KeyRound }[] = [
@@ -103,10 +96,6 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
 
       if (!res.ok) {
         setError(data?.message || "Gagal mengubah password.");
-        // Only count attempts that actually included an identity check —
-        // a password-strength or "must match" validation failure isn't
-        // evidence the identity data on file is wrong, so it shouldn't push
-        // the student toward "go find an admin" prematurely.
         if (!bypassIdentityVerification) setIdentityFailedAttempts((n) => n + 1);
         setLoading(false);
         return;
@@ -145,9 +134,9 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
       {bypassIdentityVerification ? (
         <motion.div
           variants={item}
-          className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-3"
+          className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
         >
-          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-emerald-600" />
+          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
           <p className="text-xs leading-relaxed text-black/65">
             Identitas Anda sudah diverifikasi oleh admin — langsung buat password baru di bawah ini.
           </p>
@@ -156,9 +145,9 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
         <>
           <motion.div
             variants={item}
-            className="flex items-start gap-2.5 rounded-xl border border-[#C3F84A]/20 bg-[#C3F84A]/5 px-3.5 py-3"
+            className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
           >
-            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#1C2B33]" />
+            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#000000]" />
             <p className="text-xs leading-relaxed text-black/65">
               Untuk keamanan, konfirmasi identitas Anda sebelum membuat password baru —
               ini mencegah orang lain mengganti password akun Anda dengan NIS yang bukan miliknya.
@@ -198,9 +187,9 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 px-3.5 py-3"
+              className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
             >
-              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-red-600" />
+              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
               <p className="text-xs leading-relaxed text-black/70">
                 Sudah gagal beberapa kali? Kemungkinan {profileCompleted ? "tanggal lahir" : "nama"} yang tersimpan
                 di sistem sekolah berbeda dari yang Anda ingat — bukan berarti Anda salah ketik.
@@ -249,7 +238,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border-l-4 border-l-[#EF4444] bg-[#1C2B33] px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg border-l-4 border-l-[#A1F919] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
         >
           {error}
         </motion.p>
@@ -261,8 +250,8 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
         disabled={loading}
         whileHover={!loading ? { scale: 1.02 } : undefined}
         whileTap={!loading ? { scale: 0.98 } : undefined}
-        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
-        style={{ background: "#0082FB" }}
+        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(62,3,179,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(62,3,179,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
+        style={{ background: "#3E03B3" }}
       >
         {loading ? (
           <>

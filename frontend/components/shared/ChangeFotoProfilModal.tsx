@@ -88,7 +88,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={loading ? undefined : onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-[#1C2B33] sm:rounded-3xl"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-[#1E293B] sm:rounded-3xl"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
@@ -153,7 +153,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
                   <input
                     type="range" min={1} max={3} step={0.01} value={zoom}
                     onChange={(e) => setZoom(Number(e.target.value))}
-                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0082FB]"
+                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#3E03B3]"
                   />
                 </div>
                 <button
@@ -167,7 +167,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
               </div>
             )}
 
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error && <p className="text-xs text-[#5D900F]">{error}</p>}
           </div>
 
           <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">

@@ -7,7 +7,7 @@ import { Loader2, Upload, RotateCcw, ImagePlus } from "lucide-react";
 import { getCroppedImg } from "@/lib/getCroppedImg";
 import { compressToMaxBytes, describePhotoError } from "@/lib/compressImage";
 
-const MAX_UPLOAD_BYTES = 1024 * 1024; // 1MB
+const MAX_UPLOAD_BYTES = 1024 * 1024;
 
 const container: Variants = {
   hidden: {},
@@ -154,7 +154,7 @@ export function LengkapiFotoProfilForm() {
               step={0.01}
               value={zoom}
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0082FB]"
+              className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#3E03B3]"
             />
           </div>
 
@@ -175,7 +175,7 @@ export function LengkapiFotoProfilForm() {
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border-l-4 border-l-[#EF4444] bg-[#1C2B33] px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg border-l-4 border-l-[#A1F919] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
         >
           {error}
         </motion.p>
@@ -188,8 +188,8 @@ export function LengkapiFotoProfilForm() {
         disabled={!imageSrc || !croppedAreaPixels || loading}
         whileHover={imageSrc ? { scale: 1.02 } : undefined}
         whileTap={imageSrc ? { scale: 0.98 } : undefined}
-        className="mt-1 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ background: "#0082FB" }}
+        className="mt-1 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(62,3,179,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(62,3,179,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ background: "#3E03B3" }}
       >
         {loading ? (
           <>

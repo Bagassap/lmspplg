@@ -51,7 +51,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
             transition={{ type: "spring", damping: 24, stiffness: 320 }}
             className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
 
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: "#0082FB" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <Avatar src={row.siswa.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
               <div className="min-w-0 flex-1">
@@ -67,12 +67,12 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
             <div className="flex-1 space-y-4 overflow-y-auto p-6">
               <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50">
                 <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700/50 dark:bg-slate-700/40">
-                  <FileText size={13} className="text-[#0082FB]" />
+                  <FileText size={13} className="text-[#3E03B3]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Berkas Laporan Akhir</span>
                 </div>
                 <a href={`/api/uploads${laporan.fileUrl}`} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#000000]/30 dark:text-[#8F6DD3]">
                     <Download size={15} />
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{laporan.fileName}</span>
@@ -91,13 +91,13 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
               )}
 
               {laporan.status === "DITERIMA" && (
-                <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold" style={{ backgroundColor: "#E3FBF0", color: "#00D67F" }}>
+                <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>
                   <CheckCircle2 size={15} /> Laporan ini sudah diterima
                 </div>
               )}
               {laporan.status === "REVISI" && (
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: "#F1F5F8", color: "#1C2B33" }}>
-                  <p className="flex items-center gap-2 font-semibold" style={{ color: "#8A9E1F" }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: "#FFFFFF", color: "#000000" }}>
+                  <p className="flex items-center gap-2 font-semibold" style={{ color: "#5D900F" }}>
                     <AlertTriangle size={15} /> Revisi diminta
                   </p>
                   {laporan.pesanRevisi && <p className="mt-1.5 text-slate-600 dark:text-slate-300">{laporan.pesanRevisi}</p>}
@@ -106,10 +106,10 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
 
               {laporan.status === "TERKIRIM" && showRevisiForm && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Pesan Revisi <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Pesan Revisi <span className="text-[#5D900F]">*</span></label>
                   <textarea value={pesanRevisi} onChange={(e) => setPesanRevisi(e.target.value)} rows={3} autoFocus
                     placeholder="Tuliskan catatan revisi untuk siswa…"
-                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none focus:border-[#0082FB] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none focus:border-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                 </div>
               )}
             </div>
@@ -124,7 +124,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                     </button>
                     <button type="button" onClick={handleKirimRevisi} disabled={!pesanRevisi.trim() || !!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold disabled:opacity-50"
-                      style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                      style={{ background: "#A1F919", color: "#000000" }}>
                       {busy === "revisi" ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
                       Kirim Revisi
                     </button>
@@ -133,12 +133,12 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(true)} disabled={!!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-colors disabled:opacity-50"
-                      style={{ background: "#F1F5F8", color: "#8A9E1F" }}>
+                      style={{ background: "#FFFFFF", color: "#5D900F" }}>
                       <AlertTriangle size={14} /> Revisi
                     </button>
                     <button type="button" onClick={handleTerima} disabled={!!busy}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-50"
-                      style={{ background: "#00D67F" }}>
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-black shadow-md disabled:opacity-50"
+                      style={{ background: "#A1F919" }}>
                       {busy === "terima" ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
                       Terima
                     </button>

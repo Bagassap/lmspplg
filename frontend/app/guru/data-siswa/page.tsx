@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import { CreditCard } from "lucide-react";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
-import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
+import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
-import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
+import { UnduhLaporanDropdown } from "@/components/data-siswa/UnduhLaporanDropdown";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { type SiswaCardData, type KelasRef, getNama } from "@/components/data-siswa/shared";
 
@@ -52,40 +53,40 @@ export default function GuruDataSiswaPage() {
     <div>
       <DataSiswaHeader title="Data Siswa" />
 
-      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5 lg:grid-cols-4">
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-3">
-          <FilterBar
-            search={search} onSearch={setSearch}
-            filterGender={filterGender} onFilterGender={setFilterGender}
-            kelasList={kelasList} selectedKelasId={selectedKelasId} onSelectKelas={setSelectedKelasId}
-            siswaList={inKelas}
-            isFiltered={isFiltered}
-            onReset={() => { setSearch(""); setFilterGender(""); }}
+      <div className="mt-0 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:mt-5">
+        <FilterBar
+          search={search} onSearch={setSearch}
+          filterGender={filterGender} onFilterGender={setFilterGender}
+          kelasList={kelasList} selectedKelasId={selectedKelasId} onSelectKelas={setSelectedKelasId}
+          siswaList={inKelas}
+          isFiltered={isFiltered}
+          onReset={() => { setSearch(""); setFilterGender(""); }}
+          loading={loading}
+          totalCount={inKelas.length}
+          displayedCount={displayed.length}
+          compact
+          toolbarExtra={
+            <div className="flex shrink-0 items-center gap-2">
+              <a
+                href={KARTU_PELAJAR_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10.5 items-center gap-2 rounded-lg px-3.5 text-sm font-bold text-white transition-colors hover:bg-[#2D0281]"
+                style={{ background: "#3E03B3" }}
+              >
+                <CreditCard size={15} />
+                Kartu Pelajar
+              </a>
+              <UnduhLaporanDropdown kelasId={selectedKelasId || undefined} kelasNama={selectedKelas?.nama} />
+            </div>
+          }
+        />
+        <div className="border-t border-slate-100 dark:border-slate-700/50">
+          <SiswaTable
             loading={loading}
-            totalCount={inKelas.length}
-            displayedCount={displayed.length}
-            compact
+            siswas={displayed}
+            mobileNative
           />
-          <div className="border-t border-slate-100 dark:border-slate-700/50">
-            <SiswaTable
-              loading={loading}
-              siswas={displayed}
-              mobileNative
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="p-5">
-            <KartuPelajarBanner compact />
-          </div>
-
-          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
-            <UnduhDataSiswaCard
-              kelasId={selectedKelasId || undefined}
-              kelasNama={selectedKelas?.nama}
-            />
-          </div>
         </div>
       </div>
     </div>

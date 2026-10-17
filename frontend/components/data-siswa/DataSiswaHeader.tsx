@@ -7,18 +7,16 @@ export type HeaderStat = { icon: React.ComponentType<{ size?: number; className?
 
 function Banner({ title, eyebrow, className = "" }: { title: string; eyebrow: string; className?: string }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl p-6 ${className}`}
-      style={{ background: "#0082FB" }}>
-      <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-      <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
+    <div className={`relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 ${className}`}>
       <div className="relative flex items-center gap-3 sm:gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-          <Users size={22} className="text-white sm:hidden" />
-          <Users size={26} className="hidden text-white sm:block" />
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+          style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+          <Users size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+          <Users size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
         </div>
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{eyebrow}</span>
-          <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">{title}</h1>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">{eyebrow}</span>
+          <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">{title}</h1>
         </div>
       </div>
     </div>
@@ -38,7 +36,7 @@ export function DataSiswaHeader({ title, eyebrow = "Data Siswa" }: { title: stri
   return (
     <>
       <Banner title={title} eyebrow={eyebrow} className="hidden lg:block" />
-      <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+      <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push(dashboardHref)}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -46,7 +44,7 @@ export function DataSiswaHeader({ title, eyebrow = "Data Siswa" }: { title: stri
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">{title}</h1>
         </div>
-        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1C2B33]" />
+        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1E293B]" />
       </div>
     </>
   );

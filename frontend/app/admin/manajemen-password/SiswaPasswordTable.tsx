@@ -6,8 +6,8 @@ import { ChevronLeft, ChevronRight, KeyRound, CheckCircle2, XCircle, Users } fro
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 
-const REF_PRIMARY = "#0082FB";
-const REF_SUCCESS = "#00D67F";
+const REF_PRIMARY = "#3E03B3";
+const REF_SUCCESS = "#5D900F";
 const GRID_COLS = "28px 40px 2.2fr 1.8fr 1.6fr";
 
 export type SiswaPasswordItem = {
@@ -73,7 +73,7 @@ export function SiswaPasswordTable({
     <>
       <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
         <div className="min-w-140">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>
@@ -90,7 +90,7 @@ export function SiswaPasswordTable({
                   className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
                   style={{ gridTemplateColumns: GRID_COLS }}>
                   <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{start + idx}</span>
-                  <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={36} fallbackBg="#0082FB" textClassName="text-[10px] font-extrabold" />
+                  <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={36} fallbackBg="#3E03B3" textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{displayNama}</p>
                     <p className="truncate text-xs font-mono text-slate-400 dark:text-slate-500">{s.nis}</p>
@@ -100,7 +100,7 @@ export function SiswaPasswordTable({
                       <span className="text-xs text-slate-300 dark:text-slate-600">Belum ada akun</span>
                     ) : mustChange ? (
                       <div className="flex flex-col gap-0.5">
-                        <span className="inline-flex w-fit items-center gap-1 rounded-lg bg-red-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+                        <span className="inline-flex w-fit items-center gap-1 rounded-lg bg-[#A1F919] px-2.5 py-1 text-[11px] font-semibold text-black">
                           <XCircle size={11} /> Belum Ganti
                         </span>
                         <span className="text-[10px] text-slate-400 dark:text-slate-500">{belumGantiLabel(s.user!.updatedAt)}</span>
@@ -136,14 +136,14 @@ export function SiswaPasswordTable({
             const mustChange = s.user?.mustChangePassword ?? null;
             return (
               <div key={s.id} className="flex items-center gap-3 p-3">
-                <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={38} fallbackBg="#0082FB" textClassName="text-[10px] font-extrabold" />
+                <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={38} fallbackBg="#3E03B3" textClassName="text-[10px] font-extrabold" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{displayNama}</p>
                   <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{s.nis}</p>
                   {mustChange === null ? (
                     <span className="text-[10px] text-slate-300 dark:text-slate-600">Belum ada akun</span>
                   ) : mustChange ? (
-                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-red-500 px-2 py-0.5 text-[10px] font-semibold text-white">
+                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-[#A1F919] px-2 py-0.5 text-[10px] font-semibold text-black">
                       <XCircle size={9} /> Belum Ganti
                     </span>
                   ) : (
@@ -185,7 +185,7 @@ export function SiswaPasswordTable({
                     <button onClick={() => setPage(i)}
                       className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                         i === page
-                          ? "bg-[#0082FB] text-white shadow-sm"
+                          ? "bg-[#3E03B3] text-white shadow-sm"
                           : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                       }`}>
                       {i + 1}

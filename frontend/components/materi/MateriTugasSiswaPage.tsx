@@ -86,24 +86,21 @@ export function MateriTugasSiswaPage() {
 
   return (
     <div className="space-y-6">
-      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block"
-        style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8" />
-        <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6" />
+      <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-            <BookOpen size={22} className="text-white sm:hidden" />
-            <BookOpen size={26} className="text-white hidden sm:block" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            <BookOpen size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+            <BookOpen size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
           </div>
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Belajar & Praktik</span>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Materi & Tugas</h1>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Belajar & Praktik</span>
+            <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Materi & Tugas</h1>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[1fr_2.3fr]">
+      <div className="grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[280px_1fr]">
         <div>
           <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
             <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
@@ -111,9 +108,9 @@ export function MateriTugasSiswaPage() {
               <button type="button" onClick={() => setCategory("materi")}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
-                  background: "#0082FB",
-                  boxShadow: category === "materi" ? "0 8px 24px rgba(0,130,251,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                  outline: category === "materi" ? "2px solid #0082FB" : "none",
+                  background: "#3E03B3",
+                  boxShadow: category === "materi" ? "0 8px 24px rgba(62,3,179,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "materi" ? "2px solid #3E03B3" : "none",
                   outlineOffset: "3px",
                 }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
@@ -129,19 +126,18 @@ export function MateriTugasSiswaPage() {
               <button type="button" onClick={() => setCategory("tugas")}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
-                  background: "#C3F84A",
-                  color: "#1C2B33",
-                  boxShadow: category === "tugas" ? "0 8px 24px rgba(195,248,74,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                  outline: category === "tugas" ? "2px solid #C3F84A" : "none",
+                  background: "#A1F919", color: "#000000",
+                  boxShadow: category === "tugas" ? "0 8px 24px rgba(161,249,25,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "tugas" ? "2px solid #A1F919" : "none",
                   outlineOffset: "3px",
                 }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#1C2B33]/10" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#1C2B33]/15">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#000000]/15">
                   <Send size={16} />
                 </div>
                 <div className="relative min-w-0">
                   <p className="truncate text-xl font-black leading-tight">Tugas</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#1C2B33]/75">
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#000000]/75">
                     {tugasList.length} tugas · {perluDikerjakan > 0 ? `${perluDikerjakan} belum dikerjakan` : "semua sudah dikumpulkan"}
                   </p>
                 </div>
@@ -149,7 +145,7 @@ export function MateriTugasSiswaPage() {
             </div>
           </div>
 
-          <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#0082FB" }}>
+          <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
                 className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -157,18 +153,18 @@ export function MateriTugasSiswaPage() {
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Materi & Tugas</h1>
             </div>
-            <div className="rounded-t-[28px] bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33]">
-            <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+            <div className="rounded-t-[28px] bg-[#FFFFFF] px-4 py-3 dark:bg-[#1E293B]">
+            <div className="space-y-3 rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
               <div className="relative">
                 <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
                 {category === "materi" ? (
                   <input value={searchMateri} onChange={(e) => setSearchMateri(e.target.value)}
                     placeholder="Cari judul materi, mapel..."
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#3E03B3] focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
                 ) : (
                   <input value={searchTugas} onChange={(e) => setSearchTugas(e.target.value)}
                     placeholder="Cari nama tugas atau mapel..."
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#0082FB] focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-[#3E03B3] focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200" />
                 )}
               </div>
 
@@ -178,20 +174,20 @@ export function MateriTugasSiswaPage() {
                   style={{ color: category === "materi" ? "#fff" : "#94a3b8" }}>
                   {category === "materi" && (
                     <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
-                      style={{ background: "#0082FB" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                      style={{ background: "#3E03B3" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
                   )}
                   <span className="relative z-10 flex items-center gap-1.5"><BookOpen size={15} /> Materi</span>
                 </button>
                 <button type="button" onClick={() => setCategory("tugas")}
                   className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
-                  style={{ color: category === "tugas" ? "#1C2B33" : "#94a3b8" }}>
+                  style={{ color: category === "tugas" ? "#000000" : "#94a3b8" }}>
                   {category === "tugas" && (
                     <motion.span layoutId="materiTugasTabPill" className="absolute inset-0 rounded-xl"
-                      style={{ background: "#C3F84A" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                      style={{ background: "#A1F919" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
                   )}
                   <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
                   {perluDikerjakan > 0 && (
-                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black">
                       {perluDikerjakan}
                     </span>
                   )}

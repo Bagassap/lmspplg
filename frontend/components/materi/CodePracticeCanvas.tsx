@@ -19,7 +19,7 @@ function buildSrcDoc(html: string, css: string, js: string) {
 <head>
 <meta charset="utf-8" />
 <style>
-  body { font-family: system-ui, sans-serif; color: #1C2B33; margin: 0; padding: 12px; }
+  body { font-family: system-ui, sans-serif; color: #000000; margin: 0; padding: 12px; }
   ${css}
 </style>
 </head>
@@ -29,7 +29,7 @@ ${html}
   window.addEventListener("error", function (e) {
     var pre = document.createElement("pre");
     pre.textContent = "Error: " + e.message;
-    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#FEE9EA;color:#EF4444;font:12px monospace;white-space:pre-wrap;border-top:1px solid #EF4444;";
+    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#F6FEE8;color:#A1F919;font:12px monospace;white-space:pre-wrap;border-top:1px solid #A1F919;";
     document.body.appendChild(pre);
   });
 <\/script>
@@ -48,8 +48,6 @@ export function CodePracticeCanvas({
   initialJs?: string;
   onChange?: (code: { html: string; css: string; js: string }) => void;
   minHeight?: number;
-  // Saat true: paste/cut/copy/drop teks ke editor diblokir — siswa harus
-  // murni mengetik sendiri kodenya (anti-copas untuk mode Praktik Kode).
   restrictPaste?: boolean;
 }) {
   const [html, setHtml] = useState(initialHtml);
@@ -91,7 +89,6 @@ export function CodePracticeCanvas({
     debounceRef.current = setTimeout(() => setSrcDoc(buildSrcDoc(html, css, js)), 400);
     onChange?.({ html, css, js });
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [html, css, js]);
 
   function runNow() {
@@ -120,13 +117,13 @@ export function CodePracticeCanvas({
             transition={{ type: "spring", damping: 22, stiffness: 340 }}
             className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center p-4"
           >
-            <div className="flex items-center gap-3 rounded-2xl bg-red-500 px-5 py-3.5 text-white shadow-2xl">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+            <div className="flex items-center gap-3 rounded-2xl bg-[#A1F919] px-5 py-3.5 text-black shadow-2xl">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/10">
                 <ShieldAlert size={18} />
               </span>
               <div className="min-w-0">
                 <p className="text-sm font-extrabold leading-tight">Tempel/salin dinonaktifkan</p>
-                <p className="text-xs font-medium text-white/85">Mode Praktik — ketik kodenya sendiri, ya!</p>
+                <p className="text-xs font-medium text-black/70">Mode Praktik — ketik kodenya sendiri, ya!</p>
               </div>
             </div>
           </motion.div>
@@ -139,7 +136,7 @@ export function CodePracticeCanvas({
             return (
               <button key={t.key} type="button" onClick={() => setTab(t.key)}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
-                style={active ? { background: "#0082FB" } : {}}>
+                style={active ? { background: "#3E03B3" } : {}}>
                 <t.icon size={13} /> {t.label}
               </button>
             );
@@ -156,8 +153,8 @@ export function CodePracticeCanvas({
             <RotateCcw size={12} /> Reset
           </button>
           <button type="button" onClick={runNow}
-            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
-            style={{ background: "#00D67F" }}>
+            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-black shadow-sm hover:brightness-105"
+            style={{ background: "#A1F919" }}>
             <Play size={12} /> Run
           </button>
           <button type="button" onClick={() => setFullscreen((f) => !f)}
@@ -178,7 +175,7 @@ export function CodePracticeCanvas({
           onDragOver={blockDropEvent}
           onContextMenu={blockContextMenu}
           spellCheck={false}
-          placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #0082FB; }" : "console.log('halo');"}
+          placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #3E03B3; }" : "console.log('halo');"}
           className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"
         />
         <iframe

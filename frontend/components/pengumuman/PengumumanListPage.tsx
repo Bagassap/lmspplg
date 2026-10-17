@@ -18,11 +18,11 @@ import { Avatar } from "@/components/shared/Avatar";
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
 const KATEGORI_GRADIENT: Record<string, string> = {
-  Umum:     "#0082FB",
-  Akademik: "#0064E0",
-  Magang:   "#0082FB",
-  Ujian:    "#EF4444",
-  Lainnya:  "#EF4444",
+  Umum:     "#3E03B3",
+  Akademik: "#00AAFA",
+  Magang:   "#3E03B3",
+  Ujian:    "#A1F919",
+  Lainnya:  "#A1F919",
 };
 
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -64,8 +64,8 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     return announcementDates.has(key);
   }
 
-  const CALENDAR_GRADIENT = "#0082FB";
-  const DOT_COLOR = "#0064E0";
+  const CALENDAR_GRADIENT = "#3E03B3";
+  const DOT_COLOR = "#00AAFA";
   function dotColor(_d: number) { return DOT_COLOR; }
 
   return (
@@ -92,11 +92,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1C2B33] px-4 pb-4 pt-3">
+      <div className="bg-white dark:bg-[#1E293B] px-4 pb-4 pt-3">
         <div className="grid grid-cols-7 mb-2">
           {DAY_ID.map((d, i) => (
             <div key={d} className="text-center text-[10px] font-bold"
-              style={{ color: i >= 5 ? "#0082FB" : "#94a3b8" }}>{d}</div>
+              style={{ color: i >= 5 ? "#3E03B3" : "#94a3b8" }}>{d}</div>
           ))}
         </div>
 
@@ -109,7 +109,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#0082FB] dark:text-[#0082FB]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#3E03B3]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
@@ -164,8 +164,9 @@ function AccordionCard({
   onPin: () => void;
 }) {
   const gradient = p.isPinned
-    ? "#EF4444"
+    ? "#A1F919"
     : (KATEGORI_GRADIENT[p.kategori] ?? KATEGORI_GRADIENT.Lainnya);
+  const onLime = gradient === "#A1F919";
 
   function timeAgo(iso: string): string {
     const diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -178,13 +179,13 @@ function AccordionCard({
   }
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1C2B33] ${
+    <div className={`relative overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow dark:bg-[#1E293B] ${
       isOpen ? "shadow-[0_4px_20px_rgba(0,0,0,0.12)]" : ""
     }`}>
 
       {canManage && !isOpen && (
         <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(); }} title="Hapus pengumuman"
-          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-white backdrop-blur-sm transition-all hover:bg-red-500/60">
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-black backdrop-blur-sm transition-all hover:bg-[#A1F919]/60">
           <Trash2 size={13} />
         </button>
       )}
@@ -199,32 +200,32 @@ function AccordionCard({
           <div className="pointer-events-none absolute -bottom-8 right-12 h-20 w-20 rounded-full bg-white/8" />
 
           <div className="relative flex items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-              {p.isPinned ? <Pin size={15} className="text-white" /> : <Bell size={15} className="text-white" />}
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl backdrop-blur-sm ${onLime ? "bg-black/10" : "bg-white/20"}`}>
+              {p.isPinned ? <Pin size={15} className={onLime ? "text-black" : "text-white"} /> : <Bell size={15} className={onLime ? "text-black" : "text-white"} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-bold leading-snug text-white">{p.judul}</p>
-              <p className="mt-0.5 flex items-center gap-1 text-[11px] text-white/65">
+              <p className={`text-[13px] font-bold leading-snug ${onLime ? "text-black" : "text-white"}`}>{p.judul}</p>
+              <p className={`mt-0.5 flex items-center gap-1 text-[11px] ${onLime ? "text-black/65" : "text-white/65"}`}>
                 <Clock size={9} />{timeAgo(p.createdAt)}
               </p>
             </div>
-            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
-              <ChevronDown size={13} className="text-white" />
+            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-black/10" : "bg-white/20"} ${isOpen ? "rotate-180" : ""}`}>
+              <ChevronDown size={13} className={onLime ? "text-black" : "text-white"} />
             </div>
           </div>
 
           <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
-            <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold text-white">
+            <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white/20 text-white"}`}>
               {p.kategori}
             </span>
             {p.isPinned && (
-              <span className="rounded-lg bg-white/25 px-2 py-0.5 text-[9px] font-bold text-white">Disematkan</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${onLime ? "bg-black/15 text-black" : "bg-white/25 text-white"}`}>Disematkan</span>
             )}
             {p.prioritas === "PENTING" && (
-              <span className="rounded-lg bg-white/20 px-2 py-0.5 text-[10px] font-semibold text-white">Penting</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white/20 text-white"}`}>Penting</span>
             )}
             {p.prioritas === "MENDESAK" && (
-              <span className="animate-pulse rounded-lg bg-red-500/30 px-2 py-0.5 text-[10px] font-bold text-white">Mendesak</span>
+              <span className="animate-pulse rounded-lg bg-[#A1F919]/30 px-2 py-0.5 text-[10px] font-bold text-black">Mendesak</span>
             )}
           </div>
         </div>
@@ -283,7 +284,7 @@ function AccordionCard({
                       textClassName="text-[11px] font-extrabold"
                       className="shadow-lg ring-2 ring-white dark:ring-slate-700"
                     />
-                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-400 ring-1 ring-white dark:ring-[#1C2B33]">
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#A1F919] ring-1 ring-white dark:ring-[#1E293B]">
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
                   </div>
@@ -300,14 +301,14 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-[#F1F5F8] text-[#EF4444] dark:bg-[#1C2B33]/20"
-                            : "text-slate-400 hover:bg-[#F1F5F8] hover:text-[#EF4444] dark:hover:bg-[#1C2B33]/20"
+                            ? "bg-[#FFFFFF] text-[#5D900F] dark:bg-[#000000]/20"
+                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] dark:hover:bg-[#000000]/20"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                         <BookOpen size={13} /></button>
                       <button onClick={onDelete} title="Hapus"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
                         <Trash2 size={13} /></button>
                     </div>
                   )}
@@ -322,23 +323,23 @@ function AccordionCard({
             <div className="relative overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-                style={{ background: "#0082FB" }}
+                style={{ background: "#3E03B3" }}
               />
-              <div className="relative flex items-center gap-3 border-y border-[#0082FB]/10 px-6 py-3 dark:border-[#0082FB]/20">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0082FB]/12 dark:bg-[#0082FB]/20">
-                  <MessageCircle size={13} className="text-[#0082FB] dark:text-[#0082FB]" />
+              <div className="relative flex items-center gap-3 border-y border-[#3E03B3]/10 px-6 py-3 dark:border-[#3E03B3]/20">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3E03B3]/12 dark:bg-[#3E03B3]/20">
+                  <MessageCircle size={13} className="text-[#3E03B3] dark:text-[#3E03B3]" />
                 </div>
                 <span className="text-[13px] font-extrabold tracking-tight text-slate-800 dark:text-white">
                   Ruang Diskusi
                 </span>
                 {detail && (
-                  <span className="rounded-lg bg-[#0082FB]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#0082FB] dark:bg-[#0064E0]/30 dark:text-[#0082FB]">
+                  <span className="rounded-lg bg-[#3E03B3]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-[#00AAFA]/30 dark:text-[#3E03B3]">
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}
                 <div className="ml-auto flex items-center gap-1 opacity-30">
                   {[0,1,2].map(i => (
-                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#0082FB]" style={{ opacity: 1 - i * 0.25 }} />
+                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#3E03B3]" style={{ opacity: 1 - i * 0.25 }} />
                   ))}
                 </div>
               </div>
@@ -348,8 +349,8 @@ function AccordionCard({
               {detailLoading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <div className="h-10 w-10 rounded-full bg-[#0082FB]/10" />
-                    <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#0082FB]" />
+                    <div className="h-10 w-10 rounded-full bg-[#3E03B3]/10" />
+                    <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#3E03B3]" />
                   </div>
                   <span className="text-[12px] text-slate-400">Memuat diskusi...</span>
                 </div>
@@ -482,19 +483,16 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   return (
     <div className="space-y-5">
 
-      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block"
-        style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10"/>
-        <div className="pointer-events-none absolute -bottom-8 right-32 w-36 h-36 rounded-full bg-white/8"/>
-        <div className="pointer-events-none absolute bottom-4 -left-6 w-24 h-24 rounded-full bg-white/6"/>
+      <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-lg">
-            <Megaphone size={22} className="text-white sm:hidden"/>
-            <Megaphone size={26} className="text-white hidden sm:block"/>
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            <Megaphone size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden"/>
+            <Megaphone size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block"/>
           </div>
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Papan Informasi</span>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">Pengumuman</h1>
+            <span className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase">Papan Informasi</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white leading-tight">Pengumuman</h1>
           </div>
         </div>
       </div>
@@ -507,7 +505,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             onClick={() => { setEditItem(null); setModalOpen(true); }}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="flex w-full items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white shadow-md shrink-0"
-            style={{ background: "#0082FB" }}>
+            style={{ background: "#3E03B3" }}>
             <Plus size={15}/> Buat Pengumuman
           </motion.button>
         )}
@@ -518,7 +516,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mb-3 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400"
+              className="mb-3 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]"
             >
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
@@ -533,7 +531,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             ))}
           </div>
         ) : sorted.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-100 bg-white py-24 text-center dark:border-slate-700/50 dark:bg-[#1C2B33]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-100 bg-white py-24 text-center dark:border-slate-700/50 dark:bg-[#1E293B]">
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
               <Bell size={22} className="text-primary" />
             </div>
@@ -578,7 +576,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
 
       </div>
 
-      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push(dashboardHref)}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -586,14 +584,14 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Pengumuman</h1>
         </div>
-        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] px-4 py-4 dark:bg-[#1C2B33]">
+        <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] px-4 py-4 dark:bg-[#1E293B]">
 
         {canManage && (
           <motion.button
             onClick={() => { setEditItem(null); setModalOpen(true); }}
             whileTap={{ scale: 0.97 }}
             className="flex w-full items-center justify-center gap-1.5 rounded-2xl py-3 text-sm font-bold text-white shadow-md"
-            style={{ background: "#0082FB" }}>
+            style={{ background: "#3E03B3" }}>
             <Plus size={16} /> Buat Pengumuman
           </motion.button>
         )}
@@ -601,7 +599,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
+              className="flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -615,9 +613,9 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             ))}
           </div>
         ) : sorted.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
-              <Bell size={24} style={{ color: "#0082FB" }} />
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+              <Bell size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="font-bold text-slate-600 dark:text-slate-300">Belum ada pengumuman</p>
             <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">Pengumuman akan muncul di sini</p>
@@ -626,7 +624,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                 onClick={() => { setEditItem(null); setModalOpen(true); }}
                 whileTap={{ scale: 0.97 }}
                 className="mt-5 flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-white"
-                style={{ background: "#0082FB" }}>
+                style={{ background: "#3E03B3" }}>
                 <Plus size={14} /> Buat Pertama
               </motion.button>
             )}

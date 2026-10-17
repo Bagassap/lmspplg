@@ -4,9 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, Users, Mars, Venus, Filter, Sparkles, School, ChevronDown } from "lucide-react";
 import { kelasShort, type SiswaCardData, type KelasRef } from "./shared";
 
-const REF_PRIMARY = "#0082FB";
-const REF_MALE = "#0082FB";
-const REF_FEMALE = "#EC4899";
+const REF_PRIMARY = "#3E03B3";
+const REF_MALE = "#3E03B3";
+const REF_FEMALE = "#5D900F";
 
 const GENDER_PILLS = [
   { value: "" as const, label: "Semua", icon: Users, color: "#64748B" },
@@ -22,6 +22,7 @@ export function FilterBar({
   isFiltered, onReset,
   loading, totalCount, displayedCount,
   compact = false,
+  toolbarExtra,
 }: {
   search: string; onSearch: (v: string) => void;
   filterGender: string; onFilterGender: (v: string) => void;
@@ -30,6 +31,7 @@ export function FilterBar({
   isFiltered: boolean; onReset: () => void;
   loading: boolean; totalCount: number; displayedCount: number;
   compact?: boolean;
+  toolbarExtra?: React.ReactNode;
 }) {
   const genderCount = (value: string) =>
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
@@ -62,7 +64,7 @@ export function FilterBar({
               <select
                 value={selectedKelasId}
                 onChange={(e) => onSelectKelas(e.target.value)}
-                className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#3E03B3] focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               >
                 {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
               </select>
@@ -82,7 +84,7 @@ export function FilterBar({
                 value={search}
                 onChange={(e) => onSearch(e.target.value)}
                 placeholder="Cari nama atau NIS…"
-                className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#0082FB] focus:outline-none focus:ring-2 focus:ring-[#0082FB]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+                className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#3E03B3] focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/12 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
               />
               <AnimatePresence>
                 {search && (
@@ -117,6 +119,8 @@ export function FilterBar({
                 })}
               </div>
             )}
+
+            {toolbarExtra}
           </div>
         </div>
       </div>
@@ -216,7 +220,7 @@ export function FilterBar({
           <button
             type="button"
             onClick={onReset}
-            className="text-xs font-semibold text-slate-400 transition-colors hover:text-red-500 dark:text-slate-500"
+            className="text-xs font-semibold text-slate-400 transition-colors hover:text-[#5D900F] dark:text-slate-500"
           >
             Clear all
           </button>

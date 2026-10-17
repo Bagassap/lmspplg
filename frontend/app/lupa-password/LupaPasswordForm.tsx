@@ -67,10 +67,10 @@ export function LupaPasswordForm() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-[#C3F84A]/15 bg-[#C3F84A]/[0.04] px-6 py-8 text-center"
+        className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-[#A1F919]/15 bg-[#A1F919]/[0.04] px-6 py-8 text-center"
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F1F5F8]">
-          <Clock size={28} className="text-[#C3F84A]" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFFFFF]">
+          <Clock size={28} className="text-[#5D900F]" />
         </div>
         <p className="text-sm font-semibold text-black/80">
           Tunggu Konfirmasi Admin
@@ -96,8 +96,8 @@ export function LupaPasswordForm() {
         animate={{ opacity: 1, y: 0 }}
         className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-black/8 bg-black/[0.02] px-6 py-8 text-center"
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
-          <CheckCircle2 size={28} className="text-emerald-500" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F6FEE8]">
+          <CheckCircle2 size={28} className="text-[#5D900F]" />
         </div>
         <p className="text-sm font-semibold text-black/80">
           Permintaan Anda telah dikirim ke Admin.
@@ -194,7 +194,7 @@ export function LupaPasswordForm() {
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border-l-4 border-l-[#EF4444] bg-[#1C2B33] px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg border-l-4 border-l-[#A1F919] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
         >
           {error}
         </motion.p>
@@ -206,8 +206,8 @@ export function LupaPasswordForm() {
         disabled={loading}
         whileHover={!loading ? { scale: 1.02 } : undefined}
         whileTap={!loading ? { scale: 0.98 } : undefined}
-        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(0,130,251,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(0,130,251,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
-        style={{ background: "#0082FB" }}
+        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-8px_rgba(62,3,179,0.55)] transition-all hover:shadow-[0_14px_40px_-8px_rgba(62,3,179,0.70)] hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-70"
+        style={{ background: "#3E03B3" }}
       >
         {loading ? (
           <>

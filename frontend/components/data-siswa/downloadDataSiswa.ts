@@ -31,33 +31,39 @@ async function downloadFile(url: string, filename: string, failMessage: string):
 }
 
 export async function downloadDataSiswaPdf({
-  kelasId, kelasNama, jurusan,
+  kelasId, kelasNama, jurusan, siswaId, siswaNama,
 }: {
-  kelasId?: string; kelasNama?: string; jurusan?: string;
+  kelasId?: string; kelasNama?: string; jurusan?: string; siswaId?: string; siswaNama?: string;
 }): Promise<DownloadResult> {
   const qs = new URLSearchParams();
+  if (siswaId) qs.set("siswaId", siswaId);
   if (kelasId) qs.set("kelasId", kelasId);
   if (jurusan) qs.set("jurusan", jurusan);
-  const filename = kelasId && kelasNama
-    ? `Data_Siswa_${safeName(kelasNama)}.pdf`
-    : jurusan
-      ? `Data_Siswa_${safeName(jurusan)}.pdf`
-      : "Data_Siswa_Semua_Kelas.pdf";
+  const filename = siswaId && siswaNama
+    ? `Data_Siswa_${safeName(siswaNama)}.pdf`
+    : kelasId && kelasNama
+      ? `Data_Siswa_${safeName(kelasNama)}.pdf`
+      : jurusan
+        ? `Data_Siswa_${safeName(jurusan)}.pdf`
+        : "Data_Siswa_Semua_Kelas.pdf";
   return downloadFile(`/api/siswa/export-pdf?${qs}`, filename, "Gagal membuat PDF");
 }
 
 export async function downloadDataSiswaExcel({
-  kelasId, kelasNama, jurusan,
+  kelasId, kelasNama, jurusan, siswaId, siswaNama,
 }: {
-  kelasId?: string; kelasNama?: string; jurusan?: string;
+  kelasId?: string; kelasNama?: string; jurusan?: string; siswaId?: string; siswaNama?: string;
 }): Promise<DownloadResult> {
   const qs = new URLSearchParams();
+  if (siswaId) qs.set("siswaId", siswaId);
   if (kelasId) qs.set("kelasId", kelasId);
   if (jurusan) qs.set("jurusan", jurusan);
-  const filename = kelasId && kelasNama
-    ? `Data_Siswa_${safeName(kelasNama)}.xlsx`
-    : jurusan
-      ? `Data_Siswa_${safeName(jurusan)}.xlsx`
-      : "Data_Siswa_Semua_Kelas.xlsx";
+  const filename = siswaId && siswaNama
+    ? `Data_Siswa_${safeName(siswaNama)}.xlsx`
+    : kelasId && kelasNama
+      ? `Data_Siswa_${safeName(kelasNama)}.xlsx`
+      : jurusan
+        ? `Data_Siswa_${safeName(jurusan)}.xlsx`
+        : "Data_Siswa_Semua_Kelas.xlsx";
   return downloadFile(`/api/siswa/export-excel?${qs}`, filename, "Gagal membuat Excel");
 }

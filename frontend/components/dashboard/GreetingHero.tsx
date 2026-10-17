@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 
 const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-white/20 text-white" },
-  GURU:  { label: "Guru",   cls: "bg-white/20 text-white" },
-  SISWA: { label: "Siswa",  cls: "bg-white/20 text-white" },
+  ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
+  GURU:  { label: "Guru",   cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
+  SISWA: { label: "Siswa",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
 };
 
 function jakartaHour(): number {
@@ -39,14 +39,7 @@ export default function GreetingHero({
   const badge       = ROLE_BADGE[role] ?? ROLE_BADGE.SISWA;
 
   return (
-    <div
-      className="relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 md:py-8"
-      style={{ background: "#0082FB" }}
-    >
-      <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />
-      <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />
-      <div className="pointer-events-none absolute top-3 left-[45%] h-24 w-24 rounded-full bg-white/5" />
-      <div className="pointer-events-none absolute -left-8 -bottom-8 h-36 w-36 rounded-full bg-white/5" />
+    <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white px-6 py-7 shadow-sm dark:border-slate-700 dark:bg-slate-800 md:px-8 md:py-8">
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-nowrap items-center gap-1.5 sm:flex-wrap sm:gap-2">
@@ -65,15 +58,15 @@ export default function GreetingHero({
               transition={{ duration: 0.4, delay: 0.1 }}
               className="flex min-w-0 flex-nowrap items-baseline gap-1.5 sm:flex-wrap sm:gap-2"
             >
-              <h1 className="min-w-0 truncate text-base font-extrabold leading-tight text-white sm:text-xl md:text-2xl">
+              <h1 className="min-w-0 truncate text-base font-extrabold leading-tight text-slate-800 dark:text-white sm:text-xl md:text-2xl">
                 {text},{" "}
-                <span className="text-white/90">{firstName}!</span>
+                <span className="text-slate-500 dark:text-slate-300">{firstName}!</span>
               </h1>
               <span className={`hidden shrink-0 rounded-lg px-2.5 py-0.5 text-[10px] font-bold sm:inline-block ${badge.cls}`}>
                 {badge.label}
               </span>
               {kelas && (
-                <span className="shrink-0 rounded-lg bg-white/15 px-2 py-0.5 text-[9px] font-semibold text-white/80 sm:px-2.5 sm:text-[10px]">
+                <span className="shrink-0 rounded-lg bg-slate-100 px-2 py-0.5 text-[9px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300 sm:px-2.5 sm:text-[10px]">
                   {kelas}
                 </span>
               )}

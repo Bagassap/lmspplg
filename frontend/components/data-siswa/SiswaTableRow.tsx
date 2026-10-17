@@ -1,21 +1,78 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, Trash2 } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Pencil, Trash2, Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
+import { downloadDataSiswaPdf, downloadDataSiswaExcel } from "./downloadDataSiswa";
+import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
-const REF_PRIMARY = "#0082FB";
-const REF_DANGER = "#EF4444";
+const REF_PRIMARY = "#3E03B3";
+const REF_DANGER = "#A1F919";
+
+function DownloadSiswaAction({ siswaId, siswaNama }: { siswaId: string; siswaNama: string }) {
+  const toast = useToast();
+  const [open, setOpen] = useState(false);
+  const [loadingKind, setLoadingKind] = useState<"pdf" | "excel" | null>(null);
+
+  async function run(kind: "pdf" | "excel") {
+    setOpen(false);
+    setLoadingKind(kind);
+    try {
+      const result =
+        kind === "pdf"
+          ? await downloadDataSiswaPdf({ siswaId, siswaNama })
+          : await downloadDataSiswaExcel({ siswaId, siswaNama });
+      if (!result.ok) toast.error(kind === "pdf" ? "Gagal membuat PDF" : "Gagal membuat Excel", result.message);
+    } finally {
+      setLoadingKind(null);
+    }
+  }
+
+  return (
+    <div className="relative">
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.92 }}
+        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
+        disabled={!!loadingKind}
+        title="Unduh data siswa"
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+        style={{ backgroundColor: REF_PRIMARY }}
+      >
+        {loadingKind ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
+      </motion.button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setOpen(false); }} />
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute right-0 top-full z-20 mt-1 w-40 overflow-hidden rounded-xl border border-slate-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          >
+            <button type="button" onClick={() => run("pdf")}
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700/50">
+              <FileText size={13} /> Unduh PDF
+            </button>
+            <button type="button" onClick={() => run("excel")}
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700/50">
+              <FileSpreadsheet size={13} /> Unduh Excel
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export const GRID_COLS = "28px 40px 2.0fr 1.8fr 1.1fr 1.1fr 1.8fr";
 
 export function SiswaTableHead() {
   return (
-    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
+    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
       <span />
       <span />
       <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>
@@ -72,7 +129,7 @@ export function SiswaTableRow({
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             title="Kirim pesan WhatsApp"
-            className="block truncate text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+            className="block truncate text-sm font-medium text-[#5D900F] transition-colors hover:text-[#48700B] hover:underline dark:text-[#A1F919] dark:hover:text-[#A1F919]"
           >
             {siswa.noHp}
           </a>
@@ -95,6 +152,7 @@ export function SiswaTableRow({
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-1.5">
+        <DownloadSiswaAction siswaId={siswa.id} siswaNama={displayNama} />
         {onEdit && (
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -113,7 +171,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onImpersonate(siswa)}
             title="Pantau akun siswa"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#C3F84A] text-[#1C2B33] shadow-sm transition-colors hover:brightness-95"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#A1F919] text-[#000000] shadow-sm transition-colors hover:brightness-95"
           >
             <ScanEye size={13} />
           </motion.button>
@@ -124,7 +182,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onResetPassword(siswa)}
             title="Reset password"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm transition-colors hover:brightness-95"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-black shadow-sm transition-colors hover:brightness-95"
             style={{ backgroundColor: REF_DANGER }}
           >
             <KeyRound size={13} />
@@ -136,7 +194,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onKeluarkan(siswa)}
             title="Hapus permanen (siswa keluar/pindah sekolah)"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 shadow-sm transition-colors hover:bg-red-100 dark:bg-red-900/20"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
           >
             <Trash2 size={13} />
           </motion.button>

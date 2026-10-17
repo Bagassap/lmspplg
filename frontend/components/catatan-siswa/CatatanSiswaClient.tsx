@@ -13,6 +13,7 @@ import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
+import { downloadCatatanPdf, downloadCatatanExcel } from "./downloadCatatanPdf";
 
 const GRID_COLS = "28px 40px 1.9fr 1.6fr 90px 110px 120px";
 
@@ -64,6 +65,7 @@ export function CatatanSiswaClient() {
   const [detailId, setDetailId] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
+  const [downloading, setDownloading] = useState<"pdf" | "excel" | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -89,6 +91,16 @@ export function CatatanSiswaClient() {
   useEffect(() => {
     if (!selectedKelasId && kelasOptions.length > 0) setSelectedKelasId(kelasOptions[0].id);
   }, [kelasOptions, selectedKelasId]);
+
+  async function handleDownload(kind: "pdf" | "excel") {
+    if (!selectedKelasId || !selectedKelas) return;
+    setDownloading(kind);
+    const result = kind === "pdf"
+      ? await downloadCatatanPdf({ kelasId: selectedKelasId, kelasNama: selectedKelas.nama })
+      : await downloadCatatanExcel({ kelasId: selectedKelasId, kelasNama: selectedKelas.nama });
+    if (!result.ok) toast.error(result.message, "");
+    setDownloading(null);
+  }
 
   const inKelas = list.filter((s) => s.kelas?.id === selectedKelasId);
   const displayed = inKelas.filter((s) =>
@@ -120,7 +132,7 @@ export function CatatanSiswaClient() {
                 <div className="relative sm:flex-1">
                   <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
-                    className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                    className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 transition-all focus:border-[#00AAFA] focus:outline-none focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
                     {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
                   </select>
                   <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -132,7 +144,7 @@ export function CatatanSiswaClient() {
                   <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input value={search} onChange={(e) => setSearch(e.target.value)}
                     placeholder="Cari nama atau NIS..."
-                    className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:placeholder:text-slate-500" />
+                    className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:outline-none focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:placeholder:text-slate-500" />
                   {search && (
                     <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                       <X size={14} />
@@ -142,16 +154,16 @@ export function CatatanSiswaClient() {
 
                 {isNative && (
                   <div className={`flex shrink-0 items-center gap-1.5 ${isAdmin ? "lg:hidden" : ""}`}>
-                    <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`} title="Unduh PDF"
-                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm transition-all hover:brightness-95"
-                      style={{ background: "#EF4444" }}>
-                      <FileText size={15} />
-                    </a>
-                    <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`} title="Unduh Excel"
-                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm transition-all hover:brightness-95"
-                      style={{ background: "#00D67F" }}>
-                      <FileSpreadsheet size={15} />
-                    </a>
+                    <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null} title="Unduh PDF"
+                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      style={{ background: "#A1F919" }}>
+                      {downloading === "pdf" ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
+                    </button>
+                    <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null} title="Unduh Excel"
+                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      style={{ background: "#A1F919" }}>
+                      {downloading === "excel" ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
+                    </button>
                   </div>
                 )}
               </div>
@@ -171,10 +183,10 @@ export function CatatanSiswaClient() {
               </p>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
-                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0064E0" },
-                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#8A9E1F" },
-                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#8B5CF6" },
-                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#EF4444" },
+                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#00AAFA" },
+                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#5D900F" },
+                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#00AAFA" },
+                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#5D900F" },
                 ].map((st, i) => (
                   <div key={i} className="flex items-center gap-2.5 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
@@ -201,16 +213,16 @@ export function CatatanSiswaClient() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <a href={`/api/catatan-siswa/export-pdf?kelasId=${selectedKelasId}`}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95"
-                  style={{ background: "#EF4444" }}>
-                  <FileText size={13} /> PDF
-                </a>
-                <a href={`/api/catatan-siswa/export-excel?kelasId=${selectedKelasId}`}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95"
-                  style={{ background: "#00D67F" }}>
-                  <FileSpreadsheet size={13} /> Excel
-                </a>
+                <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ background: "#A1F919" }}>
+                  {downloading === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />} PDF
+                </button>
+                <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ background: "#A1F919" }}>
+                  {downloading === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />} Excel
+                </button>
               </div>
             </div>
           )}
@@ -240,7 +252,7 @@ export function CatatanSiswaClient() {
             <>
               <div className="overflow-x-auto">
                 <div className="min-w-170">
-                  <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
+                  <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
                     <span />
                     <span />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>
@@ -274,13 +286,13 @@ export function CatatanSiswaClient() {
                         </div>
                         <div className="flex justify-center">
                           {s.totalPoin > 0 ? (
-                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin} poin</span>
+                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>{s.totalPoin} poin</span>
                           ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
                         </div>
                         <div className="flex justify-end">
                           <button onClick={() => setDetailId(s.siswaId)}
                             className="rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                            style={{ background: "#0082FB" }}>
+                            style={{ background: "#3E03B3" }}>
                             Lihat &amp; Catat
                           </button>
                         </div>
@@ -309,7 +321,7 @@ export function CatatanSiswaClient() {
                             <button onClick={() => setPage(i)}
                               className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                                 i === page
-                                  ? "bg-[#0082FB] text-white shadow-sm"
+                                  ? "bg-[#3E03B3] text-white shadow-sm"
                                   : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                               }`}>
                               {i + 1}
@@ -363,7 +375,7 @@ export function CatatanSiswaClient() {
                       <div className="flex shrink-0 items-center gap-1.5">
                         <span className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
                         {s.totalPoin > 0 && (
-                          <span className="inline-flex items-center justify-center rounded-lg px-2 py-1 text-[10px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{s.totalPoin}</span>
+                          <span className="inline-flex items-center justify-center rounded-lg px-2 py-1 text-[10px] font-bold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>{s.totalPoin}</span>
                         )}
                       </div>
                       <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
@@ -424,6 +436,7 @@ function CatatanDetailModal({
   const [poin, setPoin] = useState("");
   const [tanggal, setTanggal] = useState(todayInput());
   const [saving, setSaving] = useState(false);
+  const [downloading, setDownloading] = useState<"pdf" | "excel" | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -437,6 +450,16 @@ function CatatanDetailModal({
   }, [siswaId]);
 
   useEffect(() => { load(); }, [load]);
+
+  async function handleDownload(kind: "pdf" | "excel") {
+    if (!data) return;
+    setDownloading(kind);
+    const result = kind === "pdf"
+      ? await downloadCatatanPdf({ siswaId, siswaNama: data.siswa.nama ?? data.siswa.nis })
+      : await downloadCatatanExcel({ siswaId, siswaNama: data.siswa.nama ?? data.siswa.nis });
+    if (!result.ok) toast.error(result.message, "");
+    setDownloading(null);
+  }
 
   function openAdd() {
     setEditTarget(null);
@@ -485,7 +508,7 @@ function CatatanDetailModal({
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Hapus catatan ini?")) return;
+    if (!(await toast.confirm("Hapus catatan ini?", ""))) return;
     const res = await fetch(`/api/catatan-siswa/${id}`, { method: "DELETE" });
     if (res.ok) {
       toast.success("Catatan dihapus", "");
@@ -500,7 +523,7 @@ function CatatanDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-800" onClick={(e) => e.stopPropagation()}>
-        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#0082FB" }}>
+        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
           <div className="relative flex items-center justify-between">
             <div className="min-w-0">
@@ -508,16 +531,30 @@ function CatatanDetailModal({
               <p className="truncate text-lg font-extrabold text-white">{data?.siswa.nama ?? "Memuat..."}</p>
               <p className="text-xs text-white/70">{data?.siswa.nis}{data ? ` · Total ${data.totalPoin} poin` : ""}</p>
             </div>
-            <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white hover:bg-white/30">
-              <X size={15} />
-            </button>
+            <div className="flex shrink-0 items-center gap-1.5">
+              {data && (
+                <>
+                  <button onClick={() => handleDownload("pdf")} disabled={downloading !== null}
+                    title="Unduh PDF" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white transition-colors hover:bg-white/30 disabled:opacity-50">
+                    {downloading === "pdf" ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
+                  </button>
+                  <button onClick={() => handleDownload("excel")} disabled={downloading !== null}
+                    title="Unduh Excel" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white transition-colors hover:bg-white/30 disabled:opacity-50">
+                    {downloading === "excel" ? <Loader2 size={14} className="animate-spin" /> : <FileSpreadsheet size={14} />}
+                  </button>
+                </>
+              )}
+              <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white hover:bg-white/30">
+                <X size={15} />
+              </button>
+            </div>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
           {!showForm && (
             <button onClick={openAdd}
-              className="mb-4 flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-blue-300 hover:text-blue-500 dark:border-slate-600 dark:text-slate-400">
+              className="mb-4 flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-[#8F6DD3] hover:text-[#00AAFA] dark:border-slate-600 dark:text-slate-400">
               <Plus size={14} /> Tambah Catatan
             </button>
           )}
@@ -526,19 +563,19 @@ function CatatanDetailModal({
             <form onSubmit={submit} className="mb-5 space-y-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 dark:border-slate-700 dark:bg-slate-700/20">
               <p className="text-xs font-bold text-slate-600 dark:text-slate-300">{editTarget ? "Edit Catatan" : "Catatan Baru"}</p>
               <input value={judul} onChange={(e) => setJudul(e.target.value)} placeholder="Judul (mis. Terlambat masuk kelas)"
-                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
               <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} placeholder="Detail catatan..." rows={3}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
               <div className="flex flex-wrap gap-3">
                 <div className="flex-1 min-w-[140px]">
                   <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">Tanggal</label>
                   <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
                 </div>
                 <div className="w-28">
                   <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">Poin (opsional)</label>
                   <input type="number" value={poin} onChange={(e) => setPoin(e.target.value)} placeholder="0"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-1">
@@ -546,7 +583,7 @@ function CatatanDetailModal({
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Batal</button>
                 <button type="submit" disabled={saving}
                   className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "#0082FB" }}>
+                  style={{ background: "#3E03B3" }}>
                   {saving && <Loader2 size={13} className="animate-spin" />}
                   {editTarget ? "Simpan Perubahan" : "Simpan Catatan"}
                 </button>
@@ -565,7 +602,7 @@ function CatatanDetailModal({
                   <div className="mb-1.5 flex items-start justify-between gap-2">
                     <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                     {c.poin != null && (
-                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
+                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>{c.poin} poin</span>
                     )}
                   </div>
                   <p className="whitespace-pre-wrap text-xs leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>
@@ -580,7 +617,7 @@ function CatatanDetailModal({
                         <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
                           <Pencil size={12} />
                         </button>
-                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
                           <Trash2 size={12} />
                         </button>
                       </div>

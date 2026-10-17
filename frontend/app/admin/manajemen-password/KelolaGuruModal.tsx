@@ -137,7 +137,7 @@ export function KelolaGuruModal({
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
 
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="pointer-events-none absolute -bottom-6 right-20 h-16 w-16 rounded-full bg-white/8" />
               <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -177,9 +177,9 @@ export function KelolaGuruModal({
                         className={`relative overflow-hidden rounded-2xl border p-3.5 pl-4 transition-colors ${
                           g.isActive
                             ? "border-slate-100 dark:border-slate-700/50"
-                            : "border-red-100 bg-red-50/30 dark:border-red-900/30 dark:bg-red-900/5"
+                            : "border-[#F6FEE8] bg-[#F6FEE8]/30 dark:border-[#48700B]/30 dark:bg-[#48700B]/5"
                         }`}>
-                        <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#00D67F]" : "bg-red-400"}`} />
+                        <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#A1F919]" : "bg-[#A1F919]"}`} />
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex min-w-0 items-center gap-2.5">
                             <Avatar src={g.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
@@ -192,8 +192,8 @@ export function KelolaGuruModal({
                           </div>
                           <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold ${
                             g.isActive
-                              ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
-                              : "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400"
+                              ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#A1F919]"
+                              : "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#A1F919]"
                           }`}>
                             {g.isActive ? "Aktif" : "Nonaktif"}
                           </span>
@@ -202,10 +202,10 @@ export function KelolaGuruModal({
                         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                           <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Mapel:</span>
                           {(g.guru?.mapelDiampu ?? []).map((m) => (
-                            <span key={m.id} className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-[#0082FB] dark:bg-blue-900/20 dark:text-blue-300">
+                            <span key={m.id} className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1 text-[11px] font-semibold text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
                               {m.nama}
                               <button type="button" disabled={busy} onClick={() => hapusMapel(g.id, m.id)}
-                                className="rounded-full hover:bg-blue-100 dark:hover:bg-blue-800/40">
+                                className="rounded-full hover:bg-[#F1EDFA] dark:hover:bg-[#2D0281]/40">
                                 <X size={10} />
                               </button>
                             </span>
@@ -216,7 +216,7 @@ export function KelolaGuruModal({
                               onChange={(e) => setMapelInput((prev) => ({ ...prev, [g.id]: e.target.value }))}
                               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); tambahMapel(g.id); } }}
                               placeholder="Tambah mapel…"
-                              className="w-28 rounded-lg border border-dashed border-slate-300 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-600 focus:outline-none focus:ring-1 focus:ring-[#0082FB] dark:border-slate-600 dark:text-slate-300"
+                              className="w-28 rounded-lg border border-dashed border-slate-300 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-600 focus:outline-none focus:ring-1 focus:ring-[#3E03B3] dark:border-slate-600 dark:text-slate-300"
                             />
                             <button type="button" disabled={busy || !(mapelInput[g.id] ?? "").trim()} onClick={() => tambahMapel(g.id)}
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
@@ -231,7 +231,7 @@ export function KelolaGuruModal({
                             <span className="text-[11px] text-slate-400">Bukan wali kelas</span>
                           ) : (
                             g.guru!.kelasWali.map((k) => (
-                              <span key={k.id} className="rounded-lg bg-[#0082FB] px-2.5 py-1 text-[11px] font-semibold text-white">
+                              <span key={k.id} className="rounded-lg bg-[#3E03B3] px-2.5 py-1 text-[11px] font-semibold text-white">
                                 {k.nama}
                               </span>
                             ))
@@ -247,8 +247,8 @@ export function KelolaGuruModal({
                           <button type="button" disabled={busy} onClick={() => toggleAktif(g)}
                             className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold disabled:opacity-40 ${
                               g.isActive
-                                ? "bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-900/20"
-                                : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20"
+                                ? "bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                : "bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
                             }`}>
                             {busy ? <Loader2 size={11} className="animate-spin" /> : g.isActive ? <Ban size={11} /> : <RotateCcw size={11} />}
                             {g.isActive ? "Nonaktifkan" : "Aktifkan"}

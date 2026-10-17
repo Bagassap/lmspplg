@@ -18,10 +18,10 @@ import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { WALLET_GRADIENTS, WALLET_ON_TEXT } from "@/components/absensi-harian/shared";
-const P = "#0082FB";   
-const R = "#EF4444";   
-const B = "#0082FB";   
-const G = "#00D67F";   
+const P = "#3E03B3";   
+const R = "#5D900F";   
+const B = "#3E03B3";   
+const G = "#5D900F";   
 
 
 interface Pengumuman {
@@ -44,7 +44,7 @@ interface DashboardData {
 
 
 function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1C2B33] ${className}`} />;
+  return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1E293B] ${className}`} />;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
@@ -65,7 +65,7 @@ function SectionCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33] ${className}`}
+      className={`flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[#1E293B] ${className}`}
       style={style}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-7.5 py-4 dark:border-slate-700/40">
@@ -162,7 +162,7 @@ export default function AdminDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#0064E0",
+      gradient: "#00AAFA",
       icon: Calendar,
     },
     {
@@ -173,7 +173,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#EF4444",
+      gradient: "#A1F919",
       icon: Megaphone,
     },
     {
@@ -184,7 +184,7 @@ export default function AdminDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#C3F84A",
+      gradient: "#A1F919",
       icon: Briefcase,
     },
     {
@@ -195,7 +195,7 @@ export default function AdminDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#0082FB",
+      gradient: "#3E03B3",
       icon: FileText,
     },
   ];
@@ -221,7 +221,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-4"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-4"
         >
           <div className="mb-1">
             <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-8"
+          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-8"
         >
           <div className="mb-2 flex items-start justify-between">
             <div>
@@ -248,7 +248,7 @@ export default function AdminDashboardPage() {
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#C3F84A" }} />Total
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#A1F919" }} />Total
               </span>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function AdminDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.6 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-7"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-7"
         >
           <h2 className="mb-1 text-base font-bold text-slate-800 dark:text-white">Kehadiran Per Kelas</h2>
           <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">Hadir vs tidak hadir per kelas</p>
@@ -373,15 +373,15 @@ export default function AdminDashboardPage() {
     </div>
 
     <div className="relative isolate -m-4 overflow-hidden lg:hidden">
-      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#0082FB" }} />
+      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#3E03B3" }} />
 
       <div className="relative z-10 space-y-5 p-4">
 
-      <div className="rounded-3xl bg-white p-3 shadow-[0_10px_28px_-10px_rgba(0,130,251,0.35)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white p-3 shadow-[0_10px_28px_-10px_rgba(62,3,179,0.35)] dark:bg-[#1E293B]">
         <Link
           href="/admin/absensi-harian"
           className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
-          style={{ background: `linear-gradient(135deg, ${P}, #0064E0)` }}
+          style={{ background: `linear-gradient(135deg, ${P}, #00AAFA)` }}
         >
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />
@@ -406,11 +406,11 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-5 gap-1.5 pt-4">
           {[
-            { href: "/admin/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
-            { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, color: "#EF4444" },
-            { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, color: "#00D67F" },
-            { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
-            { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#0064E0", badge: data.pengumuman.length },
+            { href: "/admin/materi", label: "Materi", icon: BookOpen, color: "#3E03B3" },
+            { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, color: "#5D900F" },
+            { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, color: "#5D900F" },
+            { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#5D900F", dark: true },
+            { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#00AAFA", badge: data.pengumuman.length },
           ].map((s, i) => (
             <motion.div key={s.href}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -423,9 +423,9 @@ export default function AdminDashboardPage() {
                     background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), ${s.color}`,
                     boxShadow: `0 5px 10px -3px ${s.color}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
                   }}>
-                  <s.icon size={19} style={{ color: s.dark ? "#1C2B33" : "#fff" }} />
+                  <s.icon size={19} style={{ color: s.dark ? "#000000" : "#fff" }} />
                   {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-sm">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black shadow-sm">
                       {s.badge}
                     </span>
                   )}
@@ -467,7 +467,7 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <h2 className="text-sm font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
         <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi kehadiran hari ini</p>
         <StatisticRainbow
@@ -476,7 +476,7 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <button type="button" onClick={() => setKelasExpanded((v) => !v)}
           className="flex w-full items-center justify-between px-5 py-5">
           <div className="min-w-0 text-left">
@@ -499,7 +499,7 @@ export default function AdminDashboardPage() {
                   {kelasData.map((row) => (
                     <li key={row.kelas} className="flex items-center gap-3 px-5 py-3.5">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                        style={{ background: "#0082FB" }}>
+                        style={{ background: "#3E03B3" }}>
                         {row.kelas.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -519,7 +519,7 @@ export default function AdminDashboardPage() {
         </AnimatePresence>
       </div>
 
-      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <div className="flex items-center justify-between px-5 pt-5">
           <h2 className="text-sm font-bold text-slate-800 dark:text-white">Pengumuman Terbaru</h2>
           <ViewAll href="/admin/pengumuman" />

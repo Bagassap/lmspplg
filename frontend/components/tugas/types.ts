@@ -1,7 +1,6 @@
 export type StatusTugas = "TERKIRIM" | "DITERIMA" | "REVISI";
 export type TugasTipe = "SUBMIT" | "PRAKTIK" | "PILIHAN_GANDA" | "ESSAY";
 
-// Tipe yang memakai lembar pengerjaan lockdown (halaman penuh, bukan modal).
 export const LOCKDOWN_TIPE = new Set<string>(["PRAKTIK", "PILIHAN_GANDA", "ESSAY"]);
 export const MAKSIMAL_PERCOBAAN = 2;
 
@@ -15,8 +14,6 @@ export type TugasSoalItem = {
   pilihanB: string | null;
   pilihanC: string | null;
   pilihanD: string | null;
-  // Hanya terisi di sisi admin/guru, atau di sisi siswa SETELAH submisi
-  // (untuk review) — tidak pernah dikirim ke siswa sebelum ia mengumpulkan.
   jawabanBenar?: string | null;
 };
 
@@ -40,24 +37,17 @@ export type TugasSubmisiItem = {
   catatan: string | null;
   pesanRevisi: string | null;
   status: StatusTugas;
-  // Nilai pilihan ganda 0-100, dibulatkan — dihitung & disimpan backend saat
-  // submit. Selalu integer, tidak pernah desimal/koma. Null untuk tipe tugas
-  // lain (butuh penilaian manual guru).
   nilai: number | null;
   submittedAt: string;
   updatedAt: string;
   tugas?: { id: string; judul: string; tipe?: string; mapel?: string };
   siswa?: { id: string; nama: string | null; user?: { id: string; nama: string } | null };
   jawaban?: TugasJawabanItem[];
-  // Lockdown/exam-mode (PRAKTIK/PILIHAN_GANDA/ESSAY) — maksimal 2 percobaan.
   jumlahPercobaan?: number;
   terkunci?: boolean;
   dipaksaKeluar?: boolean;
   waktuMulai?: string | null;
   deadlineWaktu?: string | null;
-  // Tambahan percobaan di luar jatah normal (mis. HP siswa mati 2x tanpa
-  // sengaja) — diberikan guru/admin lewat tombol "Tambah 1x Percobaan".
-  // Batas efektif = MAKSIMAL_PERCOBAAN + bonusPercobaan, lihat maksimalPercobaanEfektif().
   bonusPercobaan?: number;
 };
 
@@ -68,8 +58,6 @@ export function maksimalPercobaanEfektif(s?: { bonusPercobaan?: number } | null)
 export type TugasItem = {
   id: string;
   mapel: string;
-  // Kelas target tugas ini — kosong berarti "Semua Kelas" (bisa lebih dari 1
-  // kelas sekaligus, sama seperti Materi.kelasList).
   kelasList: TugasKelasRef[];
   judul: string;
   deskripsi: string | null;
@@ -80,8 +68,6 @@ export type TugasItem = {
   starterHtml: string | null;
   starterCss: string | null;
   starterJs: string | null;
-  // Durasi pengerjaan (menit) untuk lembar pengerjaan lockdown — wajib untuk
-  // PILIHAN_GANDA/ESSAY, opsional untuk PRAKTIK, null untuk SUBMIT.
   durasiMenit?: number | null;
   createdBy: { id: string; nama: string; role: string };
   createdAt: string;
@@ -105,9 +91,9 @@ export function isTugasActive(t: { deadline: string }) {
 }
 
 export function statusInfo(s: StatusTugas) {
-  if (s === "DITERIMA") return { bg: "#E3FBF0", color: "#00D67F", label: "Diterima" };
-  if (s === "REVISI") return { bg: "#F1F5F8", color: "#C3F84A", label: "Perlu Revisi" };
-  return { bg: "#EAF3FF", color: "#0064E0", label: "Menunggu Review" };
+  if (s === "DITERIMA") return { bg: "#F6FEE8", color: "#5D900F", label: "Diterima" };
+  if (s === "REVISI") return { bg: "#F2F2F2", color: "#000000", label: "Perlu Revisi" };
+  return { bg: "#E6F7FF", color: "#00AAFA", label: "Menunggu Review" };
 }
 
 export function tipeLabel(tipe: string) {
@@ -117,7 +103,6 @@ export function tipeLabel(tipe: string) {
   return "Kirim File";
 }
 
-// Skor pilihan ganda: jumlah jawaban benar dari total soal.
 export function hitungSkorPilihanGanda(jawaban: TugasJawabanItem[] | undefined) {
   if (!jawaban || jawaban.length === 0) return { benar: 0, total: 0 };
   const total = jawaban.length;
@@ -125,10 +110,6 @@ export function hitungSkorPilihanGanda(jawaban: TugasJawabanItem[] | undefined) 
   return { benar, total };
 }
 
-// Nilai 0-100 pilihan ganda — selalu diambil dari nilai yang sudah dihitung &
-// dibulatkan di backend saat submit (satu-satunya sumber kebenaran). Fallback
-// hitung ulang di client (dibulatkan juga, tidak pernah koma) hanya untuk data
-// lama sebelum kolom `nilai` ada.
 export function nilaiPilihanGanda(submisi: { nilai?: number | null; jawaban?: TugasJawabanItem[] }): number | null {
   if (typeof submisi.nilai === "number") return submisi.nilai;
   const { benar, total } = hitungSkorPilihanGanda(submisi.jawaban);

@@ -9,8 +9,8 @@ import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 type Scope = "semua" | "kelas";
 
 const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#0064E0" },
-  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#C3F84A" },
+  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#00AAFA" },
+  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#A1F919" },
 ];
 
 export function UnduhDataSiswaCard({
@@ -29,7 +29,7 @@ export function UnduhDataSiswaCard({
   return (
     <div className="flex flex-1 flex-col">
       <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
           <FileText size={18} />
         </span>
         <div>
@@ -68,7 +68,7 @@ export function UnduhDataSiswaCard({
       </div>
 
       <p className="mt-3 flex items-center gap-1.5 truncate text-[11px] font-semibold text-slate-500 dark:text-slate-300">
-        <School size={12} className="shrink-0 text-[#0082FB]" />
+        <School size={12} className="shrink-0 text-[#3E03B3]" />
         {caption}
       </p>
 
@@ -80,7 +80,7 @@ export function UnduhDataSiswaCard({
       </div>
 
       <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-        <Download size={11} className="shrink-0 text-[#0082FB]" />
+        <Download size={11} className="shrink-0 text-[#3E03B3]" />
         Pilih cakupan, lalu klik salah satu tombol ekspor
       </p>
     </div>

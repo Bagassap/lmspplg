@@ -38,7 +38,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
 
   return (
     <>
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1C2B33] lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden">
         {leftPinned.map((item) => {
           const active = isItemActive(item, pathname);
           return (
@@ -47,8 +47,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? "#0082FB" : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? "text-[#0082FB]" : "text-slate-400 dark:text-slate-500"}`}>
+              <item.icon size={20} style={{ color: active ? "#3E03B3" : "#94a3b8" }} />
+              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -58,14 +58,14 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
         {dashboardItem && (
           <Link href={dashboardItem.href ?? "#"} className="relative flex flex-1 flex-col items-center">
             <span
-              className="absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1C2B33]"
-              style={{ background: "#0082FB", boxShadow: "0 10px 24px -6px rgba(0,130,251,0.55)" }}
+              className="absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1E293B]"
+              style={{ background: "#3E03B3", boxShadow: "0 10px 24px -6px rgba(62,3,179,0.55)" }}
             >
               <dashboardItem.icon size={22} />
             </span>
             <span
               className="mt-8 text-[10px] font-semibold"
-              style={{ color: dashboardActive ? "#0082FB" : "#94a3b8" }}
+              style={{ color: dashboardActive ? "#3E03B3" : "#94a3b8" }}
             >
               Dashboard
             </span>
@@ -80,8 +80,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? "#0082FB" : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? "text-[#0082FB]" : "text-slate-400 dark:text-slate-500"}`}>
+              <item.icon size={20} style={{ color: active ? "#3E03B3" : "#94a3b8" }} />
+              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -92,11 +92,11 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           onClick={() => setMoreOpen(true)}
           className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
         >
-          <LayoutGrid size={20} style={{ color: moreActive ? "#0082FB" : "#94a3b8" }} />
+          <LayoutGrid size={20} style={{ color: moreActive ? "#3E03B3" : "#94a3b8" }} />
           {pendingResetCount > 0 && (
-            <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-red-500" />
+            <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#A1F919]" />
           )}
-          <span className={`text-[10px] font-semibold ${moreActive ? "text-[#0082FB]" : "text-slate-400 dark:text-slate-500"}`}>
+          <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
           </span>
         </button>
@@ -113,7 +113,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
             <motion.div
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="absolute inset-x-0 bottom-0 flex max-h-[75vh] flex-col rounded-t-3xl bg-white pb-[env(safe-area-inset-bottom)] dark:bg-[#1C2B33]"
+              className="absolute inset-x-0 bottom-0 flex max-h-[75vh] flex-col rounded-t-3xl bg-white pb-[env(safe-area-inset-bottom)] dark:bg-[#1E293B]"
             >
               <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-white/6">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">Menu Lainnya</p>
@@ -182,7 +182,7 @@ function MoreMenuItem({ item, pendingResetCount, onNavigate }: {
       </span>
       <span className="flex-1">{item.label}</span>
       {item.key === "manajemen-password" && pendingResetCount > 0 && (
-        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#A1F919] px-1.5 text-[10px] font-bold text-black">
           {pendingResetCount > 99 ? "99+" : pendingResetCount}
         </span>
       )}

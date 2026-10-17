@@ -58,11 +58,11 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
         className={`relative z-10 flex shrink-0 items-center gap-1.5 ${
           flat
             ? "h-11 rounded-xl bg-slate-50 px-3 text-slate-700 dark:bg-slate-700/40 dark:text-slate-200"
-            : `rounded-full px-3 py-1.5 ${light ? "bg-white text-[#0082FB]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`
+            : `rounded-full px-3 py-1.5 ${light ? "bg-white text-[#3E03B3]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`
         }`}>
-        <CalendarDays size={13} className={light ? "text-[#0082FB]" : "text-slate-400"} />
+        <CalendarDays size={13} className={light ? "text-[#3E03B3]" : "text-slate-400"} />
         <span className="text-xs font-bold">{label}</span>
-        <ChevronDown size={12} className={light ? "text-[#0082FB]" : "text-slate-400"} />
+        <ChevronDown size={12} className={light ? "text-[#3E03B3]" : "text-slate-400"} />
       </button>
 
       {typeof document !== "undefined" && createPortal(
@@ -74,7 +74,7 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
                 onClick={() => setOpen(false)} />
               <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
                 transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                className="relative z-10 w-full rounded-t-3xl bg-white p-5 dark:bg-[#1C2B33]">
+                className="relative z-10 w-full rounded-t-3xl bg-white p-5 dark:bg-[#1E293B]">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Pilih Tanggal</h3>
                   <button type="button" onClick={() => setOpen(false)}
@@ -108,7 +108,7 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
                         className={`flex aspect-square items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                           isSelected || isToday ? "" : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700"
                         }`}
-                        style={isSelected ? { background: "#0082FB", color: "#fff" } : isToday ? { background: "#EAF3FF", color: "#0082FB" } : undefined}>
+                        style={isSelected ? { background: "#3E03B3", color: "#fff" } : isToday ? { background: "#F1EDFA", color: "#3E03B3" } : undefined}>
                         {day}
                       </button>
                     );

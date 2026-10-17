@@ -81,7 +81,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
 
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-6 right-20 h-16 w-16 rounded-full bg-white/8" />
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -99,16 +99,16 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {editing ? (
-            <div className="space-y-3 rounded-2xl border border-blue-100 bg-blue-50/50 p-4 dark:border-blue-900/40 dark:bg-blue-900/10">
+            <div className="space-y-3 rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/50 p-4 dark:border-[#000000]/40 dark:bg-[#000000]/10">
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Nama Kelas</label>
                 <input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: XII RPL 1"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200" />
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200" />
               </div>
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Wali Kelas</label>
                 <select value={waliId} onChange={(e) => setWaliId(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200">
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200">
                   <option value="">— Belum ditentukan —</option>
                   {guruList.map((g) => (
                     <option key={g.id} value={g.user.id}>{g.user.nama}</option>
@@ -121,7 +121,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                 </button>
                 <button onClick={save} disabled={saving}
                   className="rounded-xl px-4 py-1.5 text-xs font-bold text-white shadow-sm disabled:opacity-50"
-                  style={{ background: "#0082FB" }}>
+                  style={{ background: "#3E03B3" }}>
                   {saving ? "Menyimpan..." : "Simpan"}
                 </button>
               </div>
@@ -129,14 +129,14 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
           ) : (
             <motion.button onClick={startCreate}
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-[#0082FB] hover:bg-blue-50/50 hover:text-[#0082FB] dark:border-slate-600 dark:hover:bg-blue-900/10">
+              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-[#3E03B3] hover:bg-[#F1EDFA]/50 hover:text-[#3E03B3] dark:border-slate-600 dark:hover:bg-[#000000]/10">
               <Plus size={14} /> Tambah Kelas
             </motion.button>
           )}
 
           <div className="mt-3 space-y-2">
             {kelasList.map((k) => (
-              <div key={k.id} className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 px-3.5 py-2.5 transition-colors hover:border-blue-100 hover:bg-blue-50/30 dark:border-slate-700/50 dark:hover:bg-blue-900/10">
+              <div key={k.id} className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 px-3.5 py-2.5 transition-colors hover:border-[#F1EDFA] hover:bg-[#F1EDFA]/30 dark:border-slate-700/50 dark:hover:bg-[#000000]/10">
                 <div className="flex min-w-0 items-center gap-2.5">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: avatarColor(k.nama) }}>
                     <School size={15} />
@@ -153,11 +153,11 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                     <Users size={10} /> {k._count?.siswa ?? 0}
                   </span>
                   <button onClick={() => startEdit(k)}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-[#0082FB] hover:bg-blue-100 dark:bg-blue-900/20">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#3E03B3] hover:bg-[#F1EDFA] dark:bg-[#000000]/20">
                     <Pencil size={12} />
                   </button>
                   <button onClick={() => remove(k)} disabled={busyId === k.id}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                     <Trash2 size={12} />
                   </button>
                 </div>

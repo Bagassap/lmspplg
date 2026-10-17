@@ -49,15 +49,11 @@ function fmtRangeWib(start: number, end: number): string {
 function todayJakartaStr(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date());
 }
-// Tanggal disimpan sebagai kalender WIB ("YYYY-MM-DD"), jadi harus selalu
-// diformat lewat timeZone Asia/Jakarta eksplisit — bukan zona lokal browser
-// admin yang membuka halaman ini — supaya tanggalnya tidak pernah mundur
-// sehari untuk admin yang mengakses dari luar WIB.
 function formatTanggalWib(tgl: string, opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" }): string {
   return new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", ...opts }).format(new Date(`${tgl}T00:00:00Z`));
 }
 
-const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
+const INPUT = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200";
 const LABEL = "mb-1 block text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500";
 
 export function JadwalAbsenCard() {
@@ -145,7 +141,7 @@ export function JadwalAbsenCard() {
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
             <CalendarClock size={18} />
           </span>
           <div>
@@ -156,7 +152,7 @@ export function JadwalAbsenCard() {
         <motion.button
           type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
           onClick={() => openForm()}
-          className="flex items-center gap-1 rounded-lg bg-[#0082FB] px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#0082FB]"
+          className="flex items-center gap-1 rounded-lg bg-[#3E03B3] px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#3E03B3]"
         >
           <Plus size={13} /> Atur Jadwal
         </motion.button>
@@ -167,12 +163,12 @@ export function JadwalAbsenCard() {
       ) : hariIni ? (
         <div className="grid grid-cols-2 gap-2.5">
           <p className="col-span-2 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-            <Clock size={11} className="text-[#0082FB]" />
+            <Clock size={11} className="text-[#3E03B3]" />
             {formatTanggalWib(hariIni.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · WIB
           </p>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
             <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogIn size={11} className="text-emerald-500" /> Absen Datang
+              <LogIn size={11} className="text-[#5D900F]" /> Absen Datang
             </p>
             <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
               {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.hadirStartMinutes, hariIni.hadirEndMinutes)}
@@ -180,14 +176,14 @@ export function JadwalAbsenCard() {
           </div>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
             <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogOut size={11} className="text-blue-500" /> Absen Pulang
+              <LogOut size={11} className="text-[#00AAFA]" /> Absen Pulang
             </p>
             <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
               {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.pulangStartMinutes, hariIni.pulangEndMinutes)}
             </p>
           </div>
           {isOverriddenToday && (
-            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#F1F5F8] px-3 py-2 text-[11px] text-[#1C2B33] dark:bg-[#1C2B33]/20 dark:text-[#C3F84A]">
+            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#FFFFFF] px-3 py-2 text-[11px] text-[#000000] dark:bg-[#000000]/20 dark:text-[#A1F919]">
               <Sparkles size={12} className="mt-0.5 shrink-0" />
               <span>Jadwal hari ini disesuaikan{hariIni.override?.keterangan ? ` — ${hariIni.override.keterangan}` : ""}</span>
             </div>
@@ -214,7 +210,7 @@ export function JadwalAbsenCard() {
                 </p>
               </div>
               <button type="button" onClick={() => handleDelete(o.tanggal)}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-red-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20">
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#5D900F] hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
                 <Trash2 size={13} />
               </button>
             </div>
@@ -251,9 +247,9 @@ export function JadwalAbsenCard() {
                   )}
                 </div>
 
-                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-3 dark:border-emerald-900/30 dark:bg-emerald-900/10">
-                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-                    <LogIn size={12} /> Absen Datang <span className="normal-case text-emerald-500/70">(WIB)</span>
+                <div className="rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8]/50 p-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#5D900F] dark:text-[#A1F919]">
+                    <LogIn size={12} /> Absen Datang <span className="normal-case text-[#5D900F]/70">(WIB)</span>
                   </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
@@ -267,9 +263,9 @@ export function JadwalAbsenCard() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-3 dark:border-blue-900/30 dark:bg-blue-900/10">
-                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-blue-600 dark:text-blue-400">
-                    <LogOut size={12} /> Absen Pulang <span className="normal-case text-blue-500/70">(WIB)</span>
+                <div className="rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/50 p-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
+                    <LogOut size={12} /> Absen Pulang <span className="normal-case text-[#00AAFA]/70">(WIB)</span>
                   </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
@@ -294,7 +290,7 @@ export function JadwalAbsenCard() {
                     Batal
                   </button>
                   <button type="submit" disabled={saving}
-                    className="flex items-center gap-1.5 rounded-xl bg-[#0082FB] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#0082FB] disabled:opacity-60">
+                    className="flex items-center gap-1.5 rounded-xl bg-[#3E03B3] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#3E03B3] disabled:opacity-60">
                     {saving && <Loader2 size={14} className="animate-spin" />}
                     {saving ? "Menyimpan..." : "Simpan Jadwal"}
                   </button>

@@ -19,9 +19,8 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "bulanan", label: "Per Bulan" },
 ];
 
-const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0082FB]";
+const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
 
-/** Per Hari / Per Minggu / Per Bulan tabs + the matching inline picker — same row height in every mode (harian has no extra picker at all; mingguan/bulanan pickers share selectCls with the tabs' py-1.5). Rendered right after the main Tanggal picker, before the download buttons. */
 export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
   const currentYear = new Date().getFullYear();
   const yearOptions = [currentYear - 1, currentYear, currentYear + 1];
@@ -33,7 +32,7 @@ export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAn
           <button key={m.key} type="button" onClick={() => setRangeMode(m.key)}
             className={`rounded-lg px-3 py-1.5 text-[11px] font-bold transition-colors ${
               rangeMode === m.key
-                ? "bg-[#0082FB] text-white shadow-sm"
+                ? "bg-[#3E03B3] text-white shadow-sm"
                 : "text-slate-500 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-800"
             }`}>
             {m.label}
@@ -162,8 +161,8 @@ export function ExportButtons({ kelasId, kelasNama, range, siswaList }: {
     }
   }
 
-  const PDF_STYLE = { backgroundColor: "#FEE9EA", color: "#EF4444", borderColor: "#EF444430" };
-  const EXCEL_STYLE = { backgroundColor: "#E3FBF0", color: "#00D67F", borderColor: "#00D67F30" };
+  const PDF_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
+  const EXCEL_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
 
   return (
     <>
@@ -199,7 +198,7 @@ export function ExportButtons({ kelasId, kelasNama, range, siswaList }: {
           <SiswaPickerModal
             siswaList={siswaList}
             title={picker === "pdf" ? "Pilih Siswa — Export PDF" : "Pilih Siswa — Export Excel"}
-            accent={picker === "pdf" ? "#EF4444" : "#00D67F"}
+            accent="#5D900F"
             onPick={(s) => runSiswaExport(picker === "pdf" ? "pdf-siswa" : "excel-siswa", s)}
             onClose={() => setPicker(null)}
           />

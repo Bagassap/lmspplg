@@ -75,13 +75,13 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: st
     return (
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
-        style={{ background: "#EF4444" }}>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#EF4444]">
+        style={{ background: "#A1F919" }}>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5D900F]">
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">
-          <p className="truncate text-sm font-extrabold text-white">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
-          <p className="truncate text-[10.5px] font-semibold text-white">
+          <p className="truncate text-sm font-extrabold text-black">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+          <p className="truncate text-[10.5px] font-semibold text-black/70">
             {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
           </p>
         </div>
@@ -91,13 +91,13 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: st
 
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
-      className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-red-50 px-3 py-2.5 text-left transition-all hover:border-red-200 disabled:cursor-default disabled:opacity-50 dark:bg-red-900/15 dark:hover:border-red-800/60">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#EF4444] text-white">
+      className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-[#F6FEE8] px-3 py-2.5 text-left transition-all hover:border-[#F6FEE8] disabled:cursor-default disabled:opacity-50 dark:bg-[#48700B]/15 dark:hover:border-[#48700B]/60">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#A1F919] text-black">
         {sent ? <Check size={14} /> : <Bell size={14} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-red-700 dark:text-red-400">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
-        <p className="truncate text-[10px] font-semibold text-red-400 dark:text-red-500/80">
+        <p className="truncate text-sm font-bold text-[#48700B] dark:text-[#A1F919]">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+        <p className="truncate text-[10px] font-semibold text-[#5D900F] dark:text-[#A1F919]/80">
           {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
         </p>
       </div>
@@ -134,7 +134,7 @@ function RingkasanKehadiranCard({
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
           <PieChart size={18} />
         </span>
         <div className="min-w-0">
@@ -148,8 +148,8 @@ function RingkasanKehadiranCard({
       <p className="mt-2.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
         {showComparison ? (
           <>Rata-rata kehadiran <span className="font-bold text-slate-700 dark:text-slate-200">{avgPct}%</span> dari {kelasList.length} kelas hari ini ·
-            tertinggi <span className="font-bold text-emerald-600 dark:text-emerald-400">{terbaik!.kelas.nama} ({terbaik!.pct}%)</span> ·
-            perlu perhatian <span className="font-bold text-red-500 dark:text-red-400">{terendah!.kelas.nama} ({terendah!.pct}%)</span>
+            tertinggi <span className="font-bold text-[#5D900F] dark:text-[#A1F919]">{terbaik!.kelas.nama} ({terbaik!.pct}%)</span> ·
+            perlu perhatian <span className="font-bold text-[#5D900F] dark:text-[#A1F919]">{terendah!.kelas.nama} ({terendah!.pct}%)</span>
           </>
         ) : (
           <>Sudah <span className="font-bold text-slate-700 dark:text-slate-200">{sudahAbsen}</span> dari <span className="font-bold text-slate-700 dark:text-slate-200">{total}</span> siswa tercatat absen hari ini
@@ -168,16 +168,16 @@ function RingkasanKehadiranCard({
                 <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
                   className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
                     isSelected
-                      ? "border-[#0082FB] bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+                      ? "border-[#3E03B3] bg-[#F1EDFA] dark:border-[#8F6DD3] dark:bg-[#000000]/20"
                       : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
                   }`}>
                   <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                    isSelected ? "bg-[#0082FB] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                    isSelected ? "bg-[#3E03B3] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
                   }`}>
                     <BookOpen size={14} />
                   </span>
                   <div className="min-w-0">
-                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#0082FB] dark:text-blue-300" : "text-slate-700 dark:text-slate-200"}`}>
+                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-slate-700 dark:text-slate-200"}`}>
                       {k.nama}
                     </p>
                     <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
@@ -210,7 +210,7 @@ function RingkasanKehadiranCard({
           </div>
           <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
             <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
-              <circle cx="50" cy="50" r={r} stroke="#F1F5F8" strokeWidth="12" fill="none" />
+              <circle cx="50" cy="50" r={r} stroke="#FFFFFF" strokeWidth="12" fill="none" />
               {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
                 const pct = s.value / total;
                 const dash = pct * circumference;
@@ -232,7 +232,7 @@ function RingkasanKehadiranCard({
 
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
         <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-          <Users size={12} className="text-[#0082FB]" />
+          <Users size={12} className="text-[#3E03B3]" />
           Total {total} siswa
         </span>
       </div>
@@ -243,7 +243,7 @@ function RingkasanKehadiranCard({
 function KehadiranSlimCard({ hadirPct, kelasNama, onClick }: { hadirPct: number; kelasNama?: string; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick}
-      className="flex w-full flex-col rounded-3xl bg-white p-4 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98] dark:bg-[#1C2B33]">
+      className="flex w-full flex-col rounded-3xl bg-white p-4 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98] dark:bg-[#1E293B]">
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">
@@ -252,14 +252,14 @@ function KehadiranSlimCard({ hadirPct, kelasNama, onClick }: { hadirPct: number;
           <p className="mt-0.5 text-2xl font-black text-slate-800 dark:text-white">{hadirPct}%</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl text-white" style={{ background: "#0082FB" }}>
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl text-white" style={{ background: "#3E03B3" }}>
             <TrendingUp size={18} />
           </span>
           <ArrowRight size={16} className="text-slate-300" />
         </div>
       </div>
       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-        <div className="h-full rounded-full transition-all" style={{ width: `${hadirPct}%`, background: "#0082FB" }} />
+        <div className="h-full rounded-full transition-all" style={{ width: `${hadirPct}%`, background: "#3E03B3" }} />
       </div>
     </button>
   );
@@ -276,7 +276,7 @@ function StatusRingRow({ label, icon: Icon, value, total, color, onClick }: {
     <button type="button" onClick={onClick} className="flex w-full items-center gap-3 py-2 text-left">
       <div className="relative flex h-10 w-10 shrink-0 items-center justify-center">
         <svg viewBox="0 0 36 36" className="h-10 w-10 -rotate-90">
-          <circle cx="18" cy="18" r={r} stroke="#F1F5F8" strokeWidth="4" fill="none" />
+          <circle cx="18" cy="18" r={r} stroke="#FFFFFF" strokeWidth="4" fill="none" />
           <circle cx="18" cy="18" r={r} stroke={color} strokeWidth="4" fill="none"
             strokeDasharray={`${dash} ${circumference - dash}`} strokeLinecap="round" />
         </svg>
@@ -395,7 +395,7 @@ function MobileSiswaCard({
         )}
         {hasDok && (
           <button onClick={openDokumen}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-white" style={{ background: "#0082FB" }}>
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-white" style={{ background: "#3E03B3" }}>
             <Eye size={10} /> Lihat
           </button>
         )}
@@ -488,16 +488,16 @@ export default function GuruAbsensiHarianPage() {
     return (
       <>
         <div className="hidden space-y-5 p-1 lg:block">
-          <div className="relative overflow-hidden rounded-2xl p-6"
-            style={{ background: "#0082FB" }}>
+          <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="relative flex items-center gap-3 sm:gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-                <ClipboardCheck size={22} className="text-white sm:hidden" />
-                <ClipboardCheck size={26} className="hidden text-white sm:block" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+                <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
               </div>
               <div>
-                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
-                <p className="mt-0.5 text-sm text-white/70">Presensi kehadiran harian siswa</p>
+                <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Absensi Harian</h1>
+                <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">Presensi kehadiran harian siswa</p>
               </div>
             </div>
           </div>
@@ -510,7 +510,7 @@ export default function GuruAbsensiHarianPage() {
           </div>
         </div>
 
-        <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+        <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
           <div className="relative flex items-center px-4 pb-3 pt-4">
             <button type="button" onClick={() => router.push("/guru/dashboard")}
               className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -518,8 +518,8 @@ export default function GuruAbsensiHarianPage() {
             </button>
             <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi Harian</h1>
           </div>
-          <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
-            <div className="flex flex-col items-center gap-3 rounded-3xl bg-white py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+          <div className="rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
+            <div className="flex flex-col items-center gap-3 rounded-3xl bg-white py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
                 <GraduationCap size={24} className="text-slate-300 dark:text-slate-500" />
               </div>
@@ -535,19 +535,17 @@ export default function GuruAbsensiHarianPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0082FB" }}>
-          <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-          <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
+        <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-                <ClipboardCheck size={22} className="text-white sm:hidden" />
-                <ClipboardCheck size={26} className="hidden text-white sm:block" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+                <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
               </div>
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi Wajib Harian</span>
-                <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi Harian</h1>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Presensi Wajib Harian</span>
+                <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Absensi Harian</h1>
               </div>
             </div>
           </div>
@@ -614,15 +612,15 @@ export default function GuruAbsensiHarianPage() {
 
             <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
               <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <Users size={12} className="text-[#0082FB]" />
+                <Users size={12} className="text-[#3E03B3]" />
                 Total {total} siswa
               </span>
               <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <TrendingUp size={12} className="text-[#0082FB]" />
+                <TrendingUp size={12} className="text-[#3E03B3]" />
                 Kehadiran {hadirPct}%
               </span>
               <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <LogOut size={12} className="text-[#0082FB]" />
+                <LogOut size={12} className="text-[#3E03B3]" />
                 Sudah pulang {pulangCount} siswa
               </span>
             </div>
@@ -652,7 +650,7 @@ export default function GuruAbsensiHarianPage() {
           <div className="flex h-full flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
                   <FileText size={18} />
                 </span>
                 <div>
@@ -679,17 +677,17 @@ export default function GuruAbsensiHarianPage() {
               {exportRange.rangeMode === "mingguan" && (
                 <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
                   title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
@@ -699,7 +697,7 @@ export default function GuruAbsensiHarianPage() {
                 <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                <Download size={11} className="shrink-0 text-[#0082FB]" />
+                <Download size={11} className="shrink-0 text-[#3E03B3]" />
                 Pilih rentang waktu, lalu klik salah satu tombol ekspor
               </p>
             </div>
@@ -709,7 +707,7 @@ export default function GuruAbsensiHarianPage() {
         </div>
       </div>
 
-      <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+      <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center justify-between px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/guru/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -719,17 +717,17 @@ export default function GuruAbsensiHarianPage() {
           <MobileDatePicker value={tanggal} onChange={setTanggal} light />
         </div>
 
-        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+        <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
 
           <KehadiranSlimCard hadirPct={hadirPct} kelasNama={selectedKelas?.nama} onClick={() => setStatusPageOpen(true)} />
 
           <div className="grid grid-cols-2 gap-2.5">
             <FlatStatTile icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label="Progres Absen"
-              bg="#0064E0" fg="#FFFFFF" />
+              bg="#00AAFA" fg="#FFFFFF" />
             <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} bold />
           </div>
 
-          <div className="rounded-3xl bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+          <div className="rounded-3xl bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
             <p className="text-[12.5px] font-bold text-slate-800 dark:text-white">Rincian Status</p>
             <div className="mt-1 divide-y divide-slate-100 dark:divide-slate-700/40">
               <StatusRingRow label="Hadir" icon={STATUS_CFG.HADIR.icon} value={rekap.HADIR} total={total}
@@ -755,8 +753,8 @@ export default function GuruAbsensiHarianPage() {
           {statusPageOpen && (
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-0 z-50 flex flex-col bg-[#F1F5F8] dark:bg-[#1C2B33]">
-              <div className="shrink-0 pb-3 pt-4" style={{ background: "#0082FB" }}>
+              className="fixed inset-0 z-50 flex flex-col bg-[#FFFFFF] dark:bg-[#1E293B]">
+              <div className="shrink-0 pb-3 pt-4" style={{ background: "#3E03B3" }}>
                 <div className="relative flex items-center justify-between px-4">
                   <button type="button" onClick={() => setStatusPageOpen(false)}
                     className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -766,7 +764,7 @@ export default function GuruAbsensiHarianPage() {
                     Status Kehadiran <span className="font-medium text-white/70">({total})</span>
                   </h1>
                   <button type="button" onClick={() => setLaporanOpen(true)}
-                    className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 active:scale-95" style={{ color: "#0082FB" }}>
+                    className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 active:scale-95" style={{ color: "#3E03B3" }}>
                     <Download size={12} />
                     <span className="text-[11px] font-bold">Unduh</span>
                   </button>
@@ -793,7 +791,7 @@ export default function GuruAbsensiHarianPage() {
                   })}
                 </div>
 
-                <div className="mt-3 overflow-hidden rounded-3xl bg-white dark:bg-[#1C2B33]">
+                <div className="mt-3 overflow-hidden rounded-3xl bg-white dark:bg-[#1E293B]">
                   {loading ? (
                     <div className="space-y-3 p-4">
                       {Array.from({ length: 4 }).map((_, i) => (
@@ -821,7 +819,7 @@ export default function GuruAbsensiHarianPage() {
                 </div>
 
                 {filteredSiswa.length > 0 && (
-                  <div className="mt-3 space-y-2 rounded-2xl bg-white px-4 py-3 dark:bg-[#1C2B33]">
+                  <div className="mt-3 space-y-2 rounded-2xl bg-white px-4 py-3 dark:bg-[#1E293B]">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs text-slate-400 dark:text-slate-500">{tableStart}–{tableEnd} dari {filteredSiswa.length}</span>
                       <PageSizeToggle value={tablePageSize} onChange={setTablePageSize} />
@@ -857,11 +855,11 @@ export default function GuruAbsensiHarianPage() {
                 onClick={() => setLaporanOpen(false)} />
               <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
                 transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+                className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1E293B]"
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
                       <FileText size={16} />
                     </span>
                     <div>
@@ -895,17 +893,17 @@ export default function GuruAbsensiHarianPage() {
                   {exportRange.rangeMode === "mingguan" && (
                     <input type="date" value={exportRange.weekAnchor} onChange={(e) => exportRange.setWeekAnchor(e.target.value)}
                       title={`Minggu: ${formatTgl(exportRange.weekRange.start)} – ${formatTgl(exportRange.weekRange.end)}`}
-                      className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                      className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
                   )}
 
                   {exportRange.rangeMode === "bulanan" && (
                     <div className="mt-3 flex items-center gap-1.5">
                       <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                         {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                       </select>
                       <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
                         {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                       </select>
                     </div>
@@ -915,7 +913,7 @@ export default function GuruAbsensiHarianPage() {
                     <ExportButtons kelasId={selectedId} kelasNama={selectedKelas?.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
                   </div>
                   <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                    <Download size={11} className="shrink-0 text-[#0082FB]" />
+                    <Download size={11} className="shrink-0 text-[#3E03B3]" />
                     Pilih rentang waktu, lalu ketuk salah satu tombol ekspor
                   </p>
                 </div>

@@ -5,17 +5,13 @@ import type { ComponentType } from "react";
 
 type Tone = "blue" | "navy" | "green" | "lime" | "red" | "ink";
 
-// Desain simpel mengikuti kartu selector "Materi"/"Tugas" di
-// components/materi/MateriTugasSiswaPage.tsx — ikon badge di atas, lalu
-// blok 2 baris (nilai besar + label kecil) di bawah. Tidak ada eyebrow atau
-// footer dua kolom seperti versi lama, sengaja dibuat ringkas.
 const TONE_HEX: Record<Tone, string> = {
-  blue: "#0082FB",   // biru terang
-  navy: "#0064E0",   // blue
-  green: "#00D67F",
-  lime: "#C3F84A",   // utama
-  red: "#EF4444",
-  ink: "#1C2B33",
+  blue: "#3E03B3",
+  navy: "#00AAFA",
+  green: "#A1F919",
+  lime: "#A1F919",
+  red: "#A1F919",
+  ink: "#000000",
 };
 
 const cardVariants = {
@@ -34,7 +30,7 @@ export function GradientStatCard({
   icon: ComponentType<{ size?: number; className?: string }>;
   tone: Tone;
 }) {
-  const fg = tone === "lime" ? "#1C2B33" : "#FFFFFF";
+  const fg = TONE_HEX[tone] === "#A1F919" ? "#000000" : "#FFFFFF";
 
   return (
     <motion.div

@@ -96,7 +96,7 @@ export function PenempatanTable({
                       <td className="whitespace-nowrap px-4 py-3">
                         {canManage ? (
                           <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
-                            className="rounded-lg border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
+                            className="rounded-lg border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                             style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                             <option value="AKTIF">Aktif</option>
                             <option value="SELESAI">Selesai</option>
@@ -112,11 +112,11 @@ export function PenempatanTable({
                         <td className="whitespace-nowrap px-4 py-3">
                           <div className="flex items-center gap-1.5">
                             <button onClick={() => onEdit?.(p)} disabled={busy}
-                              className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-[#0082FB] shadow-sm transition-colors hover:bg-blue-100 disabled:opacity-40 dark:bg-blue-900/20">
+                              className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-[#000000]/20">
                               <Pencil size={12} /> Edit
                             </button>
                             <button onClick={() => onHapus?.(p)} disabled={busy}
-                              className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
+                              className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                               <Trash2 size={12} /> Hapus
                             </button>
                           </div>
@@ -145,7 +145,7 @@ export function PenempatanTable({
                       </div>
                       {canManage ? (
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
-                          className="shrink-0 rounded-lg border-0 px-2 py-1 text-[10px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30"
+                          className="shrink-0 rounded-lg border-0 px-2 py-1 text-[10px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                           style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                           <option value="AKTIF">Aktif</option>
                           <option value="SELESAI">Selesai</option>
@@ -169,11 +169,11 @@ export function PenempatanTable({
                     {canManage && (
                       <div className="flex items-center gap-1.5 pl-[50px]">
                         <button onClick={() => onEdit?.(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-[#0082FB] shadow-sm transition-colors hover:bg-blue-100 disabled:opacity-40 dark:bg-blue-900/20">
+                          className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-[#000000]/20">
                           <Pencil size={12} /> Edit
                         </button>
                         <button onClick={() => onHapus?.(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 shadow-sm transition-colors hover:bg-red-100 disabled:opacity-40 dark:bg-red-900/20">
+                          className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                           <Trash2 size={12} /> Hapus
                         </button>
                       </div>

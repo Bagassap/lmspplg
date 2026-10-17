@@ -33,10 +33,9 @@ type SiswaProfil = {
   user: { id: string; nama: string; email: string | null; fotoProfil?: string | null } | null;
 };
 
-const HERO_GRADIENT = "#0082FB";
-const ACCENT_VIOLET = "#0082FB";
-const ACCENT_ORANGE = "#C3F84A";
-const PROFILE_CARD_GRADIENT = "#0082FB";
+const ACCENT_VIOLET = "#3E03B3";
+const ACCENT_ORANGE = "#A1F919";
+const PROFILE_CARD_GRADIENT = "#3E03B3";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
 function toTitleCase(str: string): string {
@@ -55,7 +54,7 @@ function formatTanggal(iso: string | null): string {
 }
 
 const INPUT =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#0064E0] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0064E0]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00AAFA]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 function EditProfilModal({
   siswa, kelasGradient, onClose, onSave,
@@ -125,7 +124,7 @@ function EditProfilModal({
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1C2B33]"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1E293B]"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
@@ -146,7 +145,7 @@ function EditProfilModal({
             </button>
           </div>
           <div className="max-h-[60vh] space-y-4 overflow-y-auto px-6 py-5">
-            <p className="rounded-xl bg-blue-50 px-3.5 py-2.5 text-xs text-blue-600 dark:bg-blue-900/20 dark:text-blue-300">
+            <p className="rounded-xl bg-[#F1EDFA] px-3.5 py-2.5 text-xs text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
               Lengkapi data diri kamu di bawah ini.
             </p>
             <div className="flex flex-col gap-1.5">
@@ -215,7 +214,7 @@ function EditProfilModal({
                 </div>
               </div>
             </div>
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error && <p className="text-xs text-[#5D900F]">{error}</p>}
           </div>
           <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">
             <button onClick={onClose}
@@ -224,7 +223,7 @@ function EditProfilModal({
             </button>
             <motion.button
               onClick={handleSave} disabled={saving}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,100,224,0.4)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
               style={{ background: kelasGradient }}
@@ -274,14 +273,15 @@ function SectionCard({
   children: React.ReactNode;
   action?: React.ReactNode;
 }) {
+  const fg = gradient === "#A1F919" ? "#000000" : "#FFFFFF";
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1C2B33]">
+    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1E293B]">
       <div
         className="flex items-center justify-between px-5 py-3.5"
-        style={{ background: gradient, color: gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF", borderBottom: "1px solid rgba(255,255,255,0.15)" }}
+        style={{ background: gradient, color: fg, borderBottom: "1px solid rgba(255,255,255,0.15)" }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: gradient === "#C3F84A" ? "#1C2B331A" : "#FFFFFF33" }}>
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: `${fg}1A` }}>
             <Icon size={14} />
           </div>
           <span className="text-sm font-semibold">{title}</span>
@@ -296,7 +296,7 @@ function SectionCard({
 function MiniStat({
   label, value, gradient, icon: Icon,
 }: { label: string; value: string; gradient: string; icon: React.ElementType }) {
-  const fg = gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF";
+  const fg = gradient === "#A1F919" ? "#000000" : "#FFFFFF";
   return (
     <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient, color: fg }}>
       <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
@@ -327,7 +327,7 @@ export default function SiswaProfilPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#0082FB] border-t-violet-600" />
+        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#3E03B3] border-t-violet-600" />
       </div>
     );
   }
@@ -347,7 +347,7 @@ export default function SiswaProfilPage() {
   const isP = profil.jenisKelamin === "Perempuan";
   const kelasGrad = PROFILE_CARD_GRADIENT;
   const avatarGrad = isP
-    ? "#0082FB"
+    ? "#3E03B3"
     : kelasGrad;
   const tglLahir = [profil.tempatLahir, formatTanggal(profil.tanggalLahir)].filter(Boolean).join(", ") || "—";
   const jurusanShort = (profil.jurusan ?? "—")
@@ -359,21 +359,18 @@ export default function SiswaProfilPage() {
     <div className="space-y-5">
       <motion.div
         initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-2xl p-6"
-        style={{ background: HERO_GRADIENT }}
+        className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
       >
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
-
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <User size={22} className="text-white sm:hidden" />
-              <User size={26} className="hidden text-white sm:block" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              <User size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+              <User size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Profil Saya</span>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Profil Saya</h1>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Profil Saya</span>
+              <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Profil Saya</h1>
             </div>
           </div>
         </div>
@@ -385,7 +382,7 @@ export default function SiswaProfilPage() {
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="grid gap-5 lg:grid-cols-3"
       >
-        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1C2B33]">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1E293B]">
           <div className="relative h-24" style={{ background: kelasGrad }}>
             <span className="absolute right-3 top-3 rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
               {kelasShort(profil.kelas.nama)}
@@ -394,7 +391,7 @@ export default function SiswaProfilPage() {
 
           <div className="flex flex-col items-center px-6 pb-6">
             <div className="relative -mt-12 mb-4">
-              <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1C2B33]">
+              <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
                 <Avatar
                   src={profil.user?.fotoProfil}
                   nama={nama}
@@ -407,7 +404,7 @@ export default function SiswaProfilPage() {
                 type="button"
                 onClick={() => setShowChangeFoto(true)}
                 title="Ganti foto profil"
-                className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-white shadow-md transition hover:brightness-90 dark:border-[#1C2B33]"
+                className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-white shadow-md transition hover:brightness-90 dark:border-[#000000]"
                 style={{ background: kelasGrad }}
               >
                 <Camera size={13} />
@@ -415,9 +412,9 @@ export default function SiswaProfilPage() {
             </div>
 
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
-            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-blue-600/10 px-3.5 py-1.5 dark:bg-blue-400/15">
-              <IdCard size={14} className="text-blue-600 dark:text-blue-300" />
-              <span className="font-mono text-sm font-extrabold tracking-wide text-blue-600 dark:text-blue-300">
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#3E03B3]/10 px-3.5 py-1.5 dark:bg-[#8F6DD3]/15">
+              <IdCard size={14} className="text-[#3E03B3] dark:text-[#8F6DD3]" />
+              <span className="font-mono text-sm font-extrabold tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
                 NIS {profil.nis}
               </span>
             </div>
@@ -431,8 +428,8 @@ export default function SiswaProfilPage() {
             {profil.jenisKelamin && (
               <span className={`mt-3 rounded-lg px-3.5 py-1.5 text-[11px] font-bold ${
                 isP
-                  ? "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"
-                  : "bg-[#0082FB] text-[#0082FB] dark:bg-[#0064E0]/20 dark:text-[#0082FB]"
+                  ? "bg-[#3E03B3] text-[#3E03B3] dark:bg-[#00AAFA]/20 dark:text-[#3E03B3]"
+                  : "bg-[#3E03B3] text-[#3E03B3] dark:bg-[#00AAFA]/20 dark:text-[#3E03B3]"
               }`}>
                 {profil.jenisKelamin}
               </span>
@@ -449,7 +446,7 @@ export default function SiswaProfilPage() {
 
             <motion.button
               onClick={() => setShowEdit(true)}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,100,224,0.4)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-white"
               style={{ background: kelasGrad }}
@@ -468,17 +465,17 @@ export default function SiswaProfilPage() {
           >
             <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               <InfoField icon={Users} label="Jenis Kelamin" value={profil.jenisKelamin}
-                iconBg={isP ? "#EAF3FF" : "#EAF3FF"} iconColor={isP ? "#1C2B33" : "#0082FB"} />
+                iconBg={isP ? "#F1EDFA" : "#F1EDFA"} iconColor={isP ? "#000000" : "#3E03B3"} />
               <InfoField icon={Calendar} label="Tempat, Tgl Lahir" value={tglLahir}
-                iconBg="#EAF3FF" iconColor="#0064E0" />
+                iconBg="#F1EDFA" iconColor="#00AAFA" />
               <InfoField icon={GraduationCap} label="Kelas" value={profil.kelas.nama}
-                iconBg="#EAF3FF" iconColor="#0064E0" />
+                iconBg="#F1EDFA" iconColor="#00AAFA" />
               <InfoField icon={BookOpen} label="Jurusan" value={profil.jurusan}
-                iconBg="#EAF3FF" iconColor="#0064E0" />
+                iconBg="#F1EDFA" iconColor="#00AAFA" />
               <InfoField icon={Users} label="Nama Orang Tua" value={profil.namaOrtu}
-                iconBg="#E3FBF0" iconColor="#00D67F" />
+                iconBg="#F6FEE8" iconColor="#5D900F" />
               <InfoField icon={Hash} label="NIS" value={profil.nis}
-                iconBg="#EAF3FF" iconColor="#0082FB" />
+                iconBg="#F1EDFA" iconColor="#3E03B3" />
             </div>
           </SectionCard>
 
@@ -498,9 +495,9 @@ export default function SiswaProfilPage() {
           >
             <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               <InfoField icon={Phone} label="No. HP" value={profil.noHp}
-                iconBg="#EAF3FF" iconColor="#0082FB" />
+                iconBg="#F1EDFA" iconColor="#3E03B3" />
               <InfoField icon={MapPin} label="Alamat Lengkap" value={formatAlamatLengkap(profil)}
-                iconBg="#EAF3FF" iconColor="#0082FB" />
+                iconBg="#F1EDFA" iconColor="#3E03B3" />
             </div>
           </SectionCard>
         </div>

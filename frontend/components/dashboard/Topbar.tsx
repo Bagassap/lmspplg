@@ -113,10 +113,10 @@ const NOTIF_TYPE_STYLE: Record<ApiNotifType, NotifType> = {
 };
 
 const NOTIF_STYLE: Record<NotifType, { bg: string; color: string }> = {
-  info:    { bg: "#EAF3FF", color: "#0082FB" },
-  success: { bg: "#E3FBF0", color: "#00D67F" },
-  warning: { bg: "#F4FFD9", color: "#8A9E1F" },
-  error:   { bg: "#FEE9EA", color: "#EF4444" },
+  info:    { bg: "#F1EDFA", color: "#3E03B3" },
+  success: { bg: "#F6FEE8", color: "#5D900F" },
+  warning: { bg: "#F6FEE8", color: "#5D900F" },
+  error:   { bg: "#F6FEE8", color: "#5D900F" },
 };
 
 const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
@@ -128,12 +128,31 @@ const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?:
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 
+const PURPLE_MOBILE_HEADER_PATHS = new Set([
+  "/dashboard",
+  "/absensi-harian",
+  "/pengumuman",
+  "/materi",
+  "/data-siswa",
+  "/catatan-siswa",
+  "/pengaturan",
+  "/manajemen-password",
+  "/magang/absensi",
+  "/magang/penempatan",
+  "/magang/rekap",
+  "/ujian-ukk/jadwal-soal",
+]);
+
+function hasPurpleMobileHeader(pathname: string): boolean {
+  return PURPLE_MOBILE_HEADER_PATHS.has(pathname.replace(/^\/(admin|guru|siswa)/, ""));
+}
+
 
 export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
-  const blueHeader = pathname.startsWith("/siswa/") || pathname === "/admin/dashboard" || pathname === "/admin/absensi-harian" || pathname === "/admin/pengumuman" || pathname === "/admin/materi" || pathname === "/admin/data-siswa" || pathname === "/admin/catatan-siswa" || pathname === "/admin/manajemen-password" || pathname === "/admin/magang/penempatan" || pathname === "/admin/magang/absensi" || pathname === "/admin/magang/rekap" || pathname === "/admin/ujian-ukk/jadwal-soal" || pathname === "/admin/pengaturan" || pathname === "/guru/dashboard" || pathname === "/guru/absensi-harian" || pathname === "/guru/pengumuman" || pathname === "/guru/materi" || pathname === "/guru/data-siswa" || pathname === "/guru/catatan-siswa" || pathname === "/guru/magang/penempatan" || pathname === "/guru/magang/absensi" || pathname === "/guru/magang/rekap" || pathname === "/guru/ujian-ukk/jadwal-soal";
+  const purpleMobile = hasPurpleMobileHeader(pathname);
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -309,24 +328,24 @@ export function Topbar({ user }: { user: UserPayload }) {
   return (
     <>
       <header
-        className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1C2B33] 2xl:px-10 ${
-          blueHeader ? "bg-[#0082FB] lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)]" : "bg-surface dark:bg-[#1C2B33]"
+        className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1E293B] 2xl:px-10 ${
+          purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#1E293B]"
         }`}
       >
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
           <div
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm"
-            style={{ background: blueHeader ? "rgba(255,255,255,0.2)" : "#0082FB" }}
+            className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
+            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
           >
-            <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto" />
+            <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
           </div>
           <div className="min-w-0">
             <span className="flex items-baseline gap-1">
-              <span className={`text-[15px] font-black tracking-tight ${blueHeader ? "text-white" : "text-[#0082FB]"}`}>LMS</span>
-              <span className={`text-[9px] font-bold tracking-[0.15em] ${blueHeader ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>PPLG</span>
+              <span className={`text-[15px] font-black tracking-tight ${purpleMobile ? "text-white" : "text-[#3E03B3]"}`}>LMS</span>
+              <span className={`text-[9px] font-bold tracking-[0.15em] ${purpleMobile ? "text-white/70" : "text-slate-400 dark:text-slate-500"}`}>PPLG</span>
             </span>
             {(pathname === "/siswa/dashboard" || pathname === "/guru/dashboard") && (
-              <p className={`truncate text-[10px] font-semibold leading-tight ${blueHeader ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
+              <p className={`truncate text-[10px] font-semibold leading-tight ${purpleMobile ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
                 {jakartaGreetingWord()}, {user.nama.split(" ")[0]} 👋
               </p>
             )}
@@ -390,7 +409,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             >
               <Clock size={16} />
               {pendingResetCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white ring-2 ring-white dark:ring-slate-900">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#A1F919] text-[8px] font-bold text-black ring-2 ring-white dark:ring-slate-900">
                   {pendingResetCount > 9 ? "9+" : pendingResetCount}
                 </span>
               )}
@@ -400,15 +419,15 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen((v) => !v)}
-              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
-                blueHeader
-                  ? "bg-white/15 text-white hover:bg-white/25 lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700/50 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white"
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700/50 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
+                purpleMobile
+                  ? "bg-white/15 text-white hover:bg-white/25"
                   : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
               }`}
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white ring-2 ring-white dark:ring-slate-900">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#A1F919] text-[8px] font-bold text-black ring-2 ring-white dark:ring-slate-900">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
@@ -421,7 +440,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1C2B33] dark:shadow-black/30"
+                  className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30"
                 >
                   <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-slate-700">
                     <div>
@@ -459,7 +478,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                           key={n.id}
                           onClick={() => handleNotifClick(n)}
                           className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50 ${
-                            !n.isRead ? "bg-blue-50/40 dark:bg-blue-900/10" : ""
+                            !n.isRead ? "bg-[#F1EDFA]/40 dark:bg-[#000000]/10" : ""
                           }`}
                         >
                           <div
@@ -496,26 +515,24 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
-              className={`flex items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors ${
-                blueHeader
-                  ? "bg-white/15 hover:bg-white/25 lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700"
-                  : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
+              className={`flex items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700 ${
+                purpleMobile ? "bg-white/15 hover:bg-white/25" : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
               }`}
             >
               <Avatar
                 src={user.fotoProfil}
                 nama={user.nama}
                 sizePx={28}
-                fallbackBg="#0082FB"
+                fallbackBg="#3E03B3"
                 textClassName="text-[11px] font-bold"
               />
-              <span className={`hidden text-sm font-medium sm:block ${blueHeader ? "text-white lg:text-gray-700 lg:dark:text-slate-200" : "text-gray-700 dark:text-slate-200"}`}>
+              <span className={`hidden text-sm font-medium sm:block lg:text-gray-700 lg:dark:text-slate-200 ${purpleMobile ? "text-white" : "text-gray-700 dark:text-slate-200"}`}>
                 {user.nama.split(" ")[0]}
               </span>
               <ChevronDown
                 size={13}
-                className={`shrink-0 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""} ${
-                  blueHeader ? "text-white/70 lg:text-gray-400 lg:dark:text-slate-400" : "text-gray-400 dark:text-slate-400"
+                className={`shrink-0 transition-transform duration-200 lg:text-gray-400 lg:dark:text-slate-400 ${dropdownOpen ? "rotate-180" : ""} ${
+                  purpleMobile ? "text-white/80" : "text-gray-400 dark:text-slate-400"
                 }`}
               />
             </button>
@@ -527,7 +544,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.13 }}
-                  className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-[10px] border border-gray-200 bg-white py-2 shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1C2B33] dark:shadow-black/30"
+                  className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-[10px] border border-gray-200 bg-white py-2 shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30"
                 >
                   <div className="mb-1 border-b border-gray-200 px-4 pb-3 pt-1 dark:border-slate-700">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.nama}</p>
@@ -575,7 +592,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
                   >
                     <LogOut size={14} />
                     Keluar
@@ -606,7 +623,7 @@ export function Topbar({ user }: { user: UserPayload }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.97 }}
               transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-4 top-20 z-50 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#1C2B33] sm:left-1/2 sm:right-auto sm:top-24 sm:w-full sm:max-w-lg sm:-translate-x-1/2"
+              className="fixed inset-x-4 top-20 z-50 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#1E293B] sm:left-1/2 sm:right-auto sm:top-24 sm:w-full sm:max-w-lg sm:-translate-x-1/2"
             >
               <div className="flex items-center gap-3 border-b border-gray-200 px-4 py-3.5 dark:border-slate-700">
                 <Search size={17} className="shrink-0 text-gray-400 dark:text-slate-400" />
@@ -646,7 +663,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                         onClick={() => { setSearchOpen(false); router.push(item.href); }}
                         onMouseEnter={() => setSelectedIdx(i)}
                         className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50"
-                        style={isSelected ? { backgroundColor: "rgba(0,130,251,0.1)" } : {}}
+                        style={isSelected ? { backgroundColor: "rgba(62,3,179,0.1)" } : {}}
                       >
                         <div
                           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
@@ -662,7 +679,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                         <div className="min-w-0 flex-1">
                           <p
                             className="text-sm font-medium"
-                            style={{ color: isSelected ? "#0082FB" : undefined }}
+                            style={{ color: isSelected ? "#3E03B3" : undefined }}
                           >
                             {item.label}
                           </p>

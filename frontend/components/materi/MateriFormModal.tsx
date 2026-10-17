@@ -20,7 +20,7 @@ export type MateriItem = {
 
 type KelasOption = { id: string; nama: string };
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#0082FB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:bg-slate-700";
+const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
 
 export function MateriFormModal({
   open, materi, onClose, onSaved, mapelOptions,
@@ -119,7 +119,7 @@ export function MateriFormModal({
             className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div
-              className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5"
+              className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5"
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -143,14 +143,14 @@ export function MateriFormModal({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Judul <span className="text-red-500">*</span>
+                    Judul <span className="text-[#5D900F]">*</span>
                   </label>
                   <input type="text" value={judul} onChange={(e) => setJudul(e.target.value)}
                     placeholder="Contoh: Modul Dasar Pemrograman Web" className={INPUT_CLS} />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Mata Pelajaran <span className="text-red-500">*</span>
+                    Mata Pelajaran <span className="text-[#5D900F]">*</span>
                   </label>
                   {mapelOptions ? (
                     <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
@@ -187,8 +187,8 @@ export function MateriFormModal({
                         className={
                           "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " +
                           (active
-                            ? "border-[#0082FB] bg-[#0082FB] text-white"
-                            : "border-gray-200 bg-white text-gray-600 hover:border-[#0082FB]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")
+                            ? "border-[#3E03B3] bg-[#3E03B3] text-white"
+                            : "border-gray-200 bg-white text-gray-600 hover:border-[#3E03B3]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")
                         }
                       >
                         {active && <Check size={12} />}
@@ -210,10 +210,10 @@ export function MateriFormModal({
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  File Modul <span className="text-red-500">*</span>
+                  File Modul <span className="text-[#5D900F]">*</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40">
-                  <Upload size={16} className="shrink-0 text-[#0082FB]" />
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600 dark:bg-slate-700/40">
+                  <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0 flex-1">
                     {file ? (
                       <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-gray-800 dark:text-slate-200">
@@ -231,7 +231,7 @@ export function MateriFormModal({
               </div>
 
               {error && (
-                <p className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#A1F919]">
                   {error}
                 </p>
               )}
@@ -249,7 +249,7 @@ export function MateriFormModal({
                 type="button"
                 onClick={handleSubmit}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-xl bg-[#0082FB] px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
+                className="flex items-center gap-2 rounded-xl bg-[#3E03B3] px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
               >
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Materi"}

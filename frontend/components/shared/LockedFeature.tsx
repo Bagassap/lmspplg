@@ -6,7 +6,7 @@ import { ChevronLeft, Clock, Lock, Sparkles } from "lucide-react";
 
 type FeatureType = "magang" | "ujian-ukk";
 
-const BRAND_GRADIENT = "#0082FB";
+const BRAND_GRADIENT = "#3E03B3";
 
 const CONFIG: Record<FeatureType, {
   title: string;

@@ -20,10 +20,10 @@ function formatDate(iso: string): string {
 }
 
 const ROW_PALETTES = [
-  { bar: "#0082FB", gradient: "#0082FB", tint: "#EAF3FF" },
-  { bar: "#0064E0", gradient: "#0064E0", tint: "#DCEBFF" },
-  { bar: "#EF4444", gradient: "#EF4444", tint: "#FEE9EA" },
-  { bar: "#8A9E1F", gradient: "#C3F84A", tint: "#F4FFD9" },
+  { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
+  { bar: "#00AAFA", gradient: "#00AAFA", tint: "#F1EDFA" },
+  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
+  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -67,46 +67,44 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
   const chunked = useMemo(() => chunkOf4(filtered), [filtered]);
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <div className="hidden space-y-5 lg:block">
       {!embedded && (
-        <div className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: "#0082FB" }}>
-          <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
-          <div className="pointer-events-none absolute -bottom-8 right-32 h-36 w-36 rounded-full bg-white/8" />
+        <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="relative flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg">
-              <BookOpen size={26} className="text-white" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
+              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              <BookOpen size={26} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Belajar Mandiri</span>
-              <h1 className="text-2xl font-extrabold leading-tight text-white">Materi Pembelajaran</h1>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Belajar Mandiri</span>
+              <h1 className="text-2xl font-extrabold leading-tight text-slate-800 dark:text-white">Materi Pembelajaran</h1>
             </div>
           </div>
         </div>
       )}
 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-        <div className="px-5 pt-5 pb-0" style={{ background: "rgba(0,130,251,0.05)" }}>
+        <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#0082FB" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#3E03B3" }}>
               <BookOpen size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-            <span className="ml-1 rounded-lg bg-[#0082FB]/10 px-2 py-0.5 text-[10px] font-bold text-[#0082FB]">{filtered.length} materi</span>
+            <span className="ml-1 rounded-lg bg-[#3E03B3]/10 px-2 py-0.5 text-[10px] font-bold text-[#3E03B3]">{filtered.length} materi</span>
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
             <input value={search} onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Cari judul materi, mapel, atau deskripsi..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-blue-900/30" />
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
           </div>
         </div>
 
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -127,7 +125,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                 return (
                   <div key={m.id} className="flex items-center gap-2.5 px-4 py-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                      <FileText size={14} style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }} />
+                      <FileText size={14} style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
@@ -143,7 +141,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                     {m.fileUrl ? (
                       <button onClick={() => router.push(`/siswa/materi/${m.id}`)} title="Buka Modul"
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white shadow-sm"
-                        style={{ background: "#0082FB" }}>
+                        style={{ background: "#3E03B3" }}>
                         <BookOpen size={14} />
                       </button>
                     ) : (
@@ -173,7 +171,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                            <FileText size={13} style={{ color: rp.gradient === "#C3F84A" ? "#1C2B33" : "#FFFFFF" }} />
+                            <FileText size={13} style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }} />
                           </div>
                           <p className="max-w-[220px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
                         </div>
@@ -192,7 +190,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                           {m.fileUrl ? (
                             <button onClick={() => router.push(`/siswa/materi/${m.id}`)}
                               className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-105"
-                              style={{ background: "#0082FB" }}>
+                              style={{ background: "#3E03B3" }}>
                               <BookOpen size={12} /> Buka Modul
                             </button>
                           ) : (
@@ -210,18 +208,18 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
       </div>
       </div>
 
-      <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#F1F5F8] px-4 py-3 dark:bg-[#1C2B33] lg:hidden">
+      <div className="relative isolate -mx-4 space-y-3 overflow-hidden bg-[#FFFFFF] px-4 py-3 dark:bg-[#1E293B] lg:hidden">
         {uniqueMapel.length > 1 && (
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button type="button" onClick={() => setMapelFilter(null)}
               className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-[0_2px_6px_rgba(0,0,0,0.05)] transition-colors"
-              style={mapelFilter === null ? { background: "#0082FB", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
+              style={mapelFilter === null ? { background: "#3E03B3", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
               Semua
             </button>
             {uniqueMapel.map((mp) => (
               <button key={mp} type="button" onClick={() => setMapelFilter(mp)}
                 className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-[0_2px_6px_rgba(0,0,0,0.05)] transition-colors"
-                style={mapelFilter === mp ? { background: "#0082FB", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
+                style={mapelFilter === mp ? { background: "#3E03B3", color: "#fff" } : { background: "#fff", color: "#64748b" }}>
                 {mp}
               </button>
             ))}
@@ -231,21 +229,21 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
+              className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
         </AnimatePresence>
 
         {loading && (
-          <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
+          <div className="rounded-3xl bg-white py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
             <p className="text-sm text-slate-400">Memuat data...</p>
           </div>
         )}
         {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1C2B33]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
-              <BookOpen size={24} style={{ color: "#0082FB" }} />
+          <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+              <BookOpen size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada materi dengan kata kunci "${search.trim()}"` : "Belum ada materi dari gurumu"}</p>
           </div>
@@ -256,12 +254,12 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
               <motion.div key={gi}
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: gi * 0.05 }}
-                className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1C2B33]">
+                className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-[#1E293B]">
                 {group.map((m) => (
                   <button key={m.id} type="button" onClick={() => setDetailItem(m)}
                     className="flex w-full items-center gap-3 p-4 text-left">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18" }}>
-                      <FileText size={18} style={{ color: "#0082FB" }} />
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318" }}>
+                      <FileText size={18} style={{ color: "#3E03B3" }} />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{m.judul}</p>
@@ -274,7 +272,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                         </span>
                       </div>
                     </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB14", color: "#0082FB" }}>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B314", color: "#3E03B3" }}>
                       <ChevronRight size={15} />
                     </span>
                   </button>
@@ -287,7 +285,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
 
       <AnimatePresence>
         {detailItem && (
-          <MobileDetailModal onClose={() => setDetailItem(null)} accent="#0082FB">
+          <MobileDetailModal onClose={() => setDetailItem(null)} accent="#3E03B3">
             <div className="relative px-6 pb-6 pt-10 text-center">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
               <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
@@ -318,7 +316,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
             <div className="relative px-6 pb-6 pt-4">
               {detailItem.fileUrl ? (
                 <button type="button" onClick={() => { setDetailItem(null); router.push(`/siswa/materi/${detailItem.id}`); }}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold text-[#0082FB] shadow-lg">
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold text-[#3E03B3] shadow-lg">
                   <BookOpen size={16} /> Buka Modul
                 </button>
               ) : (

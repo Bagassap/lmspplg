@@ -14,9 +14,9 @@ const INLINE_LIMIT = 5;
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
 const RANK_STYLE = [
-  { bg: "#F4FFD9", clr: "#8A9E1F" },
-  { bg: "#DCEBFF", clr: "#0064E0" },
-  { bg: "#E7EAEC", clr: "#1C2B33" },
+  { bg: "#F6FEE8", clr: "#5D900F" },
+  { bg: "#F1EDFA", clr: "#00AAFA" },
+  { bg: "#F1EDFA", clr: "#000000" },
 ];
 
 function RankBadge({ index }: { index: number }) {
@@ -36,9 +36,9 @@ function RankBadge({ index }: { index: number }) {
 }
 
 function severityColor(pct: number) {
-  if (pct < 50) return "#EF4444";
-  if (pct < 75) return "#8A9E1F";
-  return "#0082FB";
+  if (pct < 50) return "#5D900F";
+  if (pct < 75) return "#5D900F";
+  return "#3E03B3";
 }
 
 function StatPill({
@@ -96,37 +96,37 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
       {cta ? (
         <button type="button" onClick={() => setShowModal(true)}
           className="flex w-full items-center gap-3 rounded-3xl p-4 text-left transition-transform active:scale-[0.98]"
-          style={{ background: "#C3F84A" }}>
+          style={{ background: "#A1F919" }}>
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white">
-            <TrendingDown size={18} className="text-[#1C2B33]" />
+            <TrendingDown size={18} className="text-[#000000]" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-[#1C2B33]">Siswa Bermasalah</p>
-            <p className="truncate text-[10.5px] font-semibold text-[#1C2B33]">
+            <p className="text-sm font-extrabold text-[#000000]">Siswa Bermasalah</p>
+            <p className="truncate text-[10.5px] font-semibold text-[#000000]">
               {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
             </p>
           </div>
-          <ArrowRight size={16} className="shrink-0 text-[#1C2B33]" />
+          <ArrowRight size={16} className="shrink-0 text-[#000000]" />
         </button>
       ) : compact ? (
         <button type="button" onClick={() => setShowModal(true)}
-          className="flex w-full items-center gap-3 rounded-2xl p-3 text-left" style={{ backgroundColor: "#FEE9EA" }}>
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: "#EF4444" }}>
+          className="flex w-full items-center gap-3 rounded-2xl p-3 text-left" style={{ backgroundColor: "#F6FEE8" }}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-black" style={{ backgroundColor: "#A1F919" }}>
             <TrendingDown size={14} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[12.5px] font-bold" style={{ color: "#EF4444" }}>Siswa Bermasalah</p>
-            <p className="truncate text-[10px] font-semibold" style={{ color: "#EF4444" }}>
+            <p className="text-[12.5px] font-bold" style={{ color: "#5D900F" }}>Siswa Bermasalah</p>
+            <p className="truncate text-[10px] font-semibold" style={{ color: "#5D900F" }}>
               {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
             </p>
           </div>
-          <ArrowRight size={14} className="shrink-0" style={{ color: "#EF4444" }} />
+          <ArrowRight size={14} className="shrink-0" style={{ color: "#5D900F" }} />
         </button>
       ) : (
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#EF4444" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-black" style={{ background: "#A1F919" }}>
               <TrendingDown size={18} />
             </span>
             <div>
@@ -141,7 +141,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
             ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
               <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
                 className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition-colors ${
-                  periode === opt.key ? "bg-red-500 text-white shadow-sm" : "text-slate-500 dark:text-slate-400"
+                  periode === opt.key ? "bg-[#A1F919] text-black shadow-sm" : "text-slate-500 dark:text-slate-400"
                 }`}>
                 {opt.label}
               </button>
@@ -157,7 +157,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           </div>
         ) : inlineRows.length === 0 ? (
           <div className="mt-4 flex flex-col items-center gap-2 py-6 text-center">
-            <ShieldCheck size={22} className="text-emerald-400" />
+            <ShieldCheck size={22} className="text-[#5D900F]" />
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Tidak ada siswa dengan catatan alpa pada periode ini
             </p>
@@ -183,7 +183,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
 
         {totalBermasalah > INLINE_LIMIT && (
           <button type="button" onClick={() => setShowModal(true)}
-            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-500 hover:bg-red-100 dark:bg-red-900/20">
+            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#F6FEE8] px-3 py-2 text-xs font-bold text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
             Lihat semua {totalBermasalah} siswa <ArrowRight size={12} />
           </button>
         )}
@@ -224,7 +224,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                       <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
                         className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
                           periode === opt.key
-                            ? "bg-[#0082FB] text-white shadow-sm"
+                            ? "bg-[#3E03B3] text-white shadow-sm"
                             : "text-slate-500 dark:text-slate-400"
                         }`}>
                         {opt.label}
@@ -239,16 +239,16 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
               </div>
 
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
-                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#EF4444" value={String(totalBermasalah)} label="Bermasalah" />
-                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#8A9E1F" textColor="#1C2B33" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
-                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#0082FB" value={`${rataKehadiran}%`} label="Rata Hadir" />
+                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#5D900F" textColor="#000000" value={String(totalBermasalah)} label="Bermasalah" />
+                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#5D900F" textColor="#000000" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+                <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#3E03B3" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 
               {loading ? (
                 <div className="flex-1 py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
               ) : rows.length === 0 ? (
                 <div className="flex flex-1 flex-col items-center justify-center gap-2 py-10 text-center">
-                  <ShieldCheck size={22} className="text-emerald-400" />
+                  <ShieldCheck size={22} className="text-[#5D900F]" />
                   <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                     Tidak ada siswa dengan catatan alpa pada periode ini
                   </p>
@@ -284,7 +284,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                               <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
                             </div>
                             <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-                            <span className="mx-auto rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-extrabold text-red-500 dark:bg-red-950">
+                            <span className="mx-auto rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#5D900F] dark:bg-[#48700B]">
                               {r.summary.ALPA}x
                             </span>
                             <div className="flex items-center gap-2">

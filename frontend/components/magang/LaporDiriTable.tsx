@@ -65,11 +65,11 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         {r.sudahLapor ? (
-                          <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "#E3FBF0", color: "#00D67F" }}>
+                          <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>
                             <CheckCircle2 size={10} /> Sudah Lapor
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-500 dark:bg-red-900/20">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:bg-[#48700B]/20">
                             <XCircle size={10} /> Belum Lapor
                           </span>
                         )}
@@ -78,7 +78,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                         {r.laporDiri ? (
                           <a href={`/api/uploads${r.laporDiri.fileUrl}`} target="_blank" rel="noopener noreferrer"
                             className="flex w-fit items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:brightness-105"
-                            style={{ background: "#0082FB" }}>
+                            style={{ background: "#3E03B3" }}>
                             <Download size={11} /> {r.laporDiri.fileName.length > 20 ? `${r.laporDiri.fileName.slice(0, 20)}…` : r.laporDiri.fileName}
                           </a>
                         ) : (
@@ -108,11 +108,11 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                         <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{r.siswa.nis} · {r.tempatMagang.namaTempat}</p>
                       </div>
                       {r.sudahLapor ? (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold" style={{ backgroundColor: "#E3FBF0", color: "#00D67F" }}>
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>
                           <CheckCircle2 size={10} /> Lapor
                         </span>
                       ) : (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-red-50 px-2 py-1 text-[10px] font-semibold text-red-500 dark:bg-red-900/20">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:bg-[#48700B]/20">
                           <XCircle size={10} /> Belum
                         </span>
                       )}
@@ -123,7 +123,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                     {r.laporDiri ? (
                       <a href={`/api/uploads${r.laporDiri.fileUrl}`} target="_blank" rel="noopener noreferrer"
                         className="ml-[50px] flex w-fit items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                        style={{ background: "#0082FB" }}>
+                        style={{ background: "#3E03B3" }}>
                         <Download size={11} /> {r.laporDiri.fileName.length > 24 ? `${r.laporDiri.fileName.slice(0, 24)}…` : r.laporDiri.fileName}
                       </a>
                     ) : (

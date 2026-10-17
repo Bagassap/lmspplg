@@ -86,7 +86,7 @@ export function ImportSiswaModal({
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0082FB] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#3E03B3] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
                   <FileSpreadsheet size={18} className="text-white" />
@@ -106,12 +106,12 @@ export function ImportSiswaModal({
               </ol>
 
               <button type="button" onClick={() => downloadTemplate(toast)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 px-4 py-3 text-sm font-bold text-slate-600 transition-colors hover:border-blue-300 hover:bg-blue-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 px-4 py-3 text-sm font-bold text-slate-600 transition-colors hover:border-[#8F6DD3] hover:bg-[#F1EDFA] dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
                 <Download size={15} /> Unduh Template Excel
               </button>
 
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600 dark:bg-slate-700/40">
-                <Upload size={16} className="shrink-0 text-[#0082FB]" />
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600 dark:bg-slate-700/40">
+                <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0 flex-1">
                   {file ? (
                     <p className="truncate text-sm font-semibold text-gray-800 dark:text-slate-200">{file.name}</p>
@@ -124,7 +124,7 @@ export function ImportSiswaModal({
               </label>
 
               <button onClick={submit} disabled={!file || uploading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0082FB] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
                 {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
                 {uploading ? "Memproses…" : "Proses Impor"}
               </button>
@@ -132,21 +132,21 @@ export function ImportSiswaModal({
               {result && (
                 <div className="space-y-3 border-t border-slate-100 pt-4 dark:border-slate-700">
                   {result.berhasil.length > 0 && (
-                    <div className="rounded-xl bg-emerald-50 p-3 dark:bg-emerald-900/20">
-                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
+                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#A1F919]">
                         <CheckCircle2 size={13} /> {result.berhasil.length} akun berhasil dibuat
                       </p>
-                      <ul className="max-h-24 space-y-0.5 overflow-y-auto text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
+                      <ul className="max-h-24 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#A1F919]/80">
                         {result.berhasil.map((r) => <li key={r.baris}>Baris {r.baris}: {r.nama} (NIS {r.nis})</li>)}
                       </ul>
                     </div>
                   )}
                   {result.gagal.length > 0 && (
-                    <div className="rounded-xl bg-red-50 p-3 dark:bg-red-900/20">
-                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-red-700 dark:text-red-400">
+                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
+                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#A1F919]">
                         <XCircle size={13} /> {result.gagal.length} baris gagal
                       </p>
-                      <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-red-700/80 dark:text-red-400/80">
+                      <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#A1F919]/80">
                         {result.gagal.map((r) => <li key={r.baris}>Baris {r.baris} ({r.nama || "—"}): {r.alasan}</li>)}
                       </ul>
                     </div>

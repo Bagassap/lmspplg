@@ -19,7 +19,7 @@ type MeResponse = {
 };
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
-const GRADIENT = "#0082FB";
+const GRADIENT = "#3E03B3";
 
 export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
   const [me, setMe] = useState<MeResponse | null>(null);
@@ -42,7 +42,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
         <motion.div
-          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1C2B33]"
+          className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1E293B]"
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
@@ -88,7 +88,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                     type="button"
                     onClick={() => setShowChangeFoto(true)}
                     title="Ganti foto profil"
-                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#0064E0] text-white shadow-md transition hover:brightness-90"
+                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90"
                   >
                     <Camera size={11} />
                   </button>
@@ -107,8 +107,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
             <div className="space-y-3 px-6 py-5">
               {me.email && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                    <Mail size={15} className="text-blue-500" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-[#000000]/20">
+                    <Mail size={15} className="text-[#00AAFA]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Email</p>
@@ -118,8 +118,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0082FB] dark:bg-[#0064E0]/20">
-                    <IdCard size={15} className="text-[#0082FB]" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-[#00AAFA]/20">
+                    <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Login ID</p>
@@ -129,8 +129,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-                    <IdCard size={15} className="text-emerald-500" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                    <IdCard size={15} className="text-[#5D900F]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIP</p>
@@ -183,7 +183,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                   <Avatar src={me.fotoProfil} nama={me.nama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
                 </div>
                 <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
-                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#0064E0] text-white shadow-md transition hover:brightness-90">
+                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90">
                   <Camera size={11} />
                 </button>
               </div>
@@ -208,8 +208,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
             <div className="mx-auto max-w-md space-y-3 px-6">
               {me.email && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                    <Mail size={15} className="text-blue-500" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-[#000000]/20">
+                    <Mail size={15} className="text-[#00AAFA]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Email</p>
@@ -219,8 +219,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0082FB] dark:bg-[#0064E0]/20">
-                    <IdCard size={15} className="text-[#0082FB]" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-[#00AAFA]/20">
+                    <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Login ID</p>
@@ -230,8 +230,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-                    <IdCard size={15} className="text-emerald-500" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                    <IdCard size={15} className="text-[#5D900F]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIP</p>

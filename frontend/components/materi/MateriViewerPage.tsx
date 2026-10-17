@@ -6,13 +6,11 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, BookOpen, AlertCircle, Loader2, Download, FileText } from "lucide-react";
 import type { MateriItem } from "./MateriFormModal";
 
-// react-pdf touches browser-only Canvas APIs (DOMMatrix) at module-eval time,
-// yang crash saat SSR — muat khusus client, sama seperti MateriPdfViewerModal.
 const MateriPdfContinuous = dynamic(
   () => import("./MateriPdfContinuous").then((m) => m.MateriPdfContinuous),
   { ssr: false, loading: () => (
     <div className="flex items-center justify-center gap-3 py-20">
-      <Loader2 size={28} className="animate-spin text-blue-500" />
+      <Loader2 size={28} className="animate-spin text-[#00AAFA]" />
     </div>
   ) },
 );
@@ -21,10 +19,6 @@ function isPdf(fileUrl: string | null, fileName: string | null) {
   return (fileName ?? fileUrl ?? "").toLowerCase().endsWith(".pdf");
 }
 
-// Halaman penuh (bukan modal) untuk melihat satu Materi — dulu modal dengan
-// navigasi "Halaman n/N" bertombol panah, sekarang halaman biasa dan semua
-// halaman PDF-nya ditumpuk vertikal, tinggal di-scroll (lihat
-// MateriPdfContinuous).
 export function MateriViewerPage({ materiId, backHref }: { materiId: string; backHref: string }) {
   const router = useRouter();
   const [materi, setMateri] = useState<MateriItem | null>(null);
@@ -35,9 +29,6 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  // Diberikan ke MateriPdfContinuous supaya indikator "Halaman n/N" di bawah
-  // ikut ter-update saat di-scroll, tanpa tombol geser — lihat komponen itu
-  // untuk cara pelacakannya (IntersectionObserver).
   const handlePageChange = useCallback((current: number, total: number) => {
     setCurrentPage(current);
     setTotalPages(total);
@@ -59,9 +50,6 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
   const proxyUrl = fileUrl ? `/api${fileUrl}` : null;
   const pdf = fileUrl ? isPdf(fileUrl, materi?.fileName ?? null) : false;
 
-  // File materi diambil lewat proxy Next.js (bukan langsung ke backend)
-  // supaya cookie sesi ikut terkirim, lalu dikonversi jadi blob URL sebelum
-  // diserahkan ke <Document>.
   useEffect(() => {
     setBlobUrl((prev) => { if (prev) URL.revokeObjectURL(prev); return null; });
     setPdfError(false);
@@ -75,13 +63,8 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
     return () => { cancelled = true; if (createdUrl) URL.revokeObjectURL(createdUrl); };
   }, [proxyUrl, pdf]);
 
-  // fixed inset-0 z-[9999] menutupi seluruh viewport (termasuk Sidebar/Topbar
-  // dari DashboardShell yang tetap ter-mount di baliknya, sama seperti pola
-  // yang dipakai halaman Kerjakan Tugas) — supaya "Lihat Materi" jadi
-  // pengalaman full-screen tanpa chrome dashboard, bukan sekadar halaman
-  // biasa di dalam <main> yang dibatasi sidebar+max-width.
   const TopBar = materi ? (
-    <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 sm:px-6 sm:py-4" style={{ background: "#0082FB" }}>
+    <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 sm:px-6 sm:py-4" style={{ background: "#3E03B3" }}>
       <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
       <button onClick={() => router.push(backHref)}
         className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white transition-colors hover:bg-white/25">
@@ -102,7 +85,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
       )}
     </div>
   ) : (
-    <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 sm:px-6 sm:py-4" style={{ background: "#0082FB" }}>
+    <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 sm:px-6 sm:py-4" style={{ background: "#3E03B3" }}>
       <button onClick={() => router.push(backHref)}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white transition-colors hover:bg-white/25">
         <ArrowLeft size={17} />
@@ -113,7 +96,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col bg-[#F1F5F8] dark:bg-slate-900">
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-[#FFFFFF] dark:bg-slate-900">
         {TopBar}
         <div className="flex flex-1 items-center justify-center text-sm font-semibold text-slate-400">Memuat…</div>
       </div>
@@ -122,7 +105,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
 
   if (notFound || !materi) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col bg-[#F1F5F8] dark:bg-slate-900">
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-[#FFFFFF] dark:bg-slate-900">
         {TopBar}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <AlertCircle size={36} className="mx-auto mb-3 text-slate-300 dark:text-slate-600" />
@@ -133,35 +116,35 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col bg-[#F1F5F8] dark:bg-slate-900">
+    <div className="fixed inset-0 z-[9999] flex flex-col bg-[#FFFFFF] dark:bg-slate-900">
       {TopBar}
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!fileUrl ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-slate-800">
-              <AlertCircle size={28} className="text-[#C3F84A]" />
+              <AlertCircle size={28} className="text-[#5D900F]" />
             </div>
             <p className="font-bold text-gray-700 dark:text-slate-200">Materi ini belum punya file</p>
           </div>
         ) : !pdf ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-900/20">
-              <FileText size={28} className="text-blue-500" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-[#000000]/20">
+              <FileText size={28} className="text-[#00AAFA]" />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">{materi.fileName ?? "File modul"}</p>
               <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">File ini bukan PDF, jadi tidak bisa ditampilkan di sini</p>
             </div>
             <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md" style={{ background: "#0082FB" }}>
+              className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md" style={{ background: "#3E03B3" }}>
               <Download size={14} /> Unduh File
             </a>
           </div>
         ) : pdfError ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-slate-800">
-              <AlertCircle size={28} className="text-[#C3F84A]" />
+              <AlertCircle size={28} className="text-[#5D900F]" />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>
@@ -170,7 +153,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
           </div>
         ) : !blobUrl ? (
           <div className="flex min-h-full items-center justify-center gap-3">
-            <Loader2 size={28} className="animate-spin text-blue-500" />
+            <Loader2 size={28} className="animate-spin text-[#00AAFA]" />
             <span className="text-sm text-gray-500 dark:text-slate-400">Memuat PDF…</span>
           </div>
         ) : (

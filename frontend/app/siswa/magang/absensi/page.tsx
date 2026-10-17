@@ -205,25 +205,20 @@ export default function SiswaMagangAbsensiPage() {
     <div className="space-y-5">
 
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="relative hidden overflow-hidden rounded-2xl p-6 lg:block"
-        style={{ background: BRAND_GRADIENT }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-14 right-28 h-52 w-52 rounded-full bg-white/6" />
-        <div className="pointer-events-none absolute top-3 left-[45%] h-24 w-24 rounded-full bg-white/5" />
-        <div className="pointer-events-none absolute -left-8 -bottom-8 h-36 w-36 rounded-full bg-white/5" />
-
+        className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
               initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 12, stiffness: 300, delay: 0.05 }}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-              <ClipboardCheck size={22} className="text-white sm:hidden" />
-              <ClipboardCheck size={26} className="hidden text-white sm:block" />
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+              <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
             </motion.div>
             <div className="min-w-0">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Presensi PKL</span>
-              <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Absensi PKL</h1>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Presensi PKL</span>
+              <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Absensi PKL</h1>
             </div>
           </div>
         </div>
@@ -232,19 +227,19 @@ export default function SiswaMagangAbsensiPage() {
       {loading ? (
         <>
           <div className="hidden items-center justify-center rounded-2xl border border-slate-100 bg-white py-20 dark:border-slate-700 dark:bg-slate-800 lg:flex">
-            <Loader2 size={24} className="animate-spin text-[#0082FB]" />
+            <Loader2 size={24} className="animate-spin text-[#3E03B3]" />
           </div>
-          <div className="-m-4 bg-[#F1F5F8] p-4 dark:bg-[#1C2B33] lg:hidden">
-            <div className="flex items-center justify-center rounded-3xl bg-white py-20 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-              <Loader2 size={24} className="animate-spin text-[#0082FB]" />
+          <div className="-m-4 bg-[#FFFFFF] p-4 dark:bg-[#1E293B] lg:hidden">
+            <div className="flex items-center justify-center rounded-3xl bg-white py-20 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
+              <Loader2 size={24} className="animate-spin text-[#3E03B3]" />
             </div>
           </div>
         </>
       ) : !hasPenempatan ? (
         <>
           <div className="hidden flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:flex">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
-              <AlertCircle size={26} className="text-red-500" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F6FEE8] dark:bg-[#48700B]/20">
+              <AlertCircle size={26} className="text-[#5D900F]" />
             </div>
             <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
             <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
@@ -259,10 +254,10 @@ export default function SiswaMagangAbsensiPage() {
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
             </div>
-            <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
-              <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
-                  <AlertCircle size={26} className="text-red-500" />
+            <div className="rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
+              <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                  <AlertCircle size={26} className="text-[#5D900F]" />
                 </div>
                 <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
                 <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">
@@ -373,12 +368,12 @@ export default function SiswaMagangAbsensiPage() {
             {data?.tempatMagang && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.25 }}
-                className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-5">
+                className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-5">
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#EAF3FF" }}>
-                    <Briefcase size={18} style={{ color: "#0082FB" }} />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#F1EDFA" }}>
+                    <Briefcase size={18} style={{ color: "#3E03B3" }} />
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{data.tempatMagang.namaTempat}</p>
@@ -399,9 +394,9 @@ export default function SiswaMagangAbsensiPage() {
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
             </div>
-            <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+            <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
 
-            <div className="rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+            <div className="rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
               <div className="relative grid grid-cols-2 divide-x divide-white/20 overflow-hidden rounded-2xl" style={{ background: BRAND_GRADIENT }}>
                 <div className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/10" />
                 <div className="pointer-events-none absolute -left-8 -bottom-8 h-24 w-24 rounded-full bg-white/8" />
@@ -433,12 +428,12 @@ export default function SiswaMagangAbsensiPage() {
             {data?.tempatMagang && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.25 }}
-                className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+                className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#EAF3FF" }}>
-                    <Briefcase size={18} style={{ color: "#0082FB" }} />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#F1EDFA" }}>
+                    <Briefcase size={18} style={{ color: "#3E03B3" }} />
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{data.tempatMagang.namaTempat}</p>
@@ -628,20 +623,20 @@ function FormAbsen({
   const fotoField = (
     <div>
       <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-        <Camera size={12} /> {fotoLabel} <span className="text-red-400 normal-case">*wajib</span>
+        <Camera size={12} /> {fotoLabel} <span className="text-[#5D900F] normal-case">*wajib</span>
       </p>
       {fotoPreview ? (
         <div className="relative flex h-18 items-center">
           <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
           <button onClick={onFotoClear}
-            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md">
+            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#A1F919] text-black shadow-md">
             ×
           </button>
         </div>
       ) : (
         <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
-          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-[#0082FB] hover:text-[#0082FB] disabled:cursor-wait disabled:opacity-70 ${
-            fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
+          className={`flex h-18 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed text-slate-400 transition-colors hover:border-[#3E03B3] hover:text-[#3E03B3] disabled:cursor-wait disabled:opacity-70 ${
+            fotoMissing ? "border-[#A1F919] dark:border-[#48700B]" : "border-slate-200 dark:border-slate-600"
           }`}>
           {compressingFoto ? (
             <>
@@ -658,34 +653,34 @@ function FormAbsen({
       )}
       <input ref={fileInputRef} type="file" accept="image/*" {...(isIzinSakit ? {} : { capture: "user" as const })}
         className="hidden" onChange={onFotoChange} />
-      {fotoMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">{fotoLabel} wajib diisi</p>}
+      {fotoMissing && <p className="mt-1 text-[11px] font-semibold text-[#5D900F]">{fotoLabel} wajib diisi</p>}
     </div>
   );
 
   const lokasiField = (
     <div>
       <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-        <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
+        <MapPin size={12} /> Lokasi <span className="text-[#5D900F] normal-case">*wajib</span>
       </p>
       <div className={`flex h-18 items-center gap-2 rounded-xl border bg-slate-50 px-3 py-2.5 dark:bg-slate-900/40 ${
-        lokasiMissing ? "border-red-300 dark:border-red-800" : "border-slate-100 dark:border-slate-700"
+        lokasiMissing ? "border-[#A1F919] dark:border-[#48700B]" : "border-slate-100 dark:border-slate-700"
       }`}>
-        <MapPin size={15} className={lokasi ? "text-emerald-500" : "text-red-400"} />
+        <MapPin size={15} className={lokasi ? "text-[#5D900F]" : "text-[#5D900F]"} />
         {lokasiLoading ? (
           <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
         ) : lokasi ? (
           <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
         ) : (
           <div className="flex flex-1 items-center justify-between gap-2">
-            <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-            <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-[#0082FB] hover:underline">
+            <span className="text-xs text-[#5D900F]">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
+            <button type="button" onClick={onRetryLokasi} className="shrink-0 text-[11px] font-bold text-[#3E03B3] hover:underline">
               Coba lagi
             </button>
           </div>
         )}
       </div>
       {lokasiMissing && !lokasiLoading && (
-        <p className="mt-1 text-[11px] font-semibold text-red-500">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
+        <p className="mt-1 text-[11px] font-semibold text-[#5D900F]">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
       )}
     </div>
   );
@@ -737,25 +732,25 @@ function FormAbsen({
           <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
             <MessageSquareText size={12} />
             {isIzinSakit
-              ? <>Keterangan / Alasan <span className="text-red-400 normal-case">*wajib</span></>
+              ? <>Keterangan / Alasan <span className="text-[#5D900F] normal-case">*wajib</span></>
               : "Keterangan (opsional)"}
           </p>
           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
             placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
             className={`w-full resize-none rounded-xl border bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
-              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-[#0082FB] dark:border-slate-600"
+              catatanMissing ? "border-[#A1F919] focus:ring-[#A1F919] dark:border-[#48700B]" : "border-slate-200 focus:ring-[#3E03B3] dark:border-slate-600"
             }`} />
-          {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
+          {catatanMissing && <p className="mt-1 text-[11px] font-semibold text-[#5D900F]">Keterangan wajib diisi</p>}
         </div>
 
         <div>
           <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-            <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
+            <FileSignature size={12} /> Tanda Tangan <span className="text-[#5D900F] normal-case">*wajib</span>
           </p>
-          <div className={ttdMissing ? "rounded-xl ring-2 ring-red-300" : ""}>
+          <div className={ttdMissing ? "rounded-xl ring-2 ring-[#A1F919]" : ""}>
             <SignaturePad onChange={setTtd} />
           </div>
-          {ttdMissing && <p className="mt-1 text-[11px] font-semibold text-red-500">Tanda tangan wajib diisi</p>}
+          {ttdMissing && <p className="mt-1 text-[11px] font-semibold text-[#5D900F]">Tanda tangan wajib diisi</p>}
         </div>
 
         <motion.button whileTap={{ scale: 0.98 }} onClick={onSubmit}
@@ -852,7 +847,7 @@ function MobileFormAbsen({
             <motion.div
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1C2B33]"
+              className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1E293B]"
               style={{ maxHeight: "92vh" }}
             >
               <div className="flex items-center justify-between px-5 pt-5">
@@ -888,7 +883,7 @@ function MobileFormAbsen({
                     {stepKey === "foto" && (
                       <div>
                         <p className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                          <Camera size={12} /> {fotoLabel} <span className="text-red-400 normal-case">*wajib</span>
+                          <Camera size={12} /> {fotoLabel} <span className="text-[#5D900F] normal-case">*wajib</span>
                         </p>
                         {fotoPreview ? (
                           <div className="relative">
@@ -901,7 +896,7 @@ function MobileFormAbsen({
                         ) : (
                           <button onClick={() => fileInputRef.current?.click()} disabled={compressingFoto}
                             className={`flex h-56 w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed text-slate-400 transition-colors active:scale-[0.98] disabled:cursor-wait disabled:opacity-70 ${
-                              fotoMissing ? "border-red-300 dark:border-red-800" : "border-slate-200 dark:border-slate-600"
+                              fotoMissing ? "border-[#A1F919] dark:border-[#48700B]" : "border-slate-200 dark:border-slate-600"
                             }`}>
                             {compressingFoto ? (
                               <>
@@ -920,20 +915,20 @@ function MobileFormAbsen({
                         )}
                         <input ref={fileInputRef} type="file" accept="image/*" {...(isIzinSakit ? {} : { capture: "user" as const })}
                           className="hidden" onChange={onFotoChange} />
-                        {fotoMissing && <p className="mt-2 text-[11px] font-semibold text-red-500">{fotoLabel} wajib diisi</p>}
+                        {fotoMissing && <p className="mt-2 text-[11px] font-semibold text-[#5D900F]">{fotoLabel} wajib diisi</p>}
                       </div>
                     )}
 
                     {stepKey === "lokasi" && (
                       <div>
                         <p className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                          <MapPin size={12} /> Lokasi <span className="text-red-400 normal-case">*wajib</span>
+                          <MapPin size={12} /> Lokasi <span className="text-[#5D900F] normal-case">*wajib</span>
                         </p>
                         <div className={`flex items-center gap-2.5 rounded-2xl border bg-slate-50 px-3.5 py-4 dark:bg-slate-900/40 ${
-                          lokasiMissing ? "border-red-300 dark:border-red-800" : "border-slate-100 dark:border-slate-700"
+                          lokasiMissing ? "border-[#A1F919] dark:border-[#48700B]" : "border-slate-100 dark:border-slate-700"
                         }`}>
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: lokasi ? "#00D67F18" : "#EF444418" }}>
-                            <MapPin size={16} className={lokasi ? "text-emerald-500" : "text-red-400"} />
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: lokasi ? "#A1F91918" : "#A1F91918" }}>
+                            <MapPin size={16} className={lokasi ? "text-[#5D900F]" : "text-[#5D900F]"} />
                           </span>
                           {lokasiLoading ? (
                             <span className="text-xs text-slate-400">Mendeteksi lokasi...</span>
@@ -941,15 +936,15 @@ function MobileFormAbsen({
                             <span className="truncate font-mono text-xs text-slate-600 dark:text-slate-300">{lokasi}</span>
                           ) : (
                             <div className="flex flex-1 items-center justify-between gap-2">
-                              <span className="text-xs text-red-500">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-                              <button type="button" onClick={onRetryLokasi} className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-[#0082FB] shadow-sm dark:bg-slate-800">
+                              <span className="text-xs text-[#5D900F]">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
+                              <button type="button" onClick={onRetryLokasi} className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-[#3E03B3] shadow-sm dark:bg-slate-800">
                                 Coba lagi
                               </button>
                             </div>
                           )}
                         </div>
                         {lokasiMissing && !lokasiLoading && (
-                          <p className="mt-2 text-[11px] font-semibold text-red-500">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
+                          <p className="mt-2 text-[11px] font-semibold text-[#5D900F]">{lokasiError ?? "Lokasi (GPS) wajib diisi"}</p>
                         )}
                         {titikLokasi && (
                           <div className="mt-3 overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
@@ -970,7 +965,7 @@ function MobileFormAbsen({
                           return (
                             <button key={s} type="button" onClick={() => setStatusPilihan(s)}
                               className="flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left transition-colors"
-                              style={active ? { borderColor: c.clr, background: c.bg } : { borderColor: "#F1F5F9", background: "transparent" }}>
+                              style={active ? { borderColor: c.clr, background: c.bg } : { borderColor: "#FFFFFF", background: "transparent" }}>
                               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${c.clr}18` }}>
                                 <Icon size={18} style={{ color: c.clr }} />
                               </span>
@@ -991,25 +986,25 @@ function MobileFormAbsen({
                           <p className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
                             <MessageSquareText size={12} />
                             {isIzinSakit
-                              ? <>Keterangan / Alasan <span className="text-red-400 normal-case">*wajib</span></>
+                              ? <>Keterangan / Alasan <span className="text-[#5D900F] normal-case">*wajib</span></>
                               : "Keterangan (opsional)"}
                           </p>
                           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
                             placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
                             className={`w-full resize-none rounded-2xl border bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
-                              catatanMissing ? "border-red-300 focus:ring-red-300 dark:border-red-800" : "border-slate-200 focus:ring-[#0082FB] dark:border-slate-600"
+                              catatanMissing ? "border-[#A1F919] focus:ring-[#A1F919] dark:border-[#48700B]" : "border-slate-200 focus:ring-[#3E03B3] dark:border-slate-600"
                             }`} />
-                          {catatanMissing && <p className="mt-2 text-[11px] font-semibold text-red-500">Keterangan wajib diisi</p>}
+                          {catatanMissing && <p className="mt-2 text-[11px] font-semibold text-[#5D900F]">Keterangan wajib diisi</p>}
                         </div>
 
                         <div>
                           <p className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-                            <FileSignature size={12} /> Tanda Tangan <span className="text-red-400 normal-case">*wajib</span>
+                            <FileSignature size={12} /> Tanda Tangan <span className="text-[#5D900F] normal-case">*wajib</span>
                           </p>
-                          <div className={ttdMissing ? "rounded-xl ring-2 ring-red-300" : ""}>
+                          <div className={ttdMissing ? "rounded-xl ring-2 ring-[#A1F919]" : ""}>
                             <SignaturePad onChange={setTtd} />
                           </div>
-                          {ttdMissing && <p className="mt-2 text-[11px] font-semibold text-red-500">Tanda tangan wajib diisi</p>}
+                          {ttdMissing && <p className="mt-2 text-[11px] font-semibold text-[#5D900F]">Tanda tangan wajib diisi</p>}
                         </div>
                       </div>
                     )}

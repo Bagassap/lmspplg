@@ -15,19 +15,17 @@ import { Avatar } from "@/components/shared/Avatar";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
-// Pengumuman sengaja tidak memakai lime (beda dari dashboard/absensi/PKL)
-// — lime diganti merah di sini, termasuk untuk badge prioritas & sematkan.
 const KATEGORI_WARNA: Record<string, string> = {
-  Umum:     "#0064E0",
-  Akademik: "#0082FB",
-  Magang:   "#0082FB",
-  Ujian:    "#EF4444",
-  Lainnya:  "#EF4444",
+  Umum:     "#00AAFA",
+  Akademik: "#3E03B3",
+  Magang:   "#3E03B3",
+  Ujian:    "#A1F919",
+  Lainnya:  "#A1F919",
 };
 
 const PRIORITAS_BADGE: Record<string, { cls: string; label: string }> = {
-  PENTING:  { cls: "bg-[#F1F5F8] text-[#1C2B33] dark:bg-[#1C2B33]/40 dark:text-[#EF4444]",   label: "Penting"  },
-  MENDESAK: { cls: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",           label: "Mendesak" },
+  PENTING:  { cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#A1F919]",   label: "Penting"  },
+  MENDESAK: { cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#A1F919]",           label: "Mendesak" },
 };
 
 function formatDate(iso: string) {
@@ -122,6 +120,7 @@ export default function PengumumanDetailModal({
   }
 
   const grad    = pengumuman ? (KATEGORI_WARNA[pengumuman.kategori] ?? KATEGORI_WARNA.Umum) : KATEGORI_WARNA.Umum;
+  const onLime  = grad === "#A1F919";
   const pb      = pengumuman ? PRIORITAS_BADGE[pengumuman.prioritas] : null;
 
   return (
@@ -175,21 +174,21 @@ export default function PengumumanDetailModal({
                 className="relative shrink-0 overflow-hidden px-5 py-4 sm:px-6 sm:py-5"
                 style={{ background: grad }}
               >
-                <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/8" />
-                <div className="pointer-events-none absolute -bottom-10 left-1/3 h-36 w-36 rounded-full bg-white/6" />
-                <Megaphone size={160} strokeWidth={0.7} className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 text-white/[0.07]" />
+                <div className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full ${onLime ? "bg-black/8" : "bg-white/8"}`} />
+                <div className={`pointer-events-none absolute -bottom-10 left-1/3 h-36 w-36 rounded-full ${onLime ? "bg-black/6" : "bg-white/6"}`} />
+                <Megaphone size={160} strokeWidth={0.7} className={`pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 ${onLime ? "text-black/[0.07]" : "text-white/[0.07]"}`} />
 
                 <div className="relative">
                   <div className="mb-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-1.5 text-[10px] text-white/55">
+                    <div className={`flex items-center gap-1.5 text-[10px] ${onLime ? "text-black/55" : "text-white/55"}`}>
                       <Megaphone size={10} />
                       <span>Pengumuman</span>
                       <span>›</span>
-                      <span className="text-white/85">{pengumuman.kategori}</span>
+                      <span className={onLime ? "text-black/85" : "text-white/85"}>{pengumuman.kategori}</span>
                     </div>
                     <button
                       onClick={onClose}
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white/80 transition-colors hover:bg-white/30 hover:text-white"
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition-colors ${onLime ? "bg-black/15 text-black/80 hover:bg-black/30 hover:text-black" : "bg-white/15 text-white/80 hover:bg-white/30 hover:text-white"}`}
                     >
                       <X size={14} />
                     </button>
@@ -197,35 +196,35 @@ export default function PengumumanDetailModal({
 
                   <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
                     {pengumuman.isPinned && (
-                      <span className="flex items-center gap-1 rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
+                      <span className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-bold ${onLime ? "bg-black/20 text-black" : "bg-white/20 text-white"}`}>
                         <Pin size={9} />Disematkan
                       </span>
                     )}
-                    <span className="rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">
+                    <span className={`rounded-lg px-2.5 py-1 text-[10px] font-bold ${onLime ? "bg-black/20 text-black" : "bg-white/20 text-white"}`}>
                       {pengumuman.kategori}
                     </span>
                     {pb && (
-                      <span className={`flex items-center gap-1 rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white ${pengumuman.prioritas === "MENDESAK" ? "animate-pulse" : ""}`}>
+                      <span className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-bold ${onLime ? "bg-black/20 text-black" : "bg-white/20 text-white"} ${pengumuman.prioritas === "MENDESAK" ? "animate-pulse" : ""}`}>
                         <AlertCircle size={9} />{pb.label}
                       </span>
                     )}
                   </div>
 
-                  <h2 className="text-lg font-extrabold leading-tight text-white sm:text-xl">
+                  <h2 className={`text-lg font-extrabold leading-tight sm:text-xl ${onLime ? "text-black" : "text-white"}`}>
                     {pengumuman.judul}
                   </h2>
 
-                  <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[11px] text-white/60">
+                  <div className={`mt-2.5 flex flex-wrap items-center gap-3 text-[11px] ${onLime ? "text-black/60" : "text-white/60"}`}>
                     <div className="flex items-center gap-1.5">
                       <Avatar
                         src={pengumuman.author.fotoProfil}
                         nama={pengumuman.author.nama}
                         sizePx={20}
-                        fallbackBg="rgba(255,255,255,0.25)"
+                        fallbackBg={onLime ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.25)"}
                         textClassName="text-[8px] font-bold"
                       />
-                      <span className="font-semibold text-white/85">{pengumuman.author.nama}</span>
-                      <span className="rounded-lg bg-white/15 px-1.5 py-0.5 text-[8px] font-bold text-white">
+                      <span className={`font-semibold ${onLime ? "text-black/85" : "text-white/85"}`}>{pengumuman.author.nama}</span>
+                      <span className={`rounded-lg px-1.5 py-0.5 text-[8px] font-bold ${onLime ? "bg-black/15 text-black" : "bg-white/15 text-white"}`}>
                         {pengumuman.author.role === "ADMIN" ? "Admin" : "Guru"}
                       </span>
                     </div>
@@ -240,7 +239,7 @@ export default function PengumumanDetailModal({
                       <motion.button
                         onClick={() => setEditOpen(true)}
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-1.5 text-xs font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+                        className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold backdrop-blur-sm transition-colors ${onLime ? "bg-black/15 text-black hover:bg-black/25" : "bg-white/15 text-white hover:bg-white/25"}`}
                       >
                         <Pencil size={12} />Edit
                       </motion.button>
@@ -248,8 +247,8 @@ export default function PengumumanDetailModal({
                         onClick={handleTogglePin}
                         disabled={pinning}
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                        className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold text-white backdrop-blur-sm transition-colors ${
-                          pengumuman.isPinned ? "bg-[#EF4444]/30 hover:bg-[#EF4444]/40" : "bg-white/15 hover:bg-white/25"
+                        className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold backdrop-blur-sm transition-colors ${onLime ? "text-black" : "text-white"} ${
+                          pengumuman.isPinned ? "bg-[#A1F919]/30 hover:bg-[#A1F919]/40" : onLime ? "bg-black/15 hover:bg-black/25" : "bg-white/15 hover:bg-white/25"
                         }`}
                       >
                         {pinning ? <Loader2 size={12} className="animate-spin" /> : <Pin size={12} />}
@@ -259,7 +258,7 @@ export default function PengumumanDetailModal({
                         onClick={handleDelete}
                         disabled={deleting}
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 rounded-xl bg-red-500/25 px-3.5 py-1.5 text-xs font-bold text-white backdrop-blur-sm transition-colors hover:bg-red-500/40"
+                        className="flex items-center gap-2 rounded-xl bg-[#A1F919]/25 px-3.5 py-1.5 text-xs font-bold text-black backdrop-blur-sm transition-colors hover:bg-[#A1F919]/40"
                       >
                         {deleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
                         Hapus
@@ -271,7 +270,7 @@ export default function PengumumanDetailModal({
 
               <div className="border-b border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-slate-700">
-                  <RotateCcw size={12} className="text-[#0064E0]" />
+                  <RotateCcw size={12} className="text-[#00AAFA]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Isi Pengumuman</span>
                   <span className="ml-auto text-[10px] font-normal text-gray-400 dark:text-slate-500">{formatDate(pengumuman.createdAt)}</span>
                 </div>

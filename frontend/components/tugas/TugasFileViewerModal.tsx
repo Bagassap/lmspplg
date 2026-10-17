@@ -33,7 +33,7 @@ export function TugasFileViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: "#0082FB" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: "#3E03B3" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                 <FileText size={18} className="text-white" />
@@ -51,15 +51,15 @@ export function TugasFileViewerModal({
             <div className="flex-1 space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#0082FB]/40 hover:bg-[#0082FB]/5 dark:border-slate-600">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF3FF] text-[#0082FB]">
+                  className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                     <FileText size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{fileName ?? "File jawaban"}</p>
                     {submittedAt && <p className="text-xs text-slate-400">Dikumpulkan {formatTglJam(submittedAt)}</p>}
                   </div>
-                  <Download size={16} className="shrink-0 text-[#0082FB]" />
+                  <Download size={16} className="shrink-0 text-[#3E03B3]" />
                 </a>
               ) : (
                 <p className="py-6 text-center text-sm text-slate-400">Belum ada file yang diunggah.</p>
@@ -79,14 +79,14 @@ export function TugasFileViewerModal({
                 {onRevisi && (
                   <button onClick={onRevisi}
                     className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold shadow-sm transition-transform hover:scale-[1.03]"
-                    style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                    style={{ background: "#A1F919", color: "#000000" }}>
                     <AlertCircle size={14} /> Minta Revisi
                   </button>
                 )}
                 {onTerima && (
                   <button onClick={onTerima}
-                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.03]"
-                    style={{ background: "#00D67F" }}>
+                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-black shadow-sm transition-transform hover:scale-[1.03]"
+                    style={{ background: "#A1F919" }}>
                     <CheckCircle size={14} /> Terima
                   </button>
                 )}

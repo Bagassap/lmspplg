@@ -26,8 +26,6 @@ type Props = {
   tablePageSize: number;
   setTablePageSize: (n: number) => void;
   onOpenDokumen: (siswa: SiswaAbsensi, source: "hadir" | "pulang") => void;
-  /** Kelas & tanggal yang sedang ditampilkan — dipakai untuk memanggil endpoint
-   * update saat admin/guru mengedit status kehadiran langsung dari tabel ini. */
   kelasId?: string;
   tanggal?: string;
   onStatusUpdated?: () => void;
@@ -106,7 +104,7 @@ export function AbsensiHarianTable({
     <>
       <div className="flex-1 overflow-x-auto">
         <div className="min-w-225">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#1C2B33" }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama</span>
@@ -181,7 +179,7 @@ export function AbsensiHarianTable({
                   <div className="min-w-0">
                     {lokasiParsed ? (
                       <button onClick={openDokumen} title="Lihat lokasi absen"
-                        className="block max-w-full truncate text-left text-[11px] text-[#0082FB] hover:underline">
+                        className="block max-w-full truncate text-left text-[11px] text-[#3E03B3] hover:underline">
                         {lokasiParsed.lat.slice(0, 8)}…
                       </button>
                     ) : (
@@ -191,16 +189,16 @@ export function AbsensiHarianTable({
                   <div className="flex justify-center">
                     {fotoRaw ? (
                       <button onClick={openDokumen} title="Lihat foto selfie"
-                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
-                        <Camera size={13} className="text-emerald-500" />
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20">
+                        <Camera size={13} className="text-[#5D900F]" />
                       </button>
                     ) : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
                   </div>
                   <div className="flex justify-center">
                     {ttdRaw ? (
                       <button onClick={openDokumen} title="Lihat tanda tangan"
-                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#0082FB] dark:hover:bg-[#0064E0]/20">
-                        <PenTool size={13} className="text-[#0082FB]" />
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#3E03B3] dark:hover:bg-[#00AAFA]/20">
+                        <PenTool size={13} className="text-[#3E03B3]" />
                       </button>
                     ) : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
                   </div>
@@ -215,7 +213,7 @@ export function AbsensiHarianTable({
                     {hasDok && (
                       <button onClick={openDokumen}
                         className="group flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95"
-                        style={{ background: "#0082FB" }}>
+                        style={{ background: "#3E03B3" }}>
                         <Eye size={11} /> Lihat
                       </button>
                     )}
@@ -249,7 +247,7 @@ export function AbsensiHarianTable({
                       <button onClick={() => setTablePage(i)}
                         className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                           i === tablePage
-                            ? "bg-[#0082FB] text-white shadow-sm"
+                            ? "bg-[#3E03B3] text-white shadow-sm"
                             : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                         }`}>
                         {i + 1}

@@ -35,36 +35,36 @@ export function RevisiFormModal({
             className="bg-white dark:bg-slate-800 rounded-t-2xl shadow-2xl w-full max-w-md overflow-hidden sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#C3F84A", color: "#1C2B33" }}>
-              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#1C2B33]/10 pointer-events-none" />
+            <div className="relative px-6 py-5 overflow-hidden" style={{ background: "#A1F919", color: "#000000" }}>
+              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10 pointer-events-none" />
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#1C2B33]/15 flex items-center justify-center shrink-0">
-                  <AlertCircle size={18} className="text-[#1C2B33]" />
+                <div className="w-10 h-10 rounded-xl bg-[#000000]/15 flex items-center justify-center shrink-0">
+                  <AlertCircle size={18} className="text-[#000000]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold tracking-widest text-[#1C2B33]/70 uppercase">Kirim Revisi</p>
-                  <h3 className="text-base font-extrabold text-[#1C2B33] leading-snug">{nama}</h3>
+                  <p className="text-[10px] font-bold tracking-widest text-[#000000]/70 uppercase">Kirim Revisi</p>
+                  <h3 className="text-base font-extrabold text-[#000000] leading-snug">{nama}</h3>
                 </div>
               </div>
             </div>
 
             <div className="px-6 py-5 space-y-4">
-              <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#F1F5F8] dark:bg-[#C3F84A]/10 border border-[#F1F5F8] dark:border-[#C3F84A]/20">
-                <AlertCircle size={15} className="text-[#C3F84A] mt-0.5 shrink-0" />
-                <p className="text-xs text-[#1C2B33] dark:text-[#C3F84A] leading-relaxed">
+              <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#FFFFFF] dark:bg-[#A1F919]/10 border border-[#FFFFFF] dark:border-[#A1F919]/20">
+                <AlertCircle size={15} className="text-[#5D900F] mt-0.5 shrink-0" />
+                <p className="text-xs text-[#000000] dark:text-[#A1F919] leading-relaxed">
                   Siswa akan menerima notifikasi revisi dan <strong>wajib mengirim ulang</strong> tugas mereka.
                 </p>
               </div>
               <div>
                 <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
-                  Pesan Revisi <span className="text-red-500">*</span>
+                  Pesan Revisi <span className="text-[#5D900F]">*</span>
                 </label>
                 <textarea
                   value={pesan}
                   onChange={(e) => setPesan(e.target.value)}
                   rows={4}
                   placeholder="Tuliskan catatan revisi untuk siswa…"
-                  className="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-[#C3F84A] placeholder:text-slate-400"
+                  className="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-[#A1F919] placeholder:text-slate-400"
                   autoFocus
                 />
               </div>
@@ -77,7 +77,7 @@ export function RevisiFormModal({
               </button>
               <button onClick={submit} disabled={!pesan.trim() || sending}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110"
-                style={{ background: "#C3F84A", color: "#1C2B33" }}>
+                style={{ background: "#A1F919", color: "#000000" }}>
                 <span className="flex items-center justify-center gap-2">
                   <AlertCircle size={14} /> {sending ? "Mengirim…" : "Kirim Revisi"}
                 </span>

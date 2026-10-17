@@ -19,10 +19,6 @@ export type QuickAccessCardData = {
   small?: boolean;
 };
 
-// Grid 2×2 sejak mobile (bukan 1 kolom dulu baru 2 di sm:) — kartu kecil
-// persegi panjang yang membesar di layar lebih lega, bukan tinggi tetap
-// (h-44) yang bikin timpang di HP sempit. Dipakai bareng oleh dashboard
-// admin/guru/siswa supaya perbaikan responsive cukup di satu tempat.
 export function QuickAccessGrid({ cards }: { cards: QuickAccessCardData[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
@@ -34,8 +30,7 @@ export function QuickAccessGrid({ cards }: { cards: QuickAccessCardData[] }) {
 }
 
 function QuickAccessCard({ card, index }: { card: QuickAccessCardData; index: number }) {
-  const onDark = card.gradient !== "#C3F84A"; // lime butuh teks gelap, sisanya teks putih
-  const fg = onDark ? "#FFFFFF" : "#1C2B33";
+  const fg = card.gradient === "#A1F919" ? "#000000" : "#FFFFFF";
 
   return (
     <motion.div

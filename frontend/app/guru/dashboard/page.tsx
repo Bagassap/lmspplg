@@ -34,16 +34,16 @@ interface DashboardData {
 }
 
 
-const P = "#0082FB";
-const R = "#EF4444";
-const G = "#00D67F";
+const P = "#3E03B3";
+const R = "#5D900F";
+const G = "#5D900F";
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
-  UMUM: P, AKADEMIK: "#0082FB", EKSKUL: G, DARURAT: R,
+  UMUM: P, AKADEMIK: "#3E03B3", EKSKUL: G, DARURAT: R,
 };
 const kColor = (k: string) => KATEGORI_COLOR[k] ?? P;
 
@@ -59,7 +59,7 @@ function SectionCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] ${className}`}
+      className={`flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] ${className}`}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-700/40">
         <div className="flex items-center gap-2.5">
@@ -128,7 +128,7 @@ export default function GuruDashboardPage() {
 
   if (error) return (
     <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-      <AlertCircle size={40} className="text-red-400" />
+      <AlertCircle size={40} className="text-[#5D900F]" />
       <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
       <button onClick={load} className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white"
         style={{ backgroundColor: P }}>
@@ -153,7 +153,7 @@ export default function GuruDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#0064E0",
+      gradient: "#00AAFA",
       icon: ClipboardCheck,
     },
     {
@@ -163,7 +163,7 @@ export default function GuruDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#C3F84A",
+      gradient: "#A1F919",
       icon: Users,
     },
     {
@@ -173,7 +173,7 @@ export default function GuruDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#0082FB",
+      gradient: "#3E03B3",
       icon: GraduationCap,
     },
     {
@@ -183,7 +183,7 @@ export default function GuruDashboardPage() {
       suffix: " info",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#EF4444",
+      gradient: "#A1F919",
       icon: Megaphone,
     },
   ];
@@ -208,7 +208,7 @@ export default function GuruDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-4"
+          className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-4"
         >
           <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi absensi kelas wali hari ini</p>
@@ -221,7 +221,7 @@ export default function GuruDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] xl:col-span-8"
+          className="col-span-12 flex flex-col rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-8"
         >
           <div className="mb-3 flex items-start justify-between">
             <div>
@@ -233,7 +233,7 @@ export default function GuruDashboardPage() {
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#C3F84A" }} />Total
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#A1F919" }} />Total
               </span>
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function GuruDashboardPage() {
                   transition={{ delay: 0.5 + i * 0.06 }}
                   className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                    style={{ background: "#0082FB" }}>
+                    style={{ background: "#3E03B3" }}>
                     {k.nama.charAt(0)}
                   </div>
                   <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{k.nama}</p>
@@ -322,15 +322,15 @@ export default function GuruDashboardPage() {
     </div>
 
     <div className="relative isolate -m-4 overflow-hidden lg:hidden">
-      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#0082FB" }} />
+      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#3E03B3" }} />
 
       <div className="relative z-10 space-y-5 p-4">
 
-      <div className="rounded-3xl bg-white p-3 shadow-[0_10px_28px_-10px_rgba(0,130,251,0.35)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white p-3 shadow-[0_10px_28px_-10px_rgba(62,3,179,0.35)] dark:bg-[#1E293B]">
         <Link
           href="/guru/absensi-harian"
           className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
-          style={{ background: `linear-gradient(135deg, ${P}, #0064E0)` }}
+          style={{ background: `linear-gradient(135deg, ${P}, #00AAFA)` }}
         >
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />
@@ -355,11 +355,11 @@ export default function GuruDashboardPage() {
 
         <div className="grid grid-cols-5 gap-1.5 pt-4">
           {[
-            { href: "/guru/materi", label: "Materi", icon: BookOpen, color: "#0082FB" },
-            { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, color: "#EF4444" },
-            { href: "/guru/magang/penempatan", label: "PKL", icon: Briefcase, color: "#00D67F" },
-            { href: "/guru/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#C3F84A", dark: true },
-            { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#0064E0", badge: data.pengumuman.length },
+            { href: "/guru/materi", label: "Materi", icon: BookOpen, color: "#3E03B3" },
+            { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, color: "#5D900F" },
+            { href: "/guru/magang/penempatan", label: "PKL", icon: Briefcase, color: "#5D900F" },
+            { href: "/guru/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#5D900F", dark: true },
+            { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#00AAFA", badge: data.pengumuman.length },
           ].map((s, i) => (
             <motion.div key={s.href}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -372,9 +372,9 @@ export default function GuruDashboardPage() {
                     background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), ${s.color}`,
                     boxShadow: `0 5px 10px -3px ${s.color}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
                   }}>
-                  <s.icon size={19} style={{ color: s.dark ? "#1C2B33" : "#fff" }} />
+                  <s.icon size={19} style={{ color: s.dark ? "#000000" : "#fff" }} />
                   {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-sm">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black shadow-sm">
                       {s.badge}
                     </span>
                   )}
@@ -416,7 +416,7 @@ export default function GuruDashboardPage() {
         })}
       </div>
 
-      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <h2 className="text-sm font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
         <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi absensi kelas wali hari ini</p>
         <StatisticRainbow
@@ -425,7 +425,7 @@ export default function GuruDashboardPage() {
         />
       </div>
 
-      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <div className="flex items-center justify-between px-5 pt-5">
           <h2 className="text-sm font-bold text-slate-800 dark:text-white">Kelas Wali Saya</h2>
         </div>
@@ -436,7 +436,7 @@ export default function GuruDashboardPage() {
             {kelasWali.map((k) => (
               <li key={k.id} className="flex items-center gap-3 px-5 py-3.5">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                  style={{ background: "#0082FB" }}>
+                  style={{ background: "#3E03B3" }}>
                   {k.nama.charAt(0)}
                 </div>
                 <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{k.nama}</p>
@@ -446,7 +446,7 @@ export default function GuruDashboardPage() {
         )}
       </div>
 
-      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+      <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <div className="flex items-center justify-between px-5 pt-5">
           <h2 className="text-sm font-bold text-slate-800 dark:text-white">Pengumuman Terbaru</h2>
           <ViewAll href="/guru/pengumuman" />

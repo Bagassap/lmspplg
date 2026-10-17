@@ -29,16 +29,16 @@ export default function SiswaMagangPenempatanPage() {
 
   return (
     <div className="space-y-5 lg:p-1">
-      <div className="relative hidden overflow-hidden rounded-2xl p-6 lg:block" style={{ background: "#0082FB" }}>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full bg-white/10" />
+      <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg sm:h-14 sm:w-14">
-            <Briefcase size={22} className="text-white sm:hidden" />
-            <Briefcase size={26} className="hidden text-white sm:block" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            <Briefcase size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
+            <Briefcase size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">PKL</span>
-            <h1 className="text-xl font-extrabold leading-tight text-white sm:text-2xl">Penempatan PKL Saya</h1>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">PKL</span>
+            <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Penempatan PKL Saya</h1>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function SiswaMagangPenempatanPage() {
           <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#0082FB" }}>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
                   <Building2 size={18} />
                 </span>
                 <div>
@@ -73,7 +73,7 @@ export default function SiswaMagangPenempatanPage() {
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <MapPin size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat}</p>
@@ -81,7 +81,7 @@ export default function SiswaMagangPenempatanPage() {
               </div>
               {aktif.tempatMagang.kontak && (
                 <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                  <Phone size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                  <Phone size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Kontak</p>
                     <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.kontak}</p>
@@ -89,14 +89,14 @@ export default function SiswaMagangPenempatanPage() {
                 </div>
               )}
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <User size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing.user.nama)}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Periode</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -130,7 +130,7 @@ export default function SiswaMagangPenempatanPage() {
         )}
       </div>
 
-      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+      <div className="relative isolate -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/siswa/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -138,19 +138,19 @@ export default function SiswaMagangPenempatanPage() {
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Penempatan PKL</h1>
         </div>
-        <div className="space-y-4 rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
+        <div className="space-y-4 rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
         {loading ? (
-          <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1C2B33]" />
+          <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1E293B]" />
         ) : !aktif ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: "#0082FB18" }}>
-              <Users size={24} style={{ color: "#0082FB" }} />
+          <div className="flex flex-col items-center justify-center gap-3 rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318" }}>
+              <Users size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Kamu belum ditempatkan PKL</p>
             <p className="max-w-sm text-xs text-slate-400">Admin akan menempatkan kamu ke tempat magang begitu jadwal PKL dimulai.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-3xl shadow-[0_4px_16px_-6px_rgba(0,130,251,0.35)]" style={{ background: "#0082FB" }}>
+          <div className="overflow-hidden rounded-3xl shadow-[0_4px_16px_-6px_rgba(62,3,179,0.35)]" style={{ background: "#3E03B3" }}>
             <div className="relative px-5 pb-5 pt-6">
               <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10" />
               <div className="relative flex items-center justify-between gap-2">
@@ -169,9 +169,9 @@ export default function SiswaMagangPenempatanPage() {
               </div>
             </div>
 
-            <div className="space-y-2 rounded-t-3xl bg-white p-4 dark:bg-[#1C2B33]">
+            <div className="space-y-2 rounded-t-3xl bg-white p-4 dark:bg-[#1E293B]">
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <MapPin size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat}</p>
@@ -179,7 +179,7 @@ export default function SiswaMagangPenempatanPage() {
               </div>
               {aktif.tempatMagang.kontak && (
                 <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                  <Phone size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                  <Phone size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0">
                     <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Kontak</p>
                     <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.kontak}</p>
@@ -187,14 +187,14 @@ export default function SiswaMagangPenempatanPage() {
                 </div>
               )}
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <User size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing.user.nama)}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#0082FB]" />
+                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Periode</p>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -207,7 +207,7 @@ export default function SiswaMagangPenempatanPage() {
         )}
 
         {riwayat.length > 0 && (
-          <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+          <div className="rounded-3xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
             <div className="px-5 pt-4">
               <p className="text-sm font-bold text-slate-800 dark:text-white">Riwayat Penempatan</p>
             </div>

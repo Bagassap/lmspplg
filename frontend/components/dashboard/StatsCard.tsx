@@ -4,13 +4,6 @@ import { useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 
-const THEMES = [
-  { icon: "#0082FB", iconBg: "#EAF3FF" },
-  { icon: "#00D67F", iconBg: "#E3FBF0" },
-  { icon: "#EF4444", iconBg: "#FEE9EA" },
-  { icon: "#C3F84A", iconBg: "#F1F5F8" },
-] as const;
-
 function useCountUp(target: number, duration = 1200) {
   const mv = useMotionValue(0);
   const rounded = useTransform(mv, (v) => Math.round(v));
@@ -40,10 +33,8 @@ export default function StatsCard({
   suffix = "",
   sub,
   delay = 0,
-  index = 0,
 }: StatsCardProps) {
   const count = useCountUp(value);
-  const theme = THEMES[index % THEMES.length];
 
   return (
     <motion.div
@@ -51,14 +42,14 @@ export default function StatsCard({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(0,0,0,0.10)" }}
       transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="flex items-center gap-2.5 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1C2B33] cursor-default sm:gap-4 sm:rounded-2xl sm:p-5"
+      className="flex items-center gap-2.5 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] cursor-default sm:gap-4 sm:rounded-2xl sm:p-5"
     >
       <div
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full sm:h-14 sm:w-14"
-        style={{ backgroundColor: theme.iconBg }}
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+        style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
       >
-        <Icon size={16} style={{ color: theme.icon }} strokeWidth={1.8} className="sm:hidden" />
-        <Icon size={26} style={{ color: theme.icon }} strokeWidth={1.8} className="hidden sm:block" />
+        <Icon size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" strokeWidth={1.8} />
+        <Icon size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" strokeWidth={1.8} />
       </div>
 
       <div className="min-w-0 flex-1">

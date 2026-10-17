@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const DOT_COLORS = ["#ffffff", "#C3F84A", "#ffffff"] as const;
+const DOT_COLORS = ["#ffffff", "#A1F919", "#ffffff"] as const;
 
 export function BrandedLoadingOverlay({
   greeting,
@@ -18,17 +18,17 @@ export function BrandedLoadingOverlay({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
       className="fixed inset-0 z-[999] flex flex-col items-center justify-center overflow-hidden px-6"
-      style={{ backgroundColor: "#0082FB" }}
+      style={{ backgroundColor: "#3E03B3" }}
     >
       <motion.div
         className="pointer-events-none absolute left-[8%] top-[10%] h-80 w-80 rounded-full blur-[100px]"
-        style={{ background: "rgba(0,130,251,0.25)" }}
+        style={{ background: "rgba(62,3,179,0.25)" }}
         animate={{ x: [0, 32, 0], y: [0, 18, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="pointer-events-none absolute bottom-[8%] right-[8%] h-72 w-72 rounded-full blur-[100px]"
-        style={{ background: "rgba(0,100,224,0.28)" }}
+        style={{ background: "rgba(0,170,250,0.28)" }}
         animate={{ x: [0, -24, 0], y: [0, -16, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -45,7 +45,7 @@ export function BrandedLoadingOverlay({
             style={{
               width: 180,
               height: 180,
-              background: "radial-gradient(circle, rgba(0,130,251,0.55), rgba(0,130,251,0.3) 55%, transparent 80%)",
+              background: "radial-gradient(circle, rgba(62,3,179,0.55), rgba(62,3,179,0.3) 55%, transparent 80%)",
               filter: "blur(36px)",
             }}
             animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.9, 0.5] }}
@@ -59,7 +59,7 @@ export function BrandedLoadingOverlay({
             priority
             className="relative h-24 w-auto sm:h-28"
             style={{
-              filter: "drop-shadow(0 0 32px rgba(0,130,251,0.75)) drop-shadow(0 8px 24px rgba(0,0,0,0.55))",
+              filter: "drop-shadow(0 0 32px rgba(62,3,179,0.75)) drop-shadow(0 8px 24px rgba(0,0,0,0.55))",
             }}
           />
         </div>

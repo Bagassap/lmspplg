@@ -2,12 +2,12 @@ import { LupaPasswordCard } from "./LupaPasswordCard";
 
 export default function LupaPasswordPage() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F1F5F8] px-4 py-4 sm:px-6 sm:py-12">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFFFFF] px-4 py-4 sm:px-6 sm:py-12">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(0,130,251,0.045) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(62,3,179,0.045) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />

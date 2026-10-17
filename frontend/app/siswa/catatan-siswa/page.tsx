@@ -46,7 +46,7 @@ export default function SiswaCatatanSayaPage() {
 
       <div className="hidden lg:grid lg:grid-cols-2 lg:gap-3">
         <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#0082FB1a", color: "#0082FB" }}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#3E03B31a", color: "#3E03B3" }}>
             <NotebookPen size={16} />
           </span>
           <div className="leading-tight">
@@ -55,7 +55,7 @@ export default function SiswaCatatanSayaPage() {
           </div>
         </div>
         <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#EF44441a", color: "#EF4444" }}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#A1F9191a", color: "#5D900F" }}>
             ±
           </span>
           <div className="leading-tight">
@@ -80,7 +80,7 @@ export default function SiswaCatatanSayaPage() {
                 <div className="mb-1.5 flex items-start justify-between gap-2">
                   <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                   {c.poin != null && (
-                    <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#FEE9EA", color: "#EF4444" }}>{c.poin} poin</span>
+                    <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>{c.poin} poin</span>
                   )}
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>
@@ -94,7 +94,7 @@ export default function SiswaCatatanSayaPage() {
         )}
       </div>
 
-      <div className="relative -m-4 lg:hidden" style={{ background: "#0082FB" }}>
+      <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/siswa/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -102,10 +102,10 @@ export default function SiswaCatatanSayaPage() {
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Catatan Saya</h1>
         </div>
-        <div className="rounded-t-[28px] bg-[#F1F5F8] p-4 dark:bg-[#1C2B33]">
-        <div className="space-y-3 rounded-[28px] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C2B33]">
+        <div className="rounded-t-[28px] bg-[#FFFFFF] p-4 dark:bg-[#1E293B]">
+        <div className="space-y-3 rounded-[28px] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#0082FB" }}>
+            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#3E03B3" }}>
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
                 <NotebookPen size={18} className="text-white" />
               </span>
@@ -114,25 +114,25 @@ export default function SiswaCatatanSayaPage() {
                 <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-white/70">Total Catatan</p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#EF4444" }}>
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-white bg-white/20">
+            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#A1F919" }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-black bg-black/10">
                 ±
               </span>
               <div className="min-w-0 leading-tight">
-                <p className="text-base font-extrabold text-white">{loading ? "—" : data?.totalPoin ?? 0}</p>
-                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-white/70">Total Poin</p>
+                <p className="text-base font-extrabold text-black">{loading ? "—" : data?.totalPoin ?? 0}</p>
+                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-black/70">Total Poin</p>
               </div>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl bg-[#F1F5F8] dark:bg-slate-900/30">
+          <div className="overflow-hidden rounded-2xl bg-[#FFFFFF] dark:bg-slate-900/30">
             {loading && (
               <p className="py-14 text-center text-sm text-slate-400">Memuat catatan...</p>
             )}
             {!loading && (!data || data.catatan.length === 0) && (
               <div className="flex flex-col items-center px-6 py-14 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#0082FB18" }}>
-                  <NotebookPen size={24} style={{ color: "#0082FB" }} />
+                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+                  <NotebookPen size={24} style={{ color: "#3E03B3" }} />
                 </div>
                 <p className="mt-4 text-sm text-slate-400">Belum ada catatan untukmu. Pertahankan!</p>
               </div>
@@ -140,7 +140,7 @@ export default function SiswaCatatanSayaPage() {
             {!loading && data && data.catatan.length > 0 && (
               <div className="divide-y divide-white dark:divide-slate-700/40">
                 {data.catatan.map((c) => {
-                  const accent = c.poin != null ? "#EF4444" : "#0082FB";
+                  const accent = c.poin != null ? "#5D900F" : "#3E03B3";
                   return (
                     <div key={c.id} className="relative p-4 pl-5">
                       <span className="absolute inset-y-0 left-0 w-1.5" style={{ background: accent }} />

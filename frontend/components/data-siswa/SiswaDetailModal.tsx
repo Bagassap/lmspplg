@@ -24,7 +24,7 @@ function MobileRow({ icon: Icon, label, value, href }: {
       </span>
       {href ? (
         <a href={href} target="_blank" rel="noopener noreferrer" title="Kirim pesan WhatsApp"
-          className="mt-1 block break-words text-sm font-bold text-emerald-600 underline decoration-emerald-200 dark:text-emerald-400">
+          className="mt-1 block break-words text-sm font-bold text-[#5D900F] underline decoration-[#F6FEE8] dark:text-[#A1F919]">
           {value}
         </a>
       ) : (
@@ -34,9 +34,9 @@ function MobileRow({ icon: Icon, label, value, href }: {
   );
 }
 
-const HEADER_GRADIENT = "#0082FB";
-const REF_PRIMARY = "#0082FB";
-const REF_SUCCESS = "#00D67F";
+const HEADER_GRADIENT = "#3E03B3";
+const REF_PRIMARY = "#3E03B3";
+const REF_SUCCESS = "#5D900F";
 
 function FieldItem({ icon: Icon, label, value, full, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
@@ -52,7 +52,7 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
             target="_blank"
             rel="noopener noreferrer"
             title="Kirim pesan WhatsApp"
-            className="mt-1.5 inline-block break-words text-[15px] font-bold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
+            className="mt-1.5 inline-block break-words text-[15px] font-bold text-[#5D900F] transition-colors hover:text-[#48700B] hover:underline dark:text-[#A1F919] dark:hover:text-[#A1F919]"
           >
             {value}
           </a>
@@ -172,7 +172,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-slate-700 dark:text-white">Kelengkapan Data {pct}%</p>
                     {missing.length === 0 ? (
-                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400">
+                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#A1F919]">
                         <CheckCircle2 size={11} /> Semua data sudah lengkap
                       </p>
                     ) : (
@@ -208,7 +208,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               {onEdit && (
                 <motion.button
                   type="button" onClick={onEdit}
-                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(0,100,224,0.4)" }}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(0,170,250,0.4)" }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2.5 text-sm font-bold text-white shadow-sm sm:py-1.5 sm:text-xs"
                   style={{ background: HEADER_GRADIENT }}
@@ -239,18 +239,18 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   {onResetPassword && siswa.user && (
                     <button type="button" onClick={() => { onResetPassword(); setActionsOpen(false); }}
                       className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
-                      <KeyRound size={15} className="text-[#0082FB]" /> Reset Password
+                      <KeyRound size={15} className="text-[#3E03B3]" /> Reset Password
                     </button>
                   )}
                   {onImpersonate && siswa.user && (
                     <button type="button" onClick={() => { onImpersonate(); setActionsOpen(false); }}
                       className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/50 dark:text-slate-200 dark:hover:bg-slate-700/50">
-                      <Eye size={15} className="text-[#0082FB]" /> Pantau Akun
+                      <Eye size={15} className="text-[#3E03B3]" /> Pantau Akun
                     </button>
                   )}
                   {onKeluarkan && (
                     <button type="button" onClick={() => { onKeluarkan(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-red-500 hover:bg-red-50 dark:border-slate-700/50 dark:hover:bg-red-900/20">
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
                       <Trash2 size={15} /> Keluarkan Siswa
                     </button>
                   )}
@@ -298,7 +298,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-slate-800 dark:text-white">Kelengkapan Data {pct}%</p>
                   {missing.length === 0 ? (
-                    <p className="mt-0.5 flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400">
+                    <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#A1F919]">
                       <CheckCircle2 size={11} /> Semua data sudah lengkap
                     </p>
                   ) : (

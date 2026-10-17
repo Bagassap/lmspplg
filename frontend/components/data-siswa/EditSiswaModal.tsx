@@ -28,7 +28,7 @@ function Field({ label, icon: Icon, required, optional, children }: {
       <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
         <Icon size={10} className="text-primary/70" />
         {label}
-        {required && <span className="normal-case text-[#EF4444]">*</span>}
+        {required && <span className="normal-case text-[#5D900F]">*</span>}
         {optional && <span className="font-normal normal-case text-gray-400">(opsional)</span>}
       </label>
       {children}
@@ -82,7 +82,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
         <motion.div className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900"
           initial={{ scale: 0.95, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 24 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
-          <div className="relative overflow-hidden bg-[#0064E0] px-6 py-5">
+          <div className="relative overflow-hidden bg-[#00AAFA] px-6 py-5">
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -195,7 +195,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                   </Field>
                 </div>
               </div>
-              {error && <p className="text-xs text-red-500">{error}</p>}
+              {error && <p className="text-xs text-[#5D900F]">{error}</p>}
             </div>
           </div>
           <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4 dark:border-slate-800">
@@ -206,9 +206,9 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                 Batal
               </button>
               <motion.button type="button" onClick={handleSave} disabled={saving}
-                whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #0082FB55" }} whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #3E03B355" }} whileTap={{ scale: 0.97 }}
                 className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md transition-opacity disabled:opacity-60"
-                style={{ backgroundColor: "#0082FB" }}>
+                style={{ backgroundColor: "#3E03B3" }}>
                 {saving
                   ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Menyimpan…</>
                   : <><Sparkles size={14} />Simpan</>}

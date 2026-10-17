@@ -6,7 +6,7 @@ import { X, ArrowUpCircle, GraduationCap, Loader2, Users, ArrowRight, AlertTrian
 import { useToast } from "@/components/shared/ToastSystem";
 import type { KelasRef } from "./shared";
 
-const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#0082FB] focus:bg-white focus:ring-2 focus:ring-[#0082FB]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
+const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#3E03B3] focus:bg-white focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
 
 function useJumlahSiswaAktif(kelasId: string) {
   const [jumlah, setJumlah] = useState<number | null>(null);
@@ -80,14 +80,14 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
       </div>
 
       {dariKelasId && (
-        <div className="flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+        <div className="flex items-center gap-2 rounded-xl bg-[#F1EDFA] px-4 py-2.5 text-sm font-semibold text-[#2D0281] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
           <Users size={14} />
           {jumlah === null ? "Menghitung…" : jumlah === 0 ? "Tidak ada siswa aktif di kelas ini" : `${jumlah} siswa aktif akan dipindahkan`}
         </div>
       )}
 
       <button onClick={submit} disabled={!dariKelasId || !keKelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0082FB] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <ArrowUpCircle size={15} />}
         {saving ? "Memproses…" : "Naikkan Semua Siswa"}
       </button>
@@ -132,7 +132,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700 dark:bg-red-900/20 dark:text-red-400">
+      <div className="flex items-start gap-2 rounded-xl bg-[#F6FEE8] px-4 py-3 text-xs text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]">
         <AlertTriangle size={14} className="mt-0.5 shrink-0" />
         <span>Aksi ini menghapus PERMANEN seluruh data (absensi, tugas, PKL, UKK) dan akun login semua siswa di kelas terpilih — tidak bisa dibatalkan. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
       </div>
@@ -145,14 +145,14 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       </div>
 
       {kelasId && (
-        <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
+        <div className="flex items-center gap-2 rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm font-semibold text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]">
           <Users size={14} />
           {jumlah === null ? "Menghitung…" : jumlah === 0 ? "Tidak ada siswa aktif di kelas ini" : `${jumlah} siswa aktif akan diluluskan`}
         </div>
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#EF4444] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#A1F919] px-5 py-3 text-sm font-bold text-black shadow-sm disabled:opacity-50">
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -179,7 +179,7 @@ export function KenaikanKelasModal({
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#0082FB] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-[#3E03B3] px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
                   <ArrowUpCircle size={18} className="text-white" />
@@ -193,11 +193,11 @@ export function KenaikanKelasModal({
 
             <div className="flex shrink-0 gap-1 border-b border-slate-100 px-5 pt-3 dark:border-slate-700">
               <button onClick={() => setTab("naik")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "naik" ? "bg-blue-50 text-[#0082FB] dark:bg-blue-900/20" : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "naik" ? "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/20" : "text-slate-400 hover:text-slate-600"}`}>
                 <ArrowUpCircle size={13} /> Naikkan Kelas
               </button>
               <button onClick={() => setTab("lulus")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? "bg-red-50 text-red-600 dark:bg-red-900/20" : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600"}`}>
                 <GraduationCap size={13} /> Luluskan Kelas
               </button>
             </div>

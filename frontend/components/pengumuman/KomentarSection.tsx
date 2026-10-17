@@ -17,21 +17,12 @@ export type KomentarItem = {
 };
 
 const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-[#EAF3FF] text-[#0064E0] dark:bg-[#0064E0]/40 dark:text-[#EAF3FF]", dot: "#0082FB" },
-  GURU:  { label: "Guru",   cls: "bg-[#1C2B33]/10 text-[#1C2B33] dark:bg-[#1C2B33]/60 dark:text-[#F1F5F8]",  dot: "#0064E0" },
-  SISWA: { label: "Siswa",  cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", dot: "#00D67F" },
+  ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#00AAFA]/40 dark:text-[#F1EDFA]", dot: "#3E03B3" },
+  GURU:  { label: "Guru",   cls: "bg-[#000000]/10 text-[#000000] dark:bg-[#000000]/60 dark:text-[#FFFFFF]",  dot: "#00AAFA" },
+  SISWA: { label: "Siswa",  cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/30 dark:text-[#A1F919]", dot: "#A1F919" },
 };
 
-// Pengumuman tidak memakai lime — merah menggantikan slot lime di sini juga.
-const AVATAR_PALETTE = [
-  "#0082FB",
-  "#EF4444",
-  "#0064E0",
-  "#EF4444",
-  "#0082FB",
-  "#00D67F",
-];
-function avatarGradient(name: string) { return AVATAR_PALETTE[name.charCodeAt(0) % AVATAR_PALETTE.length]; }
+function avatarGradient(_name: string) { return "#3E03B3"; }
 
 function timeAgo(iso: string): string {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -108,10 +99,10 @@ function KomentarBubble({
             sizePx={36}
             fallbackBg={avatarBg}
             textClassName="text-xs font-extrabold"
-            className="shadow-md ring-2 ring-white dark:ring-[#1C2B33]"
+            className="shadow-md ring-2 ring-white dark:ring-[#1E293B]"
           />
           <span
-            className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1C2B33]"
+            className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1E293B]"
             style={{ backgroundColor: badge.dot }}
           />
         </div>
@@ -138,7 +129,7 @@ function KomentarBubble({
               {!isReply && (
                 <button
                   onClick={() => setShowReplyForm((v) => !v)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-blue-50 hover:text-[#0064E0] dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20 dark:hover:text-[#8F6DD3]"
                 >
                   <CornerDownRight size={11} /> Balas
                 </button>
@@ -146,7 +137,7 @@ function KomentarBubble({
               {canDelete && (
                 <button
                   onClick={() => onDelete(k.id)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-slate-300 transition-all hover:bg-red-50 hover:text-red-500 dark:text-slate-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-slate-300 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:text-slate-600 dark:hover:bg-[#48700B]/20 dark:hover:text-[#A1F919]"
                 >
                   <Trash2 size={10} /> Hapus
                 </button>
@@ -162,7 +153,7 @@ function KomentarBubble({
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-2 overflow-hidden"
               >
-                <div className="flex items-end gap-2 rounded-xl border border-[#0064E0]/25 bg-[#EAF3FF] p-3 dark:border-blue-700/30 dark:bg-[#1C2B33]">
+                <div className="flex items-end gap-2 rounded-xl border border-[#00AAFA]/25 bg-[#F1EDFA] p-3 dark:border-[#2D0281]/30 dark:bg-[#1E293B]">
                   <textarea
                     rows={2}
                     value={replyText}
@@ -174,8 +165,8 @@ function KomentarBubble({
                   <button
                     onClick={submitReply}
                     disabled={sending || !replyText.trim()}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(0,100,224,0.4)]"
-                    style={{ background: "#0064E0" }}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(0,170,250,0.4)]"
+                    style={{ background: "#00AAFA" }}
                   >
                     {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   </button>
@@ -190,7 +181,7 @@ function KomentarBubble({
         <div className="ml-12">
           <button
             onClick={() => setShowReplies((v) => !v)}
-            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#0064E0]/70 transition-all hover:bg-blue-50 hover:text-[#0064E0] dark:hover:bg-blue-900/20"
+            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#00AAFA]/70 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20"
           >
             <ChevronDown size={12} className={`transition-transform duration-200 ${showReplies ? "rotate-180" : ""}`} />
             {k.replies.length} balasan
@@ -201,7 +192,7 @@ function KomentarBubble({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="space-y-2 border-l-2 border-[#0064E0]/15 pl-3 dark:border-blue-700/25"
+                className="space-y-2 border-l-2 border-[#00AAFA]/15 pl-3 dark:border-[#2D0281]/25"
               >
                 {k.replies.map((r) => (
                   <KomentarBubble
@@ -292,9 +283,6 @@ export function KomentarSection({
   }
 
   const PREVIEW_COUNT = 3;
-  // Show the 3 most recent top-level comments by default (komentar arrives
-  // oldest-first from the backend, and new ones are appended to the end) —
-  // full thread, oldest-first, only after "Lihat Semua Komentar" is clicked.
   const hasMore = komentar.length > PREVIEW_COUNT;
   const visibleKomentar = showAll || !hasMore ? komentar : komentar.slice(-PREVIEW_COUNT);
 
@@ -303,11 +291,11 @@ export function KomentarSection({
 
       <div className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 dark:bg-slate-800/50 ${
         focused
-          ? "border-[#0064E0]/40 shadow-[0_0_0_4px_rgba(0,100,224,0.08)]"
+          ? "border-[#00AAFA]/40 shadow-[0_0_0_4px_rgba(0,170,250,0.08)]"
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: "#0064E0" }} />
+          style={{ background: "#00AAFA" }} />
 
         <textarea
           rows={3}
@@ -327,8 +315,8 @@ export function KomentarSection({
           <button
             onClick={submitKomentar}
             disabled={sending || !teks.trim()}
-            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(0,100,224,0.45)] active:scale-95"
-            style={{ background: "#0064E0" }}
+            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(0,170,250,0.45)] active:scale-95"
+            style={{ background: "#00AAFA" }}
           >
             {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             {sending ? "Mengirim…" : "Kirim"}
@@ -337,9 +325,9 @@ export function KomentarSection({
       </div>
 
       {komentar.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-slate-50 py-10 text-center dark:border-slate-700/40 dark:bg-[#1C2B33]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0082FB]/10">
-            <Sparkles size={20} className="text-[#0064E0] dark:text-blue-400" />
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-slate-50 py-10 text-center dark:border-slate-700/40 dark:bg-[#1E293B]">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3E03B3]/10">
+            <Sparkles size={20} className="text-[#00AAFA] dark:text-[#8F6DD3]" />
           </div>
           <p className="text-[13px] font-bold text-slate-500 dark:text-slate-400">Belum ada komentar</p>
           <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Jadilah yang pertama berkomentar!</p>
@@ -363,7 +351,7 @@ export function KomentarSection({
               className={`flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed py-2 text-[12px] font-bold transition-all ${
                 showAll
                   ? "border-slate-200 text-slate-400 hover:bg-slate-50 dark:border-slate-700/50 dark:hover:bg-slate-800/40"
-                  : "border-slate-200 text-[#0064E0] hover:bg-blue-50 dark:border-slate-700/50 dark:hover:bg-blue-900/20"
+                  : "border-slate-200 text-[#00AAFA] hover:bg-[#F1EDFA] dark:border-slate-700/50 dark:hover:bg-[#000000]/20"
               }`}
             >
               <ChevronDown size={13} className={showAll ? "rotate-180" : ""} />

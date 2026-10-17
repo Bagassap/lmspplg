@@ -66,7 +66,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
                   <button onClick={() => onPage(i)}
                     className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                       i === page
-                        ? "bg-[#0082FB] text-white shadow-sm"
+                        ? "bg-[#3E03B3] text-white shadow-sm"
                         : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                     }`}>
                     {i + 1}
@@ -132,7 +132,7 @@ export function SiswaTable({
                       <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">NIS {s.nis}</p>
                     </div>
                     <span className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold"
-                      style={pct === 100 ? { backgroundColor: "#E3FBF0", color: "#00D67F" } : { backgroundColor: "#F1F5F8", color: "#64748b" }}>
+                      style={pct === 100 ? { backgroundColor: "#F6FEE8", color: "#5D900F" } : { backgroundColor: "#FFFFFF", color: "#64748b" }}>
                       {pct}%
                     </span>
                     <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />

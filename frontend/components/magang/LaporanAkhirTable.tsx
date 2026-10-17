@@ -6,9 +6,9 @@ import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import type { LaporanAkhirRow } from "./laporan-akhir-types";
 
 const STATUS_CFG: Record<string, { label: string; bg: string; clr: string; icon: typeof Clock }> = {
-  TERKIRIM: { label: "Menunggu Review", bg: "#EAF3FF", clr: "#0082FB", icon: Clock },
-  DITERIMA: { label: "Diterima", bg: "#E3FBF0", clr: "#00D67F", icon: CheckCircle2 },
-  REVISI: { label: "Perlu Revisi", bg: "#F1F5F8", clr: "#8A9E1F", icon: AlertTriangle },
+  TERKIRIM: { label: "Menunggu Review", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
+  DITERIMA: { label: "Diterima", bg: "#F6FEE8", clr: "#5D900F", icon: CheckCircle2 },
+  REVISI: { label: "Perlu Revisi", bg: "#F2F2F2", clr: "#000000", icon: AlertTriangle },
 };
 
 export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpen, mobileNative = false }: {
@@ -81,7 +81,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                         {r.laporan ? (
                           <button onClick={() => onOpen(r)}
                             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:brightness-105"
-                            style={{ background: "#0082FB" }}>
+                            style={{ background: "#3E03B3" }}>
                             <Eye size={11} /> Lihat
                           </button>
                         ) : (
@@ -124,7 +124,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                     {r.laporan ? (
                       <button onClick={() => onOpen(r)}
                         className="ml-[50px] flex w-fit items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                        style={{ background: "#0082FB" }}>
+                        style={{ background: "#3E03B3" }}>
                         <Eye size={11} /> Lihat
                       </button>
                     ) : (

@@ -51,62 +51,62 @@ function useDarkMode() {
 
 const THEME = {
   success: {
-    headerBg:    "#E3FBF0",
-    blob1:       "rgba(0,214,127,0.22)",
-    blob2:       "rgba(0,214,127,0.14)",
-    ring1:       "rgba(0,214,127,0.18)",
-    ring2:       "rgba(0,214,127,0.10)",
-    iconBg:      "#00D67F",
-    iconShadow:  "0 16px 40px rgba(0,214,127,0.55)",
-    bar:         "#00D67F",
-    btnBg:       "#00D67F",
-    btnShadow:   "0 8px 24px rgba(0,214,127,0.45)",
-    dotColor:    "#00D67F",
+    headerBg:    "#F6FEE8",
+    blob1:       "rgba(161,249,25,0.22)",
+    blob2:       "rgba(161,249,25,0.14)",
+    ring1:       "rgba(161,249,25,0.18)",
+    ring2:       "rgba(161,249,25,0.10)",
+    iconBg:      "#A1F919",
+    iconShadow:  "0 16px 40px rgba(161,249,25,0.55)",
+    bar:         "#A1F919",
+    btnBg:       "#A1F919",
+    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
+    dotColor:    "#A1F919",
     icon:        CheckCircle2,
     label:       "Berhasil",
   },
   error: {
-    headerBg:    "#FEE9EA",
-    blob1:       "rgba(239,68,68,0.22)",
-    blob2:       "rgba(239,68,68,0.14)",
-    ring1:       "rgba(239,68,68,0.18)",
-    ring2:       "rgba(239,68,68,0.10)",
-    iconBg:      "#EF4444",
-    iconShadow:  "0 16px 40px rgba(239,68,68,0.55)",
-    bar:         "#EF4444",
-    btnBg:       "#EF4444",
-    btnShadow:   "0 8px 24px rgba(239,68,68,0.45)",
-    dotColor:    "#EF4444",
+    headerBg:    "#F6FEE8",
+    blob1:       "rgba(161,249,25,0.22)",
+    blob2:       "rgba(161,249,25,0.14)",
+    ring1:       "rgba(161,249,25,0.18)",
+    ring2:       "rgba(161,249,25,0.10)",
+    iconBg:      "#A1F919",
+    iconShadow:  "0 16px 40px rgba(161,249,25,0.55)",
+    bar:         "#A1F919",
+    btnBg:       "#A1F919",
+    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
+    dotColor:    "#A1F919",
     icon:        XCircle,
     label:       "Gagal",
   },
   warning: {
-    headerBg:    "#F4FFD9",
-    blob1:       "rgba(195,248,74,0.35)",
-    blob2:       "rgba(195,248,74,0.22)",
-    ring1:       "rgba(195,248,74,0.28)",
-    ring2:       "rgba(195,248,74,0.16)",
-    iconBg:      "#1C2B33",
-    iconShadow:  "0 16px 40px rgba(28,43,51,0.35)",
-    bar:         "#C3F84A",
-    btnBg:       "#C3F84A",
-    btnShadow:   "0 8px 24px rgba(195,248,74,0.45)",
-    dotColor:    "#C3F84A",
+    headerBg:    "#F6FEE8",
+    blob1:       "rgba(161,249,25,0.35)",
+    blob2:       "rgba(161,249,25,0.22)",
+    ring1:       "rgba(161,249,25,0.28)",
+    ring2:       "rgba(161,249,25,0.16)",
+    iconBg:      "#000000",
+    iconShadow:  "0 16px 40px rgba(0,0,0,0.35)",
+    bar:         "#A1F919",
+    btnBg:       "#A1F919",
+    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
+    dotColor:    "#A1F919",
     icon:        AlertTriangle,
     label:       "Perhatian",
   },
   info: {
-    headerBg:    "#EAF3FF",
-    blob1:       "rgba(0,130,251,0.22)",
-    blob2:       "rgba(0,130,251,0.14)",
-    ring1:       "rgba(0,130,251,0.18)",
-    ring2:       "rgba(0,130,251,0.10)",
-    iconBg:      "#0064E0",
-    iconShadow:  "0 16px 40px rgba(0,130,251,0.55)",
-    bar:         "#0064E0",
-    btnBg:       "#0064E0",
-    btnShadow:   "0 8px 24px rgba(0,130,251,0.45)",
-    dotColor:    "#0082FB",
+    headerBg:    "#F1EDFA",
+    blob1:       "rgba(62,3,179,0.22)",
+    blob2:       "rgba(62,3,179,0.14)",
+    ring1:       "rgba(62,3,179,0.18)",
+    ring2:       "rgba(62,3,179,0.10)",
+    iconBg:      "#00AAFA",
+    iconShadow:  "0 16px 40px rgba(62,3,179,0.55)",
+    bar:         "#00AAFA",
+    btnBg:       "#00AAFA",
+    btnShadow:   "0 8px 24px rgba(62,3,179,0.45)",
+    dotColor:    "#3E03B3",
     icon:        Info,
     label:       "Informasi",
   },
@@ -140,8 +140,8 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 
   const handleEnd = useCallback(() => onDismiss(toast.id), [toast.id, onDismiss]);
 
-  const cardBg     = isDark ? "#1C2B33" : "#ffffff";
-  const titleColor = isDark ? "#F1F5F8" : "#1C2B33";
+  const cardBg     = isDark ? "#1E293B" : "#ffffff";
+  const titleColor = isDark ? "#FFFFFF" : "#000000";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const headerBg   = isDark ? "rgba(30,41,59,0)" : theme.headerBg;
@@ -238,7 +238,7 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
               initial={{ scale: 0, rotate: -25 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
-              className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
+              className={`relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl ${theme.iconBg === "#A1F919" ? "text-black" : "text-white"}`}
               style={{ background: theme.iconBg, boxShadow: theme.iconShadow }}
             >
               <motion.div
@@ -304,7 +304,7 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
             whileTap={{ scale: 0.97 }}
             onClick={() => onDismiss(toast.id)}
             className="mt-5 w-full rounded-2xl py-3 text-sm font-bold"
-            style={{ background: theme.btnBg, color: theme.btnBg === "#C3F84A" ? "#1C2B33" : "#FFFFFF", boxShadow: `0 6px 20px ${theme.blob1}` }}
+            style={{ background: theme.btnBg, color: theme.btnBg === "#A1F919" ? "#000000" : "#FFFFFF", boxShadow: `0 6px 20px ${theme.blob1}` }}
           >
             Tutup
           </motion.button>
@@ -332,13 +332,13 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
 
-  const cardBg     = isDark ? "#1C2B33" : "#ffffff";
-  const titleColor = isDark ? "#F1F5F8" : "#1C2B33";
+  const cardBg     = isDark ? "#1E293B" : "#ffffff";
+  const titleColor = isDark ? "#FFFFFF" : "#000000";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-  const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#F1F5F8";
+  const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#FFFFFF";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
-  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "#FEE9EA";
+  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "#F6FEE8";
 
   const dots = [
     { x: -50, y: -46, delay: 0.1,  size: 7 },
@@ -361,7 +361,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
         animate={{ opacity: [0.5, 0.16, 0.5], scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -inset-4 -z-10 rounded-4xl blur-2xl"
-        style={{ background: "rgba(239,68,68,0.24)" }}
+        style={{ background: "rgba(161,249,25,0.24)" }}
       />
 
       <div
@@ -381,25 +381,25 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             animate={{ scale: [1, 1.22, 1], opacity: [0.6, 0.25, 0.6] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-            style={{ width: 160, height: 160, background: "rgba(239,68,68,0.22)" }}
+            style={{ width: 160, height: 160, background: "rgba(161,249,25,0.22)" }}
           />
 
           <div className="relative flex items-center justify-center">
             {dots.map((d, i) => (
-              <FloatingDot key={i} color="#EF4444" x={d.x} y={d.y} delay={d.delay} size={d.size} />
+              <FloatingDot key={i} color="#A1F919" x={d.x} y={d.y} delay={d.delay} size={d.size} />
             ))}
 
             <motion.div
               animate={{ scale: [1, 1.55, 1], opacity: [0.4, 0, 0.4] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute rounded-full"
-              style={{ width: 108, height: 108, background: "rgba(239,68,68,0.10)" }}
+              style={{ width: 108, height: 108, background: "rgba(161,249,25,0.10)" }}
             />
             <motion.div
               animate={{ scale: [1, 1.32, 1], opacity: [0.55, 0.1, 0.55] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
               className="absolute rounded-full"
-              style={{ width: 84, height: 84, background: "rgba(239,68,68,0.16)" }}
+              style={{ width: 84, height: 84, background: "rgba(161,249,25,0.16)" }}
             />
 
             <motion.div
@@ -408,8 +408,8 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
               className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
               style={{
-                background: "#EF4444",
-                boxShadow: "0 16px 40px rgba(239,68,68,0.55)",
+                background: "#A1F919",
+                boxShadow: "0 16px 40px rgba(161,249,25,0.55)",
               }}
             >
               <motion.div
@@ -434,8 +434,8 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             transition={{ delay: 0.28 }}
             className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
-              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(239,68,68,0.10)",
-              color: "#EF4444",
+              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(161,249,25,0.10)",
+              color: "#5D900F",
             }}
           >
             Konfirmasi
@@ -482,13 +482,13 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               Batal
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.03, boxShadow: "0 10px 28px rgba(239,68,68,0.50)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 28px rgba(161,249,25,0.50)" }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onClose(true)}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white"
               style={{
-                background: "#EF4444",
-                boxShadow: "0 6px 20px rgba(239,68,68,0.40)",
+                background: "#A1F919",
+                boxShadow: "0 6px 20px rgba(161,249,25,0.40)",
               }}
             >
               <Trash2 size={14} />

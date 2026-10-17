@@ -19,12 +19,8 @@ export function TugasJawabanViewerModal({
   jawaban: TugasJawabanItem[];
   nilai?: number | null;
   canGrade?: boolean;
-  // Simpan nilai = langsung diterima (tidak ada tombol Terima/Revisi
-  // terpisah di sini) — begitu guru simpan nilai, backend otomatis
-  // menandai submisi DITERIMA.
   onSaveNilai?: (nilai: number) => Promise<void>;
   isDone?: boolean;
-  // Info + aksi percobaan (lockdown) — lihat PercobaanBar.
   jumlahPercobaan?: number;
   maksimalPercobaan?: number;
   terkunci?: boolean;
@@ -34,12 +30,10 @@ export function TugasJawabanViewerModal({
   onResetPercobaan?: () => void;
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
-  const warna = isPg ? "#C3F84A" : "#0064E0";
+  const warna = isPg ? "#A1F919" : "#00AAFA";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
   const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
-  // PG sudah dihitung otomatis saat submit — tetap dipakai sebagai nilai awal
-  // di kolom input (bisa ditimpa manual kalau guru mau koreksi).
   const nilaiAwal = nilai ?? nilaiAkhir;
 
   const [nilaiInput, setNilaiInput] = useState(nilaiAwal != null ? String(nilaiAwal) : "");
@@ -47,14 +41,8 @@ export function TugasJawabanViewerModal({
 
   useEffect(() => {
     if (open) setNilaiInput(nilaiAwal != null ? String(nilaiAwal) : "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, nilaiAwal]);
 
-  // Tidak ada tombol "Simpan Nilai" — nilai otomatis tersimpan (langsung
-  // menerima submisi) begitu kolom ini kehilangan fokus atau guru menekan
-  // Enter, tanpa langkah klik terpisah. Tetap dikirim walau angkanya sama
-  // dengan nilai awal (mis. Pilihan Ganda yang sudah otomatis benar) —
-  // itulah satu-satunya cara menandai submisi ini diterima.
   async function handleSaveNilai() {
     if (nilaiInput === "" || saving) return;
     const parsed = Math.round(Number(nilaiInput));
@@ -76,9 +64,9 @@ export function TugasJawabanViewerModal({
           <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#1C2B33" : "#FFFFFF" }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#1C2B331A" : "#FFFFFF1A" }} />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#000000" : "#FFFFFF" }}>
+              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0000001A" : "#FFFFFF1A" }} />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
                 {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
               </div>
               <div className="min-w-0 flex-1">
@@ -88,7 +76,7 @@ export function TugasJawabanViewerModal({
                 </p>
               </div>
               {isPg && nilaiAkhir !== null && (
-                <div className="shrink-0 rounded-xl px-3 py-1.5 text-center" style={{ backgroundColor: "#1C2B3326" }}>
+                <div className="shrink-0 rounded-xl px-3 py-1.5 text-center" style={{ backgroundColor: "#00000026" }}>
                   <p className="text-[9px] font-bold uppercase tracking-widest" style={{ opacity: 0.65 }}>Nilai</p>
                   <p className="text-lg font-black leading-none">{nilaiAkhir}</p>
                 </div>
@@ -101,7 +89,7 @@ export function TugasJawabanViewerModal({
               )}
               <button onClick={onClose}
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
-                style={{ backgroundColor: isPg ? "#1C2B3326" : "#FFFFFF26" }}>
+                style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
                 <X size={16} />
               </button>
             </div>
@@ -126,11 +114,11 @@ export function TugasJawabanViewerModal({
                     const isCorrect = isPg && !!soal?.jawabanBenar && j.jawabanPilihan === soal.jawabanBenar;
                     const isWrong = isPg && !!soal?.jawabanBenar && !!j.jawabanPilihan && j.jawabanPilihan !== soal.jawabanBenar;
                     return (
-                      <div key={j.id} className={`rounded-xl border p-4 ${isCorrect ? "border-emerald-200 bg-emerald-50/50 dark:bg-emerald-900/10" : isWrong ? "border-red-200 bg-red-50/50 dark:bg-red-900/10" : "border-slate-100 dark:border-slate-700"}`}>
+                      <div key={j.id} className={`rounded-xl border p-4 ${isCorrect ? "border-[#F6FEE8] bg-[#F6FEE8]/50 dark:bg-[#48700B]/10" : isWrong ? "border-[#F6FEE8] bg-[#F6FEE8]/50 dark:bg-[#48700B]/10" : "border-slate-100 dark:border-slate-700"}`}>
                         <div className="mb-3 flex items-start justify-between gap-2">
                           <p className="text-sm font-bold text-slate-800 dark:text-white">{idx + 1}. {soal?.pertanyaan}</p>
                           {isPg && soal?.jawabanBenar && (
-                            isCorrect ? <CheckCircle size={16} className="shrink-0 text-emerald-500" /> : <XCircle size={16} className="shrink-0 text-red-500" />
+                            isCorrect ? <CheckCircle size={16} className="shrink-0 text-[#5D900F]" /> : <XCircle size={16} className="shrink-0 text-[#5D900F]" />
                           )}
                         </div>
                         {isPg ? (
@@ -143,12 +131,12 @@ export function TugasJawabanViewerModal({
                               return (
                                 <div key={huruf}
                                   className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm ${
-                                    isKey ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20"
-                                    : isSelected ? "border-red-300 bg-red-50 dark:bg-red-900/20"
+                                    isKey ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                    : isSelected ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/20"
                                     : "border-slate-100 dark:border-slate-700"
                                   }`}>
                                   <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                                    isKey ? "bg-emerald-500 text-white" : isSelected ? "bg-red-500 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                                    isKey ? "bg-[#A1F919] text-black" : isSelected ? "bg-[#A1F919] text-black" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                                   }`}>{huruf}</span>
                                   <span className="text-slate-700 dark:text-slate-200">{teks}</span>
                                   {isSelected && <span className="ml-auto text-[10px] font-bold text-slate-400">Dipilih siswa</span>}
@@ -166,8 +154,8 @@ export function TugasJawabanViewerModal({
                             </div>
                             {soal?.jawabanBenar && (
                               <div>
-                                <p className="mb-1 text-[11px] font-bold text-emerald-500">Kunci Jawaban</p>
-                                <p className="whitespace-pre-wrap rounded-lg border border-emerald-200 bg-emerald-50/50 px-3.5 py-2.5 text-sm text-slate-700 dark:border-emerald-800 dark:bg-emerald-900/10 dark:text-slate-200">
+                                <p className="mb-1 text-[11px] font-bold text-[#5D900F]">Kunci Jawaban</p>
+                                <p className="whitespace-pre-wrap rounded-lg border border-[#F6FEE8] bg-[#F6FEE8]/50 px-3.5 py-2.5 text-sm text-slate-700 dark:border-[#48700B] dark:bg-[#48700B]/10 dark:text-slate-200">
                                   {soal.jawabanBenar}
                                 </p>
                               </div>
@@ -190,7 +178,7 @@ export function TugasJawabanViewerModal({
                     onBlur={handleSaveNilai}
                     onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
                     placeholder="0-100"
-                    className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                    className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#8F6DD3] disabled:opacity-60 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                   {saving && (
                     <Loader2 size={14} className="absolute right-2 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />
                   )}

@@ -6,7 +6,7 @@ import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { TempatMagang } from "./types";
 
-const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0082FB]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
+const INPUT_CLS = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200";
 
 export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   tempatList: TempatMagang[]; onClose: () => void; onSaved: () => void;
@@ -77,7 +77,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#0082FB] px-6 py-5">
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
             <Building2 size={18} className="text-white" />
@@ -122,14 +122,14 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                   Batal
                 </button>
                 <button onClick={save} disabled={saving}
-                  className="rounded-xl bg-[#0082FB] px-4 py-1.5 text-xs font-bold text-white disabled:opacity-50">
+                  className="rounded-xl bg-[#3E03B3] px-4 py-1.5 text-xs font-bold text-white disabled:opacity-50">
                   {saving ? "Menyimpan..." : "Simpan"}
                 </button>
               </div>
             </div>
           ) : (
             <button onClick={startCreate}
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 hover:border-[#0082FB]/40 hover:text-[#0082FB] dark:border-slate-600">
+              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 hover:border-[#3E03B3]/40 hover:text-[#3E03B3] dark:border-slate-600">
               <Plus size={14} /> Tambah Tempat Magang
             </button>
           )}
@@ -147,7 +147,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                   <button onClick={() => startEdit(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300">
                     <Pencil size={12} />
                   </button>
-                  <button onClick={() => remove(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-900/20">
+                  <button onClick={() => remove(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
                     <Trash2 size={12} />
                   </button>
                 </div>
