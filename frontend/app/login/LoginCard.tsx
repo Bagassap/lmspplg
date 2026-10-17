@@ -92,19 +92,6 @@ export function LoginCard() {
               className="mx-auto mt-3 h-px w-16 sm:mt-4"
               style={{ background: "rgba(62,3,179,0.8)" }}
             />
-
-            <p className="mt-3 text-[11.5px] font-light leading-relaxed text-white/60">
-              Pengembangan Perangkat Lunak
-              <br />
-              dan Gim
-            </p>
-
-            <div className="mt-4 flex justify-center sm:mt-5">
-              <span className="inline-flex items-center gap-2 rounded-lg border border-white/18 bg-white/[0.07] px-3.5 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/75">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-[#3E03B3]/70" />
-                SMK Ma&apos;arif NU 01 Limpung
-              </span>
-            </div>
           </div>
         </div>
       </div>

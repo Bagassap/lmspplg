@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Eye, EyeOff, Loader2, User, Lock } from "lucide-react";
 import { BrandedLoadingOverlay } from "@/components/shared/BrandedLoadingOverlay";
+import { PwaInstallScreen } from "@/components/shared/PwaInstallScreen";
+import { markInstallHandled, useCanInstall } from "@/lib/pwaInstall";
 
 const container: Variants = {
   hidden: {},
@@ -27,6 +29,8 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [redirecting, setRedirecting] = useState<string | null>(null);
+  const [afterInstall, setAfterInstall] = useState<(() => void) | null>(null);
+  const canInstall = useCanInstall();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -59,14 +63,21 @@ export function LoginForm() {
       sessionStorage.setItem("lms_session", "1");
       const namaDepan = (data.user?.nama as string | undefined)?.split(" ")[0] ?? "";
       const greeting = namaDepan ? `Selamat datang, ${namaDepan}!` : "Selamat datang!";
-      if (data.user?.mustChangePassword) {
+      const role = (data.user?.role as string)?.toLowerCase() ?? "siswa";
+      const dest = data.user?.mustChangePassword
+        ? "/change-password"
+        : `/${role}/dashboard`;
+      const proceed = () => {
         setRedirecting(greeting);
-        setTimeout(() => window.location.replace("/change-password"), 1600);
+        setTimeout(() => window.location.replace(dest), 1600);
+      };
+      // Tawarkan pasang aplikasi dulu, baru layar Selamat Datang.
+      if (canInstall) {
+        markInstallHandled();
+        setAfterInstall(() => proceed);
         return;
       }
-      const role = (data.user?.role as string)?.toLowerCase() ?? "siswa";
-      setRedirecting(greeting);
-      setTimeout(() => window.location.replace(`/${role}/dashboard`), 1600);
+      proceed();
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
       setLoading(false);
@@ -178,6 +189,15 @@ export function LoginForm() {
     </motion.form>
 
     <AnimatePresence>
+      {afterInstall && !redirecting && (
+        <PwaInstallScreen
+          onDone={() => {
+            const next = afterInstall;
+            setAfterInstall(null);
+            next();
+          }}
+        />
+      )}
       {redirecting && <BrandedLoadingOverlay greeting={redirecting} />}
     </AnimatePresence>
     </>
