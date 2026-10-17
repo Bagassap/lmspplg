@@ -372,8 +372,8 @@ export default function SiswaJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          <div className={`mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_1fr] ${appMode ? "max-lg:hidden" : ""}`}>
-            <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1">
+          <div className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_1fr]">
+            <div className={`rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:col-start-1 lg:row-start-1 ${appMode ? "max-lg:hidden" : ""}`}>
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
