@@ -592,7 +592,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] dark:text-[#A1F919] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
                   >
                     <LogOut size={14} />
                     Keluar

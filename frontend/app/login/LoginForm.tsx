@@ -170,7 +170,7 @@ export function LoginForm() {
       <motion.div variants={item} className="text-center">
         <Link
           href="/lupa-password"
-          className="text-sm font-medium text-[#5D900F] transition-colors hover:text-[#5D900F]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
+          className="text-sm font-medium text-[#5D900F] dark:text-[#A1F919] transition-colors hover:text-[#5D900F]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
         >
           Lupa Password?
         </Link>

@@ -18,13 +18,13 @@ export function PercobaanBar({
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50/60 px-5 py-3 dark:border-slate-700 dark:bg-slate-700/20">
       <span className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
-        terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+        terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
       }`}>
         <Lock size={10} /> Percobaan {jumlahPercobaan}/{maksimalPercobaan}
         {!!bonusPercobaan && ` (+${bonusPercobaan})`}
       </span>
       {dipaksaKeluar && (
-        <span className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:bg-[#48700B]/20">
+        <span className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
           <ShieldAlert size={10} /> Dipaksa Keluar
         </span>
       )}

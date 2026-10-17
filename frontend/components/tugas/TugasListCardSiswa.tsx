@@ -88,7 +88,7 @@ export function TugasListCardSiswa({
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#A1F919" }}>
-            <ClipboardList size={14} className="text-[#000000]" />
+            <ClipboardList size={14} className="text-[#000000] dark:text-[#A1F919]" />
           </div>
           <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas Saya</p>
         </div>
@@ -100,14 +100,12 @@ export function TugasListCardSiswa({
         </div>
         <div className="flex gap-5 border-b border-slate-100 dark:border-slate-700">
           <button onClick={() => setTab("active")}
-            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "active" ? "border-[#00AAFA]" : "text-slate-400 border-transparent hover:text-slate-600"}`}
-            style={tab === "active" ? { color: "#3E03B3" } : {}}>
+            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "active" ? "border-[#00AAFA] text-[#3E03B3] dark:text-[#8F6DD3]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
             Aktif
             {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#3E03B3" }}>{active.length}</span>}
           </button>
           <button onClick={() => setTab("completed")}
-            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}
-            style={tab === "completed" ? { color: "#5D900F" } : {}}>
+            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
             Selesai
             {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#A1F919" }}>{completed.length}</span>}
           </button>
@@ -253,20 +251,20 @@ export function TugasListCardSiswa({
       <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-1 dark:border-slate-700">
         <div className="flex items-center gap-5">
           <button type="button" onClick={() => setTab("active")}
-            className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
-            style={tab === "active" ? { borderColor: "#3E03B3", color: "#3E03B3" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "active" ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
+            style={{ borderColor: tab === "active" ? "#3E03B3" : "transparent" }}>
             Aktif
-            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={tab === "active" ? { background: "#3E03B318", color: "#3E03B3" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+            <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "active" ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
+              style={{ background: tab === "active" ? "#3E03B318" : "#E2E8F0" }}>
               {active.length}
             </span>
           </button>
           <button type="button" onClick={() => setTab("completed")}
-            className="-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors"
-            style={tab === "completed" ? { borderColor: "#A1F919", color: "#5D900F" } : { borderColor: "transparent", color: "#94a3b8" }}>
+            className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
+            style={{ borderColor: tab === "completed" ? "#A1F919" : "transparent" }}>
             Selesai
-            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={tab === "completed" ? { background: "#A1F91918", color: "#5D900F" } : { background: "#E2E8F0", color: "#94a3b8" }}>
+            <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
+              style={{ background: tab === "completed" ? "#A1F91918" : "#E2E8F0" }}>
               {completed.length}
             </span>
           </button>
@@ -274,8 +272,8 @@ export function TugasListCardSiswa({
 
         {uniqueMapel.length > 1 && (
           <button type="button" onClick={() => setShowFilterSheet(true)}
-            className="relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-            style={mapelFilter ? { background: "#3E03B318", color: "#3E03B3" } : { background: "#FFFFFF", color: "#94a3b8" }}>
+            className={`relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${mapelFilter ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
+            style={{ background: mapelFilter ? "#3E03B318" : "#FFFFFF" }}>
             <SlidersHorizontal size={14} />
             {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#3E03B3" }} />}
           </button>
@@ -290,7 +288,7 @@ export function TugasListCardSiswa({
       {!loading && shown.length === 0 && (
         <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
           <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#A1F91930" }}>
-            <ClipboardList size={24} style={{ color: "#5D900F" }} />
+            <ClipboardList size={24} className="text-[#5D900F] dark:text-[#A1F919]" />
           </div>
           <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : "Belum ada tugas tersedia"}</p>
         </div>
@@ -307,7 +305,7 @@ export function TugasListCardSiswa({
                 return (
                   <button key={t.id} type="button" onClick={() => setDetailItem(t)}
                     className="flex w-full items-center gap-3 p-4 text-left">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318", color: "#3E03B3" }}>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-[#3E03B3] dark:text-[#8F6DD3]" style={{ backgroundColor: "#3E03B318" }}>
                       {(() => { const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList; return <Icon size={18} />; })()}
                     </span>
                     <div className="min-w-0 flex-1">
@@ -410,17 +408,17 @@ export function TugasListCardSiswa({
             </div>
             <div className="max-h-[60vh] space-y-1.5 overflow-y-auto px-5 py-5">
               <button type="button" onClick={() => { setMapelFilter(null); setShowFilterSheet(false); }}
-                className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
-                style={mapelFilter === null ? { borderColor: "#3E03B3", background: "#3E03B318", color: "#3E03B3" } : { borderColor: "#FFFFFF", background: "transparent", color: "#334155" }}>
+                className={`flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors ${mapelFilter === null ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#334155] dark:text-slate-300"}`}
+                style={{ borderColor: mapelFilter === null ? "#3E03B3" : "#FFFFFF", background: mapelFilter === null ? "#3E03B318" : "transparent" }}>
                 Semua Mapel
-                {mapelFilter === null && <CheckCircle size={16} style={{ color: "#3E03B3" }} />}
+                {mapelFilter === null && <CheckCircle size={16} className="text-[#3E03B3] dark:text-[#8F6DD3]" />}
               </button>
               {uniqueMapel.map((mp) => (
                 <button key={mp} type="button" onClick={() => { setMapelFilter(mp); setShowFilterSheet(false); }}
-                  className="flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors"
-                  style={mapelFilter === mp ? { borderColor: "#3E03B3", background: "#3E03B318", color: "#3E03B3" } : { borderColor: "#FFFFFF", background: "transparent", color: "#334155" }}>
+                  className={`flex w-full items-center justify-between gap-2 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition-colors ${mapelFilter === mp ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#334155] dark:text-slate-300"}`}
+                  style={{ borderColor: mapelFilter === mp ? "#3E03B3" : "#FFFFFF", background: mapelFilter === mp ? "#3E03B318" : "transparent" }}>
                   {mp}
-                  {mapelFilter === mp && <CheckCircle size={16} style={{ color: "#3E03B3" }} />}
+                  {mapelFilter === mp && <CheckCircle size={16} className="text-[#3E03B3] dark:text-[#8F6DD3]" />}
                 </button>
               ))}
             </div>

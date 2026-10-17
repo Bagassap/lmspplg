@@ -240,11 +240,11 @@ export function MateriListPage({
                           {canEdit(m) && (
                             <>
                               <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] dark:hover:bg-[#000000]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#000000]/20">
                                 <Pencil size={14} />
                               </button>
                               <button onClick={() => handleDelete(m)} title="Hapus"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
                                 <Trash2 size={14} />
                               </button>
                             </>

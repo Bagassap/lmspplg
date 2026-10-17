@@ -187,7 +187,7 @@ function SubmitFileModal({
               onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
             {file ? (
               <div className="flex items-center justify-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <FileIcon size={16} className="text-[#5D900F]" /><span className="font-medium">{file.name}</span>
+                <FileIcon size={16} className="text-[#5D900F] dark:text-[#A1F919]" /><span className="font-medium">{file.name}</span>
               </div>
             ) : (
               <div><Upload size={26} className="mx-auto text-slate-300 mb-2" /><p className="text-sm text-slate-500">Klik untuk upload PDF/PPT/ZIP jawaban</p></div>
@@ -306,7 +306,7 @@ function SubmitSoalModal({
                               active ? "border-[#A1F919] bg-[#FFFFFF] dark:bg-[#000000]/20" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
                             }`}>
                             <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                              active ? "bg-[#A1F919] text-[#000000]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                              active ? "bg-[#A1F919] text-[#000000] dark:text-[#A1F919]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>
                           </button>

@@ -197,7 +197,7 @@ export function KenaikanKelasModal({
                 <ArrowUpCircle size={13} /> Naikkan Kelas
               </button>
               <button onClick={() => setTab("lulus")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600"}`}>
                 <GraduationCap size={13} /> Luluskan Kelas
               </button>
             </div>

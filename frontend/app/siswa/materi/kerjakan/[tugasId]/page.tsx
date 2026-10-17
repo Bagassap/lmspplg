@@ -264,7 +264,7 @@ export default function KerjakanTugasPage() {
   if (phase === "error") {
     return (
       <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-white p-6 text-center dark:bg-slate-900">
-        <ShieldAlert size={40} className="text-[#5D900F]" />
+        <ShieldAlert size={40} className="text-[#5D900F] dark:text-[#A1F919]" />
         <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">{errorMsg}</p>
         <button onClick={() => router.replace("/siswa/materi?tab=tugas")}
           className="rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: "#3E03B3" }}>
@@ -277,7 +277,7 @@ export default function KerjakanTugasPage() {
   if (phase === "diterima") {
     return (
       <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-white p-6 text-center dark:bg-slate-900">
-        <CheckCircle2 size={40} className="text-[#5D900F]" />
+        <CheckCircle2 size={40} className="text-[#5D900F] dark:text-[#A1F919]" />
         <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Tugas ini sudah diterima, tidak perlu dikerjakan lagi.</p>
         <button onClick={() => router.replace("/siswa/materi?tab=tugas")}
           className="rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: "#3E03B3" }}>

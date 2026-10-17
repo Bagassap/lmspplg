@@ -70,7 +70,7 @@ export function LupaPasswordForm() {
         className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-[#A1F919]/15 bg-[#A1F919]/[0.04] px-6 py-8 text-center"
       >
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFFFFF]">
-          <Clock size={28} className="text-[#5D900F]" />
+          <Clock size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
         </div>
         <p className="text-sm font-semibold text-black/80">
           Tunggu Konfirmasi Admin
@@ -97,7 +97,7 @@ export function LupaPasswordForm() {
         className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-black/8 bg-black/[0.02] px-6 py-8 text-center"
       >
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F6FEE8]">
-          <CheckCircle2 size={28} className="text-[#5D900F]" />
+          <CheckCircle2 size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
         </div>
         <p className="text-sm font-semibold text-black/80">
           Permintaan Anda telah dikirim ke Admin.

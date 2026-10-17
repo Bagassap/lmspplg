@@ -116,7 +116,7 @@ export function SubmisiTugasModal({
                 </button>
                 <button onClick={() => setTab("belum")}
                   className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2 text-xs font-bold transition-colors ${
-                    tab === "belum" ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    tab === "belum" ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   }`}>
                   <UserX size={13} /> Belum Mengumpulkan ({belumLoading ? "…" : belumList.length})
                 </button>
@@ -137,14 +137,14 @@ export function SubmisiTugasModal({
                     const nama = s.user?.nama || s.nama || "Siswa";
                     return (
                       <div key={s.id} className="flex flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F6FEE8] text-sm font-bold text-[#5D900F] dark:bg-[#48700B]/30">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F6FEE8] text-sm font-bold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/30">
                           {nama[0]?.toUpperCase() ?? "?"}
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
                           {s.kelas && <p className="text-xs text-slate-400">{s.kelas.nama}</p>}
                         </div>
-                        <span className="shrink-0 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:bg-[#48700B]/20">
+                        <span className="shrink-0 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
                           Belum Kumpul
                         </span>
                       </div>
@@ -174,14 +174,14 @@ export function SubmisiTugasModal({
                       )}
                       {isLockdown && !!s.jumlahPercobaan && (
                         <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
-                          s.terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+                          s.terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
                         }`}>
                           Percobaan {s.jumlahPercobaan}/{maksimalPercobaanEfektif(s)}
                           {!!s.bonusPercobaan && ` (+${s.bonusPercobaan})`}
                         </span>
                       )}
                       {s.dipaksaKeluar && (
-                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:bg-[#48700B]/20">
+                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
                           <ShieldAlert size={11} /> Dipaksa Keluar
                         </span>
                       )}
@@ -210,7 +210,7 @@ export function SubmisiTugasModal({
                           {actionBtn.icon} {actionBtn.label}
                         </button>
                         {isDone && (
-                          <span className="text-xs font-bold text-[#5D900F] shrink-0">Selesai ✓</span>
+                          <span className="text-xs font-bold text-[#5D900F] dark:text-[#A1F919] shrink-0">Selesai ✓</span>
                         )}
                       </div>
 

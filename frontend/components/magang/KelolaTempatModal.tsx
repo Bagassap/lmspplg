@@ -147,7 +147,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                   <button onClick={() => startEdit(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300">
                     <Pencil size={12} />
                   </button>
-                  <button onClick={() => remove(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                  <button onClick={() => remove(t)} className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
                     <Trash2 size={12} />
                   </button>
                 </div>

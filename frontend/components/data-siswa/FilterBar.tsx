@@ -220,7 +220,7 @@ export function FilterBar({
           <button
             type="button"
             onClick={onReset}
-            className="text-xs font-semibold text-slate-400 transition-colors hover:text-[#5D900F] dark:text-slate-500"
+            className="text-xs font-semibold text-slate-400 transition-colors hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:text-slate-500"
           >
             Clear all
           </button>

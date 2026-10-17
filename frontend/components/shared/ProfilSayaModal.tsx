@@ -130,7 +130,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
-                    <IdCard size={15} className="text-[#5D900F]" />
+                    <IdCard size={15} className="text-[#5D900F] dark:text-[#A1F919]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIP</p>
@@ -231,7 +231,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
-                    <IdCard size={15} className="text-[#5D900F]" />
+                    <IdCard size={15} className="text-[#5D900F] dark:text-[#A1F919]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">NIP</p>

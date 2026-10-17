@@ -617,7 +617,7 @@ function CatatanDetailModal({
                         <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
                           <Pencil size={12} />
                         </button>
-                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
+                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
                           <Trash2 size={12} />
                         </button>
                       </div>

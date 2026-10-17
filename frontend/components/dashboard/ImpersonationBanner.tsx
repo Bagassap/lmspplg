@@ -30,7 +30,7 @@ export function ImpersonationBanner({
     <button
       onClick={handleStop}
       disabled={loading}
-      className="flex w-full items-center justify-center gap-2 px-4 py-2.5 text-center text-sm font-semibold text-[#000000] transition-opacity hover:opacity-90 disabled:opacity-70"
+      className="flex w-full items-center justify-center gap-2 px-4 py-2.5 text-center text-sm font-semibold text-[#000000] dark:text-[#A1F919] transition-opacity hover:opacity-90 disabled:opacity-70"
       style={{ background: "#A1F919" }}
     >
       {loading ? (

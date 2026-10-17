@@ -171,7 +171,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onImpersonate(siswa)}
             title="Pantau akun siswa"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#A1F919] text-[#000000] shadow-sm transition-colors hover:brightness-95"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#A1F919] text-[#000000] dark:text-[#A1F919] shadow-sm transition-colors hover:brightness-95"
           >
             <ScanEye size={13} />
           </motion.button>
@@ -194,7 +194,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onKeluarkan(siswa)}
             title="Hapus permanen (siswa keluar/pindah sekolah)"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] shadow-sm transition-colors hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
           >
             <Trash2 size={13} />
           </motion.button>

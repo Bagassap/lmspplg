@@ -69,7 +69,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                             <CheckCircle2 size={10} /> Sudah Lapor
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:bg-[#48700B]/20">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
                             <XCircle size={10} /> Belum Lapor
                           </span>
                         )}
@@ -112,7 +112,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                           <CheckCircle2 size={10} /> Lapor
                         </span>
                       ) : (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:bg-[#48700B]/20">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
                           <XCircle size={10} /> Belum
                         </span>
                       )}

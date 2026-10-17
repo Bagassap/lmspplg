@@ -167,7 +167,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
               </div>
             )}
 
-            {error && <p className="text-xs text-[#5D900F]">{error}</p>}
+            {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
           </div>
 
           <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">

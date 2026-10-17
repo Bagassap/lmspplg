@@ -103,7 +103,7 @@ export function PermintaanPasswordCard({
           </div>
         ) : pending.length === 0 ? (
           <div className="flex flex-col items-center gap-1.5 py-6 text-center">
-            <CheckCircle2 size={20} className="text-[#5D900F]" />
+            <CheckCircle2 size={20} className="text-[#5D900F] dark:text-[#A1F919]" />
             <p className="text-xs font-medium text-slate-400 dark:text-slate-500">Tidak ada permintaan pending</p>
           </div>
         ) : (

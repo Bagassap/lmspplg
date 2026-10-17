@@ -143,14 +143,14 @@ export function MateriFormModal({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Judul <span className="text-[#5D900F]">*</span>
+                    Judul <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                   </label>
                   <input type="text" value={judul} onChange={(e) => setJudul(e.target.value)}
                     placeholder="Contoh: Modul Dasar Pemrograman Web" className={INPUT_CLS} />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Mata Pelajaran <span className="text-[#5D900F]">*</span>
+                    Mata Pelajaran <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                   </label>
                   {mapelOptions ? (
                     <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
@@ -210,7 +210,7 @@ export function MateriFormModal({
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  File Modul <span className="text-[#5D900F]">*</span>
+                  File Modul <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
                 <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600 dark:bg-slate-700/40">
                   <Upload size={16} className="shrink-0 text-[#3E03B3]" />

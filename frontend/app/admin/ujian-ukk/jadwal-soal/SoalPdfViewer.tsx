@@ -46,7 +46,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         {pdfError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-10 text-center" style={{ minHeight: 340 }}>
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFFFFF]">
-              <AlertCircle size={28} className="text-[#5D900F]" />
+              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>
@@ -55,7 +55,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
           </div>
         ) : !blobUrl ? (
           <div className="flex items-center justify-center gap-3 py-20">
-            <Loader2 size={28} className="animate-spin text-[#5D900F]" />
+            <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#A1F919]" />
             <span className="text-sm text-gray-500 dark:text-slate-400">Memuat PDF…</span>
           </div>
         ) : (
@@ -66,13 +66,13 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
               onLoadError={() => setPdfError(true)}
               loading={
                 <div className="flex items-center justify-center gap-3 py-20">
-                  <Loader2 size={28} className="animate-spin text-[#5D900F]" />
+                  <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#A1F919]" />
                   <span className="text-sm text-gray-500">Memuat PDF…</span>
                 </div>
               }>
               <Page pageNumber={pageNumber} width={pageWidth > 0 ? pageWidth : 640}
                 renderAnnotationLayer={false} renderTextLayer={false}
-                loading={<div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#5D900F]" /></div>}
+                loading={<div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#5D900F] dark:text-[#A1F919]" /></div>}
                 className="shadow-xl" />
             </Document>
           </div>

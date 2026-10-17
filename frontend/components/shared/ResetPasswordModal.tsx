@@ -134,7 +134,7 @@ export function ResetPasswordModal({
               </div>
               <div className="space-y-4 px-5 py-5">
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
                     menyimpan hash-nya dan tidak bisa ditampilkan ulang. Salin atau catat sekarang.
@@ -157,7 +157,7 @@ export function ResetPasswordModal({
                 <div className="flex gap-2">
                   <button type="button" onClick={handleCopy}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {copied ? <CheckCheck size={15} className="text-[#5D900F]" /> : <Copy size={15} />}
+                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#A1F919]" /> : <Copy size={15} />}
                     {copied ? "Tersalin" : "Salin"}
                   </button>
                   <button type="button" onClick={() => printSlip({ nama: userName, loginId: effectiveLoginId, password: successPassword })}
@@ -199,14 +199,14 @@ export function ResetPasswordModal({
             {resetToNis && (
               alreadyChanged ? (
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
-                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#A1F919]">
                     <strong>Siswa ini sudah mengganti password sendiri.</strong>
                   </p>
                 </div>
               ) : (
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                     <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
                   </p>
@@ -215,7 +215,7 @@ export function ResetPasswordModal({
             )}
 
             <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-              <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+              <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
               <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                 {resetToNis
                   ? (alreadyChanged
@@ -277,7 +277,7 @@ export function ResetPasswordModal({
                 di sistem belum akurat sehingga siswa tidak bisa lolos verifikasi sendiri.
               </span>
             </label>
-            {error && <p className="text-xs text-[#5D900F]">{error}</p>}
+            {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
           </div>
           <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">
             <button type="button" onClick={onClose}
@@ -318,7 +318,7 @@ export function ResetPasswordModal({
             <div className="relative -mt-4 rounded-t-3xl bg-white pb-6 pt-6 dark:bg-slate-900">
               <div className="mx-auto max-w-md space-y-4 px-6">
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
                     menyimpan hash-nya dan tidak bisa ditampilkan ulang. Salin atau catat sekarang.
@@ -341,7 +341,7 @@ export function ResetPasswordModal({
                 <div className="flex gap-2">
                   <button type="button" onClick={handleCopy}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {copied ? <CheckCheck size={15} className="text-[#5D900F]" /> : <Copy size={15} />}
+                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#A1F919]" /> : <Copy size={15} />}
                     {copied ? "Tersalin" : "Salin"}
                   </button>
                   <button type="button" onClick={() => printSlip({ nama: userName, loginId: effectiveLoginId, password: successPassword })}
@@ -374,14 +374,14 @@ export function ResetPasswordModal({
                 {resetToNis && (
                   alreadyChanged ? (
                     <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
-                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                       <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#A1F919]">
                         <strong>Siswa ini sudah mengganti password sendiri.</strong>
                       </p>
                     </div>
                   ) : (
                     <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                      <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                      <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                       <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                         <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
                       </p>
@@ -390,7 +390,7 @@ export function ResetPasswordModal({
                 )}
 
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
                     {resetToNis
                       ? (alreadyChanged
@@ -452,7 +452,7 @@ export function ResetPasswordModal({
                     di sistem belum akurat sehingga siswa tidak bisa lolos verifikasi sendiri.
                   </span>
                 </label>
-                {error && <p className="text-xs text-[#5D900F]">{error}</p>}
+                {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
 
                 <div className="flex gap-2 pt-1">
                   <button type="button" onClick={onClose}

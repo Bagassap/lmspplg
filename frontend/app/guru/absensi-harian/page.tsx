@@ -76,7 +76,7 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: st
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
         style={{ background: "#A1F919" }}>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5D900F]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5D900F] dark:text-[#A1F919]">
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">

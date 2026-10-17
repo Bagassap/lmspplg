@@ -70,7 +70,7 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
           <iframe src={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}&output=embed`}
             className="h-32 w-full border-0" loading="lazy" title="Lokasi" />
           <div className="flex items-center gap-2 px-4 py-2">
-            <MapPin size={11} className="shrink-0" style={{ color: "#00AAFA" }} />
+            <MapPin size={11} className="shrink-0 text-[#00AAFA] dark:text-[#8F6DD3]" />
             <span className="truncate font-mono text-[11px] text-slate-500 dark:text-slate-400">{lokasi.lat}, {lokasi.lng}</span>
           </div>
         </div>

@@ -124,7 +124,7 @@ export default function SiswaDashboardPage() {
 
   if (error) return (
     <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-      <AlertCircle size={40} className="text-[#5D900F]" />
+      <AlertCircle size={40} className="text-[#5D900F] dark:text-[#A1F919]" />
       <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
       <button onClick={load} className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white"
         style={{ backgroundColor: P }}>

@@ -66,14 +66,14 @@ export function SubmisiSayaModal({
               )}
               {isDiterima && (
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#F6FEE8] dark:bg-[#A1F919]/10 border border-[#F6FEE8] dark:border-[#A1F919]/20">
-                  <CheckCircle size={18} className="text-[#5D900F] shrink-0" />
+                  <CheckCircle size={18} className="text-[#5D900F] dark:text-[#A1F919] shrink-0" />
                   <p className="text-sm font-bold text-[#48700B] dark:text-[#A1F919]">Tugas kamu telah diterima!</p>
                 </div>
               )}
               {isRevisi && (
                 <div className="rounded-xl border border-[#FFFFFF] dark:border-[#A1F919]/30 bg-[#FFFFFF] dark:bg-[#A1F919]/10 px-4 py-4">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle size={15} className="text-[#5D900F] mt-0.5 shrink-0" />
+                    <AlertCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] mt-0.5 shrink-0" />
                     <div>
                       <p className="text-xs font-bold text-[#000000] dark:text-[#A1F919] mb-1.5">Catatan dari Guru/Admin</p>
                       <p className="text-sm text-[#000000] dark:text-[#A1F919] leading-relaxed whitespace-pre-line">

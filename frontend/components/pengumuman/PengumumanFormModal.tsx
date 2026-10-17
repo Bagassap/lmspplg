@@ -142,7 +142,7 @@ export function PengumumanFormModal({
             <form onSubmit={handleSubmit} className="space-y-4 p-6">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  Judul <span className="text-[#5D900F]">*</span>
+                  Judul <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
                 <input
                   type="text"
@@ -187,7 +187,7 @@ export function PengumumanFormModal({
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  Konten <span className="text-[#5D900F]">*</span>
+                  Konten <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
                 <textarea
                   rows={6}

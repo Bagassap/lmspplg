@@ -257,7 +257,7 @@ export function TugasFormModal({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Mata Pelajaran <span className="text-[#5D900F]">*</span>
+                    Mata Pelajaran <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                   </label>
                   {mapelOptions ? (
                     <select value={mapel} onChange={(e) => setMapel(e.target.value)} className={INPUT_CLS}>
@@ -317,14 +317,14 @@ export function TugasFormModal({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                    Judul Tugas <span className="text-[#5D900F]">*</span>
+                    Judul Tugas <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                   </label>
                   <input type="text" value={judul} onChange={(e) => setJudul(e.target.value)}
                     placeholder="Contoh: Membuat Landing Page" className={INPUT_CLS} />
                 </div>
                 <div>
                   <label className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-gray-700 dark:text-slate-300">
-                    <CalendarClock size={12} /> Deadline <span className="text-[#5D900F]">*</span>
+                    <CalendarClock size={12} /> Deadline <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                   </label>
                   <button type="button" onClick={openDeadlinePicker}
                     className={INPUT_CLS + " flex items-center justify-between text-left"}>
@@ -360,13 +360,13 @@ export function TugasFormModal({
               {tipe !== "SUBMIT" && (
                 <div className="rounded-xl border border-[#F6FEE8] bg-[#F6FEE8]/60 p-3.5 dark:border-[#48700B]/40 dark:bg-[#48700B]/10">
                   <div className="mb-2 flex items-start gap-2">
-                    <ShieldAlert size={14} className="mt-0.5 shrink-0 text-[#5D900F]" />
+                    <ShieldAlert size={14} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
                     <p className="text-[11px] leading-relaxed text-[#48700B] dark:text-[#A1F919]">
                       Tugas jenis ini dikerjakan siswa di <strong>lembar pengerjaan terkunci</strong> (halaman penuh, anti salin-tempel, siswa otomatis keluar &amp; jawaban tersimpan bila meninggalkan halaman) — maksimal 2 percobaan.
                     </p>
                   </div>
                   <label className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-gray-700 dark:text-slate-300">
-                    <Timer size={12} /> Durasi Pengerjaan (menit) {isSoalBased && <span className="text-[#5D900F]">*</span>}
+                    <Timer size={12} /> Durasi Pengerjaan (menit) {isSoalBased && <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>}
                   </label>
                   <input type="number" min={1} value={durasiMenit} onChange={(e) => setDurasiMenit(e.target.value)}
                     placeholder={isSoalBased ? "Contoh: 60" : "Kosongkan jika tanpa batas waktu"} className={INPUT_CLS} />
@@ -423,7 +423,7 @@ export function TugasFormModal({
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label className="block text-xs font-bold text-gray-700 dark:text-slate-300">
-                      Daftar Soal <span className="text-[#5D900F]">*</span>
+                      Daftar Soal <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
@@ -438,7 +438,7 @@ export function TugasFormModal({
                           <span className="text-[11px] font-bold text-gray-500 dark:text-slate-400">Soal {idx + 1}</span>
                           {soalList.length > 1 && (
                             <button type="button" onClick={() => removeSoal(idx)}
-                              className="flex h-6 w-6 items-center justify-center rounded-lg text-[#5D900F] hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20">
+                              className="flex h-6 w-6 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20">
                               <Trash2 size={13} />
                             </button>
                           )}
@@ -448,7 +448,7 @@ export function TugasFormModal({
                         {tipe === "PILIHAN_GANDA" && (
                           <div>
                             <label className="mb-1.5 block text-[11px] font-bold text-gray-500 dark:text-slate-400">
-                              Pilihan Jawaban <span className="text-[#5D900F]">*</span>{" "}
+                              Pilihan Jawaban <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>{" "}
                               <span className="font-normal text-gray-400">(klik lingkaran di samping pilihan untuk menandai jawaban yang benar)</span>
                             </label>
                             <div className="space-y-1.5">
@@ -469,13 +469,13 @@ export function TugasFormModal({
                                       className={`w-full rounded-lg border bg-white px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#3E03B3] dark:bg-slate-800 dark:text-slate-100 ${
                                         isKey ? "border-[#A1F919] dark:border-[#48700B]" : "border-gray-200 dark:border-slate-600"
                                       }`} />
-                                    {isKey && <span className="shrink-0 text-[10px] font-bold text-[#5D900F]">Jawaban Benar</span>}
+                                    {isKey && <span className="shrink-0 text-[10px] font-bold text-[#5D900F] dark:text-[#A1F919]">Jawaban Benar</span>}
                                   </div>
                                 );
                               })}
                             </div>
                             {s.pertanyaan.trim() && !s.jawabanBenar ? (
-                              <p className="mt-1.5 pl-9 text-[10px] font-bold text-[#5D900F]">⚠ Belum ada jawaban benar yang ditandai untuk soal ini</p>
+                              <p className="mt-1.5 pl-9 text-[10px] font-bold text-[#5D900F] dark:text-[#A1F919]">⚠ Belum ada jawaban benar yang ditandai untuk soal ini</p>
                             ) : (
                               <p className="mt-1.5 pl-9 text-[10px] text-gray-400">Klik lingkaran huruf untuk menandai jawaban benar</p>
                             )}
@@ -484,7 +484,7 @@ export function TugasFormModal({
                         {tipe === "ESSAY" && (
                           <div>
                             <label className="mb-1 block text-[11px] font-bold text-gray-500 dark:text-slate-400">
-                              Kunci Jawaban <span className="text-[#5D900F]">*</span>{" "}
+                              Kunci Jawaban <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>{" "}
                               <span className="font-normal text-gray-400">(acuan untuk kamu cocokkan saat menilai, tidak dikirim ke siswa)</span>
                             </label>
                             <textarea rows={2} value={s.jawabanBenar} onChange={(e) => updateSoal(idx, { jawabanBenar: e.target.value })}
@@ -493,7 +493,7 @@ export function TugasFormModal({
                                 s.pertanyaan.trim() && !s.jawabanBenar.trim() ? "border-[#A1F919] dark:border-[#48700B]" : "border-[#F6FEE8] dark:border-[#48700B]"
                               }`} />
                             {s.pertanyaan.trim() && !s.jawabanBenar.trim() && (
-                              <p className="mt-1.5 text-[10px] font-bold text-[#5D900F]">⚠ Belum ada kunci jawaban untuk soal ini</p>
+                              <p className="mt-1.5 text-[10px] font-bold text-[#5D900F] dark:text-[#A1F919]">⚠ Belum ada kunci jawaban untuk soal ini</p>
                             )}
                           </div>
                         )}

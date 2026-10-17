@@ -168,7 +168,7 @@ export function JadwalAbsenCard() {
           </p>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
             <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogIn size={11} className="text-[#5D900F]" /> Absen Datang
+              <LogIn size={11} className="text-[#5D900F] dark:text-[#A1F919]" /> Absen Datang
             </p>
             <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
               {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.hadirStartMinutes, hariIni.hadirEndMinutes)}
@@ -210,7 +210,7 @@ export function JadwalAbsenCard() {
                 </p>
               </div>
               <button type="button" onClick={() => handleDelete(o.tanggal)}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#5D900F] hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
                 <Trash2 size={13} />
               </button>
             </div>
@@ -249,7 +249,7 @@ export function JadwalAbsenCard() {
 
                 <div className="rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8]/50 p-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#5D900F] dark:text-[#A1F919]">
-                    <LogIn size={12} /> Absen Datang <span className="normal-case text-[#5D900F]/70">(WIB)</span>
+                    <LogIn size={12} /> Absen Datang <span className="normal-case text-[#5D900F]/70 dark:text-[#A1F919]/70">(WIB)</span>
                   </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
@@ -265,7 +265,7 @@ export function JadwalAbsenCard() {
 
                 <div className="rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/50 p-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
-                    <LogOut size={12} /> Absen Pulang <span className="normal-case text-[#00AAFA]/70">(WIB)</span>
+                    <LogOut size={12} /> Absen Pulang <span className="normal-case text-[#00AAFA]/70 dark:text-[#8F6DD3]/70">(WIB)</span>
                   </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>

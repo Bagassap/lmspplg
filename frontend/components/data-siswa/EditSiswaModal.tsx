@@ -28,7 +28,7 @@ function Field({ label, icon: Icon, required, optional, children }: {
       <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">
         <Icon size={10} className="text-primary/70" />
         {label}
-        {required && <span className="normal-case text-[#5D900F]">*</span>}
+        {required && <span className="normal-case text-[#5D900F] dark:text-[#A1F919]">*</span>}
         {optional && <span className="font-normal normal-case text-gray-400">(opsional)</span>}
       </label>
       {children}
@@ -195,7 +195,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                   </Field>
                 </div>
               </div>
-              {error && <p className="text-xs text-[#5D900F]">{error}</p>}
+              {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
             </div>
           </div>
           <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4 dark:border-slate-800">

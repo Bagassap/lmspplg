@@ -136,7 +136,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
           variants={item}
           className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
         >
-          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
           <p className="text-xs leading-relaxed text-black/65">
             Identitas Anda sudah diverifikasi oleh admin — langsung buat password baru di bawah ini.
           </p>
@@ -147,7 +147,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
             variants={item}
             className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
           >
-            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#000000]" />
+            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#000000] dark:text-[#A1F919]" />
             <p className="text-xs leading-relaxed text-black/65">
               Untuk keamanan, konfirmasi identitas Anda sebelum membuat password baru —
               ini mencegah orang lain mengganti password akun Anda dengan NIS yang bukan miliknya.
@@ -189,7 +189,7 @@ export function ChangePasswordForm({ profileCompleted, bypassIdentityVerificatio
               animate={{ opacity: 1, y: 0 }}
               className="flex items-start gap-2.5 rounded-xl border border-[#A1F919]/20 bg-[#A1F919]/5 px-3.5 py-3"
             >
-              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-[#5D900F]" />
+              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
               <p className="text-xs leading-relaxed text-black/70">
                 Sudah gagal beberapa kali? Kemungkinan {profileCompleted ? "tanggal lahir" : "nama"} yang tersimpan
                 di sistem sekolah berbeda dari yang Anda ingat — bukan berarti Anda salah ketik.

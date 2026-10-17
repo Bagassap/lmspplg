@@ -247,8 +247,8 @@ export function KelolaGuruModal({
                           <button type="button" disabled={busy} onClick={() => toggleAktif(g)}
                             className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold disabled:opacity-40 ${
                               g.isActive
-                                ? "bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
-                                : "bg-[#F6FEE8] text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
                             }`}>
                             {busy ? <Loader2 size={11} className="animate-spin" /> : g.isActive ? <Ban size={11} /> : <RotateCcw size={11} />}
                             {g.isActive ? "Nonaktifkan" : "Aktifkan"}

@@ -98,15 +98,15 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           className="flex w-full items-center gap-3 rounded-3xl p-4 text-left transition-transform active:scale-[0.98]"
           style={{ background: "#A1F919" }}>
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white">
-            <TrendingDown size={18} className="text-[#000000]" />
+            <TrendingDown size={18} className="text-[#000000] dark:text-[#A1F919]" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-[#000000]">Siswa Bermasalah</p>
-            <p className="truncate text-[10.5px] font-semibold text-[#000000]">
+            <p className="text-sm font-extrabold text-[#000000] dark:text-[#A1F919]">Siswa Bermasalah</p>
+            <p className="truncate text-[10.5px] font-semibold text-[#000000] dark:text-[#A1F919]">
               {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
             </p>
           </div>
-          <ArrowRight size={16} className="shrink-0 text-[#000000]" />
+          <ArrowRight size={16} className="shrink-0 text-[#000000] dark:text-[#A1F919]" />
         </button>
       ) : compact ? (
         <button type="button" onClick={() => setShowModal(true)}
@@ -157,7 +157,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           </div>
         ) : inlineRows.length === 0 ? (
           <div className="mt-4 flex flex-col items-center gap-2 py-6 text-center">
-            <ShieldCheck size={22} className="text-[#5D900F]" />
+            <ShieldCheck size={22} className="text-[#5D900F] dark:text-[#A1F919]" />
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Tidak ada siswa dengan catatan alpa pada periode ini
             </p>
@@ -183,7 +183,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
 
         {totalBermasalah > INLINE_LIMIT && (
           <button type="button" onClick={() => setShowModal(true)}
-            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#F6FEE8] px-3 py-2 text-xs font-bold text-[#5D900F] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
+            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#F6FEE8] px-3 py-2 text-xs font-bold text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20">
             Lihat semua {totalBermasalah} siswa <ArrowRight size={12} />
           </button>
         )}
@@ -248,7 +248,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                 <div className="flex-1 py-10 text-center text-xs font-semibold text-slate-400">Memuat data...</div>
               ) : rows.length === 0 ? (
                 <div className="flex flex-1 flex-col items-center justify-center gap-2 py-10 text-center">
-                  <ShieldCheck size={22} className="text-[#5D900F]" />
+                  <ShieldCheck size={22} className="text-[#5D900F] dark:text-[#A1F919]" />
                   <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                     Tidak ada siswa dengan catatan alpa pada periode ini
                   </p>
@@ -284,7 +284,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                               <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
                             </div>
                             <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
-                            <span className="mx-auto rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#5D900F] dark:bg-[#48700B]">
+                            <span className="mx-auto rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]">
                               {r.summary.ALPA}x
                             </span>
                             <div className="flex items-center gap-2">

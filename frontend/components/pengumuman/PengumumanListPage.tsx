@@ -301,14 +301,14 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-[#FFFFFF] text-[#5D900F] dark:bg-[#000000]/20"
-                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] dark:hover:bg-[#000000]/20"
+                            ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#000000]/20"
+                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#000000]/20"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                         <BookOpen size={13} /></button>
                       <button onClick={onDelete} title="Hapus"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:hover:bg-[#48700B]/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
                         <Trash2 size={13} /></button>
                     </div>
                   )}

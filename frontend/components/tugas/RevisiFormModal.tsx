@@ -39,25 +39,25 @@ export function RevisiFormModal({
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10 pointer-events-none" />
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[#000000]/15 flex items-center justify-center shrink-0">
-                  <AlertCircle size={18} className="text-[#000000]" />
+                  <AlertCircle size={18} className="text-[#000000] dark:text-[#A1F919]" />
                 </div>
                 <div>
                   <p className="text-[10px] font-bold tracking-widest text-[#000000]/70 uppercase">Kirim Revisi</p>
-                  <h3 className="text-base font-extrabold text-[#000000] leading-snug">{nama}</h3>
+                  <h3 className="text-base font-extrabold text-[#000000] dark:text-[#A1F919] leading-snug">{nama}</h3>
                 </div>
               </div>
             </div>
 
             <div className="px-6 py-5 space-y-4">
               <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#FFFFFF] dark:bg-[#A1F919]/10 border border-[#FFFFFF] dark:border-[#A1F919]/20">
-                <AlertCircle size={15} className="text-[#5D900F] mt-0.5 shrink-0" />
+                <AlertCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] mt-0.5 shrink-0" />
                 <p className="text-xs text-[#000000] dark:text-[#A1F919] leading-relaxed">
                   Siswa akan menerima notifikasi revisi dan <strong>wajib mengirim ulang</strong> tugas mereka.
                 </p>
               </div>
               <div>
                 <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
-                  Pesan Revisi <span className="text-[#5D900F]">*</span>
+                  Pesan Revisi <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
                 <textarea
                   value={pesan}

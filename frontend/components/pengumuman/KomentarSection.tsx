@@ -18,7 +18,7 @@ export type KomentarItem = {
 
 const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
   ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#00AAFA]/40 dark:text-[#F1EDFA]", dot: "#3E03B3" },
-  GURU:  { label: "Guru",   cls: "bg-[#000000]/10 text-[#000000] dark:bg-[#000000]/60 dark:text-[#FFFFFF]",  dot: "#00AAFA" },
+  GURU:  { label: "Guru",   cls: "bg-[#000000]/10 text-[#000000] dark:text-[#A1F919] dark:bg-[#000000]/60 dark:text-[#FFFFFF]",  dot: "#00AAFA" },
   SISWA: { label: "Siswa",  cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/30 dark:text-[#A1F919]", dot: "#A1F919" },
 };
 
@@ -137,7 +137,7 @@ function KomentarBubble({
               {canDelete && (
                 <button
                   onClick={() => onDelete(k.id)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-slate-300 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] dark:text-slate-600 dark:hover:bg-[#48700B]/20 dark:hover:text-[#A1F919]"
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-slate-300 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:text-slate-600 dark:hover:bg-[#48700B]/20 dark:hover:text-[#A1F919]"
                 >
                   <Trash2 size={10} /> Hapus
                 </button>
@@ -181,7 +181,7 @@ function KomentarBubble({
         <div className="ml-12">
           <button
             onClick={() => setShowReplies((v) => !v)}
-            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#00AAFA]/70 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20"
+            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#00AAFA]/70 dark:text-[#8F6DD3]/70 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20 dark:hover:text-[#8F6DD3]"
           >
             <ChevronDown size={12} className={`transition-transform duration-200 ${showReplies ? "rotate-180" : ""}`} />
             {k.replies.length} balasan

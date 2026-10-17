@@ -250,7 +250,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   )}
                   {onKeluarkan && (
                     <button type="button" onClick={() => { onKeluarkan(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
                       <Trash2 size={15} /> Keluarkan Siswa
                     </button>
                   )}

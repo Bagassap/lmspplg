@@ -116,7 +116,7 @@ export function PenempatanTable({
                               <Pencil size={12} /> Edit
                             </button>
                             <button onClick={() => onHapus?.(p)} disabled={busy}
-                              className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                              className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#A1F919] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                               <Trash2 size={12} /> Hapus
                             </button>
                           </div>
@@ -173,7 +173,7 @@ export function PenempatanTable({
                           <Pencil size={12} /> Edit
                         </button>
                         <button onClick={() => onHapus?.(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                          className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#A1F919] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                           <Trash2 size={12} /> Hapus
                         </button>
                       </div>

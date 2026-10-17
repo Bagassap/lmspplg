@@ -106,7 +106,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
 
               {laporan.status === "TERKIRIM" && showRevisiForm && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Pesan Revisi <span className="text-[#5D900F]">*</span></label>
+                  <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Pesan Revisi <span className="text-[#5D900F] dark:text-[#A1F919]">*</span></label>
                   <textarea value={pesanRevisi} onChange={(e) => setPesanRevisi(e.target.value)} rows={3} autoFocus
                     placeholder="Tuliskan catatan revisi untuk siswa…"
                     className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none focus:border-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
