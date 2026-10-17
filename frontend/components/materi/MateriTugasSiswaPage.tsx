@@ -9,7 +9,7 @@ import { MateriSiswaPage } from "./MateriSiswaPage";
 import { TugasListCardSiswa } from "@/components/tugas/TugasListCardSiswa";
 import { SubmitTugasModal } from "@/components/tugas/SubmitTugasModal";
 import { SubmisiSayaModal } from "@/components/tugas/SubmisiSayaModal";
-import { isTugasActive, LOCKDOWN_TIPE } from "@/components/tugas/types";
+import { isTugasActive } from "@/components/tugas/types";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 import type { MateriItem } from "./MateriFormModal";
 import { SiswaAppMateriTugas } from "./SiswaAppMateriTugas";
@@ -32,12 +32,6 @@ export function MateriTugasSiswaPage() {
 
   const [submitTarget, setSubmitTarget] = useState<TugasItem | null>(null);
   const [detailTarget, setDetailTarget] = useState<{ s: TugasSubmisiItem; t: TugasItem } | null>(null);
-  const [currentUserNama, setCurrentUserNama] = useState<string>("");
-
-  useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => setCurrentUserNama(d?.nama ?? "")).catch(() => {});
-  }, []);
-
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
@@ -55,10 +49,6 @@ export function MateriTugasSiswaPage() {
   useEffect(() => { loadAll(); }, [loadAll]);
 
   function handleKumpulkan(t: TugasItem) {
-    if (LOCKDOWN_TIPE.has(t.tipe)) {
-      router.push(`/siswa/materi/kerjakan/${t.id}`);
-      return;
-    }
     setSubmitTarget(t);
   }
 
@@ -222,7 +212,7 @@ export function MateriTugasSiswaPage() {
 
   const modals = (
     <>
-      <SubmitTugasModal tugas={submitTarget} onClose={() => setSubmitTarget(null)} onSubmit={doSubmit} currentUserNama={currentUserNama} />
+      <SubmitTugasModal tugas={submitTarget} onClose={() => setSubmitTarget(null)} onSubmit={doSubmit} />
 
       <SubmisiSayaModal
         target={detailTarget?.s ?? null}

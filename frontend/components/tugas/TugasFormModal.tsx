@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ClipboardList, Loader2, Upload, File as FileIcon, CalendarClock, Send, Code2,
-  ListChecks, PenLine, Plus, Trash2, CheckCircle2, Timer, ShieldAlert, ChevronDown,
+  ListChecks, PenLine, Plus, Trash2, CheckCircle2, ChevronDown,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
@@ -83,7 +83,6 @@ export function TugasFormModal({
   const [deskripsi, setDeskripsi] = useState("");
   const [deadline, setDeadline] = useState(toLocalInputValue());
   const [tipe, setTipe] = useState<TugasTipe>("SUBMIT");
-  const [durasiMenit, setDurasiMenit] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [code, setCode] = useState({ html: "", css: "", js: "" });
   const [soalList, setSoalList] = useState<SoalDraft[]>([emptySoal()]);
@@ -101,7 +100,6 @@ export function TugasFormModal({
       setDeskripsi(tugas?.deskripsi ?? "");
       setDeadline(toLocalInputValue(tugas?.deadline));
       setTipe((tugas?.tipe as TugasTipe) ?? "SUBMIT");
-      setDurasiMenit(tugas?.durasiMenit ? String(tugas.durasiMenit) : "");
       setFile(null);
       setCode({ html: tugas?.starterHtml ?? "", css: tugas?.starterCss ?? "", js: tugas?.starterJs ?? "" });
       setSoalList(
@@ -165,14 +163,6 @@ export function TugasFormModal({
       setError("Setiap soal essay wajib punya kunci jawaban sebagai acuan penilaian.");
       return;
     }
-    if (isSoalBased && (!durasiMenit.trim() || Number(durasiMenit) < 1)) {
-      setError("Durasi pengerjaan wajib diisi (dalam menit) untuk tugas Pilihan Ganda/Essay.");
-      return;
-    }
-    if (tipe === "PRAKTIK" && durasiMenit.trim() && Number(durasiMenit) < 1) {
-      setError("Durasi pengerjaan harus lebih dari 0 menit.");
-      return;
-    }
     setSaving(true);
     setError("");
     try {
@@ -183,7 +173,6 @@ export function TugasFormModal({
       fd.append("deskripsi", deskripsi);
       fd.append("deadline", wibInputToIso(deadline));
       fd.append("tipe", tipe);
-      if (tipe !== "SUBMIT" && durasiMenit.trim()) fd.append("durasiMenit", durasiMenit.trim());
       if (tipe === "PRAKTIK") {
         fd.append("starterHtml", code.html);
         fd.append("starterCss", code.css);
@@ -356,25 +345,6 @@ export function TugasFormModal({
                   {TIPE_OPTIONS.find((o) => o.value === tipe)?.desc}
                 </p>
               </div>
-
-              {tipe !== "SUBMIT" && (
-                <div className="rounded-xl border border-[#F6FEE8] bg-[#F6FEE8]/60 p-3.5 dark:border-[#48700B]/40 dark:bg-[#48700B]/10">
-                  <div className="mb-2 flex items-start gap-2">
-                    <ShieldAlert size={14} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                    <p className="text-[11px] leading-relaxed text-[#48700B] dark:text-[#A1F919]">
-                      Tugas jenis ini dikerjakan siswa di <strong>lembar pengerjaan terkunci</strong> (halaman penuh, anti salin-tempel, siswa otomatis keluar &amp; jawaban tersimpan bila meninggalkan halaman) — maksimal 2 percobaan.
-                    </p>
-                  </div>
-                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-gray-700 dark:text-slate-300">
-                    <Timer size={12} /> Durasi Pengerjaan (menit) {isSoalBased && <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>}
-                  </label>
-                  <input type="number" min={1} value={durasiMenit} onChange={(e) => setDurasiMenit(e.target.value)}
-                    placeholder={isSoalBased ? "Contoh: 60" : "Kosongkan jika tanpa batas waktu"} className={INPUT_CLS} />
-                  <p className="mt-1 text-[10px] text-gray-400 dark:text-slate-500">
-                    {isSoalBased ? "Wajib diisi — timer berjalan otomatis di lembar pengerjaan siswa." : "Opsional untuk Praktik Kode — kosongkan untuk tanpa batas waktu (lockdown tetap aktif)."}
-                  </p>
-                </div>
-              )}
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">Instruksi / Deskripsi</label>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2, ShieldAlert } from "lucide-react";
+import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
 
 type Tab = "html" | "css" | "js";
 
@@ -41,14 +40,13 @@ ${safeJs}
 }
 
 export function CodePracticeCanvas({
-  initialHtml = "", initialCss = "", initialJs = "", onChange, minHeight = 420, restrictPaste = false,
+  initialHtml = "", initialCss = "", initialJs = "", onChange, minHeight = 420,
 }: {
   initialHtml?: string;
   initialCss?: string;
   initialJs?: string;
   onChange?: (code: { html: string; css: string; js: string }) => void;
   minHeight?: number;
-  restrictPaste?: boolean;
 }) {
   const [html, setHtml] = useState(initialHtml);
   const [css, setCss] = useState(initialCss);
@@ -57,32 +55,7 @@ export function CodePracticeCanvas({
   const [srcDoc, setSrcDoc] = useState(() => buildSrcDoc(initialHtml, initialCss, initialJs));
   const [runKey, setRunKey] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
-  const [blockedHint, setBlockedHint] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function flashBlockedHint() {
-    setBlockedHint(true);
-    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
-    hintTimeoutRef.current = setTimeout(() => setBlockedHint(false), 2200);
-  }
-
-  useEffect(() => () => { if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current); }, []);
-
-  function blockClipboardEvent(e: React.ClipboardEvent<HTMLTextAreaElement>) {
-    if (!restrictPaste) return;
-    e.preventDefault();
-    flashBlockedHint();
-  }
-  function blockDropEvent(e: React.DragEvent<HTMLTextAreaElement>) {
-    if (!restrictPaste) return;
-    e.preventDefault();
-    flashBlockedHint();
-  }
-  function blockContextMenu(e: React.MouseEvent<HTMLTextAreaElement>) {
-    if (!restrictPaste) return;
-    e.preventDefault();
-  }
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -108,27 +81,6 @@ export function CodePracticeCanvas({
 
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
-      <AnimatePresence>
-        {blockedHint && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: -8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: -8 }}
-            transition={{ type: "spring", damping: 22, stiffness: 340 }}
-            className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center p-4"
-          >
-            <div className="flex items-center gap-3 rounded-2xl bg-[#A1F919] px-5 py-3.5 text-black shadow-2xl">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/10">
-                <ShieldAlert size={18} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-sm font-extrabold leading-tight">Tempel/salin dinonaktifkan</p>
-                <p className="text-xs font-medium text-black/70">Mode Praktik — ketik kodenya sendiri, ya!</p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/60 px-3 py-2 dark:border-slate-700 dark:bg-slate-700/20">
         <div className="flex items-center gap-1">
           {TABS.map((t) => {
@@ -143,11 +95,6 @@ export function CodePracticeCanvas({
           })}
         </div>
         <div className="flex items-center gap-1.5">
-          {restrictPaste && (
-            <span className="hidden items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-slate-300 opacity-70 sm:flex dark:text-slate-600">
-              <ShieldAlert size={11} /> Mode anti-copas
-            </span>
-          )}
           <button type="button" onClick={reset}
             className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
             <RotateCcw size={12} /> Reset
@@ -168,12 +115,6 @@ export function CodePracticeCanvas({
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onPaste={blockClipboardEvent}
-          onCut={blockClipboardEvent}
-          onCopy={blockClipboardEvent}
-          onDrop={blockDropEvent}
-          onDragOver={blockDropEvent}
-          onContextMenu={blockContextMenu}
           spellCheck={false}
           placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #3E03B3; }" : "console.log('halo');"}
           className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"

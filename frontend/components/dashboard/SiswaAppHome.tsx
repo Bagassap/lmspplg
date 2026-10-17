@@ -8,7 +8,7 @@ import {
   ClipboardList, Clock, CheckCircle2,
 } from "lucide-react";
 import { icon3dStyle, MENU_TONE, TONE_ORDER } from "@/components/shared/Icon3D";
-import { LOCKDOWN_TIPE, formatTgl, isTugasActive, type TugasItem } from "@/components/tugas/types";
+import { formatTgl, isTugasActive, type TugasItem } from "@/components/tugas/types";
 import type { MateriItem } from "@/components/materi/MateriFormModal";
 
 const ACCENT = "#F26A3D";
@@ -231,7 +231,7 @@ export function SiswaAppHome() {
                 return (
                   <li key={t.id}>
                     <Link
-                      href={LOCKDOWN_TIPE.has(t.tipe) ? `/siswa/materi/kerjakan/${t.id}` : "/siswa/materi"}
+                      href="/siswa/materi?tab=tugas"
                       className="flex items-center gap-4 active:opacity-70"
                     >
                       <span

@@ -5,12 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ListChecks, PenLine, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { TugasJawabanItem } from "./types";
 import { nilaiPilihanGanda } from "./types";
-import { PercobaanBar } from "./PercobaanBar";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export function TugasJawabanViewerModal({
   open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai, isDone,
-  jumlahPercobaan, maksimalPercobaan, terkunci, dipaksaKeluar, bonusPercobaan,
-  onTambahPercobaan, onResetPercobaan,
 }: {
   open: boolean;
   onClose: () => void;
@@ -21,14 +19,8 @@ export function TugasJawabanViewerModal({
   canGrade?: boolean;
   onSaveNilai?: (nilai: number) => Promise<void>;
   isDone?: boolean;
-  jumlahPercobaan?: number;
-  maksimalPercobaan?: number;
-  terkunci?: boolean;
-  dipaksaKeluar?: boolean;
-  bonusPercobaan?: number;
-  onTambahPercobaan?: () => void;
-  onResetPercobaan?: () => void;
 }) {
+  const app = useIsAppMode();
   const isPg = tipe === "PILIHAN_GANDA";
   const warna = isPg ? "#A1F919" : "#00AAFA";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
@@ -64,7 +56,7 @@ export function TugasJawabanViewerModal({
           <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: warna, color: isPg ? "#000000" : "#FFFFFF" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#FFE9E2" : warna, color: app ? "#1E293B" : isPg ? "#000000" : "#FFFFFF" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0000001A" : "#FFFFFF1A" }} />
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
                 {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
@@ -82,9 +74,9 @@ export function TugasJawabanViewerModal({
                 </div>
               )}
               {!isPg && nilai != null && (
-                <div className="shrink-0 rounded-xl bg-white/15 px-3 py-1.5 text-center">
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Nilai</p>
-                  <p className="text-lg font-black leading-none text-white">{nilai}</p>
+                <div className={`shrink-0 rounded-xl px-3 py-1.5 text-center ${app ? "bg-white" : "bg-white/15"}`}>
+                  <p className={`text-[9px] font-bold uppercase tracking-widest ${app ? "text-slate-400" : "text-white/60"}`}>Nilai</p>
+                  <p className={`text-lg font-black leading-none ${app ? "text-[#F26A3D]" : "text-white"}`}>{nilai}</p>
                 </div>
               )}
               <button onClick={onClose}
@@ -93,16 +85,6 @@ export function TugasJawabanViewerModal({
                 <X size={16} />
               </button>
             </div>
-
-            <PercobaanBar
-              jumlahPercobaan={jumlahPercobaan ?? 0}
-              maksimalPercobaan={maksimalPercobaan ?? 0}
-              terkunci={!!terkunci}
-              dipaksaKeluar={dipaksaKeluar}
-              bonusPercobaan={bonusPercobaan}
-              onTambahPercobaan={onTambahPercobaan}
-              onResetPercobaan={onResetPercobaan}
-            />
 
             <div className="flex-1 overflow-y-auto p-5">
               {sorted.length === 0 ? (

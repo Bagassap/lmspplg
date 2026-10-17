@@ -3,12 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Code2, CheckCircle, AlertCircle } from "lucide-react";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
-import { PercobaanBar } from "./PercobaanBar";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export function TugasPraktikViewerModal({
   open, onClose, title, subtitle, html, css, js, isDone, onTerima, onRevisi,
-  jumlahPercobaan, maksimalPercobaan, terkunci, dipaksaKeluar, bonusPercobaan,
-  onTambahPercobaan, onResetPercobaan,
 }: {
   open: boolean;
   onClose: () => void;
@@ -21,15 +19,8 @@ export function TugasPraktikViewerModal({
   isDone?: boolean;
   onTerima?: () => void;
   onRevisi?: () => void;
-  // Info + aksi percobaan (lockdown) — lihat PercobaanBar.
-  jumlahPercobaan?: number;
-  maksimalPercobaan?: number;
-  terkunci?: boolean;
-  dipaksaKeluar?: boolean;
-  bonusPercobaan?: number;
-  onTambahPercobaan?: () => void;
-  onResetPercobaan?: () => void;
 }) {
+  const app = useIsAppMode();
   return (
     <AnimatePresence>
       {open && (
@@ -45,32 +36,22 @@ export function TugasPraktikViewerModal({
             className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-              style={{ background: "#00AAFA" }}>
+              style={{ background: app ? "#FFE9E2" : "#00AAFA" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                <Code2 size={18} className="text-white" />
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/15 text-white"}`}>
+                <Code2 size={18} />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-extrabold text-white">{title}</h2>
-                {subtitle && <p className="text-xs text-white/70">{subtitle}</p>}
+                <h2 className={`truncate text-base font-extrabold ${app ? "text-slate-900" : "text-white"}`}>{title}</h2>
+                {subtitle && <p className={`text-xs ${app ? "text-slate-500" : "text-white/70"}`}>{subtitle}</p>}
               </div>
               <button
                 onClick={onClose}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25"
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors ${app ? "bg-white text-slate-600" : "bg-white/15 text-white hover:bg-white/25"}`}
               >
                 <X size={15} />
               </button>
             </div>
-
-            <PercobaanBar
-              jumlahPercobaan={jumlahPercobaan ?? 0}
-              maksimalPercobaan={maksimalPercobaan ?? 0}
-              terkunci={!!terkunci}
-              dipaksaKeluar={dipaksaKeluar}
-              bonusPercobaan={bonusPercobaan}
-              onTambahPercobaan={onTambahPercobaan}
-              onResetPercobaan={onResetPercobaan}
-            />
 
             <div className="flex flex-1 flex-col overflow-y-auto p-5">
               <div className="min-h-0 flex-1">

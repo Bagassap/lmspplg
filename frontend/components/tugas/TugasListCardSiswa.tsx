@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download, Lock,
+  ClipboardList, Search, Send, CheckCircle, AlertCircle, CalendarClock, GraduationCap, Code2, ListChecks, PenLine, Download,
   SlidersHorizontal, X, ChevronRight,
 } from "lucide-react";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
-import { formatTgl, isTugasActive, tipeLabel, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
+import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
 
 function chunkOf4<T>(items: T[]): T[][] {
@@ -36,25 +36,18 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
   const isRevisi = mySubmisi?.status === "REVISI";
   const isTerkirim = mySubmisi?.status === "TERKIRIM";
   const overdue = !isTugasActive(t) && !mySubmisi;
-  const isLockdown = LOCKDOWN_TIPE.has(t.tipe);
-  const isTerkunci = isLockdown && !!mySubmisi?.terkunci && !isDiterima;
-  const bisaCobaLagi = isLockdown && isTerkirim && !isTerkunci;
 
-  const btn = isTerkunci
-    ? { label: "Percobaan Habis", icon: <Lock size={11} />, bg: "#FFFFFF", clr: "#94a3b8", border: "#e2e8f0", disabled: true, onClick: () => {} }
-    : isDiterima
+  const btn = isDiterima
     ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onLihatDetail(mySubmisi!, t) }
     : isRevisi
-    ? { label: isLockdown ? "Kerjakan Ulang" : "Revisi", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
-    : bisaCobaLagi
-    ? { label: "Kerjakan Lagi", icon: <Send size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onKumpulkan(t) }
+    ? { label: "Revisi", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
     : isTerkirim
     ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#F1EDFA", clr: "#00AAFA", border: "#00AAFA", onClick: () => onLihatDetail(mySubmisi!, t) }
     : overdue
     ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
     : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onKumpulkan(t) };
 
-  return { mySubmisi, isDiterima, isRevisi, isTerkirim, overdue, isLockdown, isTerkunci, bisaCobaLagi, btn };
+  return { mySubmisi, isDiterima, isRevisi, isTerkirim, overdue, btn };
 }
 
 export function TugasListCardSiswa({
@@ -161,7 +154,7 @@ export function TugasListCardSiswa({
                           <Download size={12} />
                         </a>
                       )}
-                      <button onClick={d.btn.onClick} disabled={"disabled" in d.btn && d.btn.disabled}
+                      <button onClick={d.btn.onClick}
                         className="inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[10px] font-semibold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
                         style={{ borderColor: d.btn.border, color: d.btn.clr, backgroundColor: d.btn.bg }}>
                         {d.btn.icon}{d.btn.label}
@@ -186,7 +179,7 @@ export function TugasListCardSiswa({
             <tbody>
               {shown.map((t, idx) => {
                 const rp = rowPalette(idx);
-                const { mySubmisi, isDiterima, isLockdown, btn } = rowStatus(t, onKumpulkan, onLihatDetail);
+                const { mySubmisi, btn } = rowStatus(t, onKumpulkan, onLihatDetail);
 
                 return (
                   <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
@@ -220,18 +213,13 @@ export function TugasListCardSiswa({
                             Nilai {mySubmisi.nilai}
                           </span>
                         )}
-                        {isLockdown && !!mySubmisi?.jumlahPercobaan && !isDiterima && (
-                          <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-                            Percobaan {mySubmisi.jumlahPercobaan}/{maksimalPercobaanEfektif(mySubmisi)}
-                          </span>
-                        )}
                         {t.fileUrl && (
                           <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                             <Download size={14} />
                           </a>
                         )}
-                        <button onClick={btn.onClick} disabled={"disabled" in btn && btn.disabled}
+                        <button onClick={btn.onClick}
                           className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
                           style={{ borderColor: btn.border, color: btn.clr, backgroundColor: btn.bg }}>
                           {btn.icon}{btn.label}
@@ -356,12 +344,6 @@ export function TugasListCardSiswa({
                 <span className="text-xs font-bold text-white">{detail.mySubmisi.nilai}</span>
               </div>
             )}
-            {detail.isLockdown && !!detail.mySubmisi?.jumlahPercobaan && !detail.isDiterima && (
-              <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
-                <span className="text-xs font-semibold text-white/70">Percobaan</span>
-                <span className="text-xs font-bold text-white">{detail.mySubmisi.jumlahPercobaan}/{maksimalPercobaanEfektif(detail.mySubmisi)}</span>
-              </div>
-            )}
             {detailItem.fileUrl && (
               <a href={detailItem.fileUrl} target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
@@ -373,7 +355,6 @@ export function TugasListCardSiswa({
 
           <div className="relative px-6 pb-6 pt-4">
             <button type="button"
-              disabled={"disabled" in detail.btn && detail.btn.disabled}
               onClick={() => { setDetailItem(null); detail.btn.onClick(); }}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold shadow-lg disabled:opacity-60"
               style={{ color: detail.btn.clr }}>

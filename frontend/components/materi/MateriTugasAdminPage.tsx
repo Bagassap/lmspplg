@@ -98,20 +98,6 @@ export function MateriTugasAdminPage() {
     }
   }
 
-  async function resetPercobaan(submisiId: string) {
-    if (!await toast.confirm("Reset percobaan siswa ini?", "Jatah percobaan akan kembali menjadi 0/2 dan siswa bisa mengerjakan dari awal lagi.")) return;
-    const res = await fetch(`/api/tugas/submisi/${submisiId}/reset-percobaan`, { method: "PUT" });
-    if (res.ok) { toast.success("Percobaan direset", ""); loadAll(); }
-    else toast.error("Gagal mereset percobaan");
-  }
-
-  async function tambahPercobaan(submisiId: string) {
-    if (!await toast.confirm("Tambah 1x percobaan?", "Siswa akan dapat 1 kesempatan lagi mengerjakan, tanpa menghapus riwayat percobaan sebelumnya. Cocok untuk kasus HP mati/keluar tanpa sengaja.")) return;
-    const res = await fetch(`/api/tugas/submisi/${submisiId}/tambah-percobaan`, { method: "PUT" });
-    if (res.ok) { toast.success("1x percobaan ditambahkan", ""); loadAll(); }
-    else toast.error("Gagal menambah percobaan");
-  }
-
   const perluReview = submisiList.filter((s) => s.status === "TERKIRIM").length;
 
   return (
@@ -259,8 +245,6 @@ export function MateriTugasAdminPage() {
         onTerima={(id) => updateStatus(id, "DITERIMA")}
         onRevisi={(s) => setRevisiTarget(s)}
         onSimpanNilai={simpanNilai}
-        onResetPercobaan={resetPercobaan}
-        onTambahPercobaan={tambahPercobaan}
       />
 
       <RevisiFormModal target={revisiTarget} onClose={() => setRevisiTarget(null)} onSend={kirimRevisi} />

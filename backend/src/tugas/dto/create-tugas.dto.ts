@@ -75,12 +75,4 @@ export class CreateTugasDto {
   @IsString()
   @IsOptional()
   soal?: string;
-
-  // Durasi pengerjaan (menit) untuk mode lockdown (PRAKTIK/PILIHAN_GANDA/
-  // ESSAY) — string karena dikirim lewat multipart/form-data, diparse & wajib
-  // divalidasi manual di service (wajib untuk PILIHAN_GANDA/ESSAY, opsional
-  // untuk PRAKTIK, diabaikan untuk SUBMIT).
-  @IsString()
-  @IsOptional()
-  durasiMenit?: string;
 }

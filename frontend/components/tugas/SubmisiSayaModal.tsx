@@ -7,6 +7,7 @@ import type { TugasSubmisiItem } from "./types";
 import { formatTglJam } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export function SubmisiSayaModal({
   target, judul, tipe, onClose, onKirimUlang,
@@ -17,6 +18,7 @@ export function SubmisiSayaModal({
   onClose: () => void;
   onKirimUlang: () => void;
 }) {
+  const app = useIsAppMode();
   const [viewCode, setViewCode] = useState(false);
   const [viewJawaban, setViewJawaban] = useState(false);
   if (!target) return null;
@@ -38,11 +40,11 @@ export function SubmisiSayaModal({
             style={{ maxHeight: "92vh" }}
             onClick={(e) => e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{ background: isDiterima ? "#A1F919" : isRevisi ? "#000000" : "#00AAFA", color: isDiterima ? "#000000" : "#FFFFFF" }}>
+              style={app ? { background: "#FFE9E2", color: "#1E293B" } : { background: isDiterima ? "#A1F919" : isRevisi ? "#000000" : "#00AAFA", color: isDiterima ? "#000000" : "#FFFFFF" }}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full" style={{ backgroundColor: isDiterima ? "#00000019" : "#FFFFFF1A" }} />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: isDiterima ? "#00000033" : isRevisi ? "#FFFFFF26" : "#FFFFFF33" }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: app ? "#FFFFFF" : isDiterima ? "#00000033" : isRevisi ? "#FFFFFF26" : "#FFFFFF33" }}>
                     {isRevisi ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
                   </div>
                   <div>
@@ -52,7 +54,7 @@ export function SubmisiSayaModal({
                     <p className="text-base font-extrabold leading-tight">{judul ?? "Tugas"}</p>
                   </div>
                 </div>
-                <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:opacity-80" style={{ backgroundColor: isDiterima ? "#00000033" : isRevisi ? "#FFFFFF26" : "#FFFFFF33" }}>
+                <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:opacity-80" style={{ backgroundColor: app ? "#FFFFFF" : isDiterima ? "#00000033" : isRevisi ? "#FFFFFF26" : "#FFFFFF33" }}>
                   <X size={15} />
                 </button>
               </div>
@@ -97,27 +99,27 @@ export function SubmisiSayaModal({
               </div>
               {isPraktik ? (
                 <button onClick={() => setViewCode(true)}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#3E03B3" }}>
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
                   <Code2 size={14} /> Lihat Kode Terkirim
                 </button>
               ) : isSoalBased ? (
                 <button onClick={() => setViewJawaban(true)}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#3E03B3" }}>
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
                   {tipe === "PILIHAN_GANDA" ? <ListChecks size={14} /> : <PenLine size={14} />} Lihat Jawaban Saya
                 </button>
               ) : target.fileUrl && (
                 <a href={target.fileUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "#3E03B3" }}>
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
                   <Download size={14} /> Lihat File Terkirim
                 </a>
               )}
               {isRevisi && (
                 <button onClick={onKirimUlang}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold"
-                  style={{ background: "#A1F919", color: "#000000" }}>
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold ${app ? "rounded-full" : "rounded-xl"}`}
+                  style={app ? { background: "#FFE9E2", color: "#F26A3D" } : { background: "#A1F919", color: "#000000" }}>
                   <Send size={13} /> Kirim Ulang Tugas
                 </button>
               )}

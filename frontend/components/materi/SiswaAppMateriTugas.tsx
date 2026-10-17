@@ -326,7 +326,6 @@ function DetailScreen({ selected, onBack, onBuka, onKumpulkan, onLihatSubmisi }:
           {m && <Row icon={Paperclip} label="Berkas" value={m.fileName ?? "Materi interaktif"} />}
           {t && <Row icon={ClipboardList} label="Jenis Tugas" value={TIPE_LABEL[t.tipe] ?? t.tipe} />}
           {t && <Row icon={Clock} label="Batas Waktu" value={formatTglJam(t.deadline)} />}
-          {t && t.durasiMenit ? <Row icon={Clock} label="Durasi" value={`${t.durasiMenit} menit`} /> : null}
           {t && submisi && typeof submisi.nilai === "number" && <Row icon={CheckCircle2} label="Nilai" value={String(submisi.nilai)} />}
           {t?.fileUrl && <Row icon={Paperclip} label="Lampiran" value={t.fileName ?? "Unduh"} />}
         </div>

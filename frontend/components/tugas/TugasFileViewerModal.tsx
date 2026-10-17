@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, FileText, Download, CheckCircle, AlertCircle } from "lucide-react";
 import { formatTglJam } from "./types";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export function TugasFileViewerModal({
   open, onClose, title, subtitle, fileUrl, fileName, catatan, submittedAt, isDone, onTerima, onRevisi,
@@ -19,6 +20,7 @@ export function TugasFileViewerModal({
   onTerima?: () => void;
   onRevisi?: () => void;
 }) {
+  const app = useIsAppMode();
   return (
     <AnimatePresence>
       {open && (
@@ -33,17 +35,17 @@ export function TugasFileViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: "#3E03B3" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#FFE9E2" : "#3E03B3" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                <FileText size={18} className="text-white" />
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/15 text-white"}`}>
+                <FileText size={18} />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-extrabold text-white">{title}</h2>
-                {subtitle && <p className="text-xs text-white/70">{subtitle}</p>}
+                <h2 className={`truncate text-base font-extrabold ${app ? "text-slate-900" : "text-white"}`}>{title}</h2>
+                {subtitle && <p className={`text-xs ${app ? "text-slate-500" : "text-white/70"}`}>{subtitle}</p>}
               </div>
               <button onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${app ? "bg-white text-slate-600" : "bg-white/15 text-white hover:bg-white/25"}`}>
                 <X size={16} />
               </button>
             </div>
@@ -52,14 +54,14 @@ export function TugasFileViewerModal({
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${app ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
                     <FileText size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{fileName ?? "File jawaban"}</p>
                     {submittedAt && <p className="text-xs text-slate-400">Dikumpulkan {formatTglJam(submittedAt)}</p>}
                   </div>
-                  <Download size={16} className="shrink-0 text-[#3E03B3]" />
+                  <Download size={16} className={`shrink-0 ${app ? "text-[#F26A3D]" : "text-[#3E03B3]"}`} />
                 </a>
               ) : (
                 <p className="py-6 text-center text-sm text-slate-400">Belum ada file yang diunggah.</p>

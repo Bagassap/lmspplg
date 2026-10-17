@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX, ShieldAlert } from "lucide-react";
+import { X, ClipboardList, CalendarClock, AlertCircle, CheckCircle, Download, Code2, ListChecks, PenLine, UserX } from "lucide-react";
 import type { TugasItem, TugasSubmisiItem } from "./types";
-import { formatTgl, formatTglJam, statusInfo, LOCKDOWN_TIPE, maksimalPercobaanEfektif } from "./types";
+import { formatTgl, formatTglJam, statusInfo } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
 import { TugasFileViewerModal } from "./TugasFileViewerModal";
@@ -17,7 +17,7 @@ type BelumSiswa = {
 };
 
 export function SubmisiTugasModal({
-  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai, onResetPercobaan, onTambahPercobaan,
+  tugas, submisi, onClose, onTerima, onRevisi, onSimpanNilai,
 }: {
   tugas: TugasItem | null;
   submisi: TugasSubmisiItem[];
@@ -25,8 +25,6 @@ export function SubmisiTugasModal({
   onTerima: (id: string) => void;
   onRevisi: (s: TugasSubmisiItem) => void;
   onSimpanNilai: (submisiId: string, nilai: number) => Promise<void>;
-  onResetPercobaan?: (submisiId: string) => Promise<void>;
-  onTambahPercobaan?: (submisiId: string) => Promise<void>;
 }) {
   const [viewCodeTarget, setViewCodeTarget] = useState<TugasSubmisiItem | null>(null);
   const [viewJawabanTarget, setViewJawabanTarget] = useState<TugasSubmisiItem | null>(null);
@@ -36,7 +34,6 @@ export function SubmisiTugasModal({
   const [belumLoading, setBelumLoading] = useState(false);
   const isPraktik = tugas?.tipe === "PRAKTIK";
   const isSoalBased = tugas?.tipe === "PILIHAN_GANDA" || tugas?.tipe === "ESSAY";
-  const isLockdown = !!tugas && LOCKDOWN_TIPE.has(tugas.tipe);
 
   useEffect(() => {
     if (!tugas) return;
@@ -172,19 +169,6 @@ export function SubmisiTugasModal({
                           Nilai {s.nilai}
                         </span>
                       )}
-                      {isLockdown && !!s.jumlahPercobaan && (
-                        <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold ${
-                          s.terkunci ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
-                        }`}>
-                          Percobaan {s.jumlahPercobaan}/{maksimalPercobaanEfektif(s)}
-                          {!!s.bonusPercobaan && ` (+${s.bonusPercobaan})`}
-                        </span>
-                      )}
-                      {s.dipaksaKeluar && (
-                        <span className="flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-bold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
-                          <ShieldAlert size={11} /> Dipaksa Keluar
-                        </span>
-                      )}
                     </>
                   );
                   return (
@@ -230,7 +214,7 @@ export function SubmisiTugasModal({
                           )}
                         </div>
 
-                        {(((tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null) || (isLockdown && !!s.jumlahPercobaan) || s.dipaksaKeluar) && (
+                        {(((tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null)) && (
                           <div className="flex flex-wrap items-center gap-1.5 pl-[52px]">{badges}</div>
                         )}
 
@@ -269,13 +253,6 @@ export function SubmisiTugasModal({
       isDone={viewCodeTarget?.status === "DITERIMA"}
       onTerima={viewCodeTarget ? () => { onTerima(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
       onRevisi={viewCodeTarget ? () => { onRevisi(viewCodeTarget); setViewCodeTarget(null); } : undefined}
-      jumlahPercobaan={viewCodeTarget?.jumlahPercobaan}
-      maksimalPercobaan={viewCodeTarget ? maksimalPercobaanEfektif(viewCodeTarget) : undefined}
-      terkunci={viewCodeTarget?.terkunci}
-      dipaksaKeluar={viewCodeTarget?.dipaksaKeluar}
-      bonusPercobaan={viewCodeTarget?.bonusPercobaan}
-      onTambahPercobaan={viewCodeTarget && onTambahPercobaan ? () => { onTambahPercobaan(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
-      onResetPercobaan={viewCodeTarget && onResetPercobaan ? () => { onResetPercobaan(viewCodeTarget.id); setViewCodeTarget(null); } : undefined}
     />
     <TugasFileViewerModal
       open={!!viewFileTarget}
@@ -304,13 +281,6 @@ export function SubmisiTugasModal({
         await onSimpanNilai(viewJawabanTarget.id, nilai);
         setViewJawabanTarget(null);
       }}
-      jumlahPercobaan={viewJawabanTarget?.jumlahPercobaan}
-      maksimalPercobaan={viewJawabanTarget ? maksimalPercobaanEfektif(viewJawabanTarget) : undefined}
-      terkunci={viewJawabanTarget?.terkunci}
-      dipaksaKeluar={viewJawabanTarget?.dipaksaKeluar}
-      bonusPercobaan={viewJawabanTarget?.bonusPercobaan}
-      onTambahPercobaan={viewJawabanTarget && onTambahPercobaan ? () => { onTambahPercobaan(viewJawabanTarget.id); setViewJawabanTarget(null); } : undefined}
-      onResetPercobaan={viewJawabanTarget && onResetPercobaan ? () => { onResetPercobaan(viewJawabanTarget.id); setViewJawabanTarget(null); } : undefined}
     />
     </>
   );
