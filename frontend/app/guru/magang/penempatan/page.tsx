@@ -43,7 +43,7 @@ export default function GuruMagangPenempatanPage() {
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Siswa Bimbingan PKL</h1>
         </div>
-        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1E293B]" />
+        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
 
       <div className="mt-0 lg:mt-5">

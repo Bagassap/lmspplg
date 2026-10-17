@@ -110,7 +110,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
         </button>
       ) : compact ? (
         <button type="button" onClick={() => setShowModal(true)}
-          className="flex w-full items-center gap-3 rounded-2xl p-3 text-left" style={{ backgroundColor: "#F6FEE8" }}>
+          className="flex w-full items-center gap-3 rounded-2xl bg-[#F6FEE8] p-3 text-left dark:bg-[#A1F919]/15">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-black" style={{ backgroundColor: "#A1F919" }}>
             <TrendingDown size={14} />
           </span>

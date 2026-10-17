@@ -63,7 +63,7 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi</span>
             </div>
             <a href={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}`} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold hover:opacity-80" style={{ background: "#F1EDFA", color: "#3E03B3" }}>
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold hover:opacity-80 bg-[#F1EDFA] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]">
               <ExternalLink size={10} /> Maps
             </a>
           </div>

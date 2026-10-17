@@ -329,7 +329,7 @@ export function Topbar({ user }: { user: UserPayload }) {
     <>
       <header
         className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1E293B] 2xl:px-10 ${
-          purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#1E293B]"
+          purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#0F172A]"
         }`}
       >
         <div className="flex min-w-0 items-center gap-2 lg:hidden">

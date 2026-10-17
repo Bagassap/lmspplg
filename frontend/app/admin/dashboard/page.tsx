@@ -17,7 +17,7 @@ import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal
 import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-import { WALLET_GRADIENTS, WALLET_ON_TEXT } from "@/components/absensi-harian/shared";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 const P = "#3E03B3";   
 const R = "#5D900F";   
 const B = "#3E03B3";   
@@ -406,11 +406,11 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-5 gap-1.5 pt-4">
           {[
-            { href: "/admin/materi", label: "Materi", icon: BookOpen, color: "#3E03B3" },
-            { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, color: "#5D900F" },
-            { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, color: "#5D900F" },
-            { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, color: "#5D900F", dark: true },
-            { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, color: "#00AAFA", badge: data.pengumuman.length },
+            { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: "indigo" as const },
+            { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, tone: "emerald" as const },
+            { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "amber" as const },
+            { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "violet" as const },
+            { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "sky" as const, badge: data.pengumuman.length },
           ].map((s, i) => (
             <motion.div key={s.href}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -419,11 +419,8 @@ export default function AdminDashboardPage() {
             >
               <Link href={s.href} className="flex flex-col items-center gap-1.5">
                 <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl"
-                  style={{
-                    background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), ${s.color}`,
-                    boxShadow: `0 5px 10px -3px ${s.color}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
-                  }}>
-                  <s.icon size={19} style={{ color: s.dark ? "#000000" : "#fff" }} />
+                  style={icon3dStyle(s.tone)}>
+                  <s.icon size={19} style={{ color: "#fff" }} />
                   {!!s.badge && (
                     <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black shadow-sm">
                       {s.badge}
@@ -444,23 +441,20 @@ export default function AdminDashboardPage() {
           { icon: School, label: "Total Kelas", value: data.totalKelas },
           { icon: Calendar, label: "% Hadir", value: `${data.kehadiran.persen}%` },
         ].map((s, i) => {
-          const bg = WALLET_GRADIENTS[i];
-          const onText = WALLET_ON_TEXT[i];
           return (
             <motion.div key={s.label}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.4 + i * 0.05 }}
               whileTap={{ scale: 0.97 }}
-              className="relative flex items-center gap-2.5 overflow-hidden rounded-2xl p-3 shadow-[0_6px_16px_-6px_rgba(0,0,0,0.25)]"
-              style={{ background: bg, color: onText }}
+              className="flex items-center gap-2.5 rounded-2xl bg-white p-3 shadow-[0_2px_10px_-2px_rgba(15,23,42,0.08)] dark:bg-[#1E293B]"
             >
-              <div className="pointer-events-none absolute -right-3 -top-3 h-14 w-14 rounded-full" style={{ backgroundColor: `${onText}26` }} />
-              <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${onText}33` }}>
-                <s.icon size={16} style={{ color: onText }} />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                style={icon3dStyle(toneAt(i))}>
+                <s.icon size={17} style={{ color: "#fff" }} />
               </span>
-              <div className="relative flex min-w-0 items-baseline gap-1.5">
-                <p className="text-sm font-extrabold leading-none">{s.value}</p>
-                <p className="truncate text-[10px] leading-none" style={{ color: `${onText}D9` }}>{s.label}</p>
+              <div className="flex min-w-0 items-baseline gap-1.5">
+                <p className="text-sm font-extrabold leading-none text-slate-800 dark:text-white">{s.value}</p>
+                <p className="truncate text-[10px] leading-none text-slate-500 dark:text-slate-400">{s.label}</p>
               </div>
             </motion.div>
           );

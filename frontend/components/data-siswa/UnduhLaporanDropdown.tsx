@@ -5,6 +5,7 @@ import { FileText, FileSpreadsheet, Download, Users, School, Loader2 } from "luc
 import { kelasShort } from "./shared";
 import { downloadDataSiswaPdf, downloadDataSiswaExcel } from "./downloadDataSiswa";
 import { useToast } from "@/components/shared/ToastSystem";
+import { OptionCard3D } from "@/components/shared/Icon3D";
 
 type Scope = "semua" | "kelas";
 type ExportKind = "pdf" | "excel";
@@ -46,37 +47,19 @@ export function UnduhLaporanDropdown({ kelasId, kelasNama }: { kelasId?: string;
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full z-20 mt-1.5 w-72 overflow-hidden rounded-2xl border border-slate-100 bg-white p-4 shadow-lg dark:border-slate-700 dark:bg-slate-800">
             <p className="mb-2.5 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Cakupan</p>
-            <div className="mb-3 grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setScope("semua")}
-                className={`flex flex-col items-center gap-1 rounded-xl px-2 py-2.5 text-center transition-colors ${
-                  scope === "semua" ? "bg-[#3E03B3] text-white" : "bg-slate-50 text-slate-500 dark:bg-slate-700/40 dark:text-slate-300"
-                }`}
-              >
-                <Users size={16} />
-                <span className="text-[11px] font-bold">Semua Siswa</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => kelasId && setScope("kelas")}
-                disabled={!kelasId}
-                title={!kelasId ? "Pilih kelas di filter dahulu" : undefined}
-                className={`flex flex-col items-center gap-1 rounded-xl px-2 py-2.5 text-center transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-                  scope === "kelas" ? "bg-[#A1F919] text-black" : "bg-slate-50 text-slate-500 dark:bg-slate-700/40 dark:text-slate-300"
-                }`}
-              >
-                <School size={16} />
-                <span className="max-w-full truncate text-[11px] font-bold">{kelasNama ? kelasShort(kelasNama) : "Kelas Ini"}</span>
-              </button>
+            <div className="mb-3 grid grid-cols-1 gap-2">
+              <OptionCard3D icon={Users} tone="emerald" label="Semua Siswa" caption="Seluruh data"
+                active={scope === "semua"} onClick={() => setScope("semua")} />
+              <OptionCard3D icon={School} tone="sky" label={kelasNama ? kelasShort(kelasNama) : "Kelas Ini"} caption="Kelas terpilih"
+                active={scope === "kelas"} disabled={!kelasId} title={!kelasId ? "Pilih kelas di filter dahulu" : undefined}
+                onClick={() => kelasId && setScope("kelas")} />
             </div>
             <div className="flex flex-col gap-2">
               <button
                 type="button"
                 onClick={() => run("pdf")}
                 disabled={!!loadingKind}
-                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" }}
+                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]"
               >
                 {loadingKind === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
                 Download PDF
@@ -85,8 +68,7 @@ export function UnduhLaporanDropdown({ kelasId, kelasNama }: { kelasId?: string;
                 type="button"
                 onClick={() => run("excel")}
                 disabled={!!loadingKind}
-                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" }}
+                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]"
               >
                 {loadingKind === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
                 Download Excel

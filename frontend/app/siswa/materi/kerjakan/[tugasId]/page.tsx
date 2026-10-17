@@ -338,11 +338,11 @@ export default function KerjakanTugasPage() {
             </p>
           )}
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="rounded-lg px-3 py-1.5 text-[11px] font-bold" style={{ background: "#F1EDFA", color: warna }}>
+            <span className="rounded-lg px-3 py-1.5 text-[11px] font-bold bg-[#F1EDFA] dark:bg-[#3E03B3]/30" style={{ color: warna }}>
               Percobaan ke-{percobaanKe} dari {maksPercobaan}
             </span>
             {tugas.durasiMenit ? (
-              <span className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold" style={{ background: "#F1EDFA", color: warna }}>
+              <span className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold bg-[#F1EDFA] dark:bg-[#3E03B3]/30" style={{ color: warna }}>
                 <Timer size={11} /> {tugas.durasiMenit} menit
               </span>
             ) : null}
@@ -453,7 +453,7 @@ export default function KerjakanTugasPage() {
             <div className="mx-auto grid max-w-5xl grid-cols-1 items-start gap-4 lg:grid-cols-[0.85fr_2fr]">
               <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-800 lg:sticky lg:top-5">
                 <div className="mb-3 flex items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1EDFA", color: warna }}>
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] dark:bg-[#3E03B3]/30" style={{ color: warna }}>
                     <ListOrdered size={15} />
                   </div>
                   <div>
@@ -492,7 +492,7 @@ export default function KerjakanTugasPage() {
                   initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2 }}
                   className="rounded-2xl bg-white p-5 shadow-sm dark:bg-slate-800 sm:p-6">
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold" style={{ background: "#F1EDFA", color: warna }}>
+                    <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold bg-[#F1EDFA] dark:bg-[#3E03B3]/30" style={{ color: warna }}>
                       Soal {soalIdx + 1} dari {soalList.length}
                     </span>
                     {(jawaban[soalAktif.id] ?? "").trim().length > 0 && (

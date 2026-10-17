@@ -205,8 +205,7 @@ export function SubmisiTugasModal({
                           </span>
                         )}
                         <button onClick={actionBtn.onClick}
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0"
-                          style={{ color: "#3E03B3", backgroundColor: "#F1EDFA" }}>
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 bg-[#F1EDFA] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]">
                           {actionBtn.icon} {actionBtn.label}
                         </button>
                         {isDone && (
@@ -236,8 +235,7 @@ export function SubmisiTugasModal({
                         )}
 
                         <button onClick={actionBtn.onClick}
-                          className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold"
-                          style={{ color: "#3E03B3", backgroundColor: "#F1EDFA" }}>
+                          className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold bg-[#F1EDFA] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]">
                           {actionBtn.icon} {actionBtn.label}
                         </button>
                       </div>

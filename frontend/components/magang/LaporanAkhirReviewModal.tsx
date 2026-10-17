@@ -91,12 +91,12 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
               )}
 
               {laporan.status === "DITERIMA" && (
-                <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold" style={{ backgroundColor: "#F6FEE8", color: "#5D900F" }}>
+                <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">
                   <CheckCircle2 size={15} /> Laporan ini sudah diterima
                 </div>
               )}
               {laporan.status === "REVISI" && (
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: "#FFFFFF", color: "#000000" }}>
+                <div className="rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-black dark:text-white">
                   <p className="flex items-center gap-2 font-semibold" style={{ color: "#5D900F" }}>
                     <AlertTriangle size={15} /> Revisi diminta
                   </p>

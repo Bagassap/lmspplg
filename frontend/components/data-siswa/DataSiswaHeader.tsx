@@ -44,7 +44,7 @@ export function DataSiswaHeader({ title, eyebrow = "Data Siswa" }: { title: stri
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">{title}</h1>
         </div>
-        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#1E293B]" />
+        <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
     </>
   );

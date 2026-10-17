@@ -1236,12 +1236,11 @@ function RiwayatTabCard({ icon: Icon, label, active, onClick }: {
 }) {
   return (
     <motion.button type="button" whileTap={{ scale: 0.96 }} onClick={onClick}
-      className="flex flex-col items-center gap-2 rounded-3xl p-4 text-center"
-      style={{ background: active ? "#A1F919" : "#FFFFFF" }}>
+      className={`flex flex-col items-center gap-2 rounded-3xl p-4 text-center ${active ? "bg-[#A1F919]" : "bg-white dark:bg-slate-800"}`}>
       <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
         <Icon size={20} style={{ color: active ? "#A1F919" : "#94A3B8" }} />
       </span>
-      <p className="text-[11px] font-bold" style={{ color: active ? "#fff" : "#64748B" }}>{label}</p>
+      <p className={`text-[11px] font-bold ${active ? "text-black" : "text-slate-500 dark:text-slate-300"}`}>{label}</p>
     </motion.button>
   );
 }

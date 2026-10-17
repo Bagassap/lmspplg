@@ -114,33 +114,26 @@ export function ExportButtons({ tempatMagangId, tempatNama, range, siswaList }: 
     }
   }
 
-  const PDF_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
-  const EXCEL_STYLE = { backgroundColor: "#F6FEE8", color: "#5D900F", borderColor: "#A1F91930" };
-
   return (
     <>
       <div className="flex flex-nowrap items-center gap-1.5">
         <button type="button" onClick={() => runTempatExport("pdf-tempat")} disabled={disabled || !!loadingKind} title="PDF Per Tempat"
-          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-          style={PDF_STYLE}>
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]">
           {loadingKind === "pdf-tempat" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
           <span className="truncate">PDF Tempat</span>
         </button>
         <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind} title="PDF Per Siswa"
-          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-          style={PDF_STYLE}>
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]">
           {loadingKind === "pdf-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
           <span className="truncate">PDF Siswa</span>
         </button>
         <button type="button" onClick={() => runTempatExport("excel-tempat")} disabled={disabled || !!loadingKind} title="Excel Per Tempat"
-          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-          style={EXCEL_STYLE}>
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]">
           {loadingKind === "excel-tempat" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
           <span className="truncate">Excel Tempat</span>
         </button>
         <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind} title="Excel Per Siswa"
-          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-          style={EXCEL_STYLE}>
+          className="flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]">
           {loadingKind === "excel-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
           <span className="truncate">Excel Siswa</span>
         </button>

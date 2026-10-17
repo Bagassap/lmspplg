@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import { FileText, Download, Users, School } from "lucide-react";
 import { kelasShort } from "./shared";
-import { reportCardFg } from "@/components/absensi-harian/shared";
+import { OptionCard3D, type Tone3D } from "@/components/shared/Icon3D";
 import { DataSiswaExportButtons } from "./DataSiswaExportButtons";
 
 type Scope = "semua" | "kelas";
 
-const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, gradient: "#00AAFA" },
-  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, gradient: "#A1F919" },
+const SCOPE_CARDS: { key: Scope; label: string; caption: string; icon: React.ElementType; tone: Tone3D }[] = [
+  { key: "semua", label: "Semua Siswa", caption: "Seluruh data", icon: Users, tone: "emerald" },
+  { key: "kelas", label: "Kelas Ini", caption: "Kelas terpilih", icon: School, tone: "sky" },
 ];
 
 export function UnduhDataSiswaCard({
@@ -38,31 +38,21 @@ export function UnduhDataSiswaCard({
         </div>
       </div>
 
-      <div className="grid flex-1 grid-cols-2 content-center gap-3">
+      <div className="grid flex-1 grid-cols-1 content-center gap-2">
         {SCOPE_CARDS.map((opt) => {
           const disabled = opt.key === "kelas" && !kelasId;
-          const active = scope === opt.key;
-          const fg = reportCardFg(opt.gradient);
           return (
-            <button
+            <OptionCard3D
               key={opt.key}
-              type="button"
+              icon={opt.icon}
+              tone={opt.tone}
+              label={opt.label}
+              caption={opt.caption}
+              active={scope === opt.key}
               disabled={disabled}
-              onClick={() => setScope(opt.key)}
               title={disabled ? "Pilih kelas/jurusan di filter dahulu" : undefined}
-              className="flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-5 text-center shadow-sm transition-all disabled:cursor-not-allowed"
-              style={{
-                background: opt.gradient,
-                color: fg,
-                opacity: disabled ? 0.25 : active ? 1 : 0.55,
-                outline: active ? `2px solid ${fg}` : "2px solid transparent",
-                outlineOffset: active ? "2px" : "0",
-              }}
-            >
-              <opt.icon size={20} />
-              <span className="text-xs font-bold">{opt.label}</span>
-              <span className="text-[10px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
-            </button>
+              onClick={() => setScope(opt.key)}
+            />
           );
         })}
       </div>

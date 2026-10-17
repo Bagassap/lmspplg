@@ -372,7 +372,7 @@ export default function SiswaMagangAbsensiPage() {
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#F1EDFA" }}>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-[#3E03B3]/30">
                     <Briefcase size={18} style={{ color: "#3E03B3" }} />
                   </div>
                   <div className="min-w-0">
@@ -432,7 +432,7 @@ export default function SiswaMagangAbsensiPage() {
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#F1EDFA" }}>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-[#3E03B3]/30">
                     <Briefcase size={18} style={{ color: "#3E03B3" }} />
                   </div>
                   <div className="min-w-0">

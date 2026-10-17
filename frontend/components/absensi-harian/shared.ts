@@ -1,5 +1,6 @@
 import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut, CalendarDays, CalendarRange, CalendarCheck2 } from "lucide-react";
 import type { StatusAbsensi } from "./types";
+import type { Tone3D } from "@/components/shared/Icon3D";
 
 export const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
@@ -59,10 +60,10 @@ export const WALLET_WAVE_PATTERN =
 export const WALLET_DOT_PATTERN = "radial-gradient(circle, rgba(255,255,255,0.55) 1.5px, transparent 1.5px)";
 export const WALLET_DOT_SIZE = "18px 18px";
 
-export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; gradient: string }[] = [
-  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, gradient: "#00AAFA" },
-  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, gradient: "#A1F919" },
-  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, gradient: "#A1F919" },
+export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; tone: Tone3D }[] = [
+  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, tone: "sky" },
+  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, tone: "emerald" },
+  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, tone: "violet" },
 ];
 
 export function reportCardFg(gradient: string): string {

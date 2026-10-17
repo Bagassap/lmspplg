@@ -2,12 +2,27 @@
 
 import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type Props = { hadir: number; sakit: number; izin: number; alpha: number; total: number };
 
+function useIsDark(): boolean {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const el = document.documentElement;
+    const sync = () => setDark(el.classList.contains("dark"));
+    sync();
+    const obs = new MutationObserver(sync);
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+  return dark;
+}
+
 export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
+  const isDark = useIsDark();
   const pct = (n: number) => (total > 0 ? Math.round((n / total) * 100) : 0);
   const hadirPct = pct(hadir);
   const sakitPct = pct(sakit);
@@ -32,7 +47,7 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
           background: "transparent",
         },
         track: {
-          background: "#FFFFFF",
+          background: isDark ? "#334155" : "#FFFFFF",
           strokeWidth: "100%",
           margin: 6,
         },

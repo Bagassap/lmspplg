@@ -64,8 +64,7 @@ function SubmisiList({ items }: { items: Submisi[] }) {
               style={{ color: cfg.color, backgroundColor: cfg.bg }}>{cfg.label}</span>
             <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
               target="_blank" rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold"
-              style={{ color: "#3E03B3", backgroundColor: "#F1EDFA" }}>
+              className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold bg-[#F1EDFA] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]">
               <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 fill-current"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
               GDrive
             </a>

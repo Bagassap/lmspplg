@@ -22,7 +22,8 @@ import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, reportCardFg, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
+import { OptionCard3D } from "@/components/shared/Icon3D";
 import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 
 function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
@@ -543,20 +544,11 @@ export default function AdminAbsensiHarianPage() {
                   <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {RANGE_MODE_CARDS.map((opt) => {
-                  const active = exportRange.rangeMode === opt.key;
-                  const fg = reportCardFg(opt.gradient);
-                  return (
-                    <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
-                      className="flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center shadow-sm transition-all"
-                      style={{ background: opt.gradient, color: fg, opacity: active ? 1 : 0.55, outline: active ? `2px solid ${fg}` : "2px solid transparent", outlineOffset: active ? "2px" : "0" }}>
-                      <opt.icon size={16} />
-                      <span className="text-[11px] font-bold">{opt.label}</span>
-                      <span className="text-[9px] leading-tight" style={{ color: `${fg}BF` }}>{opt.caption}</span>
-                    </button>
-                  );
-                })}
+              <div className="grid grid-cols-1 gap-2">
+                {RANGE_MODE_CARDS.map((opt) => (
+                  <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                    active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
+                ))}
               </div>
 
               {exportRange.rangeMode === "mingguan" && (
@@ -683,8 +675,9 @@ export default function AdminAbsensiHarianPage() {
                             style={isSelected ? { color: "#3E03B3" } : undefined}>{k.nama}</p>
                           <p className="truncate text-[11px] text-slate-400">{s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}</p>
                         </div>
-                        <span className="shrink-0 rounded-lg px-2 py-1 text-xs font-bold"
-                          style={{ color: isSelected ? "#3E03B3" : "#64748B", background: isSelected ? "#F1EDFA" : "#FFFFFF" }}>
+                        <span className={`shrink-0 rounded-lg px-2 py-1 text-xs font-bold ${
+                            isSelected ? "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#3E03B3]/30 dark:text-[#C4B5FD]" : "bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-300"
+                          }`}>
                           {s.pct}%
                         </span>
                       </button>
@@ -824,20 +817,11 @@ export default function AdminAbsensiHarianPage() {
                 </div>
 
                 <div className="overflow-y-auto px-5 pb-6 pt-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    {RANGE_MODE_CARDS.map((opt) => {
-                      const active = exportRange.rangeMode === opt.key;
-                      const fg = reportCardFg(opt.gradient);
-                      return (
-                        <button key={opt.key} type="button" onClick={() => exportRange.setRangeMode(opt.key)}
-                          className={`flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-center transition-all ${active ? "shadow-sm" : "bg-slate-100 dark:bg-slate-700/50"}`}
-                          style={active ? { background: opt.gradient, color: fg } : { color: "#94A3B8" }}>
-                          <opt.icon size={16} />
-                          <span className="text-[11px] font-bold">{opt.label}</span>
-                          <span className="text-[9px] leading-tight" style={active ? { color: fg } : { color: "#94A3B8" }}>{opt.caption}</span>
-                        </button>
-                      );
-                    })}
+                  <div className="grid grid-cols-1 gap-2">
+                    {RANGE_MODE_CARDS.map((opt) => (
+                      <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                        active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
+                    ))}
                   </div>
 
                   {exportRange.rangeMode === "mingguan" && (
