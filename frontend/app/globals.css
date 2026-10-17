@@ -28,6 +28,7 @@
   --color-brand-dark: var(--color-brand-dark);
   --color-accent: var(--color-accent);
   --font-sans: var(--font-satoshi);
+  --font-digital: var(--font-digital), ui-monospace, monospace;
 
   --color-lavender: var(--color-lavender);
   --color-pink: var(--color-pink);

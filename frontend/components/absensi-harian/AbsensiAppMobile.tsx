@@ -87,7 +87,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         className="rounded-3xl px-5 py-6 text-center" style={{ background: ACCENT_SOFT }}
       >
         <p className="text-xs font-semibold" style={{ color: ACCENT }}>{formatTgl(today)}</p>
-        <p className="mt-1 font-mono text-4xl font-black tabular-nums" style={{ color: ACCENT }}>{jam}</p>
+        <p className="mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: ACCENT, textShadow: "0 2px 0 rgba(242,106,61,0.18)" }}>{jam}</p>
         <div
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
           style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#5D900F" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
@@ -182,7 +182,7 @@ export function AbsensiAppMobile<R extends RowLite>({
                       <span>{label}</span><span>•</span><span>{i === 0 ? "Terbaru" : "Tercatat"}</span>
                     </div>
                     <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: ACCENT }}>
-                      <Clock size={12} /> {waktu ?? "—"}
+                      <Clock size={12} /> <span className="font-digital text-[12px] tracking-wider">{waktu ?? "—"}</span>
                     </p>
                   </div>
                   <ChevronRight size={18} className="shrink-0 text-slate-300" />

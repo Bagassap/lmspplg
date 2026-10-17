@@ -21,6 +21,15 @@ const satoshi = localFont({
   display: "swap",
 });
 
+// Font jam digital (tujuh segmen, SIL OFL) untuk tampilan jam di menu Absensi.
+const digital = localFont({
+  src: "./fonts/DSEG7Classic-Bold.woff2",
+  weight: "700",
+  style: "normal",
+  variable: "--font-digital",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "LMS PPLG | SMK Ma'arif NU 01 Limpung",
   description:
@@ -42,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${satoshi.variable} h-full antialiased`}>
+    <html lang="id" className={`${satoshi.variable} ${digital.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
           {children}

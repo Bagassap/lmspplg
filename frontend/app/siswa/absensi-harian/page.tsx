@@ -470,7 +470,7 @@ export default function SiswaAbsensiHarianPage() {
 
             <div className="rounded-[28px] p-5 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)]" style={{ background: BRAND_GRADIENT }}>
               <p className="text-xs font-semibold text-[#F1EDFA]">{formatTgl(today)}</p>
-              <p className="mt-1 font-mono text-4xl font-black tabular-nums text-white">{jam}</p>
+              <p className="mt-1 font-digital text-4xl font-bold tracking-wider tabular-nums text-white">{jam}</p>
               <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold"
                 style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#A1F919" : data?.sudahAbsen ? "#3E03B3" : "#94A3B8" }}>
                 <Clock size={12} />
