@@ -11,6 +11,8 @@ import { TugasListCard } from "@/components/tugas/TugasListCard";
 import { SubmisiTugasModal } from "@/components/tugas/SubmisiTugasModal";
 import { RevisiFormModal } from "@/components/tugas/RevisiFormModal";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
+import { AppTabs } from "@/components/app/AppUI";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type MateriRef = { id: string };
 type Category = "materi" | "tugas";
@@ -18,6 +20,7 @@ type Category = "materi" | "tugas";
 export function MateriTugasGuruPage() {
   const toast = useToast();
   const router = useRouter();
+  const appMode = useIsAppMode();
   const searchParams = useSearchParams();
   const [materiList, setMateriList] = useState<MateriRef[]>([]);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
@@ -171,6 +174,25 @@ export function MateriTugasGuruPage() {
             </div>
           </div>
 
+          {appMode ? (
+            <div className="space-y-5 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">Belajar &amp; Praktik</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Materi &amp; Tugas</h1>
+              </div>
+              <div className="relative">
+                <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  value={category === "materi" ? searchMateri : searchTugas}
+                  onChange={(e) => (category === "materi" ? setSearchMateri(e.target.value) : setSearchTugas(e.target.value))}
+                  placeholder={category === "materi" ? "Cari materi..." : "Cari tugas..."}
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+              </div>
+              <AppTabs
+                tabs={[["materi", "Materi"], ["tugas", perluReview > 0 ? `Tugas (${perluReview})` : "Tugas"]] as const}
+                value={category} onChange={setCategory} layoutId="app-materi-guru-tab" />
+            </div>
+          ) : (
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/guru/dashboard")}
@@ -222,6 +244,7 @@ export function MateriTugasGuruPage() {
             </div>
             </div>
           </div>
+          )}
         </div>
 
         {category === "materi" ? (

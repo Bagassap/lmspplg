@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 
 export function MobileDetailModal({ onClose, accent, children, className = "" }: { onClose: () => void; accent: string; children: React.ReactNode; className?: string }) {
   if (typeof document === "undefined") return null;
-  const onLime = accent === "#A1F919";
+  const onLime = ["#A1F919", "#FFFFFF", "#FFE9E2"].includes(accent.toUpperCase());
   return createPortal(
     <div className={`fixed inset-0 z-50 flex items-end justify-center ${className}`}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -18,7 +18,7 @@ export function MobileDetailModal({ onClose, accent, children, className = "" }:
         className="relative z-10 w-full overflow-hidden rounded-t-3xl"
         style={{ background: accent }}>
         <button type="button" onClick={onClose}
-          className={`absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm ${onLime ? "bg-black/15 text-black" : "bg-white/20 text-white"}`}>
+          className={`absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm ${onLime ? "bg-black/10 text-slate-700" : "bg-white/20 text-white"}`}>
           <X size={15} />
         </button>
         <div className="overflow-y-auto" style={{ maxHeight: "92vh" }}>

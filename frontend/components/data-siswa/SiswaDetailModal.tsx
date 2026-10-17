@@ -13,6 +13,7 @@ import {
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
+import { useSheetHeader } from "@/components/app/AppUI";
 
 function MobileRow({ icon: Icon, label, value, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; href?: string | null;
@@ -69,6 +70,7 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
 export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate, onKeluarkan, onClose }: {
   siswa: SiswaCardData; onEdit?: () => void; onResetPassword?: () => void; onImpersonate?: () => void; onKeluarkan?: () => void; onClose: () => void;
 }) {
+  const h = useSheetHeader("#3E03B3");
   const [actionsOpen, setActionsOpen] = useState(false);
   const hasMobileActions = !!((onResetPassword || onImpersonate) && siswa.user) || !!onKeluarkan;
   const displayNama = toTitleCase(getNama(siswa));
@@ -223,7 +225,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
     </AnimatePresence>
 
     <AnimatePresence>
-      <MobileDetailModal onClose={onClose} accent={HEADER_GRADIENT} className="lg:hidden">
+      <MobileDetailModal onClose={onClose} accent={h.app ? h.bg : HEADER_GRADIENT} className="lg:hidden">
         <div className="relative px-6 pb-8 pt-10 text-center">
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
@@ -231,7 +233,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
           {hasMobileActions && (
             <>
               <button type="button" onClick={() => setActionsOpen((v) => !v)}
-                className="absolute right-14 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm">
+                className={`absolute right-14 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm ${h.app ? "bg-white text-slate-600" : "bg-white/20 text-white"}`}>
                 <MoreVertical size={15} />
               </button>
               {actionsOpen && (
@@ -261,9 +263,9 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
           <div className="relative mx-auto w-fit rounded-full border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
             <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
           </div>
-          <h2 className="relative mt-3 break-words text-lg font-extrabold text-white">{displayNama}</h2>
-          <p className="relative mt-1 font-mono text-xs text-white/70">NIS: {siswa.nis}</p>
-          <span className="relative mt-2 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+          <h2 className={`relative mt-3 break-words text-lg font-extrabold ${h.title}`}>{displayNama}</h2>
+          <p className={`relative mt-1 font-mono text-xs ${h.app ? "text-slate-500" : "text-white/70"}`}>NIS: {siswa.nis}</p>
+          <span className={`relative mt-2 inline-flex items-center rounded-lg px-2.5 py-1 text-[11px] font-bold backdrop-blur-sm ${h.chip}`}>
             {kelasShort(siswa.kelas.nama)}
           </span>
         </div>
@@ -320,7 +322,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
             <div className="mx-auto mt-4 max-w-md px-6">
               <button type="button" onClick={onEdit}
                 className="flex w-full items-center justify-center gap-1.5 rounded-full py-3.5 text-sm font-extrabold text-white shadow-sm"
-                style={{ background: HEADER_GRADIENT }}>
+                style={{ background: h.app ? "#F26A3D" : HEADER_GRADIENT }}>
                 <Pencil size={14} /> Edit Data
               </button>
             </div>

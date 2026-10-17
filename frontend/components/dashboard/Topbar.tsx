@@ -156,7 +156,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   const appMode = useIsAppMode();
   // Di aplikasi terpasang, dashboard siswa memakai header ala aplikasi:
   // avatar + sapaan di kiri, lonceng di kanan (tanpa latar ungu).
-  const appHome = appMode && pathname === "/siswa/dashboard";
+  const appHome = appMode && (pathname === "/siswa/dashboard" || pathname === "/guru/dashboard");
   const purpleMobile = hasPurpleMobileHeader(pathname) && !appHome;
 
   const [isDark, setIsDark] = useState(false);

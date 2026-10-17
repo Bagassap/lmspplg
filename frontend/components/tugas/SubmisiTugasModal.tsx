@@ -8,6 +8,7 @@ import { formatTgl, formatTglJam, statusInfo } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
 import { TugasFileViewerModal } from "./TugasFileViewerModal";
+import { useSheetHeader } from "@/components/app/AppUI";
 
 type BelumSiswa = {
   id: string;
@@ -26,6 +27,7 @@ export function SubmisiTugasModal({
   onRevisi: (s: TugasSubmisiItem) => void;
   onSimpanNilai: (submisiId: string, nilai: number) => Promise<void>;
 }) {
+  const h = useSheetHeader("#3E03B3");
   const [viewCodeTarget, setViewCodeTarget] = useState<TugasSubmisiItem | null>(null);
   const [viewJawabanTarget, setViewJawabanTarget] = useState<TugasSubmisiItem | null>(null);
   const [viewFileTarget, setViewFileTarget] = useState<TugasSubmisiItem | null>(null);
@@ -62,28 +64,28 @@ export function SubmisiTugasModal({
               transition={{ type: "spring", damping: 28, stiffness: 320 }}
               className="bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl w-full max-w-3xl max-h-[90dvh] flex flex-col overflow-hidden sm:rounded-2xl">
 
-              <div className="relative p-6 shrink-0" style={{ background: "#3E03B3" }}>
+              <div className="relative p-6 shrink-0" style={{ background: h.bg }}>
                 <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
-                <button onClick={onClose} className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors">
-                  <X size={16} className="text-white" />
+                <button onClick={onClose} className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors ${h.app ? "bg-white text-slate-600" : "bg-white/20 hover:bg-white/30 text-white"}`}>
+                  <X size={16} />
                 </button>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                    <ClipboardList size={18} className="text-white" />
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${h.app ? "bg-white text-[#F26A3D]" : "bg-white/20 backdrop-blur-sm text-white"}`}>
+                    <ClipboardList size={18} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Rekap Pengumpulan</p>
-                    <h3 className="text-lg font-extrabold text-white">{tugas.judul}</h3>
+                    <p className={`text-[10px] font-bold tracking-widest uppercase ${h.sub}`}>Rekap Pengumpulan</p>
+                    <h3 className={`text-lg font-extrabold ${h.title}`}>{tugas.judul}</h3>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/20 text-xs font-semibold text-white">
+                  <span className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold ${h.chip}`}>
                     {tugas.mapel}
                   </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/20 text-xs font-semibold text-white">
+                  <span className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold ${h.chip}`}>
                     Kelas: {tugas.kelasList.length ? tugas.kelasList.map((k) => k.nama).join(", ") : "Semua Kelas"}
                   </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
+                  <span className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold ${h.chip}`}>
                     <CalendarClock size={10} /> Deadline {formatTgl(tugas.deadline)}
                   </span>
                 </div>

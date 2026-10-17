@@ -10,6 +10,9 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { MateriFormModal, type MateriItem } from "./MateriFormModal";
+import { AppDetailSheet, AppCard, AppEmpty } from "@/components/app/AppUI";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -44,6 +47,7 @@ export function MateriListPage({
   onSearchChange?: (v: string) => void;
 } = {}) {
   const toast = useToast();
+  const appMode = useIsAppMode();
   const router = useRouter();
   const pathname = usePathname();
   const rolePrefix = pathname?.startsWith("/admin") ? "/admin" : "/guru";
@@ -261,7 +265,66 @@ export function MateriListPage({
       </div>
       </div>
 
-      {mobileNative && (
+      {mobileNative && appMode && (
+        <div className="space-y-4 lg:hidden">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{filtered.length} materi</span>
+            {canCreate && (
+              <button type="button" onClick={() => { setEditItem(null); setModalOpen(true); }}
+                className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95"
+                style={{ background: "#F26A3D" }}>
+                <Plus size={14} /> Tambah
+              </button>
+            )}
+          </div>
+
+          {uniqueMapel.length > 1 && (
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[null, ...uniqueMapel].map((mp) => (
+                <button key={mp ?? "all"} type="button" onClick={() => setMapelFilter(mp)}
+                  className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
+                  style={mapelFilter === mp ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                  {mp ?? "Semua"}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {!canCreate && (
+            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+              Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi.
+            </p>
+          )}
+          {error && <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{error}</p>}
+
+          {loading ? (
+            <div className="space-y-3">{[0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}</div>
+          ) : filtered.length === 0 ? (
+            <AppEmpty icon={BookOpen} title={search.trim() ? `Tidak ada materi dengan kata kunci "${search.trim()}"` : "Belum ada materi"} />
+          ) : (
+            <ul className="space-y-3">
+              {filtered.map((m, i) => (
+                <li key={m.id}>
+                  <AppCard onClick={() => setDetailItem(m)} className="flex items-center gap-4">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(toneAt(i))}>
+                      <FileText size={26} color="#fff" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{m.judul}</p>
+                      <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <span className="truncate">{m.mapel}</span><span>•</span><span className="shrink-0">{formatDate(m.createdAt)}</span>
+                      </p>
+                    </div>
+                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                  </AppCard>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {mobileNative && !appMode && (
         <div className="relative isolate -mx-4 space-y-3 px-4 lg:hidden">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{filtered.length} materi</span>
@@ -365,7 +428,7 @@ export function MateriListPage({
       )}
 
       <AnimatePresence>
-        {detailItem && (
+        {detailItem && !appMode && (
           <MobileDetailModal onClose={() => setDetailItem(null)} accent="#3E03B3">
             <div className="relative px-6 pb-6 pt-10 text-center">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
@@ -423,6 +486,30 @@ export function MateriListPage({
               )}
             </div>
           </MobileDetailModal>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {detailItem && appMode && (
+          <AppDetailSheet
+            onClose={() => setDetailItem(null)}
+            icon={FileText}
+            title={detailItem.judul}
+            subtitle={detailItem.mapel}
+            rows={[
+              { label: "Tanggal Dibuat", value: formatDate(detailItem.createdAt) },
+              { label: "Dibuat Oleh", value: detailItem.createdBy.nama },
+            ]}
+            chips={{ label: "Kelas Target", values: detailItem.kelasList.map((k) => k.nama) }}
+            primary={{ label: "Lihat Materi", icon: Eye, onClick: () => { const id = detailItem.id; setDetailItem(null); router.push(`${rolePrefix}/materi/${id}`); } }}
+            secondary={[
+              ...(detailItem.fileUrl ? [{ label: "Unduh", icon: Download, href: detailItem.fileUrl }] : []),
+              ...(canEdit(detailItem) ? [
+                { label: "Edit", icon: Pencil, onClick: () => { setEditItem(detailItem); setModalOpen(true); setDetailItem(null); } },
+                { label: "Hapus", icon: Trash2, danger: true, onClick: () => { handleDelete(detailItem); setDetailItem(null); } },
+              ] : []),
+            ]}
+          />
         )}
       </AnimatePresence>
 

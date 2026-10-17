@@ -6,6 +6,8 @@ import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
 import type { PenempatanMagang, StatusPenempatan } from "./types";
+import { useIsAppMode } from "@/lib/pwaInstall";
+import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 
 const PAGE_SIZE = 10;
 
@@ -25,6 +27,7 @@ export function PenempatanTable({
   onEdit?: (p: PenempatanMagang) => void;
   onHapus?: (p: PenempatanMagang) => void;
 }) {
+  const app = useIsAppMode();
   const [page, setPage] = useState(0);
   useEffect(() => setPage(0), [list]);
 
@@ -34,7 +37,7 @@ export function PenempatanTable({
   const end = Math.min((page + 1) * PAGE_SIZE, list.length);
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+    <div className={app && mobileNative ? "lg:overflow-hidden lg:rounded-3xl lg:border lg:border-slate-100 lg:bg-white lg:shadow-sm dark:lg:border-slate-700 dark:lg:bg-slate-800" : "overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
       {loading ? (
         <div className="space-y-3 p-6">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -129,7 +132,49 @@ export function PenempatanTable({
             </table>
           </div>
 
-          {mobileNative && (
+          {mobileNative && app && (
+            <ul className="space-y-3 lg:hidden">
+              {pageItems.map((p) => {
+                const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+                const cfg = STATUS_PENEMPATAN_CFG[p.status];
+                const busy = busyId === p.id;
+                return (
+                  <li key={p.id} className="rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                    <div className="flex items-center gap-4">
+                      <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={56} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{nama}</p>
+                        <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
+                        <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 space-y-1.5 rounded-2xl bg-slate-100 px-4 py-3 text-[12px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                      <p className="flex items-center gap-2 font-semibold"><Building2 size={13} className="shrink-0" />{p.tempatMagang.namaTempat}</p>
+                      <p className="flex items-center gap-2"><CalendarClock size={13} className="shrink-0" />{fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}</p>
+                    </div>
+                    {canManage && (
+                      <div className="mt-3 flex gap-2">
+                        <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
+                          className="flex-1 rounded-full border-0 px-3 py-2.5 text-xs font-bold focus:outline-none" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                          <option value="AKTIF">Aktif</option>
+                          <option value="SELESAI">Selesai</option>
+                          <option value="BATAL">Batal</option>
+                        </select>
+                        <button onClick={() => onEdit?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold disabled:opacity-40" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                          <Pencil size={12} /> Edit
+                        </button>
+                        <button onClick={() => onHapus?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-red-50 py-2.5 text-xs font-bold text-red-600 disabled:opacity-40">
+                          <Trash2 size={12} /> Hapus
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {mobileNative && !app && (
             <div className="divide-y divide-slate-100 p-2 lg:hidden dark:divide-slate-700/40">
               {pageItems.map((p) => {
                 const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, Upload, File as FileIcon, Check } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { useSheetHeader } from "@/components/app/AppUI";
 
 export type MateriItem = {
   id: string;
@@ -20,7 +21,9 @@ export type MateriItem = {
 
 type KelasOption = { id: string; nama: string };
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
+const INPUT_CLS_BASE = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
+
+const INPUT_CLS_APP = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#F26A3D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F26A3D]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-700";
 
 export function MateriFormModal({
   open, materi, onClose, onSaved, mapelOptions,
@@ -32,6 +35,8 @@ export function MateriFormModal({
   mapelOptions?: string[];
 }) {
   const isEdit = !!materi;
+  const h = useSheetHeader("#3E03B3");
+  const INPUT_CLS = h.app ? INPUT_CLS_APP : INPUT_CLS_BASE;
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -119,21 +124,22 @@ export function MateriFormModal({
             className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div
-              className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5"
+              className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5"
+              style={{ background: h.bg }}
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                <BookOpen size={18} className="text-white" />
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${h.iconBox}`}>
+                <BookOpen size={18} />
               </div>
               <div>
-                <h2 className="text-base font-extrabold text-white">
+                <h2 className={`text-base font-extrabold ${h.title}`}>
                   {isEdit ? "Edit Materi" : "Tambah Materi"}
                 </h2>
-                <p className="text-xs text-white/60">{isEdit ? "Ubah detail materi pembelajaran" : "Unggah modul pembelajaran baru"}</p>
+                <p className={`text-xs ${h.sub}`}>{isEdit ? "Ubah detail materi pembelajaran" : "Unggah modul pembelajaran baru"}</p>
               </div>
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25"
+                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${h.close}`}
               >
                 <X size={15} />
               </button>
@@ -187,7 +193,7 @@ export function MateriFormModal({
                         className={
                           "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " +
                           (active
-                            ? "border-[#3E03B3] bg-[#3E03B3] text-white"
+                            ? (h.app ? "border-[#F26A3D] bg-[#F26A3D] text-white" : "border-[#3E03B3] bg-[#3E03B3] text-white")
                             : "border-gray-200 bg-white text-gray-600 hover:border-[#3E03B3]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")
                         }
                       >
@@ -249,7 +255,7 @@ export function MateriFormModal({
                 type="button"
                 onClick={handleSubmit}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-xl bg-[#3E03B3] px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full bg-[#F26A3D]" : "rounded-xl bg-[#3E03B3]"}`}
               >
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Materi"}

@@ -10,6 +10,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import { formatTglJam } from "./types";
 import type { TugasItem, TugasTipe } from "./types";
+import { useSheetHeader } from "@/components/app/AppUI";
 
 type KelasOption = { id: string; nama: string };
 
@@ -61,6 +62,7 @@ export function TugasFormModal({
   mapelOptions?: string[];
 }) {
   const isEdit = !!tugas;
+  const h = useSheetHeader("#3E03B3");
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const deadlineInputRef = useRef<HTMLInputElement>(null);
@@ -227,17 +229,17 @@ export function TugasFormModal({
             transition={{ type: "spring", damping: 22, stiffness: 320 }}
             className={`relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl ${tipe === "PRAKTIK" || isSoalBased ? "max-w-3xl" : "max-w-lg"}`}
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: h.bg }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                <ClipboardList size={18} className="text-white" />
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${h.iconBox}`}>
+                <ClipboardList size={18} />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Tugas</p>
-                <h2 className="text-base font-extrabold text-white">{isEdit ? "Edit Tugas" : "Tambah Tugas"}</h2>
+                <p className={`text-[10px] font-bold uppercase tracking-widest ${h.sub}`}>Tugas</p>
+                <h2 className={`text-base font-extrabold ${h.title}`}>{isEdit ? "Edit Tugas" : "Tambah Tugas"}</h2>
               </div>
               <button onClick={onClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${h.close}`}>
                 <X size={15} />
               </button>
             </div>
@@ -397,7 +399,7 @@ export function TugasFormModal({
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                      style={{ background: "#3E03B3" }}>
+                      style={{ background: h.app ? "#F26A3D" : "#3E03B3" }}>
                       <Plus size={12} /> Tambah Soal
                     </button>
                   </div>
@@ -484,8 +486,8 @@ export function TugasFormModal({
                 Batal
               </button>
               <button type="button" onClick={handleSubmit} disabled={saving}
-                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
-                style={{ background: "#3E03B3" }}>
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full" : "rounded-xl"}`}
+                style={{ background: h.app ? "#F26A3D" : "#3E03B3" }}>
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Tugas"}
               </button>

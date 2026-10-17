@@ -14,6 +14,8 @@ import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
 import { downloadCatatanPdf, downloadCatatanExcel } from "./downloadCatatanPdf";
+import { useSheetHeader } from "@/components/app/AppUI";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const GRID_COLS = "28px 40px 1.9fr 1.6fr 90px 110px 120px";
 
@@ -52,6 +54,7 @@ function todayInput() {
 
 export function CatatanSiswaClient() {
   const toast = useToast();
+  const app = useIsAppMode();
   const pathname = usePathname();
   const isGuru = pathname?.startsWith("/guru/") ?? false;
   const isAdmin = pathname?.startsWith("/admin/") ?? false;
@@ -359,7 +362,30 @@ export function CatatanSiswaClient() {
             )}
             {!loading && displayed.length > 0 && (
               <>
-                <div className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-slate-800">
+                {app && (
+                  <ul className="space-y-3">
+                    {pageItems.map((s) => (
+                      <li key={s.siswaId}>
+                        <button type="button" onClick={() => setDetailId(s.siswaId)}
+                          className="flex w-full items-center gap-4 rounded-3xl bg-white p-3 text-left shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
+                          <Avatar src={null} nama={s.nama ?? "?"} sizePx={56} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-sm font-extrabold" />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{s.nama ?? "-"}</p>
+                            <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">
+                              {s.catatanTerakhir ? `${s.catatanTerakhir.judul} · ${formatTgl(s.catatanTerakhir.tanggal)}` : "Belum ada catatan"}
+                            </p>
+                            <div className="mt-1.5 flex items-center gap-1.5">
+                              <span className="rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{s.jumlahCatatan} catatan</span>
+                              {s.totalPoin > 0 && <span className="rounded-full bg-[#EAF8D2] px-2.5 py-0.5 text-[10px] font-bold text-[#5D900F]">{s.totalPoin} poin</span>}
+                            </div>
+                          </div>
+                          <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className={`divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-slate-800 ${app ? "hidden" : ""}`}>
                   {pageItems.map((s) => (
                     <button key={s.siswaId} type="button" onClick={() => setDetailId(s.siswaId)}
                       className="flex w-full items-center gap-3 p-4 text-left">
@@ -427,6 +453,7 @@ function CatatanDetailModal({
   siswaId: string; currentUserId: string; currentUserRole: string; onClose: () => void; onChanged: () => void;
 }) {
   const toast = useToast();
+  const h = useSheetHeader("#3E03B3");
   const [data, setData] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -521,30 +548,30 @@ function CatatanDetailModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-800" onClick={(e) => e.stopPropagation()}>
-        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
+    <div className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${h.app ? "items-end" : "items-center p-4"}`} onClick={onClose}>
+      <div className={`flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-800 ${h.app ? "rounded-t-[28px]" : "rounded-2xl"}`} onClick={(e) => e.stopPropagation()}>
+        <div className="relative shrink-0 overflow-hidden px-6 py-5" style={{ background: h.bg }}>
           <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
           <div className="relative flex items-center justify-between">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Catatan Siswa</p>
-              <p className="truncate text-lg font-extrabold text-white">{data?.siswa.nama ?? "Memuat..."}</p>
-              <p className="text-xs text-white/70">{data?.siswa.nis}{data ? ` · Total ${data.totalPoin} poin` : ""}</p>
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${h.sub}`}>Catatan Siswa</p>
+              <p className={`truncate text-lg font-extrabold ${h.title}`}>{data?.siswa.nama ?? "Memuat..."}</p>
+              <p className={`text-xs ${h.app ? "text-slate-500" : "text-white/70"}`}>{data?.siswa.nis}{data ? ` · Total ${data.totalPoin} poin` : ""}</p>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               {data && (
                 <>
                   <button onClick={() => handleDownload("pdf")} disabled={downloading !== null}
-                    title="Unduh PDF" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white transition-colors hover:bg-white/30 disabled:opacity-50">
+                    title="Unduh PDF" className={`flex h-8 w-8 items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${h.app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}>
                     {downloading === "pdf" ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
                   </button>
                   <button onClick={() => handleDownload("excel")} disabled={downloading !== null}
-                    title="Unduh Excel" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white transition-colors hover:bg-white/30 disabled:opacity-50">
+                    title="Unduh Excel" className={`flex h-8 w-8 items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${h.app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}>
                     {downloading === "excel" ? <Loader2 size={14} className="animate-spin" /> : <FileSpreadsheet size={14} />}
                   </button>
                 </>
               )}
-              <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white hover:bg-white/30">
+              <button onClick={onClose} className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${h.app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}>
                 <X size={15} />
               </button>
             </div>
@@ -582,8 +609,8 @@ function CatatanDetailModal({
                 <button type="button" onClick={() => setShowForm(false)}
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Batal</button>
                 <button type="submit" disabled={saving}
-                  className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60"
-                  style={{ background: "#3E03B3" }}>
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-60 ${h.app ? "rounded-full" : "rounded-xl"}`}
+                  style={{ background: h.app ? "#F26A3D" : "#3E03B3" }}>
                   {saving && <Loader2 size={13} className="animate-spin" />}
                   {editTarget ? "Simpan Perubahan" : "Simpan Catatan"}
                 </button>

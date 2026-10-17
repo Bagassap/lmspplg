@@ -9,6 +9,9 @@ import {
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
+import { AppDetailSheet, AppCard, AppEmpty, AppTabs } from "@/components/app/AppUI";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 function chunkOf4<T>(items: T[]): T[][] {
   const out: T[][] = [];
@@ -50,6 +53,7 @@ export function TugasListCard({
   search?: string;
   onSearchChange?: (v: string) => void;
 }) {
+  const appMode = useIsAppMode();
   const [tab, setTab] = useState<"active" | "completed">("active");
   const [internalSearch, setInternalSearch] = useState("");
   const search = controlledSearch ?? internalSearch;
@@ -203,7 +207,70 @@ export function TugasListCard({
       </div>
     </div>
 
-    {mobileNative && (
+    {mobileNative && appMode && (
+      <div className="space-y-4 lg:hidden">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{shown.length} tugas</span>
+          {canCreate && (
+            <button type="button" onClick={onAddTugas}
+              className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95"
+              style={{ background: "#F26A3D" }}>
+              <Plus size={14} /> Tambah
+            </button>
+          )}
+        </div>
+
+        <AppTabs
+          tabs={[["active", `Aktif (${active.length})`], ["completed", `Selesai (${completed.length})`]] as const}
+          value={tab} onChange={setTab} layoutId="app-tugas-guru-tab" />
+
+        {uniqueMapel.length > 1 && (
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {[null, ...uniqueMapel].map((mp) => (
+              <button key={mp ?? "all"} type="button" onClick={() => setMapelFilter(mp)}
+                className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
+                style={mapelFilter === mp ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                {mp ?? "Semua"}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="space-y-3">{[0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}</div>
+        ) : shown.length === 0 ? (
+          <AppEmpty icon={ClipboardList} title={search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"} />
+        ) : (
+          <ul className="space-y-3">
+            {shown.map((t, i) => {
+              const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
+              const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList;
+              return (
+                <li key={t.id}>
+                  <AppCard onClick={() => setDetailItem(t)} className="flex items-center gap-4">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(toneAt(i + 2))}>
+                      <Icon size={26} color="#fff" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
+                      <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <span className="truncate">{t.mapel}</span><span>•</span><span className="shrink-0">{formatTgl(t.deadline)}</span>
+                      </p>
+                    </div>
+                    {cnt > 0 && (
+                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-2 text-xs font-bold text-white" style={{ backgroundColor: "#F26A3D" }}>{cnt}</span>
+                    )}
+                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                  </AppCard>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    )}
+
+    {mobileNative && !appMode && (
       <div className="relative isolate space-y-3 lg:hidden">
         <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-1 dark:border-slate-700">
           <div className="flex items-center gap-5">
@@ -302,7 +369,7 @@ export function TugasListCard({
     )}
 
     <AnimatePresence>
-      {detailItem && (() => {
+      {detailItem && !appMode && (() => {
         const cnt = submisiList.filter((s) => s.tugasId === detailItem.id).length;
         return (
           <MobileDetailModal onClose={() => setDetailItem(null)} accent="#3E03B3">
@@ -356,6 +423,32 @@ export function TugasListCard({
               )}
             </div>
           </MobileDetailModal>
+        );
+      })()}
+    </AnimatePresence>
+
+    <AnimatePresence>
+      {detailItem && appMode && (() => {
+        const cnt = submisiList.filter((s) => s.tugasId === detailItem.id).length;
+        const Icon = TIPE_BADGE[detailItem.tipe]?.icon ?? ClipboardList;
+        return (
+          <AppDetailSheet
+            onClose={() => setDetailItem(null)}
+            icon={Icon}
+            tone="emerald"
+            title={detailItem.judul}
+            subtitle={`${detailItem.mapel} · ${tipeLabel(detailItem.tipe)}`}
+            rows={[
+              { label: "Deadline", value: formatTgl(detailItem.deadline) },
+              { label: "Terkumpul", value: `${cnt} siswa` },
+            ]}
+            chips={{ label: "Kelas Target", values: detailItem.kelasList.map((k) => k.nama) }}
+            primary={{ label: `Lihat Submisi${cnt > 0 ? ` (${cnt})` : ""}`, icon: Send, onClick: () => { const t = detailItem; setDetailItem(null); onLihatSubmisi(t); } }}
+            secondary={canEdit(detailItem) ? [
+              { label: "Edit", icon: Pencil, onClick: () => { onEditTugas(detailItem); setDetailItem(null); } },
+              { label: "Hapus", icon: Trash2, danger: true, onClick: () => { onDeleteTugas(detailItem.id); setDetailItem(null); } },
+            ] : []}
+          />
         );
       })()}
     </AnimatePresence>

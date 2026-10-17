@@ -7,11 +7,14 @@ import { FileBarChart, FileUp, BarChart3, ChevronLeft } from "lucide-react";
 import { GuruLaporDiriPanel } from "@/components/magang/GuruLaporDiriPanel";
 import { GuruLaporanPanel } from "@/components/magang/GuruLaporanPanel";
 import type { LaporanAkhirRow } from "@/components/magang/laporan-akhir-types";
+import { AppTabs } from "@/components/app/AppUI";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type Category = "lapor-diri" | "laporan";
 
 export default function GuruMagangRekapPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const [category, setCategory] = useState<Category>("lapor-diri");
   const [summary, setSummary] = useState({ sudahLapor: 0, belumLapor: 0, total: 0 });
   const [laporanRows, setLaporanRows] = useState<LaporanAkhirRow[]>([]);
@@ -88,6 +91,17 @@ export default function GuruMagangRekapPage() {
             </div>
           </div>
 
+          {appMode ? (
+            <div className="space-y-5 lg:hidden">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Rekap &amp; Laporan PKL</h1>
+              </div>
+              <AppTabs
+                tabs={[["lapor-diri", "Lapor Diri"], ["laporan", menungguReview > 0 ? `Laporan (${menungguReview})` : "Laporan"]] as const}
+                value={category} onChange={setCategory} layoutId="app-rekap-guru-tab" />
+            </div>
+          ) : (
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/guru/dashboard")}
@@ -126,6 +140,7 @@ export default function GuruMagangRekapPage() {
               </div>
             </div>
           </div>
+          )}
         </div>
 
         {category === "lapor-diri" ? <GuruLaporDiriPanel /> : <GuruLaporanPanel />}

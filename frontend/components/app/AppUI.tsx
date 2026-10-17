@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export const APP_ACCENT = "#F26A3D";
 export const APP_SOFT = "#FFE9E2";
@@ -151,4 +153,82 @@ export function AppEmpty({ icon: Icon, title, desc }: { icon: React.ElementType;
       {desc && <p className="max-w-sm text-xs text-slate-500 dark:text-slate-400">{desc}</p>}
     </div>
   );
+}
+
+/** Kelas warna header modal: peach di aplikasi terpasang, gaya lama di browser. */
+export function useSheetHeader(defaultBg: string) {
+  const app = useIsAppMode();
+  return app
+    ? { app, bg: APP_SOFT, title: "text-slate-900", sub: "text-slate-500", iconBox: "bg-white text-[#F26A3D]", close: "bg-white text-slate-600", chip: "bg-white text-slate-600" }
+    : { app, bg: defaultBg, title: "text-white", sub: "text-white/60", iconBox: "bg-white/15 text-white", close: "bg-white/15 text-white hover:bg-white/25", chip: "bg-white/20 text-white" };
+}
+
+type SheetAction = { label: string; icon?: React.ElementType; onClick?: () => void; href?: string; danger?: boolean };
+
+/**
+ * Panel detail dari bawah untuk aplikasi terpasang (pola detail Materi/Tugas):
+ * ikon besar, judul, baris info abu-abu, satu tombol utama oranye, dan tombol
+ * sekunder (Edit/Hapus/Unduh).
+ */
+export function AppDetailSheet({
+  onClose, icon: Icon, tone = "indigo", title, subtitle, rows, chips, primary, secondary = [],
+}: {
+  onClose: () => void;
+  icon: React.ElementType;
+  tone?: "indigo" | "emerald" | "amber" | "violet" | "sky";
+  title: string;
+  subtitle?: string;
+  rows: { label: string; value: React.ReactNode }[];
+  chips?: { label: string; values: string[] };
+  primary?: SheetAction;
+  secondary?: SheetAction[];
+}) {
+  return (
+    <MobileDetailModal onClose={onClose} accent="#FFFFFF">
+      <div className="px-6 pb-2 pt-10 text-center">
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(tone)}>
+          <Icon size={28} color="#fff" />
+        </span>
+        <h2 className="mt-3 text-lg font-extrabold text-slate-900">{title}</h2>
+        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+      </div>
+      <div className="mx-auto max-w-md space-y-2 px-6 pt-3 text-left">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-100 px-4 py-3.5">
+            <span className="text-xs font-semibold text-slate-500">{r.label}</span>
+            <span className="text-right text-[13px] font-bold text-slate-900">{r.value}</span>
+          </div>
+        ))}
+        {chips && chips.values.length > 0 && (
+          <div className="rounded-2xl bg-slate-100 px-4 py-3.5">
+            <span className="mb-1.5 block text-xs font-semibold text-slate-500">{chips.label}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {chips.values.map((v) => (
+                <span key={v} className="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700">{v}</span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="flex flex-col gap-2 px-6 pb-6 pt-4">
+        {primary && <ActionPill action={primary} primary />}
+        {secondary.length > 0 && (
+          <div className="flex gap-2">
+            {secondary.map((a) => <ActionPill key={a.label} action={a} />)}
+          </div>
+        )}
+      </div>
+    </MobileDetailModal>
+  );
+}
+
+function ActionPill({ action, primary = false }: { action: SheetAction; primary?: boolean }) {
+  const Icon = action.icon;
+  const cls = `flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
+  const style = primary
+    ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" }
+    : { background: action.danger ? "#FEE2E2" : APP_SOFT, color: action.danger ? "#DC2626" : APP_ACCENT };
+  const inner = <>{Icon && <Icon size={15} />}{action.label}</>;
+  if (action.href) return <a href={action.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>;
+  return <button type="button" onClick={action.onClick} className={cls} style={style}>{inner}</button>;
 }

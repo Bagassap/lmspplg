@@ -22,6 +22,10 @@ import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, avatarColor } from "@/components/absensi-harian/shared";
 import { OptionCard3D } from "@/components/shared/Icon3D";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
+import { AppCard, AppEmpty, AppSectionTitle } from "@/components/app/AppUI";
+import { Rocket } from "@/components/app/Rocket";
+import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
@@ -38,6 +42,7 @@ function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value
 }
 
 function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { tempatMagangId: string; tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
+  const app = useIsAppMode();
   const toast = useToast();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -72,13 +77,13 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
     return (
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
-        style={{ background: "#A1F919" }}>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5D900F] dark:text-[#A1F919]">
+        style={{ background: app ? "#FFE9E2" : "#A1F919" }}>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white ${app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"}`}>
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">
-          <p className="truncate text-sm font-extrabold text-black">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
-          <p className="truncate text-[10.5px] font-semibold text-black/70">
+          <p className={`truncate text-sm font-extrabold ${app ? "text-slate-900" : "text-black"}`}>{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+          <p className={`truncate text-[10.5px] font-semibold ${app ? "text-slate-500" : "text-black/70"}`}>
             {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
           </p>
         </div>
@@ -391,6 +396,7 @@ function MobileSiswaCard({
 
 export default function GuruMagangAbsensiPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const toast = useToast();
   const [selectedId, setSelectedId] = useState<string>("");
   const [tanggal, setTanggal] = useState(() => todayJakarta());
@@ -487,6 +493,15 @@ export default function GuruMagangAbsensiPage() {
           </div>
         </div>
 
+        {appMode ? (
+          <div className="space-y-5 lg:hidden">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
+            </div>
+            <AppEmpty icon={Briefcase} title="Anda belum menjadi guru pembimbing PKL siswa manapun" desc="Hubungi admin untuk ditetapkan sebagai pembimbing saat siswa ditempatkan PKL." />
+          </div>
+        ) : (
         <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
           <div className="relative flex items-center px-4 pb-3 pt-4">
             <button type="button" onClick={() => router.push("/guru/dashboard")}
@@ -505,6 +520,7 @@ export default function GuruMagangAbsensiPage() {
             </div>
           </div>
         </div>
+        )}
       </>
     );
   }
@@ -672,6 +688,82 @@ export default function GuruMagangAbsensiPage() {
         </div>
       </div>
 
+      {appMode && (
+        <div className="space-y-6 lg:hidden">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
+              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
+            </div>
+            <MobileDatePicker value={tanggal} onChange={setTanggal} />
+          </div>
+
+          {tempatList.length > 1 && (
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {tempatList.map((t) => (
+                <button key={t.id} type="button" onClick={() => setSelectedId(t.id)}
+                  className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
+                  style={selectedId === t.id ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                  {t.namaTempat}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <button type="button" onClick={() => setStatusPageOpen(true)}
+            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "#FFE9E2" }}>
+            <div className="relative z-10 min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-slate-500">Kehadiran hari ini{selectedTempat?.namaTempat ? ` · ${selectedTempat.namaTempat}` : ""}</p>
+              <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#F26A3D" }}>{hadirPct}%</p>
+              <p className="mt-1.5 text-sm font-semibold text-slate-700">{rekap.HADIR} dari {total} siswa bimbingan hadir</p>
+            </div>
+            <div className="relative z-10 -my-2 h-24 w-24 shrink-0"><Rocket /></div>
+          </button>
+
+          <section className="space-y-3">
+            <AppSectionTitle>Progres &amp; Pengingat</AppSectionTitle>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col justify-between gap-3 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl" style={icon3dStyle(MENU_TONE.absensi)}>
+                  <ClipboardCheck size={22} color="#fff" />
+                </span>
+                <div>
+                  <p className="text-xl font-extrabold leading-none text-slate-900 dark:text-white">{sudahAbsen}/{total}</p>
+                  <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">Progres Absen</p>
+                </div>
+              </div>
+              <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} bold />
+            </div>
+          </section>
+
+          <section>
+            <AppSectionTitle>Rincian Status</AppSectionTitle>
+            <div className="mt-4 grid grid-cols-4 gap-3">
+              {([
+                { key: "HADIR" as const, label: "Hadir", value: rekap.HADIR, tone: "emerald" as const, icon: STATUS_CFG.HADIR.icon },
+                { key: "IZIN" as const, label: "Izin", value: rekap.IZIN, tone: "sky" as const, icon: STATUS_CFG.IZIN.icon },
+                { key: "SAKIT" as const, label: "Sakit", value: rekap.SAKIT, tone: "amber" as const, icon: STATUS_CFG.SAKIT.icon },
+                { key: "ALPA" as const, label: "Alpa", value: rekap.ALPA, tone: "violet" as const, icon: STATUS_CFG.ALPA.icon },
+              ]).map((r) => (
+                <button key={r.key} type="button" onClick={() => { setActiveFilter(r.key); setStatusPageOpen(true); }}
+                  className="flex flex-col items-center gap-2 active:scale-95">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(r.tone)}>
+                    <r.icon size={26} color="#fff" />
+                  </span>
+                  <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{r.value}</span>
+                  <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{r.label}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-3">
+            <AppSectionTitle>Belum Absen</AppSectionTitle>
+            <AppCard><BelumAbsenPanel siswaList={siswaList} compact /></AppCard>
+          </section>
+        </div>
+      )}
+      <div className={appMode ? "hidden" : "contents"}>
       <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center justify-between px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/guru/dashboard")}
@@ -710,6 +802,7 @@ export default function GuruMagangAbsensiPage() {
           </div>
         </div>
       </div>
+      </div>
 
       {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
@@ -717,17 +810,17 @@ export default function GuruMagangAbsensiPage() {
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="fixed inset-0 z-50 flex flex-col bg-[#FFFFFF] dark:bg-[#1E293B]">
-              <div className="shrink-0 pb-3 pt-4" style={{ background: "#3E03B3" }}>
+              <div className="shrink-0 pb-3 pt-4" style={{ background: appMode ? "#FFE9E2" : "#3E03B3" }}>
                 <div className="relative flex items-center justify-between px-4">
                   <button type="button" onClick={() => setStatusPageOpen(false)}
-                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${appMode ? "bg-white text-slate-700" : "bg-white/15 text-white active:bg-white/25"}`}>
                     <ChevronLeft size={18} />
                   </button>
-                  <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">
-                    Status Kehadiran <span className="font-medium text-white/70">({total})</span>
+                  <h1 className={`absolute inset-x-0 text-center text-base font-bold ${appMode ? "text-slate-900" : "text-white"}`}>
+                    Status Kehadiran <span className={`font-medium ${appMode ? "text-slate-500" : "text-white/70"}`}>({total})</span>
                   </h1>
                   <button type="button" onClick={() => setLaporanOpen(true)}
-                    className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 active:scale-95" style={{ color: "#3E03B3" }}>
+                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#F26A3D" } : { color: "#3E03B3" }}>
                     <Download size={12} />
                     <span className="text-[11px] font-bold">Unduh</span>
                   </button>
@@ -822,7 +915,7 @@ export default function GuruMagangAbsensiPage() {
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: appMode ? "#F26A3D" : "#3E03B3" }}>
                       <FileText size={16} />
                     </span>
                     <div>

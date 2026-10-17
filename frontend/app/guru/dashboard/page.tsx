@@ -16,6 +16,8 @@ import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { GuruAppHome } from "@/components/dashboard/GuruAppHome";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 
 interface Pengumuman {
@@ -89,6 +91,7 @@ function ViewAll({ href }: { href: string }) {
 
 
 export default function GuruDashboardPage() {
+  const appMode = useIsAppMode();
   const [user, setUser]       = useState<{ nama: string; role: string; id: string } | null>(null);
   const [data, setData]       = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -321,6 +324,11 @@ export default function GuruDashboardPage() {
 
     </div>
 
+    {appMode ? (
+      <div className="lg:hidden">
+        <GuruAppHome data={data} onOpenPengumuman={setSelectedSlug} />
+      </div>
+    ) : (
     <div className="relative isolate -m-4 overflow-hidden lg:hidden">
       <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#3E03B3" }} />
 
@@ -468,6 +476,7 @@ export default function GuruDashboardPage() {
       </div>
       </div>
     </div>
+    )}
 
       <AnimatePresence>
         {selectedSlug && (

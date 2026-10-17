@@ -10,6 +10,7 @@ import type { SiswaAbsensi, StatusAbsensi } from "./types";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, avatarColor, parseLokasi, resolveMediaSrc } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
+import { useSheetHeader } from "@/components/app/AppUI";
 
 function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenImg }: {
   fotoSrc: string | null; fotoLabel: string; ttdSrc: string | null;
@@ -96,6 +97,7 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
 export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" }: {
   siswa: SiswaAbsensi; tanggal: string; kelas: string; onClose: () => void; source?: "hadir" | "pulang";
 }) {
+  const h = useSheetHeader(BRAND_GRADIENT);
   const [imgOverlay, setImgOverlay] = useState<string | null>(null);
   const isPulang = source === "pulang";
   const rawLokasi = isPulang ? siswa.lokasiPulang : siswa.lokasi;
@@ -214,30 +216,30 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
       </div>
 
       <AnimatePresence>
-        <MobileDetailModal onClose={onClose} accent={BRAND_GRADIENT} className="lg:hidden">
+        <MobileDetailModal onClose={onClose} accent={h.app ? h.bg : BRAND_GRADIENT} className="lg:hidden">
           <div className="relative flex items-center gap-3 px-4 pb-4 pt-10">
             <div className="relative shrink-0" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.25)", borderRadius: "9999px" }}>
               <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={48} fallbackBg={ac} textClassName="text-sm font-extrabold" />
-              <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white/40 bg-white/20">
-                <ThemeIcon size={10} className="text-white" />
+              <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${h.app ? "border-white bg-white text-[#F26A3D]" : "border-white/40 bg-white/20 text-white"}`}>
+                <ThemeIcon size={10} />
               </div>
             </div>
             <div className="min-w-0 flex-1">
-              <h2 className="truncate text-base font-extrabold leading-tight text-white">{siswa.nama}</h2>
+              <h2 className={`truncate text-base font-extrabold leading-tight ${h.title}`}>{siswa.nama}</h2>
               <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                <span className="rounded-lg px-2 py-0.5 text-[9px] font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
+                <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold ${h.app ? "text-[#F26A3D]" : "text-white"}`} style={{ background: h.app ? "#FFFFFF" : "rgba(255,255,255,0.22)" }}>
                   {theme.label}
                 </span>
-                <span className="text-[10px] text-white/70">{kelas} · {formatTgl(tanggal)}</span>
+                <span className={`text-[10px] ${h.app ? "text-slate-500" : "text-white/70"}`}>{kelas} · {formatTgl(tanggal)}</span>
               </div>
             </div>
             <div className="shrink-0 pr-6 text-right">
-              <p className="text-[8px] font-bold uppercase tracking-wide text-white/55">{isPulang ? "Pulang" : "Absen"}</p>
-              <p className="font-mono text-sm font-extrabold text-white">{waktu ?? "—"}</p>
+              <p className={`text-[8px] font-bold uppercase tracking-wide ${h.app ? "text-slate-400" : "text-white/55"}`}>{isPulang ? "Pulang" : "Absen"}</p>
+              <p className={`text-sm font-extrabold ${h.app ? "font-digital tracking-wider text-[#F26A3D]" : "font-mono text-white"}`}>{waktu ?? "—"}</p>
             </div>
           </div>
           {catatan && (
-            <p className="relative -mt-2 px-4 pb-4 text-[11px] leading-snug text-white/85">{catatan}</p>
+            <p className={`relative -mt-2 px-4 pb-4 text-[11px] leading-snug ${h.app ? "text-slate-600" : "text-white/85"}`}>{catatan}</p>
           )}
 
           <div className="relative -mt-4 rounded-t-3xl bg-white pb-6 pt-5 dark:bg-slate-900">
@@ -246,8 +248,8 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               <DocumentCards fotoSrc={fotoSrc} fotoLabel={fotoLabel} ttdSrc={ttdSrc} lokasi={lokasi} rawLokasi={rawLokasi} onOpenImg={setImgOverlay} />
             </div>
             <div className="px-4 pt-4">
-              <button onClick={onClose} className="w-full rounded-xl py-3 text-sm font-bold text-white shadow-sm"
-                style={{ background: BRAND_GRADIENT }}>
+              <button onClick={onClose} className={`w-full py-3 text-sm font-bold text-white shadow-sm ${h.app ? "rounded-full" : "rounded-xl"}`}
+                style={{ background: h.app ? "#F26A3D" : BRAND_GRADIENT }}>
                 Tutup
               </button>
             </div>

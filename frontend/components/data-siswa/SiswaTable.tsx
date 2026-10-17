@@ -7,6 +7,8 @@ import { SiswaDetailModal } from "./SiswaDetailModal";
 import { type SiswaCardData, toTitleCase, getNama, avatarColorFor, completeness } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
@@ -45,6 +47,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
   page: number; pageCount: number; start: number; end: number; total: number; onPage: (p: number) => void;
   pageSize: number; onPageSize: (n: number) => void;
 }) {
+  const app = useIsAppMode();
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 dark:border-slate-700/40">
       <span className="text-xs text-slate-400 dark:text-slate-500">{start}–{end} dari {total}</span>
@@ -66,7 +69,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
                   <button onClick={() => onPage(i)}
                     className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                       i === page
-                        ? "bg-[#3E03B3] text-white shadow-sm"
+                        ? (app ? "bg-[#F26A3D] text-white shadow-sm" : "bg-[#3E03B3] text-white shadow-sm")
                         : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                     }`}>
                     {i + 1}
@@ -91,6 +94,7 @@ export function SiswaTable({
   siswas: SiswaCardData[];
   mobileNative?: boolean;
 }) {
+  const app = useIsAppMode();
   const [detailSiswa, setDetailSiswa] = useState<SiswaCardData | null>(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -116,7 +120,34 @@ export function SiswaTable({
           </div>
         </div>
 
-        {mobileNative && (
+        {mobileNative && app && (
+          <ul className="space-y-3 p-4 lg:hidden">
+            {pageItems.map((s, i) => {
+              const displayNama = toTitleCase(getNama(s));
+              const accent = avatarColorFor(s.id || displayNama);
+              const pct = completeness(s);
+              return (
+                <li key={s.id}>
+                  <button type="button" onClick={() => setDetailSiswa(s)}
+                    className="flex w-full items-center gap-4 rounded-3xl bg-white p-3 text-left shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
+                    <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={56} fallbackBg={accent} textClassName="text-sm font-extrabold" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{displayNama}</p>
+                      <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">NIS {s.nis}</p>
+                      <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
+                        style={pct === 100 ? { background: "#EAF8D2", color: "#5D900F" } : { background: "#FFE9E2", color: "#F26A3D" }}>
+                        Data {pct}%
+                      </span>
+                    </div>
+                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {mobileNative && !app && (
           <div className="p-4 lg:hidden">
             <div className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-slate-800">
               {pageItems.map((s) => {
