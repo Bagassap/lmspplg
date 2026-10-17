@@ -46,6 +46,24 @@ function isIos() {
   return /iphone|ipad|ipod/i.test(navigator.userAgent);
 }
 
+function isAppMode() {
+  if (isStandalone()) return true;
+  // Untuk uji di browser biasa: buka halaman dengan ?app=1 (diingat selama tab terbuka).
+  try {
+    if (new URLSearchParams(window.location.search).get("app") === "1") {
+      sessionStorage.setItem("lms_force_app", "1");
+    }
+    return sessionStorage.getItem("lms_force_app") === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** true bila dibuka dari aplikasi yang sudah dipasang (mode standalone). */
+export function useIsAppMode() {
+  return useSyncExternalStore(noopSubscribe, isAppMode, () => false);
+}
+
 /** true bila aplikasi bisa dipasang sekarang (belum terpasang & didukung). */
 export function useCanInstall() {
   const standalone = useSyncExternalStore(noopSubscribe, isStandalone, () => true);

@@ -7,6 +7,7 @@ import { Topbar } from "./Topbar";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { ImpersonationBanner } from "./ImpersonationBanner";
 import type { UserPayload } from "@/lib/auth";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export function DashboardShell({
   user,
@@ -17,6 +18,7 @@ export function DashboardShell({
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const pathname = usePathname();
+  const appMode = useIsAppMode();
 
   useEffect(() => {
     if (!sessionStorage.getItem("lms_session")) {
@@ -48,7 +50,7 @@ export function DashboardShell({
       >
         <ImpersonationBanner impersonatedBy={user.impersonatedBy} nama={user.nama} />
         <Topbar user={user} />
-        <main className="mx-auto w-full max-w-screen-2xl p-4 pb-24 md:p-6 lg:pb-6 2xl:p-10">{children}</main>
+        <main className={`mx-auto w-full max-w-screen-2xl p-4 md:p-6 lg:pb-6 2xl:p-10 ${appMode ? "pb-36" : "pb-24"}`}>{children}</main>
       </div>
 
       <MobileBottomNav user={user} />

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LayoutGrid, X, Lock, ChevronRight } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { useDashboardMenu, type MenuItem } from "./useDashboardMenu";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const SIDE_KEYS = ["absensi-harian", "materi", "pengumuman"];
 const PINNED_LABELS: Record<string, string> = {
@@ -25,6 +26,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const pathname = usePathname();
   const { items, pendingResetCount } = useDashboardMenu(user);
   const [moreOpen, setMoreOpen] = useState(false);
+  const appMode = useIsAppMode();
 
   const dashboardItem = items.find((i) => i.key === "dashboard");
   const side = SIDE_KEYS
@@ -38,7 +40,25 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
 
   return (
     <>
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden">
+      {appMode && (
+        // Lapisan blur di belakang bilah mengambang: konten yang lewat di
+        // bawahnya jadi buram dengan batas yang halus.
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-20 h-32 bg-linear-to-t from-surface via-surface/70 to-transparent backdrop-blur-md dark:from-[#0F172A] dark:via-[#0F172A]/70 lg:hidden"
+          style={{
+            WebkitMaskImage: "linear-gradient(to top, #000 55%, transparent)",
+            maskImage: "linear-gradient(to top, #000 55%, transparent)",
+          }}
+        />
+      )}
+      <nav
+        className={
+          appMode
+            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-slate-100 bg-white/95 shadow-[0_12px_32px_-8px_rgba(62,3,179,0.35)] backdrop-blur-xl dark:border-white/10 dark:bg-[#1E293B]/95 lg:hidden"
+            : "fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden"
+        }
+      >
         {leftPinned.map((item) => {
           const active = isItemActive(item, pathname);
           return (
