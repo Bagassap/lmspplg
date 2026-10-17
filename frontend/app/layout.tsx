@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
+import { PwaInstall } from "@/components/shared/PwaInstall";
 
 const satoshi = localFont({
   src: [
@@ -24,6 +25,15 @@ export const metadata: Metadata = {
   title: "LMS PPLG | SMK Ma'arif NU 01 Limpung",
   description:
     "Sistem pembelajaran digital untuk siswa, guru, dan admin jurusan Pengembangan Perangkat Lunak dan Gim SMK Ma'arif NU 01 Limpung.",
+  appleWebApp: {
+    capable: true,
+    title: "LMS PPLG",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#3E03B3",
 };
 
 export default function RootLayout({
@@ -36,6 +46,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
           {children}
+          <PwaInstall />
         </ToastProvider>
       </body>
     </html>
