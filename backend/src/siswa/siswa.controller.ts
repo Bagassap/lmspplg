@@ -66,17 +66,20 @@ export class SiswaController {
   async exportPdf(
     @Query('kelasId') kelasId: string,
     @Query('jurusan') jurusan: string,
+    @Query('siswaId') siswaId: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
-    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user);
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user, siswaId || undefined);
     const buffer = await this.pdfService.build(groups);
     const filename =
-      kelasId && groups[0]
-        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.pdf`
-        : jurusan
-          ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.pdf`
-          : 'Data_Siswa_Semua_Kelas.pdf';
+      siswaId && groups[0]?.siswa[0]
+        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].siswa[0].nama ?? groups[0].siswa[0].nis)}.pdf`
+        : kelasId && groups[0]
+          ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.pdf`
+          : jurusan
+            ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.pdf`
+            : 'Data_Siswa_Semua_Kelas.pdf';
 
     res.set({
       'Content-Type': 'application/pdf',
@@ -92,17 +95,20 @@ export class SiswaController {
   async exportExcel(
     @Query('kelasId') kelasId: string,
     @Query('jurusan') jurusan: string,
+    @Query('siswaId') siswaId: string,
     @Request() req: any,
     @Res() res: Response,
   ) {
-    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user);
+    const groups = await this.service.getSiswaForExport(kelasId || undefined, jurusan || undefined, req.user, siswaId || undefined);
     const buffer = await this.excelService.build(groups);
     const filename =
-      kelasId && groups[0]
-        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.xlsx`
-        : jurusan
-          ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.xlsx`
-          : 'Data_Siswa_Semua_Kelas.xlsx';
+      siswaId && groups[0]?.siswa[0]
+        ? `Data_Siswa_${sanitizeFilenamePart(groups[0].siswa[0].nama ?? groups[0].siswa[0].nis)}.xlsx`
+        : kelasId && groups[0]
+          ? `Data_Siswa_${sanitizeFilenamePart(groups[0].kelas.nama)}.xlsx`
+          : jurusan
+            ? `Data_Siswa_${sanitizeFilenamePart(jurusan)}.xlsx`
+            : 'Data_Siswa_Semua_Kelas.xlsx';
 
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

@@ -65,7 +65,24 @@ export class CatatanSiswaService {
     });
   }
 
-  async getForExport(actor: Actor, kelasId?: string) {
+  async getForExport(actor: Actor, kelasId?: string, siswaId?: string) {
+    if (siswaId) {
+      await this.assertCanViewSiswa(siswaId, actor);
+      const siswa = await this.prisma.siswa.findUnique({
+        where: { id: siswaId },
+        include: {
+          kelas: { select: { nama: true } },
+          catatanSiswa: {
+            orderBy: { tanggal: 'asc' },
+            include: { dicatatOleh: { select: { nama: true } } },
+          },
+        },
+      });
+      if (!siswa) return [];
+      const { kelas, ...rest } = siswa;
+      return [{ kelas: { nama: kelas.nama }, siswa: [rest] }];
+    }
+
     const scopeIds = actor.role === 'GURU' ? await this.kelasWaliIds(actor.id) : null;
 
     if (kelasId) {

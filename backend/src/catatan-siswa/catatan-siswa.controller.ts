@@ -29,10 +29,15 @@ export class CatatanSiswaController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('export-excel')
-  async exportExcel(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
-    const groups = await this.service.getForExport({ id: req.user.id, role: req.user.role }, kelasId || undefined);
+  async exportExcel(@Query('kelasId') kelasId: string, @Query('siswaId') siswaId: string, @Request() req: any, @Res() res: Response) {
+    const groups = await this.service.getForExport({ id: req.user.id, role: req.user.role }, kelasId || undefined, siswaId || undefined);
     const buffer = await this.excelService.build(groups);
-    const filename = groups[0] ? `Catatan_Siswa_${groups[0].kelas.nama.replace(/[^a-zA-Z0-9]+/g, '_')}.xlsx` : 'Catatan_Siswa.xlsx';
+    const filename =
+      siswaId && groups[0]?.siswa[0]
+        ? `Catatan_Siswa_${(groups[0].siswa[0].nama ?? groups[0].siswa[0].nis).replace(/[^a-zA-Z0-9]+/g, '_')}.xlsx`
+        : groups[0]
+          ? `Catatan_Siswa_${groups[0].kelas.nama.replace(/[^a-zA-Z0-9]+/g, '_')}.xlsx`
+          : 'Catatan_Siswa.xlsx';
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'Content-Disposition': `attachment; filename="${filename}"`,
@@ -44,10 +49,15 @@ export class CatatanSiswaController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('export-pdf')
-  async exportPdf(@Query('kelasId') kelasId: string, @Request() req: any, @Res() res: Response) {
-    const groups = await this.service.getForExport({ id: req.user.id, role: req.user.role }, kelasId || undefined);
+  async exportPdf(@Query('kelasId') kelasId: string, @Query('siswaId') siswaId: string, @Request() req: any, @Res() res: Response) {
+    const groups = await this.service.getForExport({ id: req.user.id, role: req.user.role }, kelasId || undefined, siswaId || undefined);
     const buffer = await this.pdfService.build(groups);
-    const filename = groups[0] ? `Catatan_Siswa_${groups[0].kelas.nama.replace(/[^a-zA-Z0-9]+/g, '_')}.pdf` : 'Catatan_Siswa.pdf';
+    const filename =
+      siswaId && groups[0]?.siswa[0]
+        ? `Catatan_Siswa_${(groups[0].siswa[0].nama ?? groups[0].siswa[0].nis).replace(/[^a-zA-Z0-9]+/g, '_')}.pdf`
+        : groups[0]
+          ? `Catatan_Siswa_${groups[0].kelas.nama.replace(/[^a-zA-Z0-9]+/g, '_')}.pdf`
+          : 'Catatan_Siswa.pdf';
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${filename}"`,

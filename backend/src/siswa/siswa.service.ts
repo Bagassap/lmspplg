@@ -155,17 +155,26 @@ export class SiswaService {
     return { access_token: token, message: 'Profil berhasil dilengkapi' };
   }
 
-  /**
-   * Groups siswa by kelas for the Data Siswa PDF/Excel export. With a
-   * kelasId, returns just that one kelas (access-checked for GURU). Without
-   * one, ADMIN gets every kelas and GURU is scoped to their own wali-kelas
-   * classes automatically.
-   */
   async getSiswaForExport(
     kelasId: string | undefined,
     jurusan: string | undefined,
     actor: { id: string; role: string },
+    siswaId?: string,
   ) {
+    if (siswaId) {
+      const siswa = await this.prisma.siswa.findUnique({
+        where: { id: siswaId },
+        include: { user: { select: { mustChangePassword: true } }, kelas: { select: { id: true, nama: true } } },
+      });
+      if (!siswa) return [];
+      if (actor.role === 'GURU') {
+        const waliIds = await this.kelasWaliIds(actor.id);
+        if (!waliIds.includes(siswa.kelasId)) throw new ForbiddenException('Anda tidak memiliki akses ke siswa ini');
+      }
+      const { kelas, ...rest } = siswa;
+      return [{ kelas, siswa: [rest] }];
+    }
+
     if (kelasId && actor.role === 'GURU') {
       const waliIds = await this.kelasWaliIds(actor.id);
       if (!waliIds.includes(kelasId)) throw new ForbiddenException('Anda tidak memiliki akses ke kelas ini');
