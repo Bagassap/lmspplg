@@ -14,7 +14,6 @@ import { PengumumanFormModal } from "./PengumumanFormModal";
 import type { KomentarItem } from "./KomentarSection";
 import { KomentarSection } from "./KomentarSection";
 import { Avatar } from "@/components/shared/Avatar";
-import PengumumanDetailModal from "./PengumumanDetailModal";
 import { timeAgo as timeAgoShared } from "@/components/dashboard/ActivityList";
 import { AppMobileFrame, AppCard, AppEmpty } from "@/components/app/AppUI";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
@@ -383,7 +382,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   const dashboardHref = pathname.startsWith("/guru/") ? "/guru/dashboard" : pathname.startsWith("/admin/") ? "/admin/dashboard" : "/siswa/dashboard";
   const toast = useToast();
   const appMode = useIsAppMode();
-  const [appSlug, setAppSlug] = useState<string | null>(null);
   const [list,          setList]          = useState<PengumumanItem[]>([]);
   const [loading,       setLoading]       = useState(true);
   const [modalOpen,     setModalOpen]     = useState(false);
@@ -612,7 +610,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             <ul className="space-y-3">
               {sorted.map((p, idx) => (
                 <li key={p.id}>
-                  <AppCard onClick={() => setAppSlug(p.slug)} className="flex items-center gap-4">
+                  <AppCard onClick={() => router.push(`${pathname.replace(/\/$/, "")}/${p.slug}`)} className="flex items-center gap-4">
                     <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(toneAt(idx))}>
                       <Megaphone size={26} color="#fff" />
                     </span>
@@ -636,19 +634,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             </ul>
           )}
 
-          <AnimatePresence>
-            {appSlug && (
-              <PengumumanDetailModal
-                key={appSlug}
-                slug={appSlug}
-                canManage={canManage}
-                currentUserId={currentUserId}
-                onClose={() => setAppSlug(null)}
-                onDeleted={(id) => setList((prev) => prev.filter((x) => x.id !== id))}
-                onPinChanged={(id, isPinned) => setList((prev) => prev.map((x) => (x.id === id ? { ...x, isPinned } : x)))}
-              />
-            )}
-          </AnimatePresence>
           </>
         ) : (
           <>

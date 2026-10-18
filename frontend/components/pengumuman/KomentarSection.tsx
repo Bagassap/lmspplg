@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, CornerDownRight, Trash2, Send, Loader2, ChevronDown, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CornerUpLeft, Send, Loader2, X, MessageCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
-import { useIsAppMode } from "@/lib/pwaInstall";
 
 export type KomentarItem = {
   id: string;
@@ -17,241 +15,66 @@ export type KomentarItem = {
   createdAt: string;
 };
 
-const ROLE_BADGE: Record<string, { label: string; cls: string; dot: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#00AAFA]/40 dark:text-[#F1EDFA]", dot: "#3E03B3" },
-  GURU:  { label: "Guru",   cls: "bg-[#000000]/10 text-[#000000] dark:text-[#A1F919] dark:bg-[#000000]/60 dark:text-[#FFFFFF]",  dot: "#00AAFA" },
-  SISWA: { label: "Siswa",  cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/30 dark:text-[#A1F919]", dot: "#A1F919" },
-};
+const ROLE_LABEL: Record<string, string> = { ADMIN: "Admin", GURU: "Guru", SISWA: "Siswa" };
+const ROLE_COLOR: Record<string, string> = { ADMIN: "#3E03B3", GURU: "#F26A3D", SISWA: "#059669" };
 
-function avatarGradient(_name: string) { return "#3E03B3"; }
-
-function timeAgo(iso: string): string {
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (diff < 60)  return "baru saja";
-  if (diff < 3600) return `${Math.floor(diff/60)} mnt lalu`;
-  if (diff < 86400) return `${Math.floor(diff/3600)} jam lalu`;
-  return `${Math.floor(diff/86400)} hari lalu`;
+function jam(iso: string): string {
+  return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).replace(".", ":");
+}
+function hari(iso: string): string {
+  const d = new Date(iso);
+  const key = (x: Date) => x.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
+  const now = new Date();
+  const kemarin = new Date(now.getTime() - 86400000);
+  if (key(d) === key(now)) return "Hari ini";
+  if (key(d) === key(kemarin)) return "Kemarin";
+  return d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-function KomentarBubble({
-  k,
-  pengumumanId,
-  currentUserId,
-  canManage,
-  isReply,
-  onDelete,
-  onReplyAdded,
-}: {
-  k: KomentarItem;
-  pengumumanId: string;
-  currentUserId: string;
-  canManage: boolean;
-  isReply?: boolean;
-  onDelete: (id: string) => void;
-  onReplyAdded: (reply: KomentarItem) => void;
-}) {
-  const app = useIsAppMode();
-  const toast = useToast();
-  const [showReplyForm, setShowReplyForm] = useState(false);
-  const [replyText,     setReplyText]     = useState("");
-  const [sending,       setSending]       = useState(false);
-  const [showReplies,   setShowReplies]   = useState(true);
-
-  const canDelete = canManage || k.authorId === currentUserId;
-  const badge     = ROLE_BADGE[k.author.role] ?? ROLE_BADGE.SISWA;
-  const avatarBg  = avatarGradient(k.author.nama);
-
-  async function submitReply() {
-    if (!replyText.trim()) return;
-    setSending(true);
-    try {
-      const res = await fetch(`/api/pengumuman/${pengumumanId}/komentar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ konten: replyText, parentId: k.id }),
-      });
-      if (res.ok) {
-        const reply: KomentarItem = await res.json();
-        onReplyAdded(reply);
-        setReplyText("");
-        setShowReplyForm(false);
-        toast.success("Balasan terkirim!");
-      } else {
-        toast.error("Gagal mengirim balasan");
-      }
-    } catch {
-      toast.error("Koneksi bermasalah");
-    } finally {
-      setSending(false);
-    }
-  }
-
-  return (
-    <div className={isReply ? "" : "space-y-2"}>
-      <motion.div
-        initial={{ opacity: 0, y: 8, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.2 }}
-        className={`group flex gap-3 ${isReply ? "mt-2" : ""}`}
-      >
-        <div className="relative shrink-0">
-          <Avatar
-            src={k.author.fotoProfil}
-            nama={k.author.nama}
-            sizePx={36}
-            fallbackBg={avatarBg}
-            textClassName="text-xs font-extrabold"
-            className="shadow-md ring-2 ring-white dark:ring-[#1E293B]"
-          />
-          <span
-            className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-[1.5px] ring-white dark:ring-[#1E293B]"
-            style={{ backgroundColor: badge.dot }}
-          />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="relative overflow-hidden rounded-2xl rounded-tl-sm border border-slate-100 bg-white shadow-sm dark:border-slate-700/40 dark:bg-slate-800/60">
-            <div className="absolute left-0 right-0 top-0 h-0.5" style={{ background: avatarBg }} />
-
-            <div className="px-4 py-3 pt-3.5">
-              <div className="mb-2 flex flex-wrap items-center gap-1.5">
-                <span className="text-[13px] font-bold text-slate-900 dark:text-white">{k.author.nama}</span>
-                <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold tracking-wide ${badge.cls}`}>
-                  {badge.label}
-                </span>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(k.createdAt)}</span>
-              </div>
-
-              <p className="text-[13px] leading-relaxed text-slate-700 dark:text-slate-200" style={{ whiteSpace: "pre-wrap" }}>
-                {k.konten}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 border-t border-slate-50 px-4 py-2 dark:border-slate-700/30">
-              {!isReply && (
-                <button
-                  onClick={() => setShowReplyForm((v) => !v)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20 dark:hover:text-[#8F6DD3]"
-                >
-                  <CornerDownRight size={11} /> Balas
-                </button>
-              )}
-              {canDelete && (
-                <button
-                  onClick={() => onDelete(k.id)}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-slate-300 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:text-slate-600 dark:hover:bg-[#48700B]/20 dark:hover:text-[#A1F919]"
-                >
-                  <Trash2 size={10} /> Hapus
-                </button>
-              )}
-            </div>
-          </div>
-
-          <AnimatePresence>
-            {showReplyForm && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-2 overflow-hidden"
-              >
-                <div className="flex items-end gap-2 rounded-xl border border-[#00AAFA]/25 bg-[#F1EDFA] p-3 dark:border-[#2D0281]/30 dark:bg-[#1E293B]">
-                  <textarea
-                    rows={2}
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder={`Balas ${k.author.nama}…`}
-                    className="flex-1 resize-none rounded-lg bg-white/80 px-3 py-2 text-[12.5px] text-slate-700 placeholder:text-slate-400 focus:outline-none dark:bg-slate-800/50 dark:text-slate-200 dark:placeholder:text-slate-500"
-                    onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) submitReply(); }}
-                  />
-                  <button
-                    onClick={submitReply}
-                    disabled={sending || !replyText.trim()}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(0,170,250,0.4)]"
-                    style={{ background: app ? "#3E03B3" : "#00AAFA" }}
-                  >
-                    {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-
-      {!isReply && k.replies && k.replies.length > 0 && (
-        <div className="ml-12">
-          <button
-            onClick={() => setShowReplies((v) => !v)}
-            className="mb-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold text-[#00AAFA]/70 dark:text-[#8F6DD3]/70 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20 dark:hover:text-[#8F6DD3]"
-          >
-            <ChevronDown size={12} className={`transition-transform duration-200 ${showReplies ? "rotate-180" : ""}`} />
-            {k.replies.length} balasan
-          </button>
-          <AnimatePresence>
-            {showReplies && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-2 border-l-2 border-[#00AAFA]/15 pl-3 dark:border-[#2D0281]/25"
-              >
-                {k.replies.map((r) => (
-                  <KomentarBubble
-                    key={r.id}
-                    k={r}
-                    pengumumanId={pengumumanId}
-                    currentUserId={currentUserId}
-                    canManage={canManage}
-                    isReply
-                    onDelete={onDelete}
-                    onReplyAdded={() => {}}
-                  />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
-    </div>
-  );
-}
-
+/** Komentar pengumuman bergaya chat (ala BBM/WhatsApp): gelembung kiri/kanan, kutipan balasan, kolom ketik di bawah. */
 export function KomentarSection({
-  initialKomentar,
-  pengumumanId,
-  currentUserId,
-  canManage,
+  initialKomentar, pengumumanId, currentUserId, canManage,
 }: {
   initialKomentar: KomentarItem[];
   pengumumanId: string;
   currentUserId: string;
   canManage: boolean;
 }) {
-  const app = useIsAppMode();
   const toast = useToast();
-  const [komentar, setKomentar] = useState<KomentarItem[]>(initialKomentar);
-  const [teks,     setTeks]     = useState("");
-  const [sending,  setSending]  = useState(false);
-  const [focused,  setFocused]  = useState(false);
-  const [showAll,  setShowAll]  = useState(false);
+  const [flat, setFlat] = useState<KomentarItem[]>(() =>
+    initialKomentar
+      .flatMap((k) => [k, ...(k.replies ?? []).map((r) => ({ ...r, parentId: r.parentId ?? k.id }))])
+      .sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt)),
+  );
+  const [teks, setTeks] = useState("");
+  const [sending, setSending] = useState(false);
+  const [replyTo, setReplyTo] = useState<KomentarItem | null>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  const first = useRef(true);
+  const byId = useMemo(() => new Map(flat.map((k) => [k.id, k])), [flat]);
 
-  async function submitKomentar() {
-    if (!teks.trim()) return;
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [flat.length]);
+
+  async function kirim() {
+    const konten = teks.trim();
+    if (!konten || sending) return;
     setSending(true);
     try {
       const res = await fetch(`/api/pengumuman/${pengumumanId}/komentar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ konten: teks }),
+        body: JSON.stringify({ konten, ...(replyTo ? { parentId: replyTo.parentId ?? replyTo.id } : {}) }),
       });
       if (res.ok) {
-        const newK: KomentarItem = await res.json();
-        setKomentar((prev) => [...prev, { ...newK, replies: [] }]);
+        const baru: KomentarItem = await res.json();
+        setFlat((p) => [...p, { ...baru, parentId: baru.parentId ?? replyTo?.id ?? null }]);
         setTeks("");
-        toast.success("Komentar terkirim!");
+        setReplyTo(null);
       } else {
-        toast.error("Gagal mengirim komentar", "Coba lagi beberapa saat.");
+        toast.error("Gagal mengirim pesan", "Coba lagi beberapa saat.");
       }
     } catch {
       toast.error("Koneksi bermasalah", "Periksa koneksi internet kamu.");
@@ -260,109 +83,103 @@ export function KomentarSection({
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!await toast.confirm("Hapus komentar ini?")) return;
+  async function hapus(id: string) {
+    if (!await toast.confirm("Hapus pesan ini?")) return;
     const res = await fetch(`/api/pengumuman/komentar/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setKomentar((prev) =>
-        prev
-          .filter((k) => k.id !== id)
-          .map((k) => ({ ...k, replies: (k.replies ?? []).filter((r) => r.id !== id) })),
-      );
-      toast.info("Komentar dihapus.");
-    } else {
-      toast.error("Gagal menghapus komentar");
-    }
+    if (res.ok) setFlat((p) => p.filter((k) => k.id !== id && k.parentId !== id));
+    else toast.error("Gagal menghapus pesan");
   }
 
-  function handleReplyAdded(parentId: string, reply: KomentarItem) {
-    setKomentar((prev) =>
-      prev.map((k) =>
-        k.id === parentId
-          ? { ...k, replies: [...(k.replies ?? []), reply] }
-          : k,
-      ),
-    );
-  }
-
-  const PREVIEW_COUNT = 3;
-  const hasMore = komentar.length > PREVIEW_COUNT;
-  const visibleKomentar = showAll || !hasMore ? komentar : komentar.slice(-PREVIEW_COUNT);
+  let lastDay = "";
 
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col">
+      <p className="mb-3 flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+        <MessageCircle size={13} /> Diskusi ({flat.length})
+      </p>
 
-      <div className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 dark:bg-slate-800/50 ${
-        focused
-          ? "border-[#00AAFA]/40 shadow-[0_0_0_4px_rgba(0,170,250,0.08)]"
-          : "border-slate-100 shadow-sm dark:border-slate-700/50"
-      }`}>
-        <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: app ? "#3E03B3" : "#00AAFA" }} />
+      <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800/60">
+        {flat.length === 0 && (
+          <p className="py-8 text-center text-xs text-slate-400">Belum ada pesan. Mulai diskusi di bawah.</p>
+        )}
+        {flat.map((k) => {
+          const mine = k.authorId === currentUserId;
+          const quote = k.parentId ? byId.get(k.parentId) : null;
+          const day = hari(k.createdAt);
+          const showDay = day !== lastDay;
+          lastDay = day;
+          const color = ROLE_COLOR[k.author.role] ?? "#3E03B3";
+          return (
+            <div key={k.id}>
+              {showDay && (
+                <div className="my-2 flex justify-center">
+                  <span className="rounded-full bg-white/80 px-3 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">{day}</span>
+                </div>
+              )}
+              <div className={`flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
+                {!mine && <Avatar src={k.author.fotoProfil} nama={k.author.nama} sizePx={28} fallbackBg={color} textClassName="text-[10px] font-bold" />}
+                <div className={`max-w-[80%] rounded-2xl px-3 py-2 shadow-sm ${mine ? "rounded-br-sm bg-[#3E03B3] text-white" : "rounded-bl-sm bg-white text-slate-800 dark:bg-slate-700 dark:text-slate-100"}`}>
+                  {!mine && (
+                    <p className="text-[11px] font-bold" style={{ color }}>
+                      {k.author.nama} <span className="font-semibold opacity-70">· {ROLE_LABEL[k.author.role] ?? "Siswa"}</span>
+                    </p>
+                  )}
+                  {quote && (
+                    <div className={`mb-1 mt-0.5 rounded-lg border-l-[3px] border-[#F26A3D] px-2 py-1 text-[11px] ${mine ? "bg-white/15" : "bg-[#F1EDFA] dark:bg-slate-600"}`}>
+                      <p className="font-bold" style={{ color: mine ? "#FFD2C2" : "#F26A3D" }}>{quote.author.nama}</p>
+                      <p className="line-clamp-2 opacity-80">{quote.konten}</p>
+                    </div>
+                  )}
+                  <p className="whitespace-pre-wrap break-words text-[13px] leading-snug">{k.konten}</p>
+                  <div className={`mt-1 flex items-center justify-end gap-2 text-[10px] ${mine ? "text-white/70" : "text-slate-400"}`}>
+                    <button type="button" onClick={() => setReplyTo(k)} className="flex items-center gap-0.5 font-semibold hover:underline">
+                      <CornerUpLeft size={10} /> Balas
+                    </button>
+                    {(canManage || mine) && (
+                      <button type="button" onClick={() => hapus(k.id)} className="font-semibold hover:underline">Hapus</button>
+                    )}
+                    <span>{jam(k.createdAt)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={endRef} />
+      </div>
 
-        <textarea
-          rows={3}
-          value={teks}
-          onChange={(e) => setTeks(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          placeholder="Tulis komentar atau pertanyaan kamu di sini…"
-          className="w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none dark:text-slate-200 dark:placeholder:text-slate-500"
-          onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) submitKomentar(); }}
-        />
-
-        <div className="flex items-center justify-between border-t border-slate-50 px-4 py-2.5 dark:border-slate-700/30">
-          <span className="text-[10px] text-slate-300 dark:text-slate-600">
-            Ctrl+Enter untuk kirim
-          </span>
+      <div className="sticky bottom-[6rem] z-10 mt-3 rounded-3xl border border-slate-100 bg-white p-2 shadow-[0_8px_24px_-8px_rgba(62,3,179,0.3)] dark:border-slate-700 dark:bg-slate-900 lg:bottom-3">
+        {replyTo && (
+          <div className="mb-2 flex items-center gap-2 rounded-xl border-l-[3px] border-[#F26A3D] bg-[#F1EDFA] px-3 py-1.5 text-[11px] dark:bg-slate-800">
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-[#F26A3D]">Membalas {replyTo.author.nama}</p>
+              <p className="truncate text-slate-500 dark:text-slate-400">{replyTo.konten}</p>
+            </div>
+            <button type="button" onClick={() => setReplyTo(null)} className="text-slate-400" aria-label="Batal balas"><X size={14} /></button>
+          </div>
+        )}
+        <div className="flex items-end gap-2">
+          <textarea
+            rows={1}
+            value={teks}
+            onChange={(e) => setTeks(e.target.value)}
+            placeholder="Ketik pesan…"
+            className="max-h-28 min-h-10 flex-1 resize-none rounded-3xl bg-[#F1EDFA] px-4 py-2.5 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-100"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(min-width: 1024px)").matches) { e.preventDefault(); kirim(); }
+            }}
+          />
           <button
-            onClick={submitKomentar}
+            type="button"
+            onClick={kirim}
             disabled={sending || !teks.trim()}
-            className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(0,170,250,0.45)] active:scale-95"
-            style={{ background: app ? "#3E03B3" : "#00AAFA" }}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] text-white shadow-md transition-opacity disabled:opacity-40"
+            aria-label="Kirim"
           >
-            {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-            {sending ? "Mengirim…" : "Kirim"}
+            {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </button>
         </div>
       </div>
-
-      {komentar.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-100 bg-slate-50 py-10 text-center dark:border-slate-700/40 dark:bg-[#1E293B]">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3E03B3]/10">
-            <Sparkles size={20} className="text-[#00AAFA] dark:text-[#8F6DD3]" />
-          </div>
-          <p className="text-[13px] font-bold text-slate-500 dark:text-slate-400">Belum ada komentar</p>
-          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Jadilah yang pertama berkomentar!</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {visibleKomentar.map((k) => (
-            <KomentarBubble
-              key={k.id}
-              k={k}
-              pengumumanId={pengumumanId}
-              currentUserId={currentUserId}
-              canManage={canManage}
-              onDelete={handleDelete}
-              onReplyAdded={(reply) => handleReplyAdded(k.id, reply)}
-            />
-          ))}
-          {hasMore && (
-            <button
-              onClick={() => setShowAll((v) => !v)}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed py-2 text-[12px] font-bold transition-all ${
-                showAll
-                  ? "border-slate-200 text-slate-400 hover:bg-slate-50 dark:border-slate-700/50 dark:hover:bg-slate-800/40"
-                  : "border-slate-200 text-[#00AAFA] hover:bg-[#F1EDFA] dark:border-slate-700/50 dark:hover:bg-[#000000]/20"
-              }`}
-            >
-              <ChevronDown size={13} className={showAll ? "rotate-180" : ""} />
-              {showAll ? "Sembunyikan" : `Lihat Semua Komentar (${komentar.length})`}
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }

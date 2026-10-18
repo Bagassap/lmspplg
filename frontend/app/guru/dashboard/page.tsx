@@ -14,7 +14,7 @@ import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { timeAgo } from "@/components/dashboard/ActivityList";
-import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
+import { useRouter } from "next/navigation";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { GuruAppHome } from "@/components/dashboard/GuruAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -96,7 +96,8 @@ export default function GuruDashboardPage() {
   const [data, setData]       = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const router = useRouter();
+  const setSelectedSlug = (slug: string) => router.push(`/guru/pengumuman/${slug}`);
 
   async function load() {
     setLoading(true); setError(null);
@@ -478,12 +479,6 @@ export default function GuruDashboardPage() {
     </div>
     )}
 
-      <AnimatePresence>
-        {selectedSlug && (
-          <PengumumanDetailModal key={selectedSlug} slug={selectedSlug} canManage={false} currentUserId={user.id}
-            onClose={() => setSelectedSlug(null)} />
-        )}
-      </AnimatePresence>
     </>
   );
 }

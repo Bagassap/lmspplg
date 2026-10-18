@@ -13,7 +13,7 @@ import GreetingHero from "@/components/dashboard/GreetingHero";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
-import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
+import { useRouter } from "next/navigation";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { SiswaAppHome } from "@/components/dashboard/SiswaAppHome";
@@ -97,7 +97,8 @@ export default function SiswaDashboardPage() {
   const [data, setData]       = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const router = useRouter();
+  const setSelectedSlug = (slug: string) => router.push(`/siswa/pengumuman/${slug}`);
 
   async function load() {
     setLoading(true); setError(null);
@@ -409,12 +410,6 @@ export default function SiswaDashboardPage() {
 
       </div>
 
-      <AnimatePresence>
-        {selectedSlug && (
-          <PengumumanDetailModal key={selectedSlug} slug={selectedSlug} canManage={false} currentUserId={user.id}
-            onClose={() => setSelectedSlug(null)} />
-        )}
-      </AnimatePresence>
     </>
   );
 }

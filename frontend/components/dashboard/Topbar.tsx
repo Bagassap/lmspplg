@@ -50,6 +50,7 @@ function jakartaGreetingWord(): string {
 function getPageInfo(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
   const last = segments[segments.length - 1] ?? "";
+  if (segments[1] === "pengumuman" && segments.length > 2) return { title: "Pengumuman", subtitle: "Isi dan diskusi" };
   const info = PAGE_TITLES[last];
   return info
     ? { title: info[0], subtitle: info[1] }

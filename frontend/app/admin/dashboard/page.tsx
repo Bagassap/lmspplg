@@ -13,7 +13,7 @@ import GreetingHero from "@/components/dashboard/GreetingHero";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
 import { timeAgo } from "@/components/dashboard/ActivityList";
-import PengumumanDetailModal from "@/components/pengumuman/PengumumanDetailModal";
+import { useRouter } from "next/navigation";
 import { KehadiranAreaChart } from "@/components/dashboard/KehadiranAreaChart";
 import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
@@ -102,7 +102,8 @@ export default function AdminDashboardPage() {
   const [data, setData]       = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const router = useRouter();
+  const setSelectedSlug = (slug: string) => router.push(`/admin/pengumuman/${slug}`);
   const [kelasExpanded, setKelasExpanded] = useState(false);
 
   async function load() {
@@ -551,14 +552,6 @@ export default function AdminDashboardPage() {
     </div>
     )}
 
-      <AnimatePresence>
-        {selectedSlug && (
-          <PengumumanDetailModal key={selectedSlug} slug={selectedSlug} canManage currentUserId={user.id}
-            onClose={() => setSelectedSlug(null)}
-            onDeleted={() => { setSelectedSlug(null); load(); }}
-            onPinChanged={() => load()} />
-        )}
-      </AnimatePresence>
     </>
   );
 }
