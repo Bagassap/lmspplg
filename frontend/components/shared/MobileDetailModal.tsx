@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 
 export function MobileDetailModal({ onClose, accent, children, className = "" }: { onClose: () => void; accent: string; children: React.ReactNode; className?: string }) {
   if (typeof document === "undefined") return null;
-  const onLime = ["#A1F919", "#FFFFFF", "#F1EDFA"].includes(accent.toUpperCase());
+  const onLime = ["#F26A3D", "#FFFFFF", "#F1EDFA"].includes(accent.toUpperCase());
   return createPortal(
     <div className={`fixed inset-0 z-50 flex items-end justify-center ${className}`}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}

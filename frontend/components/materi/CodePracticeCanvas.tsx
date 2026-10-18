@@ -18,7 +18,7 @@ function buildSrcDoc(html: string, css: string, js: string) {
 <head>
 <meta charset="utf-8" />
 <style>
-  body { font-family: system-ui, sans-serif; color: #000000; margin: 0; padding: 12px; }
+  body { font-family: system-ui, sans-serif; color: #0F172A; margin: 0; padding: 12px; }
   ${css}
 </style>
 </head>
@@ -28,7 +28,7 @@ ${html}
   window.addEventListener("error", function (e) {
     var pre = document.createElement("pre");
     pre.textContent = "Error: " + e.message;
-    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#F6FEE8;color:#A1F919;font:12px monospace;white-space:pre-wrap;border-top:1px solid #A1F919;";
+    pre.style.cssText = "position:fixed;left:0;right:0;bottom:0;margin:0;padding:8px 12px;background:#F1EDFA;color:#F26A3D;font:12px monospace;white-space:pre-wrap;border-top:1px solid #F26A3D;";
     document.body.appendChild(pre);
   });
 <\/script>
@@ -101,7 +101,7 @@ export function CodePracticeCanvas({
           </button>
           <button type="button" onClick={runNow}
             className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-black shadow-sm hover:brightness-105"
-            style={{ background: "#A1F919" }}>
+            style={{ background: "#F26A3D" }}>
             <Play size={12} /> Run
           </button>
           <button type="button" onClick={() => setFullscreen((f) => !f)}

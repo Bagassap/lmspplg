@@ -12,7 +12,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
 
 const REF_PRIMARY = "#3E03B3";
-const REF_DANGER = "#A1F919";
+const REF_DANGER = "#F26A3D";
 
 function DownloadSiswaAction({ siswaId, siswaNama }: { siswaId: string; siswaNama: string }) {
   const toast = useToast();
@@ -72,7 +72,7 @@ export const GRID_COLS = "28px 40px 2.0fr 1.8fr 1.1fr 1.1fr 1.8fr";
 
 export function SiswaTableHead() {
   return (
-    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
+    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
       <span />
       <span />
       <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>

@@ -27,10 +27,10 @@ const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
 
 const ROW_PALETTES = [
   { bar: "#3E03B3", gradient: "#3E03B3" },
-  { bar: "#A1F919", gradient: "#A1F919" },
-  { bar: "#A1F919", gradient: "#A1F919" },
-  { bar: "#A1F919", gradient: "#A1F919" },
-  { bar: "#00AAFA", gradient: "#00AAFA" },
+  { bar: "#F26A3D", gradient: "#F26A3D" },
+  { bar: "#F26A3D", gradient: "#F26A3D" },
+  { bar: "#F26A3D", gradient: "#F26A3D" },
+  { bar: "#0EA5E9", gradient: "#0EA5E9" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -78,7 +78,7 @@ export function TugasListCard({
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#A1F919" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#F26A3D" }}>
               <ClipboardList size={14} className="text-[#000000] dark:text-[#A1F919]" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas</p>
@@ -86,7 +86,7 @@ export function TugasListCard({
           {canCreate && (
             <button onClick={onAddTugas}
               className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm"
-              style={{ background: "#A1F919", color: "#000000" }}>
+              style={{ background: "#F26A3D", color: "#0F172A" }}>
               <Plus size={13} /> Tambah Tugas
             </button>
           )}
@@ -106,7 +106,7 @@ export function TugasListCard({
           <button onClick={() => setTab("completed")}
             className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
             Selesai
-            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#A1F919" }}>{completed.length}</span>}
+            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#F26A3D" }}>{completed.length}</span>}
           </button>
         </div>
       </div>
@@ -140,7 +140,7 @@ export function TugasListCard({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                       </div>
@@ -285,10 +285,10 @@ export function TugasListCard({
             </button>
             <button type="button" onClick={() => setTab("completed")}
               className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
-              style={{ borderColor: tab === "completed" ? "#A1F919" : "transparent" }}>
+              style={{ borderColor: tab === "completed" ? "#F26A3D" : "transparent" }}>
               Selesai
               <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
-                style={{ background: tab === "completed" ? "#A1F91918" : "#E2E8F0" }}>
+                style={{ background: tab === "completed" ? "#F26A3D18" : "#E2E8F0" }}>
                 {completed.length}
               </span>
             </button>
@@ -306,7 +306,7 @@ export function TugasListCard({
             {canCreate && (
               <button type="button" onClick={onAddTugas}
                 className="mb-1.5 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-black shadow-sm"
-                style={{ background: "#A1F919", color: "#000000" }}>
+                style={{ background: "#F26A3D", color: "#0F172A" }}>
                 <Plus size={13} /> Tambah
               </button>
             )}
@@ -320,7 +320,7 @@ export function TugasListCard({
         )}
         {!loading && shown.length === 0 && (
           <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#A1F91930" }}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F26A3D30" }}>
               <ClipboardList size={24} className="text-[#5D900F] dark:text-[#A1F919]" />
             </div>
             <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"}</p>

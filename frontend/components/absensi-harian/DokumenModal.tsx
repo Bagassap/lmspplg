@@ -23,8 +23,8 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
       {fotoSrc && (
         <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/50 px-4 py-2.5 sm:py-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#A1F91918" }}>
-              <Camera size={13} style={{ color: "#5D900F" }} />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#F26A3D18" }}>
+              <Camera size={13} style={{ color: "#3E03B3" }} />
             </div>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{fotoLabel}</span>
           </div>

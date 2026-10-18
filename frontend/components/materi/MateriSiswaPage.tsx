@@ -21,9 +21,9 @@ function formatDate(iso: string): string {
 
 const ROW_PALETTES = [
   { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
-  { bar: "#00AAFA", gradient: "#00AAFA", tint: "#F1EDFA" },
-  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
-  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
+  { bar: "#0EA5E9", gradient: "#0EA5E9", tint: "#F1EDFA" },
+  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
+  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -73,7 +73,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="relative flex items-center gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
               <BookOpen size={26} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
             </div>
             <div>
@@ -125,7 +125,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                 return (
                   <div key={m.id} className="flex items-center gap-2.5 px-4 py-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                      <FileText size={14} style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }} />
+                      <FileText size={14} style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
@@ -171,7 +171,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                            <FileText size={13} style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }} />
+                            <FileText size={13} style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }} />
                           </div>
                           <p className="max-w-[220px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{m.judul}</p>
                         </div>

@@ -6,21 +6,21 @@ import { isAppModeNow } from "@/lib/pwaInstall";
 export const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
 }> = {
-  HADIR: { label: "Hadir", bg: "#F6FEE8", clr: "#5D900F", darkBg: "#A1F91920", icon: CheckCircle2 },
-  IZIN:  { label: "Izin",  bg: "#E6F7FF", clr: "#00AAFA", darkBg: "#00AAFA20", icon: AlertCircle  },
-  SAKIT: { label: "Sakit", bg: "#E6F7FF", clr: "#00AAFA", darkBg: "#00AAFA20", icon: Thermometer  },
-  ALPA:  { label: "Alpa",  bg: "#F2F2F2", clr: "#000000", darkBg: "#00000020", icon: MinusCircle  },
+  HADIR: { label: "Hadir", bg: "#F1EDFA", clr: "#3E03B3", darkBg: "#F26A3D20", icon: CheckCircle2 },
+  IZIN:  { label: "Izin",  bg: "#E6F7FF", clr: "#0EA5E9", darkBg: "#0EA5E920", icon: AlertCircle  },
+  SAKIT: { label: "Sakit", bg: "#E6F7FF", clr: "#0EA5E9", darkBg: "#0EA5E920", icon: Thermometer  },
+  ALPA:  { label: "Alpa",  bg: "#F2F2F2", clr: "#0F172A", darkBg: "#0F172A20", icon: MinusCircle  },
 };
 
 export const PULANG_CFG = {
-  label: "Pulang", bg: "#F6FEE8", clr: "#5D900F", darkBg: "#A1F91920", icon: LogOut,
+  label: "Pulang", bg: "#F1EDFA", clr: "#3E03B3", darkBg: "#F26A3D20", icon: LogOut,
 };
 
 export const STATUS_GRADIENT: Record<StatusAbsensi, string> = {
-  HADIR: "#A1F919",
-  IZIN:  "#00AAFA",
-  SAKIT: "#00AAFA",
-  ALPA:  "#000000",
+  HADIR: "#F26A3D",
+  IZIN:  "#0EA5E9",
+  SAKIT: "#0EA5E9",
+  ALPA:  "#0F172A",
 };
 export const PULANG_GRADIENT = "#3E03B3";
 
@@ -28,30 +28,30 @@ export const BRAND_GRADIENT = "#3E03B3";
 
 export const CARD_GRADIENTS = [
   "#3E03B3",
-  "#A1F919",
-  "#A1F919",
-  "#A1F919",
-  "#00AAFA",
-  "#000000",
+  "#F26A3D",
+  "#F26A3D",
+  "#F26A3D",
+  "#0EA5E9",
+  "#0F172A",
 ];
 
-export const CARD_ACCENT = ["#3E03B3", "#A1F919", "#A1F919", "#A1F919", "#00AAFA", "#000000"];
+export const CARD_ACCENT = ["#3E03B3", "#F26A3D", "#F26A3D", "#F26A3D", "#0EA5E9", "#0F172A"];
 
 export const DASHBOARD_GRADIENTS = [
-  "#00AAFA",
-  "#A1F919",
-  "#A1F919",
+  "#0EA5E9",
+  "#F26A3D",
+  "#F26A3D",
   "#3E03B3",
 ];
-export const DASHBOARD_ACCENT = ["#00AAFA", "#A1F919", "#A1F919", "#3E03B3"];
-export const DASHBOARD_PASTEL = ["#F1EDFA", "#F6FEE8", "#F6FEE8", "#F1EDFA"];
+export const DASHBOARD_ACCENT = ["#0EA5E9", "#F26A3D", "#F26A3D", "#3E03B3"];
+export const DASHBOARD_PASTEL = ["#F1EDFA", "#F1EDFA", "#F1EDFA", "#F1EDFA"];
 
-export const WALLET_ON_TEXT = ["#FFFFFF", "#000000", "#000000", "#FFFFFF"];
+export const WALLET_ON_TEXT = ["#FFFFFF", "#0F172A", "#0F172A", "#FFFFFF"];
 
 export const WALLET_GRADIENTS = [
-  "#00AAFA",
-  "#A1F919",
-  "#A1F919",
+  "#0EA5E9",
+  "#F26A3D",
+  "#F26A3D",
   "#3E03B3",
 ];
 
@@ -68,7 +68,7 @@ export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: 
 ];
 
 export function reportCardFg(gradient: string): string {
-  return gradient === "#A1F919" ? "#000000" : "#FFFFFF";
+  return gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
 }
 
 export function todayJakarta(): string {

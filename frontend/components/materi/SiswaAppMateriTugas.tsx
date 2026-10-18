@@ -196,7 +196,7 @@ export function SiswaAppMateriTugas({
                       <MetaIcon color={PURPLE}><FileText size={10} /></MetaIcon>
                       <span className="truncate">{item.mapel}</span>
                     </div>
-                    <p className="mt-2 flex items-center gap-1 text-sm font-extrabold" style={{ color: meta.done ? "#5D900F" : "#F26A3D" }}>
+                    <p className="mt-2 flex items-center gap-1 text-sm font-extrabold" style={{ color: meta.done ? "#3E03B3" : "#F26A3D" }}>
                       <meta.icon size={13} /> {meta.text}
                     </p>
                   </motion.button>
@@ -227,7 +227,7 @@ export function SiswaAppMateriTugas({
                           <span>•</span>
                           <span className="shrink-0">{tab === "materi" ? formatTgl((item as MateriItem).createdAt) : formatTgl((item as TugasItem).deadline)}</span>
                         </div>
-                        <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: meta.done ? "#5D900F" : "#F26A3D" }}>
+                        <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: meta.done ? "#3E03B3" : "#F26A3D" }}>
                           <meta.icon size={12} /> {meta.text}
                         </p>
                       </div>

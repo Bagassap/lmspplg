@@ -63,7 +63,7 @@ function SubmitPraktikModal({
         transition={{ type: "spring", damping: 28, stiffness: 320 }}
         className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-          style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
+          style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/10">
             <Code2 size={18} className="text-black" />
@@ -106,7 +106,7 @@ function SubmitPraktikModal({
             </div>
             <button onClick={submit} disabled={saving}
               className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
-              style={{ background: app ? "#3E03B3" : "#A1F919" }}>
+              style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Tugas</>}
             </button>
           </div>
@@ -153,7 +153,7 @@ function SubmitFileModal({
         className="w-full max-w-md overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-2xl"
         style={{ maxHeight: "92vh" }}
         onClick={(e) => e.stopPropagation()}>
-        <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
+        <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -205,7 +205,7 @@ function SubmitFileModal({
             </button>
             <button type="submit" disabled={saving || !file}
               className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
-              style={{ background: app ? "#3E03B3" : "#A1F919" }}>
+              style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kumpulkan</>}
             </button>
           </div>
@@ -233,8 +233,8 @@ function SubmitSoalModal({
   });
   const [catatan, setCatatan] = useState("");
   const [saving, setSaving] = useState(false);
-  const warna = app ? "#3E03B3" : isPg ? "#A1F919" : "#00AAFA";
-  const headTone = app ? "#1E293B" : isPg ? "#000000" : "#FFFFFF";
+  const warna = app ? "#3E03B3" : isPg ? "#F26A3D" : "#0EA5E9";
+  const headTone = app ? "#1E293B" : isPg ? "#0F172A" : "#FFFFFF";
 
   async function submit() {
     setSaving(true);
@@ -263,8 +263,8 @@ function SubmitSoalModal({
         transition={{ type: "spring", damping: 28, stiffness: 320 }}
         className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#F1EDFA" : warna, color: headTone }}>
-          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0000001A" : "#FFFFFF1A" }} />
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0F172A1A" : "#FFFFFF1A" }} />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#0F172A26" : "#FFFFFF26" }}>
             {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
           </div>
           <div className="min-w-0 flex-1">
@@ -275,7 +275,7 @@ function SubmitSoalModal({
           </div>
           <button onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
-            style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
+            style={{ backgroundColor: isPg ? "#0F172A26" : "#FFFFFF26" }}>
             <X size={16} />
           </button>
         </div>

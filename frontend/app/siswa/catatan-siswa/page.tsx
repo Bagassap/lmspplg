@@ -57,7 +57,7 @@ export default function SiswaCatatanSayaPage() {
           </div>
         </div>
         <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#A1F9191a", color: "#5D900F" }}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#F26A3D1a", color: "#3E03B3" }}>
             ±
           </span>
           <div className="leading-tight">
@@ -152,7 +152,7 @@ export default function SiswaCatatanSayaPage() {
                 <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-white/70">Total Catatan</p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#A1F919" }}>
+            <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#F26A3D" }}>
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-black bg-black/10">
                 ±
               </span>
@@ -178,7 +178,7 @@ export default function SiswaCatatanSayaPage() {
             {!loading && data && data.catatan.length > 0 && (
               <div className="divide-y divide-white dark:divide-slate-700/40">
                 {data.catatan.map((c) => {
-                  const accent = c.poin != null ? "#5D900F" : "#3E03B3";
+                  const accent = c.poin != null ? "#3E03B3" : "#3E03B3";
                   return (
                     <div key={c.id} className="relative p-4 pl-5">
                       <span className="absolute inset-y-0 left-0 w-1.5" style={{ background: accent }} />

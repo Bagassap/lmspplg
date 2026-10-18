@@ -17,9 +17,9 @@ const INLINE_LIMIT = 5;
 const GRID_COLS = "36px 40px 2fr 1.4fr 80px 1.2fr";
 
 const RANK_STYLE = [
-  { bg: "#F6FEE8", clr: "#5D900F" },
-  { bg: "#F1EDFA", clr: "#00AAFA" },
-  { bg: "#F1EDFA", clr: "#000000" },
+  { bg: "#F1EDFA", clr: "#3E03B3" },
+  { bg: "#F1EDFA", clr: "#0EA5E9" },
+  { bg: "#F1EDFA", clr: "#0F172A" },
 ];
 
 function RankBadge({ index }: { index: number }) {
@@ -39,8 +39,8 @@ function RankBadge({ index }: { index: number }) {
 }
 
 function severityColor(pct: number) {
-  if (pct < 50) return "#5D900F";
-  if (pct < 75) return "#5D900F";
+  if (pct < 50) return "#3E03B3";
+  if (pct < 75) return "#3E03B3";
   return "#3E03B3";
 }
 
@@ -114,22 +114,22 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
       ) : compact ? (
         <button type="button" onClick={() => setShowModal(true)}
           className="flex w-full items-center gap-3 rounded-2xl bg-[#F6FEE8] p-3 text-left dark:bg-[#A1F919]/15">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-black" style={{ backgroundColor: "#A1F919" }}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-black" style={{ backgroundColor: "#F26A3D" }}>
             <TrendingDown size={14} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[12.5px] font-bold" style={{ color: "#5D900F" }}>Siswa Bermasalah</p>
-            <p className="truncate text-[10px] font-semibold" style={{ color: "#5D900F" }}>
+            <p className="text-[12.5px] font-bold" style={{ color: "#3E03B3" }}>Siswa Bermasalah</p>
+            <p className="truncate text-[10px] font-semibold" style={{ color: "#3E03B3" }}>
               {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
             </p>
           </div>
-          <ArrowRight size={14} className="shrink-0" style={{ color: "#5D900F" }} />
+          <ArrowRight size={14} className="shrink-0" style={{ color: "#3E03B3" }} />
         </button>
       ) : (
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-black" style={{ background: "#A1F919" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-black" style={{ background: "#F26A3D" }}>
               <TrendingDown size={18} />
             </span>
             <div>
@@ -293,8 +293,8 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
               </div>
 
               <div className="flex shrink-0 flex-wrap gap-2 px-5 py-3">
-                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#5D900F" textColor="#000000" value={String(totalBermasalah)} label="Bermasalah" />
-                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#5D900F" textColor="#000000" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
+                <StatPill icon={AlertTriangle} gradient={CARD_GRADIENTS[1]} iconColor="#3E03B3" textColor="#0F172A" value={String(totalBermasalah)} label="Bermasalah" />
+                <StatPill icon={Flame} gradient={CARD_GRADIENTS[2]} iconColor="#3E03B3" textColor="#0F172A" value={`${alpaTertinggi}x`} label="Alpa Terbanyak" />
                 <StatPill icon={Gauge} gradient={CARD_GRADIENTS[0]} iconColor="#3E03B3" value={`${rataKehadiran}%`} label="Rata Hadir" />
               </div>
 

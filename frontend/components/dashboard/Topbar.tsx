@@ -118,9 +118,9 @@ const NOTIF_TYPE_STYLE: Record<ApiNotifType, NotifType> = {
 
 const NOTIF_STYLE: Record<NotifType, { bg: string; color: string }> = {
   info:    { bg: "#F1EDFA", color: "#3E03B3" },
-  success: { bg: "#F6FEE8", color: "#5D900F" },
-  warning: { bg: "#F6FEE8", color: "#5D900F" },
-  error:   { bg: "#F6FEE8", color: "#5D900F" },
+  success: { bg: "#F1EDFA", color: "#3E03B3" },
+  warning: { bg: "#F1EDFA", color: "#3E03B3" },
+  error:   { bg: "#F1EDFA", color: "#3E03B3" },
 };
 
 const NOTIF_ICON: Record<NotifType, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
@@ -337,7 +337,7 @@ export function Topbar({ user }: { user: UserPayload }) {
         <div className={`min-w-0 items-center gap-2 lg:hidden ${appMode ? "hidden" : "flex"}`}>
           <div
             className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
+            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
           >
             <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
           </div>

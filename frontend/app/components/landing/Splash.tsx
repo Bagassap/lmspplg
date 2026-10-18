@@ -96,7 +96,7 @@ export function Splash() {
       />
       <motion.div
         className="pointer-events-none absolute bottom-[-8%] left-[18%] h-80 w-80 rounded-full blur-[95px]"
-        style={{ background: "rgba(0,170,250,0.28)" }}
+        style={{ background: "rgba(14,165,233,0.28)" }}
         animate={{ x: [0, 26, 0], y: [0, -18, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />

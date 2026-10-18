@@ -293,7 +293,7 @@ export default function SiswaAbsensiHarianPage() {
               initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 12, stiffness: 300, delay: 0.05 }}
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
               <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
               <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
             </motion.div>
@@ -473,7 +473,7 @@ export default function SiswaAbsensiHarianPage() {
               <p className="text-xs font-semibold text-[#F1EDFA]">{formatTgl(today)}</p>
               <p className="mt-1 font-digital text-4xl font-bold tracking-wider tabular-nums text-white">{jam}</p>
               <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold"
-                style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#A1F919" : data?.sudahAbsen ? "#3E03B3" : "#94A3B8" }}>
+                style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#F26A3D" : data?.sudahAbsen ? "#3E03B3" : "#94A3B8" }}>
                 <Clock size={12} />
                 {data?.sudahAbsen && data?.sudahPulang
                   ? "Absensi hari ini lengkap"
@@ -1164,7 +1164,7 @@ function MobileFormAbsen({
                         <div className={`flex items-center gap-2.5 rounded-2xl border bg-slate-50 px-3.5 py-4 dark:bg-slate-900/40 ${
                           lokasiMissing ? "border-[#A1F919] dark:border-[#48700B]" : "border-slate-100 dark:border-slate-700"
                         }`}>
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: lokasi ? "#A1F91918" : "#A1F91918" }}>
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: lokasi ? "#F26A3D18" : "#F26A3D18" }}>
                             <MapPin size={16} className={lokasi ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#5D900F] dark:text-[#A1F919]"} />
                           </span>
                           {lokasiLoading ? (
@@ -1286,7 +1286,7 @@ function RiwayatTabCard({ icon: Icon, label, active, onClick }: {
     <motion.button type="button" whileTap={{ scale: 0.96 }} onClick={onClick}
       className={`flex flex-col items-center gap-2 rounded-3xl p-4 text-center ${active ? "bg-[#A1F919]" : "bg-white dark:bg-slate-800"}`}>
       <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
-        <Icon size={20} style={{ color: active ? "#A1F919" : "#94A3B8" }} />
+        <Icon size={20} style={{ color: active ? "#F26A3D" : "#94A3B8" }} />
       </span>
       <p className={`text-[11px] font-bold ${active ? "text-black" : "text-slate-500 dark:text-slate-300"}`}>{label}</p>
     </motion.button>

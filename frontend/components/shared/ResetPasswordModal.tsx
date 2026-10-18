@@ -20,7 +20,7 @@ function printSlip(opts: { nama: string; loginId?: string; password: string }) {
   }).format(new Date()) + " WIB";
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Slip Password — ${opts.nama}</title>
     <style>
-      body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;color:#000000;}
+      body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px;color:#0F172A;}
       .card{border:2px dashed #cbd5e1;border-radius:16px;padding:20px;max-width:340px;margin:0 auto;}
       h1{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#3E03B3;margin:0 0 4px;}
       .nama{font-size:18px;font-weight:800;margin:0 0 16px;}
@@ -172,7 +172,7 @@ export function ResetPasswordModal({
                 <motion.button type="button" onClick={onClose}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-black shadow-md"
-                  style={{ backgroundColor: "#A1F919" }}>
+                  style={{ backgroundColor: "#F26A3D" }}>
                   Selesai
                 </motion.button>
               </div>
@@ -287,9 +287,9 @@ export function ResetPasswordModal({
               Batal
             </button>
             <motion.button type="button" onClick={handleReset} disabled={saving}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #A1F91955" }} whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #F26A3D55" }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-black shadow-md transition-opacity disabled:opacity-60"
-              style={{ backgroundColor: "#A1F919" }}>
+              style={{ backgroundColor: "#F26A3D" }}>
               {saving
                 ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Mereset…</>
                 : <><KeyRound size={14} />Reset Password</>}
@@ -304,7 +304,7 @@ export function ResetPasswordModal({
     )}
 
     <AnimatePresence>
-      <MobileDetailModal onClose={onClose} accent={app ? "#F1EDFA" : "#A1F919"} className="lg:hidden">
+      <MobileDetailModal onClose={onClose} accent={app ? "#F1EDFA" : "#F26A3D"} className="lg:hidden">
         {successPassword ? (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">
@@ -353,7 +353,7 @@ export function ResetPasswordModal({
                 </div>
 
                 <button type="button" onClick={onClose}
-                  className="w-full rounded-xl py-3 text-sm font-bold text-black shadow-sm" style={{ backgroundColor: "#A1F919" }}>
+                  className="w-full rounded-xl py-3 text-sm font-bold text-black shadow-sm" style={{ backgroundColor: "#F26A3D" }}>
                   Selesai
                 </button>
               </div>
@@ -463,7 +463,7 @@ export function ResetPasswordModal({
                   </button>
                   <button type="button" onClick={handleReset} disabled={saving}
                     className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-black shadow-sm disabled:opacity-60"
-                    style={{ backgroundColor: "#A1F919" }}>
+                    style={{ backgroundColor: "#F26A3D" }}>
                     {saving
                       ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Mereset…</>
                       : <><KeyRound size={14} />Reset Password</>}

@@ -8,7 +8,7 @@ import { AppFold } from "@/components/app/AppUI";
 
 const REF_PRIMARY = "#3E03B3";
 const REF_MALE = "#3E03B3";
-const REF_FEMALE = "#5D900F";
+const REF_FEMALE = "#3E03B3";
 
 const GENDER_PILLS = [
   { value: "" as const, label: "Semua", icon: Users, color: "#64748B" },

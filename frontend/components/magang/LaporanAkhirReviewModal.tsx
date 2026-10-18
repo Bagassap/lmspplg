@@ -97,7 +97,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
               )}
               {laporan.status === "REVISI" && (
                 <div className="rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-black dark:text-white">
-                  <p className="flex items-center gap-2 font-semibold" style={{ color: "#5D900F" }}>
+                  <p className="flex items-center gap-2 font-semibold" style={{ color: "#3E03B3" }}>
                     <AlertTriangle size={15} /> Revisi diminta
                   </p>
                   {laporan.pesanRevisi && <p className="mt-1.5 text-slate-600 dark:text-slate-300">{laporan.pesanRevisi}</p>}
@@ -124,7 +124,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                     </button>
                     <button type="button" onClick={handleKirimRevisi} disabled={!pesanRevisi.trim() || !!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold disabled:opacity-50"
-                      style={{ background: "#A1F919", color: "#000000" }}>
+                      style={{ background: "#F26A3D", color: "#0F172A" }}>
                       {busy === "revisi" ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
                       Kirim Revisi
                     </button>
@@ -133,12 +133,12 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(true)} disabled={!!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-colors disabled:opacity-50"
-                      style={{ background: "#FFFFFF", color: "#5D900F" }}>
+                      style={{ background: "#FFFFFF", color: "#3E03B3" }}>
                       <AlertTriangle size={14} /> Revisi
                     </button>
                     <button type="button" onClick={handleTerima} disabled={!!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-black shadow-md disabled:opacity-50"
-                      style={{ background: "#A1F919" }}>
+                      style={{ background: "#F26A3D" }}>
                       {busy === "terima" ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
                       Terima
                     </button>

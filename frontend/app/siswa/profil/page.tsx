@@ -38,7 +38,7 @@ type SiswaProfil = {
 };
 
 const ACCENT_VIOLET = "#3E03B3";
-const ACCENT_ORANGE = "#A1F919";
+const ACCENT_ORANGE = "#F26A3D";
 const PROFILE_CARD_GRADIENT = "#3E03B3";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
@@ -232,7 +232,7 @@ function EditProfilModal({
             </button>
             <motion.button
               onClick={handleSave} disabled={saving}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(14,165,233,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 ${app ? "rounded-full" : "rounded-xl"}`}
               style={{ background: app ? "#3E03B3" : kelasGradient }}
@@ -282,7 +282,7 @@ function SectionCard({
   children: React.ReactNode;
   action?: React.ReactNode;
 }) {
-  const fg = gradient === "#A1F919" ? "#000000" : "#FFFFFF";
+  const fg = gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1E293B]">
       <div
@@ -305,7 +305,7 @@ function SectionCard({
 function MiniStat({
   label, value, gradient, icon: Icon,
 }: { label: string; value: string; gradient: string; icon: React.ElementType }) {
-  const fg = gradient === "#A1F919" ? "#000000" : "#FFFFFF";
+  const fg = gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
   return (
     <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient, color: fg }}>
       <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
@@ -415,7 +415,7 @@ export default function SiswaProfilPage() {
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-              style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+              style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
               <User size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
               <User size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
             </div>
@@ -497,7 +497,7 @@ export default function SiswaProfilPage() {
 
             <motion.button
               onClick={() => setShowEdit(true)}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(14,165,233,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-white"
               style={{ background: kelasGrad }}
@@ -516,15 +516,15 @@ export default function SiswaProfilPage() {
           >
             <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               <InfoField icon={Users} label="Jenis Kelamin" value={profil.jenisKelamin}
-                iconBg={isP ? "#F1EDFA" : "#F1EDFA"} iconColor={isP ? "#000000" : "#3E03B3"} />
+                iconBg={isP ? "#F1EDFA" : "#F1EDFA"} iconColor={isP ? "#0F172A" : "#3E03B3"} />
               <InfoField icon={Calendar} label="Tempat, Tgl Lahir" value={tglLahir}
-                iconBg="#F1EDFA" iconColor="#00AAFA" />
+                iconBg="#F1EDFA" iconColor="#0EA5E9" />
               <InfoField icon={GraduationCap} label="Kelas" value={profil.kelas.nama}
-                iconBg="#F1EDFA" iconColor="#00AAFA" />
+                iconBg="#F1EDFA" iconColor="#0EA5E9" />
               <InfoField icon={BookOpen} label="Jurusan" value={profil.jurusan}
-                iconBg="#F1EDFA" iconColor="#00AAFA" />
+                iconBg="#F1EDFA" iconColor="#0EA5E9" />
               <InfoField icon={Users} label="Nama Orang Tua" value={profil.namaOrtu}
-                iconBg="#F6FEE8" iconColor="#5D900F" />
+                iconBg="#F1EDFA" iconColor="#3E03B3" />
               <InfoField icon={Hash} label="NIS" value={profil.nis}
                 iconBg="#F1EDFA" iconColor="#3E03B3" />
             </div>

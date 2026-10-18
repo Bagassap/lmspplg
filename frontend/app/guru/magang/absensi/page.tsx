@@ -78,7 +78,7 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
     return (
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
-        style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
+        style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
         <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`}>
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
@@ -491,7 +491,7 @@ export default function GuruMagangAbsensiPage() {
           <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="relative flex items-center gap-3 sm:gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
                 <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
                 <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
               </div>
@@ -549,7 +549,7 @@ export default function GuruMagangAbsensiPage() {
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
                 <ClipboardCheck size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
                 <ClipboardCheck size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
               </div>
@@ -797,7 +797,7 @@ export default function GuruMagangAbsensiPage() {
 
           <div className="grid grid-cols-2 gap-2.5">
             <FlatStatTile icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label="Progres Absen"
-              bg="#00AAFA" fg="#FFFFFF" />
+              bg="#0EA5E9" fg="#FFFFFF" />
             <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} bold />
           </div>
 

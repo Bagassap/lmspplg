@@ -24,9 +24,9 @@ const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
 
 const ROW_PALETTES = [
   { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
-  { bar: "#00AAFA", gradient: "#00AAFA", tint: "#F1EDFA" },
-  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
-  { bar: "#A1F919", gradient: "#A1F919", tint: "#F6FEE8" },
+  { bar: "#0EA5E9", gradient: "#0EA5E9", tint: "#F1EDFA" },
+  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
+  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -38,14 +38,14 @@ function rowStatus(t: TugasItem, onKumpulkan: (t: TugasItem) => void, onLihatDet
   const overdue = !isTugasActive(t) && !mySubmisi;
 
   const btn = isDiterima
-    ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onLihatDetail(mySubmisi!, t) }
+    ? { label: "Diterima", icon: <CheckCircle size={11} />, bg: "#F1EDFA", clr: "#3E03B3", border: "#F26A3D", onClick: () => onLihatDetail(mySubmisi!, t) }
     : isRevisi
-    ? { label: "Revisi", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
+    ? { label: "Revisi", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#0F172A", border: "#0F172A", onClick: () => onKumpulkan(t) }
     : isTerkirim
-    ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#F1EDFA", clr: "#00AAFA", border: "#00AAFA", onClick: () => onLihatDetail(mySubmisi!, t) }
+    ? { label: "Terkirim", icon: <CheckCircle size={11} />, bg: "#F1EDFA", clr: "#0EA5E9", border: "#0EA5E9", onClick: () => onLihatDetail(mySubmisi!, t) }
     : overdue
-    ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#000000", border: "#000000", onClick: () => onKumpulkan(t) }
-    : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#F6FEE8", clr: "#5D900F", border: "#A1F919", onClick: () => onKumpulkan(t) };
+    ? { label: "Terlambat", icon: <AlertCircle size={11} />, bg: "#F2F2F2", clr: "#0F172A", border: "#0F172A", onClick: () => onKumpulkan(t) }
+    : { label: t.tipe === "PILIHAN_GANDA" || t.tipe === "ESSAY" ? "Kerjakan" : t.tipe === "PRAKTIK" ? "Mulai Praktik" : "Kumpulkan", icon: <Send size={11} />, bg: "#F1EDFA", clr: "#3E03B3", border: "#F26A3D", onClick: () => onKumpulkan(t) };
 
   return { mySubmisi, isDiterima, isRevisi, isTerkirim, overdue, btn };
 }
@@ -80,7 +80,7 @@ export function TugasListCardSiswa({
     <div className="hidden flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:flex">
       <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#A1F919" }}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#F26A3D" }}>
             <ClipboardList size={14} className="text-[#000000] dark:text-[#A1F919]" />
           </div>
           <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas Saya</p>
@@ -100,7 +100,7 @@ export function TugasListCardSiswa({
           <button onClick={() => setTab("completed")}
             className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
             Selesai
-            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#A1F919" }}>{completed.length}</span>}
+            {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{ backgroundColor: "#F26A3D" }}>{completed.length}</span>}
           </button>
         </div>
       </div>
@@ -122,7 +122,7 @@ export function TugasListCardSiswa({
                 <div key={t.id} className="flex flex-col gap-2 px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                      <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
+                      <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -186,7 +186,7 @@ export function TugasListCardSiswa({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                       </div>
@@ -249,10 +249,10 @@ export function TugasListCardSiswa({
           </button>
           <button type="button" onClick={() => setTab("completed")}
             className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
-            style={{ borderColor: tab === "completed" ? "#A1F919" : "transparent" }}>
+            style={{ borderColor: tab === "completed" ? "#F26A3D" : "transparent" }}>
             Selesai
             <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
-              style={{ background: tab === "completed" ? "#A1F91918" : "#E2E8F0" }}>
+              style={{ background: tab === "completed" ? "#F26A3D18" : "#E2E8F0" }}>
               {completed.length}
             </span>
           </button>
@@ -275,7 +275,7 @@ export function TugasListCardSiswa({
       )}
       {!loading && shown.length === 0 && (
         <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#A1F91930" }}>
+          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F26A3D30" }}>
             <ClipboardList size={24} className="text-[#5D900F] dark:text-[#A1F919]" />
           </div>
           <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : "Belum ada tugas tersedia"}</p>

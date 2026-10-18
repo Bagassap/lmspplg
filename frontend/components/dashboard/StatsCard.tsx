@@ -46,7 +46,7 @@ export default function StatsCard({
     >
       <div
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-        style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
+        style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
       >
         <Icon size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" strokeWidth={1.8} />
         <Icon size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" strokeWidth={1.8} />

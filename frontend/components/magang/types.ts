@@ -28,7 +28,7 @@ export type PenempatanMagang = {
 };
 
 export const STATUS_PENEMPATAN_CFG: Record<StatusPenempatan, { label: string; bg: string; clr: string }> = {
-  AKTIF: { label: "Aktif", bg: "#F6FEE8", clr: "#5D900F" },
-  SELESAI: { label: "Selesai", bg: "#F6FEE8", clr: "#5D900F" },
-  BATAL: { label: "Batal", bg: "#F2F2F2", clr: "#000000" },
+  AKTIF: { label: "Aktif", bg: "#F1EDFA", clr: "#3E03B3" },
+  SELESAI: { label: "Selesai", bg: "#F1EDFA", clr: "#3E03B3" },
+  BATAL: { label: "Batal", bg: "#F2F2F2", clr: "#0F172A" },
 };

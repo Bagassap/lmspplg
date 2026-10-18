@@ -37,7 +37,7 @@ export default function GuruMagangRekapPage() {
       <div className="hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
             <FileBarChart size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
             <FileBarChart size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
           </div>
@@ -74,9 +74,9 @@ export default function GuruMagangRekapPage() {
               <button type="button" onClick={() => setCategory("laporan")}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
-                  background: "#A1F919", color: "#000000",
-                  boxShadow: category === "laporan" ? "0 8px 24px rgba(161,249,25,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
-                  outline: category === "laporan" ? "2px solid #A1F919" : "none",
+                  background: "#F26A3D", color: "#0F172A",
+                  boxShadow: category === "laporan" ? "0 8px 24px rgba(242,106,61,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
+                  outline: category === "laporan" ? "2px solid #F26A3D" : "none",
                   outlineOffset: "3px",
                 }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
@@ -124,10 +124,10 @@ export default function GuruMagangRekapPage() {
                   </button>
                   <button type="button" onClick={() => setCategory("laporan")}
                     className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
-                    style={{ color: category === "laporan" ? "#000000" : "#94a3b8" }}>
+                    style={{ color: category === "laporan" ? "#0F172A" : "#94a3b8" }}>
                     {category === "laporan" && (
                       <motion.span layoutId="rekapPklGuruTabPill" className="absolute inset-0 rounded-xl"
-                        style={{ background: "#A1F919" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
+                        style={{ background: "#F26A3D" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
                     )}
                     <span className="relative z-10 flex items-center gap-1.5"><BarChart3 size={15} /> Laporan</span>
                     {menungguReview > 0 && (

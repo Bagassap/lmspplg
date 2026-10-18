@@ -92,7 +92,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         <p className="relative mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: "#FFFFFF", textShadow: "0 0 18px rgba(255,255,255,0.45)" }}>{jam}</p>
         <div
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
-          style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#5D900F" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
+          style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#3E03B3" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
         >
           <Clock size={12} /> {statusText}
         </div>

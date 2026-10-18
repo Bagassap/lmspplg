@@ -30,7 +30,7 @@ export function QuickAccessGrid({ cards }: { cards: QuickAccessCardData[] }) {
 }
 
 function QuickAccessCard({ card, index }: { card: QuickAccessCardData; index: number }) {
-  const fg = card.gradient === "#A1F919" ? "#000000" : "#FFFFFF";
+  const fg = card.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
 
   return (
     <motion.div

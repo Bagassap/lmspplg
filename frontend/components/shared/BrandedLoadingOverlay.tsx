@@ -28,7 +28,7 @@ export function BrandedLoadingOverlay({
       />
       <motion.div
         className="pointer-events-none absolute bottom-[8%] right-[8%] h-72 w-72 rounded-full blur-[100px]"
-        style={{ background: "rgba(0,170,250,0.28)" }}
+        style={{ background: "rgba(14,165,233,0.28)" }}
         animate={{ x: [0, -24, 0], y: [0, -16, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />

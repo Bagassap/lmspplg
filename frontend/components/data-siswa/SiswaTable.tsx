@@ -163,7 +163,7 @@ export function SiswaTable({
                       <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">NIS {s.nis}</p>
                     </div>
                     <span className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold"
-                      style={pct === 100 ? { backgroundColor: "#F6FEE8", color: "#5D900F" } : { backgroundColor: "#FFFFFF", color: "#64748b" }}>
+                      style={pct === 100 ? { backgroundColor: "#F1EDFA", color: "#3E03B3" } : { backgroundColor: "#FFFFFF", color: "#64748b" }}>
                       {pct}%
                     </span>
                     <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />

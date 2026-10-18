@@ -112,16 +112,16 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
   const app = useIsAppMode();
-  const tint = (a: number) => (app ? `rgba(62,3,179,${a})` : `rgba(161,249,25,${a})`);
-  const accent = app ? "#3E03B3" : "#A1F919";
+  const tint = (a: number) => (app ? `rgba(62,3,179,${a})` : `rgba(242,106,61,${a})`);
+  const accent = app ? "#3E03B3" : "#F26A3D";
 
   const cardBg     = isDark ? "#1E293B" : "#ffffff";
-  const titleColor = isDark ? "#FFFFFF" : "#000000";
+  const titleColor = isDark ? "#FFFFFF" : "#0F172A";
   const descColor  = isDark ? "#94a3b8" : "#64748b";
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#FFFFFF";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
-  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : app ? "#F1EDFA" : "#F6FEE8";
+  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : app ? "#F1EDFA" : "#F1EDFA";
 
   const dots = [
     { x: -50, y: -46, delay: 0.1,  size: 7 },
@@ -218,7 +218,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
               background: isDark ? "rgba(255,255,255,0.08)" : tint(0.10),
-              color: app ? "#3E03B3" : "#5D900F",
+              color: app ? "#3E03B3" : "#3E03B3",
             }}
           >
             Konfirmasi

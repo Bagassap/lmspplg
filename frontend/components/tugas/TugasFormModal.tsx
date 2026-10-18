@@ -47,9 +47,9 @@ function wibInputToIso(value: string) {
 
 const TIPE_OPTIONS: { value: TugasTipe; label: string; icon: typeof Send; gradient: string; desc: string }[] = [
   { value: "SUBMIT", label: "Kirim File", icon: Send, gradient: "#3E03B3", desc: "Siswa mengunggah file jawaban (PDF/PPT/ZIP), tanpa mode pengerjaan di LMS." },
-  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "#A1F919", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
-  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "#A1F919", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
-  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "#00AAFA", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
+  { value: "PRAKTIK", label: "Praktik Kode", icon: Code2, gradient: "#F26A3D", desc: "Siswa mengetik HTML/CSS/JS langsung di LMS dan hasilnya tampil live." },
+  { value: "PILIHAN_GANDA", label: "Pilihan Ganda", icon: ListChecks, gradient: "#F26A3D", desc: "Siswa memilih jawaban A–D untuk tiap soal." },
+  { value: "ESSAY", label: "Essay", icon: PenLine, gradient: "#0EA5E9", desc: "Siswa mengetik jawaban esai untuk tiap soal." },
 ];
 
 export function TugasFormModal({
@@ -338,7 +338,7 @@ export function TugasFormModal({
                       className={`flex flex-col items-center justify-center gap-1 rounded-lg px-2 py-2.5 text-xs font-bold transition-all ${
                         tipe === opt.value ? "shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400"
                       }`}
-                      style={tipe === opt.value ? { background: opt.gradient, color: opt.gradient === "#A1F919" ? "#000000" : "#FFFFFF" } : {}}>
+                      style={tipe === opt.value ? { background: opt.gradient, color: opt.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" } : {}}>
                       <opt.icon size={14} /> {opt.label}
                     </button>
                   ))}

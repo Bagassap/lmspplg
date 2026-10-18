@@ -45,6 +45,9 @@ const COLOR_TONE: Record<string, Tone3D> = {
   "#000000": "violet",
   "#FF7A00": "amber",
   "#EF4444": "amber",
+  "#F26A3D": "amber",
+  "#0EA5E9": "sky",
+  "#0F172A": "violet",
 };
 
 export function toneFromColor(color: string | undefined | null, fallback: Tone3D = "indigo"): Tone3D {

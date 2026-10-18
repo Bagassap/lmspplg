@@ -37,8 +37,8 @@ interface DashboardData {
 
 
 const P = "#3E03B3";
-const R = "#5D900F";
-const G = "#5D900F";
+const R = "#3E03B3";
+const G = "#3E03B3";
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
@@ -152,7 +152,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#00AAFA",
+      gradient: "#0EA5E9",
       icon: ClipboardCheck,
     },
     {
@@ -162,7 +162,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#A1F919",
+      gradient: "#F26A3D",
       icon: CheckCircle,
     },
     {
@@ -172,7 +172,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#A1F919",
+      gradient: "#F26A3D",
       icon: Megaphone,
     },
     {
@@ -203,7 +203,7 @@ export default function SiswaDashboardPage() {
           <Link
             href="/siswa/absensi-harian"
             className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
-            style={{ background: `linear-gradient(135deg, ${P}, #00AAFA)` }}
+            style={{ background: `linear-gradient(135deg, ${P}, #0EA5E9)` }}
           >
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />

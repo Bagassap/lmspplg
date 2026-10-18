@@ -31,9 +31,9 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
 
   const LEGEND = [
     { label: "Hadir",  color: "#3E03B3", pct: hadirPct, val: hadir },
-    { label: "Sakit",  color: "#5D900F", pct: sakitPct, val: sakit },
-    { label: "Izin",   color: "#5D900F", pct: izinPct,  val: izin },
-    { label: "Alpha",  color: "#5D900F", pct: alphaPct, val: alpha },
+    { label: "Sakit",  color: "#3E03B3", pct: sakitPct, val: sakit },
+    { label: "Izin",   color: "#3E03B3", pct: izinPct,  val: izin },
+    { label: "Alpha",  color: "#3E03B3", pct: alphaPct, val: alpha },
   ];
 
   const options: ApexOptions = {
@@ -66,7 +66,7 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
         },
       },
     },
-    colors: ["#3E03B3", "#A1F919", "#A1F919", "#A1F919"],
+    colors: ["#3E03B3", "#F26A3D", "#F26A3D", "#F26A3D"],
     series: [hadirPct, sakitPct, izinPct, alphaPct],
     labels: ["Hadir", "Sakit", "Izin", "Alpha"],
     stroke: { lineCap: "round" },

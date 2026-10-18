@@ -29,7 +29,7 @@ export function LengkapiFotoProfilCard() {
       initial="hidden"
       animate="visible"
       variants={cardVariants}
-      className="relative z-10 flex w-full max-w-3xl flex-col gap-3 rounded-[36px] bg-white p-4 shadow-[0_0_0_1px_rgba(62,3,179,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(0,170,250,0.12),0_40px_100px_rgba(62,3,179,0.07)] sm:flex-row-reverse sm:gap-4 sm:p-5"
+      className="relative z-10 flex w-full max-w-3xl flex-col gap-3 rounded-[36px] bg-white p-4 shadow-[0_0_0_1px_rgba(62,3,179,0.18),0_4px_16px_rgba(0,0,0,0.06),0_20px_56px_rgba(14,165,233,0.12),0_40px_100px_rgba(62,3,179,0.07)] sm:flex-row-reverse sm:gap-4 sm:p-5"
     >
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-5 sm:w-[280px] sm:shrink-0 sm:px-8 sm:py-12"

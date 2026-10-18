@@ -7,11 +7,11 @@ type Tone = "blue" | "navy" | "green" | "lime" | "red" | "ink";
 
 const TONE_HEX: Record<Tone, string> = {
   blue: "#3E03B3",
-  navy: "#00AAFA",
-  green: "#A1F919",
-  lime: "#A1F919",
-  red: "#A1F919",
-  ink: "#000000",
+  navy: "#0EA5E9",
+  green: "#F26A3D",
+  lime: "#F26A3D",
+  red: "#F26A3D",
+  ink: "#0F172A",
 };
 
 const cardVariants = {
@@ -30,7 +30,7 @@ export function GradientStatCard({
   icon: ComponentType<{ size?: number; className?: string }>;
   tone: Tone;
 }) {
-  const fg = TONE_HEX[tone] === "#A1F919" ? "#000000" : "#FFFFFF";
+  const fg = TONE_HEX[tone] === "#F26A3D" ? "#0F172A" : "#FFFFFF";
 
   return (
     <motion.div

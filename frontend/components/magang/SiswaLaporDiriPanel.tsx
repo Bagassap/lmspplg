@@ -103,7 +103,7 @@ export function SiswaLaporDiriPanel() {
 
       {status.sudahLapor && status.current ? (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-3xl shadow-lg" style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
+          className="overflow-hidden rounded-3xl shadow-lg" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
           <div className="relative px-6 py-8 text-center">
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
               className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg ${app ? "bg-white" : "bg-black/10"}`}>

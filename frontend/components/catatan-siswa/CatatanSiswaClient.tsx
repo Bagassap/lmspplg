@@ -161,12 +161,12 @@ export function CatatanSiswaClient() {
                   <div className={`flex shrink-0 items-center gap-1.5 ${isAdmin ? "lg:hidden" : ""}`}>
                     <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null} title="Unduh PDF"
                       className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                      style={{ background: "#A1F919" }}>
+                      style={{ background: "#F26A3D" }}>
                       {downloading === "pdf" ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
                     </button>
                     <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null} title="Unduh Excel"
                       className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                      style={{ background: "#A1F919" }}>
+                      style={{ background: "#F26A3D" }}>
                       {downloading === "excel" ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
                     </button>
                   </div>
@@ -188,10 +188,10 @@ export function CatatanSiswaClient() {
               </p>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
-                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#00AAFA" },
-                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#5D900F" },
-                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#00AAFA" },
-                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#5D900F" },
+                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0EA5E9" },
+                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#3E03B3" },
+                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#0EA5E9" },
+                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#3E03B3" },
                 ].map((st, i) => (
                   <div key={i} className="flex items-center gap-2.5 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
@@ -220,12 +220,12 @@ export function CatatanSiswaClient() {
               <div className="flex gap-2">
                 <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{ background: "#A1F919" }}>
+                  style={{ background: "#F26A3D" }}>
                   {downloading === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />} PDF
                 </button>
                 <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{ background: "#A1F919" }}>
+                  style={{ background: "#F26A3D" }}>
                   {downloading === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />} Excel
                 </button>
               </div>
@@ -257,7 +257,7 @@ export function CatatanSiswaClient() {
             <>
               <div className="overflow-x-auto">
                 <div className="min-w-170">
-                  <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
+                  <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
                     <span />
                     <span />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>

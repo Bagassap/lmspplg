@@ -94,10 +94,10 @@ export function SubmisiTugasModal({
               <div className="hidden shrink-0 border-b border-slate-100 dark:border-slate-700 lg:grid lg:grid-cols-5">
                 {[
                   { label: "Total", val: rows.length, color: "#3E03B3" },
-                  { label: "Diterima", val: cntDiterima, color: "#5D900F" },
-                  { label: "Revisi", val: cntRevisi, color: "#5D900F" },
+                  { label: "Diterima", val: cntDiterima, color: "#3E03B3" },
+                  { label: "Revisi", val: cntRevisi, color: "#3E03B3" },
                   { label: "Menunggu", val: cntMenunggu, color: "#3E03B3" },
-                  { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#5D900F" },
+                  { label: "Belum Kumpul", val: belumLoading ? "…" : belumList.length, color: "#3E03B3" },
                 ].map((st, i) => (
                   <div key={i} className="border-r border-slate-100 p-4 text-center last:border-r-0 dark:border-slate-700">
                     <p className="text-2xl font-extrabold" style={{ color: st.color }}>{st.val}</p>
@@ -167,7 +167,7 @@ export function SubmisiTugasModal({
                     <>
                       {(tugas.tipe === "PILIHAN_GANDA" || tugas.tipe === "ESSAY") && s.nilai !== null && (
                         <span className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-black text-white"
-                          style={{ background: s.nilai >= 80 ? "#A1F919" : s.nilai >= 60 ? "#A1F919" : "#A1F919" }}>
+                          style={{ background: s.nilai >= 80 ? "#F26A3D" : s.nilai >= 60 ? "#F26A3D" : "#F26A3D" }}>
                           Nilai {s.nilai}
                         </span>
                       )}
@@ -177,7 +177,7 @@ export function SubmisiTugasModal({
                     <div key={s.id}>
                       <div className="hidden flex-wrap items-center gap-3 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors lg:flex">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                          style={{ backgroundColor: isDone ? "#A1F919" : sc.color }}>
+                          style={{ backgroundColor: isDone ? "#F26A3D" : sc.color }}>
                           {nama[0]?.toUpperCase() ?? "?"}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -202,7 +202,7 @@ export function SubmisiTugasModal({
                       <div className="flex flex-col gap-3 px-4 py-4 lg:hidden">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                            style={{ backgroundColor: isDone ? "#A1F919" : sc.color }}>
+                            style={{ backgroundColor: isDone ? "#F26A3D" : sc.color }}>
                             {nama[0]?.toUpperCase() ?? "?"}
                           </div>
                           <div className="min-w-0 flex-1">

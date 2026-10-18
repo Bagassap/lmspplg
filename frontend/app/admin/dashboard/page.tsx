@@ -21,9 +21,9 @@ import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { AdminAppHome } from "@/components/dashboard/AdminAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
 const P = "#3E03B3";   
-const R = "#5D900F";   
+const R = "#3E03B3";   
 const B = "#3E03B3";   
-const G = "#5D900F";   
+const G = "#3E03B3";   
 
 
 interface Pengumuman {
@@ -166,7 +166,7 @@ export default function AdminDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#00AAFA",
+      gradient: "#0EA5E9",
       icon: Calendar,
     },
     {
@@ -177,7 +177,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#A1F919",
+      gradient: "#F26A3D",
       icon: Megaphone,
     },
     {
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#A1F919",
+      gradient: "#F26A3D",
       icon: Briefcase,
     },
     {
@@ -252,7 +252,7 @@ export default function AdminDashboardPage() {
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#A1F919" }} />Total
+                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#F26A3D" }} />Total
               </span>
             </div>
           </div>
@@ -390,7 +390,7 @@ export default function AdminDashboardPage() {
         <Link
           href="/admin/absensi-harian"
           className="relative flex flex-col overflow-hidden rounded-2xl p-4 text-white"
-          style={{ background: `linear-gradient(135deg, ${P}, #00AAFA)` }}
+          style={{ background: `linear-gradient(135deg, ${P}, #0EA5E9)` }}
         >
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-8 -left-6 h-24 w-24 rounded-full bg-white/8" />

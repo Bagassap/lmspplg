@@ -21,7 +21,7 @@ export function SignaturePad({ onChange }: { onChange: (dataUrl: string | null) 
       ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = "#000000";
+      ctx.strokeStyle = "#0F172A";
     }
   }, []);
 

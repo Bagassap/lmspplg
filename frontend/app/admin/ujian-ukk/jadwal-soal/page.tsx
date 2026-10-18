@@ -26,10 +26,10 @@ const PRIMARY = "#3E03B3";
 
 const PALETTE = [
   { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
-  { bg: "#F6FEE8", text: "#A1F919",  bar: "#A1F919",  gradient: "#A1F919" },
-  { bg: "#F6FEE8", text: "#A1F919",  bar: "#A1F919",  gradient: "#A1F919" },
-  { bg: "#FFFFFF", text: "#A1F919",  bar: "#A1F919",  gradient: "#A1F919" },
-  { bg: "#F1EDFA", text: "#00AAFA",  bar: "#00AAFA",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
+  { bg: "#F1EDFA", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
+  { bg: "#FFFFFF", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
+  { bg: "#F1EDFA", text: "#0EA5E9",  bar: "#0EA5E9",  gradient: "#3E03B3" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 
@@ -40,11 +40,11 @@ interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; 
 interface Submisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
-  if (s === "DITERIMA") return { bg: "#F6FEE8", text: "#5D900F", icon: <CheckCircle size={10} /> };
-  if (s === "REVISI")   return { bg: "#F2F2F2", text: "#000000", icon: <AlertCircle size={10} /> };
+  if (s === "DITERIMA") return { bg: "#F1EDFA", text: "#3E03B3", icon: <CheckCircle size={10} /> };
+  if (s === "REVISI")   return { bg: "#F2F2F2", text: "#0F172A", icon: <AlertCircle size={10} /> };
   return { bg: "#F1EDFA", text: "#3E03B3", icon: <Clock size={10} /> };
 }
-function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#3E03B3", GURU: "#3E03B3", SISWA: "#A1F919" }; return m[role] ?? "#64748b"; }
+function roleAvatar(role: string) { const m: Record<string, string> = { ADMIN: "#3E03B3", GURU: "#3E03B3", SISWA: "#F26A3D" }; return m[role] ?? "#64748b"; }
 
 function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
   const [tYear, tMonth, tDate] = todayJakarta().split("-").map(Number);
@@ -323,10 +323,10 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, s
             onClick={(e)=>e.stopPropagation()}>
 
             <div className="app-sheet-header relative px-6 py-5 overflow-hidden" style={{background: warna, color: "#FFFFFF"}}>
-              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full pointer-events-none" style={{backgroundColor: warna === "#A1F919" ? "#FFFFFF1A" : "#FFFFFF1A"}}/>
+              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full pointer-events-none" style={{backgroundColor: warna === "#F26A3D" ? "#FFFFFF1A" : "#FFFFFF1A"}}/>
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-extrabold">{title}</h2>
-                <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-80" style={{backgroundColor: warna === "#A1F919" ? "#FFFFFF26" : "#FFFFFF26"}}>
+                <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-80" style={{backgroundColor: warna === "#F26A3D" ? "#FFFFFF26" : "#FFFFFF26"}}>
                   <X size={14}/>
                 </button>
               </div>
@@ -603,7 +603,7 @@ export default function AdminJadwalSoalPage() {
           <div className="hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
             <div className="relative flex items-center gap-3 sm:gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
                 <FileText size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden"/>
                 <FileText size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block"/>
               </div>
@@ -795,7 +795,7 @@ export default function AdminJadwalSoalPage() {
 
               <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "#A1F919", color: "#000000", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#F26A3D", color: "#0F172A", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#000000]/15">
                   <FileText size={16} />
@@ -859,7 +859,7 @@ export default function AdminJadwalSoalPage() {
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
-                      style={{ background: "#A1F919", color: "#000000" }}>
+                      style={{ background: "#F26A3D", color: "#0F172A" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#000000]/10" />
                       <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#000000]/15">
                         <FileText size={14} />
@@ -964,7 +964,7 @@ export default function AdminJadwalSoalPage() {
                 <button onClick={() => setTab("completed")}
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
                   Completed
-                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#A1F919"}}>{completed.length}</span>}
+                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                 </button>
               </div>
             </div>
@@ -1001,7 +1001,7 @@ export default function AdminJadwalSoalPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2.5">
                               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
-                                <span className="text-xs font-bold" style={{color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF"}}>{idx+1}</span>
+                                <span className="text-xs font-bold" style={{color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF"}}>{idx+1}</span>
                               </div>
                               <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                             </div>
@@ -1053,7 +1053,7 @@ export default function AdminJadwalSoalPage() {
                     return (
                       <div key={t.id} className="flex items-center gap-3 p-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
+                          <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -1148,8 +1148,8 @@ export default function AdminJadwalSoalPage() {
                 <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:grid-cols-4 sm:divide-y-0">
                   {[
                     { label: "Total",    val: rows.length,   color: "#3E03B3" },
-                    { label: "Diterima", val: cntDiterima,   color: "#5D900F" },
-                    { label: "Revisi",   val: cntRevisi,     color: "#5D900F" },
+                    { label: "Diterima", val: cntDiterima,   color: "#3E03B3" },
+                    { label: "Revisi",   val: cntRevisi,     color: "#3E03B3" },
                     { label: "Menunggu", val: cntMenunggu,   color: "#3E03B3" },
                   ].map((st, i) => (
                     <div key={i} className="p-4 text-center">
@@ -1174,7 +1174,7 @@ export default function AdminJadwalSoalPage() {
                       <div key={s.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-6">
                         <div className="flex items-center gap-3 sm:contents">
                           <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                            style={{backgroundColor: isDone ? "#A1F919" : sc.text}}>
+                            style={{backgroundColor: isDone ? "#F26A3D" : sc.text}}>
                             {nama[0]?.toUpperCase() ?? "?"}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -1201,12 +1201,12 @@ export default function AdminJadwalSoalPage() {
                           <div className="flex gap-2 shrink-0">
                             <button onClick={() => updateStatus(s.id, "DITERIMA")}
                               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-black shadow-sm transition-transform hover:scale-105"
-                              style={{background:"#A1F919"}}>
+                              style={{background:"#F26A3D"}}>
                               <CheckCircle size={12}/> Terima
                             </button>
                             <button onClick={() => { setRevisiTarget(s); setPesanRevisi(""); }}
                               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-transform hover:scale-105"
-                              style={{background: "#A1F919", color: "#000000"}}>
+                              style={{background: "#F26A3D", color: "#0F172A"}}>
                               <AlertCircle size={12}/> Revisi
                             </button>
                           </div>
@@ -1279,7 +1279,7 @@ export default function AdminJadwalSoalPage() {
               onClick={(e)=>e.stopPropagation()}>
 
               <div className="app-sheet-header relative px-6 py-5 overflow-hidden"
-                style={{background: "#A1F919", color: "#000000"}}>
+                style={{background: "#F26A3D", color: "#0F172A"}}>
                 <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10 pointer-events-none"/>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#000000]/15 flex items-center justify-center shrink-0">
@@ -1322,7 +1322,7 @@ export default function AdminJadwalSoalPage() {
                 </button>
                 <button onClick={kirimRevisi} disabled={!pesanRevisi.trim()}
                   className="flex-1 py-2.5 rounded-xl text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110"
-                  style={{background: "#A1F919", color: "#000000"}}>
+                  style={{background: "#F26A3D", color: "#0F172A"}}>
                   <span className="flex items-center justify-center gap-2">
                     <AlertCircle size={14}/> Kirim Revisi
                   </span>

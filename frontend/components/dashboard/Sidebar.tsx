@@ -105,7 +105,7 @@ export function Sidebar({
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_3px_6px_rgba(62,3,179,0.4)] ring-1 ring-white/40 dark:ring-white/10"
-                style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
+                style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
               >
                 <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
               </div>

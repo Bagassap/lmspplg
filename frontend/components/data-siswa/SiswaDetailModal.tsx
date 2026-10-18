@@ -38,7 +38,7 @@ function MobileRow({ icon: Icon, label, value, href }: {
 
 const HEADER_GRADIENT = "#3E03B3";
 const REF_PRIMARY = "#3E03B3";
-const REF_SUCCESS = "#5D900F";
+const REF_SUCCESS = "#3E03B3";
 
 function FieldItem({ icon: Icon, label, value, full, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; full?: boolean; href?: string | null;
@@ -282,7 +282,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               {onEdit && (
                 <motion.button
                   type="button" onClick={onEdit}
-                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(0,170,250,0.4)" }}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 20px rgba(14,165,233,0.4)" }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2.5 text-sm font-bold text-white shadow-sm sm:py-1.5 sm:text-xs"
                   style={{ background: HEADER_GRADIENT }}

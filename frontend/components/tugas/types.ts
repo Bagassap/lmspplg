@@ -77,9 +77,9 @@ export function isTugasActive(t: { deadline: string }) {
 }
 
 export function statusInfo(s: StatusTugas) {
-  if (s === "DITERIMA") return { bg: "#F6FEE8", color: "#5D900F", label: "Diterima" };
-  if (s === "REVISI") return { bg: "#F2F2F2", color: "#000000", label: "Perlu Revisi" };
-  return { bg: "#E6F7FF", color: "#00AAFA", label: "Menunggu Review" };
+  if (s === "DITERIMA") return { bg: "#F1EDFA", color: "#3E03B3", label: "Diterima" };
+  if (s === "REVISI") return { bg: "#F2F2F2", color: "#0F172A", label: "Perlu Revisi" };
+  return { bg: "#E6F7FF", color: "#0EA5E9", label: "Menunggu Review" };
 }
 
 export function tipeLabel(tipe: string) {

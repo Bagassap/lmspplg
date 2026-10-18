@@ -222,7 +222,7 @@ export function SiswaAppHome() {
                           </span>
                           {terkumpul ? (
                             <span className="flex shrink-0 items-center gap-1.5 font-semibold text-[#5D900F]">
-                              <MetaIcon color="#5D900F"><CheckCircle2 size={11} /></MetaIcon>
+                              <MetaIcon color="#3E03B3"><CheckCircle2 size={11} /></MetaIcon>
                               Terkumpul
                             </span>
                           ) : (

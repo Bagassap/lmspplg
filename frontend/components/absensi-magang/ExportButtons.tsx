@@ -175,7 +175,7 @@ export function ExportButtons({ tempatMagangId, tempatNama, range, siswaList }: 
           <SiswaPickerModal
             siswaList={siswaList}
             title={picker === "pdf" ? "Pilih Siswa — Export PDF" : "Pilih Siswa — Export Excel"}
-            accent="#5D900F"
+            accent="#3E03B3"
             onPick={(s) => runSiswaExport(picker === "pdf" ? "pdf-siswa" : "excel-siswa", s)}
             onClose={() => setPicker(null)}
           />

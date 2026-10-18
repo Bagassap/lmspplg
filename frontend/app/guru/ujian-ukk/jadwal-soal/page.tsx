@@ -30,16 +30,16 @@ function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", {
 
 const ROW_PALETTES = [
   { bg:"#F1EDFA", text:"#3E03B3",  bar:"#3E03B3",  gradient:"#3E03B3" },
-  { bg:"#F6FEE8", text:"#A1F919",  bar:"#A1F919",  gradient:"#A1F919" },
-  { bg:"#F6FEE8", text:"#A1F919",  bar:"#A1F919",  gradient:"#A1F919" },
-  { bg:"#FFFFFF", text:"#A1F919",  bar:"#A1F919",  gradient:"#A1F919" },
-  { bg:"#F1EDFA", text:"#00AAFA",  bar:"#00AAFA",  gradient:"#3E03B3" },
+  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
+  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
+  { bg:"#FFFFFF", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
+  { bg:"#F1EDFA", text:"#0EA5E9",  bar:"#0EA5E9",  gradient:"#3E03B3" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
 const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: string }> = {
-  DITERIMA: { label: "Diterima", color: "#5D900F", bg: "#F6FEE8" },
-  REVISI: { label: "Revisi", color: "#5D900F", bg: "#FFFFFF" },
+  DITERIMA: { label: "Diterima", color: "#3E03B3", bg: "#F1EDFA" },
+  REVISI: { label: "Revisi", color: "#3E03B3", bg: "#FFFFFF" },
   TERKIRIM: { label: "Menunggu", color: "#3E03B3", bg: "#F1EDFA" },
 };
 
@@ -140,7 +140,7 @@ export default function GuruJadwalSoalPage() {
       <div className="hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
             <FileText size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden"/>
             <FileText size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block"/>
           </div>
@@ -285,7 +285,7 @@ export default function GuruJadwalSoalPage() {
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "#A1F919", color: "#000000", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                style={{ background: "#F26A3D", color: "#0F172A", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#000000]/15">
                   <FileText size={16} />
@@ -349,7 +349,7 @@ export default function GuruJadwalSoalPage() {
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
-                      style={{ background: "#A1F919", color: "#000000" }}>
+                      style={{ background: "#F26A3D", color: "#0F172A" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#000000]/10" />
                       <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#000000]/15">
                         <FileText size={14} />
@@ -450,7 +450,7 @@ export default function GuruJadwalSoalPage() {
                   <button onClick={()=>setTab("completed")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
                     Selesai
-                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#A1F919"}}>{completed.length}</span>}
+                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                   </button>
                 </div>
               </div>
@@ -490,7 +490,7 @@ export default function GuruJadwalSoalPage() {
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-2.5">
                                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
-                                    <span className="text-xs font-bold" style={{color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF"}}>{idx+1}</span>
+                                    <span className="text-xs font-bold" style={{color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF"}}>{idx+1}</span>
                                   </div>
                                   <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                                 </div>
@@ -547,7 +547,7 @@ export default function GuruJadwalSoalPage() {
                         <div key={t.id}>
                           <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">
                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
-                              <span className="text-xs font-bold" style={{ color: rp.gradient === "#A1F919" ? "#000000" : "#FFFFFF" }}>{idx + 1}</span>
+                              <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>

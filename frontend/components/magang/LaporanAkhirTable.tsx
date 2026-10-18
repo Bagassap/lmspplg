@@ -7,8 +7,8 @@ import type { LaporanAkhirRow } from "./laporan-akhir-types";
 
 const STATUS_CFG: Record<string, { label: string; bg: string; clr: string; icon: typeof Clock }> = {
   TERKIRIM: { label: "Menunggu Review", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
-  DITERIMA: { label: "Diterima", bg: "#F6FEE8", clr: "#5D900F", icon: CheckCircle2 },
-  REVISI: { label: "Perlu Revisi", bg: "#F2F2F2", clr: "#000000", icon: AlertTriangle },
+  DITERIMA: { label: "Diterima", bg: "#F1EDFA", clr: "#3E03B3", icon: CheckCircle2 },
+  REVISI: { label: "Perlu Revisi", bg: "#F2F2F2", clr: "#0F172A", icon: AlertTriangle },
 };
 
 export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpen, mobileNative = false }: {

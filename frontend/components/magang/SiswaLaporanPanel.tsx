@@ -102,11 +102,11 @@ export function SiswaLaporanPanel() {
       {laporan && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="overflow-hidden rounded-3xl shadow-lg"
-          style={{ background: app ? "#F1EDFA" : laporan.status === "DITERIMA" ? "#A1F919" : laporan.status === "REVISI" ? "#000000" : "#00AAFA" }}>
-          <div className="relative px-6 py-8 text-center" style={{ color: app ? "#1E293B" : laporan.status === "DITERIMA" ? "#000000" : "#FFFFFF" }}>
+          style={{ background: app ? "#F1EDFA" : laporan.status === "DITERIMA" ? "#F26A3D" : laporan.status === "REVISI" ? "#0F172A" : "#0EA5E9" }}>
+          <div className="relative px-6 py-8 text-center" style={{ color: app ? "#1E293B" : laporan.status === "DITERIMA" ? "#0F172A" : "#FFFFFF" }}>
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
               className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg"
-              style={{ background: app ? "#FFFFFF" : laporan.status === "DITERIMA" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.25)", color: app ? (laporan.status === "DITERIMA" ? "#5D900F" : "#3E03B3") : undefined }}>
+              style={{ background: app ? "#FFFFFF" : laporan.status === "DITERIMA" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.25)", color: app ? (laporan.status === "DITERIMA" ? "#3E03B3" : "#3E03B3") : undefined }}>
               {laporan.status === "DITERIMA" ? <CheckCircle2 size={30} />
                 : laporan.status === "REVISI" ? <AlertTriangle size={30} />
                 : <Clock size={30} />}

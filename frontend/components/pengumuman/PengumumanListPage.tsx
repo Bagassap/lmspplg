@@ -23,10 +23,10 @@ type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
 const KATEGORI_GRADIENT: Record<string, string> = {
   Umum:     "#3E03B3",
-  Akademik: "#00AAFA",
+  Akademik: "#0EA5E9",
   Magang:   "#3E03B3",
-  Ujian:    "#A1F919",
-  Lainnya:  "#A1F919",
+  Ujian:    "#F26A3D",
+  Lainnya:  "#F26A3D",
 };
 
 const MONTH_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -69,7 +69,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
   }
 
   const CALENDAR_GRADIENT = "#3E03B3";
-  const DOT_COLOR = "#00AAFA";
+  const DOT_COLOR = "#0EA5E9";
   function dotColor(_d: number) { return DOT_COLOR; }
 
   return (
@@ -168,9 +168,9 @@ function AccordionCard({
   onPin: () => void;
 }) {
   const gradient = p.isPinned
-    ? "#A1F919"
+    ? "#F26A3D"
     : (KATEGORI_GRADIENT[p.kategori] ?? KATEGORI_GRADIENT.Lainnya);
-  const onLime = gradient === "#A1F919";
+  const onLime = gradient === "#F26A3D";
 
   function timeAgo(iso: string): string {
     const diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -491,7 +491,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
       <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <div className="relative flex items-center gap-3 sm:gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-            style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}>
+            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
             <Megaphone size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden"/>
             <Megaphone size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block"/>
           </div>
