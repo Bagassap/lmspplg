@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Lock, LogOut, Moon, Sun, UserCircle, CreditCard } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
-import { Avatar } from "@/components/shared/Avatar";
+import { AppProfileCard } from "@/components/app/AppProfileCard";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useDashboardMenu, type MenuItem } from "@/components/dashboard/useDashboardMenu";
-import { APP_HERO_PURPLE, AppCard } from "@/components/app/AppUI";
+import { AppCard } from "@/components/app/AppUI";
 
-const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 // Sudah ada di bilah bawah, jadi tidak diulang di daftar menu.
 const SKIP_KEYS = ["dashboard", "absensi-harian", "materi", "pengumuman"];
 
@@ -83,15 +82,7 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
 
   return (
     <div className="space-y-5 pb-4">
-      <div className="relative overflow-hidden rounded-3xl px-5 py-6 text-center text-white" style={{ background: APP_HERO_PURPLE }}>
-        <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
-        <div className="relative flex flex-col items-center">
-          <Avatar src={user.fotoProfil} nama={user.nama} sizePx={84} fallbackBg="#F26A3D"
-            textClassName="text-2xl font-bold" ring="0 0 0 4px rgba(255,255,255,0.9), 0 6px 18px rgba(0,0,0,0.2)" />
-          <p className="mt-3 text-xl font-extrabold">{user.nama}</p>
-          <span className="mt-1.5 rounded-full bg-[#F26A3D] px-3 py-0.5 text-[11px] font-bold">{ROLE_LABEL[user.role]}</span>
-        </div>
-      </div>
+      <AppProfileCard fallback={{ nama: user.nama, fotoProfil: user.fotoProfil, role: user.role }} />
 
       <Group title="Akun">
         {user.role === "SISWA" && <Row href="/siswa/profil" icon={UserCircle} label="Profil Saya" hint="Data diri dan foto profil" tone={n++} />}

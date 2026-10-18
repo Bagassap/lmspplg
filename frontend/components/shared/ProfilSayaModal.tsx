@@ -8,6 +8,8 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ChangeFotoProfilModal } from "@/components/shared/ChangeFotoProfilModal";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppSheet } from "@/components/app/AppSheet";
+import { AppProfileCard } from "@/components/app/AppProfileCard";
 
 type MeResponse = {
   id: string;
@@ -35,6 +37,38 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  if (app as boolean) {
+    return (
+      <AppSheet open onClose={onClose} title="Profil Saya"
+        footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-full bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
+        <AppProfileCard fallback={me ? { nama: me.nama, fotoProfil: me.fotoProfil, role: me.role } : undefined} />
+        {loading && <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin text-slate-400" /></div>}
+        {!loading && me && (
+          <div className="mt-3 divide-y divide-white rounded-2xl bg-[#F1EDFA]">
+            {me.email && (
+              <div className="flex items-center gap-3 px-3.5 py-3">
+                <Mail size={15} className="shrink-0 text-[#3E03B3]" />
+                <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-600">Email</p><p className="truncate text-sm font-bold text-slate-900">{me.email}</p></div>
+              </div>
+            )}
+            {me.loginId && (
+              <div className="flex items-center gap-3 px-3.5 py-3">
+                <IdCard size={15} className="shrink-0 text-[#3E03B3]" />
+                <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-600">Login ID</p><p className="truncate font-mono text-sm font-bold text-slate-900">{me.loginId}</p></div>
+              </div>
+            )}
+            {me.guru?.nip && (
+              <div className="flex items-center gap-3 px-3.5 py-3">
+                <IdCard size={15} className="shrink-0 text-[#3E03B3]" />
+                <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-600">NIP</p><p className="truncate font-mono text-sm font-bold text-slate-900">{me.guru.nip}</p></div>
+              </div>
+            )}
+          </div>
+        )}
+      </AppSheet>
+    );
+  }
 
   const modal = (
     <AnimatePresence>

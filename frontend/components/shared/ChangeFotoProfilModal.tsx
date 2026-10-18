@@ -12,6 +12,7 @@ const MAX_UPLOAD_BYTES = 1024 * 1024;
 
 export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => void; gradient: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -118,21 +119,31 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
               className="hidden"
               onChange={handleFile}
             />
+            <input
+              ref={cameraRef}
+              type="file"
+              accept="image/*"
+              capture="user"
+              className="hidden"
+              onChange={handleFile}
+            />
 
             {!imageSrc ? (
-              <button
-                type="button"
-                onClick={() => inputRef.current?.click()}
-                className="flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-blue/25 bg-blue/5 px-6 py-10 text-center transition-colors hover:border-blue/45 hover:bg-blue/8"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue/10">
-                  <ImagePlus size={20} className="text-blue" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-black/80">Pilih foto baru</p>
-                  <p className="mt-1 text-xs text-black/45">JPG, PNG, atau WEBP — maksimal 5MB</p>
-                </div>
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" onClick={() => inputRef.current?.click()}
+                  className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-[#F1EDFA] px-4 py-7 text-center">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white"><ImagePlus size={20} className="text-[#3E03B3]" /></span>
+                  <span className="text-sm font-bold text-slate-900">Galeri</span>
+                  <span className="text-[11px] text-slate-600">Pilih dari galeri</span>
+                </button>
+                <button type="button" onClick={() => cameraRef.current?.click()}
+                  className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-[#F1EDFA] px-4 py-7 text-center">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white"><Camera size={20} className="text-[#3E03B3]" /></span>
+                  <span className="text-sm font-bold text-slate-900">Kamera</span>
+                  <span className="text-[11px] text-slate-600">Ambil foto langsung</span>
+                </button>
+                <p className="col-span-2 text-center text-[11px] text-slate-600">JPG, PNG, atau WEBP — maksimal 5MB</p>
+              </div>
             ) : (
               <div className="flex flex-col gap-3">
                 <div className="relative h-56 w-full overflow-hidden rounded-2xl bg-black/90">

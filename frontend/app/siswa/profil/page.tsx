@@ -11,6 +11,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { formatAlamatLengkap } from "@/components/data-siswa/shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { ChangeFotoProfilModal } from "@/components/shared/ChangeFotoProfilModal";
+import { AppProfileCard } from "@/components/app/AppProfileCard";
 import { AppMobileFrame, AppBanner, AppInfoRow, AppSectionTitle, AppPillButton } from "@/components/app/AppUI";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -369,24 +370,7 @@ export default function SiswaProfilPage() {
       {appMode && (
         <>
       <AppMobileFrame eyebrow="Akun" title="Profil Saya" backHref="/siswa/dashboard">
-        <AppBanner className="flex flex-col items-center text-center">
-          <div className="relative">
-            <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
-              <Avatar src={profil.user?.fotoProfil} nama={nama} sizePx={96} fallbackBg="#3E03B3" textClassName="text-2xl font-extrabold" />
-            </div>
-            <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
-              className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-white shadow-md"
-              style={{ background: "#F26A3D" }}>
-              <Camera size={14} />
-            </button>
-          </div>
-          <h2 className="mt-3 text-xl font-extrabold text-white">{nama}</h2>
-          <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-extrabold" style={{ color: "#3E03B3" }}>
-            <IdCard size={14} /> NIS {profil.nis}
-          </span>
-          {profil.user?.email && <p className="mt-2 text-xs text-white/80">{profil.user.email}</p>}
-          <span className="mt-2 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-slate-600">{kelasShort(profil.kelas.nama)}</span>
-        </AppBanner>
+        <AppProfileCard fallback={{ nama, fotoProfil: profil.user?.fotoProfil, role: "SISWA" }} />
 
         <div className="grid grid-cols-2 gap-3">
           {[

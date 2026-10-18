@@ -24,6 +24,7 @@ const PAGE_TITLES: Record<string, [string, string]> = {
   "absensi-harian": ["Absensi Harian",   "Presensi kehadiran harian siswa"],
   pengumuman:     ["Pengumuman",         "Informasi dan pengumuman terkini"],
   "data-siswa":   ["Data Siswa",         "Kelola data seluruh siswa"],
+  notifikasi:     ["Notifikasi",         "Pemberitahuan terbaru"],
   menu:           ["Menu",               "Profil dan semua menu"],
   profil:         ["Profil Saya",        "Informasi dan pengaturan akun"],
   penempatan:     ["Penempatan PKL",     "Data penempatan PKL siswa"],
@@ -342,24 +343,14 @@ export function Topbar({ user }: { user: UserPayload }) {
         } ${appMode ? "rounded-b-[28px] shadow-[0_10px_24px_-10px_rgba(62,3,179,0.6)] lg:rounded-none" : ""}`}
       >
         {appMode && (
-          <button
-            ref={appAvatarRef}
-            type="button"
-            onClick={() => setDropdownOpen((v) => !v)}
-            className="flex min-w-0 items-center gap-3 lg:hidden"
-          >
-            <Avatar
-              src={user.fotoProfil}
-              nama={user.nama}
-              sizePx={44}
-              fallbackBg="#F26A3D"
-              textClassName="text-sm font-bold"
-              ring="0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.12)"
-            />
-            <span className="truncate text-left text-base font-bold text-white">
-              {appHome ? <>Hi, {user.nama} 👋</> : title}
+          <div className="flex min-w-0 items-center gap-3 lg:hidden">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#2D0281" }}>
+              <Image src="/PPLG.png" alt="LMS PPLG" width={18} height={22} className="h-5 w-auto" />
+            </div>
+            <span className="truncate text-base font-bold text-white">
+              {appHome ? `Hi, ${user.nama.split(" ")[0]} 👋` : title}
             </span>
-          </button>
+          </div>
         )}
         <div className={`min-w-0 items-center gap-2 lg:hidden ${appMode ? "hidden" : "flex"}`}>
           <div
@@ -447,7 +438,7 @@ export function Topbar({ user }: { user: UserPayload }) {
 
           <div className="relative" ref={notifRef}>
             <button
-              onClick={() => setNotifOpen((v) => !v)}
+              onClick={() => (appMode ? router.push(`/${user.role.toLowerCase()}/notifikasi`) : setNotifOpen((v) => !v))}
               className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700/50 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
                 purpleMobile
                   ? "bg-white/15 text-white hover:bg-white/25"
@@ -463,7 +454,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             </button>
 
             <AnimatePresence>
-              {notifOpen && (
+              {notifOpen && !appMode && (
                 <motion.div
                   initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -542,6 +533,12 @@ export function Topbar({ user }: { user: UserPayload }) {
           </div>
 
           <div className="relative" ref={dropdownRef}>
+            {appMode && (
+              <button ref={appAvatarRef} type="button" onClick={() => setDropdownOpen((v) => !v)} aria-label="Profil"
+                className="flex shrink-0 rounded-full lg:hidden" style={{ boxShadow: "0 0 0 2px #fff" }}>
+                <Avatar src={user.fotoProfil} nama={user.nama} sizePx={36} fallbackBg="#F26A3D" textClassName="text-xs font-bold" />
+              </button>
+            )}
             <button
               onClick={() => setDropdownOpen((v) => !v)}
               className={`${appMode ? "hidden lg:flex" : "flex"} items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700 ${
