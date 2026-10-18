@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowUpCircle, GraduationCap, Loader2, Users, ArrowRight, AlertTriangle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { KelasRef } from "./shared";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#3E03B3] focus:bg-white focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:[color-scheme:dark]";
 
@@ -25,6 +26,7 @@ function useJumlahSiswaAktif(kelasId: string) {
 
 function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone: () => void }) {
   const toast = useToast();
+  const app = useIsAppMode();
   const [dariKelasId, setDariKelasId] = useState("");
   const [keKelasId, setKeKelasId] = useState("");
   const [saving, setSaving] = useState(false);
@@ -87,7 +89,7 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
       )}
 
       <button onClick={submit} disabled={!dariKelasId || !keKelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50">
+        className={`flex w-full items-center justify-center gap-2 bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50 ${app ? "rounded-full" : "rounded-xl"}`}>
         {saving ? <Loader2 size={15} className="animate-spin" /> : <ArrowUpCircle size={15} />}
         {saving ? "Memproses…" : "Naikkan Semua Siswa"}
       </button>
@@ -97,6 +99,7 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
 
 function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone: () => void }) {
   const toast = useToast();
+  const app = useIsAppMode();
   const [kelasId, setKelasId] = useState("");
   const [saving, setSaving] = useState(false);
   const jumlah = useJumlahSiswaAktif(kelasId);
@@ -132,7 +135,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-2 rounded-xl bg-[#F6FEE8] px-4 py-3 text-xs text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+      <div className={`flex items-start gap-2 rounded-xl px-4 py-3 text-xs ${app ? "bg-[#FFE9E2] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]"}`}>
         <AlertTriangle size={14} className="mt-0.5 shrink-0" />
         <span>Aksi ini menghapus PERMANEN seluruh data (absensi, tugas, PKL, UKK) dan akun login semua siswa di kelas terpilih — tidak bisa dibatalkan. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
       </div>
@@ -145,14 +148,14 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       </div>
 
       {kelasId && (
-        <div className="flex items-center gap-2 rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm font-semibold text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+        <div className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold ${app ? "bg-[#FFF4E0] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]"}`}>
           <Users size={14} />
           {jumlah === null ? "Menghitung…" : jumlah === 0 ? "Tidak ada siswa aktif di kelas ini" : `${jumlah} siswa aktif akan diluluskan`}
         </div>
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#A1F919] px-5 py-3 text-sm font-bold text-black shadow-sm disabled:opacity-50">
+        className={`flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-bold shadow-sm disabled:opacity-50 ${app ? "rounded-full bg-[#F26A3D] text-white" : "rounded-xl bg-[#A1F919] text-black"}`}>
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -169,6 +172,7 @@ export function KenaikanKelasModal({
   onDone: () => void;
 }) {
   const [tab, setTab] = useState<"naik" | "lulus">("naik");
+  const app = useIsAppMode();
 
   return (
     <AnimatePresence>
@@ -197,7 +201,7 @@ export function KenaikanKelasModal({
                 <ArrowUpCircle size={13} /> Naikkan Kelas
               </button>
               <button onClick={() => setTab("lulus")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20" : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? (app ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20") : "text-slate-400 hover:text-slate-600"}`}>
                 <GraduationCap size={13} /> Luluskan Kelas
               </button>
             </div>
