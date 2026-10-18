@@ -89,8 +89,9 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
   }, [toast.id, toast.duration, onDismiss]);
 
   return (
-    <motion.button
-      type="button"
+    <motion.div
+      role="button"
+      tabIndex={0}
       initial={{ opacity: 0, scale: 0.9, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.16 } }}
@@ -109,7 +110,7 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
       </motion.span>
       <span className="mt-4 block text-base font-extrabold leading-snug text-slate-900 dark:text-white">{toast.title}</span>
       {toast.description && <span className="mt-1 block text-sm leading-snug text-slate-600 dark:text-slate-300">{toast.description}</span>}
-    </motion.button>
+    </motion.div>
   );
 }
 
@@ -344,7 +345,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 key="toast-bd"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }}
-                className="fixed inset-0 z-9998 bg-black/30 backdrop-blur-[3px]"
+                data-plain className="fixed inset-0 z-9998 bg-black/30 backdrop-blur-[3px]"
                 onClick={() => dismiss(toasts[0].id)}
               />
             )}
@@ -352,6 +353,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
           <div
             aria-live="polite"
+            data-plain
             className="pointer-events-none fixed inset-0 z-9999 flex items-center justify-center p-4"
           >
             <AnimatePresence mode="wait">
@@ -369,13 +371,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 key="confirm-bd"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }}
-                className="fixed inset-0 z-9996 bg-black/35 backdrop-blur-[3px]"
+                data-plain className="fixed inset-0 z-9996 bg-black/35 backdrop-blur-[3px]"
                 onClick={() => closeConfirm(confirms[confirms.length - 1].id, false)}
               />
             )}
           </AnimatePresence>
 
-          <div className="pointer-events-none fixed inset-0 z-9997 flex items-center justify-center p-4">
+          <div data-plain className="pointer-events-none fixed inset-0 z-9997 flex items-center justify-center p-4">
             <AnimatePresence mode="wait">
               {confirms.slice(-1).map((item) => (
                 <div key={item.id} className="pointer-events-auto w-full max-w-sm">
