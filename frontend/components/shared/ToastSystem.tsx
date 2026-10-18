@@ -78,33 +78,37 @@ const TOAST_META: Record<ToastType, { icon: React.ElementType; tone: Tone3D }> =
   info:    { icon: Info, tone: "violet" },
 };
 
-/** Toast sukses/gagal versi simpel: ikon 3D + keterangan, muncul dari atas, hilang otomatis. */
+/** Toast sukses/gagal versi simpel: kotak di tengah layar berisi ikon 3D + keterangan, animasi pop sederhana. */
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
   const meta = TOAST_META[toast.type];
   const Icon = meta.icon;
 
   useEffect(() => {
-    const t = setTimeout(() => onDismiss(toast.id), Math.min(toast.duration, 4000));
+    const t = setTimeout(() => onDismiss(toast.id), Math.min(toast.duration, 3500));
     return () => clearTimeout(t);
   }, [toast.id, toast.duration, onDismiss]);
 
   return (
     <motion.button
       type="button"
-      initial={{ opacity: 0, y: -24, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -16, transition: { duration: 0.18 } }}
-      transition={{ type: "spring", damping: 24, stiffness: 320 }}
+      initial={{ opacity: 0, scale: 0.9, y: 12 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.16 } }}
+      transition={{ type: "spring", damping: 22, stiffness: 320 }}
       onClick={() => onDismiss(toast.id)}
-      className="flex w-full select-none items-center gap-3 rounded-3xl bg-white p-3 pr-5 text-left shadow-[0_16px_40px_-12px_rgba(15,23,42,0.35)] dark:bg-[#1E293B]"
+      className="flex w-full max-w-xs select-none flex-col items-center rounded-3xl bg-white px-6 pb-6 pt-7 text-center shadow-[0_24px_60px_-16px_rgba(15,23,42,0.45)] dark:bg-[#1E293B]"
     >
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(meta.tone)}>
-        <Icon size={22} color="#fff" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm font-extrabold leading-snug text-slate-900 dark:text-white">{toast.title}</span>
-        {toast.description && <span className="mt-0.5 block text-xs leading-snug text-slate-600 dark:text-slate-300">{toast.description}</span>}
-      </span>
+      <motion.span
+        initial={{ scale: 0.4 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", damping: 12, stiffness: 300, delay: 0.05 }}
+        className="flex h-16 w-16 items-center justify-center rounded-[22px]"
+        style={icon3dStyle(meta.tone)}
+      >
+        <Icon size={30} color="#fff" />
+      </motion.span>
+      <span className="mt-4 block text-base font-extrabold leading-snug text-slate-900 dark:text-white">{toast.title}</span>
+      {toast.description && <span className="mt-1 block text-sm leading-snug text-slate-600 dark:text-slate-300">{toast.description}</span>}
     </motion.button>
   );
 }
@@ -334,13 +338,25 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {mounted && createPortal(
         <>
+          <AnimatePresence>
+            {toasts.length > 0 && (
+              <motion.div
+                key="toast-bd"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                className="fixed inset-0 z-9998 bg-black/30 backdrop-blur-[3px]"
+                onClick={() => dismiss(toasts[0].id)}
+              />
+            )}
+          </AnimatePresence>
+
           <div
             aria-live="polite"
-            className="pointer-events-none fixed inset-x-0 top-0 z-9999 flex justify-center px-4 pt-[max(1rem,env(safe-area-inset-top))]"
+            className="pointer-events-none fixed inset-0 z-9999 flex items-center justify-center p-4"
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="wait">
               {toasts.map((t) => (
-                <div key={t.id} className="pointer-events-auto w-full max-w-sm">
+                <div key={t.id} className="pointer-events-auto flex w-full justify-center">
                   <NotificationCard toast={t} onDismiss={dismiss} />
                 </div>
               ))}
