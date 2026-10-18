@@ -60,10 +60,29 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
       <nav
         className={
           appMode
-            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-slate-100 bg-white/95 shadow-[0_12px_32px_-8px_rgba(62,3,179,0.35)] backdrop-blur-xl dark:border-white/10 dark:bg-[#1E293B]/95 lg:hidden"
+            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-slate-100 bg-white shadow-[0_12px_32px_-8px_rgba(62,3,179,0.35)] dark:border-white/10 dark:bg-[#1E293B] lg:hidden"
             : "fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden"
         }
       >
+        {appMode ? (
+          <>
+            {[dashboardItem, ...side].filter((i): i is MenuItem => !!i).map((item) => {
+              const active = isItemActive(item, pathname);
+              return (
+                <Link key={item.key} href={item.href ?? "#"} className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
+                  <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
+                  <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-500 dark:text-slate-400"}`}>{PINNED_LABELS[item.key]}</span>
+                </Link>
+              );
+            })}
+            <Link href={menuHref} className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
+              <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
+              {pendingResetCount > 0 && <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
+              <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-500 dark:text-slate-400"}`}>Menu</span>
+            </Link>
+          </>
+        ) : (
+        <>
         {leftPinned.map((item) => {
           const active = isItemActive(item, pathname);
           return (
@@ -112,13 +131,6 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
             </Link>
           );
         })}
-        {appMode && (
-          <Link href={menuHref} className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
-            <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
-            {pendingResetCount > 0 && <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
-            <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>Menu</span>
-          </Link>
-        )}
         {!appMode && <button
           type="button"
           onClick={() => setMoreOpen(true)}
@@ -132,6 +144,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
             Lainnya
           </span>
         </button>}
+        </>
+        )}
       </nav>
 
       <AnimatePresence>

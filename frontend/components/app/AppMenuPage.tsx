@@ -11,7 +11,8 @@ import { useDashboardMenu, type MenuItem } from "@/components/dashboard/useDashb
 import { APP_HERO_PURPLE, AppCard } from "@/components/app/AppUI";
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
-const SKIP_KEYS = ["dashboard"];
+// Sudah ada di bilah bawah, jadi tidak diulang di daftar menu.
+const SKIP_KEYS = ["dashboard", "absensi-harian", "materi", "pengumuman"];
 
 function Row({ href, icon: Icon, label, hint, tone, badge, locked, onClick, external }: {
   href?: string; icon: React.ElementType; label: string; hint?: string; tone: number;
