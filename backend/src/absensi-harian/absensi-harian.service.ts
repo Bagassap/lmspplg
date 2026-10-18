@@ -697,7 +697,7 @@ export class AbsensiHarianService {
 
     try {
       if (now === hadirStart) {
-        const semua = await this.prisma.siswa.findMany({ where: { userId: { not: null } }, select: { userId: true } });
+        const semua = await this.prisma.siswa.findMany({ where: { userId: { not: null }, id: { notIn: await this.siswaPklAktifIds(tanggal) } }, select: { userId: true } });
         await kirim(
           semua.map((s) => s.userId!),
           'Absen datang sudah dibuka',
@@ -718,8 +718,19 @@ export class AbsensiHarianService {
     }
   }
 
+  // Siswa yang sedang PKL absen lewat Absensi PKL, jadi tidak ikut pengingat
+  // absen harian. Pengingat PKL sengaja belum ada sampai admin menetapkan jam.
+  private async siswaPklAktifIds(tanggal: string): Promise<string[]> {
+    const rows = await this.prisma.penempatanMagang.findMany({
+      where: { status: 'AKTIF', tanggalMulai: { lte: new Date(`${tanggal}T00:00:00.000Z`) } },
+      select: { siswaId: true },
+    });
+    return rows.map((r) => r.siswaId);
+  }
+
   private async siswaBelumHadir(tanggal: string): Promise<string[]> {
-    const siswa = await this.prisma.siswa.findMany({ where: { userId: { not: null } }, select: { id: true, userId: true } });
+    const pkl = await this.siswaPklAktifIds(tanggal);
+    const siswa = await this.prisma.siswa.findMany({ where: { userId: { not: null }, id: { notIn: pkl } }, select: { id: true, userId: true } });
     const rows = await this.prisma.absensiHarian.findMany({ where: { tanggal }, select: { siswaId: true, status: true } });
     const map = new Map(rows.map((r) => [r.siswaId, r.status]));
     return siswa.filter((s) => { const st = map.get(s.id) ?? null; return st === null || st === 'ALPA'; }).map((s) => s.userId!);
@@ -727,7 +738,7 @@ export class AbsensiHarianService {
 
   private async siswaBelumPulang(tanggal: string): Promise<string[]> {
     const rows = await this.prisma.absensiHarian.findMany({
-      where: { tanggal, status: 'HADIR', waktuPulang: null, siswa: { userId: { not: null } } },
+      where: { tanggal, status: 'HADIR', waktuPulang: null, siswa: { userId: { not: null }, id: { notIn: await this.siswaPklAktifIds(tanggal) } } },
       select: { siswa: { select: { userId: true } } },
     });
     return rows.map((r) => r.siswa.userId!).filter(Boolean);
