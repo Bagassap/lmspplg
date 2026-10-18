@@ -1,17 +1,9 @@
-import { LupaPasswordCard } from "./LupaPasswordCard";
+import { redirect } from "next/navigation";
 
+// Tidak ada lagi alur lupa password di sistem: langsung ke WhatsApp Mr. Admin.
 export default function LupaPasswordPage() {
-  return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFFFFF] px-4 py-4 sm:px-6 sm:py-12">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(62,3,179,0.045) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
-      <LupaPasswordCard />
-    </main>
+  redirect(
+    "https://wa.me/6285640168132?text=" +
+      encodeURIComponent("Halo Mr. Admin, saya lupa password akun LMS PPLG. Mohon bantuannya untuk mereset password saya. Nama: ... NIS: ..."),
   );
 }

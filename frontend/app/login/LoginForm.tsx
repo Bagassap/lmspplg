@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Eye, EyeOff, Loader2, User, Lock } from "lucide-react";
 import { BrandedLoadingOverlay } from "@/components/shared/BrandedLoadingOverlay";
 import { PwaInstallScreen } from "@/components/shared/PwaInstallScreen";
+
+const LUPA_PASSWORD_WA = "https://wa.me/6285640168132?text=" + encodeURIComponent("Halo Mr. Admin, saya lupa password akun LMS PPLG. Mohon bantuannya untuk mereset password saya. Nama: ... NIS: ...");
 import { markInstallHandled, useCanInstall } from "@/lib/pwaInstall";
 
 const container: Variants = {
@@ -179,12 +180,14 @@ export function LoginForm() {
       </motion.button>
 
       <motion.div variants={item} className="text-center">
-        <Link
-          href="/lupa-password"
+        <a
+          href={LUPA_PASSWORD_WA}
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-sm font-medium text-[#5D900F] dark:text-[#A1F919] transition-colors hover:text-[#5D900F]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
         >
           Lupa Password?
-        </Link>
+        </a>
       </motion.div>
     </motion.form>
 
