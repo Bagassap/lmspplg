@@ -78,7 +78,41 @@ const TOAST_META: Record<ToastType, { icon: React.ElementType; tone: Tone3D }> =
   info:    { icon: Info, tone: "violet" },
 };
 
-/** Toast sukses/gagal versi simpel: kotak di tengah layar berisi ikon 3D + keterangan, animasi pop sederhana. */
+/**
+ * Pecah teks jadi maksimal `maxLines` baris berbentuk "piramida": baris pertama
+ * paling panjang, baris berikutnya makin pendek (potongan hanya di batas kata).
+ */
+function pyramidLines(text: string, maxLines: number, perLine: number): string[] {
+  const clean = text.trim().replace(/\s+/g, " ");
+  if (!clean) return [];
+  const n = Math.min(maxLines, Math.max(1, Math.ceil(clean.length / perLine)));
+  if (n === 1) return [clean];
+  const weights = n === 2 ? [0.6, 0.4] : [0.42, 0.33, 0.25].slice(0, n);
+  const words = clean.split(" ");
+  const total = clean.length;
+  const lines: string[] = [];
+  let cur = "";
+  let used = 0;
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    const idx = lines.length;
+    const isLast = idx >= n - 1;
+    const target = total * weights[Math.min(idx, n - 1)];
+    // Pindah baris kalau menambah kata membuat baris melewati target (dan baris belum kosong).
+    if (!isLast && cur && next.length > target && cur.length >= target * 0.6) {
+      lines.push(cur);
+      used += cur.length + 1;
+      cur = w;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur) lines.push(cur);
+  void used;
+  return lines;
+}
+
+/** Toast sukses/gagal versi simpel: kotak persegi di tengah layar berisi ikon 3D + keterangan, animasi pop sederhana. */
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
   const meta = TOAST_META[toast.type];
   const Icon = meta.icon;
@@ -87,6 +121,9 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
     const t = setTimeout(() => onDismiss(toast.id), Math.min(toast.duration, 3500));
     return () => clearTimeout(t);
   }, [toast.id, toast.duration, onDismiss]);
+
+  const titleLines = pyramidLines(toast.title, 2, 22);
+  const descLines = toast.description ? pyramidLines(toast.description, 3, 30) : [];
 
   return (
     <motion.div
@@ -97,19 +134,25 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.16 } }}
       transition={{ type: "spring", damping: 22, stiffness: 320 }}
       onClick={() => onDismiss(toast.id)}
-      className="flex w-full max-w-xs select-none flex-col items-center rounded-3xl bg-white px-6 pb-6 pt-7 text-center shadow-[0_24px_60px_-16px_rgba(15,23,42,0.45)] dark:bg-[#1E293B]"
+      className="flex aspect-square w-72 max-w-[86vw] select-none flex-col items-center justify-center rounded-[2rem] bg-white px-6 text-center shadow-[0_24px_60px_-16px_rgba(15,23,42,0.45)] dark:bg-[#1E293B]"
     >
       <motion.span
         initial={{ scale: 0.4 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", damping: 12, stiffness: 300, delay: 0.05 }}
-        className="flex h-16 w-16 items-center justify-center rounded-[22px]"
+        className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[22px]"
         style={icon3dStyle(meta.tone)}
       >
         <Icon size={30} color="#fff" />
       </motion.span>
-      <span className="mt-4 block text-base font-extrabold leading-snug text-slate-900 dark:text-white">{toast.title}</span>
-      {toast.description && <span className="mt-1 block text-sm leading-snug text-slate-600 dark:text-slate-300">{toast.description}</span>}
+      <span className="mt-4 block text-base font-extrabold leading-snug text-slate-900 dark:text-white">
+        {titleLines.map((l, i) => <span key={i} className="block">{l}</span>)}
+      </span>
+      {descLines.length > 0 && (
+        <span className="mt-1.5 block text-xs leading-snug text-slate-600 dark:text-slate-300">
+          {descLines.map((l, i) => <span key={i} className="block">{l}</span>)}
+        </span>
+      )}
     </motion.div>
   );
 }
