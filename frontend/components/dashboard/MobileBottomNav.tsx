@@ -60,26 +60,24 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
       <nav
         className={
           appMode
-            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-slate-100 bg-white shadow-[0_12px_32px_-8px_rgba(62,3,179,0.35)] dark:border-white/10 dark:bg-[#1E293B] lg:hidden"
+            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-center gap-1 rounded-full border border-slate-100 bg-white p-1.5 shadow-[0_16px_36px_-10px_rgba(62,3,179,0.45)] dark:border-white/10 dark:bg-[#1E293B] lg:hidden"
             : "fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden"
         }
       >
         {appMode ? (
           <>
-            {[dashboardItem, ...side].filter((i): i is MenuItem => !!i).map((item) => {
-              const active = isItemActive(item, pathname);
-              return (
-                <Link key={item.key} href={item.href ?? "#"} className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
-                  <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
-                  <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-500 dark:text-slate-400"}`}>{PINNED_LABELS[item.key]}</span>
-                </Link>
-              );
-            })}
-            <Link href={menuHref} className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
-              <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
-              {pendingResetCount > 0 && <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
-              <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-500 dark:text-slate-400"}`}>Menu</span>
-            </Link>
+            {[...[dashboardItem, ...side].filter((i): i is MenuItem => !!i).map((item) => ({
+              key: item.key, href: item.href ?? "#", Icon: item.icon, label: PINNED_LABELS[item.key], active: isItemActive(item, pathname), dot: false,
+            })), { key: "menu", href: menuHref, Icon: LayoutGrid, label: "Menu", active: moreActive, dot: pendingResetCount > 0 }].map((t) => (
+              <Link key={t.key} href={t.href} aria-label={t.label}
+                className={`relative flex items-center justify-center gap-1.5 rounded-full transition-all duration-300 ease-out ${
+                  t.active ? "h-12 flex-[2.4] bg-[#3E03B3] px-3 text-white shadow-[0_8px_18px_-6px_rgba(62,3,179,0.65)]" : "h-12 flex-1 text-slate-500 dark:text-slate-400"
+                }`}>
+                <t.Icon size={20} />
+                {t.active && <span className="truncate text-[12px] font-bold">{t.label}</span>}
+                {t.dot && !t.active && <span className="absolute right-[28%] top-2.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
+              </Link>
+            ))}
           </>
         ) : (
         <>
