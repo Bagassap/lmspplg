@@ -10,6 +10,10 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 export const APP_ACCENT = "#3E03B3";
 export const APP_SOFT = "#F1EDFA";
 export const APP_PURPLE = "#3E03B3";
+/** Warna kedua setelah ungu (aksen kecil: roket, lencana, tombol tengah). */
+export const APP_ORANGE = "#F26A3D";
+/** Latar banner utama: ungu brand seperti halaman login. */
+export const APP_HERO = "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)";
 
 /**
  * Rangka halaman mobile. Di aplikasi terpasang: judul besar tanpa header ungu
@@ -78,8 +82,9 @@ export function AppCard({ children, className = "", onClick }: { children: React
 
 export function AppBanner({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-3xl px-5 py-5 ${className}`} style={{ background: APP_SOFT }}>
-      {children}
+    <div className={`relative overflow-hidden rounded-3xl px-5 py-5 text-white ${className}`} style={{ background: APP_HERO }}>
+      <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
+      <div className="relative w-full">{children}</div>
     </div>
   );
 }

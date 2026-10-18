@@ -196,7 +196,7 @@ export function SiswaAppMateriTugas({
                       <MetaIcon color={PURPLE}><FileText size={10} /></MetaIcon>
                       <span className="truncate">{item.mapel}</span>
                     </div>
-                    <p className="mt-2 flex items-center gap-1 text-sm font-extrabold" style={{ color: meta.done ? "#5D900F" : ACCENT }}>
+                    <p className="mt-2 flex items-center gap-1 text-sm font-extrabold" style={{ color: meta.done ? "#5D900F" : "#F26A3D" }}>
                       <meta.icon size={13} /> {meta.text}
                     </p>
                   </motion.button>
@@ -227,7 +227,7 @@ export function SiswaAppMateriTugas({
                           <span>•</span>
                           <span className="shrink-0">{tab === "materi" ? formatTgl((item as MateriItem).createdAt) : formatTgl((item as TugasItem).deadline)}</span>
                         </div>
-                        <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: meta.done ? "#5D900F" : ACCENT }}>
+                        <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: meta.done ? "#5D900F" : "#F26A3D" }}>
                           <meta.icon size={12} /> {meta.text}
                         </p>
                       </div>
@@ -311,7 +311,7 @@ function DetailScreen({ selected, onBack, onBuka, onKumpulkan, onLihatSubmisi }:
             <UserIcon size={14} /> {guru}
           </p>
         )}
-        {infoLine && <p className="mt-2 text-lg font-extrabold" style={{ color: ACCENT }}>{infoLine}</p>}
+        {infoLine && <p className="mt-2 text-lg font-extrabold" style={{ color: "#F26A3D" }}>{infoLine}</p>}
 
         <h2 className="mt-6 text-base font-extrabold text-slate-900 dark:text-white">Deskripsi</h2>
         <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-slate-500 dark:text-slate-400">

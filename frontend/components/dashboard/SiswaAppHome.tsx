@@ -12,6 +12,7 @@ import { formatTgl, isTugasActive, type TugasItem } from "@/components/tugas/typ
 import type { MateriItem } from "@/components/materi/MateriFormModal";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 import { Rocket } from "@/components/app/Rocket";
+import { APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
 
 const ACCENT = "#3E03B3";
 const PURPLE = "#3E03B3";
@@ -93,15 +94,16 @@ export function SiswaAppHome() {
         <Link
           href="/siswa/absensi-harian"
           className="relative flex items-center overflow-hidden rounded-3xl px-5 py-6"
-          style={{ background: "#F1EDFA" }}
+          style={{ background: APP_HERO }}
         >
+          <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
           <div className="relative z-10 flex-1">
-            <svg viewBox="0 0 28 22" className="absolute -left-1 -top-3 h-5 w-6" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <svg viewBox="0 0 28 22" className="absolute -left-1 -top-3 h-5 w-6" fill="none" stroke={APP_ORANGE} strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M3 9 L9 12" />
               <path d="M7 3 L11 8" />
               <path d="M14 1 L14 7" />
             </svg>
-            <p className="text-[22px] font-extrabold leading-tight" style={{ color: ACCENT }}>
+            <p className="text-[22px] font-extrabold leading-tight text-white">
               Jangan Lupa
               <br />
               Absen Hari Ini
@@ -182,7 +184,7 @@ export function SiswaAppHome() {
                             <span className="truncate">{m.mapel}</span>
                           </span>
                           <span className="flex shrink-0 items-center gap-1.5">
-                            <MetaIcon color={ACCENT}><Clock size={11} /></MetaIcon>
+                            <MetaIcon color="#F26A3D"><Clock size={11} /></MetaIcon>
                             {formatTgl(m.createdAt)}
                           </span>
                         </div>
@@ -225,7 +227,7 @@ export function SiswaAppHome() {
                             </span>
                           ) : (
                             <span className="flex shrink-0 items-center gap-1.5" style={{ color: aktif ? undefined : "#94a3b8" }}>
-                              <MetaIcon color={ACCENT}><Clock size={11} /></MetaIcon>
+                              <MetaIcon color="#F26A3D"><Clock size={11} /></MetaIcon>
                               {relDeadline(t.deadline)}
                             </span>
                           )}

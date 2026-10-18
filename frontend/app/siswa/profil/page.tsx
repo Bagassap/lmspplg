@@ -376,15 +376,15 @@ export default function SiswaProfilPage() {
             </div>
             <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
               className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-white shadow-md"
-              style={{ background: "#3E03B3" }}>
+              style={{ background: "#F26A3D" }}>
               <Camera size={14} />
             </button>
           </div>
-          <h2 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white">{nama}</h2>
+          <h2 className="mt-3 text-xl font-extrabold text-white">{nama}</h2>
           <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-extrabold" style={{ color: "#3E03B3" }}>
             <IdCard size={14} /> NIS {profil.nis}
           </span>
-          {profil.user?.email && <p className="mt-2 text-xs text-slate-500">{profil.user.email}</p>}
+          {profil.user?.email && <p className="mt-2 text-xs text-white/80">{profil.user.email}</p>}
           <span className="mt-2 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-slate-600">{kelasShort(profil.kelas.nama)}</span>
         </AppBanner>
 

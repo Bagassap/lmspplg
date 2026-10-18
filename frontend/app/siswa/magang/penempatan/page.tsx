@@ -147,8 +147,8 @@ export default function SiswaMagangPenempatanPage() {
                   <Building2 size={24} color="#fff" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-lg font-extrabold leading-tight" style={{ color: APP_ACCENT }}>{aktif.tempatMagang.namaTempat}</p>
-                  {aktif.tempatMagang.bidangUsaha && <p className="truncate text-xs text-slate-500">{aktif.tempatMagang.bidangUsaha}</p>}
+                  <p className="truncate text-lg font-extrabold leading-tight text-white">{aktif.tempatMagang.namaTempat}</p>
+                  {aktif.tempatMagang.bidangUsaha && <p className="truncate text-xs text-white/80">{aktif.tempatMagang.bidangUsaha}</p>}
                 </div>
               </div>
               <span className="mt-3 inline-block rounded-full bg-white px-3 py-1 text-xs font-bold" style={{ color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>

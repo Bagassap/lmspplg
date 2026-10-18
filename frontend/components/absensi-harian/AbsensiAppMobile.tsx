@@ -7,6 +7,7 @@ import {
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { STATUS_CFG, formatTgl } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
+import { APP_HERO } from "@/components/app/AppUI";
 
 const ACCENT = "#3E03B3";
 const ACCENT_SOFT = "#F1EDFA";
@@ -84,10 +85,11 @@ export function AbsensiAppMobile<R extends RowLite>({
 
       <motion.div
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="rounded-3xl px-5 py-6 text-center" style={{ background: ACCENT_SOFT }}
+        className="relative overflow-hidden rounded-3xl px-5 py-6 text-center" style={{ background: APP_HERO }}
       >
-        <p className="text-xs font-semibold" style={{ color: ACCENT }}>{formatTgl(today)}</p>
-        <p className="mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: ACCENT, textShadow: "0 2px 0 rgba(62,3,179,0.18)" }}>{jam}</p>
+        <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
+        <p className="relative text-xs font-semibold text-white/80">{formatTgl(today)}</p>
+        <p className="relative mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: "#FF9A62", textShadow: "0 0 18px rgba(242,106,61,0.55)" }}>{jam}</p>
         <div
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
           style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#5D900F" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
@@ -181,7 +183,7 @@ export function AbsensiAppMobile<R extends RowLite>({
                     <div className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
                       <span>{label}</span><span>•</span><span>{i === 0 ? "Terbaru" : "Tercatat"}</span>
                     </div>
-                    <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: ACCENT }}>
+                    <p className="mt-1 flex items-center gap-1 text-[13px] font-extrabold" style={{ color: "#F26A3D" }}>
                       <Clock size={12} /> <span className="font-digital text-[12px] tracking-wider">{waktu ?? "—"}</span>
                     </p>
                   </div>

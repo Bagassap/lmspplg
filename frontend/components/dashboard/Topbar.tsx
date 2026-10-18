@@ -157,7 +157,7 @@ export function Topbar({ user }: { user: UserPayload }) {
   // Di aplikasi terpasang, dashboard siswa memakai header ala aplikasi:
   // avatar + sapaan di kiri, lonceng di kanan (tanpa latar ungu).
   const appHome = appMode && (pathname === "/siswa/dashboard" || pathname === "/guru/dashboard" || pathname === "/admin/dashboard");
-  const purpleMobile = hasPurpleMobileHeader(pathname) && !appHome;
+  const purpleMobile = hasPurpleMobileHeader(pathname) || appMode;
 
   const [isDark, setIsDark] = useState(false);
   const [darkMounted, setDarkMounted] = useState(false);
@@ -337,7 +337,7 @@ export function Topbar({ user }: { user: UserPayload }) {
       <header
         className={`sticky top-0 z-30 flex items-center gap-3 px-4 py-4 transition-colors duration-200 lg:bg-white lg:px-5 lg:py-5 lg:shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:dark:bg-[#1E293B] 2xl:px-10 ${
           purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#0F172A]"
-        }`}
+        } ${appMode ? "rounded-b-[28px] shadow-[0_10px_24px_-10px_rgba(62,3,179,0.6)] lg:rounded-none" : ""}`}
       >
         {appHome && (
           <button
@@ -350,11 +350,11 @@ export function Topbar({ user }: { user: UserPayload }) {
               src={user.fotoProfil}
               nama={user.nama}
               sizePx={44}
-              fallbackBg="#3E03B3"
+              fallbackBg="#F26A3D"
               textClassName="text-sm font-bold"
               ring="0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.12)"
             />
-            <span className="truncate text-left text-base font-bold text-slate-800 dark:text-white">
+            <span className="truncate text-left text-base font-bold text-white">
               Hi, {user.nama} 👋
             </span>
           </button>
@@ -436,7 +436,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             >
               <Clock size={16} />
               {pendingResetCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#A1F919] text-[8px] font-bold text-black ring-2 ring-white dark:ring-slate-900">
+                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#A1F919] text-black ring-white dark:ring-slate-900"}`}>
                   {pendingResetCount > 9 ? "9+" : pendingResetCount}
                 </span>
               )}
@@ -454,7 +454,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#A1F919] text-[8px] font-bold text-black ring-2 ring-white dark:ring-slate-900">
+                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#A1F919] text-black ring-white dark:ring-slate-900"}`}>
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}

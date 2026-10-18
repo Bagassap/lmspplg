@@ -619,11 +619,11 @@ export default function AdminMagangAbsensiPage() {
           </button>
 
           <button type="button" onClick={() => setStatusPageOpen(true)}
-            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "#F1EDFA" }}>
+            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)" }}>
             <div className="relative z-10 min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-slate-500">Kehadiran hari ini{selected?.tempatMagang.namaTempat ? ` · ${selected.tempatMagang.namaTempat}` : ""}</p>
-              <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#3E03B3" }}>{hadirPct}%</p>
-              <p className="mt-1.5 text-sm font-semibold text-slate-700">{rekap.HADIR} dari {total} siswa hadir</p>
+              <p className="truncate text-xs font-semibold text-white/80">Kehadiran hari ini{selected?.tempatMagang.namaTempat ? ` · ${selected.tempatMagang.namaTempat}` : ""}</p>
+              <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#FFFFFF" }}>{hadirPct}%</p>
+              <p className="mt-1.5 text-sm font-semibold text-white">{rekap.HADIR} dari {total} siswa hadir</p>
             </div>
             <div className="relative z-10 -my-2 h-24 w-24 shrink-0"><Rocket /></div>
           </button>

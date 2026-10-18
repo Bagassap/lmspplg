@@ -7,7 +7,7 @@ import {
   FileSignature, Thermometer, XCircle, Bell, ChevronRight,
 } from "lucide-react";
 import { Rocket } from "@/components/app/Rocket";
-import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
+import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
 import { icon3dStyle, MENU_TONE, toneAt } from "@/components/shared/Icon3D";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 
@@ -48,11 +48,12 @@ export function GuruAppHome({ data, onOpenPengumuman }: { data: GuruHomeData; on
   return (
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-        <Link href="/guru/absensi-harian" className="relative flex items-center overflow-hidden rounded-3xl px-5 py-6" style={{ background: APP_SOFT }}>
+        <Link href="/guru/absensi-harian" className="relative flex items-center overflow-hidden rounded-3xl px-5 py-6" style={{ background: APP_HERO }}>
+          <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
           <div className="relative z-10 flex-1">
-            <p className="text-xs font-semibold text-slate-500">Kehadiran hari ini</p>
-            <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: APP_ACCENT }}>{k.persen}%</p>
-            <p className="mt-1.5 text-sm font-semibold text-slate-700">{k.hadir} siswa hadir dari {data.siswaAmpu} siswa diampu</p>
+            <p className="text-xs font-semibold text-white/80">Kehadiran hari ini</p>
+            <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums text-white">{k.persen}%</p>
+            <p className="mt-1.5 text-sm font-semibold text-white">{k.hadir} siswa hadir dari {data.siswaAmpu} siswa diampu</p>
           </div>
           <div className="relative z-10 -my-2 h-24 w-24 shrink-0">
             <Rocket />
@@ -110,7 +111,7 @@ export function GuruAppHome({ data, onOpenPengumuman }: { data: GuruHomeData; on
       </section>
 
       <section className="space-y-3">
-        <AppSectionTitle action={<Link href="/guru/pengumuman" className="text-xs font-bold" style={{ color: APP_ACCENT }}>Lihat Semua</Link>}>
+        <AppSectionTitle action={<Link href="/guru/pengumuman" className="text-xs font-bold" style={{ color: APP_ORANGE }}>Lihat Semua</Link>}>
           Pengumuman Terbaru
         </AppSectionTitle>
         {data.pengumuman.length === 0 ? (
