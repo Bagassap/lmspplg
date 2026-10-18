@@ -312,3 +312,23 @@ html[data-app-mode] .fixed.inset-0 .pointer-events-none.absolute:is([class*="-ri
     flex: 0 1 auto; max-width: 32%; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis;
   }
 }
+
+/* ---- Modal tanpa transparansi: panel dan isi memakai warna solid ---- */
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute):not(.pointer-events-none) { background-color: #ffffff; opacity: 1 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute):not(.pointer-events-none) { background-color: #1e293b; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-white/"]:not(.app-sheet-header *) { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-black/"] { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-slate-"][class*="/"]:not(input):not(select):not(textarea) { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-[#F26A3D]/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-[#FFE9E2]/"] { background-color: #ffe9e2 !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-[#3E03B3]/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="bg-[#F1EDFA]/"] { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="text-white/"]:not(.app-sheet-header *) { color: #475569 !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="text-black/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="text-[#000000]/"] { color: #334155 !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > :not(.absolute) [class*="border-"][class*="/"] { border-color: #e4dbf7 !important; }
+html[data-app-mode] .app-sheet-header [class*="bg-white/"], html[data-app-mode] .app-sheet-header [class*="bg-black/"] { background-color: #ffffff !important; }
+html[data-app-mode] .app-sheet-header [class*="bg-[#A1F919]"] { background-color: #ffe9e2 !important; color: #f26a3d !important; }
+
+/* Header sheet UKK (jadwal/soal): tanpa kotak ikon besar & lencana, ringkas */
+html[data-app-mode] .app-sheet-header > .w-12.h-12 { display: none !important; }
+html[data-app-mode] .app-sheet-header > .flex-1 span.rounded-lg { display: none !important; }
+html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) { padding: 14px 16px !important; gap: 10px !important; align-items: center !important; }
+html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !important; margin-top: 0 !important; }

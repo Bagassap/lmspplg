@@ -41,11 +41,11 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
 
   return (
     <>
-      <div ref={containerRef} className="relative flex-1 overflow-y-auto bg-gray-100 dark:bg-slate-800" style={{ minHeight: 340 }}>
+      <div ref={containerRef} className={`relative flex-1 overflow-y-auto dark:bg-slate-800 ${app ? "bg-[#F1EDFA]" : "bg-gray-100"}`} style={{ minHeight: 340 }}>
         {pdfError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-10 text-center" style={{ minHeight: 340 }}>
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFFFFF]">
-              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
+              <AlertCircle size={28} className={app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"} />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>
@@ -72,20 +72,20 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         )}
       </div>
       {numPages > 1 && (
-        <div className="flex shrink-0 items-center justify-center gap-3 border-t border-gray-100 bg-gray-50 py-2.5 dark:border-slate-700/60 dark:bg-slate-800/60">
+        <div className={`flex shrink-0 items-center justify-center gap-3 py-2.5 dark:border-slate-700/60 dark:bg-slate-800 ${app ? "bg-white" : "border-t border-gray-100 bg-gray-50"}`}>
           <button onClick={() => setPageNumber(p => Math.max(1, p - 1))} disabled={pageNumber <= 1}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
+            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-full bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
             <ChevronLeft size={16} />
           </button>
           <span className="text-xs font-semibold text-gray-600 dark:text-slate-300">Halaman {pageNumber} / {numPages}</span>
           <button onClick={() => setPageNumber(p => Math.min(numPages, p + 1))} disabled={pageNumber >= numPages}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
+            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-full bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
             <ChevronRight size={16} />
           </button>
         </div>
       )}
-      <div className="shrink-0 flex items-center justify-between px-6 py-4 border-t border-gray-100 dark:border-slate-700/60 bg-white dark:bg-slate-900">
-        <p className="text-xs text-slate-400 truncate max-w-xs">{soal.fileName}</p>
+      <div className={`shrink-0 flex items-center justify-between gap-3 bg-white dark:bg-slate-900 ${app ? "px-4 py-3" : "px-6 py-4 border-t border-gray-100 dark:border-slate-700/60"}`}>
+        <p className={`truncate max-w-xs text-xs ${app ? "text-slate-600" : "text-slate-400"}`}>{soal.fileName}</p>
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
           className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold shadow-md shrink-0 ${app ? "rounded-full" : "rounded-xl"}`}
