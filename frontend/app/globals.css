@@ -332,3 +332,8 @@ html[data-app-mode] .app-sheet-header > .w-12.h-12 { display: none !important; }
 html[data-app-mode] .app-sheet-header > .flex-1 span.rounded-lg { display: none !important; }
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) { padding: 14px 16px !important; gap: 10px !important; align-items: center !important; }
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !important; margin-top: 0 !important; }
+
+/* Penanda "wajib diisi"/error di formulir absensi -> oranye */
+html[data-app-mode] [class*="text-[#5D900F]"][class*="text-[11px]"], html[data-app-mode] [class*="text-[#5D900F]"].normal-case { color: #f26a3d !important; }
+html[data-app-mode] [class*="border-[#A1F919]"], html[data-app-mode] [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
+html[data-app-mode] [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }

@@ -11,6 +11,7 @@ import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, avatarColor, parseLo
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useSheetHeader } from "@/components/app/AppUI";
+import { AppSheet } from "@/components/app/AppSheet";
 
 function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenImg }: {
   fotoSrc: string | null; fotoLabel: string; ttdSrc: string | null;
@@ -94,6 +95,59 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
   );
 }
 
+
+function DocumentCardsApp({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenImg }: {
+  fotoSrc: string | null; fotoLabel: string; ttdSrc: string | null;
+  lokasi: { lat: string; lng: string } | null; rawLokasi: string | null | undefined;
+  onOpenImg: (src: string) => void;
+}) {
+  const box = "rounded-2xl bg-[#F1EDFA] p-3";
+  const cap = "mb-2 flex items-center justify-between gap-2 text-xs font-bold text-slate-800";
+  return (
+    <div className="space-y-3">
+      {fotoSrc && (
+        <div className={box}>
+          <p className={cap}><span className="flex items-center gap-1.5"><Camera size={13} className="text-[#3E03B3]" /> {fotoLabel}</span></p>
+          <button onClick={() => onOpenImg(fotoSrc)} className="block w-full overflow-hidden rounded-xl">
+            <img src={fotoSrc} alt={fotoLabel} className="h-40 w-full object-cover" />
+          </button>
+        </div>
+      )}
+      {ttdSrc && (
+        <div className={box}>
+          <p className={cap}>
+            <span className="flex items-center gap-1.5"><PenTool size={13} className="text-[#3E03B3]" /> Tanda Tangan</span>
+            <button onClick={() => onOpenImg(ttdSrc)} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><Download size={11} /> Simpan</button>
+          </p>
+          <button onClick={() => onOpenImg(ttdSrc)} className="flex h-28 w-full items-center justify-center rounded-xl bg-white p-2">
+            <img src={ttdSrc} alt="TTD" className="h-full w-full object-contain" />
+          </button>
+        </div>
+      )}
+      {lokasi && (
+        <div className={box}>
+          <p className={cap}>
+            <span className="flex items-center gap-1.5"><MapPin size={13} className="text-[#3E03B3]" /> Lokasi</span>
+            <a href={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}`} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><ExternalLink size={11} /> Maps</a>
+          </p>
+          <iframe src={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}&output=embed`} className="h-36 w-full rounded-xl border-0" loading="lazy" title="Lokasi" />
+          <p className="mt-2 truncate font-mono text-[11px] text-slate-600">{lokasi.lat}, {lokasi.lng}</p>
+        </div>
+      )}
+      {rawLokasi && !lokasi && (
+        <div className={box}>
+          <p className={cap}>Lokasi Absensi</p>
+          <p className="text-sm text-slate-700">{rawLokasi}</p>
+        </div>
+      )}
+      {!fotoSrc && !ttdSrc && !rawLokasi && (
+        <p className="py-8 text-center text-sm font-semibold text-slate-600">Tidak ada dokumen pendukung</p>
+      )}
+    </div>
+  );
+}
+
 export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" }: {
   siswa: SiswaAbsensi; tanggal: string; kelas: string; onClose: () => void; source?: "hadir" | "pulang";
 }) {
@@ -113,6 +167,42 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   const ac = avatarColor(siswa.nama);
 
   if (typeof document === "undefined") return null;
+
+  if (h.app as boolean) {
+    return createPortal(
+      <>
+        <AppSheet open onClose={onClose} title={siswa.nama} subtitle={`${kelas} · ${formatTgl(tanggal)}`}
+          footer={<button onClick={onClose} className="h-12 w-full rounded-full bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
+          <div className="mb-3 flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
+            <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={44} fallbackBg={ac} textClassName="text-sm font-extrabold" />
+            <div className="min-w-0 flex-1">
+              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: theme.bg, color: theme.clr }}>
+                <ThemeIcon size={11} /> {theme.label}
+              </span>
+              {catatan && <p className="mt-1 text-xs text-slate-700">{catatan}</p>}
+            </div>
+            <div className="shrink-0 text-right">
+              <p className="text-[10px] font-bold text-slate-600">{isPulang ? "Pulang" : "Absen"}</p>
+              <p className="font-digital text-base font-bold tracking-wider text-[#3E03B3]">{waktu ?? "—"}</p>
+            </div>
+          </div>
+          <DocumentCardsApp fotoSrc={fotoSrc} fotoLabel={fotoLabel} ttdSrc={ttdSrc} lokasi={lokasi} rawLokasi={rawLokasi} onOpenImg={setImgOverlay} />
+        </AppSheet>
+        <AnimatePresence>
+          {imgOverlay && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-110 flex flex-col items-center justify-center bg-black/90 p-4"
+              onClick={() => setImgOverlay(null)}>
+              <img src={imgOverlay} alt="Dokumen" onClick={(e) => e.stopPropagation()} className="max-h-[75vh] max-w-full rounded-2xl object-contain" />
+              <button onClick={() => setImgOverlay(null)} className="mt-4 h-11 rounded-full bg-white px-6 text-sm font-bold text-[#3E03B3]">Tutup</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>,
+      document.body,
+    );
+  }
+
   return createPortal(
     <>
       <AnimatePresence>
