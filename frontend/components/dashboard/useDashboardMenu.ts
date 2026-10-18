@@ -154,20 +154,5 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
       return { ...item, locked: true, href: item.key === "magang" ? "/siswa/magang" : "/siswa/ujian-ukk" };
     });
 
-  const [pendingResetCount, setPendingResetCount] = useState(0);
-  useEffect(() => {
-    if (!isSuperAdmin) return;
-    let cancelled = false;
-    fetch("/api/users/password-reset-requests", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : []))
-      .then((list: { status: string }[]) => {
-        if (!cancelled && Array.isArray(list)) {
-          setPendingResetCount(list.filter((r) => r.status === "PENDING").length);
-        }
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [isSuperAdmin]);
-
-  return { items, pendingResetCount };
+  return { items, pendingResetCount: 0 };
 }

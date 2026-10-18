@@ -25,7 +25,7 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-999 flex flex-col items-center justify-center overflow-hidden px-6"
+      data-plain className="fixed inset-0 z-999 flex flex-col items-center justify-center overflow-hidden px-6"
       style={{ backgroundColor: "#3E03B3" }}
     >
       <motion.div

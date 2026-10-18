@@ -8,7 +8,6 @@ import { KeyRound, GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft } from 
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
-import { PermintaanPasswordCard, type PasswordResetRequest } from "./PermintaanPasswordCard";
 import { SiswaPasswordTable, type SiswaPasswordItem } from "./SiswaPasswordTable";
 import { CreateAccountModal } from "./CreateAccountModal";
 import { ImportSiswaModal } from "./ImportSiswaModal";
@@ -55,8 +54,6 @@ export default function ManajemenPasswordClient() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("");
 
-  const [permintaanList, setPermintaanList] = useState<PasswordResetRequest[]>([]);
-  const [loadingPermintaan, setLoadingPermintaan] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
@@ -78,17 +75,7 @@ export default function ManajemenPasswordClient() {
     }
   }, []);
 
-  const fetchPermintaan = useCallback(async () => {
-    setLoadingPermintaan(true);
-    try {
-      const res = await fetch("/api/users/password-reset-requests", { cache: "no-store" });
-      if (res.ok) setPermintaanList(await res.json());
-    } finally {
-      setLoadingPermintaan(false);
-    }
-  }, []);
-
-  useEffect(() => { fetchHeader(); fetchPermintaan(); }, [fetchHeader, fetchPermintaan]);
+  useEffect(() => { fetchHeader(); }, [fetchHeader]);
 
   useEffect(() => {
     if (!selectedKelasId && kelasList.length > 0) setSelectedKelasId(kelasList[0].id);
@@ -114,24 +101,7 @@ export default function ManajemenPasswordClient() {
 
   function refetchAll() {
     fetchHeader();
-    fetchPermintaan();
     if (selectedKelasId) fetchSiswaPage(selectedKelasId);
-  }
-
-  async function handleAbaikan(id: string, silent = false) {
-    setBusyId(id);
-    try {
-      const res = await fetch(`/api/users/password-reset-requests/${id}/complete`, { method: "PATCH" });
-      if (res.ok) {
-        if (!silent) toast.success("Permintaan diabaikan", "");
-        fetchPermintaan();
-      } else {
-        const d = await res.json().catch(() => null);
-        toast.error(d?.message ?? "Gagal memproses permintaan", "");
-      }
-    } finally {
-      setBusyId(null);
-    }
   }
 
 
@@ -151,13 +121,6 @@ export default function ManajemenPasswordClient() {
   const displayed = siswaItems
     .filter((s) => (statusFilter === "sudah" ? s.user && !s.user.mustChangePassword : statusFilter === "belum" ? s.user && s.user.mustChangePassword : true))
     .filter((s) => (search ? (toTitleCase(s.nama).toLowerCase().includes(search.toLowerCase()) || s.nis.includes(search)) : true));
-
-  const pending = permintaanList.filter((r) => r.status === "PENDING").sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-  const riwayat = permintaanList.filter((r) => r.status === "SELESAI").sort(
-    (a, b) => new Date(b.processedAt ?? b.createdAt).getTime() - new Date(a.processedAt ?? a.createdAt).getTime(),
-  );
 
   return (
     <div>
@@ -210,7 +173,7 @@ export default function ManajemenPasswordClient() {
         </div>
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <AppFold title="Aksi akun & permintaan reset" hint={`${pending.length} permintaan menunggu`}>
+          <AppFold title="Aksi akun" hint="Kelola guru, impor massal, buat akun">
           <div className="grid grid-cols-3 gap-2 p-5">
             <motion.button
               onClick={() => setKelolaGuruOpen(true)}
@@ -241,16 +204,6 @@ export default function ManajemenPasswordClient() {
             </motion.button>
           </div>
 
-          <div className="border-t border-slate-100 dark:border-slate-700/50">
-            <PermintaanPasswordCard
-              pending={pending}
-              riwayat={riwayat}
-              loading={loadingPermintaan}
-              busyId={busyId}
-              onProcess={(r) => r.user && setResetTarget({ id: r.user.id, nama: r.namaPengaju, nis: r.user.siswa?.nis, mustChangePassword: true, sourceRequestId: r.id })}
-              onAbaikan={handleAbaikan}
-            />
-          </div>
           </AppFold>
         </div>
       </div>
@@ -264,7 +217,6 @@ export default function ManajemenPasswordClient() {
           mustChangePassword={resetTarget.mustChangePassword}
           onClose={() => setResetTarget(null)}
           onSuccess={async () => {
-            if (resetTarget.sourceRequestId) await handleAbaikan(resetTarget.sourceRequestId, true);
             refetchAll();
           }}
         />

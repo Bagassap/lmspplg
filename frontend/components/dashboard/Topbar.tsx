@@ -233,7 +233,6 @@ export function Topbar({ user }: { user: UserPayload }) {
   const [unreadCount,    setUnreadCount]    = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  const [pendingResetCount, setPendingResetCount] = useState(0);
 
   function handleSessionExpired() {
     window.location.href = "/login";
@@ -260,28 +259,11 @@ export function Topbar({ user }: { user: UserPayload }) {
     } finally { setNotifLoading(false); }
   }
 
-  async function fetchPendingResetCount() {
-    try {
-      const res = await fetch("/api/users/password-reset-requests", { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      const list: { status: string }[] = Array.isArray(data) ? data : [];
-      setPendingResetCount(list.filter((r) => r.status === "PENDING").length);
-    } catch {  }
-  }
-
   useEffect(() => {
     fetchUnreadCount();
     const interval = setInterval(fetchUnreadCount, 30_000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (user.role !== "ADMIN") return;
-    fetchPendingResetCount();
-    const interval = setInterval(fetchPendingResetCount, 30_000);
-    return () => clearInterval(interval);
-  }, [user.role]);
 
   useEffect(() => {
     if (notifOpen) fetchNotifications();
@@ -420,21 +402,6 @@ export function Topbar({ user }: { user: UserPayload }) {
               <Moon size={13} />
             </button>
           </div>
-
-          {user.role === "ADMIN" && (
-            <button
-              onClick={() => router.push("/admin/manajemen-password")}
-              title="Permintaan reset password"
-              className="relative hidden h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white lg:flex"
-            >
-              <Clock size={16} />
-              {pendingResetCount > 0 && (
-                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#A1F919] text-black ring-white dark:ring-slate-900"}`}>
-                  {pendingResetCount > 9 ? "9+" : pendingResetCount}
-                </span>
-              )}
-            </button>
-          )}
 
           <div className="relative" ref={notifRef}>
             <button
