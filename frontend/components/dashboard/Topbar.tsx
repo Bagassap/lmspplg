@@ -467,7 +467,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-[10px] border border-gray-200 bg-white shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30"
+                  className={`overflow-hidden border bg-white dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30 ${appMode ? "fixed inset-x-3 top-[4.75rem] z-50 rounded-3xl border-transparent shadow-2xl" : "absolute right-0 top-full mt-2 w-80 rounded-[10px] border-gray-200 shadow-xl shadow-gray-200/60"}`}
                 >
                   <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-slate-700">
                     <div>
@@ -571,7 +571,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.13 }}
-                  className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-[10px] border border-gray-200 bg-white py-2 shadow-xl shadow-gray-200/60 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30"
+                  className={`absolute right-0 top-full mt-2 w-56 overflow-hidden border bg-white py-2 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30 ${appMode ? "rounded-3xl border-transparent shadow-2xl" : "rounded-[10px] border-gray-200 shadow-xl shadow-gray-200/60"}`}
                 >
                   <div className="mb-1 border-b border-gray-200 px-4 pb-3 pt-1 dark:border-slate-700">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.nama}</p>

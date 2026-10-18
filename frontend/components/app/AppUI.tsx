@@ -232,3 +232,45 @@ function ActionPill({ action, primary = false }: { action: SheetAction; primary?
   if (action.href) return <a href={action.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>;
   return <button type="button" onClick={action.onClick} className={cls} style={style}>{inner}</button>;
 }
+
+type StatusOption = { key: string; label: string; desc: string; icon: React.ElementType; tone: "indigo" | "emerald" | "amber" | "violet" | "sky" };
+
+/** Panel dari bawah untuk mengubah status kehadiran satu siswa (pengganti chip kecil di baris). */
+export function AppStatusSheet({
+  nama, current, saving, options, onPick, onClose,
+}: {
+  nama: string;
+  current: string | null;
+  saving?: boolean;
+  options: StatusOption[];
+  onPick: (key: string) => void;
+  onClose: () => void;
+}) {
+  return (
+    <MobileDetailModal onClose={onClose} accent="#FFFFFF">
+      <div className="px-6 pb-2 pt-9">
+        <p className="text-xs font-semibold text-slate-400">Ubah Status Kehadiran</p>
+        <h2 className="mt-0.5 text-xl font-extrabold text-slate-900">{nama}</h2>
+      </div>
+      <div className="space-y-2.5 px-6 pb-7 pt-3">
+        {options.map((o) => {
+          const active = current === o.key;
+          return (
+            <button key={o.key} type="button" disabled={saving} onClick={() => onPick(o.key)}
+              className="flex w-full items-center gap-4 rounded-3xl p-3 text-left transition active:scale-[0.98] disabled:opacity-60"
+              style={active ? { background: APP_SOFT, boxShadow: `inset 0 0 0 2px ${APP_ACCENT}` } : { background: "#F1F5F9" }}>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(o.tone)}>
+                <o.icon size={24} color="#fff" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-bold text-slate-900">{o.label}</span>
+                <span className="block text-[11px] text-slate-500">{o.desc}</span>
+              </span>
+              {active && <span className="rounded-full px-3 py-1 text-[10px] font-bold text-white" style={{ background: APP_ACCENT }}>Saat ini</span>}
+            </button>
+          );
+        })}
+      </div>
+    </MobileDetailModal>
+  );
+}

@@ -8,6 +8,7 @@ import {
   CheckCircle2, XCircle, AlertTriangle, Info, X, Trash2, AlertOctagon,
 } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 export type ToastType = "success" | "error" | "warning" | "info";
 
@@ -112,6 +113,38 @@ const THEME = {
   },
 } as const;
 
+// Palet mode aplikasi terpasang: warna semantik (hijau/merah/kuning) + aksen oranye.
+const APP_THEME = {
+  success: {
+    headerBg: "#EAF8EE", blob1: "rgba(22,163,74,0.20)", blob2: "rgba(22,163,74,0.12)",
+    ring1: "rgba(22,163,74,0.16)", ring2: "rgba(22,163,74,0.08)",
+    iconBg: "#16A34A", iconShadow: "0 16px 40px rgba(22,163,74,0.45)",
+    bar: "#16A34A", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    dotColor: "#16A34A", icon: CheckCircle2, label: "Berhasil",
+  },
+  error: {
+    headerBg: "#FEE9E9", blob1: "rgba(239,68,68,0.20)", blob2: "rgba(239,68,68,0.12)",
+    ring1: "rgba(239,68,68,0.16)", ring2: "rgba(239,68,68,0.08)",
+    iconBg: "#EF4444", iconShadow: "0 16px 40px rgba(239,68,68,0.45)",
+    bar: "#EF4444", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    dotColor: "#EF4444", icon: XCircle, label: "Gagal",
+  },
+  warning: {
+    headerBg: "#FEF3DC", blob1: "rgba(245,158,11,0.24)", blob2: "rgba(245,158,11,0.14)",
+    ring1: "rgba(245,158,11,0.18)", ring2: "rgba(245,158,11,0.10)",
+    iconBg: "#F59E0B", iconShadow: "0 16px 40px rgba(245,158,11,0.45)",
+    bar: "#F59E0B", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    dotColor: "#F59E0B", icon: AlertTriangle, label: "Perhatian",
+  },
+  info: {
+    headerBg: "#FFE9E2", blob1: "rgba(242,106,61,0.22)", blob2: "rgba(242,106,61,0.14)",
+    ring1: "rgba(242,106,61,0.18)", ring2: "rgba(242,106,61,0.10)",
+    iconBg: "#F26A3D", iconShadow: "0 16px 40px rgba(242,106,61,0.45)",
+    bar: "#F26A3D", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    dotColor: "#F26A3D", icon: Info, label: "Informasi",
+  },
+} as const;
+
 function FloatingDot({ color, x, y, delay, size }: { color: string; x: number; y: number; delay: number; size: number }) {
   return (
     <motion.div
@@ -133,7 +166,8 @@ export function useToast(): ToastContextValue {
 }
 
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
-  const theme  = THEME[toast.type];
+  const app = useIsAppMode();
+  const theme: (typeof THEME | typeof APP_THEME)[ToastType] = (app ? APP_THEME : THEME)[toast.type];
   const Icon   = theme.icon;
   const isDark = useDarkMode();
   const [paused, setPaused] = useState(false);
@@ -331,6 +365,9 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
+  const app = useIsAppMode();
+  const tint = (a: number) => (app ? `rgba(242,106,61,${a})` : `rgba(161,249,25,${a})`);
+  const accent = app ? "#F26A3D" : "#A1F919";
 
   const cardBg     = isDark ? "#1E293B" : "#ffffff";
   const titleColor = isDark ? "#FFFFFF" : "#000000";
@@ -338,7 +375,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#FFFFFF";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
-  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : "#F6FEE8";
+  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : app ? "#FFE9E2" : "#F6FEE8";
 
   const dots = [
     { x: -50, y: -46, delay: 0.1,  size: 7 },
@@ -361,7 +398,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
         animate={{ opacity: [0.5, 0.16, 0.5], scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -inset-4 -z-10 rounded-4xl blur-2xl"
-        style={{ background: "rgba(161,249,25,0.24)" }}
+        style={{ background: tint(0.24) }}
       />
 
       <div
@@ -381,25 +418,25 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             animate={{ scale: [1, 1.22, 1], opacity: [0.6, 0.25, 0.6] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-            style={{ width: 160, height: 160, background: "rgba(161,249,25,0.22)" }}
+            style={{ width: 160, height: 160, background: tint(0.22) }}
           />
 
           <div className="relative flex items-center justify-center">
             {dots.map((d, i) => (
-              <FloatingDot key={i} color="#A1F919" x={d.x} y={d.y} delay={d.delay} size={d.size} />
+              <FloatingDot key={i} color={accent} x={d.x} y={d.y} delay={d.delay} size={d.size} />
             ))}
 
             <motion.div
               animate={{ scale: [1, 1.55, 1], opacity: [0.4, 0, 0.4] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute rounded-full"
-              style={{ width: 108, height: 108, background: "rgba(161,249,25,0.10)" }}
+              style={{ width: 108, height: 108, background: tint(0.10) }}
             />
             <motion.div
               animate={{ scale: [1, 1.32, 1], opacity: [0.55, 0.1, 0.55] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
               className="absolute rounded-full"
-              style={{ width: 84, height: 84, background: "rgba(161,249,25,0.16)" }}
+              style={{ width: 84, height: 84, background: tint(0.16) }}
             />
 
             <motion.div
@@ -408,8 +445,8 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
               className="relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl text-white"
               style={{
-                background: "#A1F919",
-                boxShadow: "0 16px 40px rgba(161,249,25,0.55)",
+                background: accent,
+                boxShadow: `0 16px 40px ${tint(0.55)}`,
               }}
             >
               <motion.div
@@ -434,8 +471,8 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             transition={{ delay: 0.28 }}
             className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
-              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(161,249,25,0.10)",
-              color: "#5D900F",
+              background: isDark ? "rgba(255,255,255,0.08)" : tint(0.10),
+              color: app ? "#F26A3D" : "#5D900F",
             }}
           >
             Konfirmasi
@@ -476,19 +513,19 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             <motion.button
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={() => onClose(false)}
-              className="flex-1 rounded-2xl py-3 text-sm font-bold transition-colors"
+              className={`flex-1 py-3 text-sm font-bold transition-colors ${app ? "rounded-full" : "rounded-2xl"}`}
               style={{ background: cancelBg, color: cancelText }}
             >
               Batal
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.03, boxShadow: "0 10px 28px rgba(161,249,25,0.50)" }}
+              whileHover={{ scale: 1.03, boxShadow: `0 10px 28px ${tint(0.50)}` }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onClose(true)}
-              className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white"
+              className={`flex flex-1 items-center justify-center gap-2 py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-2xl"}`}
               style={{
-                background: "#A1F919",
-                boxShadow: "0 6px 20px rgba(161,249,25,0.40)",
+                background: accent,
+                boxShadow: `0 6px 20px ${tint(0.40)}`,
               }}
             >
               <Trash2 size={14} />

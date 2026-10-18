@@ -26,6 +26,7 @@ import { AppCard, AppSectionTitle } from "@/components/app/AppUI";
 import { Rocket } from "@/components/app/Rocket";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppStatusSheet } from "@/components/app/AppUI";
 
 function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
   const app = useIsAppMode();
@@ -167,6 +168,7 @@ function MobileSiswaCard({
   onOpenDokumen: (s: SiswaAbsensi, source: "hadir" | "pulang") => void;
 }) {
   const toast = useToast();
+  const app = useIsAppMode();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const canEdit = !!tempatMagangId && !!tanggal && !isPulangView;
@@ -211,7 +213,22 @@ function MobileSiswaCard({
           <span className="text-[10.5px] font-medium tabular-nums text-slate-400 dark:text-slate-500">{s.nis ?? "—"}</span>
           {waktu && <span className="text-[10.5px] font-semibold tabular-nums text-slate-400 dark:text-slate-500">· {waktu}</span>}
         </div>
-        {editing && (
+        {editing && app && (
+          <AppStatusSheet
+            nama={s.nama}
+            current={s.status}
+            saving={saving}
+            onClose={() => setEditing(false)}
+            onPick={(k) => saveStatus(k as StatusAbsensi)}
+            options={[
+              { key: "HADIR", label: "Hadir", desc: "Siswa hadir", icon: STATUS_CFG.HADIR.icon, tone: "emerald" },
+              { key: "IZIN", label: "Izin", desc: "Izin tidak masuk", icon: STATUS_CFG.IZIN.icon, tone: "sky" },
+              { key: "SAKIT", label: "Sakit", desc: "Sakit tidak masuk", icon: STATUS_CFG.SAKIT.icon, tone: "amber" },
+              { key: "ALPA", label: "Alpa", desc: "Tanpa keterangan", icon: STATUS_CFG.ALPA.icon, tone: "violet" },
+            ]}
+          />
+        )}
+        {editing && !app && (
           <div className="mt-2 flex flex-wrap items-center gap-1">
             {(["HADIR", "IZIN", "SAKIT", "ALPA"] as StatusAbsensi[]).map((st) => {
               const cfg = STATUS_CFG[st];

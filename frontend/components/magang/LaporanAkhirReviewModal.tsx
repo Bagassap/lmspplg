@@ -51,7 +51,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
             transition={{ type: "spring", damping: 24, stiffness: 320 }}
             className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
 
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
+            <div className="app-sheet-header relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
               <Avatar src={row.siswa.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
               <div className="min-w-0 flex-1">

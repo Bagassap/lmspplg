@@ -157,3 +157,36 @@ html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] {
 html[data-app-mode] button[style*="background: rgb(161, 249, 25)"] *,
 html[data-app-mode] a[style*="background: rgb(161, 249, 25)"] *,
 html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }
+
+/* ---- Lanjutan mode aplikasi: seragamkan warna sekunder (lime/biru/lavender) ---- */
+html[data-app-mode] .bg-\[\#A1F919\] { background-color: #f26a3d !important; color: #ffffff !important; }
+html[data-app-mode] .bg-\[\#A1F919\] * { color: inherit; }
+html[data-app-mode] .bg-\[\#00AAFA\] { background-color: #f26a3d !important; }
+html[data-app-mode] .text-\[\#00AAFA\],
+html[data-app-mode] .text-\[\#5D900F\],
+html[data-app-mode] .text-\[\#48700B\] { color: #f26a3d !important; }
+html[data-app-mode] .border-\[\#A1F919\],
+html[data-app-mode] .border-\[\#00AAFA\] { border-color: #f26a3d !important; }
+html[data-app-mode] .bg-\[\#F1EDFA\],
+html[data-app-mode] .bg-\[\#F6FEE8\] { background-color: #ffe9e2 !important; }
+html[data-app-mode] [style*="background: rgb(241, 237, 250)"],
+html[data-app-mode] [style*="background-color: rgb(241, 237, 250)"],
+html[data-app-mode] [style*="background: rgb(246, 254, 232)"],
+html[data-app-mode] [style*="background-color: rgb(246, 254, 232)"] { background: #ffe9e2 !important; }
+html[data-app-mode] [style*="background: rgb(0, 170, 250)"],
+html[data-app-mode] [style*="background-color: rgb(0, 170, 250)"] { background: #f26a3d !important; }
+
+/* ---- Dialog tengah -> panel dari bawah (bottom sheet) ---- */
+html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):not(.pointer-events-none) {
+  align-items: flex-end !important;
+  padding: 0 !important;
+}
+html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):not(.pointer-events-none) > :not(.absolute):not(.pointer-events-none) {
+  border-radius: 28px 28px 0 0 !important;
+  max-height: 92vh;
+}
+
+/* Konten khusus mode aplikasi (komponen server tidak bisa memakai hook). */
+.app-only { display: none; }
+html[data-app-mode] .app-only { display: block; }
+html[data-app-mode] .app-hide { display: none !important; }
