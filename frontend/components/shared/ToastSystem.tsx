@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
 
 export type ToastType = "success" | "error" | "warning" | "info";
 
@@ -50,101 +51,6 @@ function useDarkMode() {
   return dark;
 }
 
-const THEME = {
-  success: {
-    headerBg:    "#F6FEE8",
-    blob1:       "rgba(161,249,25,0.22)",
-    blob2:       "rgba(161,249,25,0.14)",
-    ring1:       "rgba(161,249,25,0.18)",
-    ring2:       "rgba(161,249,25,0.10)",
-    iconBg:      "#A1F919",
-    iconShadow:  "0 16px 40px rgba(161,249,25,0.55)",
-    bar:         "#A1F919",
-    btnBg:       "#A1F919",
-    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
-    dotColor:    "#A1F919",
-    icon:        CheckCircle2,
-    label:       "Berhasil",
-  },
-  error: {
-    headerBg:    "#F6FEE8",
-    blob1:       "rgba(161,249,25,0.22)",
-    blob2:       "rgba(161,249,25,0.14)",
-    ring1:       "rgba(161,249,25,0.18)",
-    ring2:       "rgba(161,249,25,0.10)",
-    iconBg:      "#A1F919",
-    iconShadow:  "0 16px 40px rgba(161,249,25,0.55)",
-    bar:         "#A1F919",
-    btnBg:       "#A1F919",
-    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
-    dotColor:    "#A1F919",
-    icon:        XCircle,
-    label:       "Gagal",
-  },
-  warning: {
-    headerBg:    "#F6FEE8",
-    blob1:       "rgba(161,249,25,0.35)",
-    blob2:       "rgba(161,249,25,0.22)",
-    ring1:       "rgba(161,249,25,0.28)",
-    ring2:       "rgba(161,249,25,0.16)",
-    iconBg:      "#000000",
-    iconShadow:  "0 16px 40px rgba(0,0,0,0.35)",
-    bar:         "#A1F919",
-    btnBg:       "#A1F919",
-    btnShadow:   "0 8px 24px rgba(161,249,25,0.45)",
-    dotColor:    "#A1F919",
-    icon:        AlertTriangle,
-    label:       "Perhatian",
-  },
-  info: {
-    headerBg:    "#F1EDFA",
-    blob1:       "rgba(62,3,179,0.22)",
-    blob2:       "rgba(62,3,179,0.14)",
-    ring1:       "rgba(62,3,179,0.18)",
-    ring2:       "rgba(62,3,179,0.10)",
-    iconBg:      "#00AAFA",
-    iconShadow:  "0 16px 40px rgba(62,3,179,0.55)",
-    bar:         "#00AAFA",
-    btnBg:       "#00AAFA",
-    btnShadow:   "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor:    "#3E03B3",
-    icon:        Info,
-    label:       "Informasi",
-  },
-} as const;
-
-// Palet mode aplikasi terpasang: warna semantik (hijau/merah/kuning) + aksen ungu brand.
-const APP_THEME = {
-  success: {
-    headerBg: "#E3F8EF", blob1: "rgba(16,185,129,0.20)", blob2: "rgba(16,185,129,0.12)",
-    ring1: "rgba(16,185,129,0.16)", ring2: "rgba(16,185,129,0.08)",
-    iconBg: "#10B981", iconShadow: "0 16px 40px rgba(16,185,129,0.45)",
-    bar: "#10B981", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#10B981", icon: CheckCircle2, label: "Berhasil",
-  },
-  error: {
-    headerBg: "#FFE9E2", blob1: "rgba(242,106,61,0.20)", blob2: "rgba(242,106,61,0.12)",
-    ring1: "rgba(242,106,61,0.16)", ring2: "rgba(242,106,61,0.08)",
-    iconBg: "#F26A3D", iconShadow: "0 16px 40px rgba(242,106,61,0.45)",
-    bar: "#F26A3D", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#F26A3D", icon: XCircle, label: "Gagal",
-  },
-  warning: {
-    headerBg: "#FEF3DC", blob1: "rgba(245,158,11,0.24)", blob2: "rgba(245,158,11,0.14)",
-    ring1: "rgba(245,158,11,0.18)", ring2: "rgba(245,158,11,0.10)",
-    iconBg: "#F59E0B", iconShadow: "0 16px 40px rgba(245,158,11,0.45)",
-    bar: "#F59E0B", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#F59E0B", icon: AlertTriangle, label: "Perhatian",
-  },
-  info: {
-    headerBg: "#F1EDFA", blob1: "rgba(62,3,179,0.22)", blob2: "rgba(62,3,179,0.14)",
-    ring1: "rgba(62,3,179,0.18)", ring2: "rgba(62,3,179,0.10)",
-    iconBg: "#3E03B3", iconShadow: "0 16px 40px rgba(62,3,179,0.45)",
-    bar: "#3E03B3", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#3E03B3", icon: Info, label: "Informasi",
-  },
-} as const;
-
 function FloatingDot({ color, x, y, delay, size }: { color: string; x: number; y: number; delay: number; size: number }) {
   return (
     <motion.div
@@ -165,201 +71,41 @@ export function useToast(): ToastContextValue {
   return ctx;
 }
 
+const TOAST_META: Record<ToastType, { icon: React.ElementType; tone: Tone3D }> = {
+  success: { icon: CheckCircle2, tone: "emerald" },
+  error:   { icon: XCircle, tone: "amber" },
+  warning: { icon: AlertTriangle, tone: "sky" },
+  info:    { icon: Info, tone: "violet" },
+};
+
+/** Toast sukses/gagal versi simpel: ikon 3D + keterangan, muncul dari atas, hilang otomatis. */
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
-  const app = useIsAppMode();
-  const theme: (typeof THEME | typeof APP_THEME)[ToastType] = (app ? APP_THEME : THEME)[toast.type];
-  const Icon   = theme.icon;
-  const isDark = useDarkMode();
-  const [paused, setPaused] = useState(false);
+  const meta = TOAST_META[toast.type];
+  const Icon = meta.icon;
 
-  const handleEnd = useCallback(() => onDismiss(toast.id), [toast.id, onDismiss]);
-
-  const cardBg     = isDark ? "#1E293B" : "#ffffff";
-  const titleColor = isDark ? "#FFFFFF" : "#000000";
-  const descColor  = isDark ? "#94a3b8" : "#64748b";
-  const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-  const headerBg   = isDark ? "rgba(30,41,59,0)" : theme.headerBg;
-
-  const dots = [
-    { x: -52, y: -48, delay: 0.1,  size: 7 },
-    { x:  54, y: -44, delay: 0.18, size: 5 },
-    { x: -60, y:  12, delay: 0.24, size: 6 },
-    { x:  58, y:  18, delay: 0.14, size: 4 },
-    { x: -22, y:  58, delay: 0.30, size: 5 },
-    { x:  26, y:  56, delay: 0.22, size: 7 },
-    { x: -48, y: -14, delay: 0.36, size: 4 },
-    { x:  62, y: -18, delay: 0.12, size: 6 },
-  ];
+  useEffect(() => {
+    const t = setTimeout(() => onDismiss(toast.id), Math.min(toast.duration, 4000));
+    return () => clearTimeout(t);
+  }, [toast.id, toast.duration, onDismiss]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.78, y: 32, filter: "blur(6px)" }}
-      animate={{ opacity: 1,  scale: 1,    y: 0,  filter: "blur(0px)" }}
-      exit={{ opacity: 0, scale: 0.86, y: 20, filter: "blur(4px)", transition: { duration: 0.24 } }}
-      transition={{ type: "spring", damping: 18, stiffness: 260 }}
-      onHoverStart={() => setPaused(true)}
-      onHoverEnd={() => setPaused(false)}
-      className="relative w-full max-w-sm select-none"
+    <motion.button
+      type="button"
+      initial={{ opacity: 0, y: -24, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -16, transition: { duration: 0.18 } }}
+      transition={{ type: "spring", damping: 24, stiffness: 320 }}
+      onClick={() => onDismiss(toast.id)}
+      className="flex w-full select-none items-center gap-3 rounded-3xl bg-white p-3 pr-5 text-left shadow-[0_16px_40px_-12px_rgba(15,23,42,0.35)] dark:bg-[#1E293B]"
     >
-      <motion.div
-        animate={{ opacity: [0.55, 0.18, 0.55], scale: [1, 1.06, 1] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -inset-4 -z-10 rounded-4xl blur-2xl"
-        style={{ background: theme.blob1 }}
-      />
-
-      <div
-        className="relative overflow-hidden rounded-[1.75rem]"
-        style={{
-          background: cardBg,
-          boxShadow: isDark
-            ? "0 28px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)"
-            : "0 28px 64px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05)",
-        }}
-      >
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.35 }}
-          onClick={() => onDismiss(toast.id)}
-          whileHover={{ scale: 1.14 }}
-          whileTap={{ scale: 0.88 }}
-          className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full"
-          style={{
-            background: isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)",
-            color: descColor,
-          }}
-        >
-          <X size={14} strokeWidth={2.5} />
-        </motion.button>
-
-        <div
-          className="relative flex flex-col items-center overflow-hidden pb-6 pt-10"
-          style={{ background: isDark ? "rgba(255,255,255,0.03)" : headerBg }}
-        >
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.7, 0.3, 0.7] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-            style={{ width: 160, height: 160, background: isDark ? theme.blob2 : theme.blob1 }}
-          />
-          <motion.div
-            animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.7, 0.4] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute left-1/4 top-1/4 rounded-full blur-2xl"
-            style={{ width: 80, height: 80, background: theme.blob2 }}
-          />
-
-          <div className="relative flex items-center justify-center">
-            {dots.map((d, i) => (
-              <FloatingDot key={i} color={theme.dotColor} x={d.x} y={d.y} delay={d.delay} size={d.size} />
-            ))}
-
-            <motion.div
-              animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute rounded-full"
-              style={{ width: 108, height: 108, background: theme.ring2 }}
-            />
-            <motion.div
-              animate={{ scale: [1, 1.35, 1], opacity: [0.6, 0.1, 0.6] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-              className="absolute rounded-full"
-              style={{ width: 84, height: 84, background: theme.ring1 }}
-            />
-
-            <motion.div
-              initial={{ scale: 0, rotate: -25 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", damping: 13, stiffness: 260, delay: 0.1 }}
-              className={`relative z-10 flex h-17 w-17 items-center justify-center rounded-2xl ${theme.iconBg === "#A1F919" ? "text-black" : "text-white"}`}
-              style={{ background: theme.iconBg, boxShadow: theme.iconShadow }}
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.3, 0] }}
-                transition={{ duration: 1.0, delay: 0.28, ease: "easeInOut" }}
-                className="absolute inset-0 rounded-2xl bg-white"
-              />
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 10, stiffness: 360, delay: 0.2 }}
-              >
-                <Icon size={32} strokeWidth={2} />
-              </motion.div>
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.28 }}
-            className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
-            style={{
-              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-              color: isDark ? theme.dotColor : theme.dotColor,
-            }}
-          >
-            {theme.label}
-          </motion.div>
-        </div>
-
-        <div style={{ height: 1, background: divider }} />
-
-        <div className="flex flex-col items-center px-6 pb-6 pt-5">
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.22 }}
-            className="text-center text-[16px] font-black leading-snug"
-            style={{ color: titleColor }}
-          >
-            {toast.title}
-          </motion.p>
-
-          {toast.description && (
-            <motion.p
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.28 }}
-              className="mt-2 text-center text-sm leading-relaxed"
-              style={{ color: descColor }}
-            >
-              {toast.description}
-            </motion.p>
-          )}
-
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.34 }}
-            whileHover={{ scale: 1.03, boxShadow: theme.btnShadow }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => onDismiss(toast.id)}
-            className="mt-5 w-full rounded-2xl py-3 text-sm font-bold"
-            style={{ background: theme.btnBg, color: theme.btnBg === "#A1F919" ? "#000000" : "#FFFFFF", boxShadow: `0 6px 20px ${theme.blob1}` }}
-          >
-            Tutup
-          </motion.button>
-        </div>
-
-        <div
-          className="h-1 w-full overflow-hidden"
-          style={{ background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" }}
-        >
-          <div
-            className="h-full origin-left"
-            style={{
-              background: theme.bar,
-              animation: `toast-shrink ${toast.duration}ms linear forwards`,
-              animationPlayState: paused ? "paused" : "running",
-            }}
-            onAnimationEnd={handleEnd}
-          />
-        </div>
-      </div>
-    </motion.div>
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(meta.tone)}>
+        <Icon size={22} color="#fff" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-extrabold leading-snug text-slate-900 dark:text-white">{toast.title}</span>
+        {toast.description && <span className="mt-0.5 block text-xs leading-snug text-slate-600 dark:text-slate-300">{toast.description}</span>}
+      </span>
+    </motion.button>
   );
 }
 
@@ -550,7 +296,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const add = useCallback(
-    (type: ToastType, title: string, description?: string, duration = 5000) => {
+    (type: ToastType, title: string, description?: string, duration = 3500) => {
       const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       setToasts([{ id, type, title, description, duration, createdAt: new Date() }]);
     },
@@ -588,23 +334,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {mounted && createPortal(
         <>
-          <AnimatePresence>
-            {toasts.length > 0 && (
-              <motion.div
-                key="toast-bd"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.18 }}
-                className="fixed inset-0 z-9998 bg-black/30 backdrop-blur-[3px]"
-                onClick={() => dismiss(toasts[0].id)}
-              />
-            )}
-          </AnimatePresence>
-
           <div
             aria-live="polite"
-            className="pointer-events-none fixed inset-0 z-9999 flex items-center justify-center p-4"
+            className="pointer-events-none fixed inset-x-0 top-0 z-9999 flex justify-center px-4 pt-[max(1rem,env(safe-area-inset-top))]"
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {toasts.map((t) => (
                 <div key={t.id} className="pointer-events-auto w-full max-w-sm">
                   <NotificationCard toast={t} onDismiss={dismiss} />
