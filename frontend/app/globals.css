@@ -297,3 +297,18 @@ html[data-app-mode] .app-plain-header :is(h1, h2, h3) + p, html[data-app-mode] .
 html[data-app-mode] .app-plain-header > button:last-child, html[data-app-mode] .app-plain-header > div:last-child > button:last-child {
   background: #f1edfa !important; color: #3e03b3 !important; border-radius: 9999px;
 }
+
+/* Modal polos: tanpa lingkaran/logo hiasan di latar */
+html[data-app-mode] .fixed.inset-0 .pointer-events-none.absolute:is([class*="-right-"], [class*="-top-"], [class*="-bottom-"], [class*="-left-"]) { display: none !important; }
+
+/* Kartu tabel maksimal 2 baris: judul + aksi sebaris, lalu <=3 pasangan label:nilai sebaris */
+@media (max-width: 1023px) {
+  html[data-app-mode] table tbody td[data-extra] { display: none !important; }
+  html[data-app-mode] table tbody td[data-title] { flex: 1 1 0 !important; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap !important; display: block !important; }
+  html[data-app-mode] table tbody td[data-aksi], html[data-app-mode] table tbody td[data-label=""]:not([data-skip]) {
+    flex: 0 0 auto !important; margin-top: 0 !important; padding-top: 0 !important; border-top: 0 !important;
+  }
+  html[data-app-mode] table tbody td:not([data-title]):not([data-aksi]):not([data-skip]):not([data-extra]):not([data-label=""]) {
+    flex: 0 1 auto; max-width: 32%; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis;
+  }
+}

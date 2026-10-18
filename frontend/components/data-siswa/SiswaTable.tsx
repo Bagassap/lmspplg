@@ -133,12 +133,12 @@ export function SiswaTable({
                     <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={40} fallbackBg={accent} textClassName="text-xs font-extrabold" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{displayNama}</p>
-                      <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">NIS {s.nis}</p>
-                      <span className="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-                        style={pct === 100 ? { background: "#E3F8EF", color: "#059669" } : { background: "#F1EDFA", color: "#3E03B3" }}>
-                        Data {pct}%
-                      </span>
+                      <p className="mt-0.5 truncate text-[11px] text-slate-600 dark:text-slate-400">NIS {s.nis}</p>
                     </div>
+                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                      style={pct === 100 ? { background: "#E3F8EF", color: "#059669" } : { background: "#F1EDFA", color: "#3E03B3" }}>
+                      {pct}%
+                    </span>
                     <ChevronRight size={16} className="shrink-0 text-slate-300" />
                   </button>
                 </li>

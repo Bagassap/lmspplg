@@ -373,14 +373,12 @@ export function CatatanSiswaClient() {
                           <Avatar src={null} nama={s.nama ?? "?"} sizePx={40} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-sm font-extrabold" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{s.nama ?? "-"}</p>
-                            <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">
+                            <p className="mt-0.5 truncate text-[11px] text-slate-600 dark:text-slate-400">
                               {s.catatanTerakhir ? `${s.catatanTerakhir.judul} · ${formatTgl(s.catatanTerakhir.tanggal)}` : "Belum ada catatan"}
                             </p>
-                            <div className="mt-1 flex items-center gap-1.5">
-                              <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{s.jumlahCatatan} catatan</span>
-                              {s.totalPoin > 0 && <span className="rounded-full bg-[#E3F8EF] px-2 py-0.5 text-[10px] font-bold text-[#059669]">{s.totalPoin} poin</span>}
-                            </div>
                           </div>
+                          <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{s.jumlahCatatan}</span>
+                          {s.totalPoin > 0 && <span className="shrink-0 rounded-full bg-[#E3F8EF] px-2 py-0.5 text-[10px] font-bold text-[#059669]">{s.totalPoin}p</span>}
                           <ChevronRight size={16} className="shrink-0 text-slate-300" />
                         </button>
                       </li>

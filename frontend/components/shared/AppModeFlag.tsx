@@ -11,6 +11,7 @@ function labelTables(root: ParentNode) {
     table.querySelectorAll("tbody tr").forEach((tr) => {
       let i = 0;
       let titled = false;
+      let pairs = 0;
       Array.from(tr.children).forEach((cell) => {
         if (cell.tagName !== "TD") return;
         const label = heads[i] ?? "";
@@ -20,6 +21,11 @@ function labelTables(root: ParentNode) {
         if (!label && /^\d*$/.test(text) && !cell.querySelector("button,a,input")) cell.setAttribute("data-skip", "1");
         else if (!titled && label) { cell.setAttribute("data-title", "1"); titled = true; }
         if (/^(aksi|file|detail|rincian)$/i.test(label)) cell.setAttribute("data-aksi", "1");
+        else if (!cell.hasAttribute("data-skip") && !cell.hasAttribute("data-title")) {
+          pairs += 1;
+          // maksimal 3 pasangan label:nilai per kartu agar tidak lebih dari 2 baris
+          if (pairs > 3) cell.setAttribute("data-extra", "1");
+        }
         i += Number((cell as HTMLTableCellElement).colSpan) || 1;
       });
     });

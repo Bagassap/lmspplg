@@ -141,8 +141,8 @@ export function SiswaPasswordTable({
                 <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={38} fallbackBg="#3E03B3" textClassName="text-[10px] font-extrabold" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{displayNama}</p>
-                  <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{s.nis}</p>
-                  {mustChange === null ? (
+                  <p className="truncate font-mono text-[11px] text-slate-600 dark:text-slate-400">{s.nis}</p>
+                  {!app && (mustChange === null ? (
                     <span className="text-[10px] text-slate-300 dark:text-slate-600">Belum ada akun</span>
                   ) : mustChange ? (
                     <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-[#FFE9E2] px-2 py-0.5 text-[10px] font-semibold text-[#F26A3D]">
@@ -152,8 +152,13 @@ export function SiswaPasswordTable({
                     <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-medium" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
                       <CheckCircle2 size={9} /> Sudah Ganti
                     </span>
-                  )}
+                  ))}
                 </div>
+                {app && (
+                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${mustChange === null ? "bg-[#F1EDFA] text-slate-600" : mustChange ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#E3F8EF] text-[#059669]"}`}>
+                    {mustChange === null ? "Tanpa akun" : mustChange ? "Belum" : "Sudah"}
+                  </span>
+                )}
                 {s.user && (
                   <button onClick={() => onReset(s)}
                     className={`flex shrink-0 items-center gap-1 px-3 py-1.5 text-xs font-bold text-white shadow-sm ${app ? "rounded-full" : "rounded-lg"}`}

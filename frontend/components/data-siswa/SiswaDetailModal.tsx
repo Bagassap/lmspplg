@@ -94,13 +94,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
       { icon: Users, label: "Orang tua", value: siswa.namaOrtu },
     ];
     return (
-      <AppSheet open onClose={onClose} title={displayNama} subtitle={`NIS ${siswa.nis} · ${kelasShort(siswa.kelas.nama)}`}
-        footer={onEdit ? (
-          <button type="button" onClick={onEdit}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white active:scale-[0.98]">
-            <Pencil size={15} /> Edit Data
-          </button>
-        ) : undefined}>
+      <AppSheet open onClose={onClose} title={displayNama} subtitle={`NIS ${siswa.nis} · ${kelasShort(siswa.kelas.nama)}`}>
         <div className="flex items-center gap-3">
           <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={56} fallbackBg="#3E03B3" textClassName="text-base font-extrabold" />
           <div className="min-w-0 flex-1 space-y-1.5">
@@ -137,22 +131,24 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
           ))}
         </div>
 
-        {hasMobileActions && (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {onResetPassword && siswa.user && (
-              <button type="button" onClick={onResetPassword}
-                className="flex items-center gap-1.5 rounded-full bg-[#F1EDFA] px-4 py-2 text-xs font-bold text-[#3E03B3]"><KeyRound size={13} /> Reset Password</button>
-            )}
-            {onImpersonate && siswa.user && (
-              <button type="button" onClick={onImpersonate}
-                className="flex items-center gap-1.5 rounded-full bg-[#F1EDFA] px-4 py-2 text-xs font-bold text-[#3E03B3]"><Eye size={13} /> Pantau Akun</button>
-            )}
-            {onKeluarkan && (
-              <button type="button" onClick={onKeluarkan}
-                className="flex items-center gap-1.5 rounded-full bg-[#FFE9E2] px-4 py-2 text-xs font-bold text-[#F26A3D]"><Trash2 size={13} /> Keluarkan</button>
-            )}
-          </div>
-        )}
+        <div className="mt-3 grid grid-flow-col auto-cols-fr gap-2">
+          {onEdit && (
+            <button type="button" onClick={onEdit}
+              className="flex flex-col items-center gap-1 rounded-2xl bg-[#3E03B3] px-1 py-2.5 text-[11px] font-bold text-white"><Pencil size={16} /> Edit</button>
+          )}
+          {onResetPassword && siswa.user && (
+            <button type="button" onClick={onResetPassword}
+              className="flex flex-col items-center gap-1 rounded-2xl bg-[#F1EDFA] px-1 py-2.5 text-[11px] font-bold text-[#3E03B3]"><KeyRound size={16} /> Reset</button>
+          )}
+          {onImpersonate && siswa.user && (
+            <button type="button" onClick={onImpersonate}
+              className="flex flex-col items-center gap-1 rounded-2xl bg-[#F1EDFA] px-1 py-2.5 text-[11px] font-bold text-[#3E03B3]"><Eye size={16} /> Pantau</button>
+          )}
+          {onKeluarkan && (
+            <button type="button" onClick={onKeluarkan}
+              className="flex flex-col items-center gap-1 rounded-2xl bg-[#FFE9E2] px-1 py-2.5 text-[11px] font-bold text-[#F26A3D]"><Trash2 size={16} /> Keluarkan</button>
+          )}
+        </div>
       </AppSheet>
     );
   }
