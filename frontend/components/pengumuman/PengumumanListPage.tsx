@@ -618,7 +618,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                        <span className="rounded-full px-2 py-0.5" style={{ background: "#F1EDFA", color: "#3E03B3" }}>{p.kategori}</span>
+                        <span className="rounded-full px-2 py-0.5" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{p.kategori}</span>
                         {p.isPinned && <span className="flex items-center gap-0.5"><Pin size={10} /> Disematkan</span>}
                         {p.prioritas === "MENDESAK" && <span className="font-bold" style={{ color: "#3E03B3" }}>Mendesak</span>}
                       </div>

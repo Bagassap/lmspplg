@@ -89,7 +89,7 @@ export function AbsensiAppMobile<R extends RowLite>({
       >
         <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
         <p className="relative text-xs font-semibold text-white/80">{formatTgl(today)}</p>
-        <p className="relative mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: "#FF9A62", textShadow: "0 0 18px rgba(242,106,61,0.55)" }}>{jam}</p>
+        <p className="relative mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: "#FFFFFF", textShadow: "0 0 18px rgba(255,255,255,0.45)" }}>{jam}</p>
         <div
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
           style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#5D900F" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
@@ -145,7 +145,7 @@ export function AbsensiAppMobile<R extends RowLite>({
               >
                 {label}
                 {active && (
-                  <motion.span layoutId="app-absen-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: ACCENT }} />
+                  <motion.span layoutId="app-absen-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: "#F26A3D" }} />
                 )}
               </button>
             );

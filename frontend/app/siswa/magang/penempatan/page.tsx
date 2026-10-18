@@ -141,7 +141,7 @@ export default function SiswaMagangPenempatanPage() {
           <AppEmpty icon={Users} title="Kamu belum ditempatkan PKL" desc="Admin akan menempatkan kamu ke tempat magang begitu jadwal PKL dimulai." />
         ) : (
           <>
-            <AppBanner>
+            <AppBanner tone="orange">
               <div className="flex items-center gap-3">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(MENU_TONE.magang)}>
                   <Building2 size={24} color="#fff" />

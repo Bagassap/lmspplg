@@ -146,7 +146,7 @@ export function SiswaAppMateriTugas({
               className="relative pb-3 text-[15px] font-semibold transition-colors"
               style={{ color: active ? ACCENT : "#94a3b8" }}>
               {label}
-              {active && <motion.span layoutId="app-mt-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: ACCENT }} />}
+              {active && <motion.span layoutId="app-mt-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: "#F26A3D" }} />}
             </button>
           );
         })}

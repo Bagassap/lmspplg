@@ -912,14 +912,14 @@ export default function AdminJadwalSoalPage() {
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                           <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
-                          <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                          <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                             {submisiList.length} pengumpulan
                           </span>
                         </div>
                       </button>
                       <div className="mt-3 flex gap-2">
                         <button type="button" onClick={() => { setEditTarget(t); setOpenTahapan(true); }}
-                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                           <Pencil size={12} /> Edit
                         </button>
                         <button type="button" onClick={() => deleteTahapan(t.id)}

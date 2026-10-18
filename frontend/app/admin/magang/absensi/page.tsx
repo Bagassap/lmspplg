@@ -619,7 +619,7 @@ export default function AdminMagangAbsensiPage() {
           </button>
 
           <button type="button" onClick={() => setStatusPageOpen(true)}
-            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)" }}>
+            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "linear-gradient(135deg, #F26A3D 0%, #FF8A4C 100%)" }}>
             <div className="relative z-10 min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-white/80">Kehadiran hari ini{selected?.tempatMagang.namaTempat ? ` · ${selected.tempatMagang.namaTempat}` : ""}</p>
               <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#FFFFFF" }}>{hadirPct}%</p>

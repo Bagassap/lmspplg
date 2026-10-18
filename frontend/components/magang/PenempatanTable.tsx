@@ -160,7 +160,7 @@ export function PenempatanTable({
                           <option value="SELESAI">Selesai</option>
                           <option value="BATAL">Batal</option>
                         </select>
-                        <button onClick={() => onEdit?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold disabled:opacity-40" style={{ background: "#F1EDFA", color: "#3E03B3" }}>
+                        <button onClick={() => onEdit?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold disabled:opacity-40" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                           <Pencil size={12} /> Edit
                         </button>
                         <button onClick={() => onHapus?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-red-50 py-2.5 text-xs font-bold text-red-600 disabled:opacity-40">

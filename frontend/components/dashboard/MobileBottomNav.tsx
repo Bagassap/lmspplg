@@ -28,8 +28,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const appMode = useIsAppMode();
   const ACT = "#3E03B3";
-  const ON = appMode ? "#FFFFFF" : ACT;
-  const OFF = appMode ? "rgba(255,255,255,0.6)" : "#94a3b8";
+  const ON = ACT;
+  const OFF = "#94a3b8";
   const ORANGE = "#F26A3D";
 
   const dashboardItem = items.find((i) => i.key === "dashboard");
@@ -59,7 +59,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
       <nav
         className={
           appMode
-            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-white/10 bg-[#3E03B3] shadow-[0_14px_34px_-8px_rgba(62,3,179,0.7)] lg:hidden"
+            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[28px] border border-slate-100 bg-white/95 shadow-[0_12px_32px_-8px_rgba(62,3,179,0.35)] backdrop-blur-xl dark:border-white/10 dark:bg-[#1E293B]/95 lg:hidden"
             : "fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden"
         }
       >
@@ -71,8 +71,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? ON : OFF }} />
-              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-white" : "text-[#3E03B3]") : appMode ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>
+              <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
+              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -82,8 +82,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
         {dashboardItem && (
           <Link href={dashboardItem.href ?? "#"} className="relative flex flex-1 flex-col items-center">
             <span
-              className={`absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ${appMode ? "ring-[#3E03B3]" : "ring-white dark:ring-[#1E293B]"}`}
-              style={{ background: appMode ? ORANGE : ACT, boxShadow: appMode ? "0 10px 24px -6px rgba(242,106,61,0.7)" : "0 10px 24px -6px rgba(62,3,179,0.55)" }}
+              className={`absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1E293B]`}
+              style={{ background: ACT, boxShadow: "0 10px 24px -6px rgba(62,3,179,0.55)" }}
             >
               <dashboardItem.icon size={22} />
             </span>
@@ -104,8 +104,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <item.icon size={20} style={{ color: active ? ON : OFF }} />
-              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-white" : "text-[#3E03B3]") : appMode ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>
+              <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
+              <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -116,11 +116,11 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           onClick={() => setMoreOpen(true)}
           className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
         >
-          <LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} />
+          <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
           {pendingResetCount > 0 && (
             <span className={`absolute right-[30%] top-1.5 h-2 w-2 rounded-full ${appMode ? "bg-[#F26A3D]" : "bg-[#A1F919]"}`} />
           )}
-          <span className={`text-[10px] font-semibold ${moreActive ? (appMode ? "text-white" : "text-[#3E03B3]") : appMode ? "text-white/60" : "text-slate-400 dark:text-slate-500"}`}>
+          <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
           </span>
         </button>

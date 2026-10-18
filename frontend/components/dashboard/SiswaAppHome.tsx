@@ -98,7 +98,7 @@ export function SiswaAppHome() {
         >
           <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
           <div className="relative z-10 flex-1">
-            <svg viewBox="0 0 28 22" className="absolute -left-1 -top-3 h-5 w-6" fill="none" stroke={APP_ORANGE} strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <svg viewBox="0 0 28 22" className="absolute -left-1 -top-3 h-5 w-6" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M3 9 L9 12" />
               <path d="M7 3 L11 8" />
               <path d="M14 1 L14 7" />
@@ -153,7 +153,7 @@ export function SiswaAppHome() {
               >
                 {label}
                 {active && (
-                  <motion.span layoutId="app-home-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: ACCENT }} />
+                  <motion.span layoutId="app-home-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: "#F26A3D" }} />
                 )}
               </button>
             );

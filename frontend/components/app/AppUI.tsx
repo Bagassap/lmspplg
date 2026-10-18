@@ -12,8 +12,10 @@ export const APP_SOFT = "#F1EDFA";
 export const APP_PURPLE = "#3E03B3";
 /** Warna kedua setelah ungu (aksen kecil: roket, lencana, tombol tengah). */
 export const APP_ORANGE = "#F26A3D";
-/** Latar banner utama: ungu brand seperti halaman login. */
-export const APP_HERO = "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)";
+/** Latar banner kartu roket: oranye (warna kedua). */
+export const APP_HERO = "linear-gradient(135deg, #F26A3D 0%, #FF8A4C 100%)";
+/** Banner ungu (identitas/akun). */
+export const APP_HERO_PURPLE = "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)";
 
 /**
  * Rangka halaman mobile. Di aplikasi terpasang: judul besar tanpa header ungu
@@ -80,9 +82,9 @@ export function AppCard({ children, className = "", onClick }: { children: React
   return <div className={cls}>{children}</div>;
 }
 
-export function AppBanner({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+export function AppBanner({ children, className = "", tone = "purple" }: { children: React.ReactNode; className?: string; tone?: "purple" | "orange" }) {
   return (
-    <div className={`relative overflow-hidden rounded-3xl px-5 py-5 text-white ${className}`} style={{ background: APP_HERO }}>
+    <div className={`relative overflow-hidden rounded-3xl px-5 py-5 text-white ${className}`} style={{ background: tone === "orange" ? APP_HERO : APP_HERO_PURPLE }}>
       <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
       <div className="relative w-full">{children}</div>
     </div>
@@ -91,8 +93,8 @@ export function AppBanner({ children, className = "" }: { children: React.ReactN
 
 export function AppInfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl bg-slate-100 px-4 py-3.5 dark:bg-slate-800">
-      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: `${APP_PURPLE}22`, color: APP_PURPLE }}>
+    <div className="app-info-row flex items-start gap-3 rounded-2xl bg-slate-100 px-4 py-3.5 dark:bg-slate-800">
+      <span className="app-info-icon mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: `${APP_PURPLE}22`, color: APP_PURPLE }}>
         <Icon size={13} />
       </span>
       <div className="min-w-0 flex-1">
@@ -120,7 +122,7 @@ export function AppTabs<T extends string>({
             className="relative pb-3 text-[15px] font-semibold transition-colors"
             style={{ color: active ? APP_ACCENT : "#94a3b8" }}>
             {label}
-            {active && <motion.span layoutId={layoutId} className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: APP_ACCENT }} />}
+            {active && <motion.span layoutId={layoutId} className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: APP_ORANGE }} />}
           </button>
         );
       })}
@@ -151,7 +153,7 @@ export function AppPillButton({
 export function AppEmpty({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc?: string }) {
   return (
     <div className="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+      <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "#FFE9E2", color: APP_ORANGE }}>
         <Icon size={24} />
       </span>
       <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{title}</p>
@@ -232,7 +234,7 @@ function ActionPill({ action, primary = false }: { action: SheetAction; primary?
   const cls = `flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
   const style = primary
     ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
-    : { background: action.danger ? "#FEE2E2" : APP_SOFT, color: action.danger ? "#DC2626" : APP_ACCENT };
+    : { background: action.danger ? "#FEE2E2" : "#FFE9E2", color: action.danger ? "#DC2626" : APP_ORANGE };
   const inner = <>{Icon && <Icon size={15} />}{action.label}</>;
   if (action.href) return <a href={action.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>;
   return <button type="button" onClick={action.onClick} className={cls} style={style}>{inner}</button>;

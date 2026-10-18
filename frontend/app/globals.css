@@ -170,3 +170,8 @@ html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):no
 .app-only { display: none; }
 html[data-app-mode] .app-only { display: block; }
 html[data-app-mode] .app-hide { display: none !important; }
+
+/* Variasi warna ikon baris info (ungu dominan, selang-seling oranye/hijau/biru). */
+html[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background: #ffe9e2 !important; color: #f26a3d !important; }
+html[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background: #eaf8d2 !important; color: #5d900f !important; }
+html[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background: #e0f2fe !important; color: #0284c7 !important; }

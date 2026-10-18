@@ -1,6 +1,6 @@
 "use client";
 
-/** Ilustrasi roket ungu untuk banner beranda aplikasi. */
+/** Ilustrasi roket oranye untuk banner beranda aplikasi. */
 export function Rocket() {
   return (
     <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
@@ -10,8 +10,8 @@ export function Rocket() {
           <stop offset="1" stopColor="#E4E7EC" />
         </linearGradient>
         <linearGradient id="rk-red" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7C3AED" />
-          <stop offset="1" stopColor="#3E03B3" />
+          <stop offset="0" stopColor="#E8512A" />
+          <stop offset="1" stopColor="#C73A12" />
         </linearGradient>
         <linearGradient id="rk-flame" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FFD84D" />
