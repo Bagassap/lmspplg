@@ -3,14 +3,15 @@ import type { CSSProperties, ElementType } from "react";
 export type Tone3D = "indigo" | "emerald" | "amber" | "violet" | "sky";
 
 export const TONE_3D: Record<Tone3D, [string, string]> = {
-  indigo: ["#6366F1", "#4338CA"],
+  // Palet ikon hanya 4 warna (hijau, biru, oranye, ungu): "indigo" dipetakan ke ungu.
+  indigo: ["#7C3AED", "#6B21A8"],
   emerald: ["#10B981", "#0F766E"],
   amber: ["#F59E0B", "#EA580C"],
   violet: ["#7C3AED", "#6B21A8"],
   sky: ["#38BDF8", "#2563EB"],
 };
 
-export const TONE_ORDER: Tone3D[] = ["sky", "emerald", "violet", "indigo", "amber"];
+export const TONE_ORDER: Tone3D[] = ["sky", "emerald", "violet", "amber"];
 
 export const MENU_TONE = {
   dashboard: "indigo",

@@ -29,10 +29,10 @@ const QUICK = [
   { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, tone: "sky" as const },
   { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "amber" as const },
   { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: "violet" as const },
-  { href: "/admin/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "indigo" as const },
-  { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "emerald" as const },
-  { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "sky" as const },
-  { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: "amber" as const },
+  { href: "/admin/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "sky" as const },
+  { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "amber" as const },
+  { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "violet" as const },
+  { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: "emerald" as const },
 ];
 
 /**
