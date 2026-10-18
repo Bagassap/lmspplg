@@ -341,3 +341,17 @@ html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !im
 html [class*="text-[#5D900F]"][class*="text-[11px]"], html [class*="text-[#5D900F]"].normal-case { color: #f26a3d !important; }
 html [class*="border-[#A1F919]"], html [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
 html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
+
+/* ---- Desktop: tanpa border di komponen mana pun ----
+   Pengecualian: spinner (animate-spin) dan kotak kecil (kotak centang, penanda) agar tidak hilang. */
+@media (min-width: 1024px) {
+  *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6) {
+    border-width: 0 !important;
+  }
+  html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+    background-color: #f1edfa !important;
+  }
+  html.dark :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+    background-color: #334155 !important;
+  }
+}
