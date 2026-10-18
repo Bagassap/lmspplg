@@ -177,7 +177,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#F26A3D",
+      gradient: "#10B981",
       icon: Megaphone,
     },
     {
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#3E03B3",
+      gradient: "#7C3AED",
       icon: FileText,
     },
   ];

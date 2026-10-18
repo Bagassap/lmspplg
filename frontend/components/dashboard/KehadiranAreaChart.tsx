@@ -11,7 +11,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export function KehadiranAreaChart({ data }: PropsType) {
   const options: ApexOptions = {
     legend: { show: false },
-    colors: ["#3E03B3", "#F26A3D"],
+    colors: ["#10B981", "#3E03B3"],
     chart: {
       type: "line",
       toolbar: { show: false },

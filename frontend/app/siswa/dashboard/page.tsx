@@ -162,7 +162,7 @@ export default function SiswaDashboardPage() {
       small: false,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#F26A3D",
+      gradient: "#10B981",
       icon: CheckCircle,
     },
     {
@@ -182,7 +182,7 @@ export default function SiswaDashboardPage() {
       small: belumMagang,
       validThru: data.kelas,
       holder: user.nama,
-      gradient: "#3E03B3",
+      gradient: "#7C3AED",
       icon: GraduationCap,
     },
   ];

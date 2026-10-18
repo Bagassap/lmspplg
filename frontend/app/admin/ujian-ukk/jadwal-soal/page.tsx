@@ -25,11 +25,10 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loa
 const PRIMARY = "#3E03B3";
 
 const PALETTE = [
-  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
-  { bg: "#F1EDFA", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
-  { bg: "#F1EDFA", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
-  { bg: "#FFFFFF", text: "#F26A3D",  bar: "#F26A3D",  gradient: "#F26A3D" },
-  { bg: "#F1EDFA", text: "#0EA5E9",  bar: "#0EA5E9",  gradient: "#3E03B3" },
+  { bg: "#E0F2FE", text: "#0284C7", bar: "#0EA5E9", gradient: "#0EA5E9" },
+  { bg: "#E3F8EF", text: "#059669", bar: "#10B981", gradient: "#10B981" },
+  { bg: "#F1EDFA", text: "#7C3AED", bar: "#7C3AED", gradient: "#7C3AED" },
+  { bg: "#FFE9E2", text: "#F26A3D", bar: "#F26A3D", gradient: "#F26A3D" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
 import { PwaInstall } from "@/components/shared/PwaInstall";
 import { AppModeFlag } from "@/components/shared/AppModeFlag";
+import { IconToneRotator } from "@/components/shared/IconToneRotator";
 
 const satoshi = localFont({
   src: [
@@ -58,6 +59,7 @@ export default function RootLayout({
           {children}
           <PwaInstall />
           <AppModeFlag />
+          <IconToneRotator />
         </ToastProvider>
       </body>
     </html>
