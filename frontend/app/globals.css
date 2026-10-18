@@ -355,3 +355,34 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
     background-color: #334155 !important;
   }
 }
+
+/* =====================================================================
+   TEMA GELAP: permukaan & teks yang tidak punya varian dark: dipaksa solid
+   dan terbaca (kartu transparan/pastel, filter, kolom isian). Berlaku di
+   desktop dan mode aplikasi.
+   ===================================================================== */
+html.dark :is(.bg-white, .bg-\[\#FFFFFF\], .bg-\[\#ffffff\]):not([class*="dark:bg-"]):not([class*="dark:from-"]) { background-color: #1e293b; }
+html.dark :is(.bg-slate-50, .bg-gray-50, .bg-slate-100, .bg-gray-100):not([class*="dark:bg-"]) { background-color: #273449; }
+html.dark :is(.bg-slate-200, .bg-gray-200):not([class*="dark:bg-"]) { background-color: #334155; }
+html.dark [class*="bg-primary-light"]:not([class*="dark:bg-"]), html.dark [class*="bg-[#F1EDFA]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(241, 237, 250)"], html.dark [style*="background-color: rgb(241, 237, 250)"] { background-color: #2a2350 !important; }
+html.dark [class*="bg-[#E3F8EF]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(227, 248, 239)"], html.dark [style*="background-color: rgb(227, 248, 239)"] { background-color: #143b33 !important; }
+html.dark [class*="bg-[#FFE9E2]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(255, 233, 226)"], html.dark [style*="background-color: rgb(255, 233, 226)"] { background-color: #4a2a22 !important; }
+html.dark [class*="bg-[#E0F2FE]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(224, 242, 254)"], html.dark [style*="background-color: rgb(224, 242, 254)"] { background-color: #16394f !important; }
+html.dark [class*="bg-[#FFF4E0]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(255, 244, 224)"], html.dark [style*="background-color: rgb(255, 244, 224)"] { background-color: #4a3a17 !important; }
+html.dark [style*="background: rgb(255, 255, 255)"], html.dark [style*="background-color: rgb(255, 255, 255)"] { background-color: #1e293b !important; }
+
+/* transparan -> solid (di luar header/topbar ungu & backdrop modal) */
+html.dark :is([class*="bg-white/"], [class*="bg-black/"], [class*="bg-slate-"][class*="/"], [class*="bg-gray-"][class*="/"], [class*="bg-[#F1EDFA]/"], [class*="bg-[#3E03B3]/"], [class*="bg-[#F26A3D]/"]):not([class*="dark:bg-"]):not(.absolute.inset-0):not(header *):not([class*="bg-[#3E03B3]"] *):not(.app-sheet-header *) { background-color: #273449 !important; }
+html.dark [class*="opacity-"]:is(.bg-white, [class*="bg-slate-"]) { opacity: 1; }
+
+/* teks */
+html.dark :is(.text-black, .text-slate-900, .text-slate-800, .text-gray-900, .text-gray-800, [class*="text-[#0F172A]"], [class*="text-[#000000]"]):not([class*="dark:text-"]) { color: #f1f5f9; }
+html.dark :is(.text-slate-700, .text-gray-700, .text-slate-600, .text-gray-600):not([class*="dark:text-"]) { color: #cbd5e1; }
+html.dark :is(.text-slate-500, .text-gray-500, .text-slate-400, .text-gray-400):not([class*="dark:text-"]) { color: #94a3b8; }
+html.dark :is([class*="text-black/"], [class*="text-slate-900/"], [class*="text-slate-800/"]):not([class*="dark:text-"]) { color: #cbd5e1; }
+html.dark :is(.text-\[\#3E03B3\], .text-primary):not([class*="dark:text-"]):not([class*="bg-"]) { color: #c4b5fd; }
+html.dark [style*="color: rgb(15, 23, 42)"], html.dark [style*="color: rgb(0, 0, 0)"] { color: #f1f5f9 !important; }
+html.dark [style*="color: rgb(100, 116, 139)"], html.dark [style*="color: rgb(71, 85, 105)"] { color: #cbd5e1 !important; }
+html.dark :is(input, textarea, select) { color: #f1f5f9; }
+html.dark :is(input, textarea)::placeholder { color: #94a3b8; }
+html.dark :is(select option) { background-color: #1e293b; color: #f1f5f9; }
