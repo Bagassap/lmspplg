@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
+import { RiwayatAbsenSheet } from "@/components/absensi-harian/RiwayatAbsenSheet";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta, parseLokasi } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
@@ -583,8 +584,38 @@ export default function SiswaAbsensiHarianPage() {
               submitting={submitting} onSubmit={handleSubmit}
             />
 
+            {appMode && riwayatDetail && (riwayatDetail.tab === "DATANG" ? (
+              <RiwayatAbsenSheet
+                title={`${riwayatDetail.row.status ? STATUS_CFG[riwayatDetail.row.status].label : "Hadir"} Tercatat`}
+                tanggalLabel={formatTgl(riwayatDetail.row.tanggal)}
+                statusLabel={riwayatDetail.row.status ? STATUS_CFG[riwayatDetail.row.status].label : "Hadir"}
+                statusBg={riwayatDetail.row.status ? STATUS_CFG[riwayatDetail.row.status].bg : "#E3F8EF"}
+                statusColor={riwayatDetail.row.status ? STATUS_CFG[riwayatDetail.row.status].clr : "#059669"}
+                waktu={riwayatDetail.row.waktuAbsen}
+                foto={riwayatDetail.row.foto}
+                fotoLabel={riwayatDetail.row.status !== "HADIR" ? "Foto Surat Izin/Sakit" : "Foto Selfie"}
+                ttd={riwayatDetail.row.ttd}
+                lokasi={riwayatDetail.row.lokasi}
+                catatan={riwayatDetail.row.catatan}
+                onClose={() => setRiwayatDetail(null)}
+              />
+            ) : (
+              <RiwayatAbsenSheet
+                title="Kepulangan Tercatat"
+                tanggalLabel={formatTgl(riwayatDetail.row.tanggal)}
+                statusLabel="Pulang"
+                statusBg="#F1EDFA"
+                statusColor="#3E03B3"
+                waktu={riwayatDetail.row.waktuPulang}
+                foto={riwayatDetail.row.fotoPulang}
+                ttd={riwayatDetail.row.ttdPulang}
+                lokasi={riwayatDetail.row.lokasiPulang}
+                catatan={riwayatDetail.row.catatanPulang}
+                onClose={() => setRiwayatDetail(null)}
+              />
+            ))}
             <AnimatePresence>
-              {riwayatDetail && (
+              {!appMode && riwayatDetail && (
                 <MobileDetailModal onClose={() => setRiwayatDetail(null)} accent="#ffffff">
                   {riwayatDetail.tab === "DATANG" ? (
                     <RingkasanAbsen

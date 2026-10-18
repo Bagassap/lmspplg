@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
+import { RiwayatAbsenSheet } from "@/components/absensi-harian/RiwayatAbsenSheet";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta, parseLokasi } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi } from "@/components/absensi-magang/types";
 import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
@@ -540,8 +541,38 @@ export default function SiswaMagangAbsensiPage() {
               ttd={ttd} setTtd={setTtd}
               submitting={submitting} onSubmit={handleSubmit}
             />
+            {appMode && detailTab && (detailTab === "DATANG" ? (
+              <RiwayatAbsenSheet
+                title={`${cfg.label} Tercatat`}
+                tanggalLabel="Hari ini"
+                statusLabel={cfg.label}
+                statusBg={cfg.bg}
+                statusColor={cfg.clr}
+                waktu={data?.record?.waktuAbsen}
+                foto={data?.record?.foto}
+                fotoLabel={status !== "HADIR" ? "Foto Surat Izin/Sakit" : "Foto Selfie"}
+                ttd={data?.record?.ttd}
+                lokasi={data?.record?.lokasi}
+                catatan={data?.record?.catatan}
+                onClose={() => setDetailTab(null)}
+              />
+            ) : (
+              <RiwayatAbsenSheet
+                title="Kepulangan Tercatat"
+                tanggalLabel="Hari ini"
+                statusLabel="Pulang"
+                statusBg="#F1EDFA"
+                statusColor="#3E03B3"
+                waktu={data?.record?.waktuPulang}
+                foto={data?.record?.fotoPulang}
+                ttd={data?.record?.ttdPulang}
+                lokasi={data?.record?.lokasiPulang}
+                catatan={data?.record?.catatanPulang}
+                onClose={() => setDetailTab(null)}
+              />
+            ))}
             <AnimatePresence>
-              {detailTab && (
+              {!appMode && detailTab && (
                 <MobileDetailModal onClose={() => setDetailTab(null)} accent={appMode ? "#FFFFFF" : detailTab === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT}>
                   {detailTab === "DATANG" ? (
                     <RingkasanAbsen

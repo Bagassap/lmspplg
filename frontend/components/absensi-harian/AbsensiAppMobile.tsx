@@ -170,13 +170,13 @@ export function AbsensiAppMobile<R extends RowLite>({
                 <motion.button
                   key={row.tanggal} type="button" whileTap={{ scale: 0.98 }}
                   onClick={() => onDetail(selectedRiwayatTab, row)}
-                  className="flex w-full items-center gap-4 rounded-3xl bg-white p-3 text-left shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]"
+                  className="flex w-full items-center gap-3 rounded-2xl bg-white px-3 py-2.5 text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-[#1E293B]"
                 >
                   <span
-                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
                     style={icon3dStyle(selectedRiwayatTab === "DATANG" ? MENU_TONE.absensi : MENU_TONE.magang)}
                   >
-                    {selectedRiwayatTab === "DATANG" ? <LogIn size={26} color="#fff" /> : <LogOut size={26} color="#fff" />}
+                    {selectedRiwayatTab === "DATANG" ? <LogIn size={20} color="#fff" /> : <LogOut size={20} color="#fff" />}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{formatTgl(row.tanggal)}</p>
