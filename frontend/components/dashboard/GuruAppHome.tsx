@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Rocket } from "@/components/app/Rocket";
 import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
-import { icon3dStyle, MENU_TONE, toneAt } from "@/components/shared/Icon3D";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 
 type Pengumuman = {
@@ -25,10 +25,10 @@ export type GuruHomeData = {
 };
 
 const QUICK = [
-  { href: "/guru/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: MENU_TONE.absensi },
-  { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, tone: MENU_TONE.dataSiswa },
-  { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, tone: MENU_TONE.pengumuman },
-  { href: "/guru/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: MENU_TONE.catatan },
+  { href: "/guru/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: "emerald" as const },
+  { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, tone: "sky" as const },
+  { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "amber" as const },
+  { href: "/guru/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "violet" as const },
 ];
 
 /**

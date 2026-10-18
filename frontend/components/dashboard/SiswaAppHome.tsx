@@ -7,7 +7,7 @@ import {
   BookOpen, ClipboardCheck, Megaphone, GraduationCap, FileText,
   ClipboardList, Clock, CheckCircle2,
 } from "lucide-react";
-import { icon3dStyle, MENU_TONE, TONE_ORDER } from "@/components/shared/Icon3D";
+import { icon3dStyle, TONE_ORDER } from "@/components/shared/Icon3D";
 import { formatTgl, isTugasActive, type TugasItem } from "@/components/tugas/types";
 import type { MateriItem } from "@/components/materi/MateriFormModal";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
@@ -21,10 +21,10 @@ const MAX_ITEMS = 5;
 type Tab = "materi" | "tugas";
 
 const QUICK_ACTIONS = [
-  { key: "absensi", href: "/siswa/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: MENU_TONE.absensi },
-  { key: "pengumuman", href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, tone: MENU_TONE.pengumuman },
-  { key: "magang", href: "/siswa/magang", label: "PKL", icon: GraduationCap, tone: MENU_TONE.magang },
-  { key: "ukk", href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, tone: MENU_TONE.ukk },
+  { key: "absensi", href: "/siswa/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: "emerald" as const },
+  { key: "pengumuman", href: "/siswa/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "sky" as const },
+  { key: "magang", href: "/siswa/magang", label: "PKL", icon: GraduationCap, tone: "amber" as const },
+  { key: "ukk", href: "/siswa/ujian-ukk", label: "UKK", icon: FileText, tone: "violet" as const },
 ];
 
 function relDeadline(deadline: string) {

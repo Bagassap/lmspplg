@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Rocket } from "@/components/app/Rocket";
 import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
-import { icon3dStyle, MENU_TONE, toneAt } from "@/components/shared/Icon3D";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 
 type Pengumuman = {
@@ -25,14 +25,14 @@ export type AdminHomeData = {
 };
 
 const QUICK = [
-  { href: "/admin/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: MENU_TONE.absensi },
-  { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, tone: MENU_TONE.dataSiswa },
-  { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: MENU_TONE.pengumuman },
-  { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: MENU_TONE.materi },
-  { href: "/admin/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: MENU_TONE.catatan },
-  { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: MENU_TONE.magang },
-  { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: MENU_TONE.ukk },
-  { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: MENU_TONE.akun },
+  { href: "/admin/absensi-harian", label: "Absensi", icon: ClipboardCheck, tone: "emerald" as const },
+  { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, tone: "sky" as const },
+  { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "amber" as const },
+  { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: "violet" as const },
+  { href: "/admin/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "indigo" as const },
+  { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "emerald" as const },
+  { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "sky" as const },
+  { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: "amber" as const },
 ];
 
 /**
