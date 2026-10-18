@@ -220,30 +220,42 @@ html[data-app-mode] [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; 
 html[data-app-mode] [style*="background: rgb(0, 0, 0)"], html[data-app-mode] [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
 html[data-app-mode] [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
 
-/* ---- Tabel -> kartu (tabel asli aplikasi native) ----
-   data-label diisi otomatis oleh AppModeFlag dari kepala kolom. */
+/* ---- Tabel -> kartu ringkas (tabel asli aplikasi native) ----
+   Kolom pertama = judul kartu; kolom lain = pasangan "label: nilai" kecil;
+   kolom Aksi/File di baris bawah. data-* diisi otomatis oleh AppModeFlag. */
 @media (max-width: 1023px) {
   html[data-app-mode] table { display: block !important; width: 100% !important; min-width: 0 !important; }
-  html[data-app-mode] table thead { display: none !important; }
+  html[data-app-mode] table.hidden { display: none !important; }
+  html[data-app-mode] table thead, html[data-app-mode] table tfoot { display: none !important; }
   html[data-app-mode] table tbody { display: block !important; }
   html[data-app-mode] table tbody tr {
-    display: block !important; margin: 0 0 0.75rem; padding: 0.5rem 1rem;
-    background: #ffffff; border-radius: 22px; border: 0 !important;
-    box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.10);
+    display: flex !important; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.9rem;
+    margin: 0 0 0.6rem; padding: 0.7rem 0.9rem;
+    background: #ffffff; border-radius: 18px; border: 0 !important;
+    box-shadow: 0 2px 10px -3px rgba(62, 3, 179, 0.14);
   }
   html.dark[data-app-mode] table tbody tr { background: #1e293b; }
   html[data-app-mode] table tbody td {
-    display: flex !important; align-items: center; justify-content: space-between; gap: 1rem;
-    padding: 0.45rem 0 !important; border: 0 !important; text-align: right !important; white-space: normal !important;
-    min-width: 0 !important; width: auto !important;
+    display: inline-flex !important; align-items: center; gap: 0.3rem;
+    padding: 0 !important; border: 0 !important; background: transparent !important;
+    font-size: 12px !important; line-height: 1.35; text-align: left !important; white-space: normal !important;
+    min-width: 0 !important; width: auto !important; max-width: 100%;
   }
-  html[data-app-mode] table tbody td + td { border-top: 1px solid #f1edfa !important; }
   html[data-app-mode] table tbody td::before {
-    content: attr(data-label); flex-shrink: 0; font-size: 11px; font-weight: 700; color: #64748b; text-align: left;
+    content: attr(data-label) ":"; font-size: 11px; font-weight: 600; color: #94a3b8;
   }
-  html[data-app-mode] table tbody td[data-label=""]::before { display: none; }
-  html[data-app-mode] table tbody td[data-label=""] { justify-content: flex-start; text-align: left !important; }
-  html[data-app-mode] table tbody td[colspan] { display: block !important; text-align: center !important; }
+  html[data-app-mode] table tbody td[data-label=""]::before,
+  html[data-app-mode] table tbody td[data-title]::before,
+  html[data-app-mode] table tbody td[data-aksi]::before { display: none; }
+  html[data-app-mode] table tbody td[data-skip] { display: none !important; }
+  html[data-app-mode] table tbody td[data-title] {
+    flex: 1 0 100%; display: block !important; font-size: 14px !important; font-weight: 700;
+  }
+  html[data-app-mode] table tbody td[data-aksi], html[data-app-mode] table tbody td[data-label=""] {
+    flex: 1 0 100%; justify-content: flex-end; margin-top: 0.25rem; padding-top: 0.45rem !important;
+    border-top: 1px solid #f1edfa !important;
+  }
+  html[data-app-mode] table tbody td[colspan] { flex: 1 0 100%; display: block !important; text-align: center !important; }
   html[data-app-mode] table tbody td[colspan]::before { display: none; }
 }
 

@@ -10,9 +10,16 @@ function labelTables(root: ParentNode) {
     if (!heads.length) return;
     table.querySelectorAll("tbody tr").forEach((tr) => {
       let i = 0;
+      let titled = false;
       Array.from(tr.children).forEach((cell) => {
         if (cell.tagName !== "TD") return;
-        if (!cell.hasAttribute("data-label")) cell.setAttribute("data-label", heads[i] ?? "");
+        const label = heads[i] ?? "";
+        if (!cell.hasAttribute("data-label")) cell.setAttribute("data-label", label);
+        const text = (cell.textContent ?? "").trim();
+        // kolom nomor urut (kepala kosong, isi angka) disembunyikan; kolom pertama berlabel jadi judul kartu
+        if (!label && /^\d*$/.test(text) && !cell.querySelector("button,a,input")) cell.setAttribute("data-skip", "1");
+        else if (!titled && label) { cell.setAttribute("data-title", "1"); titled = true; }
+        if (/^(aksi|file|detail|rincian)$/i.test(label)) cell.setAttribute("data-aksi", "1");
         i += Number((cell as HTMLTableCellElement).colSpan) || 1;
       });
     });
