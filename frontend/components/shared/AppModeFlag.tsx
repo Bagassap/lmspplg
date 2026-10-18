@@ -36,6 +36,7 @@ function tagSheetHeaders(root: ParentNode) {
       const style = head.getAttribute("style") ?? "";
       const cls = head.className && typeof head.className === "string" ? head.className : "";
       if (/background/.test(style) || /bg-\[#(3E03B3|A1F919|00AAFA)\]|bg-linear|bg-gradient/.test(cls)) head.classList.add("app-sheet-header");
+      else if (head.querySelector("h1,h2,h3") && head.querySelector("button")) head.classList.add("app-plain-header");
     });
   });
 }

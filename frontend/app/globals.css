@@ -278,3 +278,22 @@ html[data-app-mode] div:not(:has(button, a, input, select, textarea)):has(> h1.t
 html[data-app-mode] h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight) { display: none !important; }
 html[data-app-mode] p:has(+ h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
 html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { display: none !important; }
+
+/* ---- Semua modal/sheet: gaya aplikasi seragam (form, tombol, header polos, teks terbaca, tanpa transparansi) ---- */
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) > .absolute.inset-0 { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0,0,0,0.5) !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+  background-color: #f1edfa !important; border: 0 !important; border-radius: 16px !important; color: #0f172a;
+}
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is(input, select, textarea):focus { outline: 2px solid #3e03b3 !important; outline-offset: 0 !important; box-shadow: none !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is(input, textarea)::placeholder { color: #64748b; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) button:not(.rounded-full) { border-radius: 9999px; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) button[class*="rounded-xl"]:not([class*="px-"]) { border-radius: 14px; }
+html:not(.dark)[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is(.text-slate-400, .text-slate-300, .text-gray-400) { color: #64748b !important; }
+html:not(.dark)[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is([class*="text-slate-400/"], [class*="text-white/"]):not(.app-sheet-header *) { color: #64748b !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]) :is([class*="bg-slate-50/"], [class*="bg-slate-100/"], [class*="bg-slate-50 "], [class*="bg-gray-50"]):not(input):not(select):not(textarea) { background-color: #f1edfa !important; }
+html[data-app-mode] .app-plain-header { border-bottom: 0 !important; padding-bottom: 0.5rem !important; }
+html[data-app-mode] .app-plain-header :is(h1, h2, h3) { color: #0f172a !important; font-weight: 800 !important; }
+html[data-app-mode] .app-plain-header :is(h1, h2, h3) + p, html[data-app-mode] .app-plain-header p { color: #64748b !important; }
+html[data-app-mode] .app-plain-header > button:last-child, html[data-app-mode] .app-plain-header > div:last-child > button:last-child {
+  background: #f1edfa !important; color: #3e03b3 !important; border-radius: 9999px;
+}
