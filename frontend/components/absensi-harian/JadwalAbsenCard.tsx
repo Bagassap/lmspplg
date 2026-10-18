@@ -4,6 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarClock, Clock, LogIn, LogOut, Plus, Trash2, X, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppSheet } from "@/components/app/AppSheet";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 
 type JadwalHariIni = {
   tanggal: string;
@@ -58,6 +61,7 @@ const LABEL = "mb-1 block text-[11px] font-bold uppercase tracking-wide text-sla
 
 export function JadwalAbsenCard() {
   const toast = useToast();
+  const app = useIsAppMode();
   const [hariIni, setHariIni] = useState<JadwalHariIni | null>(null);
   const [list, setList] = useState<JadwalOverride[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,6 +140,132 @@ export function JadwalAbsenCard() {
   }
 
   const isOverriddenToday = !!hariIni?.override;
+
+  if (app) {
+    const FIELD = "h-11 w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
+    const CAP = "mb-1 block text-xs font-bold text-slate-700";
+    return (
+      <>
+        <div className="rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("violet")}>
+              <CalendarClock size={22} color="#fff" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[15px] font-extrabold text-slate-900 dark:text-white">Jadwal Absen</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Jam absen datang &amp; pulang (WIB)</p>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-6 text-slate-400"><Loader2 size={18} className="animate-spin" /></div>
+          ) : hariIni ? (
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                {formatTanggalWib(hariIni.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <div className="rounded-2xl bg-[#E3F8EF] p-3">
+                  <p className="flex items-center gap-1.5 text-xs font-bold text-[#059669]"><LogIn size={12} /> Datang</p>
+                  <p className="mt-1 text-sm font-extrabold text-slate-900">{hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.hadirStartMinutes, hariIni.hadirEndMinutes)}</p>
+                </div>
+                <div className="rounded-2xl bg-[#E0F2FE] p-3">
+                  <p className="flex items-center gap-1.5 text-xs font-bold text-[#0284C7]"><LogOut size={12} /> Pulang</p>
+                  <p className="mt-1 text-sm font-extrabold text-slate-900">{hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.pulangStartMinutes, hariIni.pulangEndMinutes)}</p>
+                </div>
+              </div>
+              {isOverriddenToday && (
+                <p className="mt-2 flex items-start gap-1.5 rounded-2xl bg-[#FFF4E0] px-3 py-2 text-xs font-semibold text-slate-800">
+                  <Sparkles size={13} className="mt-0.5 shrink-0 text-[#D97706]" />
+                  <span>Jadwal hari ini disesuaikan{hariIni.override?.keterangan ? ` — ${hariIni.override.keterangan}` : ""}</span>
+                </p>
+              )}
+            </div>
+          ) : null}
+
+          {list.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Penyesuaian jadwal</p>
+              {list.map((o) => (
+                <div key={o.id} className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] px-3 py-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-slate-900">{formatTanggalWib(o.tanggal)}</p>
+                    <p className="truncate text-xs text-slate-600">
+                      {[
+                        o.hadirStartMinutes != null || o.hadirEndMinutes != null
+                          ? `Datang ${o.hadirStartMinutes != null ? fmtMinutes(o.hadirStartMinutes) : "—"}-${o.hadirEndMinutes != null ? fmtMinutes(o.hadirEndMinutes) : "—"}`
+                          : null,
+                        o.pulangStartMinutes != null || o.pulangEndMinutes != null
+                          ? `Pulang ${o.pulangStartMinutes != null ? fmtMinutes(o.pulangStartMinutes) : "—"}-${o.pulangEndMinutes != null ? fmtMinutes(o.pulangEndMinutes) : "—"}`
+                          : null,
+                        o.keterangan,
+                      ].filter(Boolean).join(" · ")}
+                    </p>
+                  </div>
+                  <button type="button" onClick={() => handleDelete(o.tanggal)} aria-label="Hapus"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#F26A3D]">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button type="button" onClick={() => openForm()}
+            className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white active:scale-[0.98]">
+            <Plus size={16} /> Atur Jadwal
+          </button>
+        </div>
+
+        <AppSheet open={showForm} onClose={() => setShowForm(false)} title="Atur Jadwal Absen" subtitle="Kosongkan jam yang tidak ingin diubah · WIB"
+          footer={
+            <button type="submit" form="jadwal-form" disabled={saving}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-60">
+              {saving && <Loader2 size={15} className="animate-spin" />}
+              {saving ? "Menyimpan..." : "Simpan Jadwal"}
+            </button>
+          }>
+          <form id="jadwal-form" onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <label className={CAP}>Tanggal</label>
+              <input type="date" required value={form.tanggal} onChange={(e) => setForm((f) => ({ ...f, tanggal: e.target.value }))} className={FIELD} />
+            </div>
+            <div className="rounded-2xl bg-[#E3F8EF] p-3">
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#059669]"><LogIn size={13} /> Absen Datang</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className={CAP}>Mulai</label>
+                  <input type="time" value={form.hadirStart} onChange={(e) => setForm((f) => ({ ...f, hadirStart: e.target.value }))} className={`${FIELD} bg-white`} />
+                </div>
+                <div>
+                  <label className={CAP}>Selesai</label>
+                  <input type="time" value={form.hadirEnd} onChange={(e) => setForm((f) => ({ ...f, hadirEnd: e.target.value }))} className={`${FIELD} bg-white`} />
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl bg-[#E0F2FE] p-3">
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#0284C7]"><LogOut size={13} /> Absen Pulang</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className={CAP}>Mulai</label>
+                  <input type="time" value={form.pulangStart} onChange={(e) => setForm((f) => ({ ...f, pulangStart: e.target.value }))} className={`${FIELD} bg-white`} />
+                </div>
+                <div>
+                  <label className={CAP}>Selesai</label>
+                  <input type="time" value={form.pulangEnd} onChange={(e) => setForm((f) => ({ ...f, pulangEnd: e.target.value }))} className={`${FIELD} bg-white`} />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className={CAP}>Keterangan (opsional)</label>
+              <textarea rows={2} value={form.keterangan} onChange={(e) => setForm((f) => ({ ...f, keterangan: e.target.value }))}
+                placeholder="Contoh: Pulang lebih awal karena acara sekolah" className="w-full resize-none rounded-2xl border-0 bg-[#F1EDFA] px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+            </div>
+          </form>
+        </AppSheet>
+      </>
+    );
+  }
 
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">

@@ -611,27 +611,20 @@ export default function AdminAbsensiHarianPage() {
 
       {appMode && (
         <div className="space-y-6 lg:hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">Presensi Wajib Harian</p>
-              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi Harian</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <MobileDatePicker value={tanggal} onChange={setTanggal} />
-              <button type="button" onClick={() => setShowKelola(true)} aria-label="Kelola kelas"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                <Settings2 size={16} />
-              </button>
-            </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => setKelasPickerOpen(true)}
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-full bg-[#F1EDFA] px-4 text-left">
+              <span className="truncate text-sm font-bold text-[#3E03B3]">
+                {selected ? selected.kelas.nama : "Pilih kelas"}
+              </span>
+              <ChevronDown size={16} className="ml-2 shrink-0 text-[#3E03B3]" />
+            </button>
+            <MobileDatePicker value={tanggal} onChange={setTanggal} />
+            <button type="button" onClick={() => setShowKelola(true)} aria-label="Kelola kelas"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+              <Settings2 size={16} />
+            </button>
           </div>
-
-          <button type="button" onClick={() => setKelasPickerOpen(true)}
-            className="flex h-12 w-full items-center justify-between rounded-full bg-slate-100 px-5 text-left dark:bg-slate-800">
-            <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
-              {selected ? `${selected.kelas.nama} · ${hadirPct}% hadir` : "Pilih kelas"}
-            </span>
-            <ChevronDown size={16} className="ml-2 shrink-0 text-slate-400" />
-          </button>
 
           <button type="button" onClick={() => setStatusPageOpen(true)}
             className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "linear-gradient(135deg, #F26A3D 0%, #FF8A4C 100%)" }}>

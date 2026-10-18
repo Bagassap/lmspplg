@@ -46,6 +46,8 @@ function isIos() {
   return /iphone|ipad|ipod/i.test(navigator.userAgent);
 }
 
+export function isAppModeNow() { return isAppMode(); }
+
 function isAppMode() {
   if (isStandalone()) return true;
   // Untuk uji di browser biasa: buka halaman dengan ?app=1 (diingat selama tab terbuka).

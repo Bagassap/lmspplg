@@ -1,6 +1,7 @@
 import { CheckCircle2, MinusCircle, AlertCircle, Thermometer, LogOut, CalendarDays, CalendarRange, CalendarCheck2 } from "lucide-react";
 import type { StatusAbsensi } from "./types";
 import type { Tone3D } from "@/components/shared/Icon3D";
+import { isAppModeNow } from "@/lib/pwaInstall";
 
 export const STATUS_CFG: Record<StatusAbsensi, {
   label: string; bg: string; clr: string; darkBg: string; icon: React.ElementType;
@@ -133,3 +134,21 @@ export function parseLokasi(raw: string | null | undefined) {
 }
 
 export { API_BASE, resolveMediaSrc } from "@/lib/media";
+
+/* Mode aplikasi: warna status memakai palet 5 warna (ungu + hijau, biru, oranye, ungu).
+   Dijalankan sekali di klien sebelum komponen merender; browser biasa tidak berubah. */
+if (typeof window !== "undefined" && isAppModeNow()) {
+  Object.assign(STATUS_CFG.HADIR, { bg: "#E3F8EF", clr: "#059669", darkBg: "#05966933" });
+  Object.assign(STATUS_CFG.IZIN, { bg: "#E0F2FE", clr: "#0284C7", darkBg: "#0284C733" });
+  Object.assign(STATUS_CFG.SAKIT, { bg: "#FFF4E0", clr: "#D97706", darkBg: "#D9770633" });
+  Object.assign(STATUS_CFG.ALPA, { bg: "#FFE9E2", clr: "#F26A3D", darkBg: "#F26A3D33" });
+  Object.assign(PULANG_CFG, { bg: "#F1EDFA", clr: "#3E03B3", darkBg: "#3E03B333" });
+  Object.assign(STATUS_GRADIENT, { HADIR: "#10B981", IZIN: "#0EA5E9", SAKIT: "#F59E0B", ALPA: "#F26A3D" });
+  CARD_GRADIENTS.splice(0, CARD_GRADIENTS.length, "#3E03B3", "#10B981", "#F59E0B", "#10B981", "#0EA5E9", "#F26A3D");
+  CARD_ACCENT.splice(0, CARD_ACCENT.length, "#3E03B3", "#059669", "#D97706", "#059669", "#0284C7", "#F26A3D");
+  DASHBOARD_GRADIENTS.splice(0, DASHBOARD_GRADIENTS.length, "#0EA5E9", "#10B981", "#F59E0B", "#3E03B3");
+  DASHBOARD_ACCENT.splice(0, DASHBOARD_ACCENT.length, "#0284C7", "#059669", "#D97706", "#3E03B3");
+  DASHBOARD_PASTEL.splice(0, DASHBOARD_PASTEL.length, "#E0F2FE", "#E3F8EF", "#FFF4E0", "#F1EDFA");
+  WALLET_ON_TEXT.splice(0, WALLET_ON_TEXT.length, "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF");
+  WALLET_GRADIENTS.splice(0, WALLET_GRADIENTS.length, "#0EA5E9", "#10B981", "#F59E0B", "#3E03B3");
+}

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { todayJakarta } from "@/components/absensi-harian/shared";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 const BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -18,6 +19,7 @@ function pad(n: number) {
 }
 
 export function MobileDatePicker({ value, onChange, light, flat }: { value: string; onChange: (v: string) => void; light?: boolean; flat?: boolean }) {
+  const app = useIsAppMode();
   const [open, setOpen] = useState(false);
   const sel = parseYmd(value);
   const [viewY, setViewY] = useState(sel.y);
@@ -58,11 +60,11 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
         className={`relative z-10 flex shrink-0 items-center gap-1.5 ${
           flat
             ? "h-11 rounded-xl bg-slate-50 px-3 text-slate-700 dark:bg-slate-700/40 dark:text-slate-200"
-            : `rounded-full px-3 py-1.5 ${light ? "bg-white text-[#3E03B3]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`
+            : `rounded-full ${app && !light ? "h-11 bg-[#F1EDFA] px-4 text-[#3E03B3]" : `px-3 py-1.5 ${light ? "bg-white text-[#3E03B3]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`}`
         }`}>
-        <CalendarDays size={13} className={light ? "text-[#3E03B3]" : "text-slate-400"} />
+        <CalendarDays size={13} className={light || app ? "text-[#3E03B3]" : "text-slate-400"} />
         <span className="text-xs font-bold">{label}</span>
-        <ChevronDown size={12} className={light ? "text-[#3E03B3]" : "text-slate-400"} />
+        <ChevronDown size={12} className={light || app ? "text-[#3E03B3]" : "text-slate-400"} />
       </button>
 
       {typeof document !== "undefined" && createPortal(

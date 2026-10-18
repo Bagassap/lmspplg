@@ -9,14 +9,18 @@ import { PULANG_CFG, DASHBOARD_GRADIENTS, DASHBOARD_ACCENT, DASHBOARD_PASTEL } f
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { SiswaAbsensi } from "./types";
+import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppSheet } from "@/components/app/AppSheet";
+import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
 
 function formatJam(waktu?: string | null) {
   return waktu && waktu.trim() ? waktu : "-";
 }
 
 function StatTrigger({
-  title, compactTitle, icon: Icon, gradient, accent, pastel, items, total, hint, onOpen, compact,
+  title, compactTitle, icon: Icon, gradient, accent, pastel, items, total, hint, onOpen, compact, tone = "amber",
 }: {
+  tone?: Tone3D;
   title: string;
   compactTitle?: string;
   icon: React.ElementType;
@@ -35,13 +39,13 @@ function StatTrigger({
     return (
       <motion.button type="button" onClick={onOpen}
         whileTap={{ scale: 0.97 }}
-        className="flex items-center gap-2.5 rounded-2xl p-3 text-left" style={{ backgroundColor: pastel }}>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: accent }}>
-          <Icon size={14} />
+        className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3 text-left">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(tone)}>
+          <Icon size={19} color="#fff" />
         </span>
         <div className="min-w-0">
-          <p className="truncate text-base font-extrabold" style={{ color: accent }}>{items.length}</p>
-          <p className="truncate text-[9.5px] font-semibold" style={{ color: accent }}>{compactTitle ?? title}</p>
+          <p className="text-xl font-extrabold leading-none text-slate-900">{items.length}</p>
+          <p className="mt-1 truncate text-[11px] font-semibold text-slate-600">{compactTitle ?? title}</p>
         </div>
       </motion.button>
     );
@@ -104,6 +108,47 @@ function DetailModal({
     } catch {
       toast.error("Gagal menyalin", "Coba lagi atau salin manual");
     }
+  }
+
+  const app = useIsAppMode();
+  if (app) {
+    return (
+      <AppSheet open onClose={onClose} title={title} subtitle={`${items.length} siswa dalam daftar ini`}>
+        {items.length === 0 ? (
+          <p className="py-10 text-center text-sm font-semibold text-slate-600">{emptyMessage}</p>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <div className="relative min-w-0 flex-1">
+                <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama / NIS"
+                  className="h-10 w-full rounded-full border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+              </div>
+              <button type="button" onClick={copyNames}
+                className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-[#3E03B3] px-4 text-xs font-bold text-white active:scale-95">
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? "Disalin" : "Salin"}
+              </button>
+            </div>
+            <div className="mt-3 space-y-2">
+              {filtered.length === 0 && <p className="py-6 text-center text-xs font-semibold text-slate-600">Tidak ada yang cocok</p>}
+              {filtered.map((s) => (
+                <div key={s.siswaId} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5">
+                  <Avatar src={s.fotoProfil} nama={s.nama} sizePx={36} fallbackBg={avatarColorFor(s.nama)} textClassName="text-[10px] font-extrabold" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-slate-900">{s.nama}</p>
+                    <p className="truncate text-xs text-slate-600">
+                      {mode === "pulang" ? `Hadir pukul ${formatJam(s.waktuAbsen)}` : s.status === "ALPA" ? "Ditandai alpa" : "Belum ada catatan absen"}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">{s.nis ?? "—"}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </AppSheet>
+    );
   }
 
   if (typeof document === "undefined") return null;
@@ -225,6 +270,7 @@ export function BelumAbsenPanel({ siswaList, compact }: { siswaList: SiswaAbsens
           hint="Perlu tindak lanjut segera →"
           onOpen={() => setActiveModal("hadir")}
           compact={compact}
+          tone="violet"
         />
         <StatTrigger
           title="Belum Absen Pulang"
@@ -238,6 +284,7 @@ export function BelumAbsenPanel({ siswaList, compact }: { siswaList: SiswaAbsens
           hint="Klik untuk kirim pengingat →"
           onOpen={() => setActiveModal("pulang")}
           compact={compact}
+          tone="amber"
         />
       </div>
 
