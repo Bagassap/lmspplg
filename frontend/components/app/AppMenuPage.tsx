@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Lock, LogOut, Moon, Sun, UserCircle, CreditCard } from "lucide-react";
+import { ChevronRight, Lock, LogOut, Moon, Sun, UserCircle, CreditCard, BellRing } from "lucide-react";
+import { useWebPush } from "@/lib/webPush";
+import { useToast } from "@/components/shared/ToastSystem";
 import type { UserPayload } from "@/lib/auth";
 import { AppProfileCard } from "@/components/app/AppProfileCard";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
@@ -57,6 +59,15 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
   const { items, pendingResetCount } = useDashboardMenu(user);
   const [dark, setDark] = useState(false);
   const [out, setOut] = useState(false);
+  const push = useWebPush();
+  const toast = useToast();
+
+  async function togglePush() {
+    if (push.state === "on") { await push.disable(); toast.info("Notifikasi perangkat dimatikan", ""); return; }
+    const err = await push.enable();
+    if (err) toast.warning("Notifikasi belum aktif", err);
+    else toast.success("Notifikasi aktif", "Kamu akan menerima pengingat absen, tugas, dan pengumuman.");
+  }
 
   useEffect(() => { setDark(document.documentElement.classList.contains("dark")); }, []);
 
@@ -87,6 +98,11 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
       <Group title="Akun">
         {user.role === "SISWA" && <Row href="/siswa/profil" icon={UserCircle} label="Profil Saya" hint="Data diri dan foto profil" tone={n++} />}
         {user.role === "SISWA" && <Row href={KARTU_PELAJAR_URL} external icon={CreditCard} label="Kartu Pelajar Digital" hint="Buka kartu pelajar" tone={n++} />}
+        {push.state !== "unsupported" && push.state !== "loading" && (
+          <Row icon={BellRing} label="Notifikasi Perangkat"
+            hint={push.state === "on" ? "Aktif · ketuk untuk mematikan" : push.state === "denied" ? "Diblokir di pengaturan browser" : push.state === "server-off" ? "Belum tersedia di server" : "Ketuk untuk mengaktifkan"}
+            tone={n++} onClick={push.busy || push.state === "denied" ? undefined : togglePush} />
+        )}
         <Row icon={dark ? Sun : Moon} label={dark ? "Mode Terang" : "Mode Gelap"} hint="Ubah tampilan aplikasi" tone={n++} onClick={toggleDark} />
       </Group>
 

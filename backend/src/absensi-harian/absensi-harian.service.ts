@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { KelasService } from '../kelas/kelas.service';
 import { NotificationService } from '../notification/notification.service';
@@ -668,6 +669,68 @@ export class AbsensiHarianService {
     });
 
     return { count: belumAbsenUserIds.length };
+  }
+
+  // Pengingat otomatis sesuai jadwal absen (termasuk penyesuaian jadwal oleh
+  // admin). Jalan tiap menit, tapi hanya bertindak tepat pada 4 titik waktu:
+  //  1. jam buka absen datang        -> semua siswa
+  //  2. 15 menit sebelum datang tutup -> siswa yang belum tercatat hadir
+  //  3. jam buka absen pulang        -> siswa hadir yang belum absen pulang
+  //  4. 15 menit sebelum pulang tutup -> siswa hadir yang belum absen pulang
+  // Notifikasi masuk ke lonceng dan, kalau perangkat sudah mengaktifkan
+  // notifikasi, juga muncul sebagai push di HP.
+  @Cron('* * * * *', { timeZone: 'Asia/Jakarta' })
+  async pengingatJadwalAbsen() {
+    const { hour, minute, dayOfWeek } = jakartaParts();
+    if (dayOfWeek < 1 || dayOfWeek > 5) return;
+    const now = hour * 60 + minute;
+    const isFriday = dayOfWeek === 5;
+    const tanggal = todayStr();
+    const override = await this.getOverrideForDate(tanggal);
+    const hadirStart = override?.hadirStartMinutes ?? defaultHadirStart();
+    const hadirEnd = override?.hadirEndMinutes ?? defaultHadirEnd();
+    const pulangStart = override?.pulangStartMinutes ?? defaultPulangStart(isFriday);
+    const pulangEnd = override?.pulangEndMinutes ?? defaultPulangEnd(isFriday);
+
+    const kirim = (userIds: string[], title: string, message: string) =>
+      this.notificationService.createMany(userIds, { title, message, type: NotificationType.ABSENSI, link: '/absensi-harian' });
+
+    try {
+      if (now === hadirStart) {
+        const semua = await this.prisma.siswa.findMany({ where: { userId: { not: null } }, select: { userId: true } });
+        await kirim(
+          semua.map((s) => s.userId!),
+          'Absen datang sudah dibuka',
+          `Silakan absen datang sekarang. Ditutup pukul ${minutesLabel(hadirEnd)} WIB.`,
+        );
+      } else if (hadirEnd - hadirStart > 15 && now === hadirEnd - 15) {
+        const belum = await this.siswaBelumHadir(tanggal);
+        await kirim(belum, 'Absen datang segera ditutup', `Kamu belum absen datang. Ditutup pukul ${minutesLabel(hadirEnd)} WIB.`);
+      } else if (now === pulangStart) {
+        const belum = await this.siswaBelumPulang(tanggal);
+        await kirim(belum, 'Absen pulang sudah dibuka', `Jangan lupa absen pulang. Ditutup pukul ${minutesLabel(pulangEnd)} WIB.`);
+      } else if (pulangEnd - pulangStart > 15 && now === pulangEnd - 15) {
+        const belum = await this.siswaBelumPulang(tanggal);
+        await kirim(belum, 'Absen pulang segera ditutup', `Kamu belum absen pulang. Ditutup pukul ${minutesLabel(pulangEnd)} WIB.`);
+      }
+    } catch {
+      // Pengingat tidak boleh mengganggu proses lain; gagal sekali tidak apa-apa.
+    }
+  }
+
+  private async siswaBelumHadir(tanggal: string): Promise<string[]> {
+    const siswa = await this.prisma.siswa.findMany({ where: { userId: { not: null } }, select: { id: true, userId: true } });
+    const rows = await this.prisma.absensiHarian.findMany({ where: { tanggal }, select: { siswaId: true, status: true } });
+    const map = new Map(rows.map((r) => [r.siswaId, r.status]));
+    return siswa.filter((s) => { const st = map.get(s.id) ?? null; return st === null || st === 'ALPA'; }).map((s) => s.userId!);
+  }
+
+  private async siswaBelumPulang(tanggal: string): Promise<string[]> {
+    const rows = await this.prisma.absensiHarian.findMany({
+      where: { tanggal, status: 'HADIR', waktuPulang: null, siswa: { userId: { not: null } } },
+      select: { siswa: { select: { userId: true } } },
+    });
+    return rows.map((r) => r.siswa.userId!).filter(Boolean);
   }
 
   private async getOverrideForDate(tanggal: string): Promise<JadwalOverrideRow> {

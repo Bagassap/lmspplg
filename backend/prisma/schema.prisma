@@ -74,6 +74,7 @@ model User {
   komentarPengumuman  KomentarPengumuman[]
   diskusiUkk          DiskusiUKK[]
   notifications       Notification[]
+  pushSubscriptions   PushSubscription[]
   catatanSiswaDicatat CatatanSiswa[]
   materiDibuat        Materi[]
   tugasDibuat         Tugas[]
@@ -465,6 +466,20 @@ model Notification {
 
   @@index([userId, isRead])
   @@map("notifications")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }
 
 model TempatMagang {

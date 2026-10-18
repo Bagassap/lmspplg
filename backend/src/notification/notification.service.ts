@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationType } from '../../generated/prisma/client';
+import { PushService } from './push.service';
 
 export interface CreateNotificationInput {
   userId: string;
@@ -12,10 +13,13 @@ export interface CreateNotificationInput {
 
 @Injectable()
 export class NotificationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly push: PushService,
+  ) {}
 
-  create(input: CreateNotificationInput) {
-    return this.prisma.notification.create({
+  async create(input: CreateNotificationInput) {
+    const created = await this.prisma.notification.create({
       data: {
         userId:  input.userId,
         title:   input.title,
@@ -23,12 +27,21 @@ export class NotificationService {
         type:    input.type ?? NotificationType.SISTEM,
         link:    input.link,
       },
+      include: { user: { select: { role: true } } },
     });
+    const prefix = `/${created.user.role.toLowerCase()}`;
+    void this.push.sendToUsers([input.userId], {
+      title: input.title,
+      body: input.message,
+      url: input.link ? `${prefix}${input.link}` : `${prefix}/notifikasi`,
+    });
+    const { user: _user, ...plain } = created;
+    return plain;
   }
 
   async createMany(userIds: string[], input: Omit<CreateNotificationInput, 'userId'>) {
     if (userIds.length === 0) return { count: 0 };
-    return this.prisma.notification.createMany({
+    const result = await this.prisma.notification.createMany({
       data: userIds.map((userId) => ({
         userId,
         title:   input.title,
@@ -37,6 +50,19 @@ export class NotificationService {
         link:    input.link,
       })),
     });
+    // Link notifikasi relatif terhadap role ("/absensi-harian"), jadi push dikirim per kelompok role.
+    const users = await this.prisma.user.findMany({ where: { id: { in: userIds } }, select: { id: true, role: true } });
+    const byRole = new Map<string, string[]>();
+    for (const u of users) byRole.set(u.role, [...(byRole.get(u.role) ?? []), u.id]);
+    for (const [role, ids] of byRole) {
+      const prefix = `/${role.toLowerCase()}`;
+      void this.push.sendToUsers(ids, {
+        title: input.title,
+        body: input.message,
+        url: input.link ? `${prefix}${input.link}` : `${prefix}/notifikasi`,
+      });
+    }
+    return result;
   }
 
   async findAllForUser(userId: string, page = 1, limit = 10) {

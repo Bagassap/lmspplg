@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Bell, CheckCheck, Megaphone, ClipboardCheck, BookOpen, Briefcase, FileText, Info } from "lucide-react";
 import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
+import { useWebPush } from "@/lib/webPush";
 
 type ApiNotifType = "PENGUMUMAN" | "ABSENSI" | "TUGAS" | "MAGANG" | "UKK" | "SISTEM";
 type ApiNotification = {
@@ -34,6 +35,7 @@ export function AppNotifikasiPage() {
   const role = pathname.split("/").filter(Boolean)[0] ?? "siswa";
   const [items, setItems] = useState<ApiNotification[]>([]);
   const [loading, setLoading] = useState(true);
+  const push = useWebPush();
 
   const load = useCallback(async () => {
     try {
@@ -64,6 +66,16 @@ export function AppNotifikasiPage() {
 
   return (
     <div className="space-y-3 pb-4">
+      {push.state === "off" && (
+        <button type="button" onClick={() => push.enable()} disabled={push.busy}
+          className="flex w-full items-center gap-3 rounded-2xl bg-[#FFE9E2] px-3 py-3 text-left">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F26A3D] text-white"><Bell size={18} /></span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold text-slate-900">Aktifkan notifikasi di perangkat</span>
+            <span className="block text-xs text-slate-700">Terima pengingat jam absen, tugas, dan pengumuman walau aplikasi ditutup.</span>
+          </span>
+        </button>
+      )}
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
           {loading ? "Memuat…" : unread > 0 ? `${unread} belum dibaca` : "Semua sudah dibaca"}
