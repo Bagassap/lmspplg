@@ -58,7 +58,7 @@ const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const DOT_COLORS = ["#ffffff", "#A1F919", "#ffffff"] as const;
+const DOT_COLORS = ["#ffffff", "#F26A3D", "#ffffff"] as const;
 
 export function Splash() {
   const router = useRouter();

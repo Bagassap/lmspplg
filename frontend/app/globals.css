@@ -4,21 +4,21 @@
 
 :root {
   --background: #F8FAFC;
-  --foreground: #000000;
+  --foreground: #0F172A;
 
   --color-brand: #3E03B3;
-  --color-brand-dark: #00AAFA;
-  --color-accent: #A1F919;
+  --color-brand-dark: #2D0281;
+  --color-accent: #F26A3D;
 
   --color-lavender: #F1EDFA;
   --color-pink: #F1EDFA;
   --color-violet: #3E03B3;
-  --color-blue: #00AAFA;
-  --color-navy: #00AAFA;
-  --color-deep: #000000;
+  --color-blue: #0EA5E9;
+  --color-navy: #2D0281;
+  --color-deep: #0F172A;
 
-  --color-success: #A1F919;
-  --color-error: #000000;
+  --color-success: #10B981;
+  --color-error: #F26A3D;
 }
 
 @theme inline {
@@ -42,7 +42,7 @@
 
   --color-primary: #3E03B3;
   --color-primary-light: #F1EDFA;
-  --color-primary-dark: #00AAFA;
+  --color-primary-dark: #2D0281;
 
   --color-surface: #F8FAFC;
 }
@@ -140,21 +140,25 @@ html[data-app-mode] .app-header-row h1 {
 html.dark[data-app-mode] .app-header-row h1 { color: #ffffff !important; }
 
 /* Tombol/latar lime di komponen lama -> ungu brand dengan teks putih. */
-html[data-app-mode] .bg-\[\#A1F919\],
-html[data-app-mode] button[style*="background: rgb(161, 249, 25)"],
-html[data-app-mode] a[style*="background: rgb(161, 249, 25)"],
-html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] {
+html [style*="background: rgb(161, 249, 25)"]:not(button):not(a),
+html [style*="background-color: rgb(161, 249, 25)"]:not(button):not(a) { background: #3e03b3 !important; color: #ffffff !important; }
+html [style*="background: rgb(161, 249, 25)"]:not(button):not(a) *,
+html [style*="background-color: rgb(161, 249, 25)"]:not(button):not(a) * { color: #ffffff !important; }
+html .bg-\[\#A1F919\],
+html button[style*="background: rgb(161, 249, 25)"],
+html a[style*="background: rgb(161, 249, 25)"],
+html button[style*="background-color: rgb(161, 249, 25)"] {
   background: #3e03b3 !important; color: #ffffff !important;
 }
-html[data-app-mode] .bg-\[\#A1F919\] *,
-html[data-app-mode] button[style*="background: rgb(161, 249, 25)"] *,
-html[data-app-mode] a[style*="background: rgb(161, 249, 25)"] *,
-html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }
+html .bg-\[\#A1F919\] *,
+html button[style*="background: rgb(161, 249, 25)"] *,
+html a[style*="background: rgb(161, 249, 25)"] *,
+html button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }
 
 /* Biru muda lama -> ungu brand. */
-html[data-app-mode] .bg-\[\#00AAFA\] { background-color: #3e03b3 !important; }
-html[data-app-mode] [style*="background: rgb(0, 170, 250)"],
-html[data-app-mode] [style*="background-color: rgb(0, 170, 250)"] { background: #3e03b3 !important; }
+html .bg-\[\#00AAFA\] { background-color: #3e03b3 !important; }
+html [style*="background: rgb(0, 170, 250)"],
+html [style*="background-color: rgb(0, 170, 250)"] { background: #3e03b3 !important; }
 
 /* ---- Dialog tengah -> panel dari bawah (bottom sheet) ---- */
 html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):not(.pointer-events-none):not([data-plain]) {
@@ -179,7 +183,7 @@ html[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background:
 /* ================= PALET 5 WARNA (mode aplikasi) =================
    Ungu #3E03B3 utama; ikon: hijau, biru, oranye, ungu. Warna lain
    (lime, hijau tua, hitam, biru langit lama, merah) dipetakan ke palet. */
-html[data-app-mode] {
+html {
   --color-red-50: #ffe9e2; --color-red-100: #ffe9e2; --color-red-200: #ffd0c2; --color-red-300: #f9a98f;
   --color-red-400: #f58a66; --color-red-500: #f26a3d; --color-red-600: #f26a3d; --color-red-700: #d9532a; --color-red-800: #b84320; --color-red-900: #8f3318;
   --color-rose-50: #ffe9e2; --color-rose-100: #ffe9e2; --color-rose-500: #f26a3d; --color-rose-600: #f26a3d; --color-rose-700: #d9532a;
@@ -193,32 +197,32 @@ html[data-app-mode] {
   --color-green-50: #e3f8ef; --color-green-100: #d1f4e4; --color-green-500: #10b981; --color-green-600: #059669; --color-green-700: #047857;
 }
 /* lime / hijau tua lama -> ungu */
-html[data-app-mode] [class*="text-[#5D900F]"], html[data-app-mode] [class*="text-[#48700B]"],
-html[data-app-mode] [class*="text-[#A1F919]"], html[data-app-mode] [class*="text-[#8F6DD3]"] { color: #3e03b3 !important; }
-html.dark[data-app-mode] [class*="text-[#5D900F]"], html.dark[data-app-mode] [class*="text-[#A1F919]"],
-html.dark[data-app-mode] [class*="dark:text-[#A1F919]"] { color: #c4b5fd !important; }
-html[data-app-mode] [class*="bg-[#F6FEE8]"], html[data-app-mode] [class*="bg-[#EAF8D2]"] { background-color: #f1edfa !important; }
-html[data-app-mode] [class*="bg-[#A1F919]/"], html[data-app-mode] [class*="bg-[#48700B]/"] { background-color: rgba(62,3,179,0.12) !important; }
-html[data-app-mode] [class*="border-[#A1F919]"], html[data-app-mode] [class*="border-[#5D900F]"],
-html[data-app-mode] [class*="border-[#48700B]"] { border-color: rgba(62,3,179,0.35) !important; }
-html[data-app-mode] [class*="ring-[#A1F919]"] { --tw-ring-color: rgba(62,3,179,0.3) !important; }
-html[data-app-mode] [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #f1edfa !important; }
-html[data-app-mode] [class*="from-[#A1F919]"], html[data-app-mode] [class*="to-[#A1F919]"] { --tw-gradient-from: #3e03b3; --tw-gradient-to: #5b16d9; }
-html[data-app-mode] .text-black { color: #0f172a !important; }
-html[data-app-mode] .bg-\[\#A1F919\] .text-black, html[data-app-mode] .bg-\[\#A1F919\].text-black { color: #ffffff !important; }
+html [class*="text-[#5D900F]"], html [class*="text-[#48700B]"],
+html [class*="text-[#A1F919]"], html [class*="text-[#8F6DD3]"] { color: #3e03b3 !important; }
+html.dark [class*="text-[#5D900F]"], html.dark [class*="text-[#A1F919]"],
+html.dark [class*="dark:text-[#A1F919]"] { color: #c4b5fd !important; }
+html [class*="bg-[#F6FEE8]"], html [class*="bg-[#EAF8D2]"] { background-color: #f1edfa !important; }
+html [class*="bg-[#A1F919]/"], html [class*="bg-[#48700B]/"] { background-color: rgba(62,3,179,0.12) !important; }
+html [class*="border-[#A1F919]"], html [class*="border-[#5D900F]"],
+html [class*="border-[#48700B]"] { border-color: rgba(62,3,179,0.35) !important; }
+html [class*="ring-[#A1F919]"] { --tw-ring-color: rgba(62,3,179,0.3) !important; }
+html [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #f1edfa !important; }
+html [class*="from-[#A1F919]"], html [class*="to-[#A1F919]"] { --tw-gradient-from: #3e03b3; --tw-gradient-to: #5b16d9; }
+html .text-black { color: #0f172a !important; }
+html .bg-\[\#A1F919\] .text-black, html .bg-\[\#A1F919\].text-black { color: #ffffff !important; }
 /* gaya inline: warna lime / hijau tua / biru lama / hitam */
-html[data-app-mode] [style*="color: rgb(93, 144, 15)"], html[data-app-mode] [style*="color: rgb(72, 112, 11)"],
-html[data-app-mode] [style*="color: rgb(161, 249, 25)"] { color: #3e03b3 !important; }
-html[data-app-mode] [style*="color: rgb(0, 170, 250)"] { color: #0284c7 !important; }
-html[data-app-mode] [style*="background: rgb(246, 254, 232)"], html[data-app-mode] [style*="background-color: rgb(246, 254, 232)"],
-html[data-app-mode] [style*="background: rgb(234, 248, 210)"] { background: #f1edfa !important; }
-html[data-app-mode] [style*="background: rgb(230, 247, 255)"], html[data-app-mode] [style*="background-color: rgb(230, 247, 255)"] { background: #e0f2fe !important; }
-html[data-app-mode] [style*="background: rgba(161, 249, 25"], html[data-app-mode] [style*="background-color: rgba(161, 249, 25"] { background: rgba(62,3,179,0.12) !important; }
-html[data-app-mode] [style*="border-color: rgb(161, 249, 25)"], html[data-app-mode] [style*="border: 1px solid rgb(161, 249, 25)"] { border-color: rgba(62,3,179,0.4) !important; }
-html[data-app-mode] [style*="background: rgb(242, 242, 242)"], html[data-app-mode] [style*="background-color: rgb(242, 242, 242)"] { background: #ffe9e2 !important; }
-html[data-app-mode] [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; }
-html[data-app-mode] [style*="background: rgb(0, 0, 0)"], html[data-app-mode] [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
-html[data-app-mode] [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
+html [style*="color: rgb(93, 144, 15)"], html [style*="color: rgb(72, 112, 11)"],
+html [style*="color: rgb(161, 249, 25)"] { color: #3e03b3 !important; }
+html [style*="color: rgb(0, 170, 250)"] { color: #0284c7 !important; }
+html [style*="background: rgb(246, 254, 232)"], html [style*="background-color: rgb(246, 254, 232)"],
+html [style*="background: rgb(234, 248, 210)"] { background: #f1edfa !important; }
+html [style*="background: rgb(230, 247, 255)"], html [style*="background-color: rgb(230, 247, 255)"] { background: #e0f2fe !important; }
+html [style*="background: rgba(161, 249, 25"], html [style*="background-color: rgba(161, 249, 25"] { background: rgba(62,3,179,0.12) !important; }
+html [style*="border-color: rgb(161, 249, 25)"], html [style*="border: 1px solid rgb(161, 249, 25)"] { border-color: rgba(62,3,179,0.4) !important; }
+html [style*="background: rgb(242, 242, 242)"], html [style*="background-color: rgb(242, 242, 242)"] { background: #ffe9e2 !important; }
+html [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; }
+html [style*="background: rgb(0, 0, 0)"], html [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
+html [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
 
 /* ---- Tabel -> kartu ringkas (tabel asli aplikasi native) ----
    Kolom pertama = judul kartu; kolom lain = pasangan "label: nilai" kecil;
@@ -260,18 +264,18 @@ html[data-app-mode] [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3
 }
 
 /* Sisa warna di luar palet (hitam, biru lama, tepi lime) */
-html[data-app-mode] [class*="text-[#000000]"] { color: #0f172a !important; }
-html[data-app-mode] [class*="bg-[#000000]/"] { background-color: rgba(62,3,179,0.10) !important; }
-html[data-app-mode] [class*="bg-[#000000]"]:not([class*="bg-[#000000]/"]) { background-color: #3e03b3 !important; color: #fff !important; }
-html[data-app-mode] [class*="border-[#000000]"], html[data-app-mode] [class*="ring-[#000000]"] { border-color: rgba(62,3,179,0.3) !important; --tw-ring-color: rgba(62,3,179,0.3) !important; }
-html[data-app-mode] [class*="fill-[#000000]"] { fill: #3e03b3 !important; }
-html[data-app-mode] [class*="text-[#00AAFA]"] { color: #0284c7 !important; }
-html[data-app-mode] [class*="bg-[#00AAFA]/"] { background-color: rgba(14,165,233,0.15) !important; }
-html[data-app-mode] [class*="border-[#00AAFA]"] { border-color: rgba(14,165,233,0.5) !important; }
-html[data-app-mode] [class*="border-l-[#A1F919]"], html[data-app-mode] [class*="border-[#F6FEE8]"] { border-color: rgba(62,3,179,0.25) !important; }
-html[data-app-mode] [class*="bg-[#EEF2FF]"], html[data-app-mode] [style*="background: rgb(238, 242, 255)"] { background: #f1edfa !important; }
-html[data-app-mode] [class*="text-[#F6FEE8]"] { color: #f1edfa !important; }
-html[data-app-mode] [style*="rgba(161, 249, 25"][style*="box-shadow"] { box-shadow: 0 6px 18px rgba(62,3,179,0.25) !important; }
+html [class*="text-[#000000]"] { color: #0f172a !important; }
+html [class*="bg-[#000000]/"] { background-color: rgba(62,3,179,0.10) !important; }
+html [class*="bg-[#000000]"]:not([class*="bg-[#000000]/"]) { background-color: #3e03b3 !important; color: #fff !important; }
+html [class*="border-[#000000]"], html [class*="ring-[#000000]"] { border-color: rgba(62,3,179,0.3) !important; --tw-ring-color: rgba(62,3,179,0.3) !important; }
+html [class*="fill-[#000000]"] { fill: #3e03b3 !important; }
+html [class*="text-[#00AAFA]"] { color: #0284c7 !important; }
+html [class*="bg-[#00AAFA]/"] { background-color: rgba(14,165,233,0.15) !important; }
+html [class*="border-[#00AAFA]"] { border-color: rgba(14,165,233,0.5) !important; }
+html [class*="border-l-[#A1F919]"], html [class*="border-[#F6FEE8]"] { border-color: rgba(62,3,179,0.25) !important; }
+html [class*="bg-[#EEF2FF]"], html [style*="background: rgb(238, 242, 255)"] { background: #f1edfa !important; }
+html [class*="text-[#F6FEE8]"] { color: #f1edfa !important; }
+html [style*="rgba(161, 249, 25"][style*="box-shadow"] { box-shadow: 0 6px 18px rgba(62,3,179,0.25) !important; }
 
 /* ---- Tanpa judul ganda: nama menu sudah ada di topbar, judul besar di bawahnya disembunyikan ---- */
 html[data-app-mode] div:not(:has(button, a, input, select, textarea)):has(> h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
@@ -334,6 +338,6 @@ html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) { padding: 14px 16px !im
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !important; margin-top: 0 !important; }
 
 /* Penanda "wajib diisi"/error di formulir absensi -> oranye */
-html[data-app-mode] [class*="text-[#5D900F]"][class*="text-[11px]"], html[data-app-mode] [class*="text-[#5D900F]"].normal-case { color: #f26a3d !important; }
-html[data-app-mode] [class*="border-[#A1F919]"], html[data-app-mode] [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
-html[data-app-mode] [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
+html [class*="text-[#5D900F]"][class*="text-[11px]"], html [class*="text-[#5D900F]"].normal-case { color: #f26a3d !important; }
+html [class*="border-[#A1F919]"], html [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
+html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }

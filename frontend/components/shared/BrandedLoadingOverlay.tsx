@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const DOT_COLORS = ["#ffffff", "#A1F919", "#ffffff"] as const;
+const DOT_COLORS = ["#ffffff", "#F26A3D", "#ffffff"] as const;
 
 export function BrandedLoadingOverlay({
   greeting,
