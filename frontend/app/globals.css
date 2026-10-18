@@ -219,3 +219,44 @@ html[data-app-mode] [style*="background: rgb(242, 242, 242)"], html[data-app-mod
 html[data-app-mode] [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; }
 html[data-app-mode] [style*="background: rgb(0, 0, 0)"], html[data-app-mode] [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
 html[data-app-mode] [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
+
+/* ---- Tabel -> kartu (tabel asli aplikasi native) ----
+   data-label diisi otomatis oleh AppModeFlag dari kepala kolom. */
+@media (max-width: 1023px) {
+  html[data-app-mode] table { display: block !important; width: 100% !important; min-width: 0 !important; }
+  html[data-app-mode] table thead { display: none !important; }
+  html[data-app-mode] table tbody { display: block !important; }
+  html[data-app-mode] table tbody tr {
+    display: block !important; margin: 0 0 0.75rem; padding: 0.5rem 1rem;
+    background: #ffffff; border-radius: 22px; border: 0 !important;
+    box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.10);
+  }
+  html.dark[data-app-mode] table tbody tr { background: #1e293b; }
+  html[data-app-mode] table tbody td {
+    display: flex !important; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0.45rem 0 !important; border: 0 !important; text-align: right !important; white-space: normal !important;
+    min-width: 0 !important; width: auto !important;
+  }
+  html[data-app-mode] table tbody td + td { border-top: 1px solid #f1edfa !important; }
+  html[data-app-mode] table tbody td::before {
+    content: attr(data-label); flex-shrink: 0; font-size: 11px; font-weight: 700; color: #64748b; text-align: left;
+  }
+  html[data-app-mode] table tbody td[data-label=""]::before { display: none; }
+  html[data-app-mode] table tbody td[data-label=""] { justify-content: flex-start; text-align: left !important; }
+  html[data-app-mode] table tbody td[colspan] { display: block !important; text-align: center !important; }
+  html[data-app-mode] table tbody td[colspan]::before { display: none; }
+}
+
+/* Sisa warna di luar palet (hitam, biru lama, tepi lime) */
+html[data-app-mode] [class*="text-[#000000]"] { color: #0f172a !important; }
+html[data-app-mode] [class*="bg-[#000000]/"] { background-color: rgba(62,3,179,0.10) !important; }
+html[data-app-mode] [class*="bg-[#000000]"]:not([class*="bg-[#000000]/"]) { background-color: #3e03b3 !important; color: #fff !important; }
+html[data-app-mode] [class*="border-[#000000]"], html[data-app-mode] [class*="ring-[#000000]"] { border-color: rgba(62,3,179,0.3) !important; --tw-ring-color: rgba(62,3,179,0.3) !important; }
+html[data-app-mode] [class*="fill-[#000000]"] { fill: #3e03b3 !important; }
+html[data-app-mode] [class*="text-[#00AAFA]"] { color: #0284c7 !important; }
+html[data-app-mode] [class*="bg-[#00AAFA]/"] { background-color: rgba(14,165,233,0.15) !important; }
+html[data-app-mode] [class*="border-[#00AAFA]"] { border-color: rgba(14,165,233,0.5) !important; }
+html[data-app-mode] [class*="border-l-[#A1F919]"], html[data-app-mode] [class*="border-[#F6FEE8]"] { border-color: rgba(62,3,179,0.25) !important; }
+html[data-app-mode] [class*="bg-[#EEF2FF]"], html[data-app-mode] [style*="background: rgb(238, 242, 255)"] { background: #f1edfa !important; }
+html[data-app-mode] [class*="text-[#F6FEE8]"] { color: #f1edfa !important; }
+html[data-app-mode] [style*="rgba(161, 249, 25"][style*="box-shadow"] { box-shadow: 0 6px 18px rgba(62,3,179,0.25) !important; }
