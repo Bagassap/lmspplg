@@ -127,9 +127,11 @@ export function CatatanSiswaClient() {
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
         <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="p-4 sm:p-5">
-            <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-              <Filter size={14} className="text-slate-400" /> Filter Catatan Siswa
-            </p>
+            {!app && (
+              <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
+                <Filter size={14} className="text-slate-400" /> Filter Catatan Siswa
+              </p>
+            )}
             <div className="flex flex-col gap-2 sm:flex-row">
               {kelasOptions.length > 1 && (
                 <div className="relative sm:flex-1">
@@ -172,7 +174,7 @@ export function CatatanSiswaClient() {
               </div>
             </div>
 
-            {!loading && (
+            {!loading && !app && (
               <p className="mt-3 text-[11px] font-medium text-slate-400 dark:text-slate-500">
                 Menampilkan {displayed.length} dari {inKelas.length} siswa
               </p>
@@ -363,23 +365,23 @@ export function CatatanSiswaClient() {
             {!loading && displayed.length > 0 && (
               <>
                 {app && (
-                  <ul className="space-y-3">
+                  <ul className="space-y-2">
                     {pageItems.map((s) => (
                       <li key={s.siswaId}>
                         <button type="button" onClick={() => setDetailId(s.siswaId)}
-                          className="flex w-full items-center gap-4 rounded-3xl bg-white p-3 text-left shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
-                          <Avatar src={null} nama={s.nama ?? "?"} sizePx={56} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-sm font-extrabold" />
+                          className="flex w-full items-center gap-3 rounded-2xl bg-white px-3 py-2.5 text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
+                          <Avatar src={null} nama={s.nama ?? "?"} sizePx={40} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-sm font-extrabold" />
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{s.nama ?? "-"}</p>
+                            <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{s.nama ?? "-"}</p>
                             <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">
                               {s.catatanTerakhir ? `${s.catatanTerakhir.judul} · ${formatTgl(s.catatanTerakhir.tanggal)}` : "Belum ada catatan"}
                             </p>
-                            <div className="mt-1.5 flex items-center gap-1.5">
-                              <span className="rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{s.jumlahCatatan} catatan</span>
-                              {s.totalPoin > 0 && <span className="rounded-full bg-[#EAF8D2] px-2.5 py-0.5 text-[10px] font-bold text-[#5D900F]">{s.totalPoin} poin</span>}
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{s.jumlahCatatan} catatan</span>
+                              {s.totalPoin > 0 && <span className="rounded-full bg-[#E3F8EF] px-2 py-0.5 text-[10px] font-bold text-[#059669]">{s.totalPoin} poin</span>}
                             </div>
                           </div>
-                          <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                          <ChevronRight size={16} className="shrink-0 text-slate-300" />
                         </button>
                       </li>
                     ))}

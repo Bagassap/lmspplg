@@ -38,12 +38,7 @@ export function DataSiswaHeader({ title, eyebrow = "Data Siswa" }: { title: stri
   return (
     <>
       <Banner title={title} eyebrow={eyebrow} className="hidden lg:block" />
-      {app ? (
-        <div className="mb-4 lg:hidden">
-          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">{eyebrow}</p>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{title}</h1>
-        </div>
-      ) : (
+      {app ? null : (
       <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push(dashboardHref)}

@@ -1,5 +1,6 @@
 "use client";
 
+import { AppFold } from "@/components/app/AppUI";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -174,7 +175,7 @@ export default function ManajemenPasswordClient() {
         </div>
       </div>
 
-      <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
+      <div className="app-hide relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/admin/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
@@ -209,6 +210,7 @@ export default function ManajemenPasswordClient() {
         </div>
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <AppFold title="Aksi akun & permintaan reset" hint={`${pending.length} permintaan menunggu`}>
           <div className="grid grid-cols-3 gap-2 p-5">
             <motion.button
               onClick={() => setKelolaGuruOpen(true)}
@@ -249,6 +251,7 @@ export default function ManajemenPasswordClient() {
               onAbaikan={handleAbaikan}
             />
           </div>
+          </AppFold>
         </div>
       </div>
 

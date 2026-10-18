@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, KeyRound, CheckCircle2, XCircle, Users } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const REF_PRIMARY = "#3E03B3";
-const REF_SUCCESS = "#5D900F";
+const REF_SUCCESS = "#059669";
 const GRID_COLS = "28px 40px 2.2fr 1.8fr 1.6fr";
 
 export type SiswaPasswordItem = {
@@ -38,6 +39,7 @@ export function SiswaPasswordTable({
   onReset: (s: SiswaPasswordItem) => void;
   mobileNative?: boolean;
 }) {
+  const app = useIsAppMode();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(10);
   useEffect(() => setPage(0), [siswas]);
@@ -73,7 +75,7 @@ export function SiswaPasswordTable({
     <>
       <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
         <div className="min-w-140">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#000000" }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#3E03B3" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>
@@ -100,7 +102,7 @@ export function SiswaPasswordTable({
                       <span className="text-xs text-slate-300 dark:text-slate-600">Belum ada akun</span>
                     ) : mustChange ? (
                       <div className="flex flex-col gap-0.5">
-                        <span className="inline-flex w-fit items-center gap-1 rounded-lg bg-[#A1F919] px-2.5 py-1 text-[11px] font-semibold text-black">
+                        <span className="inline-flex w-fit items-center gap-1 rounded-lg bg-[#FFE9E2] px-2.5 py-1 text-[11px] font-semibold text-[#F26A3D]">
                           <XCircle size={11} /> Belum Ganti
                         </span>
                         <span className="text-[10px] text-slate-400 dark:text-slate-500">{belumGantiLabel(s.user!.updatedAt)}</span>
@@ -130,12 +132,12 @@ export function SiswaPasswordTable({
       </div>
 
       {mobileNative && (
-        <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
+        <div className={app ? "space-y-2 p-3 lg:hidden" : "divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40"}>
           {pageItems.map((s) => {
             const displayNama = toTitleCase(s.nama);
             const mustChange = s.user?.mustChangePassword ?? null;
             return (
-              <div key={s.id} className="flex items-center gap-3 p-3">
+              <div key={s.id} className={app ? "flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-[#1E293B]" : "flex items-center gap-3 p-3"}>
                 <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={38} fallbackBg="#3E03B3" textClassName="text-[10px] font-extrabold" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{displayNama}</p>
@@ -143,7 +145,7 @@ export function SiswaPasswordTable({
                   {mustChange === null ? (
                     <span className="text-[10px] text-slate-300 dark:text-slate-600">Belum ada akun</span>
                   ) : mustChange ? (
-                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-[#A1F919] px-2 py-0.5 text-[10px] font-semibold text-black">
+                    <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-lg bg-[#FFE9E2] px-2 py-0.5 text-[10px] font-semibold text-[#F26A3D]">
                       <XCircle size={9} /> Belum Ganti
                     </span>
                   ) : (
@@ -154,7 +156,7 @@ export function SiswaPasswordTable({
                 </div>
                 {s.user && (
                   <button onClick={() => onReset(s)}
-                    className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm"
+                    className={`flex shrink-0 items-center gap-1 px-3 py-1.5 text-xs font-bold text-white shadow-sm ${app ? "rounded-full" : "rounded-lg"}`}
                     style={{ backgroundColor: REF_PRIMARY }}>
                     <KeyRound size={12} /> Reset
                   </button>

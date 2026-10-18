@@ -121,7 +121,7 @@ export function SiswaTable({
         </div>
 
         {mobileNative && app && (
-          <ul className="space-y-3 p-4 lg:hidden">
+          <ul className="space-y-2 p-3 lg:hidden">
             {pageItems.map((s, i) => {
               const displayNama = toTitleCase(getNama(s));
               const accent = avatarColorFor(s.id || displayNama);
@@ -129,17 +129,17 @@ export function SiswaTable({
               return (
                 <li key={s.id}>
                   <button type="button" onClick={() => setDetailSiswa(s)}
-                    className="flex w-full items-center gap-4 rounded-3xl bg-white p-3 text-left shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
-                    <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={56} fallbackBg={accent} textClassName="text-sm font-extrabold" />
+                    className="flex w-full items-center gap-3 rounded-2xl bg-white px-3 py-2.5 text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
+                    <Avatar src={s.user?.fotoProfil} nama={displayNama} sizePx={40} fallbackBg={accent} textClassName="text-xs font-extrabold" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{displayNama}</p>
+                      <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{displayNama}</p>
                       <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">NIS {s.nis}</p>
-                      <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-                        style={pct === 100 ? { background: "#EAF8D2", color: "#5D900F" } : { background: "#F1EDFA", color: "#3E03B3" }}>
+                      <span className="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                        style={pct === 100 ? { background: "#E3F8EF", color: "#059669" } : { background: "#F1EDFA", color: "#3E03B3" }}>
                         Data {pct}%
                       </span>
                     </div>
-                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
+                    <ChevronRight size={16} className="shrink-0 text-slate-300" />
                   </button>
                 </li>
               );

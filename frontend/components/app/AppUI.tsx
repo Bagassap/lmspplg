@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronDown } from "lucide-react";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { icon3dStyle } from "@/components/shared/Icon3D";
@@ -279,5 +280,24 @@ export function AppStatusSheet({
         })}
       </div>
     </MobileDetailModal>
+  );
+}
+
+/** Di mode aplikasi: isi disembunyikan di balik satu baris judul yang bisa dibuka (supaya layar tidak ramai). Di browser: tampil biasa. */
+export function AppFold({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+  const app = useIsAppMode();
+  const [open, setOpen] = useState(false);
+  if (!app) return <>{children}</>;
+  return (
+    <div>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center gap-3 px-4 py-3 text-left">
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-bold text-slate-900 dark:text-white">{title}</span>
+          {hint && <span className="block truncate text-[11px] text-slate-500 dark:text-slate-400">{hint}</span>}
+        </span>
+        <ChevronDown size={18} className={`shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && <div className="border-t border-slate-100 dark:border-slate-700/50">{children}</div>}
+    </div>
   );
 }

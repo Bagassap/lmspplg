@@ -3,6 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, Users, Mars, Venus, Filter, Sparkles, School, ChevronDown } from "lucide-react";
 import { kelasShort, type SiswaCardData, type KelasRef } from "./shared";
+import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppFold } from "@/components/app/AppUI";
 
 const REF_PRIMARY = "#3E03B3";
 const REF_MALE = "#3E03B3";
@@ -33,6 +35,7 @@ export function FilterBar({
   compact?: boolean;
   toolbarExtra?: React.ReactNode;
 }) {
+  const app = useIsAppMode();
   const genderCount = (value: string) =>
     value ? siswaList.filter((s) => s.jenisKelamin === value).length : siswaList.length;
 
@@ -41,6 +44,51 @@ export function FilterBar({
   const pCount = genderCount("Perempuan");
   const lPct = total > 0 ? Math.round((lCount / total) * 100) : 0;
   const pPct = total > 0 ? 100 - lPct : 0;
+
+  if (app) {
+    return (
+      <div className="space-y-2.5 p-3">
+        <div className="flex items-center gap-2">
+          {kelasList.length > 1 && (
+            <div className="relative w-28 shrink-0">
+              <select value={selectedKelasId} onChange={(e) => onSelectKelas(e.target.value)}
+                className="h-10 w-full appearance-none rounded-full border-0 bg-[#F1EDFA] pl-3.5 pr-7 text-xs font-bold text-[#3E03B3] focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30">
+                {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
+              </select>
+              <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3E03B3]" />
+            </div>
+          )}
+          <div className="relative min-w-0 flex-1">
+            <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input type="search" name="data-siswa-search" autoComplete="off" value={search} onChange={(e) => onSearch(e.target.value)}
+              placeholder="Cari nama atau NIS…"
+              className="h-10 w-full rounded-full border-0 bg-[#F1EDFA] pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-700 dark:text-slate-200" />
+            {search && (
+              <button type="button" onClick={() => onSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14} /></button>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          {GENDER_PILLS.map((opt) => {
+            const active = filterGender === opt.value;
+            return (
+              <button key={opt.label} type="button" onClick={() => onFilterGender(opt.value)}
+                className={`rounded-full px-3 py-1 text-[11px] font-bold ${active ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                {opt.label} {genderCount(opt.value)}
+              </button>
+            );
+          })}
+        </div>
+        {toolbarExtra && (
+          <div className="overflow-hidden rounded-2xl bg-[#F1EDFA]/60 dark:bg-slate-700/30">
+            <AppFold title="Kartu pelajar & unduh">
+              <div className="flex flex-wrap items-center gap-2 p-3">{toolbarExtra}</div>
+            </AppFold>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex flex-col p-4 sm:p-5">

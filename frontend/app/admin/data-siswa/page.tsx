@@ -1,5 +1,6 @@
 "use client";
 
+import { AppFold } from "@/components/app/AppUI";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ArrowUpCircle, ChevronRight } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -126,6 +127,7 @@ export default function AdminDataSiswaPage() {
         </div>
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <AppFold title="Kartu pelajar, unduh & kenaikan kelas" hint="Aksi tambahan">
           <div className="p-5">
             <KartuPelajarBanner compact />
           </div>
@@ -152,6 +154,7 @@ export default function AdminDataSiswaPage() {
               <ChevronRight size={16} className="shrink-0 text-slate-300" />
             </button>
           </div>
+          </AppFold>
         </div>
       </div>
 
