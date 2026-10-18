@@ -175,3 +175,47 @@ html[data-app-mode] .app-hide { display: none !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background: #ffe9e2 !important; color: #f26a3d !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background: #eaf8d2 !important; color: #5d900f !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background: #e0f2fe !important; color: #0284c7 !important; }
+
+/* ================= PALET 5 WARNA (mode aplikasi) =================
+   Ungu #3E03B3 utama; ikon: hijau, biru, oranye, ungu. Warna lain
+   (lime, hijau tua, hitam, biru langit lama, merah) dipetakan ke palet. */
+html[data-app-mode] {
+  --color-red-50: #ffe9e2; --color-red-100: #ffe9e2; --color-red-200: #ffd0c2; --color-red-300: #f9a98f;
+  --color-red-400: #f58a66; --color-red-500: #f26a3d; --color-red-600: #f26a3d; --color-red-700: #d9532a; --color-red-800: #b84320; --color-red-900: #8f3318;
+  --color-rose-50: #ffe9e2; --color-rose-100: #ffe9e2; --color-rose-500: #f26a3d; --color-rose-600: #f26a3d; --color-rose-700: #d9532a;
+  --color-pink-50: #ffe9e2; --color-pink-100: #ffe9e2; --color-pink-500: #f26a3d; --color-pink-600: #f26a3d;
+  --color-yellow-50: #fff4e0; --color-yellow-100: #fff4e0; --color-yellow-400: #f59e0b; --color-yellow-500: #f59e0b; --color-yellow-600: #d97706;
+  --color-teal-50: #e0f2fe; --color-teal-100: #e0f2fe; --color-teal-500: #0ea5e9; --color-teal-600: #0284c7;
+  --color-cyan-50: #e0f2fe; --color-cyan-100: #e0f2fe; --color-cyan-500: #0ea5e9; --color-cyan-600: #0284c7;
+  --color-indigo-50: #f1edfa; --color-indigo-100: #e4dbf7; --color-indigo-500: #3e03b3; --color-indigo-600: #3e03b3; --color-indigo-700: #2d0281;
+  --color-blue-50: #e0f2fe; --color-blue-100: #e0f2fe; --color-blue-500: #0ea5e9; --color-blue-600: #0284c7;
+  --color-lime-50: #e3f8ef; --color-lime-100: #e3f8ef; --color-lime-500: #10b981; --color-lime-600: #059669;
+  --color-green-50: #e3f8ef; --color-green-100: #d1f4e4; --color-green-500: #10b981; --color-green-600: #059669; --color-green-700: #047857;
+}
+/* lime / hijau tua lama -> ungu */
+html[data-app-mode] [class*="text-[#5D900F]"], html[data-app-mode] [class*="text-[#48700B]"],
+html[data-app-mode] [class*="text-[#A1F919]"], html[data-app-mode] [class*="text-[#8F6DD3]"] { color: #3e03b3 !important; }
+html.dark[data-app-mode] [class*="text-[#5D900F]"], html.dark[data-app-mode] [class*="text-[#A1F919]"],
+html.dark[data-app-mode] [class*="dark:text-[#A1F919]"] { color: #c4b5fd !important; }
+html[data-app-mode] [class*="bg-[#F6FEE8]"], html[data-app-mode] [class*="bg-[#EAF8D2]"] { background-color: #f1edfa !important; }
+html[data-app-mode] [class*="bg-[#A1F919]/"], html[data-app-mode] [class*="bg-[#48700B]/"] { background-color: rgba(62,3,179,0.12) !important; }
+html[data-app-mode] [class*="border-[#A1F919]"], html[data-app-mode] [class*="border-[#5D900F]"],
+html[data-app-mode] [class*="border-[#48700B]"] { border-color: rgba(62,3,179,0.35) !important; }
+html[data-app-mode] [class*="ring-[#A1F919]"] { --tw-ring-color: rgba(62,3,179,0.3) !important; }
+html[data-app-mode] [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #f1edfa !important; }
+html[data-app-mode] [class*="from-[#A1F919]"], html[data-app-mode] [class*="to-[#A1F919]"] { --tw-gradient-from: #3e03b3; --tw-gradient-to: #5b16d9; }
+html[data-app-mode] .text-black { color: #0f172a !important; }
+html[data-app-mode] .bg-\[\#A1F919\] .text-black, html[data-app-mode] .bg-\[\#A1F919\].text-black { color: #ffffff !important; }
+/* gaya inline: warna lime / hijau tua / biru lama / hitam */
+html[data-app-mode] [style*="color: rgb(93, 144, 15)"], html[data-app-mode] [style*="color: rgb(72, 112, 11)"],
+html[data-app-mode] [style*="color: rgb(161, 249, 25)"] { color: #3e03b3 !important; }
+html[data-app-mode] [style*="color: rgb(0, 170, 250)"] { color: #0284c7 !important; }
+html[data-app-mode] [style*="background: rgb(246, 254, 232)"], html[data-app-mode] [style*="background-color: rgb(246, 254, 232)"],
+html[data-app-mode] [style*="background: rgb(234, 248, 210)"] { background: #f1edfa !important; }
+html[data-app-mode] [style*="background: rgb(230, 247, 255)"], html[data-app-mode] [style*="background-color: rgb(230, 247, 255)"] { background: #e0f2fe !important; }
+html[data-app-mode] [style*="background: rgba(161, 249, 25"], html[data-app-mode] [style*="background-color: rgba(161, 249, 25"] { background: rgba(62,3,179,0.12) !important; }
+html[data-app-mode] [style*="border-color: rgb(161, 249, 25)"], html[data-app-mode] [style*="border: 1px solid rgb(161, 249, 25)"] { border-color: rgba(62,3,179,0.4) !important; }
+html[data-app-mode] [style*="background: rgb(242, 242, 242)"], html[data-app-mode] [style*="background-color: rgb(242, 242, 242)"] { background: #ffe9e2 !important; }
+html[data-app-mode] [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; }
+html[data-app-mode] [style*="background: rgb(0, 0, 0)"], html[data-app-mode] [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
+html[data-app-mode] [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }

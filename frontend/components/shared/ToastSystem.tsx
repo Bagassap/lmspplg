@@ -116,18 +116,18 @@ const THEME = {
 // Palet mode aplikasi terpasang: warna semantik (hijau/merah/kuning) + aksen ungu brand.
 const APP_THEME = {
   success: {
-    headerBg: "#EAF8EE", blob1: "rgba(22,163,74,0.20)", blob2: "rgba(22,163,74,0.12)",
-    ring1: "rgba(22,163,74,0.16)", ring2: "rgba(22,163,74,0.08)",
-    iconBg: "#16A34A", iconShadow: "0 16px 40px rgba(22,163,74,0.45)",
-    bar: "#16A34A", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#16A34A", icon: CheckCircle2, label: "Berhasil",
+    headerBg: "#E3F8EF", blob1: "rgba(16,185,129,0.20)", blob2: "rgba(16,185,129,0.12)",
+    ring1: "rgba(16,185,129,0.16)", ring2: "rgba(16,185,129,0.08)",
+    iconBg: "#10B981", iconShadow: "0 16px 40px rgba(16,185,129,0.45)",
+    bar: "#10B981", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
+    dotColor: "#10B981", icon: CheckCircle2, label: "Berhasil",
   },
   error: {
-    headerBg: "#FEE9E9", blob1: "rgba(239,68,68,0.20)", blob2: "rgba(239,68,68,0.12)",
-    ring1: "rgba(239,68,68,0.16)", ring2: "rgba(239,68,68,0.08)",
-    iconBg: "#EF4444", iconShadow: "0 16px 40px rgba(239,68,68,0.45)",
-    bar: "#EF4444", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
-    dotColor: "#EF4444", icon: XCircle, label: "Gagal",
+    headerBg: "#FFE9E2", blob1: "rgba(242,106,61,0.20)", blob2: "rgba(242,106,61,0.12)",
+    ring1: "rgba(242,106,61,0.16)", ring2: "rgba(242,106,61,0.08)",
+    iconBg: "#F26A3D", iconShadow: "0 16px 40px rgba(242,106,61,0.45)",
+    bar: "#F26A3D", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
+    dotColor: "#F26A3D", icon: XCircle, label: "Gagal",
   },
   warning: {
     headerBg: "#FEF3DC", blob1: "rgba(245,158,11,0.24)", blob2: "rgba(245,158,11,0.14)",

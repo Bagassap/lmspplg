@@ -24,6 +24,7 @@ const PAGE_TITLES: Record<string, [string, string]> = {
   "absensi-harian": ["Absensi Harian",   "Presensi kehadiran harian siswa"],
   pengumuman:     ["Pengumuman",         "Informasi dan pengumuman terkini"],
   "data-siswa":   ["Data Siswa",         "Kelola data seluruh siswa"],
+  menu:           ["Menu",               "Profil dan semua menu"],
   profil:         ["Profil Saya",        "Informasi dan pengaturan akun"],
   penempatan:     ["Penempatan PKL",     "Data penempatan PKL siswa"],
   absensi:        ["Absensi",            "Data kehadiran"],
@@ -339,7 +340,7 @@ export function Topbar({ user }: { user: UserPayload }) {
           purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#0F172A]"
         } ${appMode ? "rounded-b-[28px] shadow-[0_10px_24px_-10px_rgba(62,3,179,0.6)] lg:rounded-none" : ""}`}
       >
-        {appHome && (
+        {appMode && (
           <button
             ref={appAvatarRef}
             type="button"
@@ -355,11 +356,11 @@ export function Topbar({ user }: { user: UserPayload }) {
               ring="0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.12)"
             />
             <span className="truncate text-left text-base font-bold text-white">
-              Hi, {user.nama} 👋
+              {appHome ? <>Hi, {user.nama} 👋</> : title}
             </span>
           </button>
         )}
-        <div className={`min-w-0 items-center gap-2 lg:hidden ${appHome ? "hidden" : "flex"}`}>
+        <div className={`min-w-0 items-center gap-2 lg:hidden ${appMode ? "hidden" : "flex"}`}>
           <div
             className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
             style={{ background: "linear-gradient(145deg, #00AAFA 0%, #3E03B3 55%, #2D0281 100%)" }}
@@ -542,7 +543,7 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
-              className={`${appHome ? "hidden lg:flex" : "flex"} items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700 ${
+              className={`${appMode ? "hidden lg:flex" : "flex"} items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700 ${
                 purpleMobile ? "bg-white/15 hover:bg-white/25" : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
               }`}
             >

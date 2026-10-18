@@ -39,7 +39,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const leftPinned = side.slice(0, 2);
   const rightPinned = side.slice(2);
   const rest = items.filter((i) => i.key !== "dashboard" && !SIDE_KEYS.includes(i.key));
-  const moreActive = rest.some((i) => isItemActive(i, pathname));
+  const menuHref = `/${user.role.toLowerCase()}/menu`;
+  const moreActive = rest.some((i) => isItemActive(i, pathname)) || pathname === menuHref;
   const dashboardActive = dashboardItem ? isItemActive(dashboardItem, pathname) : false;
 
   return (
@@ -111,7 +112,14 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
             </Link>
           );
         })}
-        <button
+        {appMode && (
+          <Link href={menuHref} className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5">
+            <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
+            {pendingResetCount > 0 && <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
+            <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>Menu</span>
+          </Link>
+        )}
+        {!appMode && <button
           type="button"
           onClick={() => setMoreOpen(true)}
           className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
@@ -123,7 +131,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
           </span>
-        </button>
+        </button>}
       </nav>
 
       <AnimatePresence>

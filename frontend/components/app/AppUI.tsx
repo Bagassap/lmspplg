@@ -234,7 +234,7 @@ function ActionPill({ action, primary = false }: { action: SheetAction; primary?
   const cls = `flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
   const style = primary
     ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
-    : { background: action.danger ? "#FEE2E2" : "#FFE9E2", color: action.danger ? "#DC2626" : APP_ORANGE };
+    : { background: "#FFE9E2", color: APP_ORANGE };
   const inner = <>{Icon && <Icon size={15} />}{action.label}</>;
   if (action.href) return <a href={action.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>;
   return <button type="button" onClick={action.onClick} className={cls} style={style}>{inner}</button>;
