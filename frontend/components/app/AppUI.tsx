@@ -39,10 +39,6 @@ export function AppMobileFrame({
   if (app) {
     return (
       <div className="space-y-5 lg:hidden">
-        <div>
-          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">{eyebrow}</p>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{title}</h1>
-        </div>
         {children}
       </div>
     );

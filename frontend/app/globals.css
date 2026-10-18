@@ -272,3 +272,9 @@ html[data-app-mode] [class*="border-l-[#A1F919]"], html[data-app-mode] [class*="
 html[data-app-mode] [class*="bg-[#EEF2FF]"], html[data-app-mode] [style*="background: rgb(238, 242, 255)"] { background: #f1edfa !important; }
 html[data-app-mode] [class*="text-[#F6FEE8]"] { color: #f1edfa !important; }
 html[data-app-mode] [style*="rgba(161, 249, 25"][style*="box-shadow"] { box-shadow: 0 6px 18px rgba(62,3,179,0.25) !important; }
+
+/* ---- Tanpa judul ganda: nama menu sudah ada di topbar, judul besar di bawahnya disembunyikan ---- */
+html[data-app-mode] div:not(:has(button, a, input, select, textarea)):has(> h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
+html[data-app-mode] h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight) { display: none !important; }
+html[data-app-mode] p:has(+ h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
+html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { display: none !important; }
