@@ -34,7 +34,7 @@ function labelTables(root: ParentNode) {
 
 /** Header modal berlatar warna (gradien/ungu/lime) diberi class app-sheet-header agar tampil seperti sheet aplikasi. */
 function tagSheetHeaders(root: ParentNode) {
-  root.querySelectorAll<HTMLElement>(".fixed.inset-0").forEach((modal) => {
+  root.querySelectorAll<HTMLElement>(".fixed.inset-0:not([data-plain])").forEach((modal) => {
     Array.from(modal.children).forEach((panel) => {
       if (panel.classList.contains("absolute") || panel.classList.contains("pointer-events-none")) return;
       const head = panel.firstElementChild as HTMLElement | null;
