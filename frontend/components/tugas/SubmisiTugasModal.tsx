@@ -70,7 +70,7 @@ export function SubmisiTugasModal({
                   <X size={16} />
                 </button>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${h.app ? "bg-white text-[#F26A3D]" : "bg-white/20 backdrop-blur-sm text-white"}`}>
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${h.app ? "bg-white text-[#3E03B3]" : "bg-white/20 backdrop-blur-sm text-white"}`}>
                     <ClipboardList size={18} />
                   </div>
                   <div>

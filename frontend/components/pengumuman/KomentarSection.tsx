@@ -168,7 +168,7 @@ function KomentarBubble({
                     onClick={submitReply}
                     disabled={sending || !replyText.trim()}
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_12px_rgba(0,170,250,0.4)]"
-                    style={{ background: app ? "#F26A3D" : "#00AAFA" }}
+                    style={{ background: app ? "#3E03B3" : "#00AAFA" }}
                   >
                     {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   </button>
@@ -298,7 +298,7 @@ export function KomentarSection({
           : "border-slate-100 shadow-sm dark:border-slate-700/50"
       }`}>
         <div className={`absolute left-0 right-0 top-0 h-0.5 transition-opacity duration-200 ${focused ? "opacity-100" : "opacity-0"}`}
-          style={{ background: app ? "#F26A3D" : "#00AAFA" }} />
+          style={{ background: app ? "#3E03B3" : "#00AAFA" }} />
 
         <textarea
           rows={3}
@@ -319,7 +319,7 @@ export function KomentarSection({
             onClick={submitKomentar}
             disabled={sending || !teks.trim()}
             className="flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-[12px] font-bold text-white shadow-md transition-all disabled:opacity-40 hover:shadow-[0_4px_14px_rgba(0,170,250,0.45)] active:scale-95"
-            style={{ background: app ? "#F26A3D" : "#00AAFA" }}
+            style={{ background: app ? "#3E03B3" : "#00AAFA" }}
           >
             {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             {sending ? "Mengirim…" : "Kirim"}

@@ -23,7 +23,7 @@ type KelasOption = { id: string; nama: string };
 
 const INPUT_CLS_BASE = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
 
-const INPUT_CLS_APP = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#F26A3D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F26A3D]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-700";
+const INPUT_CLS_APP = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-700";
 
 export function MateriFormModal({
   open, materi, onClose, onSaved, mapelOptions,
@@ -193,7 +193,7 @@ export function MateriFormModal({
                         className={
                           "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " +
                           (active
-                            ? (h.app ? "border-[#F26A3D] bg-[#F26A3D] text-white" : "border-[#3E03B3] bg-[#3E03B3] text-white")
+                            ? (h.app ? "border-[#3E03B3] bg-[#3E03B3] text-white" : "border-[#3E03B3] bg-[#3E03B3] text-white")
                             : "border-gray-200 bg-white text-gray-600 hover:border-[#3E03B3]/40 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300")
                         }
                       >
@@ -255,7 +255,7 @@ export function MateriFormModal({
                 type="button"
                 onClick={handleSubmit}
                 disabled={saving}
-                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full bg-[#F26A3D]" : "rounded-xl bg-[#3E03B3]"}`}
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full bg-[#3E03B3]" : "rounded-xl bg-[#3E03B3]"}`}
               >
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Materi"}

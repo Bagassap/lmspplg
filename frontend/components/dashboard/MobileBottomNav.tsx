@@ -27,7 +27,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const { items, pendingResetCount } = useDashboardMenu(user);
   const [moreOpen, setMoreOpen] = useState(false);
   const appMode = useIsAppMode();
-  const ACT = appMode ? "#F26A3D" : "#3E03B3";
+  const ACT = appMode ? "#3E03B3" : "#3E03B3";
 
   const dashboardItem = items.find((i) => i.key === "dashboard");
   const side = SIDE_KEYS
@@ -69,7 +69,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
               <item.icon size={20} style={{ color: active ? ACT : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
+              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#3E03B3]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -80,7 +80,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           <Link href={dashboardItem.href ?? "#"} className="relative flex flex-1 flex-col items-center">
             <span
               className="absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1E293B]"
-              style={{ background: ACT, boxShadow: appMode ? "0 10px 24px -6px rgba(242,106,61,0.6)" : "0 10px 24px -6px rgba(62,3,179,0.55)" }}
+              style={{ background: ACT, boxShadow: appMode ? "0 10px 24px -6px rgba(62,3,179,0.6)" : "0 10px 24px -6px rgba(62,3,179,0.55)" }}
             >
               <dashboardItem.icon size={22} />
             </span>
@@ -102,7 +102,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
               <item.icon size={20} style={{ color: active ? ACT : "#94a3b8" }} />
-              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
+              <span className={`text-[10px] font-semibold ${active ? (appMode ? "text-[#3E03B3]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
             </Link>
@@ -117,7 +117,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           {pendingResetCount > 0 && (
             <span className="absolute right-[30%] top-1.5 h-2 w-2 rounded-full bg-[#A1F919]" />
           )}
-          <span className={`text-[10px] font-semibold ${moreActive ? (appMode ? "text-[#F26A3D]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
+          <span className={`text-[10px] font-semibold ${moreActive ? (appMode ? "text-[#3E03B3]" : "text-[#3E03B3]") : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
           </span>
         </button>

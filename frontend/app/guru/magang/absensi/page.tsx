@@ -78,8 +78,8 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
     return (
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
-        style={{ background: app ? "#FFE9E2" : "#A1F919" }}>
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white ${app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"}`}>
+        style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`}>
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">
@@ -720,7 +720,7 @@ export default function GuruMagangAbsensiPage() {
               {tempatList.map((t) => (
                 <button key={t.id} type="button" onClick={() => setSelectedId(t.id)}
                   className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
-                  style={selectedId === t.id ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                  style={selectedId === t.id ? { background: "#3E03B3", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
                   {t.namaTempat}
                 </button>
               ))}
@@ -728,10 +728,10 @@ export default function GuruMagangAbsensiPage() {
           )}
 
           <button type="button" onClick={() => setStatusPageOpen(true)}
-            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "#FFE9E2" }}>
+            className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "#F1EDFA" }}>
             <div className="relative z-10 min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-slate-500">Kehadiran hari ini{selectedTempat?.namaTempat ? ` · ${selectedTempat.namaTempat}` : ""}</p>
-              <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#F26A3D" }}>{hadirPct}%</p>
+              <p className="mt-0.5 text-[34px] font-extrabold leading-none tabular-nums" style={{ color: "#3E03B3" }}>{hadirPct}%</p>
               <p className="mt-1.5 text-sm font-semibold text-slate-700">{rekap.HADIR} dari {total} siswa bimbingan hadir</p>
             </div>
             <div className="relative z-10 -my-2 h-24 w-24 shrink-0"><Rocket /></div>
@@ -827,7 +827,7 @@ export default function GuruMagangAbsensiPage() {
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="fixed inset-0 z-50 flex flex-col bg-[#FFFFFF] dark:bg-[#1E293B]">
-              <div className="shrink-0 pb-3 pt-4" style={{ background: appMode ? "#FFE9E2" : "#3E03B3" }}>
+              <div className="shrink-0 pb-3 pt-4" style={{ background: appMode ? "#F1EDFA" : "#3E03B3" }}>
                 <div className="relative flex items-center justify-between px-4">
                   <button type="button" onClick={() => setStatusPageOpen(false)}
                     className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${appMode ? "bg-white text-slate-700" : "bg-white/15 text-white active:bg-white/25"}`}>
@@ -837,7 +837,7 @@ export default function GuruMagangAbsensiPage() {
                     Status Kehadiran <span className={`font-medium ${appMode ? "text-slate-500" : "text-white/70"}`}>({total})</span>
                   </h1>
                   <button type="button" onClick={() => setLaporanOpen(true)}
-                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#F26A3D" } : { color: "#3E03B3" }}>
+                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#3E03B3" } : { color: "#3E03B3" }}>
                     <Download size={12} />
                     <span className="text-[11px] font-bold">Unduh</span>
                   </button>
@@ -932,7 +932,7 @@ export default function GuruMagangAbsensiPage() {
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: appMode ? "#F26A3D" : "#3E03B3" }}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: appMode ? "#3E03B3" : "#3E03B3" }}>
                       <FileText size={16} />
                     </span>
                     <div>

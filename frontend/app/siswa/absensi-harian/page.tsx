@@ -599,7 +599,7 @@ export default function SiswaAbsensiHarianPage() {
                       onReload={() => {}}
                       showMap
                       onWhite
-                      accentColor={appMode ? "#F26A3D" : BRAND_GRADIENT}
+                      accentColor={appMode ? "#3E03B3" : BRAND_GRADIENT}
                     />
                   ) : (
                     <RingkasanAbsen
@@ -613,7 +613,7 @@ export default function SiswaAbsensiHarianPage() {
                       onReload={() => {}}
                       showMap
                       onWhite
-                      accentColor={appMode ? "#F26A3D" : PULANG_CFG.clr}
+                      accentColor={appMode ? "#3E03B3" : PULANG_CFG.clr}
                     />
                   )}
                 </MobileDetailModal>
@@ -1010,7 +1010,7 @@ function MobileFormAbsen({
   const lokasiMissing = !lokasi;
   const ttdMissing = !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
-  const accentColor = app ? "#F26A3D" : activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
+  const accentColor = app ? "#3E03B3" : activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
   const fotoLabel = isIzinSakit ? "Foto Surat Izin/Sakit" : "Foto Selfie";
   const titikLokasi = lokasi ? parseLokasi(lokasi) : null;
 
@@ -1143,7 +1143,7 @@ function MobileFormAbsen({
                           ) : (
                             <div className="flex flex-1 items-center justify-between gap-2">
                               <span className="text-xs text-[#5D900F] dark:text-[#A1F919]">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-                              <button type="button" onClick={onRetryLokasi} className={`shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold shadow-sm dark:bg-slate-800 ${app ? "text-[#F26A3D]" : "text-[#3E03B3]"}`}>
+                              <button type="button" onClick={onRetryLokasi} className={`shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold shadow-sm dark:bg-slate-800 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`}>
                                 Coba lagi
                               </button>
                             </div>
@@ -1198,7 +1198,7 @@ function MobileFormAbsen({
                           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
                             placeholder={isIzinSakit ? "Tulis alasan izin/sakit..." : "Tulis keterangan tambahan..."}
                             className={`w-full resize-none rounded-2xl border bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 dark:bg-slate-900/40 dark:text-slate-200 ${
-                              catatanMissing ? "border-[#A1F919] focus:ring-[#A1F919] dark:border-[#48700B]" : app ? "border-slate-200 focus:ring-[#F26A3D] dark:border-slate-600" : "border-slate-200 focus:ring-[#3E03B3] dark:border-slate-600"
+                              catatanMissing ? "border-[#A1F919] focus:ring-[#A1F919] dark:border-[#48700B]" : app ? "border-slate-200 focus:ring-[#3E03B3] dark:border-slate-600" : "border-slate-200 focus:ring-[#3E03B3] dark:border-slate-600"
                             }`} />
                           {catatanMissing && <p className="mt-2 text-[11px] font-semibold text-[#5D900F] dark:text-[#A1F919]">Keterangan wajib diisi</p>}
                         </div>

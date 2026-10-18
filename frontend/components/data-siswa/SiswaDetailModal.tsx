@@ -322,7 +322,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
             <div className="mx-auto mt-4 max-w-md px-6">
               <button type="button" onClick={onEdit}
                 className="flex w-full items-center justify-center gap-1.5 rounded-full py-3.5 text-sm font-extrabold text-white shadow-sm"
-                style={{ background: h.app ? "#F26A3D" : HEADER_GRADIENT }}>
+                style={{ background: h.app ? "#3E03B3" : HEADER_GRADIENT }}>
                 <Pencil size={14} /> Edit Data
               </button>
             </div>

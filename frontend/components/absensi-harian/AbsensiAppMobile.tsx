@@ -8,8 +8,8 @@ import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { STATUS_CFG, formatTgl } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
 
-const ACCENT = "#F26A3D";
-const ACCENT_SOFT = "#FFE9E2";
+const ACCENT = "#3E03B3";
+const ACCENT_SOFT = "#F1EDFA";
 
 type Tab = "DATANG" | "PULANG";
 
@@ -26,8 +26,8 @@ type Summary = { hadir: number; izin: number; sakit: number; alpa: number } | nu
 
 /**
  * Tampilan mobile Absensi Harian untuk aplikasi terpasang, mengikuti pola
- * dashboard dan Materi & Tugas: judul besar, banner peach, tab bergaris bawah
- * oranye, kartu putih, dan tombol aksi oranye. Wizard absen dan modal detail
+ * dashboard dan Materi & Tugas: judul besar, banner lavender, tab bergaris bawah
+ * ungu, kartu putih, dan tombol aksi ungu. Wizard absen dan modal detail
  * dirender oleh halaman induk (dipakai bersama tampilan biasa).
  */
 export function AbsensiAppMobile<R extends RowLite>({
@@ -87,7 +87,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         className="rounded-3xl px-5 py-6 text-center" style={{ background: ACCENT_SOFT }}
       >
         <p className="text-xs font-semibold" style={{ color: ACCENT }}>{formatTgl(today)}</p>
-        <p className="mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: ACCENT, textShadow: "0 2px 0 rgba(242,106,61,0.18)" }}>{jam}</p>
+        <p className="mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: ACCENT, textShadow: "0 2px 0 rgba(62,3,179,0.18)" }}>{jam}</p>
         <div
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
           style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#5D900F" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
@@ -102,7 +102,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         onClick={() => mainNeedsAction && onOpenWizard(mainTab)}
         className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold"
         style={mainNeedsAction
-          ? { background: ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" }
+          ? { background: ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
           : { background: "#E2E8F0", color: "#94A3B8" }}
       >
         {mainTab === "DATANG" ? <LogIn size={18} /> : <LogOut size={18} />}

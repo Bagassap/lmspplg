@@ -13,7 +13,7 @@ import {
 } from "@/components/tugas/types";
 import type { MateriItem } from "@/components/materi/MateriFormModal";
 
-const ACCENT = "#F26A3D";
+const ACCENT = "#3E03B3";
 const PURPLE = "#3E03B3";
 
 type Tab = "materi" | "tugas";
@@ -134,7 +134,7 @@ export function SiswaAppMateriTugas({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={tab === "materi" ? "Cari materi..." : "Cari tugas..."}
-          className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200"
+          className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200"
         />
       </div>
 
@@ -339,7 +339,7 @@ function DetailScreen({ selected, onBack, onBuka, onKumpulkan, onLihatSubmisi }:
 
       <div className="fixed inset-x-0 bottom-0 z-10 bg-linear-to-t from-white via-white/95 to-transparent px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-8 dark:from-[#0F172A] dark:via-[#0F172A]/95">
         <button type="button" onClick={cta.onClick} disabled={cta.disabled}
-          className="w-full rounded-full py-4 text-base font-bold text-white shadow-[0_10px_24px_-8px_rgba(242,106,61,0.7)] transition active:scale-[0.98] disabled:opacity-50"
+          className="w-full rounded-full py-4 text-base font-bold text-white shadow-[0_10px_24px_-8px_rgba(62,3,179,0.7)] transition active:scale-[0.98] disabled:opacity-50"
           style={{ background: ACCENT }}>
           {cta.label}
         </button>

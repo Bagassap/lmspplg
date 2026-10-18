@@ -44,8 +44,8 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden" style={{ background: app ? "#FFFFFF" : BRAND_GRADIENT }}>
-      <div className={`pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full ${app ? "bg-[#FFE9E2]" : "bg-white/10"}`} />
-      <div className={`pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 rounded-full ${app ? "bg-[#FFE9E2]" : "bg-white/6"}`} />
+      <div className={`pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full ${app ? "bg-[#F1EDFA]" : "bg-white/10"}`} />
+      <div className={`pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 rounded-full ${app ? "bg-[#F1EDFA]" : "bg-white/6"}`} />
       <div className="pointer-events-none absolute top-10 left-[55%] h-20 w-20 rounded-full bg-white/5" />
 
       <button
@@ -66,14 +66,14 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
           <motion.div
             animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.15, 0.5] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-            className={`absolute inset-0 rounded-full ${app ? "bg-[#FFE9E2]" : "bg-white/20"}`}
+            className={`absolute inset-0 rounded-full ${app ? "bg-[#F1EDFA]" : "bg-white/20"}`}
           />
           <motion.div
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className={`relative flex h-14 w-14 items-center justify-center rounded-2xl shadow-lg backdrop-blur-sm ${app ? "bg-[#FFE9E2]" : "bg-white/20"}`}
+            className={`relative flex h-14 w-14 items-center justify-center rounded-2xl shadow-lg backdrop-blur-sm ${app ? "bg-[#F1EDFA]" : "bg-white/20"}`}
           >
-            <Clock size={24} className={app ? "text-[#F26A3D]" : "text-white"} strokeWidth={1.8} />
+            <Clock size={24} className={app ? "text-[#3E03B3]" : "text-white"} strokeWidth={1.8} />
           </motion.div>
         </div>
 
@@ -81,10 +81,10 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15 }}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 backdrop-blur-sm ${app ? "bg-[#FFE9E2]" : "bg-white/15"}`}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 backdrop-blur-sm ${app ? "bg-[#F1EDFA]" : "bg-white/15"}`}
         >
-          <Lock size={10} className={app ? "text-[#F26A3D]" : "text-white/90"} />
-          <span className={`text-[11px] font-bold uppercase tracking-widest ${app ? "text-[#F26A3D]" : "text-white/90"}`}>Belum Aktif</span>
+          <Lock size={10} className={app ? "text-[#3E03B3]" : "text-white/90"} />
+          <span className={`text-[11px] font-bold uppercase tracking-widest ${app ? "text-[#3E03B3]" : "text-white/90"}`}>Belum Aktif</span>
         </motion.div>
 
         <h1 className={`text-2xl font-extrabold leading-tight sm:text-3xl ${app ? "text-slate-900" : "text-white"}`}>

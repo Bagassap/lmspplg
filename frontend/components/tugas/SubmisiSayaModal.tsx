@@ -40,7 +40,7 @@ export function SubmisiSayaModal({
             style={{ maxHeight: "92vh" }}
             onClick={(e) => e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={app ? { background: "#FFE9E2", color: "#1E293B" } : { background: isDiterima ? "#A1F919" : isRevisi ? "#000000" : "#00AAFA", color: isDiterima ? "#000000" : "#FFFFFF" }}>
+              style={app ? { background: "#F1EDFA", color: "#1E293B" } : { background: isDiterima ? "#A1F919" : isRevisi ? "#000000" : "#00AAFA", color: isDiterima ? "#000000" : "#FFFFFF" }}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full" style={{ backgroundColor: isDiterima ? "#00000019" : "#FFFFFF1A" }} />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -100,26 +100,26 @@ export function SubmisiSayaModal({
               {isPraktik ? (
                 <button onClick={() => setViewCode(true)}
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
-                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
+                  style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   <Code2 size={14} /> Lihat Kode Terkirim
                 </button>
               ) : isSoalBased ? (
                 <button onClick={() => setViewJawaban(true)}
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
-                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
+                  style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   {tipe === "PILIHAN_GANDA" ? <ListChecks size={14} /> : <PenLine size={14} />} Lihat Jawaban Saya
                 </button>
               ) : target.fileUrl && (
                 <a href={target.fileUrl} target="_blank" rel="noopener noreferrer"
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
-                  style={{ background: app ? "#F26A3D" : "#3E03B3" }}>
+                  style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   <Download size={14} /> Lihat File Terkirim
                 </a>
               )}
               {isRevisi && (
                 <button onClick={onKirimUlang}
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold ${app ? "rounded-full" : "rounded-xl"}`}
-                  style={app ? { background: "#FFE9E2", color: "#F26A3D" } : { background: "#A1F919", color: "#000000" }}>
+                  style={app ? { background: "#F1EDFA", color: "#3E03B3" } : { background: "#A1F919", color: "#000000" }}>
                   <Send size={13} /> Kirim Ulang Tugas
                 </button>
               )}

@@ -63,7 +63,7 @@ function SubmitPraktikModal({
         transition={{ type: "spring", damping: 28, stiffness: 320 }}
         className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-          style={{ background: app ? "#FFE9E2" : "#A1F919" }}>
+          style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/10">
             <Code2 size={18} className="text-black" />
@@ -102,11 +102,11 @@ function SubmitPraktikModal({
               <label className="mb-1 block text-xs font-semibold text-slate-500 dark:text-slate-400">Catatan (opsional)</label>
               <input value={catatan} onChange={(e) => setCatatan(e.target.value)}
                 placeholder="Tambahkan keterangan jika diperlukan..."
-                className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#F26A3D]" : "focus:border-[#A1F919]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
+                className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
             </div>
             <button onClick={submit} disabled={saving}
               className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
-              style={{ background: app ? "#F26A3D" : "#A1F919" }}>
+              style={{ background: app ? "#3E03B3" : "#A1F919" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Tugas</>}
             </button>
           </div>
@@ -153,7 +153,7 @@ function SubmitFileModal({
         className="w-full max-w-md overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-2xl"
         style={{ maxHeight: "92vh" }}
         onClick={(e) => e.stopPropagation()}>
-        <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#FFE9E2" : "#A1F919" }}>
+        <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#A1F919" }}>
           <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -181,7 +181,7 @@ function SubmitFileModal({
             </div>
           )}
           <div onClick={() => fileRef.current?.click()}
-            className={`border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl p-6 text-center cursor-pointer ${app ? "hover:border-[#F26A3D]" : "hover:border-[#A1F919]"} transition-colors`}>
+            className={`border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl p-6 text-center cursor-pointer ${app ? "hover:border-[#3E03B3]" : "hover:border-[#A1F919]"} transition-colors`}>
             <input ref={fileRef} type="file" accept=".pdf,.ppt,.pptx,.zip,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/zip,application/x-zip-compressed" className="hidden"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
             {file ? (
@@ -196,7 +196,7 @@ function SubmitFileModal({
             <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
             <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
               placeholder="Tambahkan keterangan jika diperlukan..."
-              className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#F26A3D]" : "focus:border-[#A1F919]"}`} />
+              className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"}`} />
           </div>
           <div className="flex gap-3">
             <button type="button" onClick={onClose}
@@ -205,7 +205,7 @@ function SubmitFileModal({
             </button>
             <button type="submit" disabled={saving || !file}
               className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
-              style={{ background: app ? "#F26A3D" : "#A1F919" }}>
+              style={{ background: app ? "#3E03B3" : "#A1F919" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kumpulkan</>}
             </button>
           </div>
@@ -233,7 +233,7 @@ function SubmitSoalModal({
   });
   const [catatan, setCatatan] = useState("");
   const [saving, setSaving] = useState(false);
-  const warna = app ? "#F26A3D" : isPg ? "#A1F919" : "#00AAFA";
+  const warna = app ? "#3E03B3" : isPg ? "#A1F919" : "#00AAFA";
   const headTone = app ? "#1E293B" : isPg ? "#000000" : "#FFFFFF";
 
   async function submit() {
@@ -262,7 +262,7 @@ function SubmitSoalModal({
       <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
         transition={{ type: "spring", damping: 28, stiffness: 320 }}
         className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#FFE9E2" : warna, color: headTone }}>
+        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#F1EDFA" : warna, color: headTone }}>
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0000001A" : "#FFFFFF1A" }} />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#00000026" : "#FFFFFF26" }}>
             {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
@@ -302,12 +302,12 @@ function SubmitSoalModal({
                         const active = jawaban[s.id] === huruf;
                         return (
                           <button key={huruf} type="button"
-                            style={app && active ? { borderColor: "#F26A3D", background: "#FFE9E2" } : undefined}
+                            style={app && active ? { borderColor: "#3E03B3", background: "#F1EDFA" } : undefined}
                             onClick={() => setJawaban((prev) => ({ ...prev, [s.id]: huruf }))}
                             className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-all ${
                               active ? "border-[#A1F919] bg-[#FFFFFF] dark:bg-[#000000]/20" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
                             }`}>
-                            <span style={app && active ? { background: "#F26A3D", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                            <span style={app && active ? { background: "#3E03B3", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                               active ? "bg-[#A1F919] text-[#000000] dark:text-[#A1F919]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>

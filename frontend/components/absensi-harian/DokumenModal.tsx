@@ -220,14 +220,14 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           <div className="relative flex items-center gap-3 px-4 pb-4 pt-10">
             <div className="relative shrink-0" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.25)", borderRadius: "9999px" }}>
               <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={48} fallbackBg={ac} textClassName="text-sm font-extrabold" />
-              <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${h.app ? "border-white bg-white text-[#F26A3D]" : "border-white/40 bg-white/20 text-white"}`}>
+              <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${h.app ? "border-white bg-white text-[#3E03B3]" : "border-white/40 bg-white/20 text-white"}`}>
                 <ThemeIcon size={10} />
               </div>
             </div>
             <div className="min-w-0 flex-1">
               <h2 className={`truncate text-base font-extrabold leading-tight ${h.title}`}>{siswa.nama}</h2>
               <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold ${h.app ? "text-[#F26A3D]" : "text-white"}`} style={{ background: h.app ? "#FFFFFF" : "rgba(255,255,255,0.22)" }}>
+                <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold ${h.app ? "text-[#3E03B3]" : "text-white"}`} style={{ background: h.app ? "#FFFFFF" : "rgba(255,255,255,0.22)" }}>
                   {theme.label}
                 </span>
                 <span className={`text-[10px] ${h.app ? "text-slate-500" : "text-white/70"}`}>{kelas} · {formatTgl(tanggal)}</span>
@@ -235,7 +235,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             </div>
             <div className="shrink-0 pr-6 text-right">
               <p className={`text-[8px] font-bold uppercase tracking-wide ${h.app ? "text-slate-400" : "text-white/55"}`}>{isPulang ? "Pulang" : "Absen"}</p>
-              <p className={`text-sm font-extrabold ${h.app ? "font-digital tracking-wider text-[#F26A3D]" : "font-mono text-white"}`}>{waktu ?? "—"}</p>
+              <p className={`text-sm font-extrabold ${h.app ? "font-digital tracking-wider text-[#3E03B3]" : "font-mono text-white"}`}>{waktu ?? "—"}</p>
             </div>
           </div>
           {catatan && (
@@ -249,7 +249,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             </div>
             <div className="px-4 pt-4">
               <button onClick={onClose} className={`w-full py-3 text-sm font-bold text-white shadow-sm ${h.app ? "rounded-full" : "rounded-xl"}`}
-                style={{ background: h.app ? "#F26A3D" : BRAND_GRADIENT }}>
+                style={{ background: h.app ? "#3E03B3" : BRAND_GRADIENT }}>
                 Tutup
               </button>
             </div>

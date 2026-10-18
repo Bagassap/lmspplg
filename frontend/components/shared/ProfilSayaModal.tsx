@@ -160,7 +160,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
         </motion.div>
       </motion.div>
 
-      <MobileDetailModal onClose={onClose} accent={app ? "#FFE9E2" : GRADIENT} className="lg:hidden">
+      <MobileDetailModal onClose={onClose} accent={app ? "#F1EDFA" : GRADIENT} className="lg:hidden">
         <div className="app-sheet-header relative px-6 pb-6 pt-5">
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />

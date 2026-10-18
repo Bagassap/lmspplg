@@ -13,7 +13,7 @@ import type { MateriItem } from "@/components/materi/MateriFormModal";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 import { Rocket } from "@/components/app/Rocket";
 
-const ACCENT = "#F26A3D";
+const ACCENT = "#3E03B3";
 const PURPLE = "#3E03B3";
 const MAX_ITEMS = 5;
 
@@ -93,7 +93,7 @@ export function SiswaAppHome() {
         <Link
           href="/siswa/absensi-harian"
           className="relative flex items-center overflow-hidden rounded-3xl px-5 py-6"
-          style={{ background: "#FFE9E2" }}
+          style={{ background: "#F1EDFA" }}
         >
           <div className="relative z-10 flex-1">
             <svg viewBox="0 0 28 22" className="absolute -left-1 -top-3 h-5 w-6" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -240,7 +240,7 @@ export function SiswaAppHome() {
           )}
 
           {!loading && (tab === "materi" ? materiList : tugasList).length > MAX_ITEMS && (
-            <Link href="/siswa/materi" className="mt-6 block rounded-2xl py-3 text-center text-sm font-bold" style={{ background: "#FFE9E2", color: ACCENT }}>
+            <Link href="/siswa/materi" className="mt-6 block rounded-2xl py-3 text-center text-sm font-bold" style={{ background: "#F1EDFA", color: ACCENT }}>
               Lihat Semua
             </Link>
           )}

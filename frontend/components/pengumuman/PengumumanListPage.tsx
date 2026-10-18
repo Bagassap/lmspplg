@@ -591,13 +591,13 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
               onClick={() => { setEditItem(null); setModalOpen(true); }}
               whileTap={{ scale: 0.97 }}
               className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold text-white"
-              style={{ background: "#F26A3D", boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" }}>
+              style={{ background: "#3E03B3", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }}>
               <Plus size={18} /> Buat Pengumuman
             </motion.button>
           )}
 
           {error && (
-            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{error}</p>
+            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#F1EDFA", color: "#3E03B3" }}>{error}</p>
           )}
 
           {loading ? (
@@ -618,9 +618,9 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                        <span className="rounded-full px-2 py-0.5" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{p.kategori}</span>
+                        <span className="rounded-full px-2 py-0.5" style={{ background: "#F1EDFA", color: "#3E03B3" }}>{p.kategori}</span>
                         {p.isPinned && <span className="flex items-center gap-0.5"><Pin size={10} /> Disematkan</span>}
-                        {p.prioritas === "MENDESAK" && <span className="font-bold" style={{ color: "#F26A3D" }}>Mendesak</span>}
+                        {p.prioritas === "MENDESAK" && <span className="font-bold" style={{ color: "#3E03B3" }}>Mendesak</span>}
                       </div>
                       <p className="mt-1 line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{p.judul}</p>
                       <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">

@@ -25,7 +25,7 @@ export function PlaceholderPage({
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{title}</h1>
         </div>
         <div className="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "#F1EDFA", color: "#3E03B3" }}>
             <Icon size={24} />
           </span>
           <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Fitur dalam pengembangan</p>

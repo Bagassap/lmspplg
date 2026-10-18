@@ -124,7 +124,7 @@ export default function SiswaCatatanSayaPage() {
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-[15px] font-bold text-slate-900 dark:text-white">{c.judul}</p>
                       {c.poin != null && (
-                        <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: "#FFE9E2", color: APP_ACCENT }}>
+                        <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: "#F1EDFA", color: APP_ACCENT }}>
                           {c.poin} poin
                         </span>
                       )}

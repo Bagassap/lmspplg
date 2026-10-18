@@ -164,13 +164,13 @@ export default function GuruJadwalSoalPage() {
                     className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
+                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                         <CalendarDays size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
                         <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
@@ -220,13 +220,13 @@ export default function GuruJadwalSoalPage() {
                     className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
+                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                         <FileText size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
                         <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
@@ -373,7 +373,7 @@ export default function GuruJadwalSoalPage() {
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
               <AppTabs
                 tabs={[["all", "Semua"], ["active", "Aktif"], ["completed", "Selesai"]] as const}

@@ -174,7 +174,7 @@ export default function PengumumanDetailModal({
 
               <div
                 className="relative shrink-0 overflow-hidden px-5 py-4 sm:px-6 sm:py-5"
-                style={{ background: app ? "#FFE9E2" : grad }}
+                style={{ background: app ? "#F1EDFA" : grad }}
               >
                 <div className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full ${onLime ? "bg-black/8" : "bg-white/8"}`} />
                 <div className={`pointer-events-none absolute -bottom-10 left-1/3 h-36 w-36 rounded-full ${onLime ? "bg-black/6" : "bg-white/6"}`} />
@@ -272,7 +272,7 @@ export default function PengumumanDetailModal({
 
               <div className="border-b border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-slate-700">
-                  <RotateCcw size={12} className={app ? "text-[#F26A3D]" : "text-[#00AAFA]"} />
+                  <RotateCcw size={12} className={app ? "text-[#3E03B3]" : "text-[#00AAFA]"} />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Isi Pengumuman</span>
                   <span className="ml-auto text-[10px] font-normal text-gray-400 dark:text-slate-500">{formatDate(pengumuman.createdAt)}</span>
                 </div>

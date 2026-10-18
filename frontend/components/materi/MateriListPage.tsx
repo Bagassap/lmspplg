@@ -272,7 +272,7 @@ export function MateriListPage({
             {canCreate && (
               <button type="button" onClick={() => { setEditItem(null); setModalOpen(true); }}
                 className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95"
-                style={{ background: "#F26A3D" }}>
+                style={{ background: "#3E03B3" }}>
                 <Plus size={14} /> Tambah
               </button>
             )}
@@ -283,7 +283,7 @@ export function MateriListPage({
               {[null, ...uniqueMapel].map((mp) => (
                 <button key={mp ?? "all"} type="button" onClick={() => setMapelFilter(mp)}
                   className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
-                  style={mapelFilter === mp ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                  style={mapelFilter === mp ? { background: "#3E03B3", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
                   {mp ?? "Semua"}
                 </button>
               ))}
@@ -291,11 +291,11 @@ export function MateriListPage({
           )}
 
           {!canCreate && (
-            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+            <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#F1EDFA", color: "#3E03B3" }}>
               Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi.
             </p>
           )}
-          {error && <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{error}</p>}
+          {error && <p className="rounded-2xl px-4 py-3 text-sm font-semibold" style={{ background: "#F1EDFA", color: "#3E03B3" }}>{error}</p>}
 
           {loading ? (
             <div className="space-y-3">{[0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}</div>

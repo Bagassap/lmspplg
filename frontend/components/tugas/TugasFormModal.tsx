@@ -399,7 +399,7 @@ export function TugasFormModal({
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                      style={{ background: h.app ? "#F26A3D" : "#3E03B3" }}>
+                      style={{ background: h.app ? "#3E03B3" : "#3E03B3" }}>
                       <Plus size={12} /> Tambah Soal
                     </button>
                   </div>
@@ -487,7 +487,7 @@ export function TugasFormModal({
               </button>
               <button type="button" onClick={handleSubmit} disabled={saving}
                 className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full" : "rounded-xl"}`}
-                style={{ background: h.app ? "#F26A3D" : "#3E03B3" }}>
+                style={{ background: h.app ? "#3E03B3" : "#3E03B3" }}>
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Tugas"}
               </button>

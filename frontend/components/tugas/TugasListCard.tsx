@@ -214,7 +214,7 @@ export function TugasListCard({
           {canCreate && (
             <button type="button" onClick={onAddTugas}
               className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95"
-              style={{ background: "#F26A3D" }}>
+              style={{ background: "#3E03B3" }}>
               <Plus size={14} /> Tambah
             </button>
           )}
@@ -229,7 +229,7 @@ export function TugasListCard({
             {[null, ...uniqueMapel].map((mp) => (
               <button key={mp ?? "all"} type="button" onClick={() => setMapelFilter(mp)}
                 className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
-                style={mapelFilter === mp ? { background: "#F26A3D", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
+                style={mapelFilter === mp ? { background: "#3E03B3", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
                 {mp ?? "Semua"}
               </button>
             ))}
@@ -258,7 +258,7 @@ export function TugasListCard({
                       </p>
                     </div>
                     {cnt > 0 && (
-                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-2 text-xs font-bold text-white" style={{ backgroundColor: "#F26A3D" }}>{cnt}</span>
+                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-2 text-xs font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>{cnt}</span>
                     )}
                     <ChevronRight size={18} className="shrink-0 text-slate-300" />
                   </AppCard>

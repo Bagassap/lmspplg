@@ -36,9 +36,9 @@ export function TugasPraktikViewerModal({
             className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-              style={{ background: app ? "#FFE9E2" : "#00AAFA" }}>
+              style={{ background: app ? "#F1EDFA" : "#00AAFA" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/15 text-white"}`}>
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#3E03B3]" : "bg-white/15 text-white"}`}>
                 <Code2 size={18} />
               </div>
               <div className="min-w-0 flex-1">

@@ -113,35 +113,35 @@ const THEME = {
   },
 } as const;
 
-// Palet mode aplikasi terpasang: warna semantik (hijau/merah/kuning) + aksen oranye.
+// Palet mode aplikasi terpasang: warna semantik (hijau/merah/kuning) + aksen ungu brand.
 const APP_THEME = {
   success: {
     headerBg: "#EAF8EE", blob1: "rgba(22,163,74,0.20)", blob2: "rgba(22,163,74,0.12)",
     ring1: "rgba(22,163,74,0.16)", ring2: "rgba(22,163,74,0.08)",
     iconBg: "#16A34A", iconShadow: "0 16px 40px rgba(22,163,74,0.45)",
-    bar: "#16A34A", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    bar: "#16A34A", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
     dotColor: "#16A34A", icon: CheckCircle2, label: "Berhasil",
   },
   error: {
     headerBg: "#FEE9E9", blob1: "rgba(239,68,68,0.20)", blob2: "rgba(239,68,68,0.12)",
     ring1: "rgba(239,68,68,0.16)", ring2: "rgba(239,68,68,0.08)",
     iconBg: "#EF4444", iconShadow: "0 16px 40px rgba(239,68,68,0.45)",
-    bar: "#EF4444", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    bar: "#EF4444", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
     dotColor: "#EF4444", icon: XCircle, label: "Gagal",
   },
   warning: {
     headerBg: "#FEF3DC", blob1: "rgba(245,158,11,0.24)", blob2: "rgba(245,158,11,0.14)",
     ring1: "rgba(245,158,11,0.18)", ring2: "rgba(245,158,11,0.10)",
     iconBg: "#F59E0B", iconShadow: "0 16px 40px rgba(245,158,11,0.45)",
-    bar: "#F59E0B", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
+    bar: "#F59E0B", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
     dotColor: "#F59E0B", icon: AlertTriangle, label: "Perhatian",
   },
   info: {
-    headerBg: "#FFE9E2", blob1: "rgba(242,106,61,0.22)", blob2: "rgba(242,106,61,0.14)",
-    ring1: "rgba(242,106,61,0.18)", ring2: "rgba(242,106,61,0.10)",
-    iconBg: "#F26A3D", iconShadow: "0 16px 40px rgba(242,106,61,0.45)",
-    bar: "#F26A3D", btnBg: "#F26A3D", btnShadow: "0 8px 24px rgba(242,106,61,0.45)",
-    dotColor: "#F26A3D", icon: Info, label: "Informasi",
+    headerBg: "#F1EDFA", blob1: "rgba(62,3,179,0.22)", blob2: "rgba(62,3,179,0.14)",
+    ring1: "rgba(62,3,179,0.18)", ring2: "rgba(62,3,179,0.10)",
+    iconBg: "#3E03B3", iconShadow: "0 16px 40px rgba(62,3,179,0.45)",
+    bar: "#3E03B3", btnBg: "#3E03B3", btnShadow: "0 8px 24px rgba(62,3,179,0.45)",
+    dotColor: "#3E03B3", icon: Info, label: "Informasi",
   },
 } as const;
 
@@ -366,8 +366,8 @@ function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (
 function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: boolean) => void }) {
   const isDark = useDarkMode();
   const app = useIsAppMode();
-  const tint = (a: number) => (app ? `rgba(242,106,61,${a})` : `rgba(161,249,25,${a})`);
-  const accent = app ? "#F26A3D" : "#A1F919";
+  const tint = (a: number) => (app ? `rgba(62,3,179,${a})` : `rgba(161,249,25,${a})`);
+  const accent = app ? "#3E03B3" : "#A1F919";
 
   const cardBg     = isDark ? "#1E293B" : "#ffffff";
   const titleColor = isDark ? "#FFFFFF" : "#000000";
@@ -375,7 +375,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
   const divider    = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
   const cancelBg   = isDark ? "rgba(255,255,255,0.08)" : "#FFFFFF";
   const cancelText = isDark ? "#94a3b8" : "#64748b";
-  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : app ? "#FFE9E2" : "#F6FEE8";
+  const headerBg   = isDark ? "rgba(255,255,255,0.03)" : app ? "#F1EDFA" : "#F6FEE8";
 
   const dots = [
     { x: -50, y: -46, delay: 0.1,  size: 7 },
@@ -472,7 +472,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             className="mt-5 rounded-lg px-3 py-1 text-[10px] font-black tracking-[0.16em] uppercase"
             style={{
               background: isDark ? "rgba(255,255,255,0.08)" : tint(0.10),
-              color: app ? "#F26A3D" : "#5D900F",
+              color: app ? "#3E03B3" : "#5D900F",
             }}
           >
             Konfirmasi

@@ -60,7 +60,7 @@ const INPUT_DEFAULT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00AAFA]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 const INPUT_APP =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#F26A3D] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F26A3D]/15 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 function EditProfilModal({
   siswa, kelasGradient, onClose, onSave,
@@ -138,9 +138,9 @@ function EditProfilModal({
           exit={app ? { y: "100%" } : { scale: 0.92, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
         >
-          <div className="flex items-center justify-between px-6 py-4" style={{ background: app ? "#FFE9E2" : kelasGradient }}>
+          <div className="flex items-center justify-between px-6 py-4" style={{ background: app ? "#F1EDFA" : kelasGradient }}>
             <div className="flex items-center gap-2.5">
-              <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+              <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${app ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                 <Pencil size={15} />
               </div>
               <h2 className={`text-base font-semibold ${app ? "text-slate-900" : "text-white"}`}>Edit Profil</h2>
@@ -234,7 +234,7 @@ function EditProfilModal({
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,170,250,0.4)" }}
               whileTap={{ scale: 0.97 }}
               className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 ${app ? "rounded-full" : "rounded-xl"}`}
-              style={{ background: app ? "#F26A3D" : kelasGradient }}
+              style={{ background: app ? "#3E03B3" : kelasGradient }}
             >
               {saving
                 ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -336,7 +336,7 @@ export default function SiswaProfilPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#3E03B3] border-t-violet-600" style={appMode ? { borderColor: "#F26A3D", borderTopColor: "transparent" } : undefined} />
+        <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#3E03B3] border-t-violet-600" style={appMode ? { borderColor: "#3E03B3", borderTopColor: "transparent" } : undefined} />
       </div>
     );
   }
@@ -372,16 +372,16 @@ export default function SiswaProfilPage() {
         <AppBanner className="flex flex-col items-center text-center">
           <div className="relative">
             <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
-              <Avatar src={profil.user?.fotoProfil} nama={nama} sizePx={96} fallbackBg="#F26A3D" textClassName="text-2xl font-extrabold" />
+              <Avatar src={profil.user?.fotoProfil} nama={nama} sizePx={96} fallbackBg="#3E03B3" textClassName="text-2xl font-extrabold" />
             </div>
             <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
               className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-white shadow-md"
-              style={{ background: "#F26A3D" }}>
+              style={{ background: "#3E03B3" }}>
               <Camera size={14} />
             </button>
           </div>
           <h2 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white">{nama}</h2>
-          <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-extrabold" style={{ color: "#F26A3D" }}>
+          <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-extrabold" style={{ color: "#3E03B3" }}>
             <IdCard size={14} /> NIS {profil.nis}
           </span>
           {profil.user?.email && <p className="mt-2 text-xs text-slate-500">{profil.user.email}</p>}
@@ -583,7 +583,7 @@ export default function SiswaProfilPage() {
       )}
 
       {showChangeFoto && (
-        <ChangeFotoProfilModal gradient={appMode ? "#F26A3D" : kelasGrad} onClose={() => setShowChangeFoto(false)} />
+        <ChangeFotoProfilModal gradient={appMode ? "#3E03B3" : kelasGrad} onClose={() => setShowChangeFoto(false)} />
       )}
     </div>
   );

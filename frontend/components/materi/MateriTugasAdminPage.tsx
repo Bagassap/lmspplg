@@ -176,7 +176,7 @@ export function MateriTugasAdminPage() {
                   value={category === "materi" ? searchMateri : searchTugas}
                   onChange={(e) => (category === "materi" ? setSearchMateri(e.target.value) : setSearchTugas(e.target.value))}
                   placeholder={category === "materi" ? "Cari materi..." : "Cari tugas..."}
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
               <AppTabs
                 tabs={[["materi", "Materi"], ["tugas", perluReview > 0 ? `Tugas (${perluReview})` : "Tugas"]] as const}

@@ -69,7 +69,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
                   <button onClick={() => onPage(i)}
                     className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                       i === page
-                        ? (app ? "bg-[#F26A3D] text-white shadow-sm" : "bg-[#3E03B3] text-white shadow-sm")
+                        ? (app ? "bg-[#3E03B3] text-white shadow-sm" : "bg-[#3E03B3] text-white shadow-sm")
                         : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
                     }`}>
                     {i + 1}
@@ -135,7 +135,7 @@ export function SiswaTable({
                       <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{displayNama}</p>
                       <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">NIS {s.nis}</p>
                       <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-                        style={pct === 100 ? { background: "#EAF8D2", color: "#5D900F" } : { background: "#FFE9E2", color: "#F26A3D" }}>
+                        style={pct === 100 ? { background: "#EAF8D2", color: "#5D900F" } : { background: "#F1EDFA", color: "#3E03B3" }}>
                         Data {pct}%
                       </span>
                     </div>

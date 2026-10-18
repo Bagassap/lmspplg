@@ -54,7 +54,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
           </div>
         ) : !blobUrl ? (
           <div className="flex items-center justify-center gap-3 py-20">
-            <Loader2 size={28} className={`animate-spin ${app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"}`} />
+            <Loader2 size={28} className={`animate-spin ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`} />
             <span className="text-sm text-gray-500 dark:text-slate-400">Memuat PDF…</span>
           </div>
         ) : (
@@ -62,10 +62,10 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
             <Document file={blobUrl}
               onLoadSuccess={({ numPages: n }) => { setNumPages(n); setPdfError(false); }}
               onLoadError={() => setPdfError(true)}
-              loading={<div className="flex items-center justify-center gap-3 py-20"><Loader2 size={28} className={`animate-spin ${app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"}`} /></div>}>
+              loading={<div className="flex items-center justify-center gap-3 py-20"><Loader2 size={28} className={`animate-spin ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`} /></div>}>
               <Page pageNumber={pageNumber} width={pageWidth > 0 ? pageWidth : 640}
                 renderAnnotationLayer={false} renderTextLayer={false}
-                loading={<div className="flex justify-center py-12"><Loader2 size={22} className={`animate-spin ${app ? "text-[#F26A3D]" : "text-[#5D900F] dark:text-[#A1F919]"}`} /></div>}
+                loading={<div className="flex justify-center py-12"><Loader2 size={22} className={`animate-spin ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`} /></div>}
                 className="shadow-xl" />
             </Document>
           </div>
@@ -89,7 +89,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
           className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold shadow-md shrink-0 ${app ? "rounded-full" : "rounded-xl"}`}
-          style={app ? { background: "#F26A3D", color: "#FFFFFF" } : { background: "#A1F919", color: "#000000" }}>
+          style={app ? { background: "#3E03B3", color: "#FFFFFF" } : { background: "#A1F919", color: "#000000" }}>
           <Download size={14} /> Unduh PDF
         </motion.a>
       </div>

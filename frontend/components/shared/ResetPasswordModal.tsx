@@ -304,7 +304,7 @@ export function ResetPasswordModal({
     )}
 
     <AnimatePresence>
-      <MobileDetailModal onClose={onClose} accent={app ? "#FFE9E2" : "#A1F919"} className="lg:hidden">
+      <MobileDetailModal onClose={onClose} accent={app ? "#F1EDFA" : "#A1F919"} className="lg:hidden">
         {successPassword ? (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">

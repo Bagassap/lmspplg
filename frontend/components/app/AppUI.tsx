@@ -7,8 +7,8 @@ import { useIsAppMode } from "@/lib/pwaInstall";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 
-export const APP_ACCENT = "#F26A3D";
-export const APP_SOFT = "#FFE9E2";
+export const APP_ACCENT = "#3E03B3";
+export const APP_SOFT = "#F1EDFA";
 export const APP_PURPLE = "#3E03B3";
 
 /**
@@ -135,7 +135,7 @@ export function AppPillButton({
 }) {
   const style = disabled
     ? { background: "#E2E8F0", color: "#94A3B8" }
-    : { background: APP_ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" };
+    : { background: APP_ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" };
   const cls = `flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold transition active:scale-[0.98] ${className}`;
   if (href) {
     return <a href={href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{children}</a>;
@@ -155,11 +155,11 @@ export function AppEmpty({ icon: Icon, title, desc }: { icon: React.ElementType;
   );
 }
 
-/** Kelas warna header modal: peach di aplikasi terpasang, gaya lama di browser. */
+/** Kelas warna header modal: lavender di aplikasi terpasang, gaya lama di browser. */
 export function useSheetHeader(defaultBg: string) {
   const app = useIsAppMode();
   return app
-    ? { app, bg: APP_SOFT, title: "text-slate-900", sub: "text-slate-500", iconBox: "bg-white text-[#F26A3D]", close: "bg-white text-slate-600", chip: "bg-white text-slate-600" }
+    ? { app, bg: APP_SOFT, title: "text-slate-900", sub: "text-slate-500", iconBox: "bg-white text-[#3E03B3]", close: "bg-white text-slate-600", chip: "bg-white text-slate-600" }
     : { app, bg: defaultBg, title: "text-white", sub: "text-white/60", iconBox: "bg-white/15 text-white", close: "bg-white/15 text-white hover:bg-white/25", chip: "bg-white/20 text-white" };
 }
 
@@ -167,7 +167,7 @@ type SheetAction = { label: string; icon?: React.ElementType; onClick?: () => vo
 
 /**
  * Panel detail dari bawah untuk aplikasi terpasang (pola detail Materi/Tugas):
- * ikon besar, judul, baris info abu-abu, satu tombol utama oranye, dan tombol
+ * ikon besar, judul, baris info abu-abu, satu tombol utama ungu, dan tombol
  * sekunder (Edit/Hapus/Unduh).
  */
 export function AppDetailSheet({
@@ -226,7 +226,7 @@ function ActionPill({ action, primary = false }: { action: SheetAction; primary?
   const Icon = action.icon;
   const cls = `flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
   const style = primary
-    ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(242,106,61,0.7)" }
+    ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
     : { background: action.danger ? "#FEE2E2" : APP_SOFT, color: action.danger ? "#DC2626" : APP_ACCENT };
   const inner = <>{Icon && <Icon size={15} />}{action.label}</>;
   if (action.href) return <a href={action.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>;

@@ -883,7 +883,7 @@ function MobileFormAbsen({
   const lokasiMissing = !lokasi;
   const ttdMissing = !ttd;
   const catatanMissing = isIzinSakit && !catatan.trim();
-  const accentColor = app ? "#F26A3D" : activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
+  const accentColor = app ? "#3E03B3" : activeTipe === "PULANG" ? PULANG_CFG.clr : BRAND_GRADIENT;
   const fotoLabel = isIzinSakit ? "Foto Surat Izin/Sakit" : "Foto Selfie";
   const titikLokasi = lokasi ? parseLokasi(lokasi) : null;
 

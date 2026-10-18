@@ -89,7 +89,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${app ? "rounded-t-[28px]" : "rounded-2xl"}`}
             onClick={e=>e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{background: app ? "#FFE9E2" : "#A1F919"}}>
+              style={{background: app ? "#F1EDFA" : "#A1F919"}}>
               <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10"/>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -108,7 +108,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             </div>
             <form onSubmit={submit} className="p-6 space-y-4">
               <div className="flex items-start gap-3 bg-[#F1EDFA] dark:bg-[#000000]/20 rounded-xl p-3.5">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background: app ? "#F26A3D" : "#3E03B3"}}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background: app ? "#3E03B3" : "#3E03B3"}}>
                   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
                 </div>
                 <div>
@@ -121,7 +121,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">
                   Link Google Drive <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
                 </label>
-                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#A1F919]"}${app ? " focus-within:border-[#F26A3D]" : ""}`}>
+                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#A1F919]"}${app ? " focus-within:border-[#3E03B3]" : ""}`}>
                   <Link2 size={15} className="text-slate-400 shrink-0"/>
                   <input
                     type="url"
@@ -148,7 +148,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
                 <textarea value={catatan} onChange={e=>setCatatan(e.target.value)} rows={2}
                   placeholder="Tambahkan keterangan jika diperlukan..."
-                  className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#F26A3D]" : "focus:border-[#A1F919]"}`}/>
+                  className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"}`}/>
               </div>
 
               <div className="flex gap-3">
@@ -158,7 +158,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 </button>
                 <button type="submit" disabled={saving || !driveUrl.trim()}
                   className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
-                  style={{background: app ? "#F26A3D" : "#A1F919"}}>
+                  style={{background: app ? "#3E03B3" : "#A1F919"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
               </div>
@@ -289,13 +289,13 @@ export default function SiswaJadwalSoalPage() {
                     className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
+                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                         <CalendarDays size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
                         <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
@@ -337,13 +337,13 @@ export default function SiswaJadwalSoalPage() {
                     className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                     style={{maxHeight:"92vh"}}>
                     <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#FFE9E2" : "#3E03B3"}}>
+                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
                       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                         <FileText size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
+                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
                         <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
@@ -603,7 +603,7 @@ export default function SiswaJadwalSoalPage() {
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
 
               <AppTabs
@@ -798,11 +798,11 @@ export default function SiswaJadwalSoalPage() {
               className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: appMode ? "#FFE9E2" : detailTarget.status==="DITERIMA" ? "#A1F919" : "#3E03B3"}}>
+                style={{background: appMode ? "#F1EDFA" : detailTarget.status==="DITERIMA" ? "#A1F919" : "#3E03B3"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-[#F26A3D]" : "bg-white/20 text-white"}`}>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
                       <CheckCircle size={18}/>
                     </div>
                     <div>
@@ -848,7 +848,7 @@ export default function SiswaJadwalSoalPage() {
                 </div>
                 <a href={detailTarget.fileUrl} target="_blank" rel="noopener noreferrer"
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${appMode ? "rounded-full" : "rounded-xl"}`}
-                  style={{background: appMode ? "#F26A3D" : "#3E03B3"}}>
+                  style={{background: appMode ? "#3E03B3" : "#3E03B3"}}>
                   <ExternalLink size={14}/> Buka Google Drive
                 </a>
               </div>
@@ -868,7 +868,7 @@ export default function SiswaJadwalSoalPage() {
               className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: appMode ? "#FFE9E2" : "#A1F919", color: "#000000"}}>
+                style={{background: appMode ? "#F1EDFA" : "#A1F919", color: "#000000"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -915,7 +915,7 @@ export default function SiswaJadwalSoalPage() {
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
                   className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-full" : "rounded-xl"}`}
-                  style={appMode ? {background: "#F26A3D", color: "#fff"} : {background: "#A1F919", color: "#000000"}}>
+                  style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#A1F919", color: "#000000"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

@@ -35,9 +35,9 @@ export function TugasFileViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#FFE9E2" : "#3E03B3" }}>
+            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#F1EDFA" : "#3E03B3" }}>
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#F26A3D]" : "bg-white/15 text-white"}`}>
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#3E03B3]" : "bg-white/15 text-white"}`}>
                 <FileText size={18} />
               </div>
               <div className="min-w-0 flex-1">
@@ -54,14 +54,14 @@ export function TugasFileViewerModal({
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600">
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${app ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${app ? "bg-[#F1EDFA] text-[#3E03B3]" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
                     <FileText size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{fileName ?? "File jawaban"}</p>
                     {submittedAt && <p className="text-xs text-slate-400">Dikumpulkan {formatTglJam(submittedAt)}</p>}
                   </div>
-                  <Download size={16} className={`shrink-0 ${app ? "text-[#F26A3D]" : "text-[#3E03B3]"}`} />
+                  <Download size={16} className={`shrink-0 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`} />
                 </a>
               ) : (
                 <p className="py-6 text-center text-sm text-slate-400">Belum ada file yang diunggah.</p>

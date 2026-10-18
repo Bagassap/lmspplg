@@ -14,7 +14,7 @@ function ToggleSwitch({ checked, onClick, disabled }: { checked: boolean; onClic
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={onClick} disabled={disabled}
       className="relative h-7 w-12 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-      style={{ background: checked ? (app ? "#F26A3D" : "#A1F919") : "#CBD5E1" }}>
+      style={{ background: checked ? (app ? "#3E03B3" : "#A1F919") : "#CBD5E1" }}>
       <span className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform"
         style={{ transform: checked ? "translateX(1.25rem)" : "translateX(0.125rem)" }} />
     </button>

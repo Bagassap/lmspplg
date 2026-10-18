@@ -110,23 +110,15 @@ html.dark .text-\[\#3E03B3\]:not(.bg-white):not([class*="dark:text-"]) {
 }
 
 /* =====================================================================
-   Mode aplikasi terpasang (PWA): palet oranye menggantikan ungu brand.
-   Atribut data-app-mode dipasang di <html> oleh <AppModeFlag />.
-   Dipakai sebagai lapisan dasar untuk halaman/modal yang belum punya
-   tampilan aplikasi sendiri; komponen yang sudah dirancang ulang tidak
-   memakai ungu sehingga tidak terpengaruh.
+   Mode aplikasi terpasang (PWA). Atribut data-app-mode dipasang di <html>
+   oleh <AppModeFlag />. Warna utama tetap ungu brand (#3E03B3) seperti
+   halaman login; lapisan ini hanya merapikan komponen lama agar mengikuti
+   pola tampilan aplikasi.
    ===================================================================== */
-html[data-app-mode] .bg-\[\#3E03B3\] { background-color: #f26a3d !important; }
-html[data-app-mode] .text-\[\#3E03B3\] { color: #f26a3d !important; }
-html[data-app-mode] .border-\[\#3E03B3\] { border-color: #f26a3d !important; }
-html[data-app-mode] [style*="background: rgb(62, 3, 179)"],
-html[data-app-mode] [style*="background-color: rgb(62, 3, 179)"] { background: #f26a3d !important; }
-html[data-app-mode] [style^="color: rgb(62, 3, 179)"],
-html[data-app-mode] [style*="; color: rgb(62, 3, 179)"] { color: #f26a3d !important; }
 
-/* Header modal/panel berlatar ungu -> peach dengan teks gelap (pola aplikasi).
+/* Header modal/panel berlatar ungu -> lavender dengan teks gelap (pola aplikasi).
    Pasang class "app-sheet-header" pada kontainer header. */
-html[data-app-mode] .app-sheet-header { background: #ffe9e2 !important; }
+html[data-app-mode] .app-sheet-header { background: #f1edfa !important; }
 html[data-app-mode] .app-sheet-header [class*="text-white"] { color: #0f172a !important; }
 html[data-app-mode] .app-sheet-header [class*="text-white/5"],
 html[data-app-mode] .app-sheet-header [class*="text-white/6"],
@@ -137,8 +129,7 @@ html[data-app-mode] .app-sheet-header button[class*="bg-white/"],
 html[data-app-mode] .app-sheet-header button[class*="bg-white/"] svg { color: #475569 !important; }
 
 /* Strip judul mobile berlatar ungu (tombol kembali + judul tengah) -> judul besar
-   rata kiri tanpa latar, sama seperti halaman aplikasi lain. Pasang class
-   "app-header-row" pada baris header di dalam strip ungu. */
+   rata kiri tanpa latar. Pasang class "app-header-row" pada baris header. */
 html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { background: transparent !important; }
 html[data-app-mode] .app-header-row { padding-bottom: 0.25rem !important; }
 html[data-app-mode] .app-header-row > button { display: none !important; }
@@ -148,33 +139,22 @@ html[data-app-mode] .app-header-row h1 {
 }
 html.dark[data-app-mode] .app-header-row h1 { color: #ffffff !important; }
 
-/* Tombol utama berlatar lime di modal lama -> oranye bertulisan putih. */
+/* Tombol/latar lime di komponen lama -> ungu brand dengan teks putih. */
+html[data-app-mode] .bg-\[\#A1F919\],
 html[data-app-mode] button[style*="background: rgb(161, 249, 25)"],
 html[data-app-mode] a[style*="background: rgb(161, 249, 25)"],
 html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] {
-  background: #f26a3d !important; color: #ffffff !important;
+  background: #3e03b3 !important; color: #ffffff !important;
 }
+html[data-app-mode] .bg-\[\#A1F919\] *,
 html[data-app-mode] button[style*="background: rgb(161, 249, 25)"] *,
 html[data-app-mode] a[style*="background: rgb(161, 249, 25)"] *,
 html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }
 
-/* ---- Lanjutan mode aplikasi: seragamkan warna sekunder (lime/biru/lavender) ---- */
-html[data-app-mode] .bg-\[\#A1F919\] { background-color: #f26a3d !important; color: #ffffff !important; }
-html[data-app-mode] .bg-\[\#A1F919\] * { color: inherit; }
-html[data-app-mode] .bg-\[\#00AAFA\] { background-color: #f26a3d !important; }
-html[data-app-mode] .text-\[\#00AAFA\],
-html[data-app-mode] .text-\[\#5D900F\],
-html[data-app-mode] .text-\[\#48700B\] { color: #f26a3d !important; }
-html[data-app-mode] .border-\[\#A1F919\],
-html[data-app-mode] .border-\[\#00AAFA\] { border-color: #f26a3d !important; }
-html[data-app-mode] .bg-\[\#F1EDFA\],
-html[data-app-mode] .bg-\[\#F6FEE8\] { background-color: #ffe9e2 !important; }
-html[data-app-mode] [style*="background: rgb(241, 237, 250)"],
-html[data-app-mode] [style*="background-color: rgb(241, 237, 250)"],
-html[data-app-mode] [style*="background: rgb(246, 254, 232)"],
-html[data-app-mode] [style*="background-color: rgb(246, 254, 232)"] { background: #ffe9e2 !important; }
+/* Biru muda lama -> ungu brand. */
+html[data-app-mode] .bg-\[\#00AAFA\] { background-color: #3e03b3 !important; }
 html[data-app-mode] [style*="background: rgb(0, 170, 250)"],
-html[data-app-mode] [style*="background-color: rgb(0, 170, 250)"] { background: #f26a3d !important; }
+html[data-app-mode] [style*="background-color: rgb(0, 170, 250)"] { background: #3e03b3 !important; }
 
 /* ---- Dialog tengah -> panel dari bawah (bottom sheet) ---- */
 html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):not(.pointer-events-none) {
