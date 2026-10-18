@@ -118,7 +118,7 @@ export function PengumumanFormModal({
             className="relative max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div
-              className="relative flex items-center gap-3 overflow-hidden px-6 py-5"
+              className="app-sheet-header relative flex items-center gap-3 overflow-hidden px-6 py-5"
               style={{ background: "#3E03B3" }}
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />

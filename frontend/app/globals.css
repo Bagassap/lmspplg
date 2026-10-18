@@ -108,3 +108,52 @@ html.dark [style*=";color:#3E03B3"]:not(.bg-white),
 html.dark .text-\[\#3E03B3\]:not(.bg-white):not([class*="dark:text-"]) {
   color: #c4b5fd !important;
 }
+
+/* =====================================================================
+   Mode aplikasi terpasang (PWA): palet oranye menggantikan ungu brand.
+   Atribut data-app-mode dipasang di <html> oleh <AppModeFlag />.
+   Dipakai sebagai lapisan dasar untuk halaman/modal yang belum punya
+   tampilan aplikasi sendiri; komponen yang sudah dirancang ulang tidak
+   memakai ungu sehingga tidak terpengaruh.
+   ===================================================================== */
+html[data-app-mode] .bg-\[\#3E03B3\] { background-color: #f26a3d !important; }
+html[data-app-mode] .text-\[\#3E03B3\] { color: #f26a3d !important; }
+html[data-app-mode] .border-\[\#3E03B3\] { border-color: #f26a3d !important; }
+html[data-app-mode] [style*="background: rgb(62, 3, 179)"],
+html[data-app-mode] [style*="background-color: rgb(62, 3, 179)"] { background: #f26a3d !important; }
+html[data-app-mode] [style^="color: rgb(62, 3, 179)"],
+html[data-app-mode] [style*="; color: rgb(62, 3, 179)"] { color: #f26a3d !important; }
+
+/* Header modal/panel berlatar ungu -> peach dengan teks gelap (pola aplikasi).
+   Pasang class "app-sheet-header" pada kontainer header. */
+html[data-app-mode] .app-sheet-header { background: #ffe9e2 !important; }
+html[data-app-mode] .app-sheet-header [class*="text-white"] { color: #0f172a !important; }
+html[data-app-mode] .app-sheet-header [class*="text-white/5"],
+html[data-app-mode] .app-sheet-header [class*="text-white/6"],
+html[data-app-mode] .app-sheet-header [class*="text-white/7"],
+html[data-app-mode] .app-sheet-header [class*="text-white/8"] { color: #64748b !important; }
+html[data-app-mode] .app-sheet-header [class*="bg-white/"] { background: #ffffff !important; }
+html[data-app-mode] .app-sheet-header button[class*="bg-white/"],
+html[data-app-mode] .app-sheet-header button[class*="bg-white/"] svg { color: #475569 !important; }
+
+/* Strip judul mobile berlatar ungu (tombol kembali + judul tengah) -> judul besar
+   rata kiri tanpa latar, sama seperti halaman aplikasi lain. Pasang class
+   "app-header-row" pada baris header di dalam strip ungu. */
+html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { background: transparent !important; }
+html[data-app-mode] .app-header-row { padding-bottom: 0.25rem !important; }
+html[data-app-mode] .app-header-row > button { display: none !important; }
+html[data-app-mode] .app-header-row h1 {
+  position: static !important; text-align: left !important; color: #0f172a !important;
+  font-size: 1.5rem !important; line-height: 2rem !important; font-weight: 800 !important;
+}
+html.dark[data-app-mode] .app-header-row h1 { color: #ffffff !important; }
+
+/* Tombol utama berlatar lime di modal lama -> oranye bertulisan putih. */
+html[data-app-mode] button[style*="background: rgb(161, 249, 25)"],
+html[data-app-mode] a[style*="background: rgb(161, 249, 25)"],
+html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] {
+  background: #f26a3d !important; color: #ffffff !important;
+}
+html[data-app-mode] button[style*="background: rgb(161, 249, 25)"] *,
+html[data-app-mode] a[style*="background: rgb(161, 249, 25)"] *,
+html[data-app-mode] button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }

@@ -82,7 +82,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
         <motion.div className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900"
           initial={{ scale: 0.95, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 24 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
-          <div className="relative overflow-hidden bg-[#00AAFA] px-6 py-5">
+          <div className="app-sheet-header relative overflow-hidden bg-[#00AAFA] px-6 py-5">
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">

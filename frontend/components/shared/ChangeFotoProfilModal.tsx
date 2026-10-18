@@ -94,7 +94,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
           exit={{ scale: 0.92, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
         >
-          <div className="flex items-center justify-between px-6 py-4" style={{ background: gradient }}>
+          <div className="app-sheet-header flex items-center justify-between px-6 py-4" style={{ background: gradient }}>
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
                 <Camera size={15} className="text-white" />

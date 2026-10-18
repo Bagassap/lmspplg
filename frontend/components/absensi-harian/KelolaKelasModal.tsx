@@ -81,7 +81,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
 
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
+        <div className="app-sheet-header relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-6 right-20 h-16 w-16 rounded-full bg-white/8" />
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">

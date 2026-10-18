@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { KeyRound, X, Eye, EyeOff, ShieldAlert, CheckCircle2, UserCheck, Copy, CheckCheck, Printer } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const INPUT =
   "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
@@ -48,6 +49,7 @@ export function ResetPasswordModal({
   userId: string; userName: string; nis?: string; loginId?: string | null; mustChangePassword?: boolean; onClose: () => void; onSuccess?: () => void;
 }) {
   const toast = useToast();
+  const app = useIsAppMode();
   const resetToNis = !!nis;
   const alreadyChanged = resetToNis && mustChangePassword === false;
   const [newPassword, setNewPassword] = useState("");
@@ -302,7 +304,7 @@ export function ResetPasswordModal({
     )}
 
     <AnimatePresence>
-      <MobileDetailModal onClose={onClose} accent={successPassword ? "#A1F919" : "#A1F919"} className="lg:hidden">
+      <MobileDetailModal onClose={onClose} accent={app ? "#FFE9E2" : "#A1F919"} className="lg:hidden">
         {successPassword ? (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">

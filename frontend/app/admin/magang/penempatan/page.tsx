@@ -14,6 +14,8 @@ import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { PenempatanTable } from "@/components/magang/PenempatanTable";
 import type { TempatMagang, PenempatanMagang, StatusPenempatan } from "@/components/magang/types";
+import { icon3dStyle } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -21,6 +23,7 @@ const statGridVariants = { hidden: {}, visible: { transition: { staggerChildren:
 
 export default function AdminMagangPenempatanPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const toast = useToast();
   const [tempatList, setTempatList] = useState<TempatMagang[]>([]);
   const [penempatanList, setPenempatanList] = useState<PenempatanMagang[]>([]);
@@ -134,7 +137,7 @@ export default function AdminMagangPenempatanPage() {
       </div>
 
       <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
-        <div className="relative flex items-center px-4 pb-3 pt-4">
+        <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/admin/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
@@ -145,6 +148,25 @@ export default function AdminMagangPenempatanPage() {
       </div>
 
       <div className="mt-0 space-y-5 lg:mt-5">
+      {appMode && (
+        <div className="grid grid-cols-2 gap-3 lg:hidden">
+          {[
+            { label: "Tempat Magang", value: loading ? "—" : tempatList.length, icon: Building2, tone: "indigo" as const },
+            { label: "Siswa PKL Aktif", value: loading ? "—" : jumlahAktif, icon: Briefcase, tone: "emerald" as const },
+            { label: "Total Kuota", value: loading ? "—" : totalKuota, icon: Wallet, tone: "amber" as const },
+            { label: "Riwayat Penempatan", value: loading ? "—" : penempatanList.length, icon: ClipboardList, tone: "sky" as const },
+          ].map((t) => (
+            <div key={t.label} className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+              <span className="flex h-14 w-14 items-center justify-center rounded-[20px]" style={icon3dStyle(t.tone)}>
+                <t.icon size={24} color="#fff" />
+              </span>
+              <span className="text-xl font-extrabold leading-none text-slate-900 dark:text-white">{t.value}</span>
+              <span className="-mt-1 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">{t.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className={appMode ? "hidden lg:block" : "contents"}>
       <motion.div initial="hidden" animate="visible" variants={statGridVariants}
         className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
         <div className="lg:col-span-3">
@@ -180,6 +202,7 @@ export default function AdminMagangPenempatanPage() {
           />
         </div>
       </motion.div>
+      </div>
 
       <PenempatanFilterBar
         search={search} onSearch={setSearch}

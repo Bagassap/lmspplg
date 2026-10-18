@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
 import { PwaInstall } from "@/components/shared/PwaInstall";
+import { AppModeFlag } from "@/components/shared/AppModeFlag";
 
 const satoshi = localFont({
   src: [
@@ -56,6 +57,7 @@ export default function RootLayout({
         <ToastProvider>
           {children}
           <PwaInstall />
+          <AppModeFlag />
         </ToastProvider>
       </body>
     </html>

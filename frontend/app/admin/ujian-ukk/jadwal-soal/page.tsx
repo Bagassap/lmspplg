@@ -12,6 +12,9 @@ import {
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
 import { todayJakarta } from "@/components/absensi-harian/shared";
+import { AppTabs, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
+import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loading: () => (
   <div className="flex-1 flex items-center justify-center py-20">
@@ -162,7 +165,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
             className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden"
             style={{ maxHeight: "92vh" }}>
 
-            <div className="relative flex items-center gap-4 overflow-hidden bg-[#3E03B3] px-6 py-5">
+            <div className="app-sheet-header relative flex items-center gap-4 overflow-hidden bg-[#3E03B3] px-6 py-5">
               <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none"/>
               <div className="absolute -bottom-6 right-20 w-28 h-28 rounded-full bg-white/7 pointer-events-none"/>
               <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
@@ -319,7 +322,7 @@ function TambahFileModal({ open, onClose, onUpload, tahapanList, title, warna, s
             className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
             onClick={(e)=>e.stopPropagation()}>
 
-            <div className="relative px-6 py-5 overflow-hidden" style={{background: warna, color: "#FFFFFF"}}>
+            <div className="app-sheet-header relative px-6 py-5 overflow-hidden" style={{background: warna, color: "#FFFFFF"}}>
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full pointer-events-none" style={{backgroundColor: warna === "#A1F919" ? "#FFFFFF1A" : "#FFFFFF1A"}}/>
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-extrabold">{title}</h2>
@@ -463,6 +466,7 @@ function UploadSoalModal({ open, onClose, onUpload, tahapanList }: { open: boole
 
 export default function AdminJadwalSoalPage() {
   const router = useRouter();
+  const appMode = useIsAppMode();
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
@@ -616,14 +620,14 @@ export default function AdminJadwalSoalPage() {
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
-                  className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                  className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                   style={{maxHeight:"92vh"}}>
 
-                  <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
+                  <div className="app-sheet-header relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
                     style={{background:"#3E03B3"}}>
                     <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                     <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
@@ -692,18 +696,18 @@ export default function AdminJadwalSoalPage() {
           <AnimatePresence>
             {openSoalModal && (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
-                  className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                  className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
                   style={{maxHeight:"92vh"}}>
                   {(()=>{
                     const allSoal = soalFiles;
                     const curSoal = allSoal[soalSoalIdx] ?? null;
                     return (
                       <>
-                        <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
+                        <div className="app-sheet-header relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
                           style={{background:"#3E03B3"}}>
                           <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
                           <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
@@ -804,8 +808,35 @@ export default function AdminJadwalSoalPage() {
                 </div>
               </div>
 
+              {appMode && (
+                <div className="space-y-5 lg:hidden">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">Ujian Kompetensi Keahlian</p>
+                    <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">UKK</h1>
+                  </div>
+                  <section>
+                    <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Berkas UKK</h2>
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                      {[
+                        { label: "Jadwal UKK", sub: `${jadwalFiles.length} file`, icon: CalendarDays, tone: "sky" as const, onClick: () => { setSoalJadwalIdx(0); setOpenJadwalModal(true); } },
+                        { label: "Soal UKK", sub: `${totalSoal} soal`, icon: FileText, tone: "violet" as const, onClick: () => { setSoalSoalIdx(0); setOpenSoalModal(true); } },
+                      ].map((b) => (
+                        <button key={b.label} type="button" onClick={b.onClick}
+                          className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.97] dark:bg-[#1E293B]">
+                          <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(b.tone)}>
+                            <b.icon size={26} color="#fff" />
+                          </span>
+                          <span className="text-[15px] font-bold text-slate-900 dark:text-white">{b.label}</span>
+                          <span className="-mt-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">{b.sub}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              )}
+              <div className={appMode ? "hidden" : "contents"}>
               <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
-                <div className="relative flex items-center px-4 pb-3 pt-4">
+                <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
                   <button type="button" onClick={() => router.push("/admin/dashboard")}
                     className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
                     <ChevronLeft size={18} />
@@ -841,11 +872,69 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
               <div className="flex flex-col gap-6">
 
-          <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+          {appMode && (
+            <div className="space-y-4 lg:hidden">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
+                <button type="button" onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
+                  className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95" style={{ background: APP_ACCENT }}>
+                  <Plus size={14} /> Tambah
+                </button>
+              </div>
+              <div className="relative">
+                <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
+                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#F26A3D]/30 dark:bg-slate-800 dark:text-slate-200" />
+              </div>
+              <AppTabs
+                tabs={[["active", `Aktif (${active.length})`], ["completed", `Selesai (${completed.length})`]] as const}
+                value={tab} onChange={setTab} layoutId="app-ukk-admin-tab" />
+              {loading ? (
+                <div className="space-y-3">{[0, 1].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}</div>
+              ) : shown.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: APP_SOFT, color: APP_ACCENT }}><CalendarDays size={24} /></span>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                    {taskSearch.trim() ? `Tidak ada task dengan nama "${taskSearch.trim()}"` : tab === "active" ? "Tidak ada task aktif" : "Tidak ada task selesai"}
+                  </p>
+                </div>
+              ) : (
+                <ul className="space-y-3">
+                  {shown.map((t, idx) => (
+                    <li key={t.id} className="rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                      <button type="button" onClick={() => setSubmisiModalTahapan(t)} className="flex w-full items-center gap-4 text-left active:opacity-80">
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>{idx + 1}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
+                          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                          <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                            {submisiList.length} pengumpulan
+                          </span>
+                        </div>
+                      </button>
+                      <div className="mt-3 flex gap-2">
+                        <button type="button" onClick={() => { setEditTarget(t); setOpenTahapan(true); }}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold" style={{ background: APP_SOFT, color: APP_ACCENT }}>
+                          <Pencil size={12} /> Edit
+                        </button>
+                        <button type="button" onClick={() => deleteTahapan(t.id)}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-red-50 py-2.5 text-xs font-bold text-red-600">
+                          <Trash2 size={12} /> Hapus
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          <div className={`flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden ${appMode ? "max-lg:hidden" : ""}`}>
             <div className="px-5 pt-5 pb-0" style={{background:"rgba(62,3,179,0.05)"}}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -1017,12 +1106,12 @@ export default function AdminJadwalSoalPage() {
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+              className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
               onClick={(e) => { if (e.target === e.currentTarget) setSubmisiModalTahapan(null); }}>
               <motion.div initial={{scale:0.95,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0.95,opacity:0}}
-                className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+                className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}>
 
-                <div className="relative p-6 shrink-0"
+                <div className="app-sheet-header relative p-6 shrink-0"
                   style={{background:"#3E03B3"}}>
                   <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"/>
                   <button onClick={() => setSubmisiModalTahapan(null)}
@@ -1183,13 +1272,13 @@ export default function AdminJadwalSoalPage() {
         {revisiTarget && (
           <motion.div key="revisi-overlay"
             initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className={`fixed inset-0 z-[80] flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
             onClick={(e)=>{if(e.target===e.currentTarget){setRevisiTarget(null);setPesanRevisi("");}}}>
             <motion.div initial={{scale:0.95,opacity:0,y:12}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.95,opacity:0,y:12}}
-              className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+              className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-md overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={(e)=>e.stopPropagation()}>
 
-              <div className="relative px-6 py-5 overflow-hidden"
+              <div className="app-sheet-header relative px-6 py-5 overflow-hidden"
                 style={{background: "#A1F919", color: "#000000"}}>
                 <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10 pointer-events-none"/>
                 <div className="flex items-center gap-3">

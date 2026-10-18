@@ -65,7 +65,7 @@ export function EditPenempatanModal({
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
-        <div className="relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
+        <div className="app-sheet-header relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
             <Briefcase size={18} className="text-white" />

@@ -7,6 +7,7 @@ import { X, Mail, IdCard, Camera, Loader2, User } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { ChangeFotoProfilModal } from "@/components/shared/ChangeFotoProfilModal";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
+import { useIsAppMode } from "@/lib/pwaInstall";
 
 type MeResponse = {
   id: string;
@@ -22,6 +23,7 @@ const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru
 const GRADIENT = "#3E03B3";
 
 export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
+  const app = useIsAppMode();
   const [me, setMe] = useState<MeResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [showChangeFoto, setShowChangeFoto] = useState(false);
@@ -48,7 +50,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
           exit={{ scale: 0.92, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
         >
-          <div className="relative overflow-hidden px-6 pb-6 pt-5" style={{ background: GRADIENT }}>
+          <div className="app-sheet-header relative overflow-hidden px-6 pb-6 pt-5" style={{ background: GRADIENT }}>
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
 
@@ -158,8 +160,8 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
         </motion.div>
       </motion.div>
 
-      <MobileDetailModal onClose={onClose} accent={GRADIENT} className="lg:hidden">
-        <div className="relative px-6 pb-6 pt-5">
+      <MobileDetailModal onClose={onClose} accent={app ? "#FFE9E2" : GRADIENT} className="lg:hidden">
+        <div className="app-sheet-header relative px-6 pb-6 pt-5">
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/8" />
 
