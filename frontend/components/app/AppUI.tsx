@@ -117,7 +117,7 @@ export function AppTabs<T extends string>({
         return (
           <button key={key} type="button" onClick={() => onChange(key)}
             className="relative pb-3 text-[15px] font-semibold transition-colors"
-            style={{ color: active ? APP_ACCENT : "#94a3b8" }}>
+            style={{ color: active ? APP_ACCENT : "#64748b" }}>
             {label}
             {active && <motion.span layoutId={layoutId} className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: APP_ORANGE }} />}
           </button>

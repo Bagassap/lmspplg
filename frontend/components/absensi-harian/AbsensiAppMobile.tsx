@@ -105,7 +105,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold"
         style={mainNeedsAction
           ? { background: ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
-          : { background: "#E2E8F0", color: "#94A3B8" }}
+          : { background: "#E2E8F0", color: "#64748B" }}
       >
         {mainTab === "DATANG" ? <LogIn size={18} /> : <LogOut size={18} />}
         {ctaLabel}
@@ -141,7 +141,7 @@ export function AbsensiAppMobile<R extends RowLite>({
               <button
                 key={key} type="button" onClick={() => setSelectedRiwayatTab(key)}
                 className="relative pb-3 text-[15px] font-semibold transition-colors"
-                style={{ color: active ? ACCENT : "#94a3b8" }}
+                style={{ color: active ? ACCENT : "#64748b" }}
               >
                 {label}
                 {active && (

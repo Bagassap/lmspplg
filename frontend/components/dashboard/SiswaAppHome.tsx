@@ -149,7 +149,7 @@ export function SiswaAppHome() {
                 type="button"
                 onClick={() => setTab(key)}
                 className="relative pb-3 text-[15px] font-semibold transition-colors"
-                style={{ color: active ? ACCENT : "#94a3b8" }}
+                style={{ color: active ? ACCENT : "#64748b" }}
               >
                 {label}
                 {active && (

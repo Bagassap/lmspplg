@@ -11,10 +11,12 @@ function isPurpleIconBox(el: HTMLElement | null): el is HTMLElement {
   const w = el.offsetWidth;
   const h = el.offsetHeight;
   if (w < 26 || w > 72 || Math.abs(w - h) > 2) return false;
+  if (!el.querySelector(":scope > svg")) return false;
   if (el.closest("[data-no-tone], nav, table, form")) return false;
   const tag = el.tagName;
   if (tag === "BUTTON" || tag === "A" || tag === "SVG") return false;
-  return getComputedStyle(el).backgroundColor === PURPLE;
+  const cs = getComputedStyle(el);
+  return cs.backgroundColor === PURPLE || (cs.backgroundImage !== "none" && cs.backgroundImage.includes(PURPLE));
 }
 
 function sig(el: HTMLElement): string {

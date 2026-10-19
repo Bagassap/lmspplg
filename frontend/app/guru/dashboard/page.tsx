@@ -157,7 +157,7 @@ export default function GuruDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#0EA5E9",
+      gradient: "#0284C7",
       icon: ClipboardCheck,
     },
     {
@@ -167,7 +167,7 @@ export default function GuruDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#10B981",
+      gradient: "#059669",
       icon: Users,
     },
     {
@@ -177,7 +177,7 @@ export default function GuruDashboardPage() {
       suffix: " kelas",
       validThru: "2026/2027",
       holder: user.nama,
-      gradient: "#F26A3D",
+      gradient: "#E8562B",
       icon: GraduationCap,
     },
     {

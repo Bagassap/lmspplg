@@ -169,7 +169,7 @@ export function Sidebar({
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-300">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
             </p>
-            <p className="mt-2 rounded-lg bg-[#3E03B3]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#3E03B3] dark:bg-white/10 dark:text-[#3E03B3]">
+            <p className="mt-2 rounded-lg bg-[#3E03B3]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#3E03B3] dark:bg-white/10 dark:text-[#C4B5FD]">
               &ldquo;{greeting}&rdquo;
             </p>
           </div>

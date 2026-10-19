@@ -166,7 +166,7 @@ export default function AdminDashboardPage() {
       suffix: " hadir",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#0EA5E9",
+      gradient: "#0284C7",
       icon: Calendar,
     },
     {
@@ -177,7 +177,7 @@ export default function AdminDashboardPage() {
       suffix: " item",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#10B981",
+      gradient: "#059669",
       icon: Megaphone,
     },
     {
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
       suffix: " siswa",
       validThru: "2026/2027",
       holder: "Admin PPLG",
-      gradient: "#F26A3D",
+      gradient: "#E8562B",
       icon: Briefcase,
     },
     {

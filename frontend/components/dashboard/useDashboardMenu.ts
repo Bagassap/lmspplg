@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  LayoutDashboard, Bell, Users, Briefcase,
+  LayoutDashboard, Megaphone, Users, Briefcase,
   FileText, KeyRound,
   Building2, ClipboardCheck, FileBarChart,
   CalendarDays, Trophy, NotebookPen, BookOpen, Settings,
@@ -24,7 +24,7 @@ export const MENUS: Record<string, MenuItem[]> = {
   ADMIN: [
     { key: "dashboard",    href: "/admin/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/admin/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
-    { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Bell },
+    { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Megaphone },
     { key: "materi",       href: "/admin/materi",       label: "Materi",      icon: BookOpen },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
     { key: "catatan-siswa", href: "/admin/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
@@ -43,7 +43,7 @@ export const MENUS: Record<string, MenuItem[]> = {
   GURU: [
     { key: "dashboard",    href: "/guru/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/guru/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
-    { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Bell },
+    { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Megaphone },
     { key: "materi",       href: "/guru/materi",       label: "Materi & Tugas", icon: BookOpen },
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
     { key: "catatan-siswa", href: "/guru/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
@@ -60,7 +60,7 @@ export const MENUS: Record<string, MenuItem[]> = {
   SISWA: [
     { key: "dashboard",    href: "/siswa/dashboard",    label: "Dashboard",   icon: LayoutDashboard },
     { key: "absensi-harian", href: "/siswa/absensi-harian", label: "Absensi Harian", icon: ClipboardCheck },
-    { key: "pengumuman",   href: "/siswa/pengumuman",   label: "Pengumuman",  icon: Bell },
+    { key: "pengumuman",   href: "/siswa/pengumuman",   label: "Pengumuman",  icon: Megaphone },
     { key: "materi",       href: "/siswa/materi",       label: "Materi",      icon: BookOpen },
     { key: "catatan-siswa", href: "/siswa/catatan-siswa", label: "Catatan Saya", icon: NotebookPen },
     {

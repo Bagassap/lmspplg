@@ -100,7 +100,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
         <div className="grid grid-cols-7 mb-2">
           {DAY_ID.map((d, i) => (
             <div key={d} className="text-center text-[10px] font-bold"
-              style={{ color: i >= 5 ? "#3E03B3" : "#94a3b8" }}>{d}</div>
+              style={{ color: i >= 5 ? "#3E03B3" : "#64748b" }}>{d}</div>
           ))}
         </div>
 
@@ -113,7 +113,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#3E03B3]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#C4B5FD]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
@@ -170,7 +170,7 @@ function AccordionCard({
   const gradient = p.isPinned
     ? "#F26A3D"
     : (KATEGORI_GRADIENT[p.kategori] ?? KATEGORI_GRADIENT.Lainnya);
-  const onLime = gradient === "#F26A3D";
+  const onLime = false;
 
   function timeAgo(iso: string): string {
     const diff = (Date.now() - new Date(iso).getTime()) / 1000;

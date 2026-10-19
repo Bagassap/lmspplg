@@ -64,11 +64,11 @@ function QuickAccessCard({ card, index }: { card: QuickAccessCardData; index: nu
 
         <div className="relative flex items-end justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[7px] font-medium uppercase tracking-wider sm:text-[9px]" style={{ color: `${fg}99` }}>{card.footerLeftLabel ?? "TA"}</p>
+            <p className="text-[7px] font-medium uppercase tracking-wider sm:text-[9px]" style={{ color: `${fg}E6` }}>{card.footerLeftLabel ?? "TA"}</p>
             <p className="truncate text-[9px] font-semibold sm:text-[11px]">{card.validThru}</p>
           </div>
           <div className="min-w-0 text-right">
-            <p className="text-[7px] font-medium uppercase tracking-wider sm:text-[9px]" style={{ color: `${fg}99` }}>{card.footerRightLabel ?? "Pengelola"}</p>
+            <p className="text-[7px] font-medium uppercase tracking-wider sm:text-[9px]" style={{ color: `${fg}E6` }}>{card.footerRightLabel ?? "Pengelola"}</p>
             <p className="truncate text-[9px] font-semibold sm:text-[11px]">{card.holder}</p>
           </div>
         </div>

@@ -177,7 +177,7 @@ html[data-app-mode] .app-hide { display: none !important; }
 
 /* Variasi warna ikon baris info (ungu dominan, selang-seling oranye/hijau/biru). */
 html[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background: #ffe9e2 !important; color: #f26a3d !important; }
-html[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background: #eaf8d2 !important; color: #5d900f !important; }
+html[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background: #e3f8ef !important; color: #059669 !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background: #e0f2fe !important; color: #0284c7 !important; }
 
 /* ================= PALET 5 WARNA (mode aplikasi) =================
@@ -338,7 +338,7 @@ html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) { padding: 14px 16px !im
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !important; margin-top: 0 !important; }
 
 /* Penanda "wajib diisi"/error di formulir absensi -> oranye */
-html [class*="text-[#5D900F]"][class*="text-[11px]"], html [class*="text-[#5D900F]"].normal-case { color: #f26a3d !important; }
+html [class*="text-[#5D900F]"][class*="text-[11px]"], html [class*="text-[#5D900F]"].normal-case { color: #e8562b !important; }
 html [class*="border-[#A1F919]"], html [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
 html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
 
@@ -361,7 +361,7 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
    dan terbaca (kartu transparan/pastel, filter, kolom isian). Berlaku di
    desktop dan mode aplikasi.
    ===================================================================== */
-html.dark :is(.bg-white, .bg-\[\#FFFFFF\], .bg-\[\#ffffff\]):not([class*="dark:bg-"]):not([class*="dark:from-"]) { background-color: #1e293b; }
+html.dark :is(.bg-white, .bg-\[\#FFFFFF\], .bg-\[\#ffffff\]):not([class*="dark:bg-"]):not([class*="dark:from-"]):not([class*="bg-[#3E03B3]"] *):not([class*="bg-[#F26A3D]"] *):not([style*="background: rgb(62, 3, 179)"] *):not([style*="background: rgb(242, 106, 61)"] *):not([style*="linear-gradient"] *) { background-color: #1e293b; }
 html.dark :is(.bg-slate-50, .bg-gray-50, .bg-slate-100, .bg-gray-100):not([class*="dark:bg-"]) { background-color: #273449; }
 html.dark :is(.bg-slate-200, .bg-gray-200):not([class*="dark:bg-"]) { background-color: #334155; }
 html.dark [class*="bg-primary-light"]:not([class*="dark:bg-"]), html.dark [class*="bg-[#F1EDFA]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(241, 237, 250)"], html.dark [style*="background-color: rgb(241, 237, 250)"] { background-color: #2a2350 !important; }
@@ -372,7 +372,7 @@ html.dark [class*="bg-[#FFF4E0]"]:not([class*="dark:bg-"]), html.dark [style*="b
 html.dark [style*="background: rgb(255, 255, 255)"], html.dark [style*="background-color: rgb(255, 255, 255)"] { background-color: #1e293b !important; }
 
 /* transparan -> solid (di luar header/topbar ungu & backdrop modal) */
-html.dark :is([class*="bg-white/"], [class*="bg-black/"], [class*="bg-slate-"][class*="/"], [class*="bg-gray-"][class*="/"], [class*="bg-[#F1EDFA]/"], [class*="bg-[#3E03B3]/"], [class*="bg-[#F26A3D]/"]):not([class*="dark:bg-"]):not(.absolute.inset-0):not(header *):not([class*="bg-[#3E03B3]"] *):not(.app-sheet-header *) { background-color: #273449 !important; }
+html.dark :is([class*="bg-white/"], [class*="bg-black/"], [class*="bg-slate-"][class*="/"], [class*="bg-gray-"][class*="/"], [class*="bg-[#F1EDFA]/"], [class*="bg-[#3E03B3]/"], [class*="bg-[#F26A3D]/"]):not([class*="dark:bg-"]):not(.absolute.inset-0):not(.pointer-events-none):not(header *):not([class*="bg-[#3E03B3]"] *):not(.app-sheet-header *):not([style*="linear-gradient"] *) { background-color: #273449 !important; }
 html.dark [class*="opacity-"]:is(.bg-white, [class*="bg-slate-"]) { opacity: 1; }
 
 /* teks */
@@ -380,9 +380,16 @@ html.dark :is(.text-black, .text-slate-900, .text-slate-800, .text-gray-900, .te
 html.dark :is(.text-slate-700, .text-gray-700, .text-slate-600, .text-gray-600):not([class*="dark:text-"]) { color: #cbd5e1; }
 html.dark :is(.text-slate-500, .text-gray-500, .text-slate-400, .text-gray-400):not([class*="dark:text-"]) { color: #94a3b8; }
 html.dark :is([class*="text-black/"], [class*="text-slate-900/"], [class*="text-slate-800/"]):not([class*="dark:text-"]) { color: #cbd5e1; }
-html.dark :is(.text-\[\#3E03B3\], .text-primary):not([class*="dark:text-"]):not([class*="bg-"]) { color: #c4b5fd; }
+html.dark :is(.text-\[\#3E03B3\], .text-primary):not([class*="dark:text-"]):not([class~="bg-[#3E03B3]"]):not([class~="bg-primary"]):not([class*="bg-[#F26A3D]"]) { color: #c4b5fd; }
 html.dark [style*="color: rgb(15, 23, 42)"], html.dark [style*="color: rgb(0, 0, 0)"] { color: #f1f5f9 !important; }
 html.dark [style*="color: rgb(100, 116, 139)"], html.dark [style*="color: rgb(71, 85, 105)"] { color: #cbd5e1 !important; }
 html.dark :is(input, textarea, select) { color: #f1f5f9; }
 html.dark :is(input, textarea)::placeholder { color: #94a3b8; }
 html.dark :is(select option) { background-color: #1e293b; color: #f1f5f9; }
+
+/* Kontras teks: abu terang (slate-400) di latar terang dinaikkan; label grafik di tema gelap */
+html:not(.dark) :is(.text-slate-400, .text-gray-400):not([class*="dark:text-"]):not([class*="text-white"]) { color: #64748b; }
+html.dark :is(.apexcharts-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-legend-text) { fill: #94a3b8 !important; color: #94a3b8 !important; }
+html.dark .apexcharts-gridline { stroke: #334155; }
+html.dark [style*="color: rgb(62, 3, 179)"]:not([style*="background: rgb(62, 3, 179)"]):not([style*="background-color: rgb(62, 3, 179)"]):not([style*="linear-gradient"]) { color: #c4b5fd !important; }
+html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important; }
