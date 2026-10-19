@@ -15,7 +15,14 @@ import { promptInstall } from "@/lib/pwaInstall";
 export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
   const [showIosGuide, setShowIosGuide] = useState(false);
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // iPhone: tutup keyboard & kembalikan posisi gulir sebelum layar tampil. Kalau keyboard
+    // masih menutup saat ketukan, tata letak bergeser di antara sentuh dan lepas sehingga
+    // ketukan pada tombol hilang.
+    (document.activeElement as HTMLElement | null)?.blur?.();
+    window.scrollTo(0, 0);
+    setMounted(true);
+  }, []);
 
   async function install() {
     const shown = await promptInstall();

@@ -74,6 +74,7 @@ export function LoginForm() {
       };
       // Tawarkan pasang aplikasi dulu, baru layar Selamat Datang.
       if (canInstall) {
+        (document.activeElement as HTMLElement | null)?.blur?.();
         markInstallHandled();
         setAfterInstall(() => proceed);
         return;
