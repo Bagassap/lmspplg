@@ -72,7 +72,7 @@ export const GRID_COLS = "28px 40px 2.0fr 1.8fr 1.1fr 1.1fr 1.8fr";
 
 export function SiswaTableHead() {
   return (
-    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#3E03B3" }}>
+    <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
       <span />
       <span />
       <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Siswa</span>

@@ -104,7 +104,7 @@ export function AbsensiHarianTable({
     <>
       <div className="flex-1 overflow-x-auto">
         <div className="min-w-225">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#3E03B3" }}>
+          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama</span>
