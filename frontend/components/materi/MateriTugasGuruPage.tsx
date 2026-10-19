@@ -8,7 +8,6 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { MateriListPage } from "./MateriListPage";
 import { TugasFormModal } from "@/components/tugas/TugasFormModal";
 import { TugasListCard } from "@/components/tugas/TugasListCard";
-import { SubmisiTugasModal } from "@/components/tugas/SubmisiTugasModal";
 import { RevisiFormModal } from "@/components/tugas/RevisiFormModal";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 import { AppTabs } from "@/components/app/AppUI";
@@ -37,7 +36,6 @@ export function MateriTugasGuruPage() {
 
   const [tugasFormOpen, setTugasFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<TugasItem | null>(null);
-  const [submisiModalTugas, setSubmisiModalTugas] = useState<TugasItem | null>(null);
   const [revisiTarget, setRevisiTarget] = useState<TugasSubmisiItem | null>(null);
 
   const loadAll = useCallback(async () => {
@@ -270,21 +268,13 @@ export function MateriTugasGuruPage() {
             onAddTugas={() => { setEditTarget(null); setTugasFormOpen(true); }}
             onEditTugas={(t) => { setEditTarget(t); setTugasFormOpen(true); }}
             onDeleteTugas={deleteTugas}
-            onLihatSubmisi={(t) => setSubmisiModalTugas(t)}
+            onLihatSubmisi={(t) => router.push(`/guru/tugas/${t.id}`)}
             search={searchTugas}
             onSearchChange={setSearchTugas}
           />
         )}
       </div>
 
-      <SubmisiTugasModal
-        tugas={submisiModalTugas}
-        submisi={submisiList}
-        onClose={() => setSubmisiModalTugas(null)}
-        onTerima={(id) => updateStatus(id, "DITERIMA")}
-        onRevisi={(s) => setRevisiTarget(s)}
-        onSimpanNilai={simpanNilai}
-      />
 
       <RevisiFormModal target={revisiTarget} onClose={() => setRevisiTarget(null)} onSend={kirimRevisi} />
 

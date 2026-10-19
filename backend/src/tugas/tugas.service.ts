@@ -355,7 +355,7 @@ export class TugasService {
       orderBy: { submittedAt: 'desc' },
       include: {
         tugas: { select: { id: true, judul: true, tipe: true, mapel: true } },
-        siswa: { include: { user: { select: { id: true, nama: true } } } },
+        siswa: { include: { user: { select: { id: true, nama: true } }, kelas: { select: { id: true, nama: true } } } },
         jawaban: { include: { soal: true } },
       },
     });
