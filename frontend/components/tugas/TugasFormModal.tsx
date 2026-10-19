@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ClipboardList, Loader2, Upload, File as FileIcon, CalendarClock, Send, Code2,
-  ListChecks, PenLine, Plus, Trash2, CheckCircle2, ChevronDown,
+  ListChecks, PenLine, Plus, Trash2, CheckCircle2, ChevronDown, FileDown, FileUp,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import { formatTglJam } from "./types";
 import type { TugasItem, TugasTipe } from "./types";
 import { useSheetHeader } from "@/components/app/AppUI";
+import { downloadTemplateSoal, parseSoalDocx } from "@/lib/soalWord";
 
 type KelasOption = { id: string; nama: string };
 
@@ -142,6 +143,42 @@ export function TugasFormModal({
   }
   function addSoal() {
     setSoalList((prev) => [...prev, emptySoal()]);
+  }
+  const isKosong = (x: SoalDraft) => !x.pertanyaan.trim() && !x.pilihanA && !x.pilihanB && !x.pilihanC && !x.pilihanD && !x.jawabanBenar.trim();
+
+  // Tambah banyak soal sekaligus: cukup ketik jumlahnya (2/3/4/5/...).
+  const [bulk, setBulk] = useState("");
+  function addMany() {
+    const n = Math.min(100, Math.max(0, parseInt(bulk, 10) || 0));
+    if (n < 1) return;
+    setSoalList((prev) => [...prev, ...Array.from({ length: n }, () => emptySoal())]);
+    setBulk("");
+    toast.success(`${n} soal ditambahkan`, "Tinggal isi pertanyaan dan jawabannya.");
+  }
+
+  // Impor soal + jawaban dari berkas Word (.docx) sesuai templat.
+  const wordRef = useRef<HTMLInputElement>(null);
+  const [wordBusy, setWordBusy] = useState(false);
+  async function handleWord(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    if (!/\.docx$/i.test(f.name)) { toast.error("Berkas harus .docx", "Simpan dokumen Word sebagai .docx lalu coba lagi."); return; }
+    setWordBusy(true);
+    try {
+      const hasil = await parseSoalDocx(f, tipe);
+      if (hasil.length === 0) {
+        toast.warning("Soal tidak terbaca", "Pakai templat Word: tiap soal diawali nomor (1. 2. 3.) dan jawabannya di baris 'Jawaban:' / 'Kunci:'.");
+        return;
+      }
+      setSoalList((prev) => (prev.every(isKosong) ? hasil : [...prev.filter((x) => !isKosong(x)), ...hasil]));
+      const tanpaJawaban = hasil.filter((x) => !x.jawabanBenar.trim()).length;
+      toast.success(`${hasil.length} soal dibaca dari Word`, tanpaJawaban ? `${tanpaJawaban} soal belum ada jawaban/kunci, lengkapi di bawah.` : "Periksa lalu simpan tugas.");
+    } catch {
+      toast.error("Gagal membaca berkas Word", "Pastikan berkasnya tidak rusak dan berformat .docx.");
+    } finally {
+      setWordBusy(false);
+    }
   }
   function removeSoal(idx: number) {
     setSoalList((prev) => (prev.length <= 1 ? prev : prev.filter((_, i) => i !== idx)));
@@ -395,13 +432,38 @@ export function TugasFormModal({
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label className="block text-xs font-bold text-gray-700 dark:text-slate-300">
-                      Daftar Soal <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                      Daftar Soal <span className="text-[#E8562B]">*</span>
+                      <span className="ml-1.5 font-normal text-gray-500">({soalList.filter((x) => !isKosong(x)).length} terisi / {soalList.length})</span>
                     </label>
                     <button type="button" onClick={addSoal}
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm"
-                      style={{ background: h.app ? "#3E03B3" : "#3E03B3" }}>
-                      <Plus size={12} /> Tambah Soal
+                      style={{ background: "#3E03B3" }}>
+                      <Plus size={12} /> Tambah 1
                     </button>
+                  </div>
+                  <div className="mb-3 flex flex-wrap items-center gap-2 rounded-2xl bg-[#F1EDFA] p-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <input type="number" inputMode="numeric" min={1} max={100} value={bulk}
+                        onChange={(e) => setBulk(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addMany(); } }}
+                        placeholder="Jumlah"
+                        className="h-9 w-20 rounded-full border-0 bg-white px-3 text-center text-sm font-bold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+                      <button type="button" onClick={addMany} disabled={!(parseInt(bulk, 10) > 0)}
+                        className="flex h-9 items-center gap-1 rounded-full bg-[#3E03B3] px-3.5 text-[11px] font-bold text-white disabled:opacity-50">
+                        <Plus size={12} /> Tambah {parseInt(bulk, 10) > 0 ? parseInt(bulk, 10) : ""} soal
+                      </button>
+                    </div>
+                    <div className="ml-auto flex items-center gap-1.5">
+                      <button type="button" onClick={() => downloadTemplateSoal(tipe)}
+                        className="flex h-9 items-center gap-1 rounded-full bg-white px-3 text-[11px] font-bold text-[#3E03B3]">
+                        <FileDown size={13} /> Templat Word
+                      </button>
+                      <button type="button" onClick={() => wordRef.current?.click()} disabled={wordBusy}
+                        className="flex h-9 items-center gap-1 rounded-full bg-white px-3 text-[11px] font-bold text-[#3E03B3] disabled:opacity-60">
+                        {wordBusy ? <Loader2 size={13} className="animate-spin" /> : <FileUp size={13} />} Impor dari Word
+                      </button>
+                      <input ref={wordRef} type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="hidden" onChange={handleWord} />
+                    </div>
                   </div>
                   <div className="space-y-3">
                     {soalList.map((s, idx) => (
