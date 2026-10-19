@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Download, Share } from "lucide-react";
@@ -13,6 +14,8 @@ import { promptInstall } from "@/lib/pwaInstall";
  */
 export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
   const [showIosGuide, setShowIosGuide] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   async function install() {
     const shown = await promptInstall();
@@ -20,12 +23,16 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
     else setShowIosGuide(true);
   }
 
-  return (
+  if (!mounted) return null;
+
+  // Dirender lewat portal ke <body>: di dalam kartu login (yang punya transform/animasi)
+  // elemen fixed bisa terpotong dan tidak bisa diketuk di iPhone.
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      data-plain className="fixed inset-0 z-999 flex flex-col items-center justify-center overflow-hidden px-6"
+      data-plain className="fixed inset-0 z-[1000] flex flex-col items-center justify-center overflow-hidden px-6"
       style={{ backgroundColor: "#3E03B3" }}
     >
       <motion.div
@@ -78,7 +85,7 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
               <button
                 type="button"
                 onClick={install}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="flex w-full touch-manipulation items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
               >
                 <Download size={16} />
                 Pasang
@@ -87,13 +94,14 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
             <button
               type="button"
               onClick={onDone}
-              className="w-full rounded-xl px-4 py-3 text-sm font-medium text-black/60 transition hover:bg-black/5"
+              className="w-full touch-manipulation rounded-xl px-4 py-3 text-sm font-medium text-black/60 transition hover:bg-black/5"
             >
               {showIosGuide ? "Mengerti" : "Lewati"}
             </button>
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
