@@ -1,6 +1,7 @@
 "use client";
 
 import { AppFold } from "@/components/app/AppUI";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -151,18 +152,26 @@ export default function ManajemenPasswordClient() {
 
       <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5">
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="hidden items-center gap-2 px-5 pt-4 lg:flex">
-            <p className="mr-auto text-sm font-bold text-slate-800 dark:text-white">Aksi akun</p>
-            {[
-              { label: "Kelola Guru", icon: GraduationCap, onClick: () => setKelolaGuruOpen(true) },
-              { label: "Impor Massal", icon: FileSpreadsheet, onClick: () => setImportSiswaOpen(true) },
-              { label: "Buat Akun", icon: UserPlus, onClick: () => setCreateAccountOpen(true) },
-            ].map((b) => (
-              <button key={b.label} type="button" onClick={b.onClick}
-                className="flex h-10 items-center gap-2 rounded-full bg-[#3E03B3] px-4 text-sm font-bold text-white shadow-sm transition-all hover:brightness-110">
-                <b.icon size={16} /> {b.label}
-              </button>
-            ))}
+          <div className="mx-4 mt-4 hidden items-center gap-4 rounded-2xl bg-[#F1EDFA] p-3 lg:flex">
+            <div className="min-w-0 flex-1 pl-1">
+              <p className="text-sm font-extrabold text-slate-900 dark:text-white">Aksi akun</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">Kelola guru, impor siswa massal, atau buat akun baru</p>
+            </div>
+            <div className="grid shrink-0 grid-cols-3 gap-2.5">
+              {([
+                { label: "Kelola Guru", icon: GraduationCap, tone: "sky" as const, onClick: () => setKelolaGuruOpen(true) },
+                { label: "Impor Massal", icon: FileSpreadsheet, tone: "emerald" as const, onClick: () => setImportSiswaOpen(true) },
+                { label: "Buat Akun", icon: UserPlus, tone: "amber" as const, onClick: () => setCreateAccountOpen(true) },
+              ]).map((b) => (
+                <button key={b.label} type="button" onClick={b.onClick}
+                  className="flex h-12 w-44 items-center gap-2.5 rounded-full bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={icon3dStyle(b.tone)}>
+                    <b.icon size={16} color="#fff" />
+                  </span>
+                  {b.label}
+                </button>
+              ))}
+            </div>
           </div>
           <FilterBarPassword
             kelasList={kelasList}
