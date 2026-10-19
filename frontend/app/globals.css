@@ -345,7 +345,7 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
 /* ---- Desktop: tanpa border di komponen mana pun ----
    Pengecualian: spinner (animate-spin) dan kotak kecil (kotak centang, penanda) agar tidak hilang. */
 @media (min-width: 1024px) {
-  *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6):not(table):not(thead):not(tbody):not(tfoot):not(tr):not(th):not(td):not([style*="grid-template-columns"]):not([style*="grid-template-columns"] > *) {
+  *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6) {
     border-width: 0 !important;
   }
   html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
@@ -394,24 +394,24 @@ html.dark .apexcharts-gridline { stroke: #334155; }
 html.dark [style*="color: rgb(62, 3, 179)"]:not([style*="background: rgb(62, 3, 179)"]):not([style*="background-color: rgb(62, 3, 179)"]):not([style*="linear-gradient"]) { color: #c4b5fd !important; }
 html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important; }
 
-/* ---- Desktop: tabel DIBERI border (tabel asli & daftar berbasis grid di menu absensi, data siswa, password, catatan, dll) ---- */
+/* ---- Desktop: tabel TANPA border; kolom dibedakan lewat warna latar selang-seling ---- */
 @media (min-width: 1024px) {
-  table { border: 1px solid #d9cff3 !important; border-collapse: collapse; }
-  table :is(th, td) { border: 1px solid #e4dbf7 !important; }
+  table { border-collapse: collapse; }
+  table tbody :is(td):nth-child(odd) { background-color: #f6f2fd; }
+  table thead th { background-color: #3e03b3; color: #fff; }
+  table thead th:nth-child(even) { background-color: #4b14c8; }
   [style*="grid-template-columns"] {
-    border: 1px solid #e4dbf7 !important; margin-top: -1px;
     gap: 0 !important; padding: 0 !important; align-items: stretch !important;
   }
-  [style*="grid-template-columns"] > :not(.rounded-full) {
-    border-left: 1px solid #e4dbf7 !important; padding: 0.55rem 0.6rem; min-width: 0;
-  }
+  [style*="grid-template-columns"] > :not(.rounded-full) { padding: 0.6rem 0.6rem; min-width: 0; }
   [style*="grid-template-columns"] > .rounded-full { align-self: center; justify-self: center; }
   [style*="grid-template-columns"] > :not(.flex):not(.grid):not(.inline-flex):not(.rounded-full) { display: flex; flex-direction: column; justify-content: center; }
   [style*="grid-template-columns"] > .flex:not(.flex-col) { align-items: center; }
   [style*="grid-template-columns"] > :is(:nth-child(1), :nth-child(2)):not(.rounded-full) { padding-inline: 0; align-items: center; justify-content: center; }
-  [style*="grid-template-columns"] > :first-child { border-left-width: 0 !important; }
-  [style*="grid-template-columns"][style*="background-color: rgb(62, 3, 179)"] > * { border-color: #6a45d2 !important; }
-  html.dark table { border-color: #334155 !important; }
-  html.dark table :is(th, td) { border-color: #334155 !important; }
-  html.dark [style*="grid-template-columns"], html.dark [style*="grid-template-columns"] > * { border-color: #334155 !important; }
+  [style*="grid-template-columns"] > :nth-child(odd):not(.rounded-full) { background-color: #f6f2fd; }
+  [style*="grid-template-columns"][style*="background-color: rgb(62, 3, 179)"] > :nth-child(odd) { background-color: transparent; }
+  [style*="grid-template-columns"][style*="background-color: rgb(62, 3, 179)"] > :nth-child(even):not(.rounded-full) { background-color: #4b14c8; }
+  html.dark table tbody td:nth-child(odd) { background-color: #243247; }
+  html.dark [style*="grid-template-columns"] > :nth-child(odd):not(.rounded-full) { background-color: #243247; }
+  html.dark [style*="grid-template-columns"][style*="background-color: rgb(62, 3, 179)"] > :nth-child(odd) { background-color: transparent; }
 }
