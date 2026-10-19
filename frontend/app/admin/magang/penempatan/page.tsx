@@ -7,7 +7,7 @@ import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft } from "lucide
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { SiswaCardData } from "@/components/data-siswa/shared";
-import { GradientStatCard } from "@/components/shared/GradientStatCard";
+import StatsCard from "@/components/dashboard/StatsCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TempatkanSiswaModal } from "@/components/magang/TempatkanSiswaModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
@@ -167,41 +167,12 @@ export default function AdminMagangPenempatanPage() {
         </div>
       )}
       <div className={appMode ? "hidden lg:block" : "contents"}>
-      <motion.div initial="hidden" animate="visible" variants={statGridVariants}
-        className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12">
-        <div className="lg:col-span-3">
-          <GradientStatCard
-            tone="navy"
-            label="Tempat Magang"
-            value={loading ? "—" : tempatList.length}
-            icon={Building2}
-          />
-        </div>
-        <div className="lg:col-span-4">
-          <GradientStatCard
-            tone="lime"
-            label="Siswa PKL Aktif"
-            value={loading ? "—" : jumlahAktif}
-            icon={Briefcase}
-          />
-        </div>
-        <div className="lg:col-span-2">
-          <GradientStatCard
-            tone="red"
-            label="Total Kuota"
-            value={loading ? "—" : totalKuota}
-            icon={Wallet}
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <GradientStatCard
-            tone="blue"
-            label="Total Riwayat Penempatan"
-            value={loading ? "—" : penempatanList.length}
-            icon={ClipboardList}
-          />
-        </div>
-      </motion.div>
+      <div className="mb-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <StatsCard icon={Building2} label="Tempat Magang" value={loading ? 0 : tempatList.length} sub="Tempat PKL terdaftar" delay={0.05} />
+        <StatsCard icon={Briefcase} label="Siswa PKL Aktif" value={loading ? 0 : jumlahAktif} sub="Sedang menjalani PKL" delay={0.1} />
+        <StatsCard icon={Wallet} label="Total Kuota" value={loading ? 0 : totalKuota} sub="Kapasitas semua tempat" delay={0.15} />
+        <StatsCard icon={ClipboardList} label="Riwayat Penempatan" value={loading ? 0 : penempatanList.length} sub="Seluruh penempatan" delay={0.2} />
+      </div>
       </div>
 
       <PenempatanFilterBar
