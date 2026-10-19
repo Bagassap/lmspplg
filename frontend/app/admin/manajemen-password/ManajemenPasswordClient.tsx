@@ -149,8 +149,21 @@ export default function ManajemenPasswordClient() {
         <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
 
-      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5 lg:grid-cols-3">
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="hidden items-center gap-2 px-5 pt-4 lg:flex">
+            <p className="mr-auto text-sm font-bold text-slate-800 dark:text-white">Aksi akun</p>
+            {[
+              { label: "Kelola Guru", icon: GraduationCap, onClick: () => setKelolaGuruOpen(true) },
+              { label: "Impor Massal", icon: FileSpreadsheet, onClick: () => setImportSiswaOpen(true) },
+              { label: "Buat Akun", icon: UserPlus, onClick: () => setCreateAccountOpen(true) },
+            ].map((b) => (
+              <button key={b.label} type="button" onClick={b.onClick}
+                className="flex h-10 items-center gap-2 rounded-full bg-[#3E03B3] px-4 text-sm font-bold text-white shadow-sm transition-all hover:brightness-110">
+                <b.icon size={16} /> {b.label}
+              </button>
+            ))}
+          </div>
           <FilterBarPassword
             kelasList={kelasList}
             selectedKelasId={selectedKelasId}
@@ -172,7 +185,7 @@ export default function ManajemenPasswordClient() {
           </div>
         </div>
 
-        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:hidden">
           <AppFold title="Aksi akun" hint="Kelola guru, impor massal, buat akun">
           <div className="grid grid-cols-3 gap-2 p-5">
             <motion.button

@@ -585,7 +585,7 @@ export default function GuruMagangAbsensiPage() {
         </div>
 
         <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+          <div className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -600,7 +600,7 @@ export default function GuruMagangAbsensiPage() {
               </div>
             </div>
 
-            <div className="mt-6 mb-2 flex flex-wrap items-center gap-2.5 border-t border-slate-100 pt-6 pb-2 dark:border-slate-700">
+            <div className="mt-3 flex flex-wrap items-center gap-2.5 pb-1">
               <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
@@ -621,7 +621,7 @@ export default function GuruMagangAbsensiPage() {
               })}
             </div>
 
-            <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 text-[11px] dark:border-slate-700">
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
               <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
                 <Users size={12} className="text-[#3E03B3]" />
                 Total {total} siswa
