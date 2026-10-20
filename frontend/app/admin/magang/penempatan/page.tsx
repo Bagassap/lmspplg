@@ -115,13 +115,19 @@ export default function AdminMagangPenempatanPage() {
 
   const displayList = useMemo(() => {
     const q = search.trim().toLowerCase();
+    const nm = (p: PenempatanMagang) => (p.siswa.nama ?? p.siswa.user?.nama ?? "").toLowerCase();
+    const cmp = (a: string, b: string) => a.localeCompare(b, "id");
     return penempatanList
       .filter((p) => (statusFilter ? p.status === statusFilter : true))
       .filter((p) => {
         if (!q) return true;
         const nama = (p.siswa.nama ?? p.siswa.user?.nama ?? "").toLowerCase();
-        return nama.includes(q) || p.siswa.nis.includes(q) || p.tempatMagang.namaTempat.toLowerCase().includes(q);
-      });
+        return nama.includes(q) || p.siswa.nis.includes(q) || p.tempatMagang.namaTempat.toLowerCase().includes(q) || (p.guruPembimbing?.user.nama ?? "").toLowerCase().includes(q) || p.siswa.kelas.nama.toLowerCase().includes(q);
+      })
+      .sort((a, b) =>
+        cmp(a.tempatMagang.namaTempat, b.tempatMagang.namaTempat)
+        || cmp(a.guruPembimbing?.user.nama ?? "\uffff", b.guruPembimbing?.user.nama ?? "\uffff")
+        || cmp(nm(a), nm(b)));
   }, [penempatanList, search, statusFilter]);
 
   return (

@@ -102,15 +102,6 @@ export default function SiswaMagangPenempatanPage() {
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Periode</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {fmt(aktif.tanggalMulai)}{aktif.tanggalSelesai ? ` – ${fmt(aktif.tanggalSelesai)}` : " – berlangsung"}
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -125,7 +116,6 @@ export default function SiswaMagangPenempatanPage() {
                 <div key={p.id} className="flex flex-wrap items-center justify-between gap-2 px-5 py-3">
                   <div>
                     <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
-                    <p className="text-[11px] text-slate-400">{fmt(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmt(p.tanggalSelesai)}` : ""}</p>
                   </div>
                   <span className="rounded-lg px-2.5 py-1 text-[10px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                     {STATUS_PENEMPATAN_CFG[p.status].label}
@@ -164,7 +154,6 @@ export default function SiswaMagangPenempatanPage() {
               <AppInfoRow icon={MapPin} label="Alamat" value={aktif.tempatMagang.alamat ?? "-"} />
               {aktif.tempatMagang.kontak && <AppInfoRow icon={Phone} label="Kontak" value={aktif.tempatMagang.kontak} />}
               <AppInfoRow icon={User} label="Guru Pembimbing" value={toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")} />
-              <AppInfoRow icon={CalendarDays} label="Periode" value={`${fmt(aktif.tanggalMulai)}${aktif.tanggalSelesai ? ` – ${fmt(aktif.tanggalSelesai)}` : " – berlangsung"}`} />
             </div>
           </>
         )}
@@ -176,7 +165,6 @@ export default function SiswaMagangPenempatanPage() {
               <AppCard key={p.id} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
-                  <p className="text-[11px] text-slate-500">{fmt(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmt(p.tanggalSelesai)}` : ""}</p>
                 </div>
                 <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   {STATUS_PENEMPATAN_CFG[p.status].label}
@@ -242,15 +230,6 @@ export default function SiswaMagangPenempatanPage() {
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
-                <CalendarDays size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
-                <div className="min-w-0">
-                  <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Periode</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {fmt(aktif.tanggalMulai)}{aktif.tanggalSelesai ? ` – ${fmt(aktif.tanggalSelesai)}` : " – berlangsung"}
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -265,7 +244,6 @@ export default function SiswaMagangPenempatanPage() {
                 <div key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
-                    <p className="text-[11px] text-slate-400">{fmt(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmt(p.tanggalSelesai)}` : ""}</p>
                   </div>
                   <span className="shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                     {STATUS_PENEMPATAN_CFG[p.status].label}

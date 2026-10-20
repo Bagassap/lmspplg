@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Pencil, Trash2, Users, Building2, CalendarClock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Trash2, Users, Building2, UserCheck } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -10,10 +10,6 @@ import { useIsAppMode } from "@/lib/pwaInstall";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 
 const PAGE_SIZE = 10;
-
-function fmtTgl(iso: string): string {
-  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
-}
 
 export function PenempatanTable({
   loading, list, busyId, canManage = true, mobileNative = false, onUbahStatus, onEdit, onHapus,
@@ -58,13 +54,13 @@ export function PenempatanTable({
       ) : (
         <>
           <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
-            <table className="w-full min-w-215 text-left text-sm">
+            <table className="w-full min-w-225 text-left text-sm">
               <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
                 <tr>
-                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Nama</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Kelas</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Tempat</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Pembimbing</th>
-                  <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Periode</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Status</th>
                   {canManage && (
                     <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Aksi</th>
@@ -81,20 +77,15 @@ export function PenempatanTable({
                       <td className="whitespace-nowrap px-4 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-slate-800 dark:text-white">{nama}</p>
-                            <p className="font-mono text-xs text-slate-400 dark:text-slate-500">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
-                          </div>
+                          <p className="whitespace-nowrap text-sm font-medium text-slate-800 dark:text-white">{nama}</p>
                         </div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-600 dark:text-slate-300">{p.siswa.kelas.nama}</td>
+                      <td className="whitespace-nowrap px-4 py-3">
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="whitespace-nowrap px-4 py-3">
                         <p className="text-xs text-slate-500 dark:text-slate-400">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 dark:text-slate-400">
-                        {fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         {canManage ? (
@@ -145,13 +136,13 @@ export function PenempatanTable({
                       <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={56} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{nama}</p>
-                        <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
+                        <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">{p.siswa.kelas.nama}</p>
                         <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                       </div>
                     </div>
                     <div className="mt-3 space-y-1.5 rounded-2xl bg-slate-100 px-4 py-3 text-[12px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                       <p className="flex items-center gap-2 font-semibold"><Building2 size={13} className="shrink-0" />{p.tempatMagang.namaTempat}</p>
-                      <p className="flex items-center gap-2"><CalendarClock size={13} className="shrink-0" />{fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}</p>
+                      <p className="flex items-center gap-2"><UserCheck size={13} className="shrink-0" />{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
                     </div>
                     {canManage && (
                       <div className="mt-3 flex gap-2">
@@ -188,7 +179,7 @@ export function PenempatanTable({
                       <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={38} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{nama}</p>
-                        <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{p.siswa.nis} · {p.siswa.kelas.nama}</p>
+                        <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{p.siswa.kelas.nama}</p>
                       </div>
                       {canManage ? (
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
@@ -208,10 +199,7 @@ export function PenempatanTable({
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pl-[50px] text-[11px] text-slate-500 dark:text-slate-400">
                       <span className="flex items-center gap-1"><Building2 size={11} className="shrink-0" />{p.tempatMagang.namaTempat}</span>
-                      <span className="flex items-center gap-1">
-                        <CalendarClock size={11} className="shrink-0" />
-                        {fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
-                      </span>
+                      <span className="flex items-center gap-1"><UserCheck size={11} className="shrink-0" />{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</span>
                     </div>
 
                     {canManage && (

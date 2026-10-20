@@ -24,15 +24,13 @@ export function EditPenempatanModal({
   const toast = useToast();
   const [tempatId, setTempatId] = useState(penempatan.tempatMagang.id);
   const [guruId, setGuruId] = useState(penempatan.guruPembimbing?.id ?? "");
-  const [tanggalMulai, setTanggalMulai] = useState(penempatan.tanggalMulai.slice(0, 10));
-  const [tanggalSelesai, setTanggalSelesai] = useState(penempatan.tanggalSelesai ? penempatan.tanggalSelesai.slice(0, 10) : "");
   const [saving, setSaving] = useState(false);
 
   const nama = toTitleCase(penempatan.siswa.nama ?? penempatan.siswa.user?.nama ?? "—");
 
   async function save() {
-    if (!tempatId || !guruId || !tanggalMulai) {
-      toast.error("Tempat, guru pembimbing, dan tanggal mulai wajib diisi", "");
+    if (!tempatId || !guruId) {
+      toast.error("Tempat dan guru pembimbing wajib diisi", "");
       return;
     }
     setSaving(true);
@@ -42,7 +40,6 @@ export function EditPenempatanModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tempatMagangId: tempatId, guruPembimbingId: guruId,
-          tanggalMulai, tanggalSelesai: tanggalSelesai || undefined,
         }),
       });
       if (res.ok) {
@@ -118,16 +115,6 @@ export function EditPenempatanModal({
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Tanggal Mulai</label>
-              <input type="date" value={tanggalMulai} onChange={(e) => setTanggalMulai(e.target.value)} className={INPUT_CLS} />
-            </div>
-            <div>
-              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Tanggal Selesai <span className="font-normal normal-case text-slate-400">(opsional)</span></label>
-              <input type="date" value={tanggalSelesai} onChange={(e) => setTanggalSelesai(e.target.value)} className={INPUT_CLS} />
-            </div>
-          </div>
         </div>
 
         <div className="flex shrink-0 justify-end gap-2 border-t border-slate-100 p-5 pt-4 dark:border-slate-700/50">

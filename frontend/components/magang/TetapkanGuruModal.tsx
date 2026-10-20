@@ -19,7 +19,6 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
 }) {
   const toast = useToast();
   const [guruId, setGuruId] = useState("");
-  const [tanggal, setTanggal] = useState(todayStr());
   const [saving, setSaving] = useState(false);
   const t = rows[0].tempatMagang;
 
@@ -30,7 +29,7 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
       const res = await fetch(`/api/magang/penempatan/${rows[0].id}/tetapkan-guru`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ guruPembimbingId: guruId, tanggalMulai: tanggal }),
+        body: JSON.stringify({ guruPembimbingId: guruId }),
       });
       if (res.ok) {
         toast.success("Guru pembimbing ditetapkan", "Penempatan aktif dan menu PKL guru terbuka.");
@@ -98,11 +97,6 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
               <option value="">Pilih guru…</option>
               {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
             </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-bold text-slate-700">Tanggal mulai PKL</label>
-            <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-              className="h-11 w-full rounded-full border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
           </div>
 
           <button onClick={simpan} disabled={saving || !guruId}

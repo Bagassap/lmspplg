@@ -255,7 +255,6 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
               <div key={p.id} className="flex items-center justify-between gap-2 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-slate-900">{p.tempatMagang.namaTempat}</p>
-                  <p className="text-xs text-slate-600">{fmt(p.tanggalMulai)}</p>
                 </div>
                 <span className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   <CheckCircle2 size={10} className="mr-1 inline" />{STATUS_PENEMPATAN_CFG[p.status].label}
