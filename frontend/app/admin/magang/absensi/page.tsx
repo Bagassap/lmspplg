@@ -19,7 +19,7 @@ import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, WALLET_GRADIENTS, WALLET_ON_TEXT, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
 import { OptionCard3D } from "@/components/shared/Icon3D";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
 import { AppCard, AppSectionTitle } from "@/components/app/AppUI";
@@ -418,36 +418,24 @@ export default function AdminMagangAbsensiPage() {
                   {tempatPageSlice.map((t) => {
                     const s = tempatStat(t);
                     const isSelected = t.id === selectedId;
-                    const idx = s.idx % WALLET_GRADIENTS.length;
-                    const bg = WALLET_GRADIENTS[idx];
-                    const onText = WALLET_ON_TEXT[idx];
                     return (
                       <button type="button" key={t.id} onClick={() => setSelectedId(t.id)}
-                        className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl px-4 py-4 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
-                        style={{
-                          background: bg,
-                          color: onText,
-                          boxShadow: isSelected ? `0 8px 24px ${bg}59` : "0 8px 24px rgba(0,0,0,0.15)",
-                          outline: isSelected ? `2px solid ${onText}` : "2px solid transparent",
-                          outlineOffset: "3px",
-                        }}>
-                        <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full" style={{ backgroundColor: `${onText}1a` }} />
-
+                        className={`relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border bg-white px-4 py-4 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800 ${
+                          isSelected ? "border-[#3E03B3] dark:border-[#8F6DD3]" : "border-slate-100 dark:border-slate-700"
+                        }`}>
                         <div className="relative flex items-center justify-between">
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: `${onText}33` }}>
-                            <Briefcase size={16} />
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
+                            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                            <Briefcase size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
                           </span>
-                          <span className="text-[11px] font-bold tabular-nums" style={{ color: `${onText}CC` }}>{s.pct}%</span>
+                          <span className="text-[11px] font-bold tabular-nums text-slate-400 dark:text-slate-500">{s.pct}%</span>
                         </div>
 
                         <div className="relative">
-                          <p className="truncate text-lg font-black leading-tight">{t.namaTempat}</p>
-                          <p className="mt-0.5 truncate text-[11px] font-medium" style={{ color: `${onText}BF` }}>
+                          <p className="truncate text-lg font-black leading-tight text-slate-800 dark:text-white">{t.namaTempat}</p>
+                          <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
                             {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
                           </p>
-                          <div className="mt-2 h-1.5 w-full rounded-full" style={{ backgroundColor: `${onText}33` }}>
-                            <div className="h-1.5 rounded-full transition-all" style={{ width: `${s.pct}%`, backgroundColor: onText }} />
-                          </div>
                         </div>
                       </button>
                     );
@@ -602,21 +590,16 @@ export default function AdminMagangAbsensiPage() {
 
       {appMode && (
         <div className="space-y-6 lg:hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
-              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
-            </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => setTempatPickerOpen(true)}
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-full bg-[#F1EDFA] px-4 text-left">
+              <span className="truncate text-sm font-bold text-[#3E03B3]">
+                {selected ? selected.tempatMagang.namaTempat : "Pilih tempat"}
+              </span>
+              <ChevronDown size={16} className="ml-2 shrink-0 text-[#3E03B3]" />
+            </button>
             <MobileDatePicker value={tanggal} onChange={setTanggal} />
           </div>
-
-          <button type="button" onClick={() => setTempatPickerOpen(true)}
-            className="flex h-12 w-full items-center justify-between rounded-full bg-slate-100 px-5 text-left dark:bg-slate-800">
-            <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
-              {selected ? `${selected.tempatMagang.namaTempat} · ${hadirPct}% hadir` : "Pilih tempat"}
-            </span>
-            <ChevronDown size={16} className="ml-2 shrink-0 text-slate-400" />
-          </button>
 
           <button type="button" onClick={() => setStatusPageOpen(true)}
             className="relative flex w-full items-center overflow-hidden rounded-3xl px-5 py-6 text-left active:scale-[0.99]" style={{ background: "linear-gradient(135deg, #F26A3D 0%, #FF8A4C 100%)" }}>
