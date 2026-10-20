@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Pencil, Trash2, Users, Building2, UserCheck } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
@@ -12,7 +12,7 @@ import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 const PAGE_SIZE = 10;
 
 export function PenempatanTable({
-  loading, list, busyId, canManage = true, mobileNative = false, onUbahStatus, onEdit, onHapus,
+  loading, list, busyId, canManage = true, mobileNative = false, onUbahStatus, onEdit, onHapus, onTetapkanTempat,
 }: {
   loading: boolean;
   list: PenempatanMagang[];
@@ -22,6 +22,7 @@ export function PenempatanTable({
   onUbahStatus?: (p: PenempatanMagang, status: StatusPenempatan) => void;
   onEdit?: (p: PenempatanMagang) => void;
   onHapus?: (p: PenempatanMagang) => void;
+  onTetapkanTempat?: (rows: PenempatanMagang[]) => void;
 }) {
   const app = useIsAppMode();
   const [page, setPage] = useState(0);
@@ -31,6 +32,32 @@ export function PenempatanTable({
   const pageItems = list.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const start = list.length ? page * PAGE_SIZE + 1 : 0;
   const end = Math.min((page + 1) * PAGE_SIZE, list.length);
+
+  // Baris judul per tempat: tampil di awal tiap kelompok tempat pada halaman ini.
+  const barisTempat = (p: PenempatanMagang) => list.filter((x) => x.tempatMagang.id === p.tempatMagang.id && (x.status === "MENUNGGU" || x.status === "AKTIF"));
+  const judulTempat = (p: PenempatanMagang, i: number, colSpan?: number) => {
+    if (i > 0 && pageItems[i - 1].tempatMagang.id === p.tempatMagang.id) return null;
+    const semua = list.filter((x) => x.tempatMagang.id === p.tempatMagang.id);
+    const target = barisTempat(p);
+    const tanpaGuru = target.filter((x) => !x.guruPembimbing).length;
+    const isi = (
+      <div className="flex items-center gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><Building2 size={16} /></span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-extrabold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
+          <p className="truncate text-[11px] text-slate-600 dark:text-slate-300">{semua.length} siswa · {tanpaGuru > 0 ? `${tanpaGuru} belum punya pembimbing` : "semua sudah punya pembimbing"}</p>
+        </div>
+        {canManage && onTetapkanTempat && target.length > 0 && (
+          <button onClick={() => onTetapkanTempat(target)}
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#3E03B3] px-3.5 py-2 text-xs font-bold text-white">
+            <UserCheck size={13} /> Tetapkan guru
+          </button>
+        )}
+      </div>
+    );
+    if (colSpan) return <tr key={`h-${p.id}`}><td colSpan={colSpan} className="bg-[#F1EDFA] px-4 py-2.5 dark:bg-slate-700/40">{isi}</td></tr>;
+    return <div key={`h-${p.id}`} className="rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700/40">{isi}</div>;
+  };
 
   return (
     <div className={app && mobileNative ? "lg:overflow-hidden lg:rounded-3xl lg:border lg:border-slate-100 lg:bg-white lg:shadow-sm dark:lg:border-slate-700 dark:lg:bg-slate-800" : "overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
@@ -68,12 +95,14 @@ export function PenempatanTable({
                 </tr>
               </thead>
               <tbody>
-                {pageItems.map((p) => {
+                {pageItems.map((p, i) => {
                   const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                   const cfg = STATUS_PENEMPATAN_CFG[p.status];
                   const busy = busyId === p.id;
                   return (
-                    <tr key={p.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                    <Fragment key={p.id}>
+                    {judulTempat(p, i, canManage ? 6 : 5)}
+                    <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
                       <td className="whitespace-nowrap px-4 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
@@ -118,6 +147,7 @@ export function PenempatanTable({
                         </td>
                       )}
                     </tr>
+                    </Fragment>
                   );
                 })}
               </tbody>
@@ -126,12 +156,14 @@ export function PenempatanTable({
 
           {mobileNative && app && (
             <ul className="space-y-3 lg:hidden">
-              {pageItems.map((p) => {
+              {pageItems.map((p, i) => {
                 const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                 const cfg = STATUS_PENEMPATAN_CFG[p.status];
                 const busy = busyId === p.id;
                 return (
-                  <li key={p.id} className="rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
+                  <Fragment key={p.id}>
+                  {judulTempat(p, i)}
+                  <li className="rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                     <div className="flex items-center gap-4">
                       <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={56} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
                       <div className="min-w-0 flex-1">
@@ -162,6 +194,7 @@ export function PenempatanTable({
                       </div>
                     )}
                   </li>
+                  </Fragment>
                 );
               })}
             </ul>
@@ -169,12 +202,14 @@ export function PenempatanTable({
 
           {mobileNative && !app && (
             <div className="divide-y divide-slate-100 p-2 lg:hidden dark:divide-slate-700/40">
-              {pageItems.map((p) => {
+              {pageItems.map((p, i) => {
                 const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                 const cfg = STATUS_PENEMPATAN_CFG[p.status];
                 const busy = busyId === p.id;
                 return (
-                  <div key={p.id} className="flex flex-col gap-2.5 p-3">
+                  <Fragment key={p.id}>
+                  {judulTempat(p, i)}
+                  <div className="flex flex-col gap-2.5 p-3">
                     <div className="flex items-center gap-2.5">
                       <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={38} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
                       <div className="min-w-0 flex-1">
@@ -215,6 +250,7 @@ export function PenempatanTable({
                       </div>
                     )}
                   </div>
+                  </Fragment>
                 );
               })}
             </div>

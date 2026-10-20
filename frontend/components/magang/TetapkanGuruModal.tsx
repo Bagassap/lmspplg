@@ -9,10 +9,6 @@ import type { PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-function todayStr() {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date());
-}
-
 /** Admin menetapkan guru pembimbing untuk satu pengajuan (atau satu kelompok siswa). */
 export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
@@ -26,18 +22,33 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
     if (!guruId) { toast.error("Pilih guru pembimbing", ""); return; }
     setSaving(true);
     try {
-      const res = await fetch(`/api/magang/penempatan/${rows[0].id}/tetapkan-guru`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ guruPembimbingId: guruId }),
-      });
-      if (res.ok) {
-        toast.success("Guru pembimbing ditetapkan", "Penempatan aktif dan menu PKL guru terbuka.");
+      // Siswa yang masih menunggu: tetapkan per pengajuan/kelompok. Siswa yang sudah aktif: ganti gurunya.
+      const seen = new Set<string>();
+      const reqs: Promise<Response>[] = [];
+      for (const r of rows) {
+        if (r.status === "MENUNGGU") {
+          const key = r.kelompokId ?? r.id;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          reqs.push(fetch(`/api/magang/penempatan/${r.id}/tetapkan-guru`, {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ guruPembimbingId: guruId }),
+          }));
+        } else if (r.guruPembimbing?.id !== guruId) {
+          reqs.push(fetch(`/api/magang/penempatan/${r.id}`, {
+            method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ guruPembimbingId: guruId }),
+          }));
+        }
+      }
+      const hasil = await Promise.all(reqs);
+      const gagal = hasil.find((h) => !h.ok);
+      if (!gagal) {
+        toast.success("Guru pembimbing ditetapkan", `${rows.length} siswa di ${t.namaTempat} sudah memiliki pembimbing.`);
         onSaved();
         onClose();
       } else {
-        const d = await res.json().catch(() => null);
+        const d = await gagal.json().catch(() => null);
         toast.error(d?.message ?? "Gagal menetapkan guru pembimbing", "");
+        onSaved();
       }
     } finally {
       setSaving(false);
@@ -69,11 +80,12 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
           <div className="rounded-2xl bg-[#F1EDFA] p-3">
-            <p className="mb-1.5 text-xs font-bold text-slate-700">Siswa ({rows.length})</p>
+            <p className="mb-1.5 text-xs font-bold text-slate-700">Semua siswa di tempat ini ({rows.length}) otomatis memakai guru yang dipilih</p>
             <div className="space-y-1">
               {rows.map((r) => (
                 <p key={r.id} className="text-sm font-bold text-slate-900">
                   {toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600">· {r.siswa.kelas?.nama}</span>
+                  {r.guruPembimbing && <span className="font-medium text-slate-600"> · {toTitleCase(r.guruPembimbing.user.nama)}</span>}
                 </p>
               ))}
             </div>
@@ -102,7 +114,7 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
           <button onClick={simpan} disabled={saving || !guruId}
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
             {saving && <Loader2 size={15} className="animate-spin" />}
-            {saving ? "Menyimpan..." : "Tetapkan & Aktifkan"}
+            {saving ? "Menyimpan..." : "Tetapkan untuk semua siswa"}
           </button>
         </div>
       </motion.div>

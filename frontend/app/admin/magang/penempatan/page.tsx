@@ -204,6 +204,7 @@ export default function AdminMagangPenempatanPage() {
         onUbahStatus={ubahStatus}
         onEdit={setEditTarget}
         onHapus={hapus}
+        onTetapkanTempat={setTetapkanRows}
         mobileNative
       />
       </div>
