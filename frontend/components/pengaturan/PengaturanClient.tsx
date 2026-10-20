@@ -4,19 +4,18 @@ import { useEffect, useState } from "react";
 import { Briefcase, FileText, Loader2, Info } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
-import { useIsAppMode } from "@/lib/pwaInstall";
 
 type Pengaturan = { magangAktif: boolean; ukkAktif: boolean };
 type Key = keyof Pengaturan;
 
 function ToggleSwitch({ checked, onClick, disabled }: { checked: boolean; onClick: () => void; disabled?: boolean }) {
-  const app = useIsAppMode();
+  // Ukuran & posisi ditetapkan eksplisit (tanpa transform/translate) agar tidak terpengaruh aturan CSS global.
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={onClick} disabled={disabled}
-      className="relative h-7 w-12 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-      style={{ background: checked ? (app ? "#3E03B3" : "#F26A3D") : "#CBD5E1" }}>
-      <span className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform"
-        style={{ transform: checked ? "translateX(1.25rem)" : "translateX(0.125rem)" }} />
+      className="relative block shrink-0 cursor-pointer rounded-full border-0 p-0 disabled:cursor-not-allowed disabled:opacity-60"
+      style={{ width: 48, height: 28, minWidth: 48, minHeight: 28, background: checked ? "#3E03B3" : "#CBD5E1", transition: "background-color .2s" }}>
+      <span className="absolute block rounded-full"
+        style={{ top: 3, left: checked ? 23 : 3, width: 22, height: 22, background: "#FFFFFF", boxShadow: "0 1px 3px rgba(15,23,42,0.3)", transition: "left .2s" }} />
     </button>
   );
 }
@@ -41,7 +40,7 @@ function PengaturanCard({
           </span>
           <div>
             <p className="text-sm font-bold text-slate-800 dark:text-white">{title}</p>
-            <p className="text-[11px] font-semibold" style={{ color: checked ? "#F26A3D" : "#94a3b8" }}>
+            <p className="text-[11px] font-semibold" style={{ color: checked ? "#3E03B3" : "#64748b" }}>
               {checked ? "Aktif" : "Nonaktif"}
             </p>
           </div>
