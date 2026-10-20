@@ -393,3 +393,21 @@ html.dark :is(.apexcharts-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label
 html.dark .apexcharts-gridline { stroke: #334155; }
 html.dark [style*="color: rgb(62, 3, 179)"]:not([style*="background: rgb(62, 3, 179)"]):not([style*="background-color: rgb(62, 3, 179)"]):not([style*="linear-gradient"]) { color: #c4b5fd !important; }
 html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important; }
+
+/* ---- Latar oranye: teks dan ikon selalu putih ---- */
+:is(
+  [class~="bg-[#F26A3D]"], [class~="bg-[#E8562B]"],
+  [style*="background: rgb(242, 106, 61)"], [style*="background-color: rgb(242, 106, 61)"],
+  [style*="background: rgb(232, 86, 43)"], [style*="background-color: rgb(232, 86, 43)"],
+  [style*="gradient(135deg, rgb(242, 106, 61)"], [style*="gradient(145deg, rgb(242, 106, 61)"], [style*="gradient(135deg, rgb(232, 86, 43)"]
+) {
+  color: #ffffff !important;
+}
+:is(
+  [class~="bg-[#F26A3D]"], [class~="bg-[#E8562B]"],
+  [style*="background: rgb(242, 106, 61)"], [style*="background-color: rgb(242, 106, 61)"],
+  [style*="background: rgb(232, 86, 43)"], [style*="background-color: rgb(232, 86, 43)"],
+  [style*="gradient(135deg, rgb(242, 106, 61)"], [style*="gradient(145deg, rgb(242, 106, 61)"], [style*="gradient(135deg, rgb(232, 86, 43)"]
+) :not([class*="bg-white"]):not([class*="bg-white"] *):not([style*="background: rgb(255, 255, 255)"]):not([style*="background: rgb(255, 255, 255)"] *) {
+  color: #ffffff !important;
+}
