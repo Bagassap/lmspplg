@@ -10,7 +10,7 @@ import {
   type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
   completeness, missingFields, waLink,
 } from "./shared";
-import { Avatar } from "@/components/shared/Avatar";
+import { ZoomAvatar as Avatar } from "./ZoomAvatar";
 import { ProgressRing } from "./ProgressRing";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useSheetHeader } from "@/components/app/AppUI";
