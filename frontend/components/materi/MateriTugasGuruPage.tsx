@@ -11,6 +11,7 @@ import { TugasListCard } from "@/components/tugas/TugasListCard";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { TugasSubmisiPage } from "@/components/tugas/TugasSubmisiPage";
 
 type MateriRef = { id: string };
 type Category = "materi" | "tugas";
@@ -19,6 +20,7 @@ export function MateriTugasGuruPage() {
   const toast = useToast();
   const router = useRouter();
   const appMode = useIsAppMode();
+  const [submisiTugasId, setSubmisiTugasId] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const [materiList, setMateriList] = useState<MateriRef[]>([]);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
@@ -247,7 +249,7 @@ export function MateriTugasGuruPage() {
             onAddTugas={() => { setEditTarget(null); setTugasFormOpen(true); }}
             onEditTugas={(t) => { setEditTarget(t); setTugasFormOpen(true); }}
             onDeleteTugas={deleteTugas}
-            onLihatSubmisi={(t) => router.push(`/guru/tugas/${t.id}`)}
+            onLihatSubmisi={(t) => (appMode ? router.push(`/guru/tugas/${t.id}`) : setSubmisiTugasId(t.id))}
             search={searchTugas}
             onSearchChange={setSearchTugas}
           />
@@ -262,6 +264,7 @@ export function MateriTugasGuruPage() {
         onClose={() => { setTugasFormOpen(false); setEditTarget(null); }}
         onSaved={() => loadAll()}
       />
+      {submisiTugasId && <TugasSubmisiPage tugasId={submisiTugasId} role="GURU" onClose={() => setSubmisiTugasId(null)} />}
     </div>
   );
 }

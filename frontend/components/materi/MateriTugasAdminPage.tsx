@@ -11,6 +11,7 @@ import { TugasListCard } from "@/components/tugas/TugasListCard";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { TugasSubmisiPage } from "@/components/tugas/TugasSubmisiPage";
 
 type MateriRef = { id: string };
 type Category = "materi" | "tugas";
@@ -19,6 +20,7 @@ export function MateriTugasAdminPage() {
   const toast = useToast();
   const router = useRouter();
   const appMode = useIsAppMode();
+  const [submisiTugasId, setSubmisiTugasId] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const [materiList, setMateriList] = useState<MateriRef[]>([]);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
@@ -231,7 +233,7 @@ export function MateriTugasAdminPage() {
             onAddTugas={() => { setEditTarget(null); setTugasFormOpen(true); }}
             onEditTugas={(t) => { setEditTarget(t); setTugasFormOpen(true); }}
             onDeleteTugas={deleteTugas}
-            onLihatSubmisi={(t) => router.push(`/admin/tugas/${t.id}`)}
+            onLihatSubmisi={(t) => (appMode ? router.push(`/admin/tugas/${t.id}`) : setSubmisiTugasId(t.id))}
             search={searchTugas}
             onSearchChange={setSearchTugas}
           />
@@ -246,6 +248,7 @@ export function MateriTugasAdminPage() {
         onClose={() => { setTugasFormOpen(false); setEditTarget(null); }}
         onSaved={() => loadAll()}
       />
+      {submisiTugasId && <TugasSubmisiPage tugasId={submisiTugasId} role="ADMIN" onClose={() => setSubmisiTugasId(null)} />}
     </div>
   );
 }
