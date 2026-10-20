@@ -112,33 +112,18 @@ export function TugasSubmisiPage({ tugasId, role }: { tugasId: string; role: "AD
         <>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {tabs.map((k) => {
-              const total = rows.filter((r) => k.id === SEMUA || (r.siswa?.kelas?.id ?? r.siswa?.kelasId) === k.id).length;
-              const sisa = belum.filter((b) => k.id === SEMUA || b.kelas?.id === k.id).length;
               const on = aktif === k.id;
               return (
                 <button key={k.id} type="button" onClick={() => setKelasAktif(k.id)}
                   className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800"}`}>
                   {k.nama}
-                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${on ? "bg-white text-[#3E03B3]" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>{total}/{total + sisa}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { l: "Sudah mengumpulkan", v: sudahK.length, c: "#3E03B3", bg: "#F1EDFA" },
-              { l: "Belum mengumpulkan", v: belumK.length, c: "#E8562B", bg: "#FFE9E2" },
-            ].map((t) => (
-              <div key={t.l} className="rounded-2xl px-3 py-3 text-center" style={{ background: t.bg }}>
-                <p className="text-2xl font-extrabold leading-none" style={{ color: t.c }}>{t.v}</p>
-                <p className="mt-1 text-xs font-semibold text-slate-700">{t.l}</p>
-              </div>
-            ))}
-          </div>
-
           <div className="flex gap-2">
-            {([["sudah", `Sudah mengumpulkan (${sudahK.length})`, CheckCircle], ["belum", `Belum (${belumK.length})`, UserX]] as const).map(([k, label, Icon]) => (
+            {([["sudah", `Sudah mengumpulkan (${sudahK.length})`, CheckCircle], ["belum", `Belum mengumpulkan (${belumK.length})`, UserX]] as const).map(([k, label, Icon]) => (
               <button key={k} type="button" onClick={() => setTab(k)}
                 className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold ${tab === k ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
                 <Icon size={13} /> {label}

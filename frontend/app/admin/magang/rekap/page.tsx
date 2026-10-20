@@ -30,7 +30,6 @@ export default function AdminMagangRekapPage() {
     }).finally(() => setLoading(false));
   }, []);
 
-  const menungguReview = laporanRows.filter((r) => r.laporan?.status === "TERKIRIM").length;
 
   return (
     <div className="space-y-6">
@@ -67,7 +66,7 @@ export default function AdminMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0">
                   <p className="truncate text-xl font-black leading-tight">Lapor Diri</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{summary.sudahLapor}/{summary.total} sudah lapor bulan ini</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{summary.sudahLapor} sudah · {summary.belumLapor} belum mengumpulkan</p>
                 </div>
               </button>
 
@@ -85,7 +84,7 @@ export default function AdminMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0">
                   <p className="truncate text-xl font-black leading-tight">Laporan</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{menungguReview} menunggu review</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{laporanRows.filter((r) => r.laporan).length} sudah · {laporanRows.filter((r) => !r.laporan).length} belum mengumpulkan</p>
                 </div>
               </button>
             </div>
@@ -98,7 +97,7 @@ export default function AdminMagangRekapPage() {
                 <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Rekap &amp; Laporan PKL</h1>
               </div>
               <AppTabs
-                tabs={[["lapor-diri", "Lapor Diri"], ["laporan", menungguReview > 0 ? `Laporan (${menungguReview})` : "Laporan"]] as const}
+                tabs={[["lapor-diri", "Lapor Diri"], ["laporan", "Laporan"]] as const}
                 value={category} onChange={setCategory} layoutId="app-rekap-admin-tab" />
             </div>
           ) : (
@@ -124,17 +123,12 @@ export default function AdminMagangRekapPage() {
                   </button>
                   <button type="button" onClick={() => setCategory("laporan")}
                     className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
-                    style={{ color: category === "laporan" ? "#0F172A" : "#94a3b8" }}>
+                    style={{ color: category === "laporan" ? "#FFFFFF" : "#94a3b8" }}>
                     {category === "laporan" && (
                       <motion.span layoutId="rekapPklAdminTabPill" className="absolute inset-0 rounded-xl"
                         style={{ background: "#F26A3D" }} transition={{ type: "spring", stiffness: 500, damping: 35 }} />
                     )}
                     <span className="relative z-10 flex items-center gap-1.5"><BarChart3 size={15} /> Laporan</span>
-                    {menungguReview > 0 && (
-                      <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
-                        {menungguReview}
-                      </span>
-                    )}
                   </button>
                 </div>
               </div>

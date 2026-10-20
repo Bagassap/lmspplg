@@ -469,6 +469,7 @@ export default function AdminJadwalSoalPage() {
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
+  const [totalSiswaAll, setTotalSiswaAll] = useState(0);
   const [loading, setLoading]         = useState(true);
   const [openTahapan, setOpenTahapan]               = useState(false);
   const [openSoal, setOpenSoal]                     = useState(false);
@@ -510,6 +511,12 @@ export default function AdminJadwalSoalPage() {
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => {
+    fetch("/api/dashboard/admin", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setTotalSiswaAll(Number(d?.totalSiswa) || 0))
+      .catch(() => {});
+  }, []);
 
   async function saveTahapan(data: TahapanForm) {
     const url  = editTarget ? `/api/ujian-ukk/tahapan/${editTarget.id}` : "/api/ujian-ukk/tahapan";
@@ -1074,6 +1081,7 @@ export default function AdminJadwalSoalPage() {
         {submisiModalTahapan && (() => {
           const sm = submisiModalTahapan;
           const rows = submisiList;
+          const sudahSiswa = new Set(rows.map((x) => x.siswa?.id ?? x.id)).size;
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -1118,11 +1126,12 @@ export default function AdminJadwalSoalPage() {
 
                 <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:divide-y-0">
                   {[
-                    { label: "Total pengumpulan", val: rows.length, color: "#3E03B3" },
+                    { label: "Sudah mengumpulkan", val: sudahSiswa, color: "#3E03B3" },
+                    { label: "Belum mengumpulkan", val: Math.max(0, totalSiswaAll - sudahSiswa), color: "#E8562B" },
                   ].map((st, i) => (
                     <div key={i} className="p-4 text-center">
-                      <p className="text-2xl font-extrabold" style={{color:st.color}}>{st.val}</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{st.label}</p>
+                      <p className="text-3xl font-extrabold" style={{color:st.color}}>{st.val}</p>
+                      <p className="text-sm text-slate-500 mt-0.5">{st.label}</p>
                     </div>
                   ))}
                 </div>
