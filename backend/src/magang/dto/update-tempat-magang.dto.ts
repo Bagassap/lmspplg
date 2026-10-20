@@ -6,18 +6,6 @@ export class UpdateTempatMagangDto {
   @IsOptional()
   namaTempat?: string;
 
-  @IsString()
-  @IsOptional()
-  alamat?: string;
-
-  @IsString()
-  @IsOptional()
-  kontak?: string;
-
-  @IsString()
-  @IsOptional()
-  bidangUsaha?: string;
-
   @Type(() => Number)
   @IsInt()
   @Min(1)

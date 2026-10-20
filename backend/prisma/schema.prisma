@@ -15,6 +15,7 @@ enum Role {
 }
 
 enum StatusPenempatan {
+  MENUNGGU
   AKTIF
   SELESAI
   BATAL
@@ -485,10 +486,18 @@ model PushSubscription {
 model TempatMagang {
   id          String  @id @default(cuid())
   namaTempat  String
-  alamat      String
+  alamat      String?
   kontak      String?
   bidangUsaha String?
   kuota       Int     @default(1)
+  dukuh       String?
+  desa        String?
+  kecamatan   String?
+  kabupaten   String?
+  namaPimpinan String?
+  noWaUsaha   String?
+  // true bila tempat ditambahkan sendiri oleh siswa lewat pengajuan PKL
+  dibuatSiswa Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -507,11 +516,13 @@ model PenempatanMagang {
   siswa            Siswa            @relation(fields: [siswaId], references: [id])
   tempatMagangId   String
   tempatMagang     TempatMagang     @relation(fields: [tempatMagangId], references: [id])
-  guruPembimbingId String
-  guruPembimbing   Guru             @relation(fields: [guruPembimbingId], references: [id])
+  guruPembimbingId String?
+  guruPembimbing   Guru?            @relation(fields: [guruPembimbingId], references: [id])
+  // siswa yang mengajukan bersama-sama ke satu tempat memakai kelompokId yang sama
+  kelompokId       String?
   tanggalMulai     DateTime         @db.Date
   tanggalSelesai   DateTime?        @db.Date
-  status           StatusPenempatan @default(AKTIF)
+  status           StatusPenempatan @default(MENUNGGU)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -10,6 +10,7 @@ import { Rocket } from "@/components/app/Rocket";
 import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { timeAgo } from "@/components/dashboard/ActivityList";
+import { PengajuanPklCard, type PengajuanPkl } from "@/components/dashboard/PengajuanPklCard";
 
 type Pengumuman = {
   id: string; judul: string; slug: string; kategori: string; isPinned: boolean; createdAt: string;
@@ -22,6 +23,7 @@ export type AdminHomeData = {
   kehadiran: { hadir: number; izin: number; sakit: number; alpa: number; total: number; persen: number };
   pengumuman: Pengumuman[];
   kehadiranPerKelas: { kelas: string; totalSiswa: number; hadir: number; tidakHadir: number; persentase: number }[];
+  pengajuanPkl?: PengajuanPkl[];
 };
 
 const QUICK = [
@@ -69,6 +71,8 @@ export function AdminAppHome({ data, onOpenPengumuman }: { data: AdminHomeData; 
           </div>
         </Link>
       </motion.div>
+
+      <PengajuanPklCard list={data.pengajuanPkl ?? []} />
 
       <section>
         <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Akses Cepat</h2>

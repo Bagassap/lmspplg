@@ -48,7 +48,7 @@ export class LaporanAkhirMagangService {
         fotoProfil: pn.siswa.user?.fotoProfil ?? null,
       },
       tempatMagang: pn.tempatMagang,
-      guruPembimbing: { id: pn.guruPembimbing.id, nama: pn.guruPembimbing.user?.nama ?? null },
+      guruPembimbing: pn.guruPembimbing ? { id: pn.guruPembimbing.id, nama: pn.guruPembimbing.user?.nama ?? null } : null,
       laporan: pn.laporanAkhir,
     }));
   }
@@ -108,7 +108,7 @@ export class LaporanAkhirMagangService {
           data: { siswaId: siswa.id, penempatanId: penempatan.id, tempatMagangId: penempatan.tempatMagangId, ...data },
         });
 
-    if (penempatan.guruPembimbing.userId) {
+    if (penempatan.guruPembimbing?.userId) {
       await this.notificationService.create({
         userId: penempatan.guruPembimbing.userId,
         title: 'Laporan akhir PKL dikirim',

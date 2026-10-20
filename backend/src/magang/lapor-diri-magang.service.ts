@@ -52,7 +52,7 @@ export class LaporDiriMagangService {
           fotoProfil: pn.siswa.user?.fotoProfil ?? null,
         },
         tempatMagang: pn.tempatMagang,
-        guruPembimbing: { id: pn.guruPembimbing.id, nama: pn.guruPembimbing.user?.nama ?? null },
+        guruPembimbing: pn.guruPembimbing ? { id: pn.guruPembimbing.id, nama: pn.guruPembimbing.user?.nama ?? null } : null,
         sudahLapor: !!lapor,
         laporDiri: lapor
           ? { id: lapor.id, fileUrl: lapor.fileUrl, fileName: lapor.fileName, catatan: lapor.catatan, createdAt: lapor.createdAt }

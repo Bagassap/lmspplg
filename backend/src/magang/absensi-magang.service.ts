@@ -83,7 +83,7 @@ export class AbsensiMagangService {
         nama: p.siswa.user?.nama ?? p.siswa.nama,
         nis: p.siswa.nis,
         fotoProfil: p.siswa.user?.fotoProfil ?? null,
-        guruPembimbing: { id: p.guruPembimbing.id, nama: p.guruPembimbing.user?.nama ?? null },
+        guruPembimbing: p.guruPembimbing ? { id: p.guruPembimbing.id, nama: p.guruPembimbing.user?.nama ?? null } : null,
         status,
         waktuAbsen: doc?.waktuAbsen ?? null,
         lokasi: doc?.lokasi ?? null,

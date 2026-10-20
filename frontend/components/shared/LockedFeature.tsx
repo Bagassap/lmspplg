@@ -17,7 +17,7 @@ const CONFIG: Record<FeatureType, {
 }> = {
   magang: {
     title: "PKL",
-    footerHint: (isGuru) => `Pantau pengumuman dari ${isGuru ? "koordinator PKL" : "pembimbing PKL"} Anda`,
+    footerHint: (isGuru) => (isGuru ? "Menu PKL terbuka setelah admin menetapkan Anda sebagai guru pembimbing" : "Pantau pengumuman dari pembimbing PKL Anda"),
   },
   "ujian-ukk": {
     title: "UKK",

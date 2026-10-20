@@ -6,10 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
-import type { SiswaCardData } from "@/components/data-siswa/shared";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
-import { TempatkanSiswaModal } from "@/components/magang/TempatkanSiswaModal";
+import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
+import { PengajuanMenungguPanel } from "@/components/magang/PengajuanMenungguPanel";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { PenempatanTable } from "@/components/magang/PenempatanTable";
@@ -27,11 +27,10 @@ export default function AdminMagangPenempatanPage() {
   const toast = useToast();
   const [tempatList, setTempatList] = useState<TempatMagang[]>([]);
   const [penempatanList, setPenempatanList] = useState<PenempatanMagang[]>([]);
-  const [siswaList, setSiswaList] = useState<SiswaCardData[]>([]);
   const [guruList, setGuruList] = useState<GuruOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [showKelolaTempat, setShowKelolaTempat] = useState(false);
-  const [showTempatkan, setShowTempatkan] = useState(false);
+  const [tetapkanRows, setTetapkanRows] = useState<PenempatanMagang[] | null>(null);
   const [editTarget, setEditTarget] = useState<PenempatanMagang | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -49,12 +48,6 @@ export default function AdminMagangPenempatanPage() {
     setPenempatanList(Array.isArray(list) ? list : []);
   }, []);
 
-  const loadSiswa = useCallback(async () => {
-    const res = await fetch("/api/siswa", { cache: "no-store" });
-    const list = await res.json().catch(() => []);
-    setSiswaList(Array.isArray(list) ? list : []);
-  }, []);
-
   const loadGuru = useCallback(async () => {
     const res = await fetch("/api/kelas/guru-list", { cache: "no-store" });
     const list = await res.json().catch(() => []);
@@ -63,8 +56,8 @@ export default function AdminMagangPenempatanPage() {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([loadTempat(), loadPenempatan(), loadSiswa(), loadGuru()]).finally(() => setLoading(false));
-  }, [loadTempat, loadPenempatan, loadSiswa, loadGuru]);
+    Promise.all([loadTempat(), loadPenempatan(), loadGuru()]).finally(() => setLoading(false));
+  }, [loadTempat, loadPenempatan, loadGuru]);
 
   async function ubahStatus(p: PenempatanMagang, status: StatusPenempatan) {
     setBusyId(p.id);
@@ -104,6 +97,17 @@ export default function AdminMagangPenempatanPage() {
     }
   }
 
+  async function tolak(rows: PenempatanMagang[]) {
+    const nama = rows.map((r) => toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")).join(", ");
+    const ok = await toast.confirm("Tolak pengajuan PKL ini?", `Pengajuan ${nama} di "${rows[0].tempatMagang.namaTempat}" akan dihapus dan siswa bisa mengajukan ulang.`);
+    if (!ok) return;
+    const hasil = await Promise.all(rows.map((r) => fetch(`/api/magang/penempatan/${r.id}`, { method: "DELETE" })));
+    if (hasil.every((h) => h.ok)) toast.success("Pengajuan ditolak", "");
+    else toast.error("Sebagian pengajuan gagal dihapus", "");
+    loadPenempatan(); loadTempat();
+  }
+
+  const jumlahMenunggu = penempatanList.filter((p) => p.status === "MENUNGGU").length;
   const jumlahAktif = penempatanList.filter((p) => p.status === "AKTIF").length;
   const jumlahSelesai = penempatanList.filter((p) => p.status === "SELESAI").length;
   const jumlahBatal = penempatanList.filter((p) => p.status === "BATAL").length;
@@ -175,13 +179,15 @@ export default function AdminMagangPenempatanPage() {
       </div>
       </div>
 
+      <PengajuanMenungguPanel list={penempatanList} onTetapkan={setTetapkanRows} onTolak={tolak} />
+
       <PenempatanFilterBar
         search={search} onSearch={setSearch}
         statusFilter={statusFilter} onStatusFilter={setStatusFilter}
         total={penempatanList.length} aktifCount={jumlahAktif} selesaiCount={jumlahSelesai} batalCount={jumlahBatal}
         displayedCount={displayList.length}
         onKelolaTempat={() => setShowKelolaTempat(true)}
-        onTempatkan={() => setShowTempatkan(true)}
+        menungguCount={jumlahMenunggu}
         mobileNative
       />
 
@@ -204,13 +210,11 @@ export default function AdminMagangPenempatanPage() {
             onSaved={loadTempat}
           />
         )}
-        {showTempatkan && (
-          <TempatkanSiswaModal
-            siswaList={siswaList}
-            tempatList={tempatList}
+        {tetapkanRows && (
+          <TetapkanGuruModal
+            rows={tetapkanRows}
             guruList={guruList}
-            penempatanList={penempatanList}
-            onClose={() => setShowTempatkan(false)}
+            onClose={() => setTetapkanRows(null)}
             onSaved={() => { loadPenempatan(); loadTempat(); }}
           />
         )}

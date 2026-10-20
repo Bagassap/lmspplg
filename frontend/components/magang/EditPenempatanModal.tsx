@@ -23,7 +23,7 @@ export function EditPenempatanModal({
 }) {
   const toast = useToast();
   const [tempatId, setTempatId] = useState(penempatan.tempatMagang.id);
-  const [guruId, setGuruId] = useState(penempatan.guruPembimbing.id);
+  const [guruId, setGuruId] = useState(penempatan.guruPembimbing?.id ?? "");
   const [tanggalMulai, setTanggalMulai] = useState(penempatan.tanggalMulai.slice(0, 10));
   const [tanggalSelesai, setTanggalSelesai] = useState(penempatan.tanggalSelesai ? penempatan.tanggalSelesai.slice(0, 10) : "");
   const [saving, setSaving] = useState(false);

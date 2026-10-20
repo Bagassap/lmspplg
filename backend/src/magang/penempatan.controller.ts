@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { PenempatanService } from './penempatan.service';
-import { CreatePenempatanDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
+import { AjukanPenempatanDto, TetapkanGuruDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -16,6 +16,20 @@ export class PenempatanController {
   @Get('saya')
   findSaya(@Request() req: any) {
     return this.service.findSaya(req.user.id);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Get('rekan')
+  cariRekan(@Request() req: any, @Query('q') q?: string) {
+    return this.service.cariRekan(req.user.id, q);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post('ajukan')
+  ajukan(@Request() req: any, @Body() dto: AjukanPenempatanDto) {
+    return this.service.ajukan(req.user.id, dto);
   }
 
   @UseGuards(RolesGuard)
@@ -38,9 +52,9 @@ export class PenempatanController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
-  @Post()
-  create(@Body() dto: CreatePenempatanDto) {
-    return this.service.create(dto);
+  @Post(':id/tetapkan-guru')
+  tetapkanGuru(@Param('id') id: string, @Body() dto: TetapkanGuruDto) {
+    return this.service.tetapkanGuru(id, dto);
   }
 
   @UseGuards(RolesGuard)

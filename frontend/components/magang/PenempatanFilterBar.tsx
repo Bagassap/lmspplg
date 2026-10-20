@@ -11,16 +11,18 @@ export type PenempatanStatusFilter = StatusPenempatan | "";
 export function PenempatanFilterBar({
   search, onSearch, statusFilter, onStatusFilter,
   total, aktifCount, selesaiCount, batalCount, displayedCount,
-  onKelolaTempat, onTempatkan, mobileNative = false,
+  onKelolaTempat, mobileNative = false, menungguCount = 0,
 }: {
   search: string; onSearch: (v: string) => void;
   statusFilter: PenempatanStatusFilter; onStatusFilter: (v: PenempatanStatusFilter) => void;
   total: number; aktifCount: number; selesaiCount: number; batalCount: number; displayedCount: number;
-  onKelolaTempat: () => void; onTempatkan: () => void;
+  onKelolaTempat: () => void;
   mobileNative?: boolean;
+  menungguCount?: number;
 }) {
   const STATUS_PILLS: { value: PenempatanStatusFilter; label: string; icon: typeof Users; count: number }[] = [
     { value: "", label: "Semua", icon: Users, count: total },
+    { value: "MENUNGGU", label: "Menunggu", icon: Clock, count: menungguCount },
     { value: "AKTIF", label: "Aktif", icon: Clock, count: aktifCount },
     { value: "SELESAI", label: "Selesai", icon: CheckCircle2, count: selesaiCount },
     { value: "BATAL", label: "Batal", icon: XCircle, count: batalCount },
@@ -50,11 +52,6 @@ export function PenempatanFilterBar({
             <button type="button" onClick={onKelolaTempat}
               className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
               <Building2 size={14} /> Kelola Tempat
-            </button>
-            <button type="button" onClick={onTempatkan}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
-              style={{ backgroundColor: REF_PRIMARY }}>
-              <Plus size={14} /> Tempatkan Siswa
             </button>
           </div>
 
@@ -86,11 +83,6 @@ export function PenempatanFilterBar({
                 <button type="button" onClick={onKelolaTempat} title="Kelola Tempat"
                   className="flex h-10.5 w-10.5 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   <Building2 size={16} />
-                </button>
-                <button type="button" onClick={onTempatkan} title="Tempatkan Siswa"
-                  className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm"
-                  style={{ backgroundColor: REF_PRIMARY }}>
-                  <Plus size={16} />
                 </button>
               </div>
             )}

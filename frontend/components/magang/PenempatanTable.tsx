@@ -91,7 +91,7 @@ export function PenempatanTable({
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{toTitleCase(p.guruPembimbing.user.nama)}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 dark:text-slate-400">
                         {fmtTgl(p.tanggalMulai)}{p.tanggalSelesai ? ` – ${fmtTgl(p.tanggalSelesai)}` : ""}
@@ -101,6 +101,7 @@ export function PenempatanTable({
                           <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
                             className="rounded-lg border-0 px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                             style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                            <option value="MENUNGGU" disabled>Menunggu guru</option>
                             <option value="AKTIF">Aktif</option>
                             <option value="SELESAI">Selesai</option>
                             <option value="BATAL">Batal</option>
@@ -156,7 +157,8 @@ export function PenempatanTable({
                       <div className="mt-3 flex gap-2">
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
                           className="flex-1 rounded-full border-0 px-3 py-2.5 text-xs font-bold focus:outline-none" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
-                          <option value="AKTIF">Aktif</option>
+                          <option value="MENUNGGU" disabled>Menunggu guru</option>
+                            <option value="AKTIF">Aktif</option>
                           <option value="SELESAI">Selesai</option>
                           <option value="BATAL">Batal</option>
                         </select>
@@ -192,7 +194,8 @@ export function PenempatanTable({
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
                           className="shrink-0 rounded-lg border-0 px-2 py-1 text-[10px] font-semibold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                           style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
-                          <option value="AKTIF">Aktif</option>
+                          <option value="MENUNGGU" disabled>Menunggu guru</option>
+                            <option value="AKTIF">Aktif</option>
                           <option value="SELESAI">Selesai</option>
                           <option value="BATAL">Batal</option>
                         </select>

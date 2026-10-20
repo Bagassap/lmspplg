@@ -139,6 +139,18 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     return () => { cancelled = true; };
   }, [isGuru]);
 
+  // Menu PKL guru baru terbuka setelah admin menetapkan guru sebagai pembimbing siswa.
+  const [guruHasBimbingan, setGuruHasBimbingan] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!isGuru) return;
+    let cancelled = false;
+    fetch("/api/magang/penempatan/bimbingan", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: unknown[]) => { if (!cancelled) setGuruHasBimbingan(Array.isArray(list) && list.length > 0); })
+      .catch(() => { if (!cancelled) setGuruHasBimbingan(true); });
+    return () => { cancelled = true; };
+  }, [isGuru]);
+
   const { kelasXII: siswaKelasXII, magangAktif, ukkAktif } = useSiswaFitur(isSiswa);
 
   const items = (MENUS[user.role] ?? [])
@@ -148,6 +160,9 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
       return true;
     })
     .map((item) => {
+      if (isGuru && item.key === "magang" && guruHasBimbingan === false) {
+        return { ...item, locked: true, href: "/guru/magang" };
+      }
       if (!isSiswa || (item.key !== "magang" && item.key !== "ujian-ukk")) return item;
       const fiturAktif = item.key === "magang" ? magangAktif : ukkAktif;
       if (siswaKelasXII && fiturAktif) return { ...item, locked: false, href: undefined };

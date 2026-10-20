@@ -20,6 +20,13 @@ export class TempatMagangController {
   }
 
   @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Get('pilihan')
+  findPilihan() {
+    return this.service.findPilihan();
+  }
+
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Post()
   create(@Body() dto: CreateTempatMagangDto) {

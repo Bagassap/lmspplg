@@ -8,6 +8,7 @@ import type { PenempatanMagang } from "@/components/magang/types";
 import { AppMobileFrame, AppBanner, AppCard, AppEmpty, AppInfoRow, AppSectionTitle, APP_ACCENT } from "@/components/app/AppUI";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { PengajuanPklPage } from "@/components/magang/PengajuanPklPage";
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -18,16 +19,20 @@ export default function SiswaMagangPenempatanPage() {
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const reload = () => {
     fetch("/api/magang/penempatan/saya", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setList(Array.isArray(d) ? d : []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  };
+  useEffect(() => { reload(); }, []);
 
   const aktif = list.find((p) => p.status === "AKTIF");
   const riwayat = list.filter((p) => p.status !== "AKTIF");
+
+  // Belum ada penempatan aktif: siswa mengajukan sendiri / menunggu guru pembimbing ditetapkan admin.
+  if (!loading && !aktif) return <PengajuanPklPage list={list} onChanged={reload} />;
 
   return (
     <div className="space-y-5 lg:p-1">
@@ -78,7 +83,7 @@ export default function SiswaMagangPenempatanPage() {
                 <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat}</p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat ?? "-"}</p>
                 </div>
               </div>
               {aktif.tempatMagang.kontak && (
@@ -94,7 +99,7 @@ export default function SiswaMagangPenempatanPage() {
                 <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing.user.nama)}</p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
@@ -156,9 +161,9 @@ export default function SiswaMagangPenempatanPage() {
               </span>
             </AppBanner>
             <div className="space-y-2.5">
-              <AppInfoRow icon={MapPin} label="Alamat" value={aktif.tempatMagang.alamat} />
+              <AppInfoRow icon={MapPin} label="Alamat" value={aktif.tempatMagang.alamat ?? "-"} />
               {aktif.tempatMagang.kontak && <AppInfoRow icon={Phone} label="Kontak" value={aktif.tempatMagang.kontak} />}
-              <AppInfoRow icon={User} label="Guru Pembimbing" value={toTitleCase(aktif.guruPembimbing.user.nama)} />
+              <AppInfoRow icon={User} label="Guru Pembimbing" value={toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")} />
               <AppInfoRow icon={CalendarDays} label="Periode" value={`${fmt(aktif.tanggalMulai)}${aktif.tanggalSelesai ? ` – ${fmt(aktif.tanggalSelesai)}` : " – berlangsung"}`} />
             </div>
           </>
@@ -218,7 +223,7 @@ export default function SiswaMagangPenempatanPage() {
                 <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat}</p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{aktif.tempatMagang.alamat ?? "-"}</p>
                 </div>
               </div>
               {aktif.tempatMagang.kontak && (
@@ -234,7 +239,7 @@ export default function SiswaMagangPenempatanPage() {
                 <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing.user.nama)}</p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{toTitleCase(aktif.guruPembimbing?.user.nama ?? "-")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
