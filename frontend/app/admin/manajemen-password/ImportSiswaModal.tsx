@@ -133,20 +133,20 @@ export function ImportSiswaModal({
                 <div className="space-y-3 border-t border-slate-100 pt-4 dark:border-slate-700">
                   {result.berhasil.length > 0 && (
                     <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
-                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#A1F919]">
+                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#C4B5FD]">
                         <CheckCircle2 size={13} /> {result.berhasil.length} akun berhasil dibuat
                       </p>
-                      <ul className="max-h-24 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#A1F919]/80">
+                      <ul className="max-h-24 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#C4B5FD]">
                         {result.berhasil.map((r) => <li key={r.baris}>Baris {r.baris}: {r.nama} (NIS {r.nis})</li>)}
                       </ul>
                     </div>
                   )}
                   {result.gagal.length > 0 && (
                     <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
-                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#A1F919]">
+                      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#C4B5FD]">
                         <XCircle size={13} /> {result.gagal.length} baris gagal
                       </p>
-                      <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#A1F919]/80">
+                      <ul className="max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-[#48700B]/80 dark:text-[#C4B5FD]">
                         {result.gagal.map((r) => <li key={r.baris}>Baris {r.baris} ({r.nama || "—"}): {r.alasan}</li>)}
                       </ul>
                     </div>

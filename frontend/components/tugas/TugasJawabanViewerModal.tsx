@@ -8,7 +8,7 @@ import { nilaiPilihanGanda } from "./types";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasJawabanViewerModal({
-  open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai, isDone,
+  open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai,
 }: {
   open: boolean;
   onClose: () => void;
@@ -18,7 +18,6 @@ export function TugasJawabanViewerModal({
   nilai?: number | null;
   canGrade?: boolean;
   onSaveNilai?: (nilai: number) => Promise<void>;
-  isDone?: boolean;
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
@@ -141,7 +140,7 @@ export function TugasJawabanViewerModal({
               )}
             </div>
 
-            {canGrade && !isDone && (
+            {canGrade && (
               <div className="flex shrink-0 flex-wrap items-center gap-4 px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
                 <label className="text-base font-bold text-slate-900 dark:text-white">Nilai (0–100)</label>
                 <div className="relative">

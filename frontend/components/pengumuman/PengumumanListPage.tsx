@@ -189,7 +189,7 @@ function AccordionCard({
 
       {canManage && !isOpen && (
         <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(); }} title="Hapus pengumuman"
-          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-black backdrop-blur-sm transition-all hover:bg-[#A1F919]/60">
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-black backdrop-blur-sm transition-all hover:bg-[#F1EDFA]">
           <Trash2 size={13} />
         </button>
       )}
@@ -229,7 +229,7 @@ function AccordionCard({
               <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white/20 text-white"}`}>Penting</span>
             )}
             {p.prioritas === "MENDESAK" && (
-              <span className="animate-pulse rounded-lg bg-[#A1F919]/30 px-2 py-0.5 text-[10px] font-bold text-black">Mendesak</span>
+              <span className="animate-pulse rounded-lg bg-[#F1EDFA] px-2 py-0.5 text-[10px] font-bold text-black">Mendesak</span>
             )}
           </div>
         </div>
@@ -288,7 +288,7 @@ function AccordionCard({
                       textClassName="text-[11px] font-extrabold"
                       className="shadow-lg ring-2 ring-white dark:ring-slate-700"
                     />
-                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#A1F919] ring-1 ring-white dark:ring-[#1E293B]">
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#3E03B3] ring-1 ring-white dark:ring-[#1E293B]">
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
                   </div>
@@ -305,14 +305,14 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#000000]/20"
-                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#000000]/20"
+                            ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#000000]/20"
+                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#000000]/20"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
                         <BookOpen size={13} /></button>
                       <button onClick={onDelete} title="Hapus"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                         <Trash2 size={13} /></button>
                     </div>
                   )}
@@ -521,7 +521,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mb-3 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]"
+              className="mb-3 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
             >
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
@@ -651,7 +651,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+              className="flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}

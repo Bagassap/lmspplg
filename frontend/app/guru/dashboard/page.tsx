@@ -132,7 +132,7 @@ export default function GuruDashboardPage() {
 
   if (error) return (
     <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-      <AlertCircle size={40} className="text-[#5D900F] dark:text-[#A1F919]" />
+      <AlertCircle size={40} className="text-[#5D900F] dark:text-[#C4B5FD]" />
       <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
       <button onClick={load} className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white"
         style={{ backgroundColor: P }}>
@@ -380,7 +380,7 @@ export default function GuruDashboardPage() {
                   style={icon3dStyle(s.tone)}>
                   <s.icon size={19} style={{ color: "#fff" }} />
                   {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black shadow-sm">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
                       {s.badge}
                     </span>
                   )}

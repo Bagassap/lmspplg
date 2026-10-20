@@ -104,7 +104,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -229,7 +229,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+              className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}

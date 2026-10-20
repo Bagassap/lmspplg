@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Code2, CheckCircle, AlertCircle } from "lucide-react";
+import { X, Code2 } from "lucide-react";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasPraktikViewerModal({
-  open, onClose, title, subtitle, html, css, js, isDone, onTerima, onRevisi,
+  open, onClose, title, subtitle, html, css, js,
 }: {
   open: boolean;
   onClose: () => void;
@@ -15,10 +15,6 @@ export function TugasPraktikViewerModal({
   html: string;
   css: string;
   js: string;
-  // isDone true = sudah diterima, sembunyikan aksi Terima/Revisi (read-only).
-  isDone?: boolean;
-  onTerima?: () => void;
-  onRevisi?: () => void;
 }) {
   return (
     <AnimatePresence>
@@ -60,24 +56,6 @@ export function TugasPraktikViewerModal({
               </div>
             </div>
 
-            {!isDone && (onTerima || onRevisi) && (
-              <div className="flex shrink-0 justify-end gap-3 px-6 pb-6 pt-2 sm:px-8">
-                {onRevisi && (
-                  <button onClick={onRevisi}
-                    className="flex h-12 min-w-44 items-center justify-center gap-2 rounded-full px-6 text-base font-bold"
-                    style={{ background: "#F26A3D", color: "#FFFFFF" }}>
-                    <AlertCircle size={18} /> Minta Revisi
-                  </button>
-                )}
-                {onTerima && (
-                  <button onClick={onTerima}
-                    className="flex h-12 min-w-44 items-center justify-center gap-2 rounded-full px-6 text-base font-bold"
-                    style={{ background: "#3E03B3", color: "#FFFFFF" }}>
-                    <CheckCircle size={18} /> Terima
-                  </button>
-                )}
-              </div>
-            )}
           </motion.div>
         </div>
       )}

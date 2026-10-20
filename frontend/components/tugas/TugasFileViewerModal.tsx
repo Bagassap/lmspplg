@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, FileText, Download, CheckCircle, AlertCircle } from "lucide-react";
+import { X, FileText, Download } from "lucide-react";
 import { formatTglJam } from "./types";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasFileViewerModal({
-  open, onClose, title, subtitle, fileUrl, fileName, catatan, submittedAt, isDone, onTerima, onRevisi,
+  open, onClose, title, subtitle, fileUrl, fileName, catatan, submittedAt,
 }: {
   open: boolean;
   onClose: () => void;
@@ -16,9 +16,6 @@ export function TugasFileViewerModal({
   fileName: string | null;
   catatan: string | null;
   submittedAt?: string;
-  isDone?: boolean;
-  onTerima?: () => void;
-  onRevisi?: () => void;
 }) {
   return (
     <AnimatePresence>
@@ -75,24 +72,6 @@ export function TugasFileViewerModal({
               )}
             </div>
 
-            {!isDone && (onTerima || onRevisi) && (
-              <div className="flex shrink-0 gap-3 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pb-8">
-                {onRevisi && (
-                  <button onClick={onRevisi}
-                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold"
-                    style={{ background: "#F26A3D", color: "#FFFFFF" }}>
-                    <AlertCircle size={18} /> Minta Revisi
-                  </button>
-                )}
-                {onTerima && (
-                  <button onClick={onTerima}
-                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold"
-                    style={{ background: "#3E03B3", color: "#FFFFFF" }}>
-                    <CheckCircle size={18} /> Terima
-                  </button>
-                )}
-              </div>
-            )}
           </motion.div>
         </div>
       )}

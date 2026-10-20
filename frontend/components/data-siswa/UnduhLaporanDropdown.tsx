@@ -59,7 +59,7 @@ export function UnduhLaporanDropdown({ kelasId, kelasNama }: { kelasId?: string;
                 type="button"
                 onClick={() => run("pdf")}
                 disabled={!!loadingKind}
-                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]"
+                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"
               >
                 {loadingKind === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
                 Download PDF
@@ -68,7 +68,7 @@ export function UnduhLaporanDropdown({ kelasId, kelasNama }: { kelasId?: string;
                 type="button"
                 onClick={() => run("excel")}
                 disabled={!!loadingKind}
-                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#A1F919]/20 bg-[#F6FEE8] text-[#5D900F] dark:bg-[#A1F919]/15 dark:text-[#A1F919]"
+                className="flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"
               >
                 {loadingKind === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
                 Download Excel

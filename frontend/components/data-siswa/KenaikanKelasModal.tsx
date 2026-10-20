@@ -135,7 +135,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
 
   return (
     <div className="space-y-4">
-      <div className={`flex items-start gap-2 rounded-xl px-4 py-3 text-xs ${app ? "bg-[#FFE9E2] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]"}`}>
+      <div className={`flex items-start gap-2 rounded-xl px-4 py-3 text-xs ${app ? "bg-[#FFE9E2] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"}`}>
         <AlertTriangle size={14} className="mt-0.5 shrink-0" />
         <span>Aksi ini menghapus PERMANEN seluruh data (absensi, tugas, PKL, UKK) dan akun login semua siswa di kelas terpilih — tidak bisa dibatalkan. Pastikan ini benar-benar kelas yang sudah menyelesaikan sekolah (biasanya kelas XII).</span>
       </div>
@@ -148,14 +148,14 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       </div>
 
       {kelasId && (
-        <div className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold ${app ? "bg-[#FFF4E0] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#A1F919]"}`}>
+        <div className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold ${app ? "bg-[#FFF4E0] text-slate-800" : "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"}`}>
           <Users size={14} />
           {jumlah === null ? "Menghitung…" : jumlah === 0 ? "Tidak ada siswa aktif di kelas ini" : `${jumlah} siswa aktif akan diluluskan`}
         </div>
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className={`flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-bold shadow-sm disabled:opacity-50 ${app ? "rounded-full bg-[#F26A3D] text-white" : "rounded-xl bg-[#A1F919] text-black"}`}>
+        className={`flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-bold shadow-sm disabled:opacity-50 ${app ? "rounded-full bg-[#F26A3D] text-white" : "rounded-xl bg-[#3E03B3] text-white"}`}>
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -201,7 +201,7 @@ export function KenaikanKelasModal({
                 <ArrowUpCircle size={13} /> Naikkan Kelas
               </button>
               <button onClick={() => setTab("lulus")}
-                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? (app ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20") : "text-slate-400 hover:text-slate-600"}`}>
+                className={`flex items-center gap-1.5 rounded-t-xl px-4 py-2.5 text-xs font-bold transition-colors ${tab === "lulus" ? (app ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]/20") : "text-slate-400 hover:text-slate-600"}`}>
                 <GraduationCap size={13} /> Luluskan Kelas
               </button>
             </div>

@@ -20,8 +20,8 @@ function chunkOf4<T>(items: T[]): T[][] {
 }
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
-  PRAKTIK: { icon: Code2, cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#A1F919]" },
-  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#A1F919]" },
+  PRAKTIK: { icon: Code2, cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#C4B5FD]" },
+  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#C4B5FD]" },
   ESSAY: { icon: PenLine, cls: "bg-[#F1EDFA] text-[#2D0281] dark:bg-[#000000]/40 dark:text-[#8F6DD3]" },
 };
 
@@ -79,7 +79,7 @@ export function TugasListCard({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#F26A3D" }}>
-              <ClipboardList size={14} className="text-[#000000] dark:text-[#A1F919]" />
+              <ClipboardList size={14} className="text-[#000000] dark:text-[#C4B5FD]" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Tugas</p>
           </div>
@@ -95,7 +95,7 @@ export function TugasListCard({
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
           <input value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari nama tugas atau mapel..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#A1F919] focus:ring-2 focus:ring-[#FFFFFF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#F26A3D] focus:ring-2 focus:ring-[#FFFFFF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
         </div>
         <div className="flex gap-6 border-b border-slate-100 dark:border-slate-700">
           <button onClick={() => setTab("active")}
@@ -104,7 +104,7 @@ export function TugasListCard({
             {tab === "active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#3E03B3" }}>{active.length}</span>}
           </button>
           <button onClick={() => setTab("completed")}
-            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
+            className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === "completed" ? "border-[#F26A3D] text-[#5D900F] dark:text-[#C4B5FD]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
             Selesai
             {tab === "completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{ backgroundColor: "#F26A3D" }}>{completed.length}</span>}
           </button>
@@ -191,7 +191,7 @@ export function TugasListCard({
                               <Pencil size={12} />
                             </button>
                             <button onClick={() => onDeleteTugas(t.id)}
-                              className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                              className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                               <Trash2 size={12} />
                             </button>
                           </>
@@ -284,10 +284,10 @@ export function TugasListCard({
               </span>
             </button>
             <button type="button" onClick={() => setTab("completed")}
-              className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
+              className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab === "completed" ? "text-[#5D900F] dark:text-[#C4B5FD]" : "text-[#94a3b8]"}`}
               style={{ borderColor: tab === "completed" ? "#F26A3D" : "transparent" }}>
               Selesai
-              <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "completed" ? "text-[#5D900F] dark:text-[#A1F919]" : "text-[#94a3b8]"}`}
+              <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab === "completed" ? "text-[#5D900F] dark:text-[#C4B5FD]" : "text-[#94a3b8]"}`}
                 style={{ background: tab === "completed" ? "#F26A3D18" : "#E2E8F0" }}>
                 {completed.length}
               </span>
@@ -321,7 +321,7 @@ export function TugasListCard({
         {!loading && shown.length === 0 && (
           <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
             <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F26A3D30" }}>
-              <ClipboardList size={24} className="text-[#5D900F] dark:text-[#A1F919]" />
+              <ClipboardList size={24} className="text-[#5D900F] dark:text-[#C4B5FD]" />
             </div>
             <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"}</p>
           </div>

@@ -8,7 +8,6 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { MateriListPage } from "./MateriListPage";
 import { TugasFormModal } from "@/components/tugas/TugasFormModal";
 import { TugasListCard } from "@/components/tugas/TugasListCard";
-import { RevisiFormModal } from "@/components/tugas/RevisiFormModal";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
 import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -31,7 +30,6 @@ export function MateriTugasAdminPage() {
 
   const [tugasFormOpen, setTugasFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<TugasItem | null>(null);
-  const [revisiTarget, setRevisiTarget] = useState<TugasSubmisiItem | null>(null);
 
   const [mapelOptions, setMapelOptions] = useState<string[] | undefined>(undefined);
   useEffect(() => {
@@ -64,25 +62,6 @@ export function MateriTugasAdminPage() {
     const res = await fetch(`/api/tugas/${id}`, { method: "DELETE" });
     if (res.ok) { toast.success("Tugas dihapus", ""); loadAll(); }
     else toast.error("Gagal menghapus tugas");
-  }
-
-  async function updateStatus(id: string, status: "DITERIMA" | "REVISI", pesanRevisi?: string) {
-    const res = await fetch(`/api/tugas/submisi/${id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, ...(pesanRevisi ? { pesanRevisi } : {}) }),
-    });
-    if (res.ok) {
-      toast.success(status === "DITERIMA" ? "Tugas diterima!" : "Revisi dikirim ke siswa", "");
-      loadAll();
-    } else {
-      toast.error("Gagal memperbarui status");
-    }
-  }
-
-  async function kirimRevisi(id: string, pesan: string) {
-    await updateStatus(id, "REVISI", pesan);
-    setRevisiTarget(null);
   }
 
   async function simpanNilai(submisiId: string, nilai: number) {
@@ -223,7 +202,7 @@ export function MateriTugasAdminPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
                   {perluReview > 0 && (
-                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black">
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
                       {perluReview}
                     </span>
                   )}
@@ -259,8 +238,6 @@ export function MateriTugasAdminPage() {
         )}
       </div>
 
-
-      <RevisiFormModal target={revisiTarget} onClose={() => setRevisiTarget(null)} onSend={kirimRevisi} />
 
       <TugasFormModal
         open={tugasFormOpen}

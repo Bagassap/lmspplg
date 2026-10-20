@@ -209,7 +209,7 @@ export function Sidebar({
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
                         {item.key === "manajemen-password" && pendingResetCount > 0 && (
-                          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-[#A1F919] ring-2 ring-white dark:ring-[#1E293B]" />
+                          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-[#3E03B3] ring-2 ring-white dark:ring-[#1E293B]" />
                         )}
                       </span>
                     </Link>
@@ -394,7 +394,7 @@ export function Sidebar({
                   </span>
 
                   {item.key === "manajemen-password" && pendingResetCount > 0 && (
-                    <span className="relative flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#A1F919] px-1.5 text-[10px] font-bold text-black">
+                    <span className="relative flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] px-1.5 text-[10px] font-bold text-white">
                       {pendingResetCount > 99 ? "99+" : pendingResetCount}
                     </span>
                   )}

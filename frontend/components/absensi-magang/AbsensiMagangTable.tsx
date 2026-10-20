@@ -190,7 +190,7 @@ export function AbsensiMagangTable({
                     {fotoRaw ? (
                       <button onClick={openDokumen} title="Lihat foto selfie"
                         className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20">
-                        <Camera size={13} className="text-[#5D900F] dark:text-[#A1F919]" />
+                        <Camera size={13} className="text-[#5D900F] dark:text-[#C4B5FD]" />
                       </button>
                     ) : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
                   </div>

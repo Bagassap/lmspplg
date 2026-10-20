@@ -8,7 +8,6 @@ import { formatTgl, formatTglJam, statusInfo, tipeLabel } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
 import { TugasFileViewerModal } from "./TugasFileViewerModal";
-import { RevisiFormModal } from "./RevisiFormModal";
 import { useToast } from "@/components/shared/ToastSystem";
 
 type Kelas = { id: string; nama: string };
@@ -34,7 +33,6 @@ export function TugasSubmisiPage({ tugasId, role }: { tugasId: string; role: "AD
   const [codeT, setCodeT] = useState<SubmisiRow | null>(null);
   const [jawabanT, setJawabanT] = useState<SubmisiRow | null>(null);
   const [fileT, setFileT] = useState<SubmisiRow | null>(null);
-  const [revisiT, setRevisiT] = useState<SubmisiRow | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -72,20 +70,10 @@ export function TugasSubmisiPage({ tugasId, role }: { tugasId: string; role: "AD
   const inKelas = (kelasId?: string | null) => aktif === SEMUA || kelasId === aktif;
   const sudahK = rows.filter((r) => inKelas(r.siswa?.kelas?.id ?? r.siswa?.kelasId));
   const belumK = belum.filter((b) => inKelas(b.kelas?.id));
-  const cnt = (s: string) => sudahK.filter((r) => r.status === s).length;
 
   const isPraktik = tugas?.tipe === "PRAKTIK";
   const isSoal = tugas?.tipe === "PILIHAN_GANDA" || tugas?.tipe === "ESSAY";
 
-  async function updateStatus(id: string, status: "DITERIMA" | "REVISI", pesanRevisi?: string) {
-    const res = await fetch(`/api/tugas/submisi/${id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, ...(pesanRevisi ? { pesanRevisi } : {}) }),
-    });
-    if (res.ok) { toast.success(status === "DITERIMA" ? "Tugas diterima!" : "Revisi dikirim ke siswa", ""); load(); }
-    else toast.error("Gagal memperbarui status");
-  }
   async function simpanNilai(id: string, nilai: number) {
     const res = await fetch(`/api/tugas/submisi/${id}/nilai`, {
       method: "PUT",
@@ -137,16 +125,14 @@ export function TugasSubmisiPage({ tugasId, role }: { tugasId: string; role: "AD
             })}
           </div>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {[
-              { l: "Diterima", v: cnt("DITERIMA"), c: "#059669", bg: "#E3F8EF" },
-              { l: "Menunggu", v: cnt("TERKIRIM"), c: "#0284C7", bg: "#E0F2FE" },
-              { l: "Revisi", v: cnt("REVISI"), c: "#D97706", bg: "#FFF4E0" },
-              { l: "Belum", v: belumK.length, c: "#E8562B", bg: "#FFE9E2" },
+              { l: "Sudah mengumpulkan", v: sudahK.length, c: "#3E03B3", bg: "#F1EDFA" },
+              { l: "Belum mengumpulkan", v: belumK.length, c: "#E8562B", bg: "#FFE9E2" },
             ].map((t) => (
-              <div key={t.l} className="rounded-2xl px-2 py-2.5 text-center" style={{ background: t.bg }}>
-                <p className="text-lg font-extrabold leading-none" style={{ color: t.c }}>{t.v}</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-700">{t.l}</p>
+              <div key={t.l} className="rounded-2xl px-3 py-3 text-center" style={{ background: t.bg }}>
+                <p className="text-2xl font-extrabold leading-none" style={{ color: t.c }}>{t.v}</p>
+                <p className="mt-1 text-xs font-semibold text-slate-700">{t.l}</p>
               </div>
             ))}
           </div>
@@ -203,26 +189,19 @@ export function TugasSubmisiPage({ tugasId, role }: { tugasId: string; role: "AD
         open={!!codeT} onClose={() => setCodeT(null)}
         title={codeT ? namaOf(codeT) : "Siswa"} subtitle={tugas?.judul}
         html={codeT?.submittedHtml ?? ""} css={codeT?.submittedCss ?? ""} js={codeT?.submittedJs ?? ""}
-        isDone={codeT?.status === "DITERIMA"}
-        onTerima={codeT ? () => { updateStatus(codeT.id, "DITERIMA"); setCodeT(null); } : undefined}
-        onRevisi={codeT ? () => { setRevisiT(codeT); setCodeT(null); } : undefined}
       />
       <TugasFileViewerModal
         open={!!fileT} onClose={() => setFileT(null)}
         title={fileT ? namaOf(fileT) : "Siswa"} subtitle={tugas?.judul}
         fileUrl={fileT?.fileUrl ?? null} fileName={fileT?.fileName ?? null} catatan={fileT?.catatan ?? null}
-        submittedAt={fileT?.submittedAt} isDone={fileT?.status === "DITERIMA"}
-        onTerima={fileT ? () => { updateStatus(fileT.id, "DITERIMA"); setFileT(null); } : undefined}
-        onRevisi={fileT ? () => { setRevisiT(fileT); setFileT(null); } : undefined}
+        submittedAt={fileT?.submittedAt}
       />
       <TugasJawabanViewerModal
         open={!!jawabanT} onClose={() => setJawabanT(null)}
         judul={jawabanT ? namaOf(jawabanT) : "Siswa"} tipe={tugas?.tipe ?? ""}
-        jawaban={jawabanT?.jawaban ?? []} nilai={jawabanT?.nilai} canGrade isDone={jawabanT?.status === "DITERIMA"}
+        jawaban={jawabanT?.jawaban ?? []} nilai={jawabanT?.nilai} canGrade
         onSaveNilai={async (nilai) => { if (!jawabanT) return; await simpanNilai(jawabanT.id, nilai); setJawabanT(null); }}
       />
-      <RevisiFormModal target={revisiT} onClose={() => setRevisiT(null)}
-        onSend={async (id, pesan) => { await updateStatus(id, "REVISI", pesan); setRevisiT(null); }} />
     </div>
   );
 }

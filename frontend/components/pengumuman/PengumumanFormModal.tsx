@@ -22,8 +22,8 @@ export type PengumumanItem = {
 const KATEGORI_OPTIONS = ["Umum", "Akademik", "Magang", "Ujian", "Lainnya"];
 const PRIORITAS_OPTIONS = [
   { value: "NORMAL",   label: "Normal",   cls: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300" },
-  { value: "PENTING",  label: "Penting",  cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#A1F919]" },
-  { value: "MENDESAK", label: "Mendesak", cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#A1F919]" },
+  { value: "PENTING",  label: "Penting",  cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#C4B5FD]" },
+  { value: "MENDESAK", label: "Mendesak", cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#C4B5FD]" },
 ];
 
 const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#3E03B3] dark:focus:bg-slate-700";
@@ -142,7 +142,7 @@ export function PengumumanFormModal({
             <form onSubmit={handleSubmit} className="space-y-4 p-6">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  Judul <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                  Judul <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                 </label>
                 <input
                   type="text"
@@ -187,7 +187,7 @@ export function PengumumanFormModal({
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  Konten <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                  Konten <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                 </label>
                 <textarea
                   rows={6}
@@ -213,7 +213,7 @@ export function PengumumanFormModal({
               </label>
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#A1F919]">
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">
                   {error}
                 </p>
               )}

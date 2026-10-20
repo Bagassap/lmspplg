@@ -146,7 +146,7 @@ export function CreateAccountModal({
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                  Nama Lengkap <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                  Nama Lengkap <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                 </label>
                 <input type="text" value={nama} onChange={(e) => setNama(e.target.value)}
                   placeholder="Nama sesuai identitas" className={INPUT_CLS} />
@@ -157,14 +157,14 @@ export function CreateAccountModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        NIS <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        NIS <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <input type="text" value={nis} onChange={(e) => setNis(e.target.value)}
                         placeholder="Nomor induk siswa" className={INPUT_CLS} />
                     </div>
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        Kelas <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        Kelas <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <select value={kelasId} onChange={(e) => setKelasId(e.target.value)} className={INPUT_CLS}>
                         {kelasList.length === 0 && <option value="">Belum ada kelas</option>}
@@ -175,7 +175,7 @@ export function CreateAccountModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        Jurusan <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        Jurusan <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <select value={jurusan} onChange={(e) => setJurusan(e.target.value)} className={INPUT_CLS}>
                         {JURUSAN_OPTIONS.map((j) => <option key={j} value={j}>{j}</option>)}
@@ -183,7 +183,7 @@ export function CreateAccountModal({
                     </div>
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        Angkatan <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        Angkatan <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <input type="number" value={angkatan} onChange={(e) => setAngkatan(e.target.value)} className={INPUT_CLS} />
                     </div>
@@ -205,14 +205,14 @@ export function CreateAccountModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        Login ID <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        Login ID <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <input type="text" value={loginId} onChange={(e) => setLoginId(e.target.value)}
                         placeholder="Kode login unik" className={INPUT_CLS} />
                     </div>
                     <div>
                       <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
-                        Password Awal <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                        Password Awal <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                       </label>
                       <input type="text" value={password} onChange={(e) => setPassword(e.target.value)}
                         placeholder="Minimal 4 karakter" className={INPUT_CLS} />
@@ -237,7 +237,7 @@ export function CreateAccountModal({
               )}
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#A1F919]">{error}</p>
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">{error}</p>
               )}
             </form>
 

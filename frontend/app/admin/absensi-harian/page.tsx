@@ -68,7 +68,7 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
         style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-white ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"}`}>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-white ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"}`}>
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">
@@ -84,12 +84,12 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
       className="flex w-full items-center gap-2.5 rounded-2xl border-2 border-transparent bg-[#F6FEE8] px-4 py-3 text-left transition-all hover:border-[#F6FEE8] disabled:cursor-default disabled:opacity-50 dark:bg-[#48700B]/15 dark:hover:border-[#48700B]/60">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#A1F919] text-black">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white">
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-[#48700B] dark:text-[#A1F919]">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
-        <p className="truncate text-[11px] font-semibold text-[#5D900F] dark:text-[#A1F919]/80">
+        <p className="truncate text-sm font-bold text-[#48700B] dark:text-[#C4B5FD]">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
+        <p className="truncate text-[11px] font-semibold text-[#5D900F] dark:text-[#C4B5FD]">
           {belum.length > 0 ? `${belum.length} siswa belum absen di seluruh kelas` : "Semua siswa di seluruh kelas sudah absen"}
         </p>
       </div>

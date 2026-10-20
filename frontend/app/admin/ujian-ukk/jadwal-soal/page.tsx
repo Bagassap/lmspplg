@@ -18,7 +18,7 @@ import { useIsAppMode } from "@/lib/pwaInstall";
 
 const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loading: () => (
   <div className="flex-1 flex items-center justify-center py-20">
-    <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#A1F919]"/>
+    <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#C4B5FD]"/>
   </div>
 )});
 
@@ -482,8 +482,6 @@ export default function AdminJadwalSoalPage() {
   const [submisiModalTahapan, setSubmisiModalTahapan] = useState<Tahapan | null>(null);
   const [soalJadwalIdx, setSoalJadwalIdx]           = useState(0);
   const [soalSoalIdx,   setSoalSoalIdx]             = useState(0);
-  const [revisiTarget,  setRevisiTarget]            = useState<Submisi | null>(null);
-  const [pesanRevisi,   setPesanRevisi]             = useState("");
   const toast = useToast();
 
   const loadAll = useCallback(async () => {
@@ -556,21 +554,6 @@ export default function AdminJadwalSoalPage() {
     if (!await toast.confirm("Hapus soal ini?", "Soal yang dihapus tidak dapat dikembalikan.")) return;
     const r = await fetch(`/api/ujian-ukk/soal/${id}`, { method: "DELETE" });
     if (r.ok) { toast.success("Soal dihapus", ""); loadAll(); }
-  }
-
-  async function updateStatus(id: string, status: StatusSubmisi, pesan?: string) {
-    const r = await fetch(`/api/ujian-ukk/submisi/${id}/status`, {
-      method: "PUT", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, ...(pesan ? { pesanRevisi: pesan } : {}) }),
-    });
-    if (r.ok) { toast.success(status === "DITERIMA" ? "Project diterima!" : "Revisi dikirim ke siswa", ""); loadAll(); }
-  }
-
-  async function kirimRevisi() {
-    if (!revisiTarget || !pesanRevisi.trim()) return;
-    await updateStatus(revisiTarget.id, "REVISI", pesanRevisi.trim());
-    setRevisiTarget(null);
-    setPesanRevisi("");
   }
 
   const jadwalFiles = (filePool?.soal ?? []).filter(s => s.deskripsi?.startsWith("__jadwal__:"));
@@ -953,7 +936,7 @@ export default function AdminJadwalSoalPage() {
                   {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#3E03B3"}}>{active.length}</span>}
                 </button>
                 <button onClick={() => setTab("completed")}
-                  className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
+                  className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#F26A3D] text-[#5D900F] dark:text-[#C4B5FD]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
                   Completed
                   {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                 </button>
@@ -1024,7 +1007,7 @@ export default function AdminJadwalSoalPage() {
                                 <Pencil size={12}/>
                               </button>
                               <button onClick={() => deleteTahapan(t.id)}
-                                className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                                className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                                 <Trash2 size={12}/>
                               </button>
                             </div>
@@ -1068,7 +1051,7 @@ export default function AdminJadwalSoalPage() {
                             <Pencil size={12} />
                           </button>
                           <button onClick={() => deleteTahapan(t.id)}
-                            className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                            className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                             <Trash2 size={12} />
                           </button>
                         </div>
@@ -1091,9 +1074,6 @@ export default function AdminJadwalSoalPage() {
         {submisiModalTahapan && (() => {
           const sm = submisiModalTahapan;
           const rows = submisiList;
-          const cntDiterima = rows.filter(s => s.status === "DITERIMA").length;
-          const cntRevisi   = rows.filter(s => s.status === "REVISI").length;
-          const cntMenunggu = rows.filter(s => s.status === "TERKIRIM").length;
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -1136,12 +1116,9 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:grid-cols-4 sm:divide-y-0">
+                <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:divide-y-0">
                   {[
-                    { label: "Total",    val: rows.length,   color: "#3E03B3" },
-                    { label: "Diterima", val: cntDiterima,   color: "#3E03B3" },
-                    { label: "Revisi",   val: cntRevisi,     color: "#3E03B3" },
-                    { label: "Menunggu", val: cntMenunggu,   color: "#3E03B3" },
+                    { label: "Total pengumpulan", val: rows.length, color: "#3E03B3" },
                   ].map((st, i) => (
                     <div key={i} className="p-4 text-center">
                       <p className="text-2xl font-extrabold" style={{color:st.color}}>{st.val}</p>
@@ -1176,7 +1153,7 @@ export default function AdminJadwalSoalPage() {
                         <div className="flex flex-wrap items-center gap-2 pl-[52px] sm:contents sm:pl-0">
                         <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0"
                           style={{backgroundColor: sc.bg, color: sc.text}}>
-                          {isDone ? "✓ UKK Selesai" : s.status === "REVISI" ? "⚠ Perlu Revisi" : "⏳ Menunggu Review"}
+                          ✓ Terkumpul
                         </span>
                         <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `http://localhost:3001${s.fileUrl}`}
                           target="_blank" rel="noopener noreferrer"
@@ -1186,22 +1163,6 @@ export default function AdminJadwalSoalPage() {
                           </svg>
                           GDrive
                         </a>
-                        {isDone ? (
-                          <span className="text-xs font-bold text-[#5D900F] dark:text-[#A1F919] shrink-0">Selesai ✓</span>
-                        ) : (
-                          <div className="flex gap-2 shrink-0">
-                            <button onClick={() => updateStatus(s.id, "DITERIMA")}
-                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
-                              style={{background:"#F26A3D"}}>
-                              <CheckCircle size={12}/> Terima
-                            </button>
-                            <button onClick={() => { setRevisiTarget(s); setPesanRevisi(""); }}
-                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-transform hover:scale-105"
-                              style={{background: "#F26A3D", color: "#FFFFFF"}}>
-                              <AlertCircle size={12}/> Revisi
-                            </button>
-                          </div>
-                        )}
                         </div>
                       </div>
                     );
@@ -1209,10 +1170,7 @@ export default function AdminJadwalSoalPage() {
                 </div>
 
                 <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/60">
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    <span className="font-semibold text-[#5D900F] dark:text-[#A1F919]">Revisi</span> → siswa kirim ulang, dokumen lama tergantikan ·{" "}
-                    <span className="font-semibold text-[#5D900F] dark:text-[#A1F919]">Terima</span> → UKK selesai
-                  </p>
+                  <p className="text-sm text-slate-500">Project yang dikumpulkan siswa otomatis tercatat selesai.</p>
                   <button onClick={() => setSubmisiModalTahapan(null)}
                     className="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shrink-0 transition-colors">
                     Tutup
@@ -1259,70 +1217,6 @@ export default function AdminJadwalSoalPage() {
         showTahapan={false}
       />
 
-      <AnimatePresence>
-        {revisiTarget && (
-          <motion.div key="revisi-overlay"
-            initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-            className={`fixed inset-0 z-[80] flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
-            onClick={(e)=>{if(e.target===e.currentTarget){setRevisiTarget(null);setPesanRevisi("");}}}>
-            <motion.div initial={{scale:0.95,opacity:0,y:12}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.95,opacity:0,y:12}}
-              className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-md overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
-              onClick={(e)=>e.stopPropagation()}>
-
-              <div className="app-sheet-header relative px-6 py-5 overflow-hidden"
-                style={{background: "#F26A3D", color: "#FFFFFF"}}>
-                <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <AlertCircle size={18} className="text-[#000000] dark:text-[#A1F919]"/>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold tracking-widest text-white/70 uppercase">Kirim Revisi</p>
-                    <h3 className="text-base font-extrabold text-[#000000] dark:text-[#A1F919] leading-snug">{revisiTarget.siswa?.nama ?? revisiTarget.siswa?.user?.nama}</h3>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-6 py-5 space-y-4">
-                <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#FFFFFF] dark:bg-[#A1F919]/10 border border-[#FFFFFF] dark:border-[#A1F919]/20">
-                  <AlertCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] mt-0.5 shrink-0"/>
-                  <p className="text-xs text-[#000000] dark:text-[#A1F919] leading-relaxed">
-                    Siswa akan menerima notifikasi revisi dan <strong>wajib mengirim ulang</strong> project mereka.
-                  </p>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
-                    Pesan Revisi <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
-                  </label>
-                  <textarea
-                    value={pesanRevisi}
-                    onChange={(e)=>setPesanRevisi(e.target.value)}
-                    rows={4}
-                    placeholder="Tuliskan catatan revisi untuk siswa, misalnya: &quot;Tampilan UI belum responsif, perbaiki layout mobile dan tambahkan validasi form login.&quot;"
-                    className="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none focus:border-[#A1F919] placeholder:text-slate-400"
-                    autoFocus
-                  />
-                  <p className="text-[11px] text-slate-400 mt-1">{pesanRevisi.length} karakter</p>
-                </div>
-              </div>
-
-              <div className="px-6 pb-5 flex gap-3">
-                <button onClick={()=>{setRevisiTarget(null);setPesanRevisi("");}}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                  Batal
-                </button>
-                <button onClick={kirimRevisi} disabled={!pesanRevisi.trim()}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110"
-                  style={{background: "#F26A3D", color: "#FFFFFF"}}>
-                  <span className="flex items-center justify-center gap-2">
-                    <AlertCircle size={14}/> Kirim Revisi
-                  </span>
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

@@ -298,7 +298,7 @@ export function JadwalAbsenCard() {
           </p>
           <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
             <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogIn size={11} className="text-[#5D900F] dark:text-[#A1F919]" /> Absen Datang
+              <LogIn size={11} className="text-[#5D900F] dark:text-[#C4B5FD]" /> Absen Datang
             </p>
             <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
               {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.hadirStartMinutes, hariIni.hadirEndMinutes)}
@@ -313,7 +313,7 @@ export function JadwalAbsenCard() {
             </p>
           </div>
           {isOverriddenToday && (
-            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#FFFFFF] px-3 py-2 text-[11px] text-[#000000] dark:bg-[#000000]/20 dark:text-[#A1F919]">
+            <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#FFFFFF] px-3 py-2 text-[11px] text-[#000000] dark:bg-[#000000]/20 dark:text-[#C4B5FD]">
               <Sparkles size={12} className="mt-0.5 shrink-0" />
               <span>Jadwal hari ini disesuaikan{hariIni.override?.keterangan ? ` — ${hariIni.override.keterangan}` : ""}</span>
             </div>
@@ -340,7 +340,7 @@ export function JadwalAbsenCard() {
                 </p>
               </div>
               <button type="button" onClick={() => handleDelete(o.tanggal)}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                 <Trash2 size={13} />
               </button>
             </div>
@@ -378,8 +378,8 @@ export function JadwalAbsenCard() {
                 </div>
 
                 <div className="rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8]/50 p-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
-                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#5D900F] dark:text-[#A1F919]">
-                    <LogIn size={12} /> Absen Datang <span className="normal-case text-[#5D900F]/70 dark:text-[#A1F919]/70">(WIB)</span>
+                  <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#5D900F] dark:text-[#C4B5FD]">
+                    <LogIn size={12} /> Absen Datang <span className="normal-case text-[#5D900F]/70 dark:text-[#C4B5FD]">(WIB)</span>
                   </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>

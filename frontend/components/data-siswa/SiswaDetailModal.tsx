@@ -26,7 +26,7 @@ function MobileRow({ icon: Icon, label, value, href }: {
       </span>
       {href ? (
         <a href={href} target="_blank" rel="noopener noreferrer" title="Kirim pesan WhatsApp"
-          className="mt-1 block break-words text-sm font-bold text-[#5D900F] underline decoration-[#F6FEE8] dark:text-[#A1F919]">
+          className="mt-1 block break-words text-sm font-bold text-[#5D900F] underline decoration-[#F6FEE8] dark:text-[#C4B5FD]">
           {value}
         </a>
       ) : (
@@ -54,7 +54,7 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
             target="_blank"
             rel="noopener noreferrer"
             title="Kirim pesan WhatsApp"
-            className="mt-1.5 inline-block break-words text-[15px] font-bold text-[#5D900F] transition-colors hover:text-[#48700B] hover:underline dark:text-[#A1F919] dark:hover:text-[#A1F919]"
+            className="mt-1.5 inline-block break-words text-[15px] font-bold text-[#5D900F] transition-colors hover:text-[#48700B] hover:underline dark:text-[#C4B5FD] dark:hover:text-[#C4B5FD]"
           >
             {value}
           </a>
@@ -246,7 +246,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-slate-700 dark:text-white">Kelengkapan Data {pct}%</p>
                     {missing.length === 0 ? (
-                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#A1F919]">
+                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#C4B5FD]">
                         <CheckCircle2 size={11} /> Semua data sudah lengkap
                       </p>
                     ) : (
@@ -324,7 +324,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   )}
                   {onKeluarkan && (
                     <button type="button" onClick={() => { onKeluarkan(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
                       <Trash2 size={15} /> Keluarkan Siswa
                     </button>
                   )}
@@ -372,7 +372,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-slate-800 dark:text-white">Kelengkapan Data {pct}%</p>
                   {missing.length === 0 ? (
-                    <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#A1F919]">
+                    <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5D900F] dark:text-[#C4B5FD]">
                       <CheckCircle2 size={11} /> Semua data sudah lengkap
                     </p>
                   ) : (

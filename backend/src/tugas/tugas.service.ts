@@ -398,8 +398,8 @@ export class TugasService {
 
     const submisi = await this.prisma.tugasSubmisi.upsert({
       where: { tugasId_siswaId: { tugasId: dto.tugasId, siswaId: siswa.id } },
-      create: { tugasId: dto.tugasId, siswaId: siswa.id, catatan: dto.catatan, ...data },
-      update: { catatan: dto.catatan, status: 'TERKIRIM', pesanRevisi: null, updatedAt: new Date(), ...data },
+      create: { tugasId: dto.tugasId, siswaId: siswa.id, catatan: dto.catatan, status: 'DITERIMA', ...data },
+      update: { catatan: dto.catatan, status: 'DITERIMA', pesanRevisi: null, updatedAt: new Date(), ...data },
     });
 
     if (isSoalBased) {

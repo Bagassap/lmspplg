@@ -136,7 +136,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
         >
           <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
           {pendingResetCount > 0 && (
-            <span className={`absolute right-[30%] top-1.5 h-2 w-2 rounded-full ${appMode ? "bg-[#F26A3D]" : "bg-[#A1F919]"}`} />
+            <span className={`absolute right-[30%] top-1.5 h-2 w-2 rounded-full ${appMode ? "bg-[#F26A3D]" : "bg-[#3E03B3]"}`} />
           )}
           <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
@@ -226,7 +226,7 @@ function MoreMenuItem({ item, pendingResetCount, onNavigate }: {
       </span>
       <span className="flex-1">{item.label}</span>
       {item.key === "manajemen-password" && pendingResetCount > 0 && (
-        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#A1F919] px-1.5 text-[10px] font-bold text-black">
+        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] px-1.5 text-[10px] font-bold text-white">
           {pendingResetCount > 99 ? "99+" : pendingResetCount}
         </span>
       )}

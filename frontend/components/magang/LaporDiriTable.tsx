@@ -65,11 +65,11 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         {r.sudahLapor ? (
-                          <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">
+                          <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold bg-[#F6FEE8] dark:bg-slate-700 text-[#5D900F] dark:text-[#C4B5FD]">
                             <CheckCircle2 size={10} /> Sudah Lapor
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]/20">
                             <XCircle size={10} /> Belum Lapor
                           </span>
                         )}
@@ -108,11 +108,11 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                         <p className="truncate font-mono text-[11px] text-slate-400 dark:text-slate-500">{r.siswa.nis} · {r.tempatMagang.namaTempat}</p>
                       </div>
                       {r.sudahLapor ? (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold bg-[#F6FEE8] dark:bg-slate-700 text-[#5D900F] dark:text-[#C4B5FD]">
                           <CheckCircle2 size={10} /> Lapor
                         </span>
                       ) : (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:text-[#A1F919] dark:bg-[#48700B]/20">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]/20">
                           <XCircle size={10} /> Belum
                         </span>
                       )}

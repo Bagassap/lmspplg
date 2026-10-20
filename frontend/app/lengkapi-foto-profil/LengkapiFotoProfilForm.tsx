@@ -175,7 +175,7 @@ export function LengkapiFotoProfilForm() {
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border-l-4 border-l-[#A1F919] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
+          className="rounded-lg border-l-4 border-l-[#F26A3D] bg-[#000000] px-3 py-2 text-sm font-medium text-white"
         >
           {error}
         </motion.p>

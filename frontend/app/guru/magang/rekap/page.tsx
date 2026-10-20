@@ -131,7 +131,7 @@ export default function GuruMagangRekapPage() {
                     )}
                     <span className="relative z-10 flex items-center gap-1.5"><BarChart3 size={15} /> Laporan</span>
                     {menungguReview > 0 && (
-                      <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A1F919] px-1 text-[9px] font-bold text-black">
+                      <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
                         {menungguReview}
                       </span>
                     )}

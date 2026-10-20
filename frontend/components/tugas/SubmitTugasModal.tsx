@@ -102,7 +102,7 @@ function SubmitPraktikModal({
               <label className="mb-1 block text-xs font-semibold text-slate-500 dark:text-slate-400">Catatan (opsional)</label>
               <input value={catatan} onChange={(e) => setCatatan(e.target.value)}
                 placeholder="Tambahkan keterangan jika diperlukan..."
-                className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
+                className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#3E03B3]" : "focus:border-[#F26A3D]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
             </div>
             <button onClick={submit} disabled={saving}
               className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
@@ -181,12 +181,12 @@ function SubmitFileModal({
             </div>
           )}
           <div onClick={() => fileRef.current?.click()}
-            className={`border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl p-6 text-center cursor-pointer ${app ? "hover:border-[#3E03B3]" : "hover:border-[#A1F919]"} transition-colors`}>
+            className={`border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl p-6 text-center cursor-pointer ${app ? "hover:border-[#3E03B3]" : "hover:border-[#F26A3D]"} transition-colors`}>
             <input ref={fileRef} type="file" accept=".pdf,.ppt,.pptx,.zip,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/zip,application/x-zip-compressed" className="hidden"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
             {file ? (
               <div className="flex items-center justify-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <FileIcon size={16} className="text-[#5D900F] dark:text-[#A1F919]" /><span className="font-medium">{file.name}</span>
+                <FileIcon size={16} className="text-[#5D900F] dark:text-[#C4B5FD]" /><span className="font-medium">{file.name}</span>
               </div>
             ) : (
               <div><Upload size={26} className="mx-auto text-slate-300 mb-2" /><p className="text-sm text-slate-500">Klik untuk upload PDF/PPT/ZIP jawaban</p></div>
@@ -196,7 +196,7 @@ function SubmitFileModal({
             <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
             <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
               placeholder="Tambahkan keterangan jika diperlukan..."
-              className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"}`} />
+              className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#F26A3D]"}`} />
           </div>
           <div className="flex gap-3">
             <button type="button" onClick={onClose}
@@ -305,10 +305,10 @@ function SubmitSoalModal({
                             style={app && active ? { borderColor: "#3E03B3", background: "#F1EDFA" } : undefined}
                             onClick={() => setJawaban((prev) => ({ ...prev, [s.id]: huruf }))}
                             className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-all ${
-                              active ? "border-[#A1F919] bg-[#FFFFFF] dark:bg-[#000000]/20" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
+                              active ? "border-[#F26A3D] bg-[#FFFFFF] dark:bg-[#000000]/20" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
                             }`}>
                             <span style={app && active ? { background: "#3E03B3", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                              active ? "bg-[#A1F919] text-[#000000] dark:text-[#A1F919]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                              active ? "bg-[#3E03B3] text-[#000000] dark:text-[#C4B5FD]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>
                           </button>

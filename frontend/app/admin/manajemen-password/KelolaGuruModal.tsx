@@ -179,7 +179,7 @@ export function KelolaGuruModal({
                             ? "border-slate-100 dark:border-slate-700/50"
                             : "border-[#F6FEE8] bg-[#F6FEE8]/30 dark:border-[#48700B]/30 dark:bg-[#48700B]/5"
                         }`}>
-                        <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#A1F919]" : "bg-[#A1F919]"}`} />
+                        <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#3E03B3]" : "bg-[#3E03B3]"}`} />
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex min-w-0 items-center gap-2.5">
                             <Avatar src={g.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
@@ -192,8 +192,8 @@ export function KelolaGuruModal({
                           </div>
                           <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold ${
                             g.isActive
-                              ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#A1F919]"
-                              : "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#A1F919]"
+                              ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
+                              : "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
                           }`}>
                             {g.isActive ? "Aktif" : "Nonaktif"}
                           </span>
@@ -247,8 +247,8 @@ export function KelolaGuruModal({
                           <button type="button" disabled={busy} onClick={() => toggleAktif(g)}
                             className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold disabled:opacity-40 ${
                               g.isActive
-                                ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
-                                : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
                             }`}>
                             {busy ? <Loader2 size={11} className="animate-spin" /> : g.isActive ? <Ban size={11} /> : <RotateCcw size={11} />}
                             {g.isActive ? "Nonaktifkan" : "Aktifkan"}

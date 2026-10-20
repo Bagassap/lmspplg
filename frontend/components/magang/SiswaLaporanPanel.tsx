@@ -75,7 +75,7 @@ export function SiswaLaporanPanel() {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-[#48700B]/20"}`} style={app ? { background: "#F1EDFA" } : undefined}>
-          <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#A1F919]"} />
+          <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
         <p className="mt-1.5 max-w-sm text-sm text-slate-400 dark:text-slate-500">

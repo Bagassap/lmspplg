@@ -291,7 +291,7 @@ export function CatatanSiswaClient() {
                         </div>
                         <div className="flex justify-center">
                           {s.totalPoin > 0 ? (
-                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">{s.totalPoin} poin</span>
+                            <span className="inline-flex items-center justify-center rounded-lg px-2.5 py-1 text-xs font-bold bg-[#F6FEE8] dark:bg-slate-700 text-[#5D900F] dark:text-[#C4B5FD]">{s.totalPoin} poin</span>
                           ) : <span className="text-xs text-slate-300 dark:text-slate-600">—</span>}
                         </div>
                         <div className="flex justify-end">
@@ -401,7 +401,7 @@ export function CatatanSiswaClient() {
                       <div className="flex shrink-0 items-center gap-1.5">
                         <span className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">{s.jumlahCatatan}</span>
                         {s.totalPoin > 0 && (
-                          <span className="inline-flex items-center justify-center rounded-lg px-2 py-1 text-[10px] font-bold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">{s.totalPoin}</span>
+                          <span className="inline-flex items-center justify-center rounded-lg px-2 py-1 text-[10px] font-bold bg-[#F6FEE8] dark:bg-slate-700 text-[#5D900F] dark:text-[#C4B5FD]">{s.totalPoin}</span>
                         )}
                       </div>
                       <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
@@ -629,7 +629,7 @@ function CatatanDetailModal({
                   <div className="mb-1.5 flex items-start justify-between gap-2">
                     <p className="text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                     {c.poin != null && (
-                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">{c.poin} poin</span>
+                      <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold bg-[#F6FEE8] dark:bg-slate-700 text-[#5D900F] dark:text-[#C4B5FD]">{c.poin} poin</span>
                     )}
                   </div>
                   <p className="whitespace-pre-wrap text-xs leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>
@@ -644,7 +644,7 @@ function CatatanDetailModal({
                         <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
                           <Pencil size={12} />
                         </button>
-                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                           <Trash2 size={12} />
                         </button>
                       </div>

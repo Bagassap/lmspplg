@@ -17,7 +17,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
   loading: () => (
     <div className="flex-1 flex items-center justify-center py-20">
-      <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#A1F919]" />
+      <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#C4B5FD]" />
     </div>
   ),
 });
@@ -194,7 +194,7 @@ export default function GuruJadwalSoalPage() {
                       <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/>
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-[#5D900F] dark:text-[#A1F919]"/>
+                        <FileText size={30} className="text-[#5D900F] dark:text-[#C4B5FD]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada file jadwal</p>
                       </div>
                     )}
@@ -442,7 +442,7 @@ export default function GuruJadwalSoalPage() {
                     {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#3E03B3"}}>{active.length}</span>}
                   </button>
                   <button onClick={()=>setTab("completed")}
-                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
+                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#F26A3D] text-[#5D900F] dark:text-[#C4B5FD]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
                     Selesai
                     {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                   </button>

@@ -157,7 +157,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                     <Pencil size={12} />
                   </button>
                   <button onClick={() => remove(k)} disabled={busyId === k.id}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#A1F919] hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
                     <Trash2 size={12} />
                   </button>
                 </div>

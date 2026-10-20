@@ -126,7 +126,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
         {!fileUrl ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-slate-800">
-              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
+              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#C4B5FD]" />
             </div>
             <p className="font-bold text-gray-700 dark:text-slate-200">Materi ini belum punya file</p>
           </div>
@@ -147,7 +147,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
         ) : pdfError ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-slate-800">
-              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#A1F919]" />
+              <AlertCircle size={28} className="text-[#5D900F] dark:text-[#C4B5FD]" />
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>

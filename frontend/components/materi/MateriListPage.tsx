@@ -152,14 +152,14 @@ export function MateriListPage({
         <AnimatePresence>
           {!canCreate && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#A1F919]">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />
               Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi. Hubungi admin bila ini keliru.
             </motion.div>
           )}
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -244,11 +244,11 @@ export function MateriListPage({
                           {canEdit(m) && (
                             <>
                               <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#000000]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#000000]/20">
                                 <Pencil size={14} />
                               </button>
                               <button onClick={() => handleDelete(m)} title="Hapus"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#A1F919] dark:hover:bg-[#48700B]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
                                 <Trash2 size={14} />
                               </button>
                             </>
@@ -357,14 +357,14 @@ export function MateriListPage({
           <AnimatePresence>
             {!canCreate && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2 rounded-2xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#A1F919]">
+                className="flex items-center gap-2 rounded-2xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#C4B5FD]">
                 <AlertCircle size={14} className="shrink-0" />
                 Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi.
               </motion.div>
             )}
             {error && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#A1F919]">
+                className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
                 <AlertCircle size={14} className="shrink-0" />{error}
               </motion.div>
             )}

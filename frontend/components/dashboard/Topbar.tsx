@@ -415,7 +415,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#A1F919] text-black ring-white dark:ring-slate-900"}`}>
+                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#3E03B3] text-white ring-white dark:ring-slate-900"}`}>
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
@@ -586,7 +586,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] dark:text-[#A1F919] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] dark:text-[#C4B5FD] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
                   >
                     <LogOut size={14} />
                     Keluar

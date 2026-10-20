@@ -185,7 +185,7 @@ export function LoginForm() {
           href={LUPA_PASSWORD_WA}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-[#5D900F] dark:text-[#A1F919] transition-colors hover:text-[#5D900F]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
+          className="text-sm font-medium text-[#5D900F] dark:text-[#C4B5FD] transition-colors hover:text-[#5D900F]/75 sm:font-normal sm:text-black/40 sm:hover:text-black/70"
         >
           Lupa Password?
         </a>

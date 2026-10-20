@@ -116,7 +116,7 @@ export function ResetPasswordModal({
           exit={{ scale: 0.95, opacity: 0, y: 24 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
           {successPassword ? (
             <>
-              <div className="relative overflow-hidden bg-[#A1F919] px-6 py-5">
+              <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
                 <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
                 <div className="relative flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -136,8 +136,8 @@ export function ResetPasswordModal({
               </div>
               <div className="space-y-4 px-5 py-5">
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
                     menyimpan hash-nya dan tidak bisa ditampilkan ulang. Salin atau catat sekarang.
                   </p>
@@ -152,14 +152,14 @@ export function ResetPasswordModal({
                   )}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Password Baru</p>
-                    <p className="font-mono text-lg font-extrabold tracking-wide text-[#5D900F] dark:text-[#A1F919]">{successPassword}</p>
+                    <p className="font-mono text-lg font-extrabold tracking-wide text-[#5D900F] dark:text-[#C4B5FD]">{successPassword}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
                   <button type="button" onClick={handleCopy}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#A1F919]" /> : <Copy size={15} />}
+                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#C4B5FD]" /> : <Copy size={15} />}
                     {copied ? "Tersalin" : "Salin"}
                   </button>
                   <button type="button" onClick={() => printSlip({ nama: userName, loginId: effectiveLoginId, password: successPassword })}
@@ -179,7 +179,7 @@ export function ResetPasswordModal({
             </>
           ) : (
           <>
-          <div className="relative overflow-hidden bg-[#A1F919] px-6 py-5">
+          <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
             <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -201,15 +201,15 @@ export function ResetPasswordModal({
             {resetToNis && (
               alreadyChanged ? (
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
-                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                  <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#A1F919]">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                  <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#C4B5FD]">
                     <strong>Siswa ini sudah mengganti password sendiri.</strong>
                   </p>
                 </div>
               ) : (
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
                   </p>
                 </div>
@@ -217,8 +217,8 @@ export function ResetPasswordModal({
             )}
 
             <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-              <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-              <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+              <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+              <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                 {resetToNis
                   ? (alreadyChanged
                       ? <>Siswa sudah memiliki password sendiri. Reset akan mengembalikan password ke <strong>NIS siswa ({nis})</strong> dan siswa akan diminta membuat password baru lagi saat login berikutnya.</>
@@ -279,7 +279,7 @@ export function ResetPasswordModal({
                 di sistem belum akurat sehingga siswa tidak bisa lolos verifikasi sendiri.
               </span>
             </label>
-            {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
+            {error && <p className="text-xs text-[#5D900F] dark:text-[#C4B5FD]">{error}</p>}
           </div>
           <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">
             <button type="button" onClick={onClose}
@@ -320,8 +320,8 @@ export function ResetPasswordModal({
             <div className="relative -mt-4 rounded-t-3xl bg-white pb-6 pt-6 dark:bg-slate-900">
               <div className="mx-auto max-w-md space-y-4 px-6">
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
                     menyimpan hash-nya dan tidak bisa ditampilkan ulang. Salin atau catat sekarang.
                   </p>
@@ -336,14 +336,14 @@ export function ResetPasswordModal({
                   )}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Password Baru</p>
-                    <p className="font-mono text-lg font-extrabold tracking-wide text-[#5D900F] dark:text-[#A1F919]">{successPassword}</p>
+                    <p className="font-mono text-lg font-extrabold tracking-wide text-[#5D900F] dark:text-[#C4B5FD]">{successPassword}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
                   <button type="button" onClick={handleCopy}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#A1F919]" /> : <Copy size={15} />}
+                    {copied ? <CheckCheck size={15} className="text-[#5D900F] dark:text-[#C4B5FD]" /> : <Copy size={15} />}
                     {copied ? "Tersalin" : "Salin"}
                   </button>
                   <button type="button" onClick={() => printSlip({ nama: userName, loginId: effectiveLoginId, password: successPassword })}
@@ -376,15 +376,15 @@ export function ResetPasswordModal({
                 {resetToNis && (
                   alreadyChanged ? (
                     <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
-                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                      <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#A1F919]">
+                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                      <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#C4B5FD]">
                         <strong>Siswa ini sudah mengganti password sendiri.</strong>
                       </p>
                     </div>
                   ) : (
                     <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                      <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                      <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+                      <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                      <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                         <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
                       </p>
                     </div>
@@ -392,8 +392,8 @@ export function ResetPasswordModal({
                 )}
 
                 <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
-                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#A1F919]">
+                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+                  <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     {resetToNis
                       ? (alreadyChanged
                           ? <>Siswa sudah memiliki password sendiri. Reset akan mengembalikan password ke <strong>NIS siswa ({nis})</strong> dan siswa akan diminta membuat password baru lagi saat login berikutnya.</>
@@ -454,7 +454,7 @@ export function ResetPasswordModal({
                     di sistem belum akurat sehingga siswa tidak bisa lolos verifikasi sendiri.
                   </span>
                 </label>
-                {error && <p className="text-xs text-[#5D900F] dark:text-[#A1F919]">{error}</p>}
+                {error && <p className="text-xs text-[#5D900F] dark:text-[#C4B5FD]">{error}</p>}
 
                 <div className="flex gap-2 pt-1">
                   <button type="button" onClick={onClose}

@@ -61,24 +61,24 @@ export function SubmisiSayaModal({
             </div>
             <div className="space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]" style={{ maxHeight: "calc(92vh - 84px)" }}>
               {(tipe === "PILIHAN_GANDA" || tipe === "ESSAY") && target.nilai !== null && (
-                <div className="flex items-center justify-between rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 dark:border-[#A1F919]/30 dark:bg-[#A1F919]/10">
-                  <p className="text-sm font-bold text-[#000000] dark:text-[#A1F919]">Nilai Kamu</p>
-                  <p className="text-2xl font-black leading-none text-[#000000] dark:text-[#A1F919]">{target.nilai}</p>
+                <div className="flex items-center justify-between rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 dark:border-[#F26A3D] dark:bg-slate-700">
+                  <p className="text-sm font-bold text-[#000000] dark:text-[#C4B5FD]">Nilai Kamu</p>
+                  <p className="text-2xl font-black leading-none text-[#000000] dark:text-[#C4B5FD]">{target.nilai}</p>
                 </div>
               )}
               {isDiterima && (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#F6FEE8] dark:bg-[#A1F919]/10 border border-[#F6FEE8] dark:border-[#A1F919]/20">
-                  <CheckCircle size={18} className="text-[#5D900F] dark:text-[#A1F919] shrink-0" />
-                  <p className="text-sm font-bold text-[#48700B] dark:text-[#A1F919]">Tugas kamu telah diterima!</p>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#F6FEE8] dark:bg-slate-700 border border-[#F6FEE8] dark:border-[#F26A3D]">
+                  <CheckCircle size={18} className="text-[#5D900F] dark:text-[#C4B5FD] shrink-0" />
+                  <p className="text-sm font-bold text-[#48700B] dark:text-[#C4B5FD]">Tugas kamu telah diterima!</p>
                 </div>
               )}
               {isRevisi && (
-                <div className="rounded-xl border border-[#FFFFFF] dark:border-[#A1F919]/30 bg-[#FFFFFF] dark:bg-[#A1F919]/10 px-4 py-4">
+                <div className="rounded-xl border border-[#FFFFFF] dark:border-[#F26A3D] bg-[#FFFFFF] dark:bg-slate-700 px-4 py-4">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] mt-0.5 shrink-0" />
+                    <AlertCircle size={15} className="text-[#5D900F] dark:text-[#C4B5FD] mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-xs font-bold text-[#000000] dark:text-[#A1F919] mb-1.5">Catatan dari Guru/Admin</p>
-                      <p className="text-sm text-[#000000] dark:text-[#A1F919] leading-relaxed whitespace-pre-line">
+                      <p className="text-xs font-bold text-[#000000] dark:text-[#C4B5FD] mb-1.5">Catatan dari Guru/Admin</p>
+                      <p className="text-sm text-[#000000] dark:text-[#C4B5FD] leading-relaxed whitespace-pre-line">
                         {target.pesanRevisi || "Silakan perbaiki tugas kamu dan kirim ulang."}
                       </p>
                     </div>

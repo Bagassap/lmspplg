@@ -19,7 +19,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
   ssr: false,
   loading: () => (
     <div className="flex-1 flex items-center justify-center py-20">
-      <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#A1F919]" />
+      <Loader2 size={28} className="animate-spin text-[#5D900F] dark:text-[#C4B5FD]" />
     </div>
   ),
 });
@@ -119,9 +119,9 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
 
               <div>
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">
-                  Link Google Drive <span className="text-[#5D900F] dark:text-[#A1F919]">*</span>
+                  Link Google Drive <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                 </label>
-                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#A1F919]"}${app ? " focus-within:border-[#3E03B3]" : ""}`}>
+                <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#F26A3D] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#F26A3D]"}${app ? " focus-within:border-[#3E03B3]" : ""}`}>
                   <Link2 size={15} className="text-slate-400 shrink-0"/>
                   <input
                     type="url"
@@ -131,15 +131,15 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                     className="flex-1 text-sm bg-transparent text-slate-700 dark:text-slate-200 outline-none placeholder:text-slate-400"
                   />
                   {driveUrl && isValidDriveUrl(driveUrl) && (
-                    <CheckCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] shrink-0"/>
+                    <CheckCircle size={15} className="text-[#5D900F] dark:text-[#C4B5FD] shrink-0"/>
                   )}
                 </div>
-                {urlError && <p className="mt-1 text-[11px] text-[#5D900F] dark:text-[#A1F919]">{urlError}</p>}
+                {urlError && <p className="mt-1 text-[11px] text-[#5D900F] dark:text-[#C4B5FD]">{urlError}</p>}
               </div>
 
               {driveUrl && isValidDriveUrl(driveUrl) && (
                 <a href={driveUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-xs font-semibold text-[#5D900F] dark:text-[#A1F919] hover:text-[#48700B]">
+                  className="flex items-center gap-2 text-xs font-semibold text-[#5D900F] dark:text-[#C4B5FD] hover:text-[#48700B]">
                   <ExternalLink size={12}/> Cek link (buka di tab baru)
                 </a>
               )}
@@ -148,7 +148,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Catatan (opsional)</label>
                 <textarea value={catatan} onChange={e=>setCatatan(e.target.value)} rows={2}
                   placeholder="Tambahkan keterangan jika diperlukan..."
-                  className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"}`}/>
+                  className={`w-full text-sm px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 outline-none resize-none placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3]" : "focus:border-[#F26A3D]"}`}/>
               </div>
 
               <div className="flex gap-3">
@@ -311,7 +311,7 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/> : (
                       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                        <FileText size={30} className="text-[#5D900F] dark:text-[#A1F919]"/>
+                        <FileText size={30} className="text-[#5D900F] dark:text-[#C4B5FD]"/>
                         <p className="font-bold text-slate-700 dark:text-slate-200">Belum ada file jadwal</p>
                       </div>
                     )}
@@ -483,7 +483,7 @@ export default function SiswaJadwalSoalPage() {
                     {tab==="active" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#3E03B3"}}>{active.length}</span>}
                   </button>
                   <button onClick={()=>setTab("completed")}
-                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed"?"border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]":"text-slate-400 border-transparent hover:text-slate-600"}`}>
+                    className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed"?"border-[#F26A3D] text-[#5D900F] dark:text-[#C4B5FD]":"text-slate-400 border-transparent hover:text-slate-600"}`}>
                     Completed
                     {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                   </button>
@@ -688,10 +688,10 @@ export default function SiswaJadwalSoalPage() {
                   </span>
                 </button>
                 <button type="button" onClick={()=>setTab("completed")}
-                  className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab==="completed"?"text-[#5D900F] dark:text-[#A1F919]":"text-[#94a3b8]"}`}
+                  className={`-mb-px flex items-center gap-1.5 border-b-2 pb-2.5 text-sm font-bold transition-colors ${tab==="completed"?"text-[#5D900F] dark:text-[#C4B5FD]":"text-[#94a3b8]"}`}
                   style={{ borderColor: tab==="completed"?"#F26A3D":"transparent" }}>
                   Selesai
-                  <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab==="completed"?"text-[#5D900F] dark:text-[#A1F919]":"text-[#94a3b8]"}`}
+                  <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${tab==="completed"?"text-[#5D900F] dark:text-[#C4B5FD]":"text-[#94a3b8]"}`}
                     style={{ background: tab==="completed"?"#F26A3D18":"#E2E8F0" }}>
                     {completed.length}
                   </span>
@@ -813,9 +813,9 @@ export default function SiswaJadwalSoalPage() {
               </div>
               <div className="p-6 space-y-4">
                 {detailTarget.status==="DITERIMA" && (
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#F6FEE8] dark:bg-[#A1F919]/10 border border-[#F6FEE8] dark:border-[#A1F919]/20">
-                    <CheckCircle size={18} className="text-[#5D900F] dark:text-[#A1F919] shrink-0"/>
-                    <p className="text-sm font-bold text-[#48700B] dark:text-[#A1F919]">Project kamu telah diterima! UKK selesai.</p>
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#F6FEE8] dark:bg-slate-700 border border-[#F6FEE8] dark:border-[#F26A3D]">
+                    <CheckCircle size={18} className="text-[#5D900F] dark:text-[#C4B5FD] shrink-0"/>
+                    <p className="text-sm font-bold text-[#48700B] dark:text-[#C4B5FD]">Project kamu telah diterima! UKK selesai.</p>
                   </div>
                 )}
                 <div className="space-y-3">
@@ -867,25 +867,25 @@ export default function SiswaJadwalSoalPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-[#000000]/15 flex items-center justify-center">
-                      <AlertCircle size={18} className="text-[#000000] dark:text-[#A1F919]"/>
+                      <AlertCircle size={18} className="text-[#000000] dark:text-[#C4B5FD]"/>
                     </div>
                     <div>
                       <p className="text-[10px] font-bold text-[#000000]/70 uppercase tracking-widest">Perlu Revisi</p>
-                      <p className="text-base font-extrabold text-[#000000] dark:text-[#A1F919] leading-tight">{revisiModal.soal?.judul}</p>
+                      <p className="text-base font-extrabold text-[#000000] dark:text-[#C4B5FD] leading-tight">{revisiModal.soal?.judul}</p>
                     </div>
                   </div>
-                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-[#000000]/15 flex items-center justify-center text-[#000000] dark:text-[#A1F919] hover:bg-[#000000]/25">
+                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-[#000000]/15 flex items-center justify-center text-[#000000] dark:text-[#C4B5FD] hover:bg-[#000000]/25">
                     <X size={15}/>
                   </button>
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <div className="rounded-xl border border-[#FFFFFF] dark:border-[#A1F919]/30 bg-[#FFFFFF] dark:bg-[#A1F919]/10 px-4 py-4">
+                <div className="rounded-xl border border-[#FFFFFF] dark:border-[#F26A3D] bg-[#FFFFFF] dark:bg-slate-700 px-4 py-4">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle size={15} className="text-[#5D900F] dark:text-[#A1F919] mt-0.5 shrink-0"/>
+                    <AlertCircle size={15} className="text-[#5D900F] dark:text-[#C4B5FD] mt-0.5 shrink-0"/>
                     <div>
-                      <p className="text-xs font-bold text-[#000000] dark:text-[#A1F919] mb-1.5">Catatan dari Penguji</p>
-                      <p className="text-sm text-[#000000] dark:text-[#A1F919] leading-relaxed whitespace-pre-line">
+                      <p className="text-xs font-bold text-[#000000] dark:text-[#C4B5FD] mb-1.5">Catatan dari Penguji</p>
+                      <p className="text-sm text-[#000000] dark:text-[#C4B5FD] leading-relaxed whitespace-pre-line">
                         {revisiModal.pesanRevisi || "Silakan perbaiki project kamu dan kirim ulang."}
                       </p>
                     </div>
