@@ -171,7 +171,7 @@ export function ResetPasswordModal({
               <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-800">
                 <motion.button type="button" onClick={onClose}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-black shadow-md"
+                  className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md"
                   style={{ backgroundColor: "#F26A3D" }}>
                   Selesai
                 </motion.button>
@@ -288,7 +288,7 @@ export function ResetPasswordModal({
             </button>
             <motion.button type="button" onClick={handleReset} disabled={saving}
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px #F26A3D55" }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-black shadow-md transition-opacity disabled:opacity-60"
+              className="flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-md transition-opacity disabled:opacity-60"
               style={{ backgroundColor: "#F26A3D" }}>
               {saving
                 ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Mereset…</>
@@ -353,7 +353,7 @@ export function ResetPasswordModal({
                 </div>
 
                 <button type="button" onClick={onClose}
-                  className="w-full rounded-xl py-3 text-sm font-bold text-black shadow-sm" style={{ backgroundColor: "#F26A3D" }}>
+                  className="w-full rounded-xl py-3 text-sm font-bold text-white shadow-sm" style={{ backgroundColor: "#F26A3D" }}>
                   Selesai
                 </button>
               </div>
@@ -462,7 +462,7 @@ export function ResetPasswordModal({
                     Batal
                   </button>
                   <button type="button" onClick={handleReset} disabled={saving}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-black shadow-sm disabled:opacity-60"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-sm disabled:opacity-60"
                     style={{ backgroundColor: "#F26A3D" }}>
                     {saving
                       ? <><span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />Mereset…</>

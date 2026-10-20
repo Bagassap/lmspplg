@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, FileText, Download, CheckCircle, AlertCircle } from "lucide-react";
 import { formatTglJam } from "./types";
-import { useIsAppMode } from "@/lib/pwaInstall";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasFileViewerModal({
   open, onClose, title, subtitle, fileUrl, fileName, catatan, submittedAt, isDone, onTerima, onRevisi,
@@ -20,11 +20,10 @@ export function TugasFileViewerModal({
   onTerima?: () => void;
   onRevisi?: () => void;
 }) {
-  const app = useIsAppMode();
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-4">
+        <div className="fixed inset-0 z-80 flex items-end justify-center sm:items-center sm:p-6">
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose}
@@ -33,43 +32,43 @@ export function TugasFileViewerModal({
           <motion.div
             initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="relative flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
+            className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#F1EDFA" : "#3E03B3" }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#3E03B3]" : "bg-white/15 text-white"}`}>
-                <FileText size={18} />
-              </div>
+            <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("sky")}>
+                <FileText size={26} color="#fff" />
+              </span>
               <div className="min-w-0 flex-1">
-                <h2 className={`truncate text-base font-extrabold ${app ? "text-slate-900" : "text-white"}`}>{title}</h2>
-                {subtitle && <p className={`text-xs ${app ? "text-slate-500" : "text-white/70"}`}>{subtitle}</p>}
+                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{title}</h2>
+                {subtitle && <p className="truncate text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
-              <button onClick={onClose}
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${app ? "bg-white text-slate-600" : "bg-white/15 text-white hover:bg-white/25"}`}>
-                <X size={16} />
+              <button onClick={onClose} aria-label="Tutup"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <div className="flex-1 space-y-5 overflow-y-auto px-6 pb-6 sm:px-8">
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-4 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600">
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${app ? "bg-[#F1EDFA] text-[#3E03B3]" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
-                    <FileText size={20} />
-                  </div>
+                  className="flex items-center gap-4 rounded-3xl bg-[#F1EDFA] px-5 py-5 dark:bg-slate-700/40">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#3E03B3]">
+                    <Download size={22} />
+                  </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{fileName ?? "File jawaban"}</p>
-                    {submittedAt && <p className="text-xs text-slate-400">Dikumpulkan {formatTglJam(submittedAt)}</p>}
+                    <p className="truncate text-base font-bold text-slate-900 dark:text-white">{fileName ?? "File jawaban"}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      {submittedAt ? `Dikumpulkan ${formatTglJam(submittedAt)}` : "Klik untuk membuka file"}
+                    </p>
                   </div>
-                  <Download size={16} className={`shrink-0 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`} />
                 </a>
               ) : (
-                <p className="py-6 text-center text-sm text-slate-400">Belum ada file yang diunggah.</p>
+                <p className="py-10 text-center text-base text-slate-500">Belum ada file yang diunggah.</p>
               )}
               {catatan && (
                 <div>
-                  <p className="mb-1.5 text-[11px] font-bold text-slate-400">Catatan Siswa</p>
-                  <p className="whitespace-pre-wrap rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:bg-slate-700/40 dark:text-slate-200">
+                  <p className="mb-2 text-sm font-bold text-slate-900 dark:text-white">Catatan siswa</p>
+                  <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 px-5 py-4 text-base text-slate-700 dark:bg-slate-700/40 dark:text-slate-200">
                     {catatan}
                   </p>
                 </div>
@@ -77,19 +76,19 @@ export function TugasFileViewerModal({
             </div>
 
             {!isDone && (onTerima || onRevisi) && (
-              <div className="flex shrink-0 items-center justify-end gap-3 border-t border-slate-100 px-5 py-4 dark:border-slate-700">
+              <div className="flex shrink-0 gap-3 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pb-8">
                 {onRevisi && (
                   <button onClick={onRevisi}
-                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold shadow-sm transition-transform hover:scale-[1.03]"
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold"
                     style={{ background: "#F26A3D", color: "#FFFFFF" }}>
-                    <AlertCircle size={14} /> Minta Revisi
+                    <AlertCircle size={18} /> Minta Revisi
                   </button>
                 )}
                 {onTerima && (
                   <button onClick={onTerima}
-                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-black shadow-sm transition-transform hover:scale-[1.03]"
-                    style={{ background: "#F26A3D" }}>
-                    <CheckCircle size={14} /> Terima
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold"
+                    style={{ background: "#3E03B3", color: "#FFFFFF" }}>
+                    <CheckCircle size={18} /> Terima
                   </button>
                 )}
               </div>

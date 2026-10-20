@@ -623,52 +623,48 @@ export default function AdminJadwalSoalPage() {
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
-                  className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
+                  className={`w-full max-w-5xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-3xl"}`}
                   style={{maxHeight:"92vh"}}>
 
-                  <div className="app-sheet-header relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                    style={{background:"#3E03B3"}}>
-                    <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                    <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
-                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
-                      <CalendarDays size={22} className="text-white"/>
+                  <div className="flex items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8 shrink-0">
+                    <div className="w-14 h-14 rounded-2xl bg-[#F1EDFA] flex items-center justify-center shrink-0">
+                      <CalendarDays size={26} className="text-[#3E03B3]"/>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Jadwal UKK</span>
-                        {allSoal.length > 1 && <span className="text-[10px] text-white/60">{soalJadwalIdx+1} / {allSoal.length}</span>}
+                        {allSoal.length > 1 && <span className="text-sm text-slate-500">{soalJadwalIdx+1} / {allSoal.length}</span>}
                       </div>
-                      <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
                         {curSoal ? curSoal.judul : "Jadwal UKK"}
                       </h2>
-                      <p className="mt-0.5 text-[11px] text-white/70">{curSoal?.fileName ?? (allSoal.length === 0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
+                      <p className="mt-0.5 text-sm text-slate-500">{curSoal?.fileName ?? (allSoal.length === 0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {allSoal.length > 1 && (
                         <>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40 transition-colors">
-                            <ChevronLeft size={16}/>
+                            className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                            <ChevronLeft size={18}/>
                           </button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40 transition-colors">
-                            <ChevronRight size={16}/>
+                            className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                            <ChevronRight size={18}/>
                           </button>
                         </>
                       )}
                       {curSoal && (
                         <button onClick={async()=>{ await deleteSoal(curSoal.id); setSoalJadwalIdx(i=>Math.max(0,i-1)); }}
-                          className="w-8 h-8 rounded-xl bg-[#A1F919]/70 flex items-center justify-center text-black hover:bg-[#A1F919] transition-colors" title="Hapus jadwal ini">
+                          className="w-10 h-10 rounded-full bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus jadwal ini">
                           <Trash2 size={14}/>
                         </button>
                       )}
                       <button onClick={()=>{ setOpenJadwalModal(false); setOpenTambahJadwal(true); }}
-                        className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-colors">
+                        className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-full bg-[#3E03B3] text-white transition-colors">
                         <Plus size={13}/> Tambah
                       </button>
                       <button onClick={()=>setOpenJadwalModal(false)}
-                        className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 transition-colors">
-                        <X size={16}/>
+                        className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
+                        <X size={18}/>
                       </button>
                     </div>
                   </div>
@@ -699,56 +695,52 @@ export default function AdminJadwalSoalPage() {
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
-                  className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
+                  className={`w-full max-w-5xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-3xl"}`}
                   style={{maxHeight:"92vh"}}>
                   {(()=>{
                     const allSoal = soalFiles;
                     const curSoal = allSoal[soalSoalIdx] ?? null;
                     return (
                       <>
-                        <div className="app-sheet-header relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                          style={{background:"#3E03B3"}}>
-                          <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                          <div className="absolute -bottom-6 right-24 w-24 h-24 rounded-full bg-white/8 pointer-events-none"/>
-                          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-sm">
-                            <FileText size={22} className="text-white"/>
+                        <div className="flex items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8 shrink-0">
+                          <div className="w-14 h-14 rounded-2xl bg-[#F1EDFA] flex items-center justify-center shrink-0">
+                            <FileText size={26} className="text-[#3E03B3]"/>
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="rounded-lg bg-white/20 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white/95">Soal UKK</span>
-                              {allSoal.length > 1 && <span className="text-[10px] text-white/60">{soalSoalIdx+1} / {allSoal.length}</span>}
+                              {allSoal.length > 1 && <span className="text-sm text-slate-500">{soalSoalIdx+1} / {allSoal.length}</span>}
                             </div>
-                            <h2 className="mt-1 text-lg font-extrabold text-white leading-snug line-clamp-2">
+                            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
                               {curSoal ? curSoal.judul : "Soal UKK"}
                             </h2>
-                            <p className="mt-0.5 text-[11px] text-white/70">{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
+                            <p className="mt-0.5 text-sm text-slate-500">{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             {allSoal.length > 1 && (
                               <>
                                 <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                                  className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40 transition-colors">
-                                  <ChevronLeft size={16}/>
+                                  className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                                  <ChevronLeft size={18}/>
                                 </button>
                                 <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                                  className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 disabled:opacity-40 transition-colors">
-                                  <ChevronRight size={16}/>
+                                  className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                                  <ChevronRight size={18}/>
                                 </button>
                               </>
                             )}
                             {curSoal && (
                               <button onClick={async()=>{ await deleteSoal(curSoal.id); setSoalSoalIdx(i=>Math.max(0,i-1)); }}
-                                className="w-8 h-8 rounded-xl bg-[#A1F919]/70 flex items-center justify-center text-black hover:bg-[#A1F919] transition-colors" title="Hapus soal ini">
+                                className="w-10 h-10 rounded-full bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus soal ini">
                                 <Trash2 size={14}/>
                               </button>
                             )}
                             <button onClick={()=>{ setOpenSoalModal(false); setOpenTambahSoal(true); }}
-                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-colors">
+                              className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-full bg-[#3E03B3] text-white transition-colors">
                               <CloudUpload size={13}/> Tambah
                             </button>
                             <button onClick={()=>setOpenSoalModal(false)}
-                              className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white/80 hover:bg-white/30 transition-colors">
-                              <X size={16}/>
+                              className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
+                              <X size={18}/>
                             </button>
                           </div>
                         </div>
@@ -963,7 +955,7 @@ export default function AdminJadwalSoalPage() {
                 <button onClick={() => setTab("completed")}
                   className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed" ? "border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]" : "text-slate-400 border-transparent hover:text-slate-600"}`}>
                   Completed
-                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
+                  {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                 </button>
               </div>
             </div>
@@ -1199,7 +1191,7 @@ export default function AdminJadwalSoalPage() {
                         ) : (
                           <div className="flex gap-2 shrink-0">
                             <button onClick={() => updateStatus(s.id, "DITERIMA")}
-                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-black shadow-sm transition-transform hover:scale-105"
+                              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl text-white shadow-sm transition-transform hover:scale-105"
                               style={{background:"#F26A3D"}}>
                               <CheckCircle size={12}/> Terima
                             </button>

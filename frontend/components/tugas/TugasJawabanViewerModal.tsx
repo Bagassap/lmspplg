@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ListChecks, PenLine, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import type { TugasJawabanItem } from "./types";
 import { nilaiPilihanGanda } from "./types";
-import { useIsAppMode } from "@/lib/pwaInstall";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasJawabanViewerModal({
   open, onClose, judul, tipe, jawaban, nilai, canGrade, onSaveNilai, isDone,
@@ -20,9 +20,7 @@ export function TugasJawabanViewerModal({
   onSaveNilai?: (nilai: number) => Promise<void>;
   isDone?: boolean;
 }) {
-  const app = useIsAppMode();
   const isPg = tipe === "PILIHAN_GANDA";
-  const warna = isPg ? "#F26A3D" : "#0EA5E9";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
   const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
@@ -55,38 +53,30 @@ export function TugasJawabanViewerModal({
             onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="relative flex h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4" style={{ background: app ? "#F1EDFA" : warna, color: app ? "#1E293B" : isPg ? "#0F172A" : "#FFFFFF" }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full" style={{ backgroundColor: isPg ? "#0F172A1A" : "#FFFFFF1A" }} />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: isPg ? "#0F172A26" : "#FFFFFF26" }}>
-                {isPg ? <ListChecks size={18} /> : <PenLine size={18} />}
-              </div>
+            className="relative flex h-[90dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
+            <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(isPg ? "amber" : "sky")}>
+                {isPg ? <ListChecks size={26} color="#fff" /> : <PenLine size={26} color="#fff" />}
+              </span>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-extrabold">{judul}</h2>
-                <p className="text-xs" style={{ opacity: 0.75 }}>
-                  {isPg ? `${benar}/${sorted.length} benar` : `${sorted.length} soal esai`}
+                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{judul}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {isPg ? `${benar} dari ${sorted.length} soal benar` : `${sorted.length} soal esai`}
                 </p>
               </div>
-              {isPg && nilaiAkhir !== null && (
-                <div className="shrink-0 rounded-xl px-3 py-1.5 text-center" style={{ backgroundColor: "#0F172A26" }}>
-                  <p className="text-[9px] font-bold uppercase tracking-widest" style={{ opacity: 0.65 }}>Nilai</p>
-                  <p className="text-lg font-black leading-none">{nilaiAkhir}</p>
+              {(isPg ? nilaiAkhir : nilai) != null && (
+                <div className="shrink-0 rounded-2xl bg-[#F1EDFA] px-5 py-2 text-center">
+                  <p className="text-[11px] font-bold text-slate-600">Nilai</p>
+                  <p className="text-2xl font-black leading-none text-[#3E03B3]">{isPg ? nilaiAkhir : nilai}</p>
                 </div>
               )}
-              {!isPg && nilai != null && (
-                <div className={`shrink-0 rounded-xl px-3 py-1.5 text-center ${app ? "bg-white" : "bg-white/15"}`}>
-                  <p className={`text-[9px] font-bold uppercase tracking-widest ${app ? "text-slate-400" : "text-white/60"}`}>Nilai</p>
-                  <p className={`text-lg font-black leading-none ${app ? "text-[#3E03B3]" : "text-white"}`}>{nilai}</p>
-                </div>
-              )}
-              <button onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
-                style={{ backgroundColor: isPg ? "#0F172A26" : "#FFFFFF26" }}>
-                <X size={16} />
+              <button onClick={onClose} aria-label="Tutup"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5">
+            <div className="flex-1 overflow-y-auto px-6 pb-6 sm:px-8">
               {sorted.length === 0 ? (
                 <p className="py-10 text-center text-sm text-slate-400">Belum ada jawaban.</p>
               ) : (
@@ -96,15 +86,15 @@ export function TugasJawabanViewerModal({
                     const isCorrect = isPg && !!soal?.jawabanBenar && j.jawabanPilihan === soal.jawabanBenar;
                     const isWrong = isPg && !!soal?.jawabanBenar && !!j.jawabanPilihan && j.jawabanPilihan !== soal.jawabanBenar;
                     return (
-                      <div key={j.id} className={`rounded-xl border p-4 ${isCorrect ? "border-[#F6FEE8] bg-[#F6FEE8]/50 dark:bg-[#48700B]/10" : isWrong ? "border-[#F6FEE8] bg-[#F6FEE8]/50 dark:bg-[#48700B]/10" : "border-slate-100 dark:border-slate-700"}`}>
-                        <div className="mb-3 flex items-start justify-between gap-2">
-                          <p className="text-sm font-bold text-slate-800 dark:text-white">{idx + 1}. {soal?.pertanyaan}</p>
+                      <div key={j.id} className="rounded-3xl bg-slate-50 p-5 dark:bg-slate-700/30">
+                        <div className="mb-4 flex items-start justify-between gap-3">
+                          <p className="text-base font-bold text-slate-900 dark:text-white">{idx + 1}. {soal?.pertanyaan}</p>
                           {isPg && soal?.jawabanBenar && (
-                            isCorrect ? <CheckCircle size={16} className="shrink-0 text-[#5D900F] dark:text-[#A1F919]" /> : <XCircle size={16} className="shrink-0 text-[#5D900F] dark:text-[#A1F919]" />
+                            isCorrect ? <CheckCircle size={22} className="shrink-0 text-[#5D900F]" /> : <XCircle size={22} className="shrink-0 text-[#E8562B]" />
                           )}
                         </div>
                         {isPg ? (
-                          <div className="space-y-1.5">
+                          <div className="space-y-2">
                             {(["A", "B", "C", "D"] as const).map((huruf) => {
                               const teks = soal?.[`pilihan${huruf}` as "pilihanA" | "pilihanB" | "pilihanC" | "pilihanD"];
                               if (!teks) return null;
@@ -112,16 +102,16 @@ export function TugasJawabanViewerModal({
                               const isKey = soal?.jawabanBenar === huruf;
                               return (
                                 <div key={huruf}
-                                  className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm ${
-                                    isKey ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/20"
-                                    : isSelected ? "border-[#A1F919] bg-[#F6FEE8] dark:bg-[#48700B]/20"
-                                    : "border-slate-100 dark:border-slate-700"
+                                  className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-base ${
+                                    isKey ? "bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                    : isSelected ? "bg-[#FFE9E2]"
+                                    : "bg-white dark:bg-slate-800"
                                   }`}>
-                                  <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                                    isKey ? "bg-[#A1F919] text-black" : isSelected ? "bg-[#A1F919] text-black" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
+                                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                                    isKey ? "bg-[#5D900F] text-white" : isSelected ? "bg-[#E8562B] text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700"
                                   }`}>{huruf}</span>
-                                  <span className="text-slate-700 dark:text-slate-200">{teks}</span>
-                                  {isSelected && <span className="ml-auto text-[10px] font-bold text-slate-400">Dipilih siswa</span>}
+                                  <span className="text-slate-800 dark:text-slate-100">{teks}</span>
+                                  {isSelected && <span className="ml-auto shrink-0 text-xs font-bold text-slate-600">Dipilih siswa</span>}
                                 </div>
                               );
                             })}
@@ -129,15 +119,15 @@ export function TugasJawabanViewerModal({
                         ) : (
                           <div className="space-y-2">
                             <div>
-                              <p className="mb-1 text-[11px] font-bold text-slate-400">Jawaban Siswa</p>
-                              <p className="whitespace-pre-wrap rounded-lg bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 dark:bg-slate-700/40 dark:text-slate-200">
+                              <p className="mb-1.5 text-sm font-bold text-slate-900 dark:text-white">Jawaban siswa</p>
+                              <p className="whitespace-pre-wrap rounded-2xl bg-white px-5 py-4 text-base text-slate-800 dark:bg-slate-800 dark:text-slate-100">
                                 {j.jawabanEssay || <span className="text-slate-400">(belum dijawab)</span>}
                               </p>
                             </div>
                             {soal?.jawabanBenar && (
                               <div>
-                                <p className="mb-1 text-[11px] font-bold text-[#5D900F] dark:text-[#A1F919]">Kunci Jawaban</p>
-                                <p className="whitespace-pre-wrap rounded-lg border border-[#F6FEE8] bg-[#F6FEE8]/50 px-3.5 py-2.5 text-sm text-slate-700 dark:border-[#48700B] dark:bg-[#48700B]/10 dark:text-slate-200">
+                                <p className="mb-1.5 text-sm font-bold text-[#48700B]">Kunci jawaban</p>
+                                <p className="whitespace-pre-wrap rounded-2xl bg-[#F6FEE8] px-5 py-4 text-base text-slate-800">
                                   {soal.jawabanBenar}
                                 </p>
                               </div>
@@ -152,24 +142,20 @@ export function TugasJawabanViewerModal({
             </div>
 
             {canGrade && !isDone && (
-              <div className="flex shrink-0 flex-wrap items-center gap-3 border-t border-slate-100 px-5 py-4 dark:border-slate-700">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Nilai (0–100)</label>
+              <div className="flex shrink-0 flex-wrap items-center gap-4 px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
+                <label className="text-base font-bold text-slate-900 dark:text-white">Nilai (0–100)</label>
                 <div className="relative">
                   <input type="number" min={0} max={100} step={1} value={nilaiInput} disabled={saving}
                     onChange={(e) => setNilaiInput(e.target.value)}
                     onBlur={handleSaveNilai}
                     onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
                     placeholder="0-100"
-                    className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#8F6DD3] disabled:opacity-60 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                    className="h-12 w-32 rounded-full border-0 bg-[#F1EDFA] px-5 text-center text-lg font-bold text-[#3E03B3] outline-none focus:ring-2 focus:ring-[#3E03B3] disabled:opacity-60" />
                   {saving && (
-                    <Loader2 size={14} className="absolute right-2 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />
+                    <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />
                   )}
                 </div>
-                <span className="text-[11px] text-slate-400">
-                  {isPg
-                    ? "Nilai otomatis dari jawaban benar — klik di luar kolom untuk langsung menerima."
-                    : "Isi nilai lalu klik di luar kolom (atau Enter) untuk langsung menerima."}
-                </span>
+                <span className="text-sm text-slate-600 dark:text-slate-300">Isi nilai lalu tekan Enter atau klik di luar kolom untuk menyimpan.</span>
               </div>
             )}
           </motion.div>

@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Code2, CheckCircle, AlertCircle } from "lucide-react";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
-import { useIsAppMode } from "@/lib/pwaInstall";
+import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasPraktikViewerModal({
   open, onClose, title, subtitle, html, css, js, isDone, onTerima, onRevisi,
@@ -20,7 +20,6 @@ export function TugasPraktikViewerModal({
   onTerima?: () => void;
   onRevisi?: () => void;
 }) {
-  const app = useIsAppMode();
   return (
     <AnimatePresence>
       {open && (
@@ -35,25 +34,21 @@ export function TugasPraktikViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
-              style={{ background: app ? "#F1EDFA" : "#0EA5E9" }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${app ? "bg-white text-[#3E03B3]" : "bg-white/15 text-white"}`}>
-                <Code2 size={18} />
-              </div>
+            <div className="flex shrink-0 items-center gap-4 px-6 pb-3 pt-5 sm:px-8">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("violet")}>
+                <Code2 size={26} color="#fff" />
+              </span>
               <div className="min-w-0 flex-1">
-                <h2 className={`truncate text-base font-extrabold ${app ? "text-slate-900" : "text-white"}`}>{title}</h2>
-                {subtitle && <p className={`text-xs ${app ? "text-slate-500" : "text-white/70"}`}>{subtitle}</p>}
+                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{title}</h2>
+                {subtitle && <p className="truncate text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
-              <button
-                onClick={onClose}
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors ${app ? "bg-white text-slate-600" : "bg-white/15 text-white hover:bg-white/25"}`}
-              >
-                <X size={15} />
+              <button onClick={onClose} aria-label="Tutup"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="flex flex-1 flex-col overflow-y-auto p-5">
+            <div className="flex flex-1 flex-col overflow-y-auto px-6 pb-4 sm:px-8">
               <div className="min-h-0 flex-1">
                 <CodePracticeCanvas
                   key={`${html.length}-${css.length}-${js.length}`}
@@ -66,19 +61,19 @@ export function TugasPraktikViewerModal({
             </div>
 
             {!isDone && (onTerima || onRevisi) && (
-              <div className="flex shrink-0 items-center justify-end gap-3 border-t border-slate-100 px-5 py-4 dark:border-slate-700">
+              <div className="flex shrink-0 justify-end gap-3 px-6 pb-6 pt-2 sm:px-8">
                 {onRevisi && (
                   <button onClick={onRevisi}
-                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold shadow-sm transition-transform hover:scale-[1.03]"
+                    className="flex h-12 min-w-44 items-center justify-center gap-2 rounded-full px-6 text-base font-bold"
                     style={{ background: "#F26A3D", color: "#FFFFFF" }}>
-                    <AlertCircle size={14} /> Minta Revisi
+                    <AlertCircle size={18} /> Minta Revisi
                   </button>
                 )}
                 {onTerima && (
                   <button onClick={onTerima}
-                    className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-black shadow-sm transition-transform hover:scale-[1.03]"
-                    style={{ background: "#F26A3D" }}>
-                    <CheckCircle size={14} /> Terima
+                    className="flex h-12 min-w-44 items-center justify-center gap-2 rounded-full px-6 text-base font-bold"
+                    style={{ background: "#3E03B3", color: "#FFFFFF" }}>
+                    <CheckCircle size={18} /> Terima
                   </button>
                 )}
               </div>

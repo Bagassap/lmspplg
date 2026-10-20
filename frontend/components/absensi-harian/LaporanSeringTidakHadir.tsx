@@ -114,7 +114,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
       ) : compact ? (
         <button type="button" onClick={() => setShowModal(true)}
           className="flex w-full items-center gap-3 rounded-2xl bg-[#F6FEE8] p-3 text-left dark:bg-[#A1F919]/15">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-black" style={{ backgroundColor: "#F26A3D" }}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: "#F26A3D" }}>
             <TrendingDown size={14} />
           </span>
           <div className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-black" style={{ background: "#F26A3D" }}>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#F26A3D" }}>
               <TrendingDown size={18} />
             </span>
             <div>

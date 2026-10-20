@@ -105,7 +105,7 @@ function SubmitPraktikModal({
                 className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#3E03B3]" : "focus:border-[#A1F919]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
             </div>
             <button onClick={submit} disabled={saving}
-              className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
+              className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
               style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Tugas</>}
             </button>
@@ -204,7 +204,7 @@ function SubmitFileModal({
               Batal
             </button>
             <button type="submit" disabled={saving || !file}
-              className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
+              className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
               style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kumpulkan</>}
             </button>

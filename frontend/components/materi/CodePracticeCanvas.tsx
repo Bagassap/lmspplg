@@ -100,7 +100,7 @@ export function CodePracticeCanvas({
             <RotateCcw size={12} /> Reset
           </button>
           <button type="button" onClick={runNow}
-            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-black shadow-sm hover:brightness-105"
+            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
             style={{ background: "#F26A3D" }}>
             <Play size={12} /> Run
           </button>

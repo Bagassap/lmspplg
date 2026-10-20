@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, FileText, Download, CheckCircle2, AlertTriangle, Loader2, Clock } from "lucide-react";
+import { X, Download, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import type { LaporanAkhirRow } from "./laporan-akhir-types";
@@ -44,102 +44,92 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
   return (
     <AnimatePresence>
       {row && laporan && (
-        <div className="fixed inset-0 z-100 flex items-end justify-center p-0 sm:items-center sm:p-4">
+        <div className="fixed inset-0 z-100 flex items-end justify-center p-0 sm:items-center sm:p-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={handleClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", damping: 24, stiffness: 320 }}
-            className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
+            className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
 
-            <div className="app-sheet-header relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-5" style={{ background: "#3E03B3" }}>
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <Avatar src={row.siswa.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-sm font-extrabold" />
+            <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
+              <Avatar src={row.siswa.fotoProfil} nama={nama} sizePx={56} fallbackBg={avatarColorFor(nama)} textClassName="text-lg font-extrabold" />
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-extrabold text-white">{nama}</h2>
-                <p className="truncate text-xs text-white/70">{row.tempatMagang.namaTempat} · {row.siswa.nis}</p>
+                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{nama}</h2>
+                <p className="truncate text-sm text-slate-500 dark:text-slate-400">{row.tempatMagang.namaTempat}</p>
               </div>
-              <button onClick={handleClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
-                <X size={16} />
+              <button onClick={handleClose} aria-label="Tutup"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto p-6">
-              <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50">
-                <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700/50 dark:bg-slate-700/40">
-                  <FileText size={13} className="text-[#3E03B3]" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Berkas Laporan Akhir</span>
+            <div className="flex-1 space-y-5 overflow-y-auto px-6 pb-6 sm:px-8">
+              <a href={`/api/uploads${laporan.fileUrl}`} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-4 rounded-3xl bg-[#F1EDFA] px-5 py-5 dark:bg-slate-700/40">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#3E03B3]">
+                  <Download size={22} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-base font-bold text-slate-900 dark:text-white">{laporan.fileName}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">Laporan akhir · dikirim {fmtTgl(laporan.submittedAt)}</p>
                 </div>
-                <a href={`/api/uploads${laporan.fileUrl}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#000000]/30 dark:text-[#8F6DD3]">
-                    <Download size={15} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{laporan.fileName}</span>
-                </a>
-              </div>
-
-              <p className="flex items-center gap-1.5 text-xs text-slate-400">
-                <Clock size={11} /> Dikirim {fmtTgl(laporan.submittedAt)}
-              </p>
+              </a>
 
               {laporan.catatan && (
-                <div className="rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700/40 dark:text-slate-300">
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Catatan Siswa</p>
-                  {laporan.catatan}
+                <div>
+                  <p className="mb-2 text-sm font-bold text-slate-900 dark:text-white">Catatan siswa</p>
+                  <p className="rounded-2xl bg-slate-50 px-5 py-4 text-base text-slate-700 dark:bg-slate-700/40 dark:text-slate-200">{laporan.catatan}</p>
                 </div>
               )}
 
               {laporan.status === "DITERIMA" && (
-                <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold bg-[#F6FEE8] dark:bg-[#A1F919]/15 text-[#5D900F] dark:text-[#A1F919]">
-                  <CheckCircle2 size={15} /> Laporan ini sudah diterima
+                <div className="flex items-center gap-3 rounded-2xl bg-[#F6FEE8] px-5 py-4 text-base font-bold text-[#48700B]">
+                  <CheckCircle2 size={20} /> Laporan ini sudah diterima
                 </div>
               )}
               {laporan.status === "REVISI" && (
-                <div className="rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-black dark:text-white">
-                  <p className="flex items-center gap-2 font-semibold" style={{ color: "#3E03B3" }}>
-                    <AlertTriangle size={15} /> Revisi diminta
-                  </p>
-                  {laporan.pesanRevisi && <p className="mt-1.5 text-slate-600 dark:text-slate-300">{laporan.pesanRevisi}</p>}
+                <div className="rounded-2xl bg-[#FFE9E2] px-5 py-4">
+                  <p className="flex items-center gap-2 text-base font-bold text-[#C2410C]"><AlertTriangle size={20} /> Revisi diminta</p>
+                  {laporan.pesanRevisi && <p className="mt-1.5 text-base text-slate-800">{laporan.pesanRevisi}</p>}
                 </div>
               )}
 
               {laporan.status === "TERKIRIM" && showRevisiForm && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-slate-500 dark:text-slate-400">Pesan Revisi <span className="text-[#5D900F] dark:text-[#A1F919]">*</span></label>
-                  <textarea value={pesanRevisi} onChange={(e) => setPesanRevisi(e.target.value)} rows={3} autoFocus
-                    placeholder="Tuliskan catatan revisi untuk siswa…"
-                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none focus:border-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                  <label className="mb-2 block text-sm font-bold text-slate-900 dark:text-white">Pesan revisi untuk siswa</label>
+                  <textarea value={pesanRevisi} onChange={(e) => setPesanRevisi(e.target.value)} rows={4} autoFocus
+                    placeholder="Tuliskan bagian yang perlu diperbaiki…"
+                    className="w-full resize-none rounded-2xl border-0 bg-slate-50 px-5 py-4 text-base text-slate-800 outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100" />
                 </div>
               )}
             </div>
 
             {laporan.status === "TERKIRIM" && (
-              <div className="flex shrink-0 gap-3 border-t border-slate-100 p-6 pt-4 dark:border-slate-700">
+              <div className="flex shrink-0 gap-3 px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
                 {showRevisiForm ? (
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(false)}
-                      className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-500 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-700">
+                      className="h-12 flex-1 rounded-full bg-[#F1EDFA] text-base font-bold text-[#3E03B3]">
                       Batal
                     </button>
                     <button type="button" onClick={handleKirimRevisi} disabled={!pesanRevisi.trim() || !!busy}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold disabled:opacity-50"
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
                       style={{ background: "#F26A3D", color: "#FFFFFF" }}>
-                      {busy === "revisi" ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
+                      {busy === "revisi" ? <Loader2 size={18} className="animate-spin" /> : <AlertTriangle size={18} />}
                       Kirim Revisi
                     </button>
                   </>
                 ) : (
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(true)} disabled={!!busy}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-colors disabled:opacity-50"
-                      style={{ background: "#FFFFFF", color: "#3E03B3" }}>
-                      <AlertTriangle size={14} /> Revisi
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
+                      style={{ background: "#F26A3D", color: "#FFFFFF" }}>
+                      <AlertTriangle size={18} /> Minta Revisi
                     </button>
                     <button type="button" onClick={handleTerima} disabled={!!busy}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-black shadow-md disabled:opacity-50"
-                      style={{ background: "#F26A3D" }}>
-                      {busy === "terima" ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
+                      style={{ background: "#3E03B3", color: "#FFFFFF" }}>
+                      {busy === "terima" ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
                       Terima
                     </button>
                   </>

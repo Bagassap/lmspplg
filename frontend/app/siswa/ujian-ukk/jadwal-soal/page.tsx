@@ -157,7 +157,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                   Batal
                 </button>
                 <button type="submit" disabled={saving || !driveUrl.trim()}
-                  className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-black"}`}
+                  className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
                   style={{background: app ? "#3E03B3" : "#F26A3D"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
@@ -286,30 +286,27 @@ export default function SiswaJadwalSoalPage() {
                   onClick={e=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
-                    className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
+                    className={`w-full max-w-5xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-3xl"}`}
                     style={{maxHeight:"92vh"}}>
-                    <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
-                      <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
-                        <CalendarDays size={22}/>
+                    <div className="flex items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8 shrink-0">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-[#F1EDFA] text-[#3E03B3]">
+                        <CalendarDays size={26}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Jadwal UKK</span>
-                        <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
+                        <h2 className={`text-xl sm:text-2xl font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-[11px] ${appMode ? "text-slate-500" : "text-white/70"}`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
+                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronLeft size={16}/></button>
+                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronRight size={16}/></button>
+                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
                         </>)}
                         <button onClick={()=>setOpenJadwalModal(false)}
-                          className={`w-8 h-8 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><X size={16}/></button>
+                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/> : (
@@ -334,30 +331,27 @@ export default function SiswaJadwalSoalPage() {
                   onClick={e=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
-                    className={`w-full max-w-3xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
+                    className={`w-full max-w-5xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-3xl"}`}
                     style={{maxHeight:"92vh"}}>
-                    <div className="relative flex items-start gap-4 px-6 py-5 overflow-hidden shrink-0"
-                      style={{background: appMode ? "#F1EDFA" : "#3E03B3"}}>
-                      <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 pointer-events-none"/>
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white"}`}>
+                    <div className="flex items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8 shrink-0">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-[#F1EDFA] text-[#3E03B3]">
                         <FileText size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-bold ${appMode ? "bg-white text-[#3E03B3]" : "bg-white/20 text-white/95"}`}>Soal UKK</span>
-                        <h2 className={`mt-1 text-lg font-extrabold leading-snug line-clamp-2 ${appMode ? "text-slate-900" : "text-white"}`}>
+                        <h2 className={`text-xl sm:text-2xl font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-[11px] ${appMode ? "text-slate-500" : "text-white/70"}`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
+                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronLeft size={16}/></button>
+                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-40 ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><ChevronRight size={16}/></button>
+                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
                         </>)}
                         <button onClick={()=>setOpenSoalModal(false)}
-                          className={`w-8 h-8 rounded-xl flex items-center justify-center ${appMode ? "bg-white text-slate-600" : "bg-white/15 text-white/80 hover:bg-white/30"}`}><X size={16}/></button>
+                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenSoalModal(false)}/> : (
@@ -491,7 +485,7 @@ export default function SiswaJadwalSoalPage() {
                   <button onClick={()=>setTab("completed")}
                     className={`pb-3 text-sm font-semibold border-b-2 -mb-px transition-all ${tab==="completed"?"border-[#A1F919] text-[#5D900F] dark:text-[#A1F919]":"text-slate-400 border-transparent hover:text-slate-600"}`}>
                     Completed
-                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-black font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
+                    {tab==="completed" && <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-lg text-white font-bold" style={{backgroundColor:"#F26A3D"}}>{completed.length}</span>}
                   </button>
                 </div>
               </div>

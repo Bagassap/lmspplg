@@ -160,12 +160,12 @@ export function CatatanSiswaClient() {
                 {isNative && (
                   <div className={`flex shrink-0 items-center gap-1.5 ${isAdmin ? "lg:hidden" : ""}`}>
                     <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null} title="Unduh PDF"
-                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                       style={{ background: "#F26A3D" }}>
                       {downloading === "pdf" ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
                     </button>
                     <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null} title="Unduh Excel"
-                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex h-10.5 w-10.5 items-center justify-center rounded-lg text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                       style={{ background: "#F26A3D" }}>
                       {downloading === "excel" ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
                     </button>
@@ -219,12 +219,12 @@ export function CatatanSiswaClient() {
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ background: "#F26A3D" }}>
                   {downloading === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />} PDF
                 </button>
                 <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-black shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ background: "#F26A3D" }}>
                   {downloading === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />} Excel
                 </button>

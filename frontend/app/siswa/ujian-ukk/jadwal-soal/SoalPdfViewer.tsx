@@ -84,13 +84,13 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
           </button>
         </div>
       )}
-      <div className={`shrink-0 flex items-center justify-between gap-3 bg-white dark:bg-slate-900 ${app ? "px-4 py-3" : "px-6 py-4 border-t border-gray-100 dark:border-slate-700/60"}`}>
-        <p className={`truncate max-w-xs text-xs ${app ? "text-slate-600" : "text-slate-400"}`}>{soal.fileName}</p>
+      <div className="shrink-0 flex items-center justify-between gap-3 bg-white px-6 py-4 dark:bg-slate-900 sm:px-8 sm:py-5">
+        <p className="truncate max-w-md text-sm text-slate-600 dark:text-slate-300">{soal.fileName}</p>
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-          className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold shadow-md shrink-0 ${app ? "rounded-full" : "rounded-xl"}`}
-          style={app ? { background: "#3E03B3", color: "#FFFFFF" } : { background: "#F26A3D", color: "#FFFFFF" }}>
-          <Download size={14} /> Unduh PDF
+          className="flex h-12 items-center gap-2 rounded-full px-7 text-base font-bold shrink-0"
+          style={{ background: "#3E03B3", color: "#FFFFFF" }}>
+          <Download size={18} /> Unduh PDF
         </motion.a>
       </div>
     </>
