@@ -419,20 +419,20 @@ export default function SiswaJadwalSoalPage() {
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-40 lg:px-5 lg:py-5"
-                style={{ background: "#F26A3D", color: "#0F172A", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#000000]/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
+                style={{ background: "#F26A3D", color: "#FFFFFF", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
                 <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-[#000000]/8 lg:block" />
 
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#000000]/15 lg:hidden">
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:hidden">
                   <FileText size={14} />
                 </div>
                 <div className="relative min-w-0 lg:hidden">
-                  <p className="truncate text-sm font-black leading-tight">Soal<span className="text-[#000000]/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-[#000000]/75">{totalSoal} soal tersedia</p>
+                  <p className="truncate text-sm font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{totalSoal} soal tersedia</p>
                 </div>
 
                 <div className="relative hidden items-start justify-between lg:flex">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#000000]/15">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
                     <FileText size={15} />
                   </div>
                   <div className="text-right">
@@ -868,7 +868,7 @@ export default function SiswaJadwalSoalPage() {
               className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
-                style={{background: appMode ? "#F1EDFA" : "#F26A3D", color: "#0F172A"}}>
+                style={{background: appMode ? "#F1EDFA" : "#F26A3D", color: appMode ? "#0F172A" : "#FFFFFF"}}>
                 <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -915,7 +915,7 @@ export default function SiswaJadwalSoalPage() {
                 </button>
                 <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
                   className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-full" : "rounded-xl"}`}
-                  style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#F26A3D", color: "#0F172A"}}>
+                  style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#F26A3D", color: "#FFFFFF"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>
               </div>

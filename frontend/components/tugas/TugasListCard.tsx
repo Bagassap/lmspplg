@@ -86,7 +86,7 @@ export function TugasListCard({
           {canCreate && (
             <button onClick={onAddTugas}
               className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl shadow-sm"
-              style={{ background: "#F26A3D", color: "#0F172A" }}>
+              style={{ background: "#F26A3D", color: "#FFFFFF" }}>
               <Plus size={13} /> Tambah Tugas
             </button>
           )}
@@ -306,7 +306,7 @@ export function TugasListCard({
             {canCreate && (
               <button type="button" onClick={onAddTugas}
                 className="mb-1.5 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-black shadow-sm"
-                style={{ background: "#F26A3D", color: "#0F172A" }}>
+                style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                 <Plus size={13} /> Tambah
               </button>
             )}

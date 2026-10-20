@@ -101,7 +101,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
           whileHover={app ? undefined : { scale: 1.04, boxShadow: "0 8px 24px rgba(242,106,61,0.4)" }}
           whileTap={{ scale: 0.96 }}
           className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold shadow-md shrink-0 ${app ? "rounded-full" : "rounded-xl"}`}
-          style={app ? { background: "#3E03B3", color: "#FFFFFF" } : { background: "#F26A3D", color: "#0F172A" }}>
+          style={app ? { background: "#3E03B3", color: "#FFFFFF" } : { background: "#F26A3D", color: "#FFFFFF" }}>
           <Download size={14} /> Unduh PDF
         </motion.a>
       </div>

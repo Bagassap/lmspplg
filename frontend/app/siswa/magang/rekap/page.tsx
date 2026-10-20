@@ -86,18 +86,18 @@ export default function SiswaMagangRekapPage() {
               <button type="button" onClick={() => setCategory("laporan")}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
-                  background: "#F26A3D", color: "#0F172A",
+                  background: "#F26A3D", color: "#FFFFFF",
                   boxShadow: category === "laporan" ? "0 8px 24px rgba(242,106,61,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
                   outline: category === "laporan" ? "2px solid #F26A3D" : "none",
                   outlineOffset: "3px",
                 }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#000000]/15">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <BarChart3 size={16} />
                 </div>
                 <div className="relative min-w-0">
                   <p className="truncate text-xl font-black leading-tight">Laporan</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#000000]/75">{loading ? "…" : laporanAkhirSubtitle}</p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{loading ? "…" : laporanAkhirSubtitle}</p>
                 </div>
               </button>
             </div>

@@ -70,7 +70,7 @@ export function TugasPraktikViewerModal({
                 {onRevisi && (
                   <button onClick={onRevisi}
                     className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold shadow-sm transition-transform hover:scale-[1.03]"
-                    style={{ background: "#F26A3D", color: "#0F172A" }}>
+                    style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                     <AlertCircle size={14} /> Minta Revisi
                   </button>
                 )}

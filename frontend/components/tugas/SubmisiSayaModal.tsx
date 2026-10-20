@@ -119,7 +119,7 @@ export function SubmisiSayaModal({
               {isRevisi && (
                 <button onClick={onKirimUlang}
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold ${app ? "rounded-full" : "rounded-xl"}`}
-                  style={app ? { background: "#F1EDFA", color: "#3E03B3" } : { background: "#F26A3D", color: "#0F172A" }}>
+                  style={app ? { background: "#F1EDFA", color: "#3E03B3" } : { background: "#F26A3D", color: "#FFFFFF" }}>
                   <Send size={13} /> Kirim Ulang Tugas
                 </button>
               )}

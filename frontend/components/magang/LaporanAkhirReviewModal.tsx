@@ -124,7 +124,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                     </button>
                     <button type="button" onClick={handleKirimRevisi} disabled={!pesanRevisi.trim() || !!busy}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold disabled:opacity-50"
-                      style={{ background: "#F26A3D", color: "#0F172A" }}>
+                      style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                       {busy === "revisi" ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
                       Kirim Revisi
                     </button>

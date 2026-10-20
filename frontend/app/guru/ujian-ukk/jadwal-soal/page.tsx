@@ -285,14 +285,14 @@ export default function GuruJadwalSoalPage() {
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: "#F26A3D", color: "#0F172A", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#000000]/10" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-[#000000]/15">
+                style={{ background: "#F26A3D", color: "#FFFFFF", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
                   <FileText size={16} />
                 </div>
                 <div className="relative min-w-0">
-                  <p className="truncate text-xl font-black leading-tight">Soal<span className="text-[#000000]/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-[#000000]/75">{totalSoal} soal diunggah · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{totalSoal} soal diunggah · TA 2026/2027</p>
                 </div>
               </button>
                 </div>
@@ -349,14 +349,14 @@ export default function GuruJadwalSoalPage() {
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
-                      style={{ background: "#F26A3D", color: "#0F172A" }}>
-                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#000000]/10" />
-                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-[#000000]/15">
+                      style={{ background: "#F26A3D", color: "#FFFFFF" }}>
+                      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
                         <FileText size={14} />
                       </div>
                       <div className="relative min-w-0">
                         <p className="truncate text-sm font-black leading-tight">Soal UKK</p>
-                        <p className="mt-0.5 truncate text-[9px] font-medium text-[#000000]/75">{totalSoal} soal diunggah</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{totalSoal} soal diunggah</p>
                       </div>
                     </button>
                   </div>
