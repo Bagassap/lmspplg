@@ -86,19 +86,16 @@ export function FilterBarPassword({
 
   return (
     <div className="flex flex-col p-4 sm:p-5">
-      <div className="flex flex-col gap-3">
-        <div>
-          <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="shrink-0">
+          <p className="flex items-center gap-1.5 whitespace-nowrap text-sm font-bold text-slate-700 dark:text-white">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
               <Filter size={13} />
             </span>
             Kelola Password <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
           </p>
-          <p className="mt-1 ml-9 text-xs text-slate-500 dark:text-slate-400">
-            {kelasNama ? `Siswa kelas ${kelasNama}` : "Cari dan saring status password"}
-          </p>
         </div>
-        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-1 sm:flex-row sm:items-center">
           <div className="relative shrink-0 sm:w-44">
             <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
