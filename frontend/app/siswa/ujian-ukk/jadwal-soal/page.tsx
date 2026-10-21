@@ -219,7 +219,7 @@ export default function SiswaJadwalSoalPage() {
     const all: Tahapan[]  = Array.isArray(t) ? t : [];
     setFilePool(all.find(x => x.hariKe === 0) ?? null);
     const tasks = all.filter(x => x.hariKe !== 0);
-    setTahapanList(tasks.length > 0 ? [tasks[0]] : []);
+    setTahapanList(tasks);
     setMySubmisi(Array.isArray(s) ? s : []);
     setLoading(false);
     const nowCheck = new Date();
