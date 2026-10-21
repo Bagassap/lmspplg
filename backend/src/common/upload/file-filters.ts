@@ -3,7 +3,7 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 import { extname } from 'path';
 
 const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const DOCUMENT_EXTENSIONS = ['.pdf', '.zip', '.ppt', '.pptx', '.doc', '.docx'];
+const DOCUMENT_EXTENSIONS = ['.pdf', '.zip', '.rar', '.7z', '.ppt', '.pptx', '.doc', '.docx'];
 
 function mimeFileFilter(allowed: string[]): MulterOptions['fileFilter'] {
   return (_req, file, cb) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
@@ -46,6 +46,10 @@ const ROW_PALETTES = [
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
 
+function fileHref(url: string) {
+  return url.startsWith("http") ? url : `/api${url}`;
+}
+
 function isValidDriveUrl(url: string) {
   return url.startsWith("https://drive.google.com/") || url.startsWith("https://docs.google.com/");
 }
@@ -58,18 +62,23 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
   const [catatan, setCatatan]   = useState("");
   const [saving, setSaving]     = useState(false);
   const [urlError, setUrlError] = useState("");
-  useEffect(() => { if (open) { setDriveUrl(""); setCatatan(""); setUrlError(""); } }, [open]);
+  const [berkas, setBerkas] = useState<File | null>(null);
+  const berkasRef = useRef<HTMLInputElement>(null);
+  useEffect(() => { if (open) { setDriveUrl(""); setCatatan(""); setUrlError(""); setBerkas(null); } }, [open]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!soal) return;
-    if (!driveUrl.trim()) { setUrlError("Link Google Drive wajib diisi"); return; }
-    if (!isValidDriveUrl(driveUrl.trim())) { setUrlError("Link harus dari Google Drive (drive.google.com atau docs.google.com)"); return; }
+    if (!berkas) {
+      if (!driveUrl.trim()) { setUrlError("Upload file ZIP/RAR atau isi link Google Drive"); return; }
+      if (!isValidDriveUrl(driveUrl.trim())) { setUrlError("Link harus dari Google Drive (drive.google.com atau docs.google.com)"); return; }
+    }
     setSaving(true);
     try {
       const fd = new FormData();
       fd.append("soalId", soal.id);
-      fd.append("driveUrl", driveUrl.trim());
+      if (berkas) fd.append("file", berkas);
+      else fd.append("driveUrl", driveUrl.trim());
       if (catatan.trim()) fd.append("catatan", catatan.trim());
       await onSubmit(fd);
     } finally {
@@ -118,8 +127,21 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
               </div>
 
               <div>
+                <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">Upload file (ZIP / RAR / 7Z / PDF)</label>
+                <input ref={berkasRef} type="file" accept=".zip,.rar,.7z,.pdf,.doc,.docx,.ppt,.pptx" className="hidden"
+                  onChange={e => { setBerkas(e.target.files?.[0] ?? null); setUrlError(""); }} />
+                <button type="button" onClick={() => berkasRef.current?.click()}
+                  className="flex w-full items-center gap-3 rounded-xl bg-[#F1EDFA] px-3 py-3 text-left dark:bg-slate-700/40">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#3E03B3]"><FileText size={16}/></span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{berkas ? berkas.name : "Pilih file project (maks. 100 MB)"}</span>
+                  {berkas && <span role="button" onClick={e => { e.stopPropagation(); setBerkas(null); if (berkasRef.current) berkasRef.current.value = ""; }} className="shrink-0 text-xs font-bold text-[#3E03B3]">Hapus</span>}
+                </button>
+                <p className="my-3 text-center text-[11px] font-semibold text-slate-400">— atau —</p>
+              </div>
+
+              <div>
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">
-                  Link Google Drive <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
+                  Link Google Drive
                 </label>
                 <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 transition-colors ${urlError ? "border-[#F26A3D] bg-[#F6FEE8] dark:bg-[#48700B]/10" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 focus-within:border-[#F26A3D]"}${app ? " focus-within:border-[#3E03B3]" : ""}`}>
                   <Link2 size={15} className="text-slate-400 shrink-0"/>
@@ -156,7 +178,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                   className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-full" : "rounded-xl"}`}>
                   Batal
                 </button>
-                <button type="submit" disabled={saving || !driveUrl.trim()}
+                <button type="submit" disabled={saving || (!berkas && !driveUrl.trim())}
                   className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
                   style={{background: app ? "#3E03B3" : "#F26A3D"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
@@ -371,84 +393,28 @@ export default function SiswaJadwalSoalPage() {
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-40 lg:px-5 lg:py-5"
+                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-32 lg:px-5 lg:py-5"
                 style={{ background: "#3E03B3", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-white/8 lg:block" />
-
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:hidden">
-                  <CalendarDays size={14} />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
+                  <CalendarDays size={16} />
                 </div>
-                <div className="relative min-w-0 lg:hidden">
-                  <p className="truncate text-sm font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
-                </div>
-
-                <div className="relative hidden items-start justify-between lg:flex">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
-                    <CalendarDays size={15} />
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/60">Kategori</p>
-                    <p className="text-lg font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
-                  </div>
-                </div>
-
-                <div className="relative hidden items-baseline gap-2 lg:flex">
-                  <span className="text-5xl font-black leading-none tabular-nums">{jadwalFiles.length}</span>
-                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/70">file<br />jadwal</span>
-                </div>
-
-                <div className="relative hidden items-end justify-between pt-2 lg:flex">
-                  <div>
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">TA</p>
-                    <p className="text-base font-black leading-none">2026/2027</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-white/60">Status</p>
-                    <p className="text-[10px] font-semibold">Aktif</p>
-                  </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-sm font-black leading-tight lg:text-xl">Jadwal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
                 </div>
               </button>
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] sm:rounded-2xl lg:h-40 lg:px-5 lg:py-5"
+                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-32 lg:px-5 lg:py-5"
                 style={{ background: "#F26A3D", color: "#FFFFFF", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-                <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10 lg:-right-6 lg:-top-6 lg:h-28 lg:w-28" />
-                <div className="pointer-events-none absolute -bottom-4 right-12 hidden h-20 w-20 rounded-full bg-[#000000]/8 lg:block" />
-
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:hidden">
-                  <FileText size={14} />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
+                  <FileText size={16} />
                 </div>
-                <div className="relative min-w-0 lg:hidden">
-                  <p className="truncate text-sm font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{totalSoal} soal tersedia</p>
-                </div>
-
-                <div className="relative hidden items-start justify-between lg:flex">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
-                    <FileText size={15} />
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#000000]/60">Kategori</p>
-                    <p className="text-lg font-black leading-tight">Soal<span className="text-[#000000]/70"> UKK</span></p>
-                  </div>
-                </div>
-
-                <div className="relative hidden items-baseline gap-2 lg:flex">
-                  <span className="text-5xl font-black leading-none tabular-nums">{totalSoal}</span>
-                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-[#000000]/70">soal<br />tersedia</span>
-                </div>
-
-                <div className="relative hidden items-end justify-between pt-2 lg:flex">
-                  <div>
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#000000]/60">TA</p>
-                    <p className="text-base font-black leading-none">2026/2027</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#000000]/60">Status</p>
-                    <p className="text-[10px] font-semibold">{diterima > 0 ? "Diterima" : "Berjalan"}</p>
-                  </div>
+                <div className="relative min-w-0">
+                  <p className="truncate text-sm font-black leading-tight lg:text-xl">Soal<span className="text-white/70"> UKK</span></p>
+                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{totalSoal} soal tersedia · TA 2026/2027</p>
                 </div>
               </button>
                 </div>
@@ -842,7 +808,7 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                   )}
                 </div>
-                <a href={detailTarget.fileUrl} target="_blank" rel="noopener noreferrer"
+                <a href={fileHref(detailTarget.fileUrl)} target="_blank" rel="noopener noreferrer"
                   className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${appMode ? "rounded-full" : "rounded-xl"}`}
                   style={{background: appMode ? "#3E03B3" : "#3E03B3"}}>
                   <ExternalLink size={14}/> Buka Google Drive
@@ -895,7 +861,7 @@ export default function SiswaJadwalSoalPage() {
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
                   <span className="text-xs text-slate-500">Pengiriman sebelumnya</span>
-                  <a href={revisiModal.fileUrl} target="_blank" rel="noopener noreferrer"
+                  <a href={fileHref(revisiModal.fileUrl)} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 text-xs font-semibold text-[#3E03B3] dark:text-[#8F6DD3]">
                     <ExternalLink size={11}/> Lihat GDrive Lama
                   </a>
