@@ -41,13 +41,13 @@ export class UjianUkkService {
       taskList = peserta.map(p => p.tahapan);
     }
 
+    // Belum ada pembagian peserta khusus: semua siswa melihat seluruh task UKK.
     if (taskList.length === 0) {
-      const firstTask = await this.prisma.tahapanUKK.findFirst({
+      taskList = await this.prisma.tahapanUKK.findMany({
         where: { hariKe: { gt: 0 } },
-        orderBy: { createdAt: 'asc' },
+        orderBy: [{ tanggal: 'asc' }, { hariKe: 'asc' }],
         include: { soal: SOAL_SELECT },
       });
-      if (firstTask) taskList = [firstTask];
     }
 
     const result = [...taskList];
