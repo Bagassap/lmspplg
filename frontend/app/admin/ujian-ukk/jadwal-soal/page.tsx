@@ -37,7 +37,7 @@ type StatusSubmisi = "TERKIRIM" | "DITERIMA" | "REVISI";
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; _count?: { submisi: number }; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
-interface Submisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
+interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
   if (s === "DITERIMA") return { bg: "#F1EDFA", text: "#3E03B3", icon: <CheckCircle size={10} /> };
@@ -888,7 +888,7 @@ export default function AdminJadwalSoalPage() {
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                           <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                           <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
-                            {submisiList.length} pengumpulan
+                            {submisiList.filter((x) => x.tahapan?.id === t.id).length} pengumpulan
                           </span>
                         </div>
                       </button>
@@ -970,8 +970,8 @@ export default function AdminJadwalSoalPage() {
                   <tbody>
                     {shown.map((t, idx) => {
                       const rp  = rowPalette(idx);
-                      const sudahKumpul = submisiList.length;
-                      const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
+                      const sudahKumpul = submisiList.filter((x) => x.tahapan?.id === t.id).length;
+                      const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSiswaAll, 1)) * 100), 100);
                       return (
                         <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
                           <td className="px-4 py-3">
@@ -1025,8 +1025,8 @@ export default function AdminJadwalSoalPage() {
                 <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
                   {shown.map((t, idx) => {
                     const rp = rowPalette(idx);
-                    const sudahKumpul = submisiList.length;
-                    const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
+                    const sudahKumpul = submisiList.filter((x) => x.tahapan?.id === t.id).length;
+                    const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSiswaAll, 1)) * 100), 100);
                     return (
                       <div key={t.id} className="flex items-center gap-3 p-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
@@ -1076,7 +1076,7 @@ export default function AdminJadwalSoalPage() {
       <AnimatePresence>
         {submisiModalTahapan && (() => {
           const sm = submisiModalTahapan;
-          const rows = submisiList;
+          const rows = submisiList.filter((x) => x.tahapan?.id === sm.id);
           const sudahSiswa = new Set(rows.map((x) => x.siswa?.id ?? x.id)).size;
           return (
             <motion.div key="submisi-modal-overlay"

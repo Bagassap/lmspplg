@@ -648,6 +648,7 @@ model TahapanUKK {
 
   soal    SoalTahapanUKK[]
   peserta PesertaUKK[]
+  submisi SubmisiProjectUKK[]
 
   @@map("tahapan_ukk")
 }
@@ -683,6 +684,9 @@ model SubmisiProjectUKK {
   id          String           @id @default(cuid())
   soalId      String
   soal        SoalTahapanUKK   @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  // Tiap task (TahapanUKK) punya pengiriman sendiri; soalId menunjuk berkas soal umum.
+  tahapanId   String?
+  tahapan     TahapanUKK?      @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
   siswaId     String
   siswa       Siswa            @relation(fields: [siswaId], references: [id])
   fileUrl     String
@@ -693,7 +697,8 @@ model SubmisiProjectUKK {
   submittedAt DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  @@unique([soalId, siswaId])
+  @@unique([tahapanId, siswaId])
+  @@index([soalId])
   @@map("submisi_project_ukk")
 }
 

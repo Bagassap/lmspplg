@@ -24,7 +24,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
-interface Submisi { id: string; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
+interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 
@@ -388,7 +388,7 @@ export default function GuruJadwalSoalPage() {
                 <ul className="space-y-3">
                   {shown.map((t, idx) => {
                     const exp = expanded.has(t.id);
-                    const submisiTahapan = submisiList;
+                    const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                     return (
                       <li key={t.id} className="overflow-hidden rounded-3xl bg-white shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                         <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-4 p-3 text-left active:opacity-80">
@@ -479,7 +479,7 @@ export default function GuruJadwalSoalPage() {
                       {shown.map((t, idx) => {
                         const rp  = rowPalette(idx);
                         const exp = expanded.has(t.id);
-                        const submisiTahapan = submisiList;
+                        const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                         const sudahKumpul = submisiTahapan.length;
                         const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
                         return (
@@ -539,7 +539,7 @@ export default function GuruJadwalSoalPage() {
                     {shown.map((t, idx) => {
                       const rp = rowPalette(idx);
                       const exp = expanded.has(t.id);
-                      const submisiTahapan = submisiList;
+                      const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                       const sudahKumpul = submisiTahapan.length;
                       const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
                       return (

@@ -5,6 +5,9 @@ export class SubmitProjectDto {
   soalId: string;
 
   @IsString()
+  tahapanId: string;
+
+  @IsString()
   @IsOptional()
   catatan?: string;
 

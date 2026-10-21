@@ -26,7 +26,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
-interface MySubmisi { id: string; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
+interface MySubmisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric", timeZone: "Asia/Jakarta" }); }
 
@@ -54,8 +54,8 @@ function isValidDriveUrl(url: string) {
   return url.startsWith("https://drive.google.com/") || url.startsWith("https://docs.google.com/");
 }
 
-function SubmitModal({ open, onClose, soal, onSubmit }: {
-  open: boolean; onClose: () => void; soal: Soal | null; onSubmit: (fd: FormData) => Promise<void>;
+function SubmitModal({ open, onClose, soal, task, onSubmit }: {
+  open: boolean; onClose: () => void; soal: Soal | null; task: Tahapan | null; onSubmit: (fd: FormData) => Promise<void>;
 }) {
   const app = useIsAppMode();
   const [driveUrl, setDriveUrl] = useState("");
@@ -77,6 +77,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
     try {
       const fd = new FormData();
       fd.append("soalId", soal.id);
+      if (task) fd.append("tahapanId", task.id);
       if (berkas) fd.append("file", berkas);
       else fd.append("driveUrl", driveUrl.trim());
       if (catatan.trim()) fd.append("catatan", catatan.trim());
@@ -106,7 +107,7 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-white uppercase tracking-widest">Kirim Project</p>
-                    <p className="text-base font-extrabold text-white leading-tight line-clamp-1">{soal.judul}</p>
+                    <p className="text-base font-extrabold text-white leading-tight line-clamp-1">{task ? task.judul : soal.judul}</p>
                   </div>
                 </div>
                 <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30">
@@ -202,6 +203,7 @@ export default function SiswaJadwalSoalPage() {
   const [tab,          setTab]         = useState<"active"|"completed"|"all">("all");
   const [taskSearch,   setTaskSearch]  = useState("");
   const [submitSoal,   setSubmitSoal]  = useState<Soal | null>(null);
+  const [submitTask,   setSubmitTask]  = useState<Tahapan | null>(null);
   const [detailTarget, setDetailTarget] = useState<MySubmisi | null>(null);
   const [revisiModal,  setRevisiModal]  = useState<MySubmisi | null>(null);
   const [openJadwalModal, setOpenJadwalModal] = useState(false);
@@ -239,8 +241,8 @@ export default function SiswaJadwalSoalPage() {
   async function doSubmit(fd: FormData) {
     try {
       const r = await fetch("/api/ujian-ukk/submisi", { method:"POST", body: fd });
-      if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); loadAll(); }
-      else toast.error("Gagal mengirim", "Coba lagi");
+      if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); setSubmitTask(null); loadAll(); }
+      else { const d = await r.json().catch(() => null); toast.error("Gagal mengirim", typeof d?.message === "string" ? d.message : "Coba lagi"); }
     } catch {
       toast.error("Server tidak dapat dijangkau", "Periksa koneksi internet dan coba lagi.");
     }
@@ -262,7 +264,12 @@ export default function SiswaJadwalSoalPage() {
   const jadwalFiles = (filePool?.soal ?? []).filter(s => s.deskripsi?.startsWith("__jadwal__:"));
   const soalFiles   = (filePool?.soal ?? []).filter(s => !s.deskripsi?.startsWith("__jadwal__:"));
   const totalSoal   = soalFiles.length;
-  const submisiMap = new Map(mySubmisi.filter(s=>s.soal?.id).map(s=>[s.soal.id, s]));
+  const submisiMap = new Map(mySubmisi.filter(s=>s.tahapan?.id).map(s=>[s.tahapan!.id, s]));
+  const openSubmit = (t: Tahapan) => {
+    const g = soalFiles[0] ?? null;
+    if (!g) { toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru."); return; }
+    setSubmitTask(t); setSubmitSoal(g);
+  };
   const diterima   = mySubmisi.filter(s=>s.status==="DITERIMA").length;
   const revisiCnt  = mySubmisi.filter(s=>s.status==="REVISI").length;
   const menungguCnt = mySubmisi.filter(s=>s.status==="TERKIRIM").length;
@@ -479,8 +486,7 @@ export default function SiswaJadwalSoalPage() {
                     <tbody>
                       {shown.map((t, idx) => {
                         const rp        = rowPalette(idx);
-                        const globalSoal = soalFiles[0] ?? null;
-                        const myS       = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                                                const myS       = submisiMap.get(t.id);
                         const isDiterima = myS?.status === "DITERIMA";
                         const isRevisi   = myS?.status === "REVISI";
                         const isTerkirim = myS?.status === "TERKIRIM";
@@ -492,7 +498,7 @@ export default function SiswaJadwalSoalPage() {
                           ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F2F2F2", clr:"#0F172A", border:"#0F172A", onClick:()=>setRevisiModal(myS!) }
                           : isTerkirim
                           ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#3E03B3", onClick:()=>setDetailTarget(myS!) }
-                          : { label:"Kirim", icon:<Send size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>(globalSoal ? setSubmitSoal(globalSoal) : toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru.")) };
+                          : { label:"Kirim", icon:<Send size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>openSubmit(t) };
 
                         return (
                           <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
@@ -587,8 +593,7 @@ export default function SiswaJadwalSoalPage() {
               ) : (
                 <ul className="space-y-3">
                   {shown.map((t, idx) => {
-                    const globalSoal = soalFiles[0] ?? null;
-                    const myS = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                                        const myS = submisiMap.get(t.id);
                     const isDiterima = myS?.status === "DITERIMA";
                     const isRevisi = myS?.status === "REVISI";
                     const isTerkirim = myS?.status === "TERKIRIM";
@@ -598,7 +603,7 @@ export default function SiswaJadwalSoalPage() {
                       ? { label: "Revisi", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
                       : isTerkirim
                       ? { label: "Terkirim", icon: <CheckCircle size={12} />, bg: "#EEF2FF", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
-                      : { label: "Kirim", icon: <Send size={12} />, bg: APP_ACCENT, clr: "#FFFFFF", onClick: () => (globalSoal ? setSubmitSoal(globalSoal) : toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru.")) };
+                      : { label: "Kirim", icon: <Send size={12} />, bg: APP_ACCENT, clr: "#FFFFFF", onClick: () => openSubmit(t) };
                     return (
                       <li key={t.id} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                         <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>
@@ -683,8 +688,7 @@ export default function SiswaJadwalSoalPage() {
               <div className="space-y-2.5">
                 {shown.map((t, idx) => {
                   const accent = idx % 2 === 0;
-                  const globalSoal = soalFiles[0] ?? null;
-                  const myS       = globalSoal ? submisiMap.get(globalSoal.id) : undefined;
+                                    const myS       = submisiMap.get(t.id);
                   const isDiterima = myS?.status === "DITERIMA";
                   const isRevisi   = myS?.status === "REVISI";
                   const isTerkirim = myS?.status === "TERKIRIM";
@@ -697,7 +701,7 @@ export default function SiswaJadwalSoalPage() {
                     ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F2F2F2", clr: accent ? "#fff" : "#0F172A", onClick:()=>setRevisiModal(myS!) }
                     : isTerkirim
                     ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
-                    : { label:"Kirim", icon:<Send size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>(globalSoal ? setSubmitSoal(globalSoal) : toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru.")) };
+                    : { label:"Kirim", icon:<Send size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>openSubmit(t) };
 
                   return (
                     <motion.div key={t.id}
@@ -746,7 +750,7 @@ export default function SiswaJadwalSoalPage() {
         </div>
       </div>
 
-      <SubmitModal open={!!submitSoal} onClose={()=>setSubmitSoal(null)} soal={submitSoal} onSubmit={doSubmit}/>
+      <SubmitModal open={!!submitSoal} onClose={()=>{ setSubmitSoal(null); setSubmitTask(null); }} soal={submitSoal} task={submitTask} onSubmit={doSubmit}/>
 
       <AnimatePresence>
         {detailTarget && (
@@ -874,7 +878,7 @@ export default function SiswaJadwalSoalPage() {
                   className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 ${appMode ? "rounded-full" : "rounded-xl"}`}>
                   Tutup
                 </button>
-                <button onClick={()=>{ setRevisiModal(null); soalFiles[0] && setSubmitSoal(soalFiles[0]); }}
+                <button onClick={()=>{ const tk = tahapanList.find(x => x.id === revisiModal?.tahapan?.id); setRevisiModal(null); if (tk) openSubmit(tk); }}
                   className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-full" : "rounded-xl"}`}
                   style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#F26A3D", color: "#FFFFFF"}}>
                   <Send size={13}/> Kirim Ulang Project

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { TipeUKK } from '../../generated/prisma/client';
@@ -137,6 +137,7 @@ export class UjianUkkService {
       orderBy: { submittedAt: 'desc' },
       include: {
         soal:  { select: { id: true, judul: true } },
+        tahapan: { select: { id: true, judul: true } },
         siswa: { include: { user: { select: { id: true, nama: true } } } },
       },
     });
@@ -166,7 +167,10 @@ export class UjianUkkService {
     return this.prisma.submisiProjectUKK.findMany({
       where: { siswaId: siswa.id },
       orderBy: { submittedAt: 'desc' },
-      include: { soal: { select: { id: true, judul: true } } },
+      include: {
+        soal: { select: { id: true, judul: true } },
+        tahapan: { select: { id: true, judul: true } },
+      },
     });
   }
 
@@ -176,11 +180,36 @@ export class UjianUkkService {
     const soal = await this.prisma.soalTahapanUKK.findUnique({ where: { id: dto.soalId } });
     if (!soal) throw new NotFoundException('Soal tidak ditemukan');
 
-    return this.prisma.submisiProjectUKK.upsert({
-      where: { soalId_siswaId: { soalId: dto.soalId, siswaId: siswa.id } },
-      create: { soalId: dto.soalId, siswaId: siswa.id, fileUrl, fileName, catatan: dto.catatan },
-      update: { fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', updatedAt: new Date() },
-      include: { soal: { select: { id: true, judul: true } } },
+    const task = await this.prisma.tahapanUKK.findUnique({ where: { id: dto.tahapanId } });
+    if (!task || task.hariKe === 0) throw new NotFoundException('Task tidak ditemukan');
+
+    // Satu hari hanya boleh mengirim untuk satu task: tolak jika siswa sudah
+    // mengirim untuk task lain yang tanggalnya sama.
+    const kembar = await this.prisma.submisiProjectUKK.findFirst({
+      where: { siswaId: siswa.id, tahapanId: { not: task.id }, tahapan: { tanggal: task.tanggal } },
+      include: { tahapan: { select: { judul: true } } },
+    });
+    if (kembar) {
+      throw new BadRequestException(
+        `Kamu sudah mengirim project untuk task "${kembar.tahapan?.judul ?? 'lain'}" di hari yang sama. Dalam satu hari hanya bisa mengirim untuk satu task.`,
+      );
+    }
+
+    const include = {
+      soal: { select: { id: true, judul: true } },
+      tahapan: { select: { id: true, judul: true } },
+    };
+    const ada = await this.prisma.submisiProjectUKK.findFirst({ where: { tahapanId: task.id, siswaId: siswa.id } });
+    if (ada) {
+      return this.prisma.submisiProjectUKK.update({
+        where: { id: ada.id },
+        data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', updatedAt: new Date() },
+        include,
+      });
+    }
+    return this.prisma.submisiProjectUKK.create({
+      data: { soalId: dto.soalId, tahapanId: task.id, siswaId: siswa.id, fileUrl, fileName, catatan: dto.catatan },
+      include,
     });
   }
 
