@@ -19,7 +19,7 @@ const ROLE_LABEL: Record<string, string> = { ADMIN: "Admin", GURU: "Guru", SISWA
 const ROLE_COLOR: Record<string, string> = { ADMIN: "#3E03B3", GURU: "#F26A3D", SISWA: "#059669" };
 
 function jam(iso: string): string {
-  return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).replace(".", ":");
+  return new Date(iso).toLocaleTimeString("id-ID", { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).replace(".", ":");
 }
 function hari(iso: string): string {
   const d = new Date(iso);

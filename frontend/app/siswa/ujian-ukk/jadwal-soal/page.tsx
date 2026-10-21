@@ -832,7 +832,7 @@ export default function SiswaJadwalSoalPage() {
                   <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
                     <span className="text-xs text-slate-500">Dikirim pada</span>
                     <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      {new Date(detailTarget.submittedAt).toLocaleString("id-ID",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"})} WIB
+                      {new Date(detailTarget.submittedAt).toLocaleString("id-ID",{day:"numeric",month:"short",year:"numeric",hourCycle: "h23", hour: "2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"})} WIB
                     </span>
                   </div>
                   {detailTarget.catatan && (

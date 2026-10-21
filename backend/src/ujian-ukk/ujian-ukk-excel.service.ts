@@ -98,7 +98,7 @@ export class UjianUkkExcelService {
             soal: sub.soal.judul,
             status: STATUS_LABEL[sub.status],
             link: sub.fileUrl,
-            waktu: `${sub.submittedAt.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' })} WIB`,
+            waktu: `${sub.submittedAt.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta', hourCycle: 'h23' })} WIB`,
           });
           row.alignment = { vertical: 'middle' };
           row.getCell('status').font = { color: { argb: STATUS_COLOR[sub.status] }, bold: true };

@@ -68,7 +68,7 @@ export function formatTgl(s: string) {
 }
 
 export function formatTglJam(s: string) {
-  const formatted = new Date(s).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
+  const formatted = new Date(s).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
   return `${formatted} WIB`;
 }
 

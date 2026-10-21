@@ -16,7 +16,7 @@ function printSlip(opts: { nama: string; loginId?: string; password: string }) {
   if (!w) return;
   const tanggal = new Intl.DateTimeFormat("id-ID", {
     timeZone: "Asia/Jakarta", weekday: "long", day: "numeric", month: "long", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
+    hourCycle: "h23", hour: "2-digit", minute: "2-digit",
   }).format(new Date()) + " WIB";
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Slip Password — ${opts.nama}</title>
     <style>

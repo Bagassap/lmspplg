@@ -15,7 +15,7 @@ type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 function formatDate(iso: string) {
   return `${new Date(iso).toLocaleDateString("id-ID", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
-    hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta",
+    hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta",
   })} WIB`;
 }
 

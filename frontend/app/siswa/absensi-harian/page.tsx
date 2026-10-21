@@ -244,7 +244,7 @@ export default function SiswaAbsensiHarianPage() {
     try {
       const formData = new FormData();
       formData.set("tipe", tipe);
-      formData.set("waktuAbsen", new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }));
+      formData.set("waktuAbsen", new Date().toLocaleTimeString("id-ID", { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }));
       if (lokasi) formData.set("lokasi", lokasi);
       if (catatan) formData.set("catatan", catatan);
       if (ttd) formData.set("ttd", ttd);

@@ -69,7 +69,7 @@ export class CatatanSiswaPdfService {
       y += 10;
       doc.font('Satoshi-Bold').fontSize(16).fillColor('#1C2B33').text('Laporan Catatan Siswa', margin, y);
       doc.font('Satoshi').fontSize(9).fillColor('#94a3b8')
-        .text(`Dicetak ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'short' })}`, margin, doc.y + 2);
+        .text(`Dicetak ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'short', hourCycle: 'h23' })}`, margin, doc.y + 2);
       y = doc.y + 16;
     };
 
