@@ -467,6 +467,7 @@ export default function GuruJadwalSoalPage() {
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal</th>
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Waktu</th>
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Lokasi</th>
+                        <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Penguji</th>
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Terkumpul</th>
                         <th className="whitespace-nowrap px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Aksi</th>
                       </tr>
@@ -492,6 +493,7 @@ export default function GuruJadwalSoalPage() {
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
+                              <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
                               <td className="whitespace-nowrap px-4 py-3">
                                 <div className="flex items-center gap-2">
                                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
@@ -514,7 +516,7 @@ export default function GuruJadwalSoalPage() {
                             </tr>
                             {exp && (
                               <tr className="border-b border-slate-100 dark:border-slate-700/40">
-                                <td colSpan={6} className="bg-slate-50/50 p-0 dark:bg-slate-700/20">
+                                <td colSpan={7} className="bg-slate-50/50 p-0 dark:bg-slate-700/20">
                                   <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:border-slate-700">
                                     <span>Hasil Kerja Siswa</span>
                                     <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>

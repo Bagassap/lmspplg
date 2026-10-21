@@ -183,17 +183,12 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
             <form onSubmit={submit} className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 88px)" }}>
               <div className="px-6 py-5 space-y-5">
 
-                <div className="grid grid-cols-[1fr_96px] gap-3">
+                <div>
                   <div>
                     <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 block">Judul Task</label>
                     <input required value={form.judul} onChange={(e) => set("judul", e.target.value)}
-                      placeholder="mis. UKK Internal Hari 1"
+                      placeholder="mis. UKK Internal"
                       className={INPUT_CLS}/>
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 block">Hari Ke</label>
-                    <input type="number" min={1} max={3} value={form.hariKe} onChange={(e) => set("hariKe", parseInt(e.target.value))}
-                      className={INPUT_CLS + " text-center font-bold"}/>
                   </div>
                 </div>
 
@@ -968,6 +963,7 @@ export default function AdminJadwalSoalPage() {
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal</th>
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Waktu</th>
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Lokasi</th>
+                      <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Penguji</th>
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Terkumpul</th>
                       <th className="whitespace-nowrap px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Aksi</th>
                     </tr>
@@ -990,6 +986,7 @@ export default function AdminJadwalSoalPage() {
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
+                          <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
                           <td className="whitespace-nowrap px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
