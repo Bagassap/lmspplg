@@ -114,9 +114,6 @@ export function CatatanSiswaClient() {
 
   const { pageItems, pageCount, start, end } = paginate(displayed, page, pageSize);
 
-  const kelasTercatat = inKelas.filter((s) => s.jumlahCatatan > 0).length;
-  const kelasTotalPoin = inKelas.reduce((sum, s) => sum + s.totalPoin, 0);
-  const kelasTotalCatatan = inKelas.reduce((sum, s) => sum + s.jumlahCatatan, 0);
   const selectedKelas = kelasOptions.find((k) => k.id === selectedKelasId);
 
   return (
@@ -124,8 +121,8 @@ export function CatatanSiswaClient() {
       <DataSiswaHeader title="Catatan Siswa" eyebrow="Catatan Siswa" />
 
       <div className={isNative ? "mt-0 lg:mt-5" : ""}>
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
-        <div className="flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="grid grid-cols-1 items-start gap-4">
+        <div className={`flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 ${isNative ? "lg:hidden" : ""}`}>
           <div className="p-4 sm:p-5">
             {!app && (
               <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
@@ -181,59 +178,43 @@ export function CatatanSiswaClient() {
             )}
           </div>
 
-          {!isGuru && (
-            <div className={`border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700/50 ${isAdmin ? "hidden lg:block" : ""}`}>
-              <p className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
-                Ringkasan {selectedKelas?.nama ?? "Kelas"}
-              </p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {[
-                  { icon: UserIcon, val: inKelas.length, label: "Total Siswa", color: "#0EA5E9" },
-                  { icon: NotebookPen, val: kelasTercatat, label: "Siswa Tercatat", color: "#3E03B3" },
-                  { icon: FileText, val: loading ? "—" : kelasTotalCatatan, label: "Total Catatan", color: "#0EA5E9" },
-                  { icon: AlertTriangle, val: kelasTotalPoin, label: "Total Poin", color: "#3E03B3" },
-                ].map((st, i) => (
-                  <div key={i} className="flex items-center gap-2.5 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: `${st.color}1A`, color: st.color }}>
-                      <st.icon size={15} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-lg font-extrabold leading-none text-slate-800 dark:text-white">{st.val}</p>
-                      <p className="mt-1 truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{st.label}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {!isGuru && (
-            <div className={`border-t border-slate-100 p-4 sm:p-5 dark:border-slate-700 ${isAdmin ? "hidden lg:block" : ""}`}>
-              <div className="mb-3 flex items-center gap-2.5">
-                <Download size={16} className="text-slate-400" />
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                  <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">Rekap {selectedKelas?.nama ?? "kelas ini"} & seluruh catatannya</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{ background: "#F26A3D" }}>
-                  {downloading === "pdf" ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />} PDF
-                </button>
-                <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{ background: "#F26A3D" }}>
-                  {downloading === "excel" ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />} Excel
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
-        <div className={`overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2 ${isNative ? "hidden lg:block" : ""}`}>
+        <div className={`overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 ${isNative ? "hidden lg:block" : ""}`}>
+          {isNative && (
+            <div className="flex items-center gap-3 p-5">
+              {kelasOptions.length > 1 && (
+                <div className="relative w-56 shrink-0">
+                  <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <select value={selectedKelasId} onChange={(e) => setSelectedKelasId(e.target.value)}
+                    className="h-10.5 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm font-semibold text-slate-700 focus:border-[#3E03B3] focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    {kelasOptions.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                  </select>
+                  <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                </div>
+              )}
+              <div className="relative min-w-0 flex-1">
+                <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama atau NIS..."
+                  className="h-10.5 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-700 placeholder:text-slate-400 focus:border-[#3E03B3] focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                {search && (
+                  <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              <button type="button" onClick={() => handleDownload("pdf")} disabled={!selectedKelasId || downloading !== null}
+                className="flex h-10.5 shrink-0 items-center gap-1.5 rounded-lg px-4 text-sm font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                style={{ background: "#F26A3D" }}>
+                {downloading === "pdf" ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />} PDF
+              </button>
+              <button type="button" onClick={() => handleDownload("excel")} disabled={!selectedKelasId || downloading !== null}
+                className="flex h-10.5 shrink-0 items-center gap-1.5 rounded-lg px-4 text-sm font-bold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                style={{ background: "#F26A3D" }}>
+                {downloading === "excel" ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />} Excel
+              </button>
+            </div>
+          )}
           {loading && (
             <div className="space-y-3 p-6">
               {Array.from({ length: 4 }).map((_, i) => (
