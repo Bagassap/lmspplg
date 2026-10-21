@@ -83,6 +83,7 @@ export default function GuruJadwalSoalPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
   const [tahapanList, setTahapanList] = useState<Tahapan[]>([]);
+  const [semuaTahapan, setSemuaTahapan] = useState<Tahapan[]>([]);
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
   const [loading, setLoading]         = useState(true);
   const [tab, setTab]                 = useState<"active"|"completed"|"all">("all");
@@ -99,7 +100,9 @@ export default function GuruJadwalSoalPage() {
       fetch("/api/ujian-ukk/tahapan").then(r => r.json()).catch(() => []),
       fetch("/api/ujian-ukk/submisi").then(r => r.json()).catch(() => []),
     ]);
-    const list: Tahapan[] = Array.isArray(t) ? t : [];
+    const all: Tahapan[] = Array.isArray(t) ? t : [];
+    const list = all.filter(x => x.hariKe !== 0);
+    setSemuaTahapan(all);
     setTahapanList(list);
     setSubmisiList(Array.isArray(s) ? s : []);
     setLoading(false);
@@ -132,7 +135,7 @@ export default function GuruJadwalSoalPage() {
   const completed = tahapanList.filter(t => !active.includes(t));
   const shown     = (tab === "all" ? tahapanList : tab === "active" ? active : completed)
     .filter((t) => t.judul.toLowerCase().includes(taskSearch.trim().toLowerCase()));
-  const totalSoal = tahapanList.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:")).length;
+  const totalSoal = semuaTahapan.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:")).length;
 
   return (
     <div className="space-y-6">
@@ -153,7 +156,7 @@ export default function GuruJadwalSoalPage() {
 
       <AnimatePresence>
             {openJadwalModal && (()=>{
-              const allSoal = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:"));
+              const allSoal = semuaTahapan.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:"));
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -206,7 +209,7 @@ export default function GuruJadwalSoalPage() {
 
           <AnimatePresence>
             {openSoalModal && (()=>{
-              const allSoal = tahapanList.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:"));
+              const allSoal = semuaTahapan.flatMap(t=>t.soal).filter(s=>!s.deskripsi?.startsWith("__jadwal__:"));
               const curSoal = allSoal[soalSoalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -257,7 +260,7 @@ export default function GuruJadwalSoalPage() {
             })()}
           </AnimatePresence>
 
-          {(()=>{ const jadwalFiles = tahapanList.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:")); return (
+          {(()=>{ const jadwalFiles = semuaTahapan.flatMap(t=>t.soal).filter(s=>s.deskripsi?.startsWith("__jadwal__:")); return (
           <>
           <div className="mb-8 grid grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[280px_1fr]">
             <div>
@@ -385,7 +388,7 @@ export default function GuruJadwalSoalPage() {
                 <ul className="space-y-3">
                   {shown.map((t, idx) => {
                     const exp = expanded.has(t.id);
-                    const submisiTahapan = submisiList.filter((s) => t.soal.some((so) => so.id === s.soal?.id));
+                    const submisiTahapan = submisiList;
                     return (
                       <li key={t.id} className="overflow-hidden rounded-3xl bg-white shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                         <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-4 p-3 text-left active:opacity-80">
@@ -476,9 +479,9 @@ export default function GuruJadwalSoalPage() {
                       {shown.map((t, idx) => {
                         const rp  = rowPalette(idx);
                         const exp = expanded.has(t.id);
-                        const submisiTahapan = submisiList.filter(s => t.soal.some(so => so.id === s.soal?.id));
+                        const submisiTahapan = submisiList;
                         const sudahKumpul = submisiTahapan.length;
-                        const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSoal,1))*100),100);
+                        const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
                         return (
                           <Fragment key={t.id}>
                             <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
@@ -536,9 +539,9 @@ export default function GuruJadwalSoalPage() {
                     {shown.map((t, idx) => {
                       const rp = rowPalette(idx);
                       const exp = expanded.has(t.id);
-                      const submisiTahapan = submisiList.filter((s) => t.soal.some((so) => so.id === s.soal?.id));
+                      const submisiTahapan = submisiList;
                       const sudahKumpul = submisiTahapan.length;
-                      const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSoal, 1)) * 100), 100);
+                      const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
                       return (
                         <div key={t.id}>
                           <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">
