@@ -86,7 +86,7 @@ export function FilterBarPassword({
 
   return (
     <div className="flex flex-col p-4 sm:p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
@@ -98,7 +98,7 @@ export function FilterBarPassword({
             {kelasNama ? `Siswa kelas ${kelasNama}` : "Cari dan saring status password"}
           </p>
         </div>
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <div className="relative shrink-0 sm:w-44">
             <School size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
@@ -111,7 +111,7 @@ export function FilterBarPassword({
             <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
           </div>
 
-          <div className="relative w-full sm:max-w-xs">
+          <div className="relative w-full sm:min-w-0 sm:flex-1">
             <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
@@ -131,6 +131,37 @@ export function FilterBarPassword({
                 </motion.button>
               )}
             </AnimatePresence>
+          </div>
+          <div className="relative flex shrink-0 items-center gap-1.5">
+            {STATUS_PILLS.map((opt) => {
+              const active = statusFilter === opt.value;
+              const Icon = opt.icon;
+              return (
+                <motion.button
+                  key={opt.value}
+                  type="button"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onStatusFilter(opt.value)}
+                  className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="password-status-pill-active"
+                      transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                      className="absolute inset-0 rounded-md shadow-sm"
+                      style={{ backgroundColor: "#3E03B3" }}
+                    />
+                  )}
+                  <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
+                    <Icon size={12} />
+                    {opt.label}
+                    <span className={`rounded-lg px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                      {opt.count}
+                    </span>
+                  </span>
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -164,38 +195,6 @@ export function FilterBarPassword({
           </div>
         </div>
       )}
-
-      <div className="relative mt-4 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-4 dark:border-slate-700/50">
-        {STATUS_PILLS.map((opt) => {
-          const active = statusFilter === opt.value;
-          const Icon = opt.icon;
-          return (
-            <motion.button
-              key={opt.value}
-              type="button"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onStatusFilter(opt.value)}
-              className="relative rounded-md px-3.5 py-1.5 text-xs font-semibold"
-            >
-              {active && (
-                <motion.span
-                  layoutId="password-status-pill-active"
-                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                  className="absolute inset-0 rounded-md shadow-sm"
-                  style={{ backgroundColor: REF_SUCCESS }}
-                />
-              )}
-              <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
-                <Icon size={12} />
-                {opt.label}
-                <span className={`rounded-lg px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
-                  {opt.count}
-                </span>
-              </span>
-            </motion.button>
-          );
-        })}
-      </div>
 
       <p className="relative mt-4 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
         Menampilkan {displayedCount} dari {total} siswa di kelas ini
