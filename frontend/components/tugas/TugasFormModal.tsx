@@ -1,5 +1,6 @@
 "use client";
 
+import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -66,16 +67,6 @@ export function TugasFormModal({
   const h = useSheetHeader("#3E03B3");
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const deadlineInputRef = useRef<HTMLInputElement>(null);
-
-  function openDeadlinePicker() {
-    const el = deadlineInputRef.current;
-    if (!el) return;
-    if (typeof el.showPicker === "function") {
-      try { el.showPicker(); return; } catch {}
-    }
-    el.focus();
-  }
 
   const [mapel, setMapel] = useState("");
   const [kelasIds, setKelasIds] = useState<string[]>([]);
@@ -354,16 +345,15 @@ export function TugasFormModal({
                   <label className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-gray-700 dark:text-slate-300">
                     <CalendarClock size={12} /> Deadline <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                   </label>
-                  <button type="button" onClick={openDeadlinePicker}
-                    className={INPUT_CLS + " flex items-center justify-between text-left"}>
-                    <span className={deadline ? "" : "text-gray-400"}>
-                      {deadline ? formatTglJam(wibInputToIso(deadline)) : "Pilih deadline…"}
-                    </span>
-                    <CalendarClock size={14} className="shrink-0 text-gray-400" />
-                  </button>
-                  <input ref={deadlineInputRef} type="datetime-local" value={deadline}
-                    onChange={(e) => setDeadline(e.target.value)} tabIndex={-1}
-                    className="pointer-events-none absolute h-0 w-0 opacity-0" />
+                  <div className="flex items-center gap-2">
+                    <input type="date" value={deadline.slice(0, 10)}
+                      onChange={(e) => setDeadline(`${e.target.value}T${deadline.slice(11, 16) || "23:59"}`)}
+                      className={INPUT_CLS + " flex-1"} />
+                    <div className="w-40 shrink-0">
+                      <TimeInput24 value={deadline.slice(11, 16) || "23:59"}
+                        onChange={(v) => setDeadline(`${deadline.slice(0, 10) || toLocalInputValue().slice(0, 10)}T${v}`)} className={INPUT_CLS} />
+                    </div>
+                  </div>
                 </div>
               </div>
 

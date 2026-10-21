@@ -1,5 +1,6 @@
 "use client";
 
+import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarClock, Clock, LogIn, LogOut, Plus, Trash2, X, Loader2, Sparkles } from "lucide-react";
@@ -235,11 +236,11 @@ export function JadwalAbsenCard() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className={CAP}>Mulai</label>
-                  <input type="time" value={form.hadirStart} onChange={(e) => setForm((f) => ({ ...f, hadirStart: e.target.value }))} className={`${FIELD} bg-white`} />
+                  <TimeInput24 value={form.hadirStart} onChange={(v) => setForm((f) => ({ ...f, hadirStart: v }))} className={`${FIELD} bg-white`} />
                 </div>
                 <div>
                   <label className={CAP}>Selesai</label>
-                  <input type="time" value={form.hadirEnd} onChange={(e) => setForm((f) => ({ ...f, hadirEnd: e.target.value }))} className={`${FIELD} bg-white`} />
+                  <TimeInput24 value={form.hadirEnd} onChange={(v) => setForm((f) => ({ ...f, hadirEnd: v }))} className={`${FIELD} bg-white`} />
                 </div>
               </div>
             </div>
@@ -248,11 +249,11 @@ export function JadwalAbsenCard() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className={CAP}>Mulai</label>
-                  <input type="time" value={form.pulangStart} onChange={(e) => setForm((f) => ({ ...f, pulangStart: e.target.value }))} className={`${FIELD} bg-white`} />
+                  <TimeInput24 value={form.pulangStart} onChange={(v) => setForm((f) => ({ ...f, pulangStart: v }))} className={`${FIELD} bg-white`} />
                 </div>
                 <div>
                   <label className={CAP}>Selesai</label>
-                  <input type="time" value={form.pulangEnd} onChange={(e) => setForm((f) => ({ ...f, pulangEnd: e.target.value }))} className={`${FIELD} bg-white`} />
+                  <TimeInput24 value={form.pulangEnd} onChange={(v) => setForm((f) => ({ ...f, pulangEnd: v }))} className={`${FIELD} bg-white`} />
                 </div>
               </div>
             </div>
@@ -384,11 +385,11 @@ export function JadwalAbsenCard() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
                       <label className={LABEL}>Mulai</label>
-                      <input type="time" value={form.hadirStart} onChange={(e) => setForm((f) => ({ ...f, hadirStart: e.target.value }))} className={INPUT} />
+                      <TimeInput24 value={form.hadirStart} onChange={(v) => setForm((f) => ({ ...f, hadirStart: v }))} className={INPUT} />
                     </div>
                     <div>
                       <label className={LABEL}>Selesai</label>
-                      <input type="time" value={form.hadirEnd} onChange={(e) => setForm((f) => ({ ...f, hadirEnd: e.target.value }))} className={INPUT} />
+                      <TimeInput24 value={form.hadirEnd} onChange={(v) => setForm((f) => ({ ...f, hadirEnd: v }))} className={INPUT} />
                     </div>
                   </div>
                 </div>
@@ -400,11 +401,11 @@ export function JadwalAbsenCard() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
                       <label className={LABEL}>Mulai</label>
-                      <input type="time" value={form.pulangStart} onChange={(e) => setForm((f) => ({ ...f, pulangStart: e.target.value }))} className={INPUT} />
+                      <TimeInput24 value={form.pulangStart} onChange={(v) => setForm((f) => ({ ...f, pulangStart: v }))} className={INPUT} />
                     </div>
                     <div>
                       <label className={LABEL}>Selesai</label>
-                      <input type="time" value={form.pulangEnd} onChange={(e) => setForm((f) => ({ ...f, pulangEnd: e.target.value }))} className={INPUT} />
+                      <TimeInput24 value={form.pulangEnd} onChange={(v) => setForm((f) => ({ ...f, pulangEnd: v }))} className={INPUT} />
                     </div>
                   </div>
                 </div>

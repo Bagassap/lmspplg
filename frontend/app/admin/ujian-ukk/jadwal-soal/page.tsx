@@ -1,5 +1,6 @@
 "use client";
 
+import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -212,15 +213,13 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                     <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
                       <Clock size={11}/> Jam Mulai
                     </label>
-                    <input type="time" value={form.jamMulai} onChange={(e) => set("jamMulai", e.target.value)}
-                      className={INPUT_CLS}/>
+                    <TimeInput24 value={form.jamMulai} onChange={(v) => set("jamMulai", v)} className={INPUT_CLS} />
                   </div>
                   <div>
                     <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
                       <Clock size={11}/> Jam Selesai
                     </label>
-                    <input type="time" value={form.jamSelesai} onChange={(e) => set("jamSelesai", e.target.value)}
-                      className={INPUT_CLS}/>
+                    <TimeInput24 value={form.jamSelesai} onChange={(v) => set("jamSelesai", v)} className={INPUT_CLS} />
                   </div>
                 </div>
 
