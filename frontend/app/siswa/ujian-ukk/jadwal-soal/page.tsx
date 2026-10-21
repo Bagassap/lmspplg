@@ -98,19 +98,18 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
             className={`bg-white dark:bg-slate-800 w-full max-w-md shadow-2xl overflow-hidden ${app ? "rounded-t-[28px]" : "rounded-2xl"}`}
             onClick={e=>e.stopPropagation()}>
             <div className="relative px-6 py-5 overflow-hidden"
-              style={{background: app ? "#F1EDFA" : "#F26A3D"}}>
-              <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10"/>
+              style={{background: "#3E03B3"}}>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-black/10 flex items-center justify-center">
-                    <Link2 size={18} className="text-black"/>
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Link2 size={18} className="text-white"/>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-black/60 uppercase tracking-widest">Kirim Project</p>
-                    <p className="text-base font-extrabold text-black leading-tight line-clamp-1">{soal.judul}</p>
+                    <p className="text-[10px] font-bold text-white uppercase tracking-widest">Kirim Project</p>
+                    <p className="text-base font-extrabold text-white leading-tight line-clamp-1">{soal.judul}</p>
                   </div>
                 </div>
-                <button onClick={onClose} className="w-8 h-8 rounded-xl bg-black/10 flex items-center justify-center text-black hover:bg-black/20">
+                <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30">
                   <X size={15}/>
                 </button>
               </div>
@@ -121,8 +120,8 @@ function SubmitModal({ open, onClose, soal, onSubmit }: {
                   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#2D0281] dark:text-[#8F6DD3]">Pastikan file sudah dishare</p>
-                  <p className="text-[11px] text-[#00AAFA] dark:text-[#8F6DD3] mt-0.5">Set sharing Google Drive ke "Anyone with the link can view" sebelum kirim link.</p>
+                  <p className="text-xs font-bold text-black dark:text-white">Pastikan file sudah dishare</p>
+                  <p className="text-[11px] text-black dark:text-slate-200 mt-0.5">Set sharing Google Drive ke "Anyone with the link can view" sebelum kirim link.</p>
                 </div>
               </div>
 
