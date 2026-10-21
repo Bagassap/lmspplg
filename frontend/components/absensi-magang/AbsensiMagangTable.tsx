@@ -155,7 +155,7 @@ export function AbsensiMagangTable({
                         const cfg = STATUS_CFG[st];
                         const active = s.status === st;
                         return (
-                          <button key={st} type="button" disabled={isSavingRow}
+                          <button key={st} type="button" data-keep-style disabled={isSavingRow}
                             onClick={() => saveStatus(s.siswaId, st)}
                             className="rounded-lg border px-2 py-1 text-[10px] font-bold transition-all hover:scale-105 disabled:cursor-wait disabled:opacity-50"
                             style={{

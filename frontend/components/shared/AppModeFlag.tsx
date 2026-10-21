@@ -47,6 +47,18 @@ function tagSheetHeaders(root: ParentNode) {
   });
 }
 
+/** Tombol aksi di baris tabel (table maupun grid-baris) ditandai data-row-act agar seragam: ungu, ikon/teks putih. */
+const ACT_SKIP = '[role="switch"],[role="checkbox"],[role="tab"],[aria-pressed],[data-keep-style]';
+function tagRowActions(root: ParentNode) {
+  root.querySelectorAll<HTMLElement>('tbody tr button, [style*="grid-template-columns"] button').forEach((b) => {
+    if (b.hasAttribute("data-row-act")) return;
+    if (b.matches(ACT_SKIP) || b.closest("thead, .fixed.inset-0, [role=tablist]")) return;
+    if (b.querySelector("img") || b.querySelector(".rounded-full.overflow-hidden") || b.className.toString().includes("w-full")) return;
+    if (b.offsetWidth > 220 || b.offsetHeight > 48) return;
+    b.setAttribute("data-row-act", "1");
+  });
+}
+
 /** Menandai <html data-app-mode> saat dibuka sebagai aplikasi terpasang, agar CSS mode aplikasi aktif. */
 export function AppModeFlag() {
   const app = useIsAppMode();
@@ -62,5 +74,13 @@ export function AppModeFlag() {
     mo.observe(document.body, { childList: true, subtree: true });
     return () => { mo.disconnect(); cancelAnimationFrame(raf); };
   }, [app]);
+  useEffect(() => {
+    let raf = 0;
+    const run = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => tagRowActions(document)); };
+    run();
+    const mo = new MutationObserver(run);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => { mo.disconnect(); cancelAnimationFrame(raf); };
+  }, []);
   return null;
 }
