@@ -48,8 +48,19 @@ function isIos() {
 
 export function isAppModeNow() { return isAppMode(); }
 
+// Layar sempit (di bawah breakpoint lg = 1024px) selalu memakai tampilan aplikasi,
+// baik aplikasi sudah dipasang maupun hanya dibuka di browser HP / mode mobile DevTools.
+const MOBILE_QUERY = "(max-width: 1023px)";
+
+function subscribeViewport(cb: () => void) {
+  const mq = window.matchMedia(MOBILE_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
 function isAppMode() {
   if (isStandalone()) return true;
+  if (window.matchMedia(MOBILE_QUERY).matches) return true;
   // Untuk uji di browser biasa: buka halaman dengan ?app=1 (diingat selama tab terbuka).
   try {
     if (new URLSearchParams(window.location.search).get("app") === "1") {
@@ -63,7 +74,7 @@ function isAppMode() {
 
 /** true bila dibuka dari aplikasi yang sudah dipasang (mode standalone). */
 export function useIsAppMode() {
-  return useSyncExternalStore(noopSubscribe, isAppMode, () => false);
+  return useSyncExternalStore(subscribeViewport, isAppMode, () => false);
 }
 
 /** true bila aplikasi bisa dipasang sekarang (belum terpasang & didukung). */
