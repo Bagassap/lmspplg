@@ -75,6 +75,11 @@ export function AppModeFlag() {
     return () => { mo.disconnect(); cancelAnimationFrame(raf); };
   }, [app]);
   useEffect(() => {
+    // hidrasi selesai: tampilkan halaman (lihat aturan data-boot-mobile di globals.css)
+    const t = window.setTimeout(() => document.documentElement.setAttribute("data-hydrated", "1"), 60);
+    return () => window.clearTimeout(t);
+  }, []);
+  useEffect(() => {
     let raf = 0;
     const run = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => tagRowActions(document)); };
     run();

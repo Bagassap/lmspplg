@@ -53,7 +53,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${satoshi.variable} ${digital.variable} h-full antialiased`}>
+    <html lang="id" suppressHydrationWarning className={`${satoshi.variable} ${digital.variable} h-full antialiased`}>
+      <head>
+        {/* Layar sempit memakai tampilan aplikasi: sembunyikan halaman sampai hidrasi selesai agar tidak sempat terlihat tampilan mobile lama. */}
+        <script dangerouslySetInnerHTML={{ __html: 'try{if(window.matchMedia("(max-width:1023px)").matches)document.documentElement.setAttribute("data-boot-mobile","1")}catch(e){}' }} />
+      </head>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
           {children}
