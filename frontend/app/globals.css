@@ -286,7 +286,8 @@ html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row
 /* ---- Semua modal/sheet: gaya aplikasi seragam (form, tombol, header polos, teks terbaca, tanpa transparansi) ---- */
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > .absolute.inset-0 { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0,0,0,0.5) !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
-  background-color: #f1edfa !important; border: 0 !important; border-radius: 16px !important; color: #0f172a;
+  background-color: #ffffff !important; border: 0 !important; border-radius: 16px !important; color: #0f172a;
+  box-shadow: inset 0 0 0 1px #cbd5e1;
 }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input, select, textarea):focus { outline: 2px solid #3e03b3 !important; outline-offset: 0 !important; box-shadow: none !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input, textarea)::placeholder { color: #64748b; }
@@ -350,6 +351,10 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
   }
   html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
     background-color: #f1edfa !important;
+  }
+  /* isian form di dalam modal: putih (tepi dibuat dengan bayangan tipis, bukan border) */
+  html:not(.dark) .fixed.inset-0:not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+    background-color: #ffffff !important; box-shadow: inset 0 0 0 1px #cbd5e1;
   }
   html.dark :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
     background-color: #334155 !important;
