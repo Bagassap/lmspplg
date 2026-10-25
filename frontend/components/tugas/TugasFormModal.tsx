@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -346,9 +347,7 @@ export function TugasFormModal({
                     <CalendarClock size={12} /> Deadline <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                   </label>
                   <div className="flex items-center gap-2">
-                    <input type="date" value={deadline.slice(0, 10)}
-                      onChange={(e) => setDeadline(`${e.target.value}T${deadline.slice(11, 16) || "23:59"}`)}
-                      className={INPUT_CLS + " flex-1"} />
+                    <DateInputID value={deadline.slice(0, 10)} onChange={(v) => setDeadline(`${v}T${deadline.slice(11, 16) || "23:59"}`)} className={INPUT_CLS + " flex-1"} />
                     <div className="w-40 shrink-0">
                       <TimeInput24 value={deadline.slice(11, 16) || "23:59"}
                         onChange={(v) => setDeadline(`${deadline.slice(0, 10) || toLocalInputValue().slice(0, 10)}T${v}`)} className={INPUT_CLS} />

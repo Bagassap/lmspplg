@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -577,8 +578,7 @@ function CatatanDetailModal({
               <div className="flex flex-wrap gap-3">
                 <div className="flex-1 min-w-[140px]">
                   <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">Tanggal</label>
-                  <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
+                  <DateInputID value={tanggal} onChange={(v) => setTanggal(v)} className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
                 </div>
                 <div className="w-28">
                   <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">Poin (opsional)</label>

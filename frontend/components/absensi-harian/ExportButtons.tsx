@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, FileSpreadsheet, Loader2, X, Search, User } from "lucide-react";
@@ -43,8 +44,7 @@ export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAn
       </div>
 
       {rangeMode === "mingguan" && (
-        <input type="date" value={weekAnchor} onChange={(e) => setWeekAnchor(e.target.value)} className={selectCls}
-          title={`Minggu: ${formatTgl(weekRange.start)} – ${formatTgl(weekRange.end)}`} />
+        <DateInputID value={weekAnchor} onChange={(v) => setWeekAnchor(v)} className={selectCls} />
       )}
 
       {rangeMode === "bulanan" && (

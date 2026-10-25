@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { useMemo, useState, type FormEvent } from "react";
 import { motion, type Variants } from "framer-motion";
 import { Loader2, MapPin, Sparkles } from "lucide-react";
@@ -136,11 +137,7 @@ export function LengkapiProfilForm() {
         </motion.div>
         <motion.div variants={item} className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-black/70">Tanggal Lahir</label>
-          <input
-            type="date" required value={values.tanggalLahir}
-            onChange={(e) => set("tanggalLahir", e.target.value)}
-            className={INPUT_CLASS}
-          />
+          <DateInputID value={values.tanggalLahir} onChange={(v) => set("tanggalLahir", v)} className={INPUT_CLASS} required birth />
         </motion.div>
       </div>
 

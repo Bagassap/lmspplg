@@ -1,3 +1,4 @@
+import { DateInputID } from "@/components/shared/DateInputID";
 ﻿﻿"use client";
 
 import { useEffect, useState } from "react";
@@ -173,7 +174,7 @@ function EditProfilModal({
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal Lahir</label>
-                <input type="date" value={tanggalLahir} onChange={(e) => setTanggalLahir(e.target.value)} className={INPUT} />
+                <DateInputID value={tanggalLahir} onChange={(v) => setTanggalLahir(v)} className={INPUT} birth />
               </div>
             </div>
             <div className="flex flex-col gap-1.5">

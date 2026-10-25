@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -229,7 +230,7 @@ export function JadwalAbsenCard() {
           <form id="jadwal-form" onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label className={CAP}>Tanggal</label>
-              <input type="date" required value={form.tanggal} onChange={(e) => setForm((f) => ({ ...f, tanggal: e.target.value }))} className={FIELD} />
+              <DateInputID value={form.tanggal} onChange={(v) => setForm((f) => ({ ...f, tanggal: v }))} className={FIELD} required />
             </div>
             <div className="rounded-2xl bg-[#E3F8EF] p-3">
               <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#059669]"><LogIn size={13} /> Absen Datang</p>
@@ -370,7 +371,7 @@ export function JadwalAbsenCard() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
                 <div>
                   <label className={LABEL}>Tanggal</label>
-                  <input type="date" required value={form.tanggal} onChange={(e) => setForm((f) => ({ ...f, tanggal: e.target.value }))} className={INPUT} />
+                  <DateInputID value={form.tanggal} onChange={(v) => setForm((f) => ({ ...f, tanggal: v }))} className={INPUT} required />
                   {form.tanggal && (
                     <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
                       {formatTanggalWib(form.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}

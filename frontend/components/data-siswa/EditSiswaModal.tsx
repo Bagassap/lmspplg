@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -152,7 +153,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                     placeholder="Kota" className={INPUT} />
                 </Field>
                 <Field label="Tanggal Lahir" optional icon={CalendarDays}>
-                  <input type="date" autoComplete="off" value={form.tanggalLahir} onChange={(e) => set("tanggalLahir", e.target.value)} className={INPUT} />
+                  <DateInputID value={form.tanggalLahir} onChange={(v) => set("tanggalLahir", v)} className={INPUT} birth />
                   {form.tanggalLahir && (
                     <p className="text-[11px] text-slate-400 dark:text-slate-500">
                       {formatTglShort(form.tanggalLahir)} <span className="text-slate-300 dark:text-slate-600">(tgl/bln/thn)</span>

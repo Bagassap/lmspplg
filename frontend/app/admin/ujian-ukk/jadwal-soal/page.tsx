@@ -1,5 +1,6 @@
 "use client";
 
+import { DateInputID } from "@/components/shared/DateInputID";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -155,7 +156,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
   const isEdit = !!initial?.judul;
   useEffect(() => { if (open) setForm({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial }); }, [open, initial]);
   function set(k: keyof TahapanForm, v: string | number) { setForm((p) => ({ ...p, [k]: v })); }
-  async function submit(e: React.FormEvent) { e.preventDefault(); setSaving(true); await onSave(form); setSaving(false); };
+  async function submit(e: React.FormEvent) { e.preventDefault(); if (!form.tanggal) { alert("Tanggal mulai wajib diisi"); return; } if (form.tanggalSelesai && form.tanggalSelesai < form.tanggal) { alert("Tanggal selesai tidak boleh sebelum tanggal mulai"); return; } setSaving(true); await onSave(form); setSaving(false); };
 
   return (
     <AnimatePresence>
@@ -209,15 +210,13 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                       <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
                         <CalendarDays size={11}/> Tanggal Mulai
                       </label>
-                      <input required type="date" value={form.tanggal} onChange={(e) => set("tanggal", e.target.value)}
-                        className={INPUT_CLS}/>
+                      <DateInputID value={form.tanggal} onChange={(v) => set("tanggal", v)} className={INPUT_CLS} required />
                     </div>
                     <div>
                       <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
                         <CalendarDays size={11}/> Tanggal Selesai
                       </label>
-                      <input type="date" min={form.tanggal || undefined} value={form.tanggalSelesai} onChange={(e) => set("tanggalSelesai", e.target.value)}
-                        className={INPUT_CLS}/>
+                      <DateInputID value={form.tanggalSelesai} onChange={(v) => set("tanggalSelesai", v)} className={INPUT_CLS} min={form.tanggal || undefined} />
                     </div>
                   </div>
                   <p className="mt-1.5 text-[11px] text-slate-400">Kosongkan tanggal selesai bila task hanya satu hari. Jam selesai berlaku di hari terakhir.</p>
