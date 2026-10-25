@@ -10,6 +10,10 @@ export class CreateTahapanDto {
   @IsDateString()
   tanggal: string;
 
+  @IsDateString()
+  @IsOptional()
+  tanggalSelesai?: string;
+
   @IsString()
   jamMulai: string;
 

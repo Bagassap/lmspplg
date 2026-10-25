@@ -1,5 +1,6 @@
 "use client";
 
+import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,7 +24,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 });
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
@@ -108,14 +109,7 @@ export default function GuruJadwalSoalPage() {
     setLoading(false);
     const nowCheck = new Date();
     const todayCheck = todayJakarta();
-    const hasActive = list.some(tk => {
-      const tglStr = tk.tanggal?.slice(0, 10) ?? "";
-      if (tglStr > todayCheck) return true;
-      if (tglStr < todayCheck) return false;
-      const [h, m] = (tk.jamSelesai ?? "23:59").split(":").map(Number);
-      const selesai = new Date(); selesai.setHours(h, m, 0, 0);
-      return nowCheck < selesai;
-    });
+    const hasActive = list.some(tk => isTaskAktif(tk));
     if (!hasActive && list.length > 0) setTab("completed");
   }, []);
   useEffect(() => { loadAll(); }, [loadAll]);
@@ -124,14 +118,7 @@ export default function GuruJadwalSoalPage() {
 
   const now      = new Date();
   const todayStr = todayJakarta();
-  const active   = tahapanList.filter(t => {
-    const tglStr = t.tanggal?.slice(0,10) ?? "";
-    if (tglStr > todayStr) return true;
-    if (tglStr < todayStr) return false;
-    const [h,m] = (t.jamSelesai ?? "23:59").split(":").map(Number);
-    const selesai = new Date(); selesai.setHours(h,m,0,0);
-    return now < selesai;
-  });
+  const active   = tahapanList.filter(t => isTaskAktif(t));
   const completed = tahapanList.filter(t => !active.includes(t));
   const shown     = (tab === "all" ? tahapanList : tab === "active" ? active : completed)
     .filter((t) => t.judul.toLowerCase().includes(taskSearch.trim().toLowerCase()));
@@ -395,7 +382,7 @@ export default function GuruJadwalSoalPage() {
                           <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>{idx + 1}</span>
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
-                            <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                            <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                             <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                               {submisiTahapan.length} pengumpulan
                             </span>
@@ -493,7 +480,7 @@ export default function GuruJadwalSoalPage() {
                                   <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                                 </div>
                               </td>
-                              <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
+                              <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatRentang(t)}</td>
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
@@ -550,7 +537,7 @@ export default function GuruJadwalSoalPage() {
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
-                              <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                              <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                               <div className="mt-1.5 flex items-center gap-2">
                                 <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                                   <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />

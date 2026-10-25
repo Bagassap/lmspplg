@@ -638,6 +638,8 @@ model TahapanUKK {
   hariKe     Int
   judul      String
   tanggal    DateTime @db.Date
+  // Tanggal terakhir task dibuka; null = hanya satu hari (sama dengan tanggal).
+  tanggalSelesai DateTime? @db.Date
   jamMulai   String
   jamSelesai String
   lokasi     String

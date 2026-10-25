@@ -1,5 +1,6 @@
 "use client";
 
+import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,7 +26,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 });
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface MySubmisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric", timeZone: "Asia/Jakarta" }); }
@@ -226,14 +227,7 @@ export default function SiswaJadwalSoalPage() {
     setLoading(false);
     const nowCheck = new Date();
     const todayCheck = todayJakarta();
-    const hasActive = tasks.some(tk => {
-      const tglStr = tk.tanggal?.slice(0, 10) ?? "";
-      if (tglStr > todayCheck) return true;
-      if (tglStr < todayCheck) return false;
-      const [h, m] = (tk.jamSelesai ?? "23:59").split(":").map(Number);
-      const selesai = new Date(); selesai.setHours(h, m, 0, 0);
-      return nowCheck < selesai;
-    });
+    const hasActive = tasks.some((tk) => isTaskAktif(tk));
     if (!hasActive && tasks.length > 0) setTab("completed");
   }, []);
   useEffect(() => { loadAll(); }, [loadAll]);
@@ -250,14 +244,7 @@ export default function SiswaJadwalSoalPage() {
 
   const now      = new Date();
   const todayStr = todayJakarta();
-  const active   = tahapanList.filter(t => {
-    const tglStr = t.tanggal?.slice(0,10) ?? "";
-    if (tglStr > todayStr) return true;
-    if (tglStr < todayStr) return false;
-    const [h,m] = (t.jamSelesai ?? "23:59").split(":").map(Number);
-    const selesai = new Date(); selesai.setHours(h,m,0,0);
-    return now < selesai;
-  });
+  const active   = tahapanList.filter(t => isTaskAktif(t));
   const completed  = tahapanList.filter(t => !active.includes(t));
   const shown      = (tab === "all" ? tahapanList : tab === "active" ? active : completed)
     .filter((t) => t.judul.toLowerCase().includes(taskSearch.trim().toLowerCase()));
@@ -510,7 +497,7 @@ export default function SiswaJadwalSoalPage() {
                                 <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                               </div>
                             </td>
-                            <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
+                            <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatRentang(t)}</td>
                             <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
                             <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
                             <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
@@ -612,7 +599,7 @@ export default function SiswaJadwalSoalPage() {
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
-                            <span className="flex items-center gap-1"><CalendarDays size={10} />{formatTgl(t.tanggal)}</span>
+                            <span className="flex items-center gap-1"><CalendarDays size={10} />{formatRentang(t)}</span>
                             <span className="flex items-center gap-1"><Clock size={10} />{t.jamMulai}–{t.jamSelesai}</span>
                             <span className="flex items-center gap-1"><MapPin size={10} />{t.lokasi}</span>
                           </div>
@@ -718,7 +705,7 @@ export default function SiswaJadwalSoalPage() {
                         <div className="min-w-0 flex-1">
                           <p className={`truncate text-sm font-bold ${accent ? "text-white" : "text-slate-800 dark:text-white"}`}>{t.judul}</p>
                           <div className={`mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] font-medium ${accent ? "text-white/75" : "text-slate-500 dark:text-slate-400"}`}>
-                            <span className="flex items-center gap-1"><CalendarDays size={9} />{formatTgl(t.tanggal)}</span>
+                            <span className="flex items-center gap-1"><CalendarDays size={9} />{formatRentang(t)}</span>
                             <span className="flex items-center gap-1"><Clock size={9} />{t.jamMulai}–{t.jamSelesai}</span>
                             <span className="flex items-center gap-1"><MapPin size={9} />{t.lokasi}</span>
                           </div>

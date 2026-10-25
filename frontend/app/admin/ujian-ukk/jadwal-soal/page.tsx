@@ -1,5 +1,6 @@
 "use client";
 
+import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { TimeInput24 } from "@/components/shared/TimeInput24";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,7 @@ function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 type StatusSubmisi = "TERKIRIM" | "DITERIMA" | "REVISI";
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; _count?: { submisi: number }; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
 interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
@@ -51,7 +52,7 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
   const today = new Date(tYear, tMonth - 1, tDate);
 
   const ukkDateObjs = tahapanList
-    .map((t) => { const d = new Date(t.tanggal); d.setHours(0,0,0,0); return d; })
+    .flatMap((t) => daftarTanggal(t))
     .sort((a, b) => a.getTime() - b.getTime());
   const ukkDateStrings = new Set(ukkDateObjs.map((d) => d.toDateString()));
 
@@ -82,9 +83,11 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
 
   const byDate: Record<string, Tahapan[]> = {};
   for (const t of tahapanList) {
-    const key = new Date(t.tanggal).toDateString();
-    if (!byDate[key]) byDate[key] = [];
-    byDate[key].push(t);
+    for (const d of daftarTanggal(t)) {
+      const key = d.toDateString();
+      if (!byDate[key]) byDate[key] = [];
+      byDate[key].push(t);
+    }
   }
 
   function prevWeek() { const d = new Date(weekStart); d.setDate(d.getDate() - 7); setWeekStart(d); }
@@ -142,15 +145,15 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
   );
 }
 
-interface TahapanForm { hariKe: number; judul: string; tanggal: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji: string; keterangan: string; }
+interface TahapanForm { hariKe: number; judul: string; tanggal: string; tanggalSelesai: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji: string; keterangan: string; }
 
 const INPUT_CLS = "w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-[#3E03B3] focus:ring-2 focus:ring-[#3E03B3] dark:focus:ring-[#00AAFA]/30 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500";
 
 function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClose: () => void; onSave: (d: TahapanForm) => Promise<void>; initial?: Partial<TahapanForm>; }) {
-  const [form, setForm] = useState<TahapanForm>({ hariKe: 1, judul: "", tanggal: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial });
+  const [form, setForm] = useState<TahapanForm>({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial });
   const [saving, setSaving] = useState(false);
   const isEdit = !!initial?.judul;
-  useEffect(() => { if (open) setForm({ hariKe: 1, judul: "", tanggal: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial }); }, [open, initial]);
+  useEffect(() => { if (open) setForm({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial }); }, [open, initial]);
   function set(k: keyof TahapanForm, v: string | number) { setForm((p) => ({ ...p, [k]: v })); }
   async function submit(e: React.FormEvent) { e.preventDefault(); setSaving(true); await onSave(form); setSaving(false); };
 
@@ -201,11 +204,23 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
-                    <CalendarDays size={11}/> Tanggal
-                  </label>
-                  <input required type="date" value={form.tanggal} onChange={(e) => set("tanggal", e.target.value)}
-                    className={INPUT_CLS}/>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
+                        <CalendarDays size={11}/> Tanggal Mulai
+                      </label>
+                      <input required type="date" value={form.tanggal} onChange={(e) => set("tanggal", e.target.value)}
+                        className={INPUT_CLS}/>
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
+                        <CalendarDays size={11}/> Tanggal Selesai
+                      </label>
+                      <input type="date" min={form.tanggal || undefined} value={form.tanggalSelesai} onChange={(e) => set("tanggalSelesai", e.target.value)}
+                        className={INPUT_CLS}/>
+                    </div>
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-slate-400">Kosongkan tanggal selesai bila task hanya satu hari. Jam selesai berlaku di hari terakhir.</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -493,14 +508,7 @@ export default function AdminJadwalSoalPage() {
     const nowCheck = new Date();
     const todayCheck = todayJakarta();
     const tasks = all.filter(x => x.hariKe !== 0);
-    const hasActive = tasks.some((tk) => {
-      const tglStr = tk.tanggal.slice(0, 10);
-      if (tglStr > todayCheck) return true;
-      if (tglStr < todayCheck) return false;
-      const [h, m] = tk.jamSelesai.split(":").map(Number);
-      const selesai = new Date(); selesai.setHours(h, m, 0, 0);
-      return nowCheck < selesai;
-    });
+    const hasActive = tasks.some((tk) => isTaskAktif(tk));
     if (!hasActive && tasks.length > 0) setTab("completed");
   }, []);
 
@@ -515,13 +523,13 @@ export default function AdminJadwalSoalPage() {
   async function saveTahapan(data: TahapanForm) {
     const url  = editTarget ? `/api/ujian-ukk/tahapan/${editTarget.id}` : "/api/ujian-ukk/tahapan";
     const meth = editTarget ? "PUT" : "POST";
-    const r = await fetch(url, { method: meth, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...data, hariKe: Number(data.hariKe) }) });
+    const r = await fetch(url, { method: meth, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...data, hariKe: Number(data.hariKe), tanggalSelesai: data.tanggalSelesai || null }) });
     if (r.ok) {
       toast.success(editTarget ? "Task diperbarui" : "Task ditambahkan", "");
       setOpenTahapan(false);
       setEditTarget(null);
       await loadAll();
-      const tgl = data.tanggal;
+      const tgl = data.tanggalSelesai || data.tanggal;
       const todayS = todayJakarta();
       if (tgl > todayS) {
         setTab("active");
@@ -562,14 +570,7 @@ export default function AdminJadwalSoalPage() {
   const totalSoal   = soalFiles.length;
   const now       = new Date();
   const todayStr  = todayJakarta();
-  const active    = tahapanList.filter((t) => {
-    const tglStr = t.tanggal.slice(0, 10);
-    if (tglStr > todayStr) return true;   
-    if (tglStr < todayStr) return false;  
-    const [h, m] = t.jamSelesai.split(":").map(Number);
-    const selesai = new Date(); selesai.setHours(h, m, 0, 0);
-    return now < selesai;                 
-  });
+  const active    = tahapanList.filter((t) => isTaskAktif(t));
   const completed = tahapanList.filter((t) => !active.includes(t));
   const shown     = (tab === "active" ? active : completed)
     .filter((t) => t.judul.toLowerCase().includes(taskSearch.trim().toLowerCase()));
@@ -886,7 +887,7 @@ export default function AdminJadwalSoalPage() {
                         <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>{idx + 1}</span>
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
-                          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                           <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                             {submisiList.filter((x) => x.tahapan?.id === t.id).length} pengumpulan
                           </span>
@@ -982,7 +983,7 @@ export default function AdminJadwalSoalPage() {
                               <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                             </div>
                           </td>
-                          <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatTgl(t.tanggal)}</td>
+                          <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{formatRentang(t)}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.jamMulai}–{t.jamSelesai}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.lokasi}</td>
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
@@ -1034,7 +1035,7 @@ export default function AdminJadwalSoalPage() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
-                          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatTgl(t.tanggal)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                           <div className="mt-1.5 flex items-center gap-2">
                             <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                               <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />
@@ -1112,7 +1113,7 @@ export default function AdminJadwalSoalPage() {
                       </span>
                     )}
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
-                      <CalendarDays size={10}/>{formatTgl(sm.tanggal)}
+                      <CalendarDays size={10}/>{formatRentang(sm)}
                     </span>
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
                       <Clock size={10}/>{sm.jamMulai}–{sm.jamSelesai}
@@ -1189,7 +1190,7 @@ export default function AdminJadwalSoalPage() {
       </AnimatePresence>
 
       <TahapanModal open={openTahapan} onClose={() => { setOpenTahapan(false); setEditTarget(null); }} onSave={saveTahapan}
-        initial={editTarget ? { hariKe: editTarget.hariKe, judul: editTarget.judul, tanggal: editTarget.tanggal.slice(0, 10), jamMulai: editTarget.jamMulai, jamSelesai: editTarget.jamSelesai, lokasi: editTarget.lokasi, penguji: editTarget.penguji ?? "", keterangan: editTarget.keterangan ?? "" } : undefined} />
+        initial={editTarget ? { hariKe: editTarget.hariKe, judul: editTarget.judul, tanggal: editTarget.tanggal.slice(0, 10), tanggalSelesai: editTarget.tanggalSelesai ? editTarget.tanggalSelesai.slice(0, 10) : "", jamMulai: editTarget.jamMulai, jamSelesai: editTarget.jamSelesai, lokasi: editTarget.lokasi, penguji: editTarget.penguji ?? "", keterangan: editTarget.keterangan ?? "" } : undefined} />
       <UploadSoalModal open={openSoal} onClose={() => setOpenSoal(false)} onUpload={uploadSoal} tahapanList={tahapanList} />
 
       <TambahFileModal

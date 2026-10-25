@@ -61,6 +61,7 @@ export class UjianUkkService {
         ...dto,
         tipe: TipeUKK.INTERNAL,
         tanggal: new Date(dto.tanggal),
+        tanggalSelesai: dto.tanggalSelesai ? new Date(dto.tanggalSelesai) : null,
       },
     });
   }
@@ -72,6 +73,7 @@ export class UjianUkkService {
       data: {
         ...dto,
         ...(dto.tanggal ? { tanggal: new Date(dto.tanggal) } : {}),
+        ...(dto.tanggalSelesai !== undefined ? { tanggalSelesai: dto.tanggalSelesai ? new Date(dto.tanggalSelesai) : null } : {}),
       },
     });
   }
@@ -184,9 +186,14 @@ export class UjianUkkService {
     if (!task || task.hariKe === 0) throw new NotFoundException('Task tidak ditemukan');
 
     // Satu hari hanya boleh mengirim untuk satu task: tolak jika siswa sudah
-    // mengirim untuk task lain yang tanggalnya sama.
+    // mengirim untuk task lain yang rentang tanggalnya beririsan.
+    const akhir = task.tanggalSelesai ?? task.tanggal;
     const kembar = await this.prisma.submisiProjectUKK.findFirst({
-      where: { siswaId: siswa.id, tahapanId: { not: task.id }, tahapan: { tanggal: task.tanggal } },
+      where: {
+        siswaId: siswa.id,
+        tahapanId: { not: task.id },
+        tahapan: { tanggal: { lte: akhir }, OR: [{ tanggalSelesai: { gte: task.tanggal } }, { tanggalSelesai: null, tanggal: { gte: task.tanggal } }] },
+      },
       include: { tahapan: { select: { judul: true } } },
     });
     if (kembar) {
