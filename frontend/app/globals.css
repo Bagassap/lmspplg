@@ -426,3 +426,7 @@ html [data-row-act]:disabled { opacity: 0.5; }
 /* ---- Layar mobile: tahan tampilan sampai hidrasi selesai (maks. 2,5 dtk) agar tidak berkedip tampilan lama ---- */
 @keyframes boot-reveal { to { visibility: visible; } }
 html[data-boot-mobile]:not([data-hydrated]) body { visibility: hidden; animation: boot-reveal 0s 2.5s forwards; }
+
+/* ---- Pemisah antar kartu (Unduh Laporan, Siswa Bermasalah, Jadwal Absen): garis tipis lewat bayangan, bukan border ---- */
+html:not(.dark) .card-pisah { box-shadow: 0 0 0 1px #d6cdee, 0 6px 18px -8px rgba(62,3,179,0.18) !important; }
+html.dark .card-pisah { box-shadow: 0 0 0 1px #475569 !important; }
