@@ -82,10 +82,10 @@ export function Icon3D({
 }
 
 export function OptionCard3D({
-  icon, tone, label, caption, active, disabled, title, onClick,
+  icon, tone, label, caption, active, disabled, title, onClick, stack,
 }: {
   icon: ElementType; tone: Tone3D; label: string; caption?: string;
-  active: boolean; disabled?: boolean; title?: string; onClick: () => void;
+  active: boolean; disabled?: boolean; title?: string; onClick: () => void; stack?: boolean;
 }) {
   const [c1] = TONE_3D[tone];
   return (
@@ -94,13 +94,13 @@ export function OptionCard3D({
       disabled={disabled}
       title={title}
       onClick={onClick}
-      className={`flex min-w-0 items-center gap-2.5 rounded-2xl border bg-white p-2.5 text-left transition-all disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-800 ${
+      className={`flex min-w-0 ${stack ? "flex-col justify-center gap-1.5 text-center" : "items-center gap-2.5 text-left"} rounded-2xl border bg-white p-2.5 transition-all disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-800 ${
         active ? "shadow-sm" : "border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600"
       }`}
       style={active ? { borderColor: c1, boxShadow: `0 0 0 1px ${c1}` } : undefined}
     >
       <Icon3D icon={icon} tone={tone} size={34} iconSize={16} />
-      <span className="min-w-0">
+      <span className="min-w-0 max-w-full">
         <span className="block truncate text-[11px] font-bold text-slate-800 dark:text-white">{label}</span>
         {caption && <span className="block truncate text-[9.5px] leading-tight text-slate-400 dark:text-slate-500">{caption}</span>}
       </span>

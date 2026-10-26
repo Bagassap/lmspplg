@@ -69,7 +69,7 @@ export function FilterBarPassword({
           ))}
         </div>
         {wali && (
-          <div className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA]/60 px-3 py-2 dark:bg-slate-700/30">
+          <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2 dark:bg-slate-700/30">
             <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={28} fallbackBg="#3E03B3" textClassName="text-[10px] font-bold" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-bold text-slate-800 dark:text-white">{wali.nama}</p>

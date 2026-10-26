@@ -198,7 +198,7 @@ export function PengumumanFormModal({
                 />
               </div>
 
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:bg-[#3E03B3]/5 dark:border-slate-600 dark:bg-slate-700/40 dark:hover:bg-[#00AAFA]/20">
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/40 dark:hover:bg-slate-600">
                 <input
                   type="checkbox"
                   checked={isPinned}

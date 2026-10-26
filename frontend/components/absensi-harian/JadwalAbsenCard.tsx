@@ -395,7 +395,7 @@ export function JadwalAbsenCard() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/50 p-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                <div className="rounded-2xl border border-[#F1EDFA] bg-slate-100 p-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
                     <LogOut size={12} /> Absen Pulang <span className="normal-case text-[#00AAFA]/70 dark:text-[#8F6DD3]/70">(WIB)</span>
                   </p>

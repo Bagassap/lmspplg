@@ -91,7 +91,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
               <BookOpen size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-            <span className="ml-1 rounded-lg bg-[#3E03B3]/10 px-2 py-0.5 text-[10px] font-bold text-[#3E03B3]">{filtered.length} materi</span>
+            <span className="ml-1 rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-[#3E03B3]">{filtered.length} materi</span>
           </div>
           <div className="relative mb-4">
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />

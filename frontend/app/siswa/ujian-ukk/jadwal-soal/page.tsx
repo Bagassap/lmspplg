@@ -832,7 +832,7 @@ export default function SiswaJadwalSoalPage() {
                       <p className="text-base font-extrabold text-[#000000] dark:text-[#C4B5FD] leading-tight">{revisiModal.soal?.judul}</p>
                     </div>
                   </div>
-                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-[#000000]/15 flex items-center justify-center text-[#000000] dark:text-[#C4B5FD] hover:bg-[#000000]/25">
+                  <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-[#000000]/15 flex items-center justify-center text-[#000000] dark:text-[#C4B5FD] hover:bg-slate-100">
                     <X size={15}/>
                   </button>
                 </div>

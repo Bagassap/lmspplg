@@ -84,13 +84,13 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
 
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
-      className="flex w-full items-center gap-2.5 rounded-2xl border-2 border-transparent bg-[#F6FEE8] px-4 py-3 text-left transition-all hover:border-[#F6FEE8] disabled:cursor-default disabled:opacity-50 dark:bg-[#48700B]/15 dark:hover:border-[#48700B]/60">
+      className="flex w-full items-center gap-2.5 rounded-2xl bg-slate-100 px-4 py-3 text-left transition-all hover:bg-slate-200 disabled:cursor-default disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white">
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-[#48700B] dark:text-[#C4B5FD]">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
-        <p className="truncate text-[11px] font-semibold text-[#5D900F] dark:text-[#C4B5FD]">
+        <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
+        <p className="truncate text-[11px] font-semibold text-slate-600 dark:text-slate-300">
           {belum.length > 0 ? `${belum.length} siswa belum absen di seluruh kelas` : "Semua siswa di seluruh kelas sudah absen"}
         </p>
       </div>
@@ -568,9 +568,9 @@ export default function AdminAbsensiHarianPage() {
                   <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {RANGE_MODE_CARDS.map((opt) => (
-                  <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                  <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                     active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
                 ))}
               </div>
@@ -774,7 +774,7 @@ export default function AdminAbsensiHarianPage() {
                           <p className="truncate text-[11px] text-slate-400">{s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}</p>
                         </div>
                         <span className={`shrink-0 rounded-lg px-2 py-1 text-xs font-bold ${
-                            isSelected ? "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#3E03B3]/30 dark:text-[#C4B5FD]" : "bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-300"
+                            isSelected ? "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]" : "bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-300"
                           }`}>
                           {s.pct}%
                         </span>
@@ -915,9 +915,9 @@ export default function AdminAbsensiHarianPage() {
                 </div>
 
                 <div className="overflow-y-auto px-5 pb-6 pt-4">
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {RANGE_MODE_CARDS.map((opt) => (
-                      <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                      <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                         active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
                     ))}
                   </div>

@@ -384,7 +384,7 @@ export function TugasFormModal({
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                   File Soal / Lampiran <span className="font-normal text-gray-400">(opsional)</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-[#3E03B3]/5 dark:border-slate-600 dark:bg-slate-700/40">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/40">
                   <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0 flex-1">
                     {file ? (
@@ -461,7 +461,7 @@ export function TugasFormModal({
                           <span className="text-[11px] font-bold text-gray-500 dark:text-slate-400">Soal {idx + 1}</span>
                           {soalList.length > 1 && (
                             <button type="button" onClick={() => removeSoal(idx)}
-                              className="flex h-6 w-6 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20">
+                              className="flex h-6 w-6 items-center justify-center rounded-lg text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:hover:bg-slate-600">
                               <Trash2 size={13} />
                             </button>
                           )}

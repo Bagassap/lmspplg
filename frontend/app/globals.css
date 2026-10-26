@@ -201,12 +201,12 @@ html [class*="text-[#5D900F]"], html [class*="text-[#48700B]"],
 html [class*="text-[#A1F919]"], html [class*="text-[#8F6DD3]"] { color: #3e03b3 !important; }
 html.dark [class*="text-[#5D900F]"], html.dark [class*="text-[#A1F919]"],
 html.dark [class*="dark:text-[#A1F919]"] { color: #c4b5fd !important; }
-html [class*="bg-[#F6FEE8]"], html [class*="bg-[#EAF8D2]"] { background-color: #f1edfa !important; }
+html [class*="bg-[#F6FEE8]"], html [class*="bg-[#EAF8D2]"] { background-color: #f1f5f9 !important; }
 html [class*="bg-[#A1F919]/"], html [class*="bg-[#48700B]/"] { background-color: rgba(62,3,179,0.12) !important; }
 html [class*="border-[#A1F919]"], html [class*="border-[#5D900F]"],
 html [class*="border-[#48700B]"] { border-color: rgba(62,3,179,0.35) !important; }
 html [class*="ring-[#A1F919]"] { --tw-ring-color: rgba(62,3,179,0.3) !important; }
-html [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #f1edfa !important; }
+html [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #e2e8f0 !important; }
 html [class*="from-[#A1F919]"], html [class*="to-[#A1F919]"] { --tw-gradient-from: #3e03b3; --tw-gradient-to: #5b16d9; }
 html .text-black { color: #0f172a !important; }
 html .bg-\[\#A1F919\] .text-black, html .bg-\[\#A1F919\].text-black { color: #ffffff !important; }

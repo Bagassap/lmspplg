@@ -306,13 +306,13 @@ function AccordionCard({
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
                             ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#000000]/20"
-                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#000000]/20"
+                            : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
                         <BookOpen size={13} /></button>
                       <button onClick={onDelete} title="Hapus"
-                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                         <Trash2 size={13} /></button>
                     </div>
                   )}
@@ -330,14 +330,14 @@ function AccordionCard({
                 style={{ background: "#3E03B3" }}
               />
               <div className="relative flex items-center gap-3 border-y border-[#3E03B3]/10 px-6 py-3 dark:border-[#3E03B3]/20">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3E03B3]/12 dark:bg-[#3E03B3]/20">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700">
                   <MessageCircle size={13} className="text-[#3E03B3] dark:text-[#3E03B3]" />
                 </div>
                 <span className="text-[13px] font-extrabold tracking-tight text-slate-800 dark:text-white">
                   Ruang Diskusi
                 </span>
                 {detail && (
-                  <span className="rounded-lg bg-[#3E03B3]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-[#00AAFA]/30 dark:text-[#3E03B3]">
+                  <span className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-[#00AAFA]/30 dark:text-[#3E03B3]">
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}
@@ -353,7 +353,7 @@ function AccordionCard({
               {detailLoading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <div className="h-10 w-10 rounded-full bg-[#3E03B3]/10" />
+                    <div className="h-10 w-10 rounded-full bg-slate-100" />
                     <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#3E03B3]" />
                   </div>
                   <span className="text-[12px] text-slate-400">Memuat diskusi...</span>

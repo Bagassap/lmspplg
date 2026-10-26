@@ -466,7 +466,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                           key={n.id}
                           onClick={() => handleNotifClick(n)}
                           className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50 ${
-                            !n.isRead ? "bg-[#F1EDFA]/40 dark:bg-[#000000]/10" : ""
+                            !n.isRead ? "bg-slate-100 dark:bg-[#000000]/10" : ""
                           }`}
                         >
                           <div

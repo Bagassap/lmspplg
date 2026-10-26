@@ -131,7 +131,7 @@ export function MateriListPage({
                 <BookOpen size={14} className="text-white" />
               </div>
               <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
-              <span className="ml-1 rounded-lg bg-[#3E03B3]/10 px-2 py-0.5 text-[10px] font-bold text-[#3E03B3]">{filtered.length} materi</span>
+              <span className="ml-1 rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-[#3E03B3]">{filtered.length} materi</span>
             </div>
             {canCreate && (
               <button onClick={() => { setEditItem(null); setModalOpen(true); }}
@@ -232,23 +232,23 @@ export function MateriListPage({
                       <td className="whitespace-nowrap px-5 py-3.5">
                         <div className="flex items-center justify-end gap-1">
                           <button onClick={() => router.push(`${rolePrefix}/materi/${m.id}`)} title="Lihat materi"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
                             <Eye size={14} />
                           </button>
                           {m.fileUrl && (
                             <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" title="Unduh file"
-                              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
                               <Download size={14} />
                             </a>
                           )}
                           {canEdit(m) && (
                             <>
                               <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#000000]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                                 <Pencil size={14} />
                               </button>
                               <button onClick={() => handleDelete(m)} title="Hapus"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                                 <Trash2 size={14} />
                               </button>
                             </>

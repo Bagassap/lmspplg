@@ -464,7 +464,7 @@ export default function SiswaProfilPage() {
             </div>
 
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
-            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#3E03B3]/10 px-3.5 py-1.5 dark:bg-[#8F6DD3]/15">
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3.5 py-1.5 dark:bg-[#8F6DD3]/15">
               <IdCard size={14} className="text-[#3E03B3] dark:text-[#8F6DD3]" />
               <span className="font-mono text-sm font-extrabold tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
                 NIS {profil.nis}

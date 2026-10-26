@@ -342,7 +342,7 @@ export function Sidebar({
                                   <span
                                     className={[
                                       "flex h-5 w-5 shrink-0 items-center justify-center rounded-md",
-                                      subActive ? "bg-[#3E03B3]/20" : "",
+                                      subActive ? "bg-slate-100" : "",
                                     ].join(" ")}
                                   >
                                     <sub.icon

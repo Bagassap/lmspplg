@@ -95,13 +95,13 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
 
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
-      className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-[#F6FEE8] px-3 py-2.5 text-left transition-all hover:border-[#F6FEE8] disabled:cursor-default disabled:opacity-50 dark:bg-[#48700B]/15 dark:hover:border-[#48700B]/60">
+      className="flex h-full w-full items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2.5 text-left transition-all hover:bg-slate-200 disabled:cursor-default disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600">
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white">
         {sent ? <Check size={14} /> : <Bell size={14} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-[#48700B] dark:text-[#C4B5FD]">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
-        <p className="truncate text-[10px] font-semibold text-[#5D900F] dark:text-[#C4B5FD]">
+        <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
+        <p className="truncate text-[11px] font-semibold text-slate-600 dark:text-slate-300">
           {belum.length > 0 ? `${belum.length} siswa belum absen` : "Semua sudah absen"}
         </p>
       </div>
@@ -119,10 +119,10 @@ function RingkasanKehadiranCard({
   tanggal: string;
 }) {
   const segments = [
-    { key: "HADIR", value: rekap.HADIR, color: STATUS_CFG.HADIR.clr, label: STATUS_CFG.HADIR.label },
-    { key: "IZIN", value: rekap.IZIN, color: STATUS_CFG.IZIN.clr, label: STATUS_CFG.IZIN.label },
-    { key: "SAKIT", value: rekap.SAKIT, color: STATUS_CFG.SAKIT.clr, label: STATUS_CFG.SAKIT.label },
-    { key: "ALPA", value: rekap.ALPA, color: STATUS_CFG.ALPA.clr, label: STATUS_CFG.ALPA.label },
+    { key: "HADIR", value: rekap.HADIR, color: "#3E03B3", label: STATUS_CFG.HADIR.label },
+    { key: "IZIN", value: rekap.IZIN, color: "#0EA5E9", label: STATUS_CFG.IZIN.label },
+    { key: "SAKIT", value: rekap.SAKIT, color: "#10B981", label: STATUS_CFG.SAKIT.label },
+    { key: "ALPA", value: rekap.ALPA, color: "#F26A3D", label: STATUS_CFG.ALPA.label },
   ];
   const r = 40;
   const circumference = 2 * Math.PI * r;
@@ -195,39 +195,34 @@ function RingkasanKehadiranCard({
           <div className="flex flex-col gap-2.5">
             {segments.map((s) => (
               <div key={s.key} className="flex items-center gap-2 text-left">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.label} <span className="text-slate-700 dark:text-slate-200">{s.value}</span></span>
+                <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{s.label} <span className="font-extrabold text-slate-900 dark:text-white">{s.value}</span> <span className="text-xs text-slate-400">({total > 0 ? Math.round((s.value / total) * 100) : 0}%)</span></span>
               </div>
             ))}
           </div>
-          <div className="relative flex h-40 w-40 shrink-0 items-center justify-center">
-            <svg viewBox="0 0 100 100" className="h-40 w-40 -rotate-90">
-              <circle cx="50" cy="50" r={r} stroke="#FFFFFF" strokeWidth="12" fill="none" />
+          <div className="relative flex h-44 w-44 shrink-0 items-center justify-center">
+            <svg viewBox="0 0 100 100" className="h-44 w-44 -rotate-90">
+              <circle cx="50" cy="50" r={r} stroke="#E2E8F0" strokeWidth="14" fill="none" />
               {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
                 const pct = s.value / total;
-                const dash = pct * circumference;
+                const gap = segments.filter((x) => x.value > 0).length > 1 ? 1.2 : 0;
+                const dash = Math.max(pct * circumference - gap, 0);
                 const offset = circumference * (1 - cumulative);
                 cumulative += pct;
                 return (
-                  <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="12" fill="none"
-                    strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="round" />
+                  <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="14" fill="none"
+                    strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="butt" />
                 );
               })}
             </svg>
             <div className="absolute flex flex-col items-center">
-              <span className="text-2xl font-extrabold text-slate-800 dark:text-white">{hadirPct}%</span>
-              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Hadir</span>
+              <span className="text-3xl font-black text-slate-900 dark:text-white">{hadirPct}%</span>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Hadir</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 text-[11px] dark:border-slate-700">
-        <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-          <Users size={12} className="text-[#3E03B3]" />
-          Total {total} siswa bimbingan
-        </span>
-      </div>
     </div>
   );
 }
@@ -668,9 +663,9 @@ export default function GuruMagangAbsensiPage() {
                 <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {RANGE_MODE_CARDS.map((opt) => (
-                <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                   active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
               ))}
             </div>
@@ -945,9 +940,9 @@ export default function GuruMagangAbsensiPage() {
                 </div>
 
                 <div className="overflow-y-auto px-5 pb-6 pt-4">
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {RANGE_MODE_CARDS.map((opt) => (
-                      <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                      <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                         active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
                     ))}
                   </div>

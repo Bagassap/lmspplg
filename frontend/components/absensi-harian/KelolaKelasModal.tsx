@@ -99,7 +99,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {editing ? (
-            <div className="space-y-3 rounded-2xl border border-[#F1EDFA] bg-[#F1EDFA]/50 p-4 dark:border-[#000000]/40 dark:bg-[#000000]/10">
+            <div className="space-y-3 rounded-2xl border border-[#F1EDFA] bg-slate-100 p-4 dark:border-[#000000]/40 dark:bg-[#000000]/10">
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Nama Kelas</label>
                 <input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: XII RPL 1"
@@ -129,14 +129,14 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
           ) : (
             <motion.button onClick={startCreate}
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-[#3E03B3] hover:bg-[#F1EDFA]/50 hover:text-[#3E03B3] dark:border-slate-600 dark:hover:bg-[#000000]/10">
+              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:border-[#3E03B3] hover:bg-slate-100 hover:text-[#3E03B3] dark:border-slate-600 dark:hover:bg-slate-600">
               <Plus size={14} /> Tambah Kelas
             </motion.button>
           )}
 
           <div className="mt-3 space-y-2">
             {kelasList.map((k) => (
-              <div key={k.id} className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 px-3.5 py-2.5 transition-colors hover:border-[#F1EDFA] hover:bg-[#F1EDFA]/30 dark:border-slate-700/50 dark:hover:bg-[#000000]/10">
+              <div key={k.id} className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 px-3.5 py-2.5 transition-colors hover:border-[#F1EDFA] hover:bg-slate-100 dark:border-slate-700/50 dark:hover:bg-slate-600">
                 <div className="flex min-w-0 items-center gap-2.5">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: avatarColor(k.nama) }}>
                     <School size={15} />

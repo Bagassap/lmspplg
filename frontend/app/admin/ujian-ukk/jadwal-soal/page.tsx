@@ -1162,7 +1162,7 @@ export default function AdminJadwalSoalPage() {
                         </span>
                         <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`}
                           target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 bg-[#F1EDFA] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]">
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 bg-[#F1EDFA] dark:bg-slate-700 text-[#3E03B3] dark:text-[#C4B5FD]">
                           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current shrink-0">
                             <path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/>
                           </svg>

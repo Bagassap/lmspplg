@@ -150,7 +150,7 @@ export function TugasListCardSiswa({
                       )}
                       {t.fileUrl && (
                         <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
+                          className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
                           <Download size={12} />
                         </a>
                       )}
@@ -215,7 +215,7 @@ export function TugasListCardSiswa({
                         )}
                         {t.fileUrl && (
                           <a href={t.fileUrl} target="_blank" rel="noopener noreferrer" title={`Unduh lampiran${t.fileName ? `: ${t.fileName}` : ""}`}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-[#000000]/20">
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
                             <Download size={14} />
                           </a>
                         )}
