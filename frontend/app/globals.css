@@ -346,7 +346,7 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
 /* ---- Desktop: tanpa border di komponen mana pun (kecuali tabel, yang tampil dengan gayanya sendiri) ----
    Pengecualian: spinner (animate-spin) dan kotak kecil (kotak centang, penanda) agar tidak hilang. */
 @media (min-width: 1024px) {
-  *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6):not(table):not(thead):not(tbody):not(tfoot):not(tr):not(th):not(td):not([style*="grid-template-columns"]):not([style*="grid-template-columns"] > *):not([class*="rounded-2xl"][class~="border"]):not([class*="rounded-3xl"][class~="border"]) {
+  *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6):not(table):not(thead):not(tbody):not(tfoot):not(tr):not(th):not(td):not([style*="grid-template-columns"]):not([style*="grid-template-columns"] > *) {
     border-width: 0 !important;
   }
   html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
@@ -430,19 +430,3 @@ html[data-boot-mobile]:not([data-hydrated]) body { visibility: hidden; animation
 /* ---- Pemisah antar kartu (Unduh Laporan, Siswa Bermasalah, Jadwal Absen): garis tipis lewat bayangan, bukan border ---- */
 html:not(.dark) .card-pisah { box-shadow: 0 0 0 1px #d6cdee, 0 6px 18px -8px rgba(62,3,179,0.18) !important; }
 html.dark .card-pisah { box-shadow: 0 0 0 1px #475569 !important; }
-
-/* ---- Desktop: kartu mendapat garis tepi tipis (tabel tidak diubah) ---- */
-@media (min-width: 1024px) {
-  /* kartu yang memang punya kelas border: tampilkan lagi, warna dibuat jelas */
-  html:not(.dark) [class*="rounded-2xl"][class~="border"][class*="border-slate-100"],
-  html:not(.dark) [class*="rounded-3xl"][class~="border"][class*="border-slate-100"] { border-color: #dbe2ec !important; }
-  html.dark [class*="rounded-2xl"][class~="border"],
-  html.dark [class*="rounded-3xl"][class~="border"] { border-color: #334155; }
-  /* kartu putih tanpa border: garis tipis lewat outline (mengikuti lengkung sudut) */
-  html:not(.dark) :is([class*="rounded-2xl"], [class*="rounded-3xl"]):is(.bg-white, [class*="bg-[#FFFFFF]"]):not([class~="border"]):not(table *):not(thead *):not(button):not(a):not(input):not(select):not(textarea):not(.fixed):not([class*="inset-0"]):not([data-plain] *):not(.card-pisah) {
-    outline: 1px solid #dbe2ec; outline-offset: -1px;
-  }
-  html.dark :is([class*="rounded-2xl"], [class*="rounded-3xl"]):is([class*="dark:bg-slate-800"], [class*="dark:bg-[#1E293B]"]):not([class~="border"]):not(table *):not(button):not(a):not(.fixed):not([class*="inset-0"]):not([data-plain] *) {
-    outline: 1px solid #334155; outline-offset: -1px;
-  }
-}
