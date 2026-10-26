@@ -327,21 +327,14 @@ export function Topbar({ user }: { user: UserPayload }) {
       >
         {appMode && (
           <div className="flex min-w-0 items-center gap-3 lg:hidden">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#2D0281" }}>
-              <Image src="/PPLG.png" alt="LMS PPLG" width={18} height={22} className="h-5 w-auto" />
-            </div>
+            <Image src="/favicon.png" alt="LMS PPLG" width={40} height={40} className="h-10 w-10 shrink-0 rounded-xl" />
             <span className="truncate text-base font-bold text-white">
               {appHome ? `Hi, ${user.nama.split(" ")[0]} 👋` : title}
             </span>
           </div>
         )}
         <div className={`min-w-0 items-center gap-2 lg:hidden ${appMode ? "hidden" : "flex"}`}>
-          <div
-            className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
-          >
-            <Image src="/PPLG.png" alt="PPLG" width={16} height={20} className="h-4 w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
-          </div>
+          <Image src="/favicon.png" alt="LMS PPLG" width={32} height={32} className="h-8 w-8 shrink-0 rounded-xl" />
           <div className="min-w-0">
             <span className="flex items-baseline gap-1">
               <span className={`text-[15px] font-black tracking-tight ${purpleMobile ? "text-white" : "text-[#3E03B3]"}`}>LMS</span>

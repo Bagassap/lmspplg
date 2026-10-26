@@ -63,10 +63,10 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
       >
         <div className="w-full rounded-3xl bg-white p-6 text-center shadow-2xl">
           <Image
-            src="/PPLG.png"
+            src="/favicon.png"
             alt="Logo PPLG"
-            width={676}
-            height={904}
+            width={1214}
+            height={1214}
             priority
             className="mx-auto mb-4 h-24 w-auto sm:h-28"
             style={{ filter: "drop-shadow(0 6px 16px rgba(62,3,179,0.35))" }}

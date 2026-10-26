@@ -64,10 +64,10 @@ export function LengkapiProfilCard() {
               }}
             />
             <Image
-              src="/PPLG.png"
+              src="/favicon.png"
               alt="Logo PPLG"
-              width={676}
-              height={904}
+              width={1214}
+              height={1214}
               priority
               className="relative h-12 w-auto sm:h-22"
               style={{

@@ -198,10 +198,10 @@ export function Splash() {
             transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
           />
           <Image
-            src="/PPLG.png"
+            src="/favicon.png"
             alt="Logo PPLG"
-            width={676}
-            height={904}
+            width={1214}
+            height={1214}
             priority
             className="relative h-28 w-auto sm:h-32"
             style={{
