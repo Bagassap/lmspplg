@@ -825,25 +825,25 @@ export default function AdminJadwalSoalPage() {
                 <div className="rounded-t-[28px] bg-[#FFFFFF] px-4 pb-1 pt-3 dark:bg-[#1E293B]">
                   <div className="grid grid-cols-2 gap-2.5">
                     <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                      className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
                       style={{ background: "#3E03B3" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
-                      <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white/20">
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
                         <CalendarDays size={14} />
                       </div>
-                      <div className="relative min-w-0 flex-1">
+                      <div className="relative min-w-0">
                         <p className="truncate text-sm font-black leading-tight">Jadwal UKK</p>
                         <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
                       </div>
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                      className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
+                      className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
                       style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
-                      <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white/20">
+                      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
                         <FileText size={14} />
                       </div>
-                      <div className="relative min-w-0 flex-1">
+                      <div className="relative min-w-0">
                         <p className="truncate text-sm font-black leading-tight">Soal UKK</p>
                         <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{totalSoal} soal diunggah</p>
                       </div>
