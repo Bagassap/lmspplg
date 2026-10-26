@@ -321,11 +321,11 @@ html[data-app-mode] .fixed.inset-0:not([data-plain]) .pointer-events-none.absolu
 /* ---- Modal tanpa transparansi: panel dan isi memakai warna solid ---- */
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute):not(.pointer-events-none) { background-color: #ffffff; opacity: 1 !important; }
 html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute):not(.pointer-events-none) { background-color: #1e293b; }
-html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-white/"]:not(.app-sheet-header *) { background-color: #f1edfa !important; }
-html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-black/"] { background-color: #f1edfa !important; }
-html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-slate-"][class*="/"]:not(input):not(select):not(textarea) { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-white/"]:not(.app-sheet-header *) { background-color: #f1f5f9 !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-black/"] { background-color: #f1f5f9 !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-slate-"][class*="/"]:not(input):not(select):not(textarea) { background-color: #f1f5f9 !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#F26A3D]/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#FFE9E2]/"] { background-color: #ffe9e2 !important; }
-html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#3E03B3]/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#F1EDFA]/"] { background-color: #f1edfa !important; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#3E03B3]/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#F1EDFA]/"] { background-color: #f1f5f9 !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="text-white/"]:not(.app-sheet-header *) { color: #475569 !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="text-black/"], html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="text-[#000000]/"] { color: #334155 !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="border-"][class*="/"] { border-color: #e4dbf7 !important; }
@@ -350,7 +350,7 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
     border-width: 0 !important;
   }
   html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
-    background-color: #f1edfa !important;
+    background-color: #f1f5f9 !important;
   }
   /* isian form di dalam modal: putih (tepi dibuat dengan bayangan tipis, bukan border) */
   html:not(.dark) .fixed.inset-0:not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
@@ -440,3 +440,11 @@ html.dark .card-pisah { box-shadow: 0 0 0 1px #475569 !important; }
     outline: 1px solid #334155; outline-offset: -1px;
   }
 }
+
+/* ---- Tanpa warna transparan: lingkaran dekorasi disembunyikan, chip kaca (putih/NN) jadi putih solid ---- */
+html [class*="bg-white/"][class*="rounded-full"][class*="pointer-events-none"] { display: none !important; }
+html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) {
+  background-color: #ffffff !important; color: #3e03b3 !important; backdrop-filter: none !important;
+}
+html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) * { color: #3e03b3 !important; }
+html [class*="backdrop-blur"]:not(.fixed):not([class*="inset-0"]) { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
