@@ -417,9 +417,9 @@ html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important
   color: #ffffff !important;
 }
 
-/* ---- Tombol aksi di baris tabel: latar abu-abu, ikon & teks ungu ---- */
-html [data-row-act] { background: #e2e8f0 !important; color: #3e03b3 !important; border-color: transparent !important; box-shadow: none !important; }
-html [data-row-act] * { color: #3e03b3 !important; }
+/* ---- Tombol aksi di baris tabel: latar abu-abu, ikon & teks abu-abu tua ---- */
+html [data-row-act] { background: #e2e8f0 !important; color: #475569 !important; border-color: transparent !important; box-shadow: none !important; }
+html [data-row-act] * { color: #475569 !important; }
 html [data-row-act]:hover:not(:disabled) { background: #cbd5e1 !important; }
 html [data-row-act]:disabled { opacity: 0.5; }
 
