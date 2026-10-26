@@ -114,7 +114,7 @@ export function MateriTugasGuruPage() {
             <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
             <div className="flex flex-col gap-4">
               <button type="button" onClick={() => setCategory("materi")}
-                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="relative flex h-24 items-center gap-4 overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   background: "#3E03B3",
                   boxShadow: category === "materi" ? "0 8px 24px rgba(62,3,179,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
@@ -122,17 +122,17 @@ export function MateriTugasGuruPage() {
                   outlineOffset: "3px",
                 }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
                   <BookOpen size={16} />
                 </div>
-                <div className="relative min-w-0">
+                <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Materi</p>
                   <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{materiList.length} materi tersedia</p>
                 </div>
               </button>
 
               <button type="button" onClick={() => setCategory("tugas")}
-                className="relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="relative flex h-24 items-center gap-4 overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   background: "#F26A3D", color: "#FFFFFF",
                   boxShadow: category === "tugas" ? "0 8px 24px rgba(242,106,61,0.35)" : "0 8px 24px rgba(0,0,0,0.15)",
@@ -140,10 +140,10 @@ export function MateriTugasGuruPage() {
                   outlineOffset: "3px",
                 }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20">
+                <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
                   <Send size={16} />
                 </div>
-                <div className="relative min-w-0">
+                <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Tugas</p>
                   <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">
                     {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}

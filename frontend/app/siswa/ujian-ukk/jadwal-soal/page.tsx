@@ -389,26 +389,26 @@ export default function SiswaJadwalSoalPage() {
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-4">
               <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-24 lg:gap-4 lg:px-5 lg:py-4"
                 style={{ background: "#3E03B3", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
+                <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
                   <CalendarDays size={16} />
                 </div>
-                <div className="relative min-w-0">
+                <div className="relative min-w-0 flex-1">
                   <p className="truncate text-sm font-black leading-tight lg:text-xl">Jadwal<span className="text-white/70"> UKK</span></p>
                   <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
                 </div>
               </button>
 
               <button type="button" onClick={()=>{ setSoalSoalIdx(0); setOpenSoalModal(true); }}
-                className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-32 lg:px-5 lg:py-5"
+                className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-left transition-all hover:scale-[1.01] active:scale-[0.99] lg:h-24 lg:gap-4 lg:px-5 lg:py-4"
                 style={{ background: "#F26A3D", color: "#FFFFFF", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
-                <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
+                <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white/20 lg:h-9 lg:w-9 lg:rounded-2xl">
                   <FileText size={16} />
                 </div>
-                <div className="relative min-w-0">
+                <div className="relative min-w-0 flex-1">
                   <p className="truncate text-sm font-black leading-tight lg:text-xl">Soal<span className="text-white/70"> UKK</span></p>
                   <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{totalSoal} soal tersedia · TA 2026/2027</p>
                 </div>
