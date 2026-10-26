@@ -465,3 +465,13 @@ html.dark [style*="background: rgb(241, 237, 250)"], html.dark [style*="backgrou
 html.dark [style*="background: rgb(255, 233, 226)"], html.dark [style*="background-color: rgb(255, 233, 226)"] { background: #273449 !important; }
 html.dark [style*="background: rgb(226, 232, 240)"], html.dark [style*="background-color: rgb(226, 232, 240)"] { background: #334155 !important; }
 html.dark :is(button, a)[class*="bg-[#F1EDFA]"]:not([class*="dark:bg-"]) { color: #c4b5fd !important; }
+
+/* ---- Tema gelap (lanjutan): sisa permukaan putih ---- */
+html.dark [class*="bg-[#F6FEE8]"], html.dark [class*="bg-[#EAF8D2]"] { background-color: #334155 !important; color: #c4b5fd !important; }
+html.dark [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #475569 !important; }
+/* chip / kotak ikon putih di dalam bar berwarna (oranye, ungu, gradien) */
+html.dark :is([style*="background: rgb("], [style*="linear-gradient"], [class*="bg-[#3E03B3]"], [class*="bg-[#F26A3D]"]) :is(.bg-white, [class*="bg-white/"], [class*="bg-[#FFFFFF]"]) {
+  background-color: #1e293b !important; color: #e2e8f0 !important;
+}
+html.dark :is([style*="background: rgb("], [style*="linear-gradient"], [class*="bg-[#3E03B3]"], [class*="bg-[#F26A3D]"]) :is(.bg-white, [class*="bg-white/"], [class*="bg-[#FFFFFF]"]) * { color: #e2e8f0 !important; }
+html.dark :is(.bg-white, [class*="bg-[#FFFFFF]"]):is(button, a, span, div)[class*="text-[#3E03B3]"] { background-color: #1e293b !important; color: #c4b5fd !important; }
