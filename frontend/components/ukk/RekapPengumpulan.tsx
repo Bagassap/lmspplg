@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, Copy, FolderOpen, UserX } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Copy, Download, FolderOpen, UserX } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 type SubmisiRow = {
@@ -17,6 +17,13 @@ type KelasXII = { id: string; nama: string; siswa: { id: string; nama: string | 
 
 const PER_PAGE = 10;
 
+function urlZip(o: { tahapanId?: string; kelasId?: string }) {
+  const qs = new URLSearchParams();
+  if (o.tahapanId) qs.set("tahapanId", o.tahapanId);
+  if (o.kelasId) qs.set("kelasId", o.kelasId);
+  return `/api/ujian-ukk/submisi/unduh-semua?${qs.toString()}`;
+}
+
 function tgl(s: string) {
   return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
@@ -29,7 +36,7 @@ function labelBerkas(url: string) {
  * Rekap pengumpulan satu task UKK per kelas XII: kartu "Sudah" dan "Belum mengumpulkan"
  * bisa diklik untuk melihat siswanya, ditampilkan 10 siswa per halaman.
  */
-export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
+export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]; tahapanId?: string }) {
   const toast = useToast();
   async function salin(teks: string, pesan: string) {
     try { await navigator.clipboard.writeText(teks); toast.success(pesan, ""); }
@@ -104,6 +111,25 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
           );
         })}
       </div>
+
+      {submisi.length > 0 && (
+        <div className="flex shrink-0 flex-wrap items-center gap-2 px-6 pb-3 sm:px-8">
+          <a href={urlZip({ tahapanId })} download
+            className="flex items-center gap-2 rounded-full bg-[#3E03B3] px-4 py-2 text-xs font-bold text-white">
+            <Download size={14} /> Unduh semua (ZIP)
+          </a>
+          {aktif && (
+            <a href={urlZip({ tahapanId, kelasId: aktif.id })} download
+              className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
+              <Download size={14} /> Unduh {aktif.nama}
+            </a>
+          )}
+          <button type="button" onClick={() => salin(`${window.location.origin}${urlZip({ tahapanId, kelasId: aktif?.id })}`, "Alamat unduh disalin (harus login admin/guru)")}
+            className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
+            <Copy size={14} /> Salin alamat unduh
+          </button>
+        </div>
+      )}
 
       {tab === "sudah" && folderKelas && (
         <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">

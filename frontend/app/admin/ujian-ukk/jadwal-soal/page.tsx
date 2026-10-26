@@ -1105,7 +1105,7 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
 
-                <RekapPengumpulan submisi={rowsTask} />
+                <RekapPengumpulan submisi={rowsTask} tahapanId={sm.id} />
 
               </motion.div>
             </motion.div>

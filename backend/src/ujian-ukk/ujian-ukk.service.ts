@@ -146,6 +146,21 @@ export class UjianUkkService {
     });
   }
 
+  // Data untuk ZIP "unduh semua": berkas pengumpulan (opsional per task / per kelas).
+  submisiUntukZip(filter: { tahapanId?: string; kelasId?: string }) {
+    return this.prisma.submisiProjectUKK.findMany({
+      where: {
+        ...(filter.tahapanId ? { tahapanId: filter.tahapanId } : {}),
+        ...(filter.kelasId ? { siswa: { kelasId: filter.kelasId } } : {}),
+      },
+      orderBy: { submittedAt: 'asc' },
+      include: {
+        tahapan: { select: { judul: true } },
+        siswa: { select: { nama: true, kelas: { select: { nama: true } } } },
+      },
+    });
+  }
+
   // Daftar kelas XII beserta siswa aktifnya (untuk rekap "sudah / belum mengumpulkan").
   async pesertaKelasXII() {
     const kelas = await this.prisma.kelas.findMany({

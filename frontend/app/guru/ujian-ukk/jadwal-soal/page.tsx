@@ -45,11 +45,11 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
   TERKIRIM: { label: "Menunggu", color: "#3E03B3", bg: "#F1EDFA" },
 };
 
-function SubmisiList({ items }: { items: Submisi[] }) {
+function SubmisiList({ items, tahapanId }: { items: Submisi[]; tahapanId?: string }) {
   // rekap per kelas XII: "sudah" & "belum mengumpulkan" bisa diklik, 10 siswa per halaman
   return (
     <div className="flex max-h-[34rem] flex-col">
-      <RekapPengumpulan submisi={items} />
+      <RekapPengumpulan submisi={items} tahapanId={tahapanId} />
     </div>
   );
 }
@@ -367,7 +367,7 @@ export default function GuruJadwalSoalPage() {
                         {exp && (
                           <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                             <div className="px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">Hasil Kerja Siswa</div>
-                            <SubmisiList items={submisiTahapan} />
+                            <SubmisiList items={submisiTahapan} tahapanId={t.id} />
                           </div>
                         )}
                       </li>
@@ -486,7 +486,7 @@ export default function GuruJadwalSoalPage() {
                                     <span>Hasil Kerja Siswa</span>
                                     <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
                                   </div>
-                                  <SubmisiList items={submisiTahapan} />
+                                  <SubmisiList items={submisiTahapan} tahapanId={t.id} />
                                 </td>
                               </tr>
                             )}
@@ -532,7 +532,7 @@ export default function GuruJadwalSoalPage() {
                                 <span>Hasil Kerja Siswa</span>
                                 <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
                               </div>
-                              <SubmisiList items={submisiTahapan} />
+                              <SubmisiList items={submisiTahapan} tahapanId={t.id} />
                             </div>
                           )}
                         </div>

@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Put, Delete, Param, Body,
+  Controller, Get, Post, Put, Delete, Param, Body, Query,
   UseGuards, Request, Res, UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,6 +7,7 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import * as fs from 'fs';
 import type { Response } from 'express';
+import archiver from 'archiver';
 import { UjianUkkService } from './ujian-ukk.service';
 import { UjianUkkExcelService } from './ujian-ukk-excel.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
@@ -133,6 +134,48 @@ export class UjianUkkController {
   @Roles(Role.ADMIN, Role.GURU)
   @Get('peserta-xii')
   pesertaKelasXII() { return this.service.pesertaKelasXII(); }
+
+  // Satu alamat untuk mengunduh semua berkas pengumpulan (ZIP): <Kelas>/<Nama siswa - Judul task>.<ext>
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('submisi/unduh-semua')
+  async unduhSemua(
+    @Query('tahapanId') tahapanId: string | undefined,
+    @Query('kelasId') kelasId: string | undefined,
+    @Res() res: Response,
+  ) {
+    const rows = await this.service.submisiUntukZip({ tahapanId: tahapanId || undefined, kelasId: kelasId || undefined });
+    const bersih = (s: string) => s.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'tanpa-nama';
+    const judul = rows[0]?.tahapan?.judul && tahapanId ? bersih(rows[0].tahapan.judul) : 'Semua Task';
+    res.set({
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="Asset UKK - ${judul}.zip"`,
+    });
+    const arsip = archiver('zip', { zlib: { level: 5 } });
+    arsip.on('error', () => res.end());
+    arsip.pipe(res);
+
+    const dipakai = new Set<string>();
+    const tautan: string[] = [];
+    for (const r of rows) {
+      const kelas = bersih(r.siswa?.kelas?.nama ?? 'Tanpa Kelas');
+      const nama = bersih(r.siswa?.nama ?? 'Siswa');
+      const task = bersih(r.tahapan?.judul ?? 'Task');
+      if (r.fileUrl.startsWith('/uploads/')) {
+        const path = join(process.cwd(), r.fileUrl);
+        if (!fs.existsSync(path)) { tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`); continue; }
+        const ext = extname(r.fileName || r.fileUrl);
+        let dalam = `${kelas}/${nama} - ${task}${ext}`;
+        for (let i = 2; dipakai.has(dalam); i++) dalam = `${kelas}/${nama} - ${task} (${i})${ext}`;
+        dipakai.add(dalam);
+        arsip.file(path, { name: dalam });
+      } else {
+        tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
+      }
+    }
+    if (tautan.length) arsip.append(tautan.join('\n'), { name: 'Link Google Drive & catatan.txt' });
+    await arsip.finalize();
+  }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
