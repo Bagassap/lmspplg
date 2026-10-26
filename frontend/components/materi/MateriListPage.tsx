@@ -231,24 +231,24 @@ export function MateriListPage({
                       </td>
                       <td className="whitespace-nowrap px-5 py-3.5">
                         <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => router.push(`${rolePrefix}/materi/${m.id}`)} title="Lihat materi"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
+                          <button onClick={() => router.push(`${rolePrefix}/materi/${m.id}`)} title="Lihat materi" data-row-act
+                            className="flex h-8 w-8 items-center justify-center rounded-lg">
                             <Eye size={14} />
                           </button>
                           {m.fileUrl && (
-                            <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" title="Unduh file"
-                              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F1EDFA] hover:text-[#00AAFA] dark:hover:bg-slate-600">
+                            <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" title="Unduh file" data-row-act
+                              className="flex h-8 w-8 items-center justify-center rounded-lg">
                               <Download size={14} />
                             </a>
                           )}
                           {canEdit(m) && (
                             <>
-                              <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
+                              <button onClick={() => { setEditItem(m); setModalOpen(true); }} title="Edit" data-row-act
+                                className="flex h-8 w-8 items-center justify-center rounded-lg">
                                 <Pencil size={14} />
                               </button>
-                              <button onClick={() => handleDelete(m)} title="Hapus"
-                                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
+                              <button onClick={() => handleDelete(m)} title="Hapus" data-row-act
+                                className="flex h-8 w-8 items-center justify-center rounded-lg">
                                 <Trash2 size={14} />
                               </button>
                             </>
