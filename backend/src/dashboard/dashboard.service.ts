@@ -197,12 +197,11 @@ export class DashboardService {
       where: { userId },
       include: {
         kelas: { include: { waliKelasGuru: { include: { user: { select: { nama: true } } } } } },
-        user: { select: { createdAt: true } },
       },
     });
     if (!siswaRecord) return { error: 'Profil siswa tidak ditemukan' };
 
-    const [absensiList, pklList, pengumuman, penempatanMagang] = await Promise.all([
+    const [absensiList, pklList, awalLmsAgg, pengumuman, penempatanMagang] = await Promise.all([
       this.prisma.absensiHarian.findMany({
         where: { siswaId: siswaRecord.id },
         select: { tanggal: true, status: true },
@@ -211,6 +210,7 @@ export class DashboardService {
         where: { siswaId: siswaRecord.id, status: { in: ['AKTIF', 'SELESAI'] } },
         select: { tanggalMulai: true, tanggalSelesai: true },
       }),
+      this.prisma.absensiHarian.aggregate({ _min: { tanggal: true }, where: { status: { not: null } } }),
       this.prisma.pengumuman.findMany({
         take: 3,
         orderBy: { createdAt: 'desc' },
@@ -229,16 +229,14 @@ export class DashboardService {
       }),
     ]);
 
-    // Statistik dihitung sejak siswa terdaftar di LMS (atau absensi pertamanya, mana yang lebih awal)
+    // Statistik dihitung sejak absen pertama siswa mana pun tercatat di LMS (awal pemakaian LMS)
     // sampai kemarin: hari sekolah (Senin-Jumat) tanpa catatan dihitung Alpa, sama seperti rekap
     // berkala. Hari ini baru ikut bila sudah ada catatannya, karena jendela absen belum tentu tutup.
     // Hari selama PKL tidak dihitung karena absensinya lewat Absensi PKL.
     const today = todayStr();
+    const awalLms = awalLmsAgg._min.tanggal;
     const records = new Map(absensiList.map((a) => [a.tanggal, a.status]));
-    const awalDaftar = siswaRecord.user?.createdAt
-      ? new Date(siswaRecord.user.createdAt.getTime() + 7 * 3600_000).toISOString().slice(0, 10)
-      : today;
-    const awal = [awalDaftar, ...records.keys()].sort()[0];
+    const awal = [awalLms ?? today, ...records.keys()].sort()[0];
     const hariPkl = (d: string) => pklList.some((p) => {
       const mulai = p.tanggalMulai.toISOString().slice(0, 10);
       const selesai = p.tanggalSelesai ? p.tanggalSelesai.toISOString().slice(0, 10) : today;
