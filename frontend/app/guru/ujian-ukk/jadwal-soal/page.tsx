@@ -1,5 +1,6 @@
 "use client";
 
+import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, Fragment } from "react";
 import { useRouter } from "next/navigation";
@@ -45,49 +46,10 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
 };
 
 function SubmisiList({ items }: { items: Submisi[] }) {
-  if (items.length === 0) {
-    return <div className="px-4 py-6 text-center text-xs text-slate-400">Belum ada siswa yang mengumpulkan</div>;
-  }
-  // siswa dikelompokkan per kelas supaya tidak bercampur
-  const groups = new Map<string, Submisi[]>();
-  [...items].sort((a, b) => (a.siswa?.kelas?.nama ?? "~").localeCompare(b.siswa?.kelas?.nama ?? "~", "id")).forEach((x) => {
-    const k = x.siswa?.kelas?.nama ?? "Tanpa kelas";
-    groups.set(k, [...(groups.get(k) ?? []), x]);
-  });
+  // rekap per kelas XII: "sudah" & "belum mengumpulkan" bisa diklik, 10 siswa per halaman
   return (
-    <div>
-      {[...groups.entries()].map(([kelasNama, list]) => (
-      <div key={kelasNama}>
-      <p className="bg-slate-100 px-4 py-2 text-[11px] font-extrabold uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">{kelasNama} <span className="font-semibold normal-case text-slate-500">· {list.length} siswa</span></p>
-      <div className="divide-y divide-slate-100 dark:divide-slate-700/30">
-      {list.map((s) => {
-        const cfg = SUBMISI_STATUS_CFG[s.status];
-        return (
-          <div key={s.id} className="flex items-center gap-3 px-4 py-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-              style={{ background: "#3E03B3" }}>
-              {(s.siswa?.user?.nama || s.siswa?.nama)?.[0]?.toUpperCase()}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">
-                {s.siswa?.user?.nama || s.siswa?.nama}
-              </p>
-              <p className="text-[10px] text-slate-400">{s.fileName}</p>
-            </div>
-            <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold"
-              style={{ color: cfg.color, backgroundColor: cfg.bg }}>{cfg.label}</span>
-            <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`}
-              target="_blank" rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold bg-[#F1EDFA] dark:bg-slate-700 text-[#3E03B3] dark:text-[#C4B5FD]">
-              <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 fill-current"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
-              {s.fileUrl.startsWith("http") ? "GDrive" : /\.(pdf|png|jpe?g|webp|gif)$/i.test(s.fileUrl) ? "Buka" : "Unduh"}
-            </a>
-          </div>
-        );
-      })}
-      </div>
-      </div>
-      ))}
+    <div className="flex max-h-[34rem] flex-col">
+      <RekapPengumpulan submisi={items} />
     </div>
   );
 }

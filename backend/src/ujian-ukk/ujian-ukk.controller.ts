@@ -131,6 +131,11 @@ export class UjianUkkController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
+  @Get('peserta-xii')
+  pesertaKelasXII() { return this.service.pesertaKelasXII(); }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
   @Get('submisi/export-excel')
   async exportSubmisiExcel(@Res() res: Response) {
     const groups = await this.service.getSubmisiForExport();

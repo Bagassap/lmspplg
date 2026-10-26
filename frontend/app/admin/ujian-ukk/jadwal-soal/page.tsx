@@ -1,5 +1,6 @@
 "use client";
 
+import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { DateInputID } from "@/components/shared/DateInputID";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { TimeInput24 } from "@/components/shared/TimeInput24";
@@ -1080,12 +1081,6 @@ export default function AdminJadwalSoalPage() {
         {submisiModalTahapan && (() => {
           const sm = submisiModalTahapan;
           const rowsTask = submisiList.filter((x) => x.tahapan?.id === sm.id);
-          // siswa dikelompokkan per kelas: satu tab = satu kelas, tidak bercampur
-          const kelasAktifId = kelasUkk.some((k) => k.id === kelasTab) ? kelasTab : (kelasUkk.find((k) => rowsTask.some((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === k.id)) ?? kelasUkk[0])?.id ?? "";
-          const kelasAktif = kelasUkk.find((k) => k.id === kelasAktifId);
-          const rows = kelasUkk.length > 0 ? rowsTask.filter((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === kelasAktifId) : rowsTask;
-          const sudahSiswa = new Set(rows.map((x) => x.siswa?.id ?? x.id)).size;
-          const belumSiswa = kelasAktif?._count ? Math.max(0, kelasAktif._count.siswa - sudahSiswa) : Math.max(0, totalSiswaAll - sudahSiswa);
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -1128,75 +1123,7 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
 
-                {kelasUkk.length > 0 && (
-                  <div className="flex shrink-0 gap-2 overflow-x-auto px-6 pb-3 pt-4">
-                    {kelasUkk.map((k) => {
-                      const on = k.id === kelasAktifId;
-                      const n = new Set(rowsTask.filter((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === k.id).map((x) => x.siswa?.id ?? x.id)).size;
-                      return (
-                        <button key={k.id} type="button" onClick={() => setKelasTab(k.id)}
-                          className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
-                          {k.nama}
-                          <span className={`rounded-full px-1.5 text-[11px] ${on ? "bg-white text-[#3E03B3]" : "bg-white text-slate-600"}`}>{n}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:divide-y-0">
-                  {[
-                    { label: "Sudah mengumpulkan", val: sudahSiswa, color: "#3E03B3" },
-                    { label: "Belum mengumpulkan", val: belumSiswa, color: "#E8562B" },
-                  ].map((st, i) => (
-                    <div key={i} className="p-4 text-center">
-                      <p className="text-3xl font-extrabold" style={{color:st.color}}>{st.val}</p>
-                      <p className="text-sm text-slate-500 mt-0.5">{st.label}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex-1 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-700/30">
-                  {rows.length === 0 ? (
-                    <div className="py-16 text-center">
-                      <AlertCircle size={36} className="mx-auto mb-3 text-slate-200"/>
-                      <p className="text-sm font-semibold text-slate-400">Belum ada siswa yang mengumpulkan</p>
-                      <p className="text-xs text-slate-300 mt-1">Siswa harus mengirimkan link Google Drive</p>
-                    </div>
-                  ) : rows.map((s) => {
-                    const sc    = statusBadge(s.status);
-                    const nama  = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
-                    const isDone = s.status === "DITERIMA";
-                    return (
-                      <div key={s.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-6">
-                        <div className="flex items-center gap-3 sm:contents">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                            style={{backgroundColor: isDone ? "#F26A3D" : sc.text}}>
-                            {nama[0]?.toUpperCase() ?? "?"}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
-                            <p className="text-xs text-slate-400 truncate">{s.soal?.judul ?? "—"} · {formatTgl(s.submittedAt)}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2 pl-[52px] sm:contents sm:pl-0">
-                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0"
-                          style={{backgroundColor: sc.bg, color: sc.text}}>
-                          ✓ Terkumpul
-                        </span>
-                        <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`}
-                          target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 bg-[#F1EDFA] dark:bg-slate-700 text-[#3E03B3] dark:text-[#C4B5FD]">
-                          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current shrink-0">
-                            <path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/>
-                          </svg>
-                          {s.fileUrl.startsWith("http") ? "GDrive" : /\.(pdf|png|jpe?g|webp|gif)$/i.test(s.fileUrl) ? "Buka" : "Unduh"}
-                        </a>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <RekapPengumpulan submisi={rowsTask} />
 
                 <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-700">
                   <p className="text-sm text-slate-500">Project yang dikumpulkan siswa otomatis tercatat selesai.</p>

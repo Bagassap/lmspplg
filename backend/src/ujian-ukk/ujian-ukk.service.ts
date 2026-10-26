@@ -145,6 +145,24 @@ export class UjianUkkService {
     });
   }
 
+  // Daftar kelas XII beserta siswa aktifnya (untuk rekap "sudah / belum mengumpulkan").
+  async pesertaKelasXII() {
+    const kelas = await this.prisma.kelas.findMany({
+      where: { nama: { startsWith: 'XII', mode: 'insensitive' } },
+      orderBy: { nama: 'asc' },
+      select: {
+        id: true,
+        nama: true,
+        siswa: {
+          where: { status: 'AKTIF' },
+          orderBy: { nama: 'asc' },
+          select: { id: true, nama: true, nis: true, user: { select: { nama: true } } },
+        },
+      },
+    });
+    return kelas.filter((k) => /^XII(\s|$)/i.test(k.nama));
+  }
+
   async getSubmisiForExport() {
     const kelasList = await this.prisma.kelas.findMany({
       orderBy: { nama: 'asc' },
