@@ -439,7 +439,7 @@ export default function SiswaAbsensiHarianPage() {
                 transition={{ duration: 0.4, delay: 0.25 }}
                 className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-5">
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran semester ini</p>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran sejak awal kamu terdaftar</p>
                 <StatisticRainbow
                   hadir={summary.hadir} sakit={summary.sakit}
                   izin={summary.izin} alpha={summary.alpa}

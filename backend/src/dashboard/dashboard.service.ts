@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { todayJakarta as todayStr, weekDatesJakarta as weekDates } from '../common/utils/jakarta-date.util';
+import { addDaysUTC, effectiveWeekdaysInRange, todayJakarta as todayStr, weekDatesJakarta as weekDates } from '../common/utils/jakarta-date.util';
 
 @Injectable()
 export class DashboardService {
@@ -197,14 +197,19 @@ export class DashboardService {
       where: { userId },
       include: {
         kelas: { include: { waliKelasGuru: { include: { user: { select: { nama: true } } } } } },
+        user: { select: { createdAt: true } },
       },
     });
     if (!siswaRecord) return { error: 'Profil siswa tidak ditemukan' };
 
-    const [absensiList, pengumuman, penempatanMagang] = await Promise.all([
+    const [absensiList, pklList, pengumuman, penempatanMagang] = await Promise.all([
       this.prisma.absensiHarian.findMany({
         where: { siswaId: siswaRecord.id },
-        select: { status: true },
+        select: { tanggal: true, status: true },
+      }),
+      this.prisma.penempatanMagang.findMany({
+        where: { siswaId: siswaRecord.id, status: { in: ['AKTIF', 'SELESAI'] } },
+        select: { tanggalMulai: true, tanggalSelesai: true },
       }),
       this.prisma.pengumuman.findMany({
         take: 3,
@@ -224,11 +229,31 @@ export class DashboardService {
       }),
     ]);
 
-    const hadir = absensiList.filter((a) => a.status === 'HADIR').length;
-    const izin = absensiList.filter((a) => a.status === 'IZIN').length;
-    const sakit = absensiList.filter((a) => a.status === 'SAKIT').length;
-    const alpa = absensiList.filter((a) => a.status === 'ALPA').length;
-    const totalAbsensi = absensiList.length;
+    // Statistik dihitung sejak siswa terdaftar di LMS (atau absensi pertamanya, mana yang lebih awal)
+    // sampai kemarin: hari sekolah (Senin-Jumat) tanpa catatan dihitung Alpa, sama seperti rekap
+    // berkala. Hari ini baru ikut bila sudah ada catatannya, karena jendela absen belum tentu tutup.
+    // Hari selama PKL tidak dihitung karena absensinya lewat Absensi PKL.
+    const today = todayStr();
+    const records = new Map(absensiList.map((a) => [a.tanggal, a.status]));
+    const awalDaftar = siswaRecord.user?.createdAt
+      ? new Date(siswaRecord.user.createdAt.getTime() + 7 * 3600_000).toISOString().slice(0, 10)
+      : today;
+    const awal = [awalDaftar, ...records.keys()].sort()[0];
+    const hariPkl = (d: string) => pklList.some((p) => {
+      const mulai = p.tanggalMulai.toISOString().slice(0, 10);
+      const selesai = p.tanggalSelesai ? p.tanggalSelesai.toISOString().slice(0, 10) : today;
+      return d >= mulai && d <= selesai;
+    });
+    const hari = new Set(effectiveWeekdaysInRange(awal, addDaysUTC(today, -1)).filter((d) => !hariPkl(d)));
+    for (const d of records.keys()) hari.add(d);
+
+    const tally = { HADIR: 0, IZIN: 0, SAKIT: 0, ALPA: 0 };
+    for (const d of hari) {
+      const status = records.get(d) ?? (d < today ? 'ALPA' : null);
+      if (status && status in tally) tally[status as keyof typeof tally]++;
+    }
+    const { HADIR: hadir, IZIN: izin, SAKIT: sakit, ALPA: alpa } = tally;
+    const totalAbsensi = hadir + izin + sakit + alpa;
     const persentase = totalAbsensi > 0 ? Math.round((hadir / totalAbsensi) * 1000) / 10 : 0;
 
     const magang = !penempatanMagang
