@@ -80,7 +80,7 @@ function SubmisiList({ items }: { items: Submisi[] }) {
               target="_blank" rel="noopener noreferrer"
               className="flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold bg-[#F1EDFA] dark:bg-slate-700 text-[#3E03B3] dark:text-[#C4B5FD]">
               <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 fill-current"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
-              {s.fileUrl.startsWith("http") ? "GDrive" : "Unduh"}
+              {s.fileUrl.startsWith("http") ? "GDrive" : /\.(pdf|png|jpe?g|webp|gif)$/i.test(s.fileUrl) ? "Buka" : "Unduh"}
             </a>
           </div>
         );
@@ -160,7 +160,7 @@ export default function GuruJadwalSoalPage() {
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
+                  className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
@@ -213,7 +213,7 @@ export default function GuruJadwalSoalPage() {
               const curSoal = allSoal[soalSoalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className={`fixed inset-0 z-50 flex justify-center bg-black/60 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
+                  className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}

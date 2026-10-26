@@ -530,3 +530,7 @@ html.dark :is([style*="color:#3E03B3" i], [style*="color: #3E03B3" i], [style*="
 
 /* tema gelap: teks ungu pada latar pastel inline (yang digelapkan) */
 html.dark [style*="color:#3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color:#3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color:#3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color:#3E03B3" i][style*="#E2E8F0" i], html.dark [style*="color: #3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color: #3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color: #3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color: #3E03B3" i][style*="#E2E8F0" i] { color: #c4b5fd !important; }
+
+/* ---- Modal UKK: latar polos seperti membuka halaman baru (tanpa blur/menu di belakang) ---- */
+html .ukk-plain-overlay { background: #f1f5f9 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html.dark .ukk-plain-overlay { background: #0f172a !important; }

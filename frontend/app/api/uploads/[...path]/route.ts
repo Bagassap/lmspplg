@@ -40,6 +40,8 @@ export async function GET(
   const headers = new Headers();
   const contentType = fileRes.headers.get("content-type");
   if (contentType) headers.set("Content-Type", contentType);
+  // PDF & gambar dibuka langsung di tab (tanpa unduh dulu); format lain tetap mengikuti browser
+  if (contentType && /^(application\/pdf|image\/)/i.test(contentType)) headers.set("Content-Disposition", "inline");
   headers.set("Cache-Control", "private, max-age=60");
 
   return new NextResponse(fileRes.body, { status: 200, headers });
