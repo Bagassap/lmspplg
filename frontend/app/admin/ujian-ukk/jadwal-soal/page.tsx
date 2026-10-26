@@ -1087,51 +1087,25 @@ export default function AdminJadwalSoalPage() {
               className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
               onClick={(e) => { if (e.target === e.currentTarget) setSubmisiModalTahapan(null); }}>
               <motion.div initial={{scale:0.95,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0.95,opacity:0}}
-                className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}>
+                className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden ${appMode ? "rounded-t-3xl" : "rounded-3xl"}`}>
 
-                <div className="app-sheet-header relative p-6 shrink-0"
-                  style={{background:"#3E03B3"}}>
-                  <div className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"/>
-                  <button onClick={() => setSubmisiModalTahapan(null)}
-                    className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors">
-                    <X size={16} className="text-white"/>
+                <div className="flex shrink-0 items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
+                  <button type="button" onClick={() => setSubmisiModalTahapan(null)} aria-label="Tutup"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                    <X size={18}/>
                   </button>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                      <BookOpen size={18} className="text-white"/>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Rekap Pengumpulan</p>
-                      <h3 className="text-lg font-extrabold text-white">{sm.judul}</h3>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
-                      <MapPin size={10}/>{sm.lokasi}
-                    </span>
-                    {sm.penguji && (
-                      <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
-                        <User size={10}/>{sm.penguji}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
-                      <CalendarDays size={10}/>{formatRentang(sm)}
-                    </span>
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-xs font-semibold text-white">
-                      <Clock size={10}/>{sm.jamMulai}–{sm.jamSelesai}
-                    </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-xl font-extrabold leading-tight text-slate-900 dark:text-white sm:text-2xl">{sm.judul}</h3>
+                    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-600 dark:text-slate-300">
+                      <span className="flex items-center gap-1"><MapPin size={12}/>{sm.lokasi}</span>
+                      {sm.penguji && <span className="flex items-center gap-1">· <User size={12}/>{sm.penguji}</span>}
+                      <span className="flex items-center gap-1">· <CalendarDays size={12}/>{formatRentang(sm)}</span>
+                      <span className="flex items-center gap-1">· <Clock size={12}/>{sm.jamMulai}–{sm.jamSelesai}</span>
+                    </p>
                   </div>
                 </div>
 
                 <RekapPengumpulan submisi={rowsTask} />
-
-                <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-700">
-                  <p className="text-sm text-slate-500">Project yang dikumpulkan siswa otomatis tercatat selesai.</p>
-                  <button onClick={() => setSubmisiModalTahapan(null)}
-                    className="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shrink-0 transition-colors">
-                    Tutup
-                  </button>
-                </div>
 
               </motion.div>
             </motion.div>

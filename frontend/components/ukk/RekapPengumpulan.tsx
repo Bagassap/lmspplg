@@ -68,13 +68,13 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
   return (
     <>
       {kelasList.length > 0 && (
-        <div className="flex shrink-0 gap-2 overflow-x-auto px-6 pb-3 pt-4">
+        <div className="flex shrink-0 gap-2 overflow-x-auto px-6 pb-3 sm:px-8">
           {kelasList.map((k) => {
             const on = k.id === aktifId;
             const n = new Set(submisi.filter((s) => kelasOf(s) === k.id).map((s) => s.siswa?.id)).size;
             return (
               <button key={k.id} type="button" onClick={() => setKelasId(k.id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
+                className={`flex shrink-0 items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
                 {k.nama}
                 <span className={`rounded-full px-1.5 text-[11px] ${on ? "bg-white text-[#3E03B3]" : "bg-white text-slate-600"}`}>{n}/{k.siswa.length}</span>
               </button>
@@ -83,41 +83,37 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
         </div>
       )}
 
-      <div className="grid shrink-0 grid-cols-2 gap-3 px-6 pb-3">
+      <div className="grid shrink-0 grid-cols-2 gap-3 px-6 pb-4 sm:px-8">
         {tiles.map((t) => {
           const on = tab === t.key;
+          const Icon = t.key === "sudah" ? CheckCircle2 : UserX;
           return (
             <button key={t.key} type="button" onClick={() => setTab(t.key)}
-              className={`rounded-2xl p-4 text-center transition-colors ${on ? "bg-slate-100 dark:bg-slate-700" : "bg-white dark:bg-slate-800"}`}
-              style={on ? { boxShadow: `inset 0 0 0 2px ${t.color}` } : { boxShadow: "inset 0 0 0 1px #cbd5e1" }}>
-              <p className="text-3xl font-extrabold" style={{ color: t.color }}>{t.val}</p>
-              <p className="mt-0.5 text-sm font-semibold text-slate-600">{t.label}</p>
+              className={`flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition-colors ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
+              <Icon size={16} /> {t.label} ({t.val})
             </button>
           );
         })}
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 space-y-2.5 overflow-y-auto px-6 pb-4 sm:px-8">
         {total === 0 ? (
-          <div className="px-6 py-14 text-center">
-            {tab === "sudah" ? <UserX size={32} className="mx-auto mb-2 text-slate-300" /> : <CheckCircle2 size={32} className="mx-auto mb-2 text-slate-300" />}
-            <p className="text-sm font-semibold text-slate-500">
-              {tab === "sudah" ? "Belum ada siswa di kelas ini yang mengumpulkan" : "Semua siswa di kelas ini sudah mengumpulkan"}
-            </p>
-          </div>
+          <p className="py-14 text-center text-sm font-semibold text-slate-500">
+            {tab === "sudah" ? "Belum ada siswa di kelas ini yang mengumpulkan" : "Semua siswa di kelas ini sudah mengumpulkan"}
+          </p>
         ) : tab === "sudah" ? (
           sudahRows.slice(from, to).map((s) => {
             const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
             return (
-              <div key={s.id} className="flex items-center gap-3 px-6 py-3">
+              <div key={s.id} className="flex items-center gap-4 rounded-2xl bg-slate-100 px-5 py-4 dark:bg-slate-700/60">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] text-sm font-bold text-white">{nama[0]?.toUpperCase()}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
-                  <p className="truncate text-xs text-slate-500">Dikumpulkan {tgl(s.submittedAt)}</p>
+                  <p className="truncate text-base font-bold text-slate-900 dark:text-white">{nama}</p>
+                  <p className="truncate text-sm text-slate-600 dark:text-slate-300">{tgl(s.submittedAt)}</p>
                 </div>
-                <span className="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-700">✓ Terkumpul</span>
+                <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#3E03B3] dark:bg-slate-800">Terkumpul</span>
                 <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`} target="_blank" rel="noopener noreferrer"
-                  className="shrink-0 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-[#3E03B3] dark:bg-slate-700">
+                  className="shrink-0 rounded-full bg-[#3E03B3] px-4 py-2 text-xs font-bold text-white">
                   {labelBerkas(s.fileUrl)}
                 </a>
               </div>
@@ -127,13 +123,13 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
           belumList.slice(from, to).map((s) => {
             const nama = s.user?.nama || s.nama || "Siswa";
             return (
-              <div key={s.id} className="flex items-center gap-3 px-6 py-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-bold text-slate-600">{nama[0]?.toUpperCase()}</span>
+              <div key={s.id} className="flex items-center gap-4 rounded-2xl bg-slate-100 px-5 py-4 dark:bg-slate-700/60">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-300 text-sm font-bold text-slate-700">{nama[0]?.toUpperCase()}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{nama}</p>
-                  <p className="truncate text-xs text-slate-500">NIS {s.nis}</p>
+                  <p className="truncate text-base font-bold text-slate-900 dark:text-white">{nama}</p>
+                  <p className="truncate text-sm text-slate-600 dark:text-slate-300">NIS {s.nis}</p>
                 </div>
-                <span className="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-[#E8562B] dark:bg-slate-700">Belum kumpul</span>
+                <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#E8562B] dark:bg-slate-800">Belum kumpul</span>
               </div>
             );
           })
@@ -141,14 +137,14 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
       </div>
 
       {total > 0 && (
-        <div className="flex shrink-0 items-center justify-between gap-3 px-6 py-3">
-          <span className="text-xs font-semibold text-slate-500">{from + 1}–{to} dari {total} siswa</span>
+        <div className="flex shrink-0 items-center justify-between gap-3 px-6 pb-6 pt-1 sm:px-8 sm:pb-8">
+          <span className="text-sm font-semibold text-slate-600">{from + 1}–{to} dari {total} siswa</span>
           <div className="flex items-center gap-2">
             <button type="button" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={16} /></button>
-            <span className="text-xs font-bold text-slate-600">{page + 1}/{pageCount}</span>
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={18} /></button>
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{page + 1}/{pageCount}</span>
             <button type="button" disabled={page >= pageCount - 1} onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={16} /></button>
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={18} /></button>
           </div>
         </div>
       )}
