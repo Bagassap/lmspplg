@@ -6,7 +6,7 @@ export const viewport: Viewport = { themeColor: "#E5E7EB" };
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-[100dvh] items-end justify-center overflow-hidden bg-[#E5E7EB] sm:items-center dark:bg-[#1F2937] sm:px-6 sm:py-12">
+    <main className="fixed inset-0 flex items-end overscroll-none sm:relative sm:inset-auto sm:min-h-[100dvh] justify-center overflow-hidden bg-[#E5E7EB] sm:items-center dark:bg-[#1F2937] sm:px-6 sm:py-12">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
