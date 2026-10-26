@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from "@/components/shared/ToastSystem";
 import { PwaInstall } from "@/components/shared/PwaInstall";
 import { AppModeFlag } from "@/components/shared/AppModeFlag";
+import { PwaReinstallGate } from "@/components/shared/PwaReinstallGate";
 import { IconToneRotator } from "@/components/shared/IconToneRotator";
 
 const satoshi = localFont({
@@ -57,6 +58,8 @@ export default function RootLayout({
       <head>
         {/* Layar sempit memakai tampilan aplikasi: sembunyikan halaman sampai hidrasi selesai agar tidak sempat terlihat tampilan mobile lama. */}
         <script dangerouslySetInnerHTML={{ __html: 'try{if(window.matchMedia("(max-width:1023px)").matches)document.documentElement.setAttribute("data-boot-mobile","1")}catch(e){}' }} />
+        {/* Tandai pembukaan awal aplikasi terpasang sebelum halaman sempat mengalihkan alamat (lihat PwaReinstallGate). */}
+        <script dangerouslySetInnerHTML={{ __html: 'try{if(sessionStorage.getItem("lms_pwa_gate")===null){var o=matchMedia("(display-mode: standalone)").matches&&location.pathname==="/"&&new URLSearchParams(location.search).get("pwa")!=="2";sessionStorage.setItem("lms_pwa_gate",o?"old":"ok")}}catch(e){}' }} />
       </head>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>
@@ -64,6 +67,7 @@ export default function RootLayout({
           <PwaInstall />
           <AppModeFlag />
           <IconToneRotator />
+          <PwaReinstallGate />
         </ToastProvider>
       </body>
     </html>

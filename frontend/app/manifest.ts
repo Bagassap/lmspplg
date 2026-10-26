@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const ICON_VERSION = 2;
+const PWA_VERSION = "2"; // samakan dengan PWA_VERSION di components/shared/PwaReinstallGate.tsx
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -10,7 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Sistem pembelajaran digital untuk siswa, guru, dan admin jurusan Pengembangan Perangkat Lunak dan Gim SMK Ma'arif NU 01 Limpung.",
     lang: "id",
-    start_url: "/",
+    // "?pwa=" menandai versi pemasangan; aplikasi lama (start_url "/") diblokir oleh PwaReinstallGate.
+    start_url: `/?pwa=${PWA_VERSION}`,
     scope: "/",
     display: "standalone",
     orientation: "portrait",
