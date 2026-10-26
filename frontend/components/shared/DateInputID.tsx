@@ -46,10 +46,13 @@ export function DateInputID({ value, onChange, className, required, disabled, bi
     onChange(y && m && d ? `${y}-${m}-${d}` : "");
   }
 
-  const cls = `${className ?? ""} min-w-0 text-center`;
+  // margin dipindah ke pembungkus, lebar diatur sendiri (bukan w-full milik className asal)
+  const tokens = (className ?? "").split(/\s+/).filter(Boolean);
+  const wrapCls = tokens.filter((t) => /^-?m[trblxy]?-/.test(t)).join(" ");
+  const cls = `${tokens.filter((t) => !/^-?m[trblxy]?-/.test(t) && !/^w-/.test(t) && !/^min-w-/.test(t)).join(" ")} min-w-0 text-center`;
   return (
-    <div className="flex w-full items-center gap-1.5">
-      <select aria-label="Tanggal" required={required} disabled={disabled} value={p.d} onChange={(e) => update({ ...p, d: e.target.value })} className={`${cls} w-[22%] flex-none`}>
+    <div className={`flex w-full items-center gap-1.5 ${wrapCls}`}>
+      <select aria-label="Tanggal" required={required} disabled={disabled} value={p.d} onChange={(e) => update({ ...p, d: e.target.value })} className={`${cls} flex-none`} style={{ width: "22%" }}>
         <option value="">Tgl</option>
         {Array.from({ length: hariMaks }, (_, i) => pad(i + 1)).map((x) => <option key={x} value={x}>{Number(x)}</option>)}
       </select>
@@ -57,7 +60,7 @@ export function DateInputID({ value, onChange, className, required, disabled, bi
         <option value="">Bulan</option>
         {BULAN.map((n, i) => <option key={n} value={pad(i + 1)}>{n}</option>)}
       </select>
-      <select aria-label="Tahun" required={required} disabled={disabled} value={p.y} onChange={(e) => update({ ...p, y: e.target.value })} className={`${cls} w-[26%] flex-none`}>
+      <select aria-label="Tahun" required={required} disabled={disabled} value={p.y} onChange={(e) => update({ ...p, y: e.target.value })} className={`${cls} flex-none`} style={{ width: "28%" }}>
         <option value="">Tahun</option>
         {tahun.map((x) => <option key={x} value={x}>{x}</option>)}
       </select>
