@@ -162,7 +162,7 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
     <AnimatePresence>
       {open && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 ukk-plain-overlay"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
           onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
           <motion.div initial={{ scale: 0.93, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.93, opacity: 0, y: 24 }} transition={{ type: "spring", damping: 26, stiffness: 340 }}
@@ -606,7 +606,7 @@ export default function AdminJadwalSoalPage() {
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
+                className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
@@ -678,7 +678,7 @@ export default function AdminJadwalSoalPage() {
           <AnimatePresence>
             {openSoalModal && (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
+                className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                 onClick={(e)=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                 <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                   transition={{type:"spring",damping:26,stiffness:340}}
@@ -1089,7 +1089,7 @@ export default function AdminJadwalSoalPage() {
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-              className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
+              className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
               onClick={(e) => { if (e.target === e.currentTarget) setSubmisiModalTahapan(null); }}>
               <motion.div initial={{scale:0.95,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0.95,opacity:0}}
                 className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden ${appMode ? "rounded-t-[28px]" : "rounded-2xl"}`}>

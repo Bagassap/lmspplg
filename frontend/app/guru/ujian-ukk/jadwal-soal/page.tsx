@@ -160,7 +160,7 @@ export default function GuruJadwalSoalPage() {
               const curSoal = allSoal[soalJadwalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
+                  className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenJadwalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
@@ -213,7 +213,7 @@ export default function GuruJadwalSoalPage() {
               const curSoal = allSoal[soalSoalIdx] ?? null;
               return (
                 <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                  className={`fixed inset-0 z-50 flex justify-center ukk-plain-overlay ${appMode ? "items-end" : "items-center p-4"}`}
+                  className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
                   onClick={e=>{if(e.target===e.currentTarget)setOpenSoalModal(false)}}>
                   <motion.div initial={{scale:0.93,opacity:0,y:24}} animate={{scale:1,opacity:1,y:0}} exit={{scale:0.93,opacity:0,y:24}}
                     transition={{type:"spring",damping:26,stiffness:340}}
