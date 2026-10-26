@@ -39,7 +39,7 @@ type StatusSubmisi = "TERKIRIM" | "DITERIMA" | "REVISI";
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; _count?: { submisi: number }; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
-interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
+interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
   if (s === "DITERIMA") return { bg: "#F1EDFA", text: "#3E03B3", icon: <CheckCircle size={10} /> };
@@ -478,6 +478,8 @@ export default function AdminJadwalSoalPage() {
   const [filePool,    setFilePool]    = useState<Tahapan | null>(null); 
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
   const [totalSiswaAll, setTotalSiswaAll] = useState(0);
+  const [kelasUkk, setKelasUkk] = useState<{ id: string; nama: string; _count?: { siswa: number } }[]>([]);
+  const [kelasTab, setKelasTab] = useState("");
   const [loading, setLoading]         = useState(true);
   const [openTahapan, setOpenTahapan]               = useState(false);
   const [openSoal, setOpenSoal]                     = useState(false);
@@ -513,6 +515,7 @@ export default function AdminJadwalSoalPage() {
 
   useEffect(() => { loadAll(); }, [loadAll]);
   useEffect(() => {
+    fetch("/api/kelas", { cache: "no-store" }).then((r) => r.json()).then((d) => setKelasUkk(Array.isArray(d) ? [...d].sort((a, b) => a.nama.localeCompare(b.nama, "id")) : [])).catch(() => {});
     fetch("/api/dashboard/admin", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setTotalSiswaAll(Number(d?.totalSiswa) || 0))
@@ -1076,8 +1079,13 @@ export default function AdminJadwalSoalPage() {
       <AnimatePresence>
         {submisiModalTahapan && (() => {
           const sm = submisiModalTahapan;
-          const rows = submisiList.filter((x) => x.tahapan?.id === sm.id);
+          const rowsTask = submisiList.filter((x) => x.tahapan?.id === sm.id);
+          // siswa dikelompokkan per kelas: satu tab = satu kelas, tidak bercampur
+          const kelasAktifId = kelasUkk.some((k) => k.id === kelasTab) ? kelasTab : (kelasUkk.find((k) => rowsTask.some((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === k.id)) ?? kelasUkk[0])?.id ?? "";
+          const kelasAktif = kelasUkk.find((k) => k.id === kelasAktifId);
+          const rows = kelasUkk.length > 0 ? rowsTask.filter((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === kelasAktifId) : rowsTask;
           const sudahSiswa = new Set(rows.map((x) => x.siswa?.id ?? x.id)).size;
+          const belumSiswa = kelasAktif?._count ? Math.max(0, kelasAktif._count.siswa - sudahSiswa) : Math.max(0, totalSiswaAll - sudahSiswa);
           return (
             <motion.div key="submisi-modal-overlay"
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -1120,10 +1128,26 @@ export default function AdminJadwalSoalPage() {
                   </div>
                 </div>
 
+                {kelasUkk.length > 0 && (
+                  <div className="flex shrink-0 gap-2 overflow-x-auto px-6 pb-3 pt-4">
+                    {kelasUkk.map((k) => {
+                      const on = k.id === kelasAktifId;
+                      const n = new Set(rowsTask.filter((x) => (x.siswa?.kelas?.id ?? x.siswa?.kelasId) === k.id).map((x) => x.siswa?.id ?? x.id)).size;
+                      return (
+                        <button key={k.id} type="button" onClick={() => setKelasTab(k.id)}
+                          className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
+                          {k.nama}
+                          <span className={`rounded-full px-1.5 text-[11px] ${on ? "bg-white text-[#3E03B3]" : "bg-white text-slate-600"}`}>{n}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 shrink-0 divide-x divide-y divide-slate-100 border-b border-slate-100 dark:divide-slate-700 dark:border-slate-700 sm:divide-y-0">
                   {[
                     { label: "Sudah mengumpulkan", val: sudahSiswa, color: "#3E03B3" },
-                    { label: "Belum mengumpulkan", val: Math.max(0, totalSiswaAll - sudahSiswa), color: "#E8562B" },
+                    { label: "Belum mengumpulkan", val: belumSiswa, color: "#E8562B" },
                   ].map((st, i) => (
                     <div key={i} className="p-4 text-center">
                       <p className="text-3xl font-extrabold" style={{color:st.color}}>{st.val}</p>

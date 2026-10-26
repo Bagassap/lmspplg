@@ -140,7 +140,7 @@ export class UjianUkkService {
       include: {
         soal:  { select: { id: true, judul: true } },
         tahapan: { select: { id: true, judul: true } },
-        siswa: { include: { user: { select: { id: true, nama: true } } } },
+        siswa: { include: { user: { select: { id: true, nama: true } }, kelas: { select: { id: true, nama: true } } } },
       },
     });
   }

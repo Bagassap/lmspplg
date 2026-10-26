@@ -25,7 +25,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
-interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; user: { id: string; nama: string } }; }
+interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; kelasId?: string | null; kelas?: { id: string; nama: string } | null; nama: string; user: { id: string; nama: string } }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 
@@ -48,9 +48,19 @@ function SubmisiList({ items }: { items: Submisi[] }) {
   if (items.length === 0) {
     return <div className="px-4 py-6 text-center text-xs text-slate-400">Belum ada siswa yang mengumpulkan</div>;
   }
+  // siswa dikelompokkan per kelas supaya tidak bercampur
+  const groups = new Map<string, Submisi[]>();
+  [...items].sort((a, b) => (a.siswa?.kelas?.nama ?? "~").localeCompare(b.siswa?.kelas?.nama ?? "~", "id")).forEach((x) => {
+    const k = x.siswa?.kelas?.nama ?? "Tanpa kelas";
+    groups.set(k, [...(groups.get(k) ?? []), x]);
+  });
   return (
-    <div className="divide-y divide-slate-100 dark:divide-slate-700/30">
-      {items.map((s) => {
+    <div>
+      {[...groups.entries()].map(([kelasNama, list]) => (
+      <div key={kelasNama}>
+      <p className="bg-slate-100 px-4 py-2 text-[11px] font-extrabold uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">{kelasNama} <span className="font-semibold normal-case text-slate-500">· {list.length} siswa</span></p>
+      <div className="divide-y divide-slate-100 dark:divide-slate-700/30">
+      {list.map((s) => {
         const cfg = SUBMISI_STATUS_CFG[s.status];
         return (
           <div key={s.id} className="flex items-center gap-3 px-4 py-3">
@@ -75,6 +85,9 @@ function SubmisiList({ items }: { items: Submisi[] }) {
           </div>
         );
       })}
+      </div>
+      </div>
+      ))}
     </div>
   );
 }
