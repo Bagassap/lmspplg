@@ -161,6 +161,19 @@ export class PenempatanService {
     return this.findSaya(userId);
   }
 
+  // Siswa melengkapi/mengganti surat keterangan pada pengajuannya yang masih menunggu (berlaku untuk satu kelompok).
+  async unggahSurat(userId: string, surat: { url: string; nama: string }) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
+    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+    const mine = await this.prisma.penempatanMagang.findFirst({ where: { siswaId: siswa.id, status: 'MENUNGGU' } });
+    if (!mine) throw new BadRequestException('Tidak ada pengajuan PKL yang menunggu');
+    await this.prisma.penempatanMagang.updateMany({
+      where: mine.kelompokId ? { kelompokId: mine.kelompokId, status: 'MENUNGGU' } : { id: mine.id },
+      data: { suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama },
+    });
+    return this.findSaya(userId);
+  }
+
   // Admin menolak pengajuan: baris MENUNGGU (satu kelompok) dihapus agar siswa bisa mengajukan ulang.
   async tolak(id: string, alasan?: string) {
     const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
@@ -196,6 +209,9 @@ export class PenempatanService {
       include: { siswa: { select: { userId: true } }, tempatMagang: { select: { namaTempat: true } } },
     });
     if (rows.length === 0) throw new BadRequestException('Pengajuan ini sudah diproses');
+    if (rows.some((r) => !r.suratKeteranganUrl)) {
+      throw new BadRequestException('Pengajuan belum disertai surat keterangan PKL. Minta siswa mengunggahnya dulu.');
+    }
 
     await this.prisma.penempatanMagang.updateMany({
       where: { id: { in: rows.map((r) => r.id) } },

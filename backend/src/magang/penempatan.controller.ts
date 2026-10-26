@@ -84,6 +84,15 @@ export class PenempatanController {
   }
 
   @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Post('saya/surat')
+  @UseInterceptors(FileInterceptor('surat', { storage: suratStorage, ...suratUploadOptions }))
+  unggahSurat(@UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
+    if (!file) throw new BadRequestException('Bukti surat keterangan PKL wajib diunggah');
+    return this.service.unggahSurat(req.user.id, { url: `/uploads/surat-pkl/${file.filename}`, nama: file.originalname });
+  }
+
+  @UseGuards(RolesGuard)
   @Roles(Role.GURU)
   @Get('bimbingan')
   findBimbingan(@Request() req: any) {

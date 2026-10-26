@@ -180,6 +180,28 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
     });
   }
 
+  const suratRef = useRef<HTMLInputElement>(null);
+
+  // Untuk pengajuan lama yang belum punya surat: lengkapi tanpa mengajukan ulang.
+  async function unggahSurat(f?: File) {
+    if (!f) return;
+    if (f.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }
+    setSaving(true);
+    try {
+      const fd = new FormData();
+      fd.append("surat", f);
+      const res = await fetch("/api/magang/penempatan/saya/surat", { method: "POST", body: fd });
+      if (res.ok) { toast.success("Surat terkirim", "Admin dapat memeriksa suratmu."); onChanged(); }
+      else {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ? String(Array.isArray(d.message) ? d.message[0] : d.message) : "Gagal mengunggah surat", "");
+      }
+    } finally {
+      setSaving(false);
+      if (suratRef.current) suratRef.current.value = "";
+    }
+  }
+
   async function kirim() {
     if (!pilih) { toast.error("Pilih tempat magang", ""); return; }
     if (modeBaru && !baruLengkap) { toast.error("Lengkapi data tempat magang", "Semua kolom tempat baru wajib diisi."); setModalBaru(true); return; }
@@ -235,7 +257,23 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
             {menunggu[0].tempatMagang.namaPimpinan && <p className="flex items-center gap-2 text-xs"><User size={14} className="text-[#3E03B3]" /> {menunggu[0].tempatMagang.namaPimpinan}</p>}
             {menunggu[0].tempatMagang.noWaUsaha && <p className="flex items-center gap-2 text-xs"><Phone size={14} className="text-[#3E03B3]" /> {menunggu[0].tempatMagang.noWaUsaha}</p>}
             <p className="flex items-center gap-2 text-xs"><Users size={14} className="text-[#3E03B3]" /> Diajukan {fmt(menunggu[0].createdAt)}</p>
+            {menunggu[0].suratKeteranganUrl && (
+              <a href={`/api/uploads${menunggu[0].suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 text-xs font-bold text-[#3E03B3] underline">
+                <FileText size={14} className="shrink-0" /> <span className="truncate">Surat terkirim: {menunggu[0].suratKeteranganNama ?? "Lihat berkas"}</span>
+              </a>
+            )}
           </div>
+          {!menunggu[0].suratKeteranganUrl && (
+            <div className="mt-3 rounded-2xl bg-[#FFE9E2] p-3.5">
+              <p className="text-xs font-bold text-[#E8562B]">Surat keterangan PKL belum diunggah. Admin baru bisa menerima pengajuan setelah surat terkirim.</p>
+              <input ref={suratRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden" onChange={(e) => unggahSurat(e.target.files?.[0])} />
+              <button type="button" onClick={() => suratRef.current?.click()} disabled={saving}
+                className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-50">
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />} Unggah surat keterangan
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">

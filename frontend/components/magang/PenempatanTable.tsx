@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Pencil, Trash2, Users, Building2, UserCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText, Pencil, Trash2, Users, Building2, UserCheck } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -112,6 +112,12 @@ export function PenempatanTable({
                       <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-600 dark:text-slate-300">{p.siswa.kelas.nama}</td>
                       <td className="whitespace-nowrap px-4 py-3">
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{p.tempatMagang.namaTempat}</p>
+                        {p.suratKeteranganUrl && (
+                          <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
+                            className="mt-0.5 flex items-center gap-1 text-[11px] font-bold text-[#3E03B3] underline dark:text-[#C4B5FD]">
+                            <FileText size={11} /> Surat keterangan
+                          </a>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         <p className="text-xs text-slate-500 dark:text-slate-400">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
@@ -175,6 +181,11 @@ export function PenempatanTable({
                     <div className="mt-3 space-y-1.5 rounded-2xl bg-slate-100 px-4 py-3 text-[12px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                       <p className="flex items-center gap-2 font-semibold"><Building2 size={13} className="shrink-0" />{p.tempatMagang.namaTempat}</p>
                       <p className="flex items-center gap-2"><UserCheck size={13} className="shrink-0" />{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
+                      {p.suratKeteranganUrl && (
+                        <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-bold text-[#3E03B3] underline dark:text-[#C4B5FD]">
+                          <FileText size={13} className="shrink-0" />Surat keterangan
+                        </a>
+                      )}
                     </div>
                     {canManage && (
                       <div className="mt-3 flex gap-2">
