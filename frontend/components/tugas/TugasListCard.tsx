@@ -178,20 +178,19 @@ export function TugasListCard({
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => onLihatSubmisi(t)}
-                          className="flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
-                          style={{ borderColor: rp.bar, color: rp.bar, backgroundColor: "#F1F5F9" }}>
+                        <button onClick={() => onLihatSubmisi(t)} data-row-act
+                          className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all">
                           <Send size={11} /> Lihat
                           {cnt > 0 && <span className="rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-white" style={{ backgroundColor: rp.bar }}>{cnt}</span>}
                         </button>
                         {canEdit(t) && (
                           <>
-                            <button onClick={() => onEditTugas(t)}
-                              className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
+                            <button onClick={() => onEditTugas(t)} data-row-act
+                              className="rounded-lg p-1.5">
                               <Pencil size={12} />
                             </button>
                             <button onClick={() => onDeleteTugas(t.id)}
-                              className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
+                              data-row-act className="rounded-lg p-1.5">
                               <Trash2 size={12} />
                             </button>
                           </>
