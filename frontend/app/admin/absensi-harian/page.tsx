@@ -278,6 +278,9 @@ function MobileSiswaCard({
   );
 }
 
+// Warna tiap kartu kelas (biru, hijau, ungu, oranye) dipakai untuk ikon dan border.
+const KELAS_WARNA = ["#0EA5E9", "#10B981", "#8B5CF6", "#F59E0B"];
+
 export default function AdminAbsensiHarianPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -431,17 +434,17 @@ export default function AdminAbsensiHarianPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  {kelasPageSlice.map((k) => {
+                  {kelasPageSlice.map((k, i) => {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
+                    const warna = KELAS_WARNA[i % KELAS_WARNA.length];
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        className={`relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border bg-white px-4 py-4 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800 ${
-                          isSelected ? "border-[#3E03B3] dark:border-[#8F6DD3]" : "border-slate-100 dark:border-slate-700"
-                        }`}>
+                        style={{ borderColor: warna, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}33` } : {}) }}
+                        className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border-2 bg-white px-4 py-4 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
                         <div className="relative flex items-center justify-between">
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-                            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25)]"
+                            style={{ background: warna }}>
                             <BookOpen size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
                           </span>
                           <span className="text-[11px] font-bold tabular-nums text-slate-400 dark:text-slate-500">{s.pct}%</span>
