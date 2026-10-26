@@ -77,11 +77,13 @@ export function Sidebar({
 
   return (
     <aside
+      aria-hidden={collapsed && !open}
       className={[
         "fixed inset-y-0 left-0 z-40 flex flex-col bg-white transition-all duration-300 ease-in-out",
-        "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:bg-[#1E293B] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
-        collapsed ? "w-18" : "w-64",
-        open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        // Ditutup (collapsed) = sidebar benar-benar hilang di desktop, tidak menyisakan jalur ikon.
+        collapsed ? "pointer-events-none shadow-none" : "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
+        "w-64 dark:bg-[#1E293B]",
+        open ? "translate-x-0" : collapsed ? "-translate-x-full" : "-translate-x-full lg:translate-x-0",
       ].join(" ")}
       style={{ "--color-primary": PRIMARY } as React.CSSProperties}
     >
