@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 const pad = (n: number) => String(n).padStart(2, "0");
 
 function parse(v: string) {
@@ -46,21 +46,21 @@ export function DateInputID({ value, onChange, className, required, disabled, bi
     onChange(y && m && d ? `${y}-${m}-${d}` : "");
   }
 
-  // margin dipindah ke pembungkus, lebar diatur sendiri (bukan w-full milik className asal)
+  // margin dipindah ke pembungkus; lebar & padding diatur sendiri supaya muat di kolom sempit
   const tokens = (className ?? "").split(/\s+/).filter(Boolean);
   const wrapCls = tokens.filter((t) => /^-?m[trblxy]?-/.test(t)).join(" ");
-  const cls = `${tokens.filter((t) => !/^-?m[trblxy]?-/.test(t) && !/^w-/.test(t) && !/^min-w-/.test(t)).join(" ")} min-w-0 text-center`;
+  const cls = `${tokens.filter((t) => !/^-?m[trblxy]?-/.test(t) && !/^(w|min-w|max-w|p[xlr]?)-/.test(t)).join(" ")} w-full min-w-0 px-1.5 text-center`;
   return (
-    <div className={`flex w-full items-center gap-1.5 ${wrapCls}`}>
-      <select aria-label="Tanggal" required={required} disabled={disabled} value={p.d} onChange={(e) => update({ ...p, d: e.target.value })} className={`${cls} flex-none`} style={{ width: "22%" }}>
+    <div className={`grid w-full items-center gap-1 ${wrapCls}`} style={{ gridTemplateColumns: "minmax(0,0.85fr) minmax(0,1.15fr) minmax(0,1.1fr)" }}>
+      <select aria-label="Tanggal" required={required} disabled={disabled} value={p.d} onChange={(e) => update({ ...p, d: e.target.value })} className={cls}>
         <option value="">Tgl</option>
         {Array.from({ length: hariMaks }, (_, i) => pad(i + 1)).map((x) => <option key={x} value={x}>{Number(x)}</option>)}
       </select>
-      <select aria-label="Bulan" required={required} disabled={disabled} value={p.m} onChange={(e) => update({ ...p, m: e.target.value })} className={`${cls} flex-1`}>
+      <select aria-label="Bulan" required={required} disabled={disabled} value={p.m} onChange={(e) => update({ ...p, m: e.target.value })} className={cls}>
         <option value="">Bulan</option>
         {BULAN.map((n, i) => <option key={n} value={pad(i + 1)}>{n}</option>)}
       </select>
-      <select aria-label="Tahun" required={required} disabled={disabled} value={p.y} onChange={(e) => update({ ...p, y: e.target.value })} className={`${cls} flex-none`} style={{ width: "28%" }}>
+      <select aria-label="Tahun" required={required} disabled={disabled} value={p.y} onChange={(e) => update({ ...p, y: e.target.value })} className={cls}>
         <option value="">Tahun</option>
         {tahun.map((x) => <option key={x} value={x}>{x}</option>)}
       </select>
