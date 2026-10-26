@@ -45,6 +45,13 @@ export class AjukanPenempatanDto {
   rekanSiswaIds?: string[];
 }
 
+// Admin menolak pengajuan PKL; alasan (opsional) diteruskan ke siswa lewat notifikasi.
+export class TolakPenempatanDto {
+  @IsString()
+  @IsOptional()
+  alasan?: string;
+}
+
 // Admin menetapkan guru pembimbing setelah siswa mengajukan.
 export class TetapkanGuruDto {
   @IsString()

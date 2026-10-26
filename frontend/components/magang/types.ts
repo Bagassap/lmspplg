@@ -29,6 +29,8 @@ export type PenempatanMagang = {
   tempatMagang: TempatMagang;
   guruPembimbing: { id: string; user: { id: string; nama: string } } | null;
   kelompokId?: string | null;
+  suratKeteranganUrl?: string | null;
+  suratKeteranganNama?: string | null;
   tanggalMulai: string;
   tanggalSelesai: string | null;
   status: StatusPenempatan;

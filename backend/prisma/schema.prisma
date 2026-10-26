@@ -499,6 +499,9 @@ model PenempatanMagang {
   guruPembimbing   Guru?            @relation(fields: [guruPembimbingId], references: [id])
   // siswa yang mengajukan bersama-sama ke satu tempat memakai kelompokId yang sama
   kelompokId       String?
+  // bukti surat keterangan PKL yang diunggah siswa saat mengajukan
+  suratKeteranganUrl  String?
+  suratKeteranganNama String?
   tanggalMulai     DateTime         @db.Date
   tanggalSelesai   DateTime?        @db.Date
   status           StatusPenempatan @default(MENUNGGU)

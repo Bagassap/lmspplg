@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, UserCheck, Loader2, MapPin, Phone, Briefcase, User } from "lucide-react";
+import { X, FileText, UserCheck, Loader2, MapPin, Phone, Briefcase, User } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
@@ -17,6 +17,7 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   const [guruId, setGuruId] = useState("");
   const [saving, setSaving] = useState(false);
   const t = rows[0].tempatMagang;
+  const surat = rows.find((r) => r.suratKeteranganUrl);
 
   async function simpan() {
     if (!guruId) { toast.error("Pilih guru pembimbing", ""); return; }
@@ -100,6 +101,13 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
                 </p>
               ))}
             </div>
+          )}
+
+          {surat?.suratKeteranganUrl && (
+            <a href={`/api/uploads${surat.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3]">
+              <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat keterangan: {surat.suratKeteranganNama ?? "Lihat berkas"}</span>
+            </a>
           )}
 
           <div>

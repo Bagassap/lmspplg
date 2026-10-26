@@ -79,7 +79,7 @@ export class PenempatanService {
   }
 
   // Siswa mengajukan tempat PKL sendiri (pilih tempat atau isi tempat baru), boleh bersama rekan.
-  async ajukan(userId: string, dto: AjukanPenempatanDto) {
+  async ajukan(userId: string, dto: AjukanPenempatanDto, surat: { url: string; nama: string }) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { user: { select: { nama: true } } } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
 
@@ -141,7 +141,10 @@ export class PenempatanService {
     const tanggalMulai = new Date(todayJakarta());
     try {
       await this.prisma.penempatanMagang.createMany({
-        data: ids.map((siswaId) => ({ siswaId, tempatMagangId: tempatId, kelompokId, tanggalMulai, status: 'MENUNGGU' as const })),
+        data: ids.map((siswaId) => ({
+          siswaId, tempatMagangId: tempatId, kelompokId, tanggalMulai, status: 'MENUNGGU' as const,
+          suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama,
+        })),
       });
     } catch {
       throw new BadRequestException('Pengajuan ke tempat ini sudah pernah dibuat sebelumnya');
@@ -156,6 +159,29 @@ export class PenempatanService {
     });
 
     return this.findSaya(userId);
+  }
+
+  // Admin menolak pengajuan: baris MENUNGGU (satu kelompok) dihapus agar siswa bisa mengajukan ulang.
+  async tolak(id: string, alasan?: string) {
+    const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
+    if (!target) throw new NotFoundException('Pengajuan tidak ditemukan');
+    const rows = await this.prisma.penempatanMagang.findMany({
+      where: target.kelompokId ? { kelompokId: target.kelompokId, status: 'MENUNGGU' } : { id, status: 'MENUNGGU' },
+      include: { siswa: { select: { userId: true } }, tempatMagang: { select: { namaTempat: true } } },
+    });
+    if (rows.length === 0) throw new BadRequestException('Pengajuan ini sudah diproses');
+
+    await this.prisma.penempatanMagang.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
+
+    const userIds = rows.map((r) => r.siswa.userId).filter((u): u is string => !!u);
+    const catatan = alasan?.trim() ? ` Alasan: ${alasan.trim()}` : '';
+    await this.notificationService.createMany(userIds, {
+      title: 'Pengajuan PKL ditolak',
+      message: `Pengajuan PKL di ${rows[0].tempatMagang.namaTempat} ditolak admin.${catatan} Silakan ajukan ulang.`,
+      type: NotificationType.MAGANG,
+      link: '/magang/penempatan',
+    });
+    return this.findAll({});
   }
 
   // Admin menetapkan guru pembimbing: penempatan menjadi AKTIF dan menu guru terbuka.

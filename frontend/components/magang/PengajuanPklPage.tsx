@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Briefcase, Building2, CheckCircle2, Clock, Loader2, MapPin, Phone, Plus, Search, Send, User, UserPlus, Users, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Briefcase, Building2, CheckCircle2, Clock, FileText, Loader2, MapPin, Pencil, Phone, Plus, Search, Send, Upload, User, UserPlus, Users, X } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -12,7 +13,10 @@ type Rekan = { id: string; nis: string; nama: string | null; kelas: { id: string
 type Me = { nama: string; siswa?: { kelas?: { nama: string } | null } | null };
 
 const LAINNYA = "__lainnya__";
-const FIELD = "h-11 w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:text-slate-100";
+const FIELD = "h-11 w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400";
+const BARU_KOSONG = { namaTempat: "", dukuh: "", desa: "", kecamatan: "", kabupaten: "", bidangUsaha: "", namaPimpinan: "", noWaUsaha: "" };
+type TempatBaru = typeof BARU_KOSONG;
+const MAKS_SURAT = 10 * 1024 * 1024;
 const CAP = "mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300";
 
 function fmt(iso: string) {
@@ -41,7 +45,7 @@ function RekanPicker({ terpilih, onPick, onRemove, excludeIds }: {
 
   if (terpilih) {
     return (
-      <div className="flex h-11 items-center gap-2 rounded-2xl bg-[#F1EDFA] pl-4 pr-1.5">
+      <div className="flex h-11 items-center gap-2 rounded-2xl bg-[#F1EDFA] pl-4 pr-1.5 dark:bg-slate-700">
         <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-slate-100">
           {toTitleCase(terpilih.user?.nama ?? terpilih.nama ?? "Siswa")} <span className="font-medium text-slate-600">· {terpilih.kelas?.nama}</span>
         </p>
@@ -71,6 +75,72 @@ function RekanPicker({ terpilih, onPick, onRemove, excludeIds }: {
   );
 }
 
+/** Modal isian data tempat magang yang tidak ada di daftar. */
+function TempatBaruModal({ awal, onClose, onSimpan }: { awal: TempatBaru; onClose: () => void; onSimpan: (v: TempatBaru) => void }) {
+  const toast = useToast();
+  const [v, setV] = useState(awal);
+
+  function simpan() {
+    if ((Object.keys(v) as (keyof TempatBaru)[]).some((k) => !v[k].trim())) {
+      toast.error("Lengkapi data tempat magang", "Semua kolom wajib diisi.");
+      return;
+    }
+    onSimpan(v);
+  }
+
+  return (
+    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
+        transition={{ type: "spring", damping: 26, stiffness: 300 }}
+        className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><Plus size={20} /></span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Data Tempat Magang Baru</h2>
+            <p className="text-xs text-slate-600 dark:text-slate-300">Tempat belum ada di daftar? Isi datanya di sini.</p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
+        </div>
+
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
+          <div>
+            <label className={CAP}>Nama tempat</label>
+            <input value={v.namaTempat} onChange={(e) => setV({ ...v, namaTempat: e.target.value })} placeholder="Nama perusahaan / instansi" className={FIELD} />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {([["dukuh", "Dukuh"], ["desa", "Desa"], ["kecamatan", "Kecamatan"], ["kabupaten", "Kabupaten"]] as const).map(([k, l]) => (
+              <div key={k}>
+                <label className={CAP}>{l}</label>
+                <input value={v[k]} onChange={(e) => setV({ ...v, [k]: e.target.value })} className={FIELD} />
+              </div>
+            ))}
+          </div>
+          <div>
+            <label className={CAP}>Bidang usaha</label>
+            <input value={v.bidangUsaha} onChange={(e) => setV({ ...v, bidangUsaha: e.target.value })} placeholder="Contoh: Pengembangan perangkat lunak" className={FIELD} />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className={CAP}>Nama pimpinan</label>
+              <input value={v.namaPimpinan} onChange={(e) => setV({ ...v, namaPimpinan: e.target.value })} className={FIELD} />
+            </div>
+            <div>
+              <label className={CAP}>Nomor WA usaha</label>
+              <input inputMode="tel" value={v.noWaUsaha} onChange={(e) => setV({ ...v, noWaUsaha: e.target.value })} placeholder="08xxxxxxxxxx" className={FIELD} />
+            </div>
+          </div>
+          <button type="button" onClick={simpan}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white">
+            Simpan data tempat
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 /** Halaman PKL siswa sebelum penempatan aktif: formulir pengajuan, atau status menunggu guru pembimbing. */
 export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]; onChanged: () => void }) {
   const toast = useToast();
@@ -78,7 +148,10 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
   const [tempat, setTempat] = useState<Pilihan[]>([]);
   const [pilih, setPilih] = useState("");
   const [rekan, setRekan] = useState<(Rekan | null)[]>([]);
-  const [baru, setBaru] = useState({ namaTempat: "", dukuh: "", desa: "", kecamatan: "", kabupaten: "", bidangUsaha: "", namaPimpinan: "", noWaUsaha: "" });
+  const [baru, setBaru] = useState<TempatBaru>(BARU_KOSONG);
+  const [modalBaru, setModalBaru] = useState(false);
+  const [surat, setSurat] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
 
   const menunggu = list.filter((p) => p.status === "MENUNGGU");
@@ -96,8 +169,11 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
   const bolehTambah = modeBaru || (!!terpilih && terpilih.sisa > 1);
   const excludeIds = rekan.filter((r): r is Rekan => !!r).map((r) => r.id);
 
+  const baruLengkap = (Object.keys(baru) as (keyof TempatBaru)[]).every((k) => baru[k].trim());
+
   function onPilih(v: string) {
     setPilih(v);
+    if (v === LAINNYA) setModalBaru(true);
     setRekan((prev) => {
       const maks = v === LAINNYA ? 4 : Math.max(0, (tempat.find((t) => t.id === v)?.sisa ?? 1) - 1);
       return prev.slice(0, maks);
@@ -106,20 +182,17 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
 
   async function kirim() {
     if (!pilih) { toast.error("Pilih tempat magang", ""); return; }
-    if (modeBaru) {
-      const kosong = (Object.keys(baru) as (keyof typeof baru)[]).find((k) => !baru[k].trim());
-      if (kosong) { toast.error("Lengkapi data tempat magang", "Semua kolom tempat baru wajib diisi."); return; }
-    }
+    if (modeBaru && !baruLengkap) { toast.error("Lengkapi data tempat magang", "Semua kolom tempat baru wajib diisi."); setModalBaru(true); return; }
+    if (!surat) { toast.error("Upload bukti surat keterangan PKL", "Berkas ini wajib diunggah."); return; }
+    if (surat.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }
     setSaving(true);
     try {
-      const res = await fetch("/api/magang/penempatan/ajukan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...(modeBaru ? { tempatBaru: baru } : { tempatMagangId: pilih }),
-          rekanSiswaIds: rekan.filter((r): r is Rekan => !!r).map((r) => r.id),
-        }),
-      });
+      const fd = new FormData();
+      if (modeBaru) fd.append("tempatBaru", JSON.stringify(baru));
+      else fd.append("tempatMagangId", pilih);
+      fd.append("rekanSiswaIds", JSON.stringify(rekan.filter((r): r is Rekan => !!r).map((r) => r.id)));
+      fd.append("surat", surat);
+      const res = await fetch("/api/magang/penempatan/ajukan", { method: "POST", body: fd });
       if (res.ok) {
         toast.success("Pengajuan terkirim", "Menunggu admin menetapkan guru pembimbing.");
         onChanged();
@@ -207,39 +280,38 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
               </select>
             </div>
 
-            {modeBaru && (
-              <div className="space-y-3 rounded-2xl bg-[#F1EDFA] p-3.5">
-                <p className="flex items-center gap-1.5 text-xs font-bold text-slate-800"><Plus size={13} className="text-[#3E03B3]" /> Data tempat magang baru</p>
-                <div>
-                  <label className={CAP}>Nama tempat</label>
-                  <input value={baru.namaTempat} onChange={(e) => setBaru({ ...baru, namaTempat: e.target.value })} placeholder="Nama perusahaan / instansi" className={`${FIELD} !bg-white`} />
+            {modeBaru && baruLengkap && (
+              <div className="flex items-start gap-3 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><Building2 size={16} /></span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{baru.namaTempat}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">Dukuh {baru.dukuh}, Desa {baru.desa}, Kec. {baru.kecamatan}, Kab. {baru.kabupaten}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">{baru.bidangUsaha} · {baru.namaPimpinan} · {baru.noWaUsaha}</p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {([["dukuh", "Dukuh"], ["desa", "Desa"], ["kecamatan", "Kecamatan"], ["kabupaten", "Kabupaten"]] as const).map(([k, l]) => (
-                    <div key={k}>
-                      <label className={CAP}>{l}</label>
-                      <input value={baru[k]} onChange={(e) => setBaru({ ...baru, [k]: e.target.value })} className={`${FIELD} !bg-white`} />
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <label className={CAP}>Bidang usaha</label>
-                  <input value={baru.bidangUsaha} onChange={(e) => setBaru({ ...baru, bidangUsaha: e.target.value })} placeholder="Contoh: Pengembangan perangkat lunak" className={`${FIELD} !bg-white`} />
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className={CAP}>Nama pimpinan</label>
-                    <input value={baru.namaPimpinan} onChange={(e) => setBaru({ ...baru, namaPimpinan: e.target.value })} className={`${FIELD} !bg-white`} />
-                  </div>
-                  <div>
-                    <label className={CAP}>Nomor WA usaha</label>
-                    <input inputMode="tel" value={baru.noWaUsaha} onChange={(e) => setBaru({ ...baru, noWaUsaha: e.target.value })} placeholder="08xxxxxxxxxx" className={`${FIELD} !bg-white`} />
-                  </div>
-                </div>
+                <button type="button" onClick={() => setModalBaru(true)} aria-label="Ubah data tempat"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#3E03B3] dark:bg-slate-800"><Pencil size={14} /></button>
               </div>
             )}
 
-            <button type="button" onClick={kirim} disabled={saving || !pilih}
+            <div>
+              <label className={CAP}>Upload bukti surat keterangan PKL <span className="text-[#E8562B]">*</span></label>
+              <input ref={fileRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden"
+                onChange={(e) => setSurat(e.target.files?.[0] ?? null)} />
+              <button type="button" onClick={() => fileRef.current?.click()}
+                className="flex min-h-11 w-full items-center gap-3 rounded-2xl bg-[#F1EDFA] px-4 py-2.5 text-left dark:bg-slate-700">
+                {surat ? <FileText size={16} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> : <Upload size={16} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />}
+                <span className={`min-w-0 flex-1 truncate text-sm font-semibold ${surat ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"}`}>
+                  {surat ? surat.name : "Pilih berkas surat keterangan (PDF, Word, atau foto)"}
+                </span>
+                {surat && (
+                  <span role="button" aria-label="Hapus berkas" onClick={(e) => { e.stopPropagation(); setSurat(null); if (fileRef.current) fileRef.current.value = ""; }}
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#E8562B] dark:bg-slate-800"><X size={13} /></span>
+                )}
+              </button>
+              <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-400">Wajib diisi, baik tempat dari daftar maupun tempat isi sendiri. Maksimal 10 MB.</p>
+            </div>
+
+            <button type="button" onClick={kirim} disabled={saving || !pilih || !surat}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} Ajukan PKL
             </button>
@@ -264,6 +336,14 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
           </div>
         </div>
       )}
+
+      <AnimatePresence>
+        {modalBaru && (
+          <TempatBaruModal awal={baru}
+            onClose={() => { setModalBaru(false); if (!baruLengkap) setPilih(""); }}
+            onSimpan={(v) => { setBaru(v); setModalBaru(false); }} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

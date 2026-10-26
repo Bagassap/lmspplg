@@ -101,9 +101,15 @@ export default function AdminMagangPenempatanPage() {
     const nama = rows.map((r) => toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")).join(", ");
     const ok = await toast.confirm("Tolak pengajuan PKL ini?", `Pengajuan ${nama} di "${rows[0].tempatMagang.namaTempat}" akan dihapus dan siswa bisa mengajukan ulang.`);
     if (!ok) return;
-    const hasil = await Promise.all(rows.map((r) => fetch(`/api/magang/penempatan/${r.id}`, { method: "DELETE" })));
-    if (hasil.every((h) => h.ok)) toast.success("Pengajuan ditolak", "");
-    else toast.error("Sebagian pengajuan gagal dihapus", "");
+    // Satu permintaan cukup: server menolak seluruh kelompok dan memberi tahu siswa.
+    const res = await fetch(`/api/magang/penempatan/${rows[0].id}/tolak`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}),
+    });
+    if (res.ok) toast.success("Pengajuan ditolak", "Siswa diberi tahu dan bisa mengajukan ulang.");
+    else {
+      const d = await res.json().catch(() => null);
+      toast.error(d?.message ?? "Gagal menolak pengajuan", "");
+    }
     loadPenempatan(); loadTempat();
   }
 
