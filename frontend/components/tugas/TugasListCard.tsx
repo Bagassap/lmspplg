@@ -27,10 +27,10 @@ const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
 
 const ROW_PALETTES = [
   { bar: "#3E03B3", gradient: "#3E03B3" },
-  { bar: "#F26A3D", gradient: "#F26A3D" },
-  { bar: "#F26A3D", gradient: "#F26A3D" },
-  { bar: "#F26A3D", gradient: "#F26A3D" },
-  { bar: "#0EA5E9", gradient: "#0EA5E9" },
+  { bar: "#3E03B3", gradient: "#3E03B3" },
+  { bar: "#3E03B3", gradient: "#3E03B3" },
+  { bar: "#3E03B3", gradient: "#3E03B3" },
+  { bar: "#3E03B3", gradient: "#3E03B3" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 

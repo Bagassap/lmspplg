@@ -28,10 +28,10 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), { ssr: false, loa
 const PRIMARY = "#3E03B3";
 
 const PALETTE = [
-  { bg: "#E0F2FE", text: "#0284C7", bar: "#0EA5E9", gradient: "#0EA5E9" },
-  { bg: "#E3F8EF", text: "#059669", bar: "#10B981", gradient: "#10B981" },
-  { bg: "#F1EDFA", text: "#7C3AED", bar: "#7C3AED", gradient: "#7C3AED" },
-  { bg: "#FFE9E2", text: "#F26A3D", bar: "#F26A3D", gradient: "#F26A3D" },
+  { bg: "#F1EDFA", text: "#3E03B3", bar: "#3E03B3", gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3", bar: "#3E03B3", gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3", bar: "#3E03B3", gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3", bar: "#3E03B3", gradient: "#3E03B3" },
 ];
 function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 
@@ -886,7 +886,7 @@ export default function AdminJadwalSoalPage() {
                   {shown.map((t, idx) => (
                     <li key={t.id} className="rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                       <button type="button" onClick={() => setSubmisiModalTahapan(t)} className="flex w-full items-center gap-4 text-left active:opacity-80">
-                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>{idx + 1}</span>
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>{idx + 1}</span>
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                           <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>

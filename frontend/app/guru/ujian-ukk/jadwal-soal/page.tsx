@@ -30,11 +30,11 @@ interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 
 const ROW_PALETTES = [
-  { bg:"#F1EDFA", text:"#3E03B3",  bar:"#3E03B3",  gradient:"#3E03B3" },
-  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#FFFFFF", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#F1EDFA", text:"#0EA5E9",  bar:"#0EA5E9",  gradient:"#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -392,7 +392,7 @@ export default function GuruJadwalSoalPage() {
                     return (
                       <li key={t.id} className="overflow-hidden rounded-3xl bg-white shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                         <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-4 p-3 text-left active:opacity-80">
-                          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>{idx + 1}</span>
+                          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>{idx + 1}</span>
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                             <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>

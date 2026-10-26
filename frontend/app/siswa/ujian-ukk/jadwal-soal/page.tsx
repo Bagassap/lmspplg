@@ -38,11 +38,11 @@ function statusInfo(s: "TERKIRIM"|"DITERIMA"|"REVISI") {
 }
 
 const ROW_PALETTES = [
-  { bg:"#F1EDFA", text:"#3E03B3",  bar:"#3E03B3",  gradient:"#3E03B3" },
-  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#F1EDFA", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#FFFFFF", text:"#F26A3D",  bar:"#F26A3D",  gradient:"#F26A3D" },
-  { bg:"#F1EDFA", text:"#0EA5E9",  bar:"#0EA5E9",  gradient:"#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
+  { bg: "#F1EDFA", text: "#3E03B3",  bar: "#3E03B3",  gradient: "#3E03B3" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
@@ -593,7 +593,7 @@ export default function SiswaJadwalSoalPage() {
                       : { label: "Kirim", icon: <Send size={12} />, bg: APP_ACCENT, clr: "#FFFFFF", onClick: () => openSubmit(t) };
                     return (
                       <li key={t.id} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
-                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle(toneAt(idx))}>
+                        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>
                           {idx + 1}
                         </span>
                         <div className="min-w-0 flex-1">

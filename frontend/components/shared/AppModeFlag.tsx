@@ -50,7 +50,7 @@ function tagSheetHeaders(root: ParentNode) {
 /** Tombol aksi di baris tabel (table maupun grid-baris) ditandai data-row-act agar seragam: ungu, ikon/teks putih. */
 const ACT_SKIP = '[role="switch"],[role="checkbox"],[role="tab"],[aria-pressed],[data-keep-style]';
 function tagRowActions(root: ParentNode) {
-  root.querySelectorAll<HTMLElement>('tbody tr button, [style*="grid-template-columns"] button').forEach((b) => {
+  root.querySelectorAll<HTMLElement>('tbody tr button, [style*="grid-template-columns"] button, tbody tr a[download], tbody tr a:has(> svg:only-child), [style*="grid-template-columns"] a:has(> svg:only-child)').forEach((b) => {
     if (b.hasAttribute("data-row-act")) return;
     if (b.matches(ACT_SKIP) || b.closest("thead, .fixed.inset-0, [role=tablist]")) return;
     if (b.querySelector("img") || b.querySelector(".rounded-full.overflow-hidden") || b.className.toString().includes("w-full")) return;

@@ -21,9 +21,9 @@ function formatDate(iso: string): string {
 
 const ROW_PALETTES = [
   { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
-  { bar: "#0EA5E9", gradient: "#0EA5E9", tint: "#F1EDFA" },
-  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
-  { bar: "#F26A3D", gradient: "#F26A3D", tint: "#F1EDFA" },
+  { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
+  { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
+  { bar: "#3E03B3", gradient: "#3E03B3", tint: "#F1EDFA" },
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
