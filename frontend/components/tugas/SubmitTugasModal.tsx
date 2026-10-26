@@ -64,7 +64,6 @@ function SubmitPraktikModal({
         className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
           style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-200">
             <Code2 size={18} className="text-black" />
           </div>
@@ -154,7 +153,6 @@ function SubmitFileModal({
         style={{ maxHeight: "92vh" }}
         onClick={(e) => e.stopPropagation()}>
         <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-          <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-slate-200" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center shrink-0">

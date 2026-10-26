@@ -117,7 +117,6 @@ export function ResetPasswordModal({
           {successPassword ? (
             <>
               <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
-                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
                 <div className="relative flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
@@ -180,7 +179,6 @@ export function ResetPasswordModal({
           ) : (
           <>
           <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
-            <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
@@ -308,8 +306,6 @@ export function ResetPasswordModal({
         {successPassword ? (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-slate-200" />
-              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-slate-200" />
               <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                 <CheckCircle2 size={24} className="text-black" />
               </div>
@@ -362,8 +358,6 @@ export function ResetPasswordModal({
         ) : (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-slate-200" />
-              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-slate-200" />
               <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                 <KeyRound size={24} className="text-black" />
               </div>

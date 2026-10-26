@@ -821,7 +821,6 @@ export default function SiswaJadwalSoalPage() {
               onClick={e=>e.stopPropagation()}>
               <div className="relative px-6 py-5 overflow-hidden"
                 style={{background: appMode ? "#F1EDFA" : "#F26A3D", color: appMode ? "#0F172A" : "#FFFFFF"}}>
-                <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-slate-100"/>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">

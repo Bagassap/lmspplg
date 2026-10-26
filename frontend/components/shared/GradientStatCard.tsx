@@ -40,9 +40,8 @@ export function GradientStatCard({
       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-xl px-3 py-3 sm:h-32 sm:rounded-2xl sm:px-5 sm:py-5"
       style={{ background: TONE_HEX[tone], color: fg, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
     >
-      <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full sm:-right-6 sm:-top-6 sm:h-28 sm:w-28" style={{ backgroundColor: "#F1F5F9" }} />
 
-      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl sm:h-9 sm:w-9 sm:rounded-2xl" style={{ backgroundColor: "#F1F5F9" }}>
+      <div className="relative flex h-7 w-7 items-center justify-center rounded-xl sm:h-9 sm:w-9 sm:rounded-2xl" style={{ background: "#FFFFFF", color: TONE_HEX[tone] }}>
         <Icon size={14} className="sm:hidden" />
         <Icon size={16} className="hidden sm:block" />
       </div>

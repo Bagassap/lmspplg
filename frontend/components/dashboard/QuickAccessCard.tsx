@@ -42,15 +42,13 @@ function QuickAccessCard({ card, index }: { card: QuickAccessCardData; index: nu
         className="relative flex h-32 flex-col justify-between overflow-hidden rounded-xl p-3.5 sm:h-44 sm:rounded-2xl sm:p-5"
         style={{ background: card.gradient, color: fg, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
       >
-        <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full sm:-right-6 sm:-top-6 sm:h-28 sm:w-28" style={{ backgroundColor: "#F1F5F9" }} />
-        <div className="pointer-events-none absolute -bottom-3 right-8 h-12 w-12 rounded-full sm:-bottom-4 sm:right-12 sm:h-20 sm:w-20" style={{ backgroundColor: "#F1F5F9" }} />
 
         <div className="relative flex items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="text-[8px] font-medium uppercase tracking-widest sm:text-[10px]" style={{ color: `${fg}B3` }}>Akses Cepat</p>
             <p className="mt-0.5 truncate text-xs font-bold sm:text-sm">{card.label}</p>
           </div>
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9" style={{ backgroundColor: "#F1F5F9" }}>
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9" style={{ background: "#FFFFFF", color: card.gradient }}>
             <card.icon size={14} className="sm:hidden" />
             <card.icon size={17} className="hidden sm:block" />
           </div>

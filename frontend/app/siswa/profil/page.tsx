@@ -288,10 +288,10 @@ function SectionCard({
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700/50 dark:bg-[#1E293B]">
       <div
         className="flex items-center justify-between px-5 py-3.5"
-        style={{ background: gradient, color: fg, borderBottom: "1px solid rgba(255,255,255,0.15)" }}
+        style={{ background: gradient, color: fg }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: "#F1F5F9" }}>
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#FFFFFF", color: gradient }}>
             <Icon size={14} />
           </div>
           <span className="text-sm font-semibold">{title}</span>
@@ -309,7 +309,6 @@ function MiniStat({
   const fg = gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
   return (
     <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient, color: fg }}>
-      <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: "#F1F5F9" }} />
       <div className="relative flex items-center justify-center gap-1">
         <Icon size={11} style={{ color: `${fg}B3` }} />
         <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: `${fg}B3` }}>{label}</p>
