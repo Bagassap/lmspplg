@@ -112,25 +112,6 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
         })}
       </div>
 
-      {submisi.length > 0 && (
-        <div className="flex shrink-0 flex-wrap items-center gap-2 px-6 pb-3 sm:px-8">
-          <a href={urlZip({ tahapanId })} download
-            className="flex items-center gap-2 rounded-full bg-[#3E03B3] px-4 py-2 text-xs font-bold text-white">
-            <Download size={14} /> Unduh semua (ZIP)
-          </a>
-          {aktif && (
-            <a href={urlZip({ tahapanId, kelasId: aktif.id })} download
-              className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
-              <Download size={14} /> Unduh {aktif.nama}
-            </a>
-          )}
-          <button type="button" onClick={() => salin(`${window.location.origin}${urlZip({ tahapanId, kelasId: aktif?.id })}`, "Alamat unduh disalin (harus login admin/guru)")}
-            className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
-            <Copy size={14} /> Salin alamat unduh
-          </button>
-        </div>
-      )}
-
       {tab === "sudah" && folderKelas && (
         <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">
           <button type="button" onClick={() => salin(folderKelas, `Link folder ${aktif?.nama ?? "kelas"} disalin`)}
@@ -186,16 +167,38 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
         )}
       </div>
 
-      {total > 0 && (
-        <div className="flex shrink-0 items-center justify-between gap-3 px-6 pb-6 pt-1 sm:px-8 sm:pb-8">
-          <span className="text-sm font-semibold text-slate-600">{from + 1}–{to} dari {total} siswa</span>
-          <div className="flex items-center gap-2">
-            <button type="button" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={18} /></button>
-            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{page + 1}/{pageCount}</span>
-            <button type="button" disabled={page >= pageCount - 1} onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={18} /></button>
+      {(total > 0 || submisi.length > 0) && (
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-6 pb-6 pt-1 sm:px-8 sm:pb-8">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            {total > 0 && <span className="mr-1 text-sm font-semibold text-slate-600">{from + 1}–{to} dari {total} siswa</span>}
+            {submisi.length > 0 && (
+              <>
+                <a href={urlZip({ tahapanId })} download
+                  className="flex items-center gap-2 rounded-full bg-[#3E03B3] px-4 py-2 text-xs font-bold text-white">
+                  <Download size={14} /> Unduh semua (ZIP)
+                </a>
+                {aktif && (
+                  <a href={urlZip({ tahapanId, kelasId: aktif.id })} download
+                    className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
+                    <Download size={14} /> Unduh {aktif.nama}
+                  </a>
+                )}
+                <button type="button" onClick={() => salin(`${window.location.origin}${urlZip({ tahapanId, kelasId: aktif?.id })}`, "Alamat unduh disalin (harus login admin/guru)")}
+                  className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
+                  <Copy size={14} /> Salin alamat unduh
+                </button>
+              </>
+            )}
           </div>
+          {total > 0 && (
+            <div className="flex items-center gap-2">
+              <button type="button" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={18} /></button>
+              <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{page + 1}/{pageCount}</span>
+              <button type="button" disabled={page >= pageCount - 1} onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={18} /></button>
+            </div>
+          )}
         </div>
       )}
     </>
