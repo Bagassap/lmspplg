@@ -83,8 +83,9 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
 
   return (
     <>
+      <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">
       {kelasList.length > 0 && (
-        <div className="flex shrink-0 gap-2 overflow-x-auto px-6 pb-3 sm:px-8">
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
           {kelasList.map((k) => {
             const on = k.id === aktifId;
             const n = new Set(submisi.filter((s) => kelasOf(s) === k.id).map((s) => s.siswa?.id)).size;
@@ -99,17 +100,18 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
         </div>
       )}
 
-      <div className="grid shrink-0 grid-cols-2 gap-3 px-6 pb-4 sm:px-8">
+      <div className="flex shrink-0 gap-2">
         {tiles.map((t) => {
           const on = tab === t.key;
           const Icon = t.key === "sudah" ? CheckCircle2 : UserX;
           return (
             <button key={t.key} type="button" onClick={() => setTab(t.key)}
-              className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-colors ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
+              className={`flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-colors ${on ? "bg-[#F26A3D] text-white" : "bg-[#FFE9E2] text-[#E8562B] dark:bg-slate-700"}`}>
               <Icon size={14} /> {t.label} ({t.val})
             </button>
           );
         })}
+      </div>
       </div>
 
       {tab === "sudah" && folderKelas && (
