@@ -10,6 +10,7 @@ import StatsCard from "@/components/dashboard/StatsCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
 import { PengajuanMenungguPanel } from "@/components/magang/PengajuanMenungguPanel";
+import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { PenempatanTable } from "@/components/magang/PenempatanTable";
@@ -31,6 +32,7 @@ export default function AdminMagangPenempatanPage() {
   const [loading, setLoading] = useState(true);
   const [showKelolaTempat, setShowKelolaTempat] = useState(false);
   const [tetapkanRows, setTetapkanRows] = useState<PenempatanMagang[] | null>(null);
+  const [pengajuanRows, setPengajuanRows] = useState<PenempatanMagang[] | null>(null);
   const [editTarget, setEditTarget] = useState<PenempatanMagang | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -95,22 +97,6 @@ export default function AdminMagangPenempatanPage() {
     } finally {
       setBusyId(null);
     }
-  }
-
-  async function tolak(rows: PenempatanMagang[]) {
-    const nama = rows.map((r) => toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")).join(", ");
-    const ok = await toast.confirm("Tolak pengajuan PKL ini?", `Pengajuan ${nama} di "${rows[0].tempatMagang.namaTempat}" akan dihapus dan siswa bisa mengajukan ulang.`);
-    if (!ok) return;
-    // Satu permintaan cukup: server menolak seluruh kelompok dan memberi tahu siswa.
-    const res = await fetch(`/api/magang/penempatan/${rows[0].id}/tolak`, {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}),
-    });
-    if (res.ok) toast.success("Pengajuan ditolak", "Siswa diberi tahu dan bisa mengajukan ulang.");
-    else {
-      const d = await res.json().catch(() => null);
-      toast.error(d?.message ?? "Gagal menolak pengajuan", "");
-    }
-    loadPenempatan(); loadTempat();
   }
 
   const jumlahMenunggu = penempatanList.filter((p) => p.status === "MENUNGGU").length;
@@ -191,7 +177,7 @@ export default function AdminMagangPenempatanPage() {
       </div>
       </div>
 
-      <PengajuanMenungguPanel list={penempatanList} onTetapkan={setTetapkanRows} onTolak={tolak} />
+      <PengajuanMenungguPanel list={penempatanList} onBuka={setPengajuanRows} />
 
       <PenempatanFilterBar
         search={search} onSearch={setSearch}
@@ -221,6 +207,14 @@ export default function AdminMagangPenempatanPage() {
             tempatList={tempatList}
             onClose={() => setShowKelolaTempat(false)}
             onSaved={loadTempat}
+          />
+        )}
+        {pengajuanRows && (
+          <PengajuanPklModal
+            rows={pengajuanRows}
+            guruList={guruList}
+            onClose={() => setPengajuanRows(null)}
+            onSaved={() => { loadPenempatan(); loadTempat(); }}
           />
         )}
         {tetapkanRows && (

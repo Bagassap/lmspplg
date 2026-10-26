@@ -1,15 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { Clock, Building2, FileText, UserCheck, Users, X } from "lucide-react";
+import { Clock, Building2, ChevronRight, FileText, Users } from "lucide-react";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
 
-/** Pengajuan PKL dari siswa yang menunggu admin menetapkan guru pembimbing (dikelompokkan per rombongan). */
-export function PengajuanMenungguPanel({ list, onTetapkan, onTolak }: {
+/** Pengajuan PKL dari siswa yang menunggu admin (dikelompokkan per rombongan). Klik kartu untuk membuka modal pengajuan. */
+export function PengajuanMenungguPanel({ list, onBuka }: {
   list: PenempatanMagang[];
-  onTetapkan: (rows: PenempatanMagang[]) => void;
-  onTolak: (rows: PenempatanMagang[]) => void;
+  onBuka: (rows: PenempatanMagang[]) => void;
 }) {
   const groups = useMemo(() => {
     const map = new Map<string, PenempatanMagang[]>();
@@ -27,8 +26,8 @@ export function PengajuanMenungguPanel({ list, onTetapkan, onTolak }: {
       <div className="mb-3 flex items-center gap-2.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFE9E2] text-[#E8562B]"><Clock size={17} /></span>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-extrabold text-slate-900 dark:text-white">Pengajuan Menunggu Guru Pembimbing</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">Periksa surat keterangan siswa, lalu terima (tetapkan guru pembimbing) atau tolak.</p>
+          <p className="text-sm font-extrabold text-slate-900 dark:text-white">Pengajuan Penempatan PKL</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">Klik kartu untuk memeriksa surat keterangan, lalu terima atau tolak.</p>
         </div>
         <span className="rounded-full bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
       </div>
@@ -36,39 +35,26 @@ export function PengajuanMenungguPanel({ list, onTetapkan, onTolak }: {
       <div className="grid gap-2.5 lg:grid-cols-2">
         {groups.map((rows) => {
           const t = rows[0].tempatMagang;
+          const adaSurat = rows.some((r) => r.suratKeteranganUrl);
           return (
-            <div key={rows[0].id} className="flex flex-col gap-2 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700">
-              <div className="flex items-start gap-2.5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E03B3]"><Building2 size={16} /></span>
-                <div className="min-w-0 flex-1">
+            <button key={rows[0].id} type="button" onClick={() => onBuka(rows)}
+              className="flex w-full items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3.5 text-left transition-colors hover:bg-[#E7E0F7] dark:bg-slate-700 dark:hover:bg-slate-600">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E03B3] dark:bg-slate-800"><Building2 size={18} /></span>
+              <div className="min-w-0 flex-1 space-y-0.5">
+                <div className="flex items-center gap-2">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
-                  <p className="truncate text-xs text-slate-600 dark:text-slate-300">{t.alamat ?? "Tempat dari daftar guru"}</p>
+                  {t.dibuatSiswa && <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#E8562B] dark:bg-slate-800">Tempat sendiri</span>}
                 </div>
-                {t.dibuatSiswa && <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#E8562B]">Tempat baru</span>}
+                <p className="flex items-start gap-1.5 text-xs text-slate-700 dark:text-slate-200">
+                  <Users size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
+                  <span className="line-clamp-2">{rows.map((r) => `${toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} (${r.siswa.kelas?.nama ?? "-"})`).join(", ")}</span>
+                </p>
+                <p className={`flex items-center gap-1.5 text-[11px] font-bold ${adaSurat ? "text-[#3E03B3] dark:text-[#C4B5FD]" : "text-[#E8562B]"}`}>
+                  <FileText size={12} /> {adaSurat ? "Surat keterangan terlampir" : "Belum ada surat keterangan"}
+                </p>
               </div>
-              <p className="flex items-start gap-1.5 text-xs text-slate-800 dark:text-slate-200">
-                <Users size={13} className="mt-0.5 shrink-0 text-[#3E03B3]" />
-                <span>{rows.map((r) => `${toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} (${r.siswa.kelas?.nama ?? "-"})`).join(", ")}</span>
-              </p>
-              {rows[0].suratKeteranganUrl ? (
-                <a href={`/api/uploads${rows[0].suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs font-bold text-[#3E03B3] underline dark:text-[#C4B5FD]">
-                  <FileText size={13} className="shrink-0" /> <span className="truncate">Surat keterangan: {rows[0].suratKeteranganNama ?? "Lihat berkas"}</span>
-                </a>
-              ) : (
-                <p className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><FileText size={13} className="shrink-0" /> Tidak ada surat keterangan</p>
-              )}
-              <div className="mt-1 flex gap-2">
-                <button type="button" onClick={() => onTetapkan(rows)}
-                  className="flex h-10 flex-1 items-center justify-center gap-1.5 rounded-full bg-[#3E03B3] text-xs font-bold text-white">
-                  <UserCheck size={14} /> Terima &amp; tetapkan guru
-                </button>
-                <button type="button" onClick={() => onTolak(rows)}
-                  className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-xs font-bold text-[#E8562B] dark:bg-slate-800">
-                  <X size={14} /> Tolak
-                </button>
-              </div>
-            </div>
+              <ChevronRight size={18} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
+            </button>
           );
         })}
       </div>
