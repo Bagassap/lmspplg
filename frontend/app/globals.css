@@ -480,6 +480,30 @@ html.dark :is(.bg-white, [class*="bg-[#FFFFFF]"]):is(button, a, span, div)[class
 html.dark [style*="background:#F1F5F9" i], html.dark [style*="background: #F1F5F9" i], html.dark [style*="background-color:#F1F5F9" i], html.dark [style*="background-color: #F1F5F9" i], html.dark [style*="background:#F1EDFA" i], html.dark [style*="background: #F1EDFA" i], html.dark [style*="background-color:#F1EDFA" i], html.dark [style*="background-color: #F1EDFA" i], html.dark [style*="background:#FFE9E2" i], html.dark [style*="background: #FFE9E2" i], html.dark [style*="background-color:#FFE9E2" i], html.dark [style*="background-color: #FFE9E2" i] { background: #273449 !important; }
 html.dark [style*="background:#E2E8F0" i], html.dark [style*="background: #E2E8F0" i], html.dark [style*="background-color:#E2E8F0" i], html.dark [style*="background-color: #E2E8F0" i] { background: #334155 !important; }
 html.dark button[role="switch"][aria-checked="false"] { background: #475569 !important; }
-html.dark .app-info-icon { background: #273449 !important; }
+html.dark .app-info-icon, html.dark[data-app-mode] .app-info-row .app-info-icon { background: #273449 !important; }
 :is([style*="background:#F26A3D" i], [style*="background: #F26A3D" i], [style*="background-color:#F26A3D" i], [style*="background-color: #F26A3D" i], [style*="background:#E8562B" i], [style*="background: #E8562B" i], [style*="background-color:#E8562B" i], [style*="background-color: #E8562B" i]) { color: #ffffff !important; }
 :is([style*="background:#F26A3D" i], [style*="background: #F26A3D" i], [style*="background-color:#F26A3D" i], [style*="background-color: #F26A3D" i], [style*="background:#E8562B" i], [style*="background: #E8562B" i], [style*="background-color:#E8562B" i], [style*="background-color: #E8562B" i]) :not([class*="bg-white"]):not([class*="bg-white"] *):not([style*="background: rgb(255, 255, 255)"]):not([style*="background:#FFFFFF" i]):not([style*="background: #FFFFFF" i]):not([style*="background:#FFFFFF" i] *):not([style*="background: #FFFFFF" i] *) { color: #ffffff !important; }
+
+/* ---- Tema gelap: kembaran otomatis aturan mode aplikasi yang berlatar terang ---- */
+html.dark[data-app-mode] .app-sheet-header { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-sheet-header [class*="bg-white/"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is([class*="bg-slate-50/"], [class*="bg-slate-100/"], [class*="bg-slate-50 "], [class*="bg-gray-50"]):not(input):not(select):not(textarea) { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-white/"]:not(.app-sheet-header *) { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-black/"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-slate-"][class*="/"]:not(input):not(select):not(textarea) { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#F26A3D]/"], html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#FFE9E2]/"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#3E03B3]/"], html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-[#F1EDFA]/"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-sheet-header [class*="bg-white/"], html.dark[data-app-mode] .app-sheet-header [class*="bg-black/"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .app-sheet-header [class*="bg-[#A1F919]"] { background-color: #273449 !important; }
+html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) { background-color: #334155 !important; color: #f1f5f9 !important; box-shadow: inset 0 0 0 1px #475569; }
+html.dark[data-app-mode] .app-plain-header > button:last-child, html.dark[data-app-mode] .app-plain-header > div:last-child > button:last-child { background-color: #334155 !important; color: #f1f5f9 !important; box-shadow: inset 0 0 0 1px #475569; }
+
+html.dark .app-sheet-header :is(h1, h2, h3, p, span, label), html.dark[data-app-mode] .app-sheet-header :is(h1, h2, h3, p, span, label) { color: #e2e8f0 !important; }
+html.dark[data-app-mode] .app-plain-header > button:last-child, html.dark[data-app-mode] .app-plain-header > div:last-child > button:last-child { background: #334155 !important; color: #c4b5fd !important; }
+html.dark[data-app-mode] .app-plain-header :is(h1, h2, h3) { color: #f1f5f9 !important; }
+html.dark .fixed.inset-0:not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) { background-color: #334155 !important; color: #f1f5f9 !important; box-shadow: inset 0 0 0 1px #475569; }
+html.dark .fixed.inset-0:not([data-plain]) :is(button, label):is([class*="bg-[#F1EDFA]"], [class*="bg-slate-"], [class*="bg-gray-"], .bg-white) { background-color: #334155 !important; color: #e2e8f0 !important; }
+html.dark .fixed.inset-0:not([data-plain]) .sticky.bottom-0 { background-color: #1e293b !important; }
