@@ -22,8 +22,8 @@ export type PengumumanItem = {
 const KATEGORI_OPTIONS = ["Umum", "Akademik", "Magang", "Ujian", "Lainnya"];
 const PRIORITAS_OPTIONS = [
   { value: "NORMAL",   label: "Normal",   cls: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300" },
-  { value: "PENTING",  label: "Penting",  cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#C4B5FD]" },
-  { value: "MENDESAK", label: "Mendesak", cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#C4B5FD]" },
+  { value: "PENTING",  label: "Penting",  cls: "bg-[#FFFFFF] text-[#000000] dark:bg-slate-700 dark:text-[#C4B5FD]" },
+  { value: "MENDESAK", label: "Mendesak", cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-slate-700 dark:text-[#C4B5FD]" },
 ];
 
 const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#3E03B3] dark:focus:bg-slate-700";
@@ -121,19 +121,18 @@ export function PengumumanFormModal({
               className="app-sheet-header relative flex items-center gap-3 overflow-hidden px-6 py-5"
               style={{ background: "#3E03B3" }}
             >
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E03B3]">
                 <Megaphone size={18} className="text-white" />
               </div>
               <div>
                 <h2 className="text-base font-extrabold text-white">
                   {isEdit ? "Edit Pengumuman" : "Buat Pengumuman"}
                 </h2>
-                <p className="text-xs text-white/60">{isEdit ? "Ubah isi pengumuman" : "Tulis pengumuman baru untuk semua civitas"}</p>
+                <p className="text-xs text-white">{isEdit ? "Ubah isi pengumuman" : "Tulis pengumuman baru untuk semua civitas"}</p>
               </div>
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25"
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#3E03B3] transition-colors hover:bg-[#F1EDFA]"
               >
                 <X size={15} />
               </button>
@@ -213,7 +212,7 @@ export function PengumumanFormModal({
               </label>
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]">
                   {error}
                 </p>
               )}

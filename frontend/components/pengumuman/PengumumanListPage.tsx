@@ -76,20 +76,18 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
     <div className="rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:shadow-none">
       <div className="relative px-5 py-4 overflow-hidden"
         style={{ background: CALENDAR_GRADIENT }}>
-        <div className="pointer-events-none absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10"/>
-        <div className="pointer-events-none absolute -bottom-4 right-16 w-20 h-20 rounded-full bg-white/8"/>
         <div className="relative flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold tracking-widest text-white/60 uppercase mb-0.5">Kalender</p>
+            <p className="text-[10px] font-bold tracking-widest text-white uppercase mb-0.5">Kalender</p>
             <h2 className="text-base font-extrabold text-white">{MONTH_ID[month]} {year}</h2>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={() => setViewDate(new Date(year, month - 1, 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/35 transition-colors">
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
               <ChevronLeft size={14}/>
             </button>
             <button onClick={() => setViewDate(new Date(year, month + 1, 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/35 transition-colors">
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
               <ChevronRight size={14}/>
             </button>
           </div>
@@ -189,7 +187,7 @@ function AccordionCard({
 
       {canManage && !isOpen && (
         <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(); }} title="Hapus pengumuman"
-          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-black backdrop-blur-sm transition-all hover:bg-[#F1EDFA]">
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-white text-black transition-all hover:bg-[#F1EDFA]">
           <Trash2 size={13} />
         </button>
       )}
@@ -200,33 +198,31 @@ function AccordionCard({
         className="w-full text-left"
       >
         <div className="relative overflow-hidden px-4 py-4" style={{ background: gradient }}>
-          <div className="pointer-events-none absolute -right-5 -top-5 h-24 w-24 rounded-full bg-white/10" />
-          <div className="pointer-events-none absolute -bottom-8 right-12 h-20 w-20 rounded-full bg-white/8" />
 
           <div className="relative flex items-start gap-3">
-            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl backdrop-blur-sm ${onLime ? "bg-black/10" : "bg-white/20"}`}>
-              {p.isPinned ? <Pin size={15} className={onLime ? "text-black" : "text-white"} /> : <Bell size={15} className={onLime ? "text-black" : "text-white"} />}
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${onLime ? "bg-black/10" : "bg-white"}`}>
+              {p.isPinned ? <Pin size={15} className="text-[#3E03B3]" /> : <Bell size={15} className="text-[#3E03B3]" />}
             </div>
             <div className="min-w-0 flex-1">
               <p className={`text-[13px] font-bold leading-snug ${onLime ? "text-black" : "text-white"}`}>{p.judul}</p>
-              <p className={`mt-0.5 flex items-center gap-1 text-[11px] ${onLime ? "text-black/65" : "text-white/65"}`}>
+              <p className={`mt-0.5 flex items-center gap-1 text-[11px] ${onLime ? "text-black" : "text-white"}`}>
                 <Clock size={9} />{timeAgo(p.createdAt)}
               </p>
             </div>
-            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-black/10" : "bg-white/20"} ${isOpen ? "rotate-180" : ""}`}>
-              <ChevronDown size={13} className={onLime ? "text-black" : "text-white"} />
+            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-black/10" : "bg-white"} ${isOpen ? "rotate-180" : ""}`}>
+              <ChevronDown size={13} className="text-[#3E03B3]" />
             </div>
           </div>
 
           <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
-            <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white/20 text-white"}`}>
+            <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white text-slate-800"}`}>
               {p.kategori}
             </span>
             {p.isPinned && (
-              <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${onLime ? "bg-black/15 text-black" : "bg-white/25 text-white"}`}>Disematkan</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${onLime ? "bg-black/15 text-black" : "bg-white text-slate-800"}`}>Disematkan</span>
             )}
             {p.prioritas === "PENTING" && (
-              <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white/20 text-white"}`}>Penting</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white text-slate-800"}`}>Penting</span>
             )}
             {p.prioritas === "MENDESAK" && (
               <span className="animate-pulse rounded-lg bg-[#F1EDFA] px-2 py-0.5 text-[10px] font-bold text-black">Mendesak</span>
@@ -267,16 +263,6 @@ function AccordionCard({
             <div className="relative overflow-hidden">
               <div className="absolute bottom-0 left-0 top-0 w-1 rounded-r" style={{ background: gradient }} />
 
-              <div
-                className="absolute inset-0 opacity-[0.035] dark:opacity-[0.06]"
-                style={{ background: gradient }}
-              />
-
-              <div
-                className="pointer-events-none absolute right-4 top-0 select-none font-serif text-[96px] leading-none opacity-[0.06]"
-                style={{ color: "currentColor" }}
-              >"</div>
-
               <div className="relative px-6 py-5">
                 <div className="mb-4 flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
                   <div className="relative shrink-0">
@@ -305,7 +291,7 @@ function AccordionCard({
                       <button onClick={onPin} title={p.isPinned ? "Lepas sematkan" : "Sematkan"}
                         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
                           p.isPinned
-                            ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#000000]/20"
+                            ? "bg-[#FFFFFF] text-[#5D900F] dark:text-[#C4B5FD] dark:bg-slate-700"
                             : "text-slate-400 hover:bg-[#FFFFFF] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600"
                         }`}><Pin size={13} /></button>
                       <button onClick={onEdit} title="Edit"
@@ -324,12 +310,8 @@ function AccordionCard({
               </div>
             </div>
 
-            <div className="relative overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-                style={{ background: "#3E03B3" }}
-              />
-              <div className="relative flex items-center gap-3 border-y border-[#3E03B3]/10 px-6 py-3 dark:border-[#3E03B3]/20">
+            <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+              <div className="relative flex items-center gap-3 px-6 py-3">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700">
                   <MessageCircle size={13} className="text-[#3E03B3] dark:text-[#3E03B3]" />
                 </div>
@@ -337,15 +319,10 @@ function AccordionCard({
                   Ruang Diskusi
                 </span>
                 {detail && (
-                  <span className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-[#00AAFA]/30 dark:text-[#3E03B3]">
+                  <span className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
                     {detail.komentar.reduce((s, k) => s + 1 + (k.replies?.length ?? 0), 0)} pesan
                   </span>
                 )}
-                <div className="ml-auto flex items-center gap-1 opacity-30">
-                  {[0,1,2].map(i => (
-                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#3E03B3]" style={{ opacity: 1 - i * 0.25 }} />
-                  ))}
-                </div>
               </div>
             </div>
 
@@ -521,7 +498,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mb-3 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
+              className="mb-3 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-slate-700 dark:bg-slate-700 dark:text-[#C4B5FD]"
             >
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
@@ -537,7 +514,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
           </div>
         ) : sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-100 bg-white py-24 text-center dark:border-slate-700/50 dark:bg-[#1E293B]">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1EDFA]">
               <Bell size={22} className="text-primary" />
             </div>
             <p className="font-bold text-slate-600 dark:text-slate-300">Belum ada pengumuman</p>
@@ -651,7 +628,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         <AnimatePresence>
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
+              className="flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-slate-700 dark:bg-slate-700 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -660,13 +637,13 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
         {loading ? (
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-28 animate-pulse rounded-2xl bg-white/60 dark:bg-slate-800/60"
+              <div key={i} className="h-28 animate-pulse rounded-2xl bg-white dark:bg-slate-800"
                 style={{ animationDelay: `${i * 70}ms` }} />
             ))}
           </div>
         ) : sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1EDFA" }}>
               <Bell size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="font-bold text-slate-600 dark:text-slate-300">Belum ada pengumuman</p>

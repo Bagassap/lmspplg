@@ -98,7 +98,7 @@ export function KomentarSection({
         <MessageCircle size={13} /> Diskusi ({flat.length})
       </p>
 
-      <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800/60">
+      <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
         {flat.length === 0 && (
           <p className="py-8 text-center text-xs text-slate-400">Belum ada pesan. Mulai diskusi di bawah.</p>
         )}
@@ -113,7 +113,7 @@ export function KomentarSection({
             <div key={k.id}>
               {showDay && (
                 <div className="my-2 flex justify-center">
-                  <span className="rounded-full bg-white/80 px-3 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">{day}</span>
+                  <span className="rounded-full bg-white px-3 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">{day}</span>
                 </div>
               )}
               <div className={`flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
@@ -121,17 +121,17 @@ export function KomentarSection({
                 <div className={`max-w-[80%] rounded-2xl px-3 py-2 shadow-sm ${mine ? "rounded-br-sm bg-[#3E03B3] text-white" : "rounded-bl-sm bg-white text-slate-800 dark:bg-slate-700 dark:text-slate-100"}`}>
                   {!mine && (
                     <p className="text-[11px] font-bold" style={{ color }}>
-                      {k.author.nama} <span className="font-semibold opacity-70">· {ROLE_LABEL[k.author.role] ?? "Siswa"}</span>
+                      {k.author.nama} <span className="font-semibold">· {ROLE_LABEL[k.author.role] ?? "Siswa"}</span>
                     </p>
                   )}
                   {quote && (
-                    <div className={`mb-1 mt-0.5 rounded-lg border-l-[3px] border-[#F26A3D] px-2 py-1 text-[11px] ${mine ? "bg-white/15" : "bg-[#F1EDFA] dark:bg-slate-600"}`}>
+                    <div className={`mb-1 mt-0.5 rounded-lg border-l-[3px] border-[#F26A3D] px-2 py-1 text-[11px] ${mine ? "bg-[#2D0281]" : "bg-[#F1EDFA] dark:bg-slate-600"}`}>
                       <p className="font-bold" style={{ color: mine ? "#FFD2C2" : "#F26A3D" }}>{quote.author.nama}</p>
-                      <p className="line-clamp-2 opacity-80">{quote.konten}</p>
+                      <p className="line-clamp-2">{quote.konten}</p>
                     </div>
                   )}
                   <p className="whitespace-pre-wrap break-words text-[13px] leading-snug">{k.konten}</p>
-                  <div className={`mt-1 flex items-center justify-end gap-2 text-[10px] ${mine ? "text-white/70" : "text-slate-400"}`}>
+                  <div className={`mt-1 flex items-center justify-end gap-2 text-[10px] ${mine ? "text-white" : "text-slate-500"}`}>
                     <button type="button" onClick={() => setReplyTo(k)} className="flex items-center gap-0.5 font-semibold hover:underline">
                       <CornerUpLeft size={10} /> Balas
                     </button>
