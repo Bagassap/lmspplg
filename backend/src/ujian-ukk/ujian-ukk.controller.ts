@@ -126,7 +126,7 @@ export class UjianUkkController {
       }
     }
 
-    return this.service.submitProject(req.user.id, dto, fileUrl, fileName);
+    return this.service.submitProject(req.user.id, dto, fileUrl, fileName, file?.path);
   }
 
   @UseGuards(RolesGuard)

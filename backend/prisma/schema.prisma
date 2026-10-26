@@ -693,6 +693,10 @@ model SubmisiProjectUKK {
   siswa       Siswa            @relation(fields: [siswaId], references: [id])
   fileUrl     String
   fileName    String
+  // Salinan di Google Drive admin (folder per kelas); null bila Drive belum dikonfigurasi / gagal.
+  driveFileId    String?
+  driveUrl       String?
+  driveFolderUrl String?
   catatan     String?
   pesanRevisi String?
   status      StatusSubmisiUKK @default(TERKIRIM)

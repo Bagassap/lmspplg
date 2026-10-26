@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, UserX } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Copy, FolderOpen, UserX } from "lucide-react";
+import { useToast } from "@/components/shared/ToastSystem";
 
 type SubmisiRow = {
   id: string;
   fileUrl: string;
   fileName: string;
   submittedAt: string;
+  driveUrl?: string | null;
+  driveFolderUrl?: string | null;
   siswa?: { id: string; nama?: string | null; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user?: { nama?: string } | null } | null;
 };
 type KelasXII = { id: string; nama: string; siswa: { id: string; nama: string | null; nis: string; user?: { nama: string } | null }[] };
@@ -27,6 +30,11 @@ function labelBerkas(url: string) {
  * bisa diklik untuk melihat siswanya, ditampilkan 10 siswa per halaman.
  */
 export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
+  const toast = useToast();
+  async function salin(teks: string, pesan: string) {
+    try { await navigator.clipboard.writeText(teks); toast.success(pesan, ""); }
+    catch { toast.error("Tidak bisa menyalin", teks); }
+  }
   const [kelasList, setKelasList] = useState<KelasXII[]>([]);
   const [kelasId, setKelasId] = useState("");
   const [tab, setTab] = useState<"sudah" | "belum">("sudah");
@@ -51,6 +59,7 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
     [submisi, aktifId],
   );
   const sudahIds = useMemo(() => new Set(sudahRows.map((s) => s.siswa?.id)), [sudahRows]);
+  const folderKelas = sudahRows.find((s) => s.driveFolderUrl)?.driveFolderUrl ?? null;
   const belumList = useMemo(() => (aktif?.siswa ?? []).filter((s) => !sudahIds.has(s.id)), [aktif, sudahIds]);
 
   useEffect(() => { setPage(0); }, [aktifId, tab]);
@@ -96,6 +105,15 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
         })}
       </div>
 
+      {tab === "sudah" && folderKelas && (
+        <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">
+          <button type="button" onClick={() => salin(folderKelas, `Link folder ${aktif?.nama ?? "kelas"} disalin`)}
+            className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-700">
+            <FolderOpen size={14} /> Salin link folder {aktif?.nama} (Google Drive)
+          </button>
+        </div>
+      )}
+
       <div className="flex-1 space-y-2.5 overflow-y-auto px-6 pb-4 sm:px-8">
         {total === 0 ? (
           <p className="py-14 text-center text-sm font-semibold text-slate-500">
@@ -112,9 +130,15 @@ export function RekapPengumpulan({ submisi }: { submisi: SubmisiRow[] }) {
                   <p className="truncate text-sm text-slate-600 dark:text-slate-300">{tgl(s.submittedAt)}</p>
                 </div>
                 <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#3E03B3] dark:bg-slate-800">Terkumpul</span>
-                <a href={s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`} target="_blank" rel="noopener noreferrer"
+                {s.driveUrl && (
+                  <button type="button" onClick={() => salin(s.driveUrl!, "Link Google Drive disalin")} title="Salin link Google Drive"
+                    className="flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-bold text-[#3E03B3] dark:bg-slate-800">
+                    <Copy size={13} /> Salin link
+                  </button>
+                )}
+                <a href={s.driveUrl ?? (s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`)} target="_blank" rel="noopener noreferrer"
                   className="shrink-0 rounded-full bg-[#3E03B3] px-4 py-2 text-xs font-bold text-white">
-                  {labelBerkas(s.fileUrl)}
+                  {s.driveUrl ? "Drive" : labelBerkas(s.fileUrl)}
                 </a>
               </div>
             );

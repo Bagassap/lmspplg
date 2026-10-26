@@ -5,12 +5,13 @@ import { TipeUKK } from '../../generated/prisma/client';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
+import { GoogleDriveService } from '../google-drive/google-drive.service';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
 @Injectable()
 export class UjianUkkService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly drive: GoogleDriveService) {}
 
   findAllTahapan() {
     return this.prisma.tahapanUKK.findMany({
@@ -194,8 +195,8 @@ export class UjianUkkService {
     });
   }
 
-  async submitProject(userId: string, dto: SubmitProjectDto, fileUrl: string, fileName: string) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
+  async submitProject(userId: string, dto: SubmitProjectDto, fileUrl: string, fileName: string, localPath?: string) {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { kelas: { select: { nama: true } } } });
     if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
     const soal = await this.prisma.soalTahapanUKK.findUnique({ where: { id: dto.soalId } });
     if (!soal) throw new NotFoundException('Soal tidak ditemukan');
@@ -239,17 +240,39 @@ export class UjianUkkService {
       tahapan: { select: { id: true, judul: true } },
     };
     const ada = await this.prisma.submisiProjectUKK.findFirst({ where: { tahapanId: task.id, siswaId: siswa.id } });
-    if (ada) {
-      return this.prisma.submisiProjectUKK.update({
-        where: { id: ada.id },
-        data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', updatedAt: new Date() },
-        include,
-      });
+    const simpan = ada
+      ? await this.prisma.submisiProjectUKK.update({
+          where: { id: ada.id },
+          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
+          include,
+        })
+      : await this.prisma.submisiProjectUKK.create({
+          data: { soalId: dto.soalId, tahapanId: task.id, siswaId: siswa.id, fileUrl, fileName, catatan: dto.catatan },
+          include,
+        });
+
+    // Berkas yang diunggah siswa juga disalin ke Google Drive admin: folder per kelas, nama file = nama siswa.
+    if (localPath && this.drive.isConfigured()) {
+      try {
+        const bersih = (s: string) => s.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim();
+        const ext = fileName.includes('.') ? fileName.slice(fileName.lastIndexOf('.')) : '';
+        const namaFile = `${bersih(siswa.nama ?? 'Siswa')} - ${bersih(task.judul)}${ext}`;
+        const hasil = await this.drive.uploadKeFolderKelas({
+          kelasNama: bersih(siswa.kelas?.nama ?? 'Tanpa Kelas'),
+          fileName: namaFile,
+          localPath,
+        });
+        return await this.prisma.submisiProjectUKK.update({
+          where: { id: simpan.id },
+          data: { driveFileId: hasil.fileId, driveUrl: hasil.fileUrl, driveFolderUrl: hasil.folderUrl },
+          include,
+        });
+      } catch (e) {
+        // Gagal ke Drive tidak menggagalkan pengumpulan; berkas tetap tersimpan di server.
+        console.error('[UKK] Gagal unggah ke Google Drive:', (e as Error).message);
+      }
     }
-    return this.prisma.submisiProjectUKK.create({
-      data: { soalId: dto.soalId, tahapanId: task.id, siswaId: siswa.id, fileUrl, fileName, catatan: dto.catatan },
-      include,
-    });
+    return simpan;
   }
 
   async updateStatusSubmisi(id: string, status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', pesanRevisi?: string) {
