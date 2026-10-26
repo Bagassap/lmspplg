@@ -58,8 +58,8 @@ export default function RootLayout({
       <head>
         {/* Layar sempit memakai tampilan aplikasi: sembunyikan halaman sampai hidrasi selesai agar tidak sempat terlihat tampilan mobile lama. */}
         <script dangerouslySetInnerHTML={{ __html: 'try{if(window.matchMedia("(max-width:1023px)").matches)document.documentElement.setAttribute("data-boot-mobile","1")}catch(e){}' }} />
-        {/* Tandai pembukaan awal aplikasi terpasang sebelum halaman sempat mengalihkan alamat (lihat PwaReinstallGate). */}
-        <script dangerouslySetInnerHTML={{ __html: 'try{if(sessionStorage.getItem("lms_pwa_gate")===null){var o=matchMedia("(display-mode: standalone)").matches&&location.pathname==="/"&&new URLSearchParams(location.search).get("pwa")!=="2";sessionStorage.setItem("lms_pwa_gate",o?"old":"ok")}}catch(e){}' }} />
+        {/* Tulis penanda pemasangan baru sebelum halaman sempat mengalihkan alamat (lihat PwaReinstallGate). */}
+        <script dangerouslySetInnerHTML={{ __html: 'try{var m=function(){try{localStorage.setItem("lms_pwa_ok","2")}catch(e){}};addEventListener("appinstalled",m);if(matchMedia("(display-mode: standalone)").matches&&new URLSearchParams(location.search).get("pwa")==="2")m()}catch(e){}' }} />
       </head>
       <body className="min-h-full flex flex-col bg-white text-black">
         <ToastProvider>

@@ -6,13 +6,11 @@ import { Copy, Download, Smartphone, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
 // Naikkan PWA_VERSION bersama start_url di app/manifest.ts bila aplikasi terpasang wajib dipasang ulang lagi.
-// Aplikasi lama terpasang dengan start_url "/" (tanpa penanda), aplikasi hasil pasang ulang "/?pwa=<versi>".
+// Penanda "lms_pwa_ok" hanya ditulis oleh pemasangan baru: saat event appinstalled, atau saat aplikasi
+// terpasang dibuka lewat start_url "/?pwa=<versi>" (skrip di <head> app/layout.tsx). Aplikasi lama tidak
+// pernah menuliskannya, jadi di halaman mana pun ia dibuka (termasuk dari daftar aplikasi terakhir) ia terkunci.
 export const PWA_VERSION = "2";
-const KEY = "lms_pwa_gate";
-
-function isInstalledApp() {
-  return window.matchMedia("(display-mode: standalone)").matches;
-}
+export const PWA_KEY = "lms_pwa_ok";
 
 /** Aplikasi terpasang versi lama tidak bisa dibuka: pengguna diminta menghapus dan memasangnya ulang. */
 export function PwaReinstallGate() {
@@ -20,18 +18,9 @@ export function PwaReinstallGate() {
   const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
-    // Diperiksa sekali per sesi pada pembukaan awal: ikon di layar utama selalu membuka start_url ("/" + penanda versi).
-    // Pembukaan lewat notifikasi/tautan (alamat selain "/") tidak bisa dinilai, jadi tidak diblokir.
-    let hasil: string | null = null;
-    try { hasil = sessionStorage.getItem(KEY); } catch { /* sessionStorage bisa tidak tersedia */ }
-    if (hasil === null) {
-      const lama = isInstalledApp()
-        && window.location.pathname === "/"
-        && new URLSearchParams(window.location.search).get("pwa") !== PWA_VERSION;
-      hasil = lama ? "old" : "ok";
-      try { sessionStorage.setItem(KEY, hasil); } catch { /* abaikan */ }
-    }
-    if (hasil === "old") setBlocked(true); // eslint-disable-line react-hooks/set-state-in-effect
+    let ok = false;
+    try { ok = localStorage.getItem(PWA_KEY) === PWA_VERSION; } catch { ok = true; /* tanpa penyimpanan: jangan mengunci */ }
+    if (window.matchMedia("(display-mode: standalone)").matches && !ok) setBlocked(true); // eslint-disable-line react-hooks/set-state-in-effect
   }, []);
 
   if (!blocked) return null;
