@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Sistem pembelajaran digital untuk siswa, guru, dan admin jurusan Pengembangan Perangkat Lunak dan Gim SMK Ma'arif NU 01 Limpung.",
     lang: "id",
-    start_url: "/login",
+    start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",

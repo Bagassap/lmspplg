@@ -64,6 +64,7 @@ export function Splash() {
   const router = useRouter();
 
   useEffect(() => {
+    try { sessionStorage.setItem("lms_splash_seen", "1"); } catch {}
     const timer = setTimeout(() => {
       let lastPath: string | null = null;
       try { lastPath = localStorage.getItem("lms_last_path"); } catch {}
