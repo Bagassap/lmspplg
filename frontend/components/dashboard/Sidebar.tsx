@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -62,6 +63,9 @@ export function Sidebar({
     return s;
   });
 
+  const [flyout, setFlyout] = useState<{ key: string; top: number } | null>(null);
+  useEffect(() => { setFlyout(null); }, [pathname]);
+
   function toggleExpand(key: string) {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -77,13 +81,11 @@ export function Sidebar({
 
   return (
     <aside
-      aria-hidden={collapsed && !open}
       className={[
         "fixed inset-y-0 left-0 z-40 flex flex-col bg-white transition-all duration-300 ease-in-out",
-        // Ditutup (collapsed) = sidebar benar-benar hilang di desktop, tidak menyisakan jalur ikon.
-        collapsed ? "pointer-events-none shadow-none" : "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
-        "w-64 dark:bg-[#1E293B]",
-        open ? "translate-x-0" : collapsed ? "-translate-x-full" : "-translate-x-full lg:translate-x-0",
+        "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:bg-[#1E293B] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
+        collapsed ? "w-18" : "w-64",
+        open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       ].join(" ")}
       style={{ "--color-primary": PRIMARY } as React.CSSProperties}
     >
@@ -95,13 +97,13 @@ export function Sidebar({
         ].join(" ")}
       >
         {collapsed ? (
-          <button
-            onClick={onToggleCollapse}
-            title="Buka sidebar"
-            className={`h-9 w-9 ${TOGGLE_BTN_CLASS}`}
+          <div
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_3px_6px_rgba(62,3,179,0.35)]"
+            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
+            title="LMS PPLG"
           >
-            <ChevronsRight size={18} />
-          </button>
+            <Image src="/PPLG.png" alt="PPLG" width={18} height={22} className="h-4.5 w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
+          </div>
         ) : (
           <>
             <div className="flex items-center gap-2.5">
@@ -217,7 +219,10 @@ export function Sidebar({
                     </Link>
                   ) : (
                     <button
-                      onClick={() => toggleExpand(item.key)}
+                      onClick={(e) => {
+                        const r = e.currentTarget.getBoundingClientRect();
+                        setFlyout((f) => (f?.key === item.key ? null : { key: item.key, top: r.top }));
+                      }}
                       title={item.label}
                       className="relative flex h-11 w-full items-center justify-center rounded-xl transition-all duration-200"
                     >
@@ -422,6 +427,27 @@ export function Sidebar({
           </p>
         </div>
       )}
+      {flyout && typeof document !== "undefined" && createPortal((() => {
+        const it = items.find((x) => x.key === flyout.key);
+        if (!it?.submenu) return null;
+        return (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setFlyout(null)} />
+            <div className="fixed left-19.5 z-50 w-56 rounded-2xl bg-white p-2 shadow-2xl dark:bg-[#1E293B]" style={{ top: Math.max(8, flyout.top - 4) }}>
+              <p className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">{it.label}</p>
+              {it.submenu.map((sub) => {
+                const on = pathname.startsWith(sub.href);
+                return (
+                  <Link key={sub.href} href={sub.href} onClick={() => setFlyout(null)}
+                    className={`block rounded-xl px-3 py-2 text-[13px] font-semibold ${on ? "bg-[#3E03B3] text-white" : "text-slate-700 hover:bg-[#F1EDFA] dark:text-slate-200 dark:hover:bg-white/10"}`}>
+                    {sub.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </>
+        );
+      })(), document.body)}
     </aside>
   );
 }

@@ -8,7 +8,7 @@ import {
   Search, Sun, Moon, Bell, ChevronDown, LogOut, X,
   LayoutDashboard, Calendar, Users, FileText, Briefcase,
   MessageSquare, UserCircle, CheckCircle2, Info, AlertTriangle,
-  CheckCheck, Clock, CreditCard, PanelLeftOpen,
+  CheckCheck, Clock, CreditCard,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
@@ -153,7 +153,7 @@ function hasPurpleMobileHeader(pathname: string): boolean {
 }
 
 
-export function Topbar({ user, sidebarCollapsed = false, onOpenSidebar }: { user: UserPayload; sidebarCollapsed?: boolean; onOpenSidebar?: () => void }) {
+export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
@@ -325,12 +325,6 @@ export function Topbar({ user, sidebarCollapsed = false, onOpenSidebar }: { user
           purpleMobile ? "bg-[#3E03B3]" : "bg-surface dark:bg-[#0F172A]"
         } ${appMode ? "rounded-b-[28px] shadow-[0_10px_24px_-10px_rgba(62,3,179,0.6)] lg:rounded-none" : ""}`}
       >
-        {sidebarCollapsed && onOpenSidebar && (
-          <button type="button" onClick={onOpenSidebar} title="Buka sidebar" aria-label="Buka sidebar"
-            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] lg:flex">
-            <PanelLeftOpen size={18} />
-          </button>
-        )}
         {appMode && (
           <div className="flex min-w-0 items-center gap-3 lg:hidden">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#2D0281" }}>
