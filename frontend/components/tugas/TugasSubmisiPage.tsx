@@ -112,43 +112,45 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
         <p className="py-16 text-center text-sm font-semibold text-slate-600">Tugas tidak ditemukan</p>
       ) : (
         <>
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className={asModal ? "flex items-center gap-3" : "space-y-2"}>
+          <div className={`flex gap-2 overflow-x-auto pb-1 ${asModal ? "min-w-0 flex-1" : ""}`}>
             {tabs.map((k) => {
               const on = aktif === k.id;
               return (
                 <button key={k.id} type="button" onClick={() => setKelasAktif(k.id)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-xl font-bold ${asModal ? "px-5 py-2.5 text-sm" : "px-4 py-2 text-xs"} ${on ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800"}`}>
+                  className={`flex shrink-0 items-center gap-1.5 rounded-xl font-bold px-4 py-2 text-xs ${on ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800"}`}>
                   {k.nama}
                 </button>
               );
             })}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex shrink-0 gap-2">
             {([["sudah", `Sudah mengumpulkan (${sudahK.length})`, CheckCircle], ["belum", `Belum mengumpulkan (${belumK.length})`, UserX]] as const).map(([k, label, Icon]) => (
               <button key={k} type="button" onClick={() => setTab(k)}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl font-bold ${asModal ? "py-3 text-sm" : "py-2 text-xs"} ${tab === k ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold ${asModal ? "" : "flex-1"} ${tab === k ? "bg-[#F26A3D] text-white" : "bg-[#FFE9E2] text-[#E8562B]"}`}>
                 <Icon size={13} /> {label}
               </button>
             ))}
+          </div>
           </div>
 
           <div className="space-y-2">
             {tab === "belum" ? (
               belumK.length === 0 ? (
-                <p className="py-12 text-center text-sm font-semibold text-slate-600">Semua siswa di kelas ini sudah mengumpulkan</p>
+                <p className="py-12 text-center text-xs font-semibold text-slate-600">Semua siswa di kelas ini sudah mengumpulkan</p>
               ) : belumK.map((s) => {
                 const nama = s.user?.nama || s.nama || "Siswa";
                 return (
-                  <div key={s.id} className={`flex items-center gap-3 rounded-2xl bg-white shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-slate-800 ${asModal ? "px-5 py-4" : "px-3 py-2.5"}`}>
+                  <div key={s.id} className={`flex items-center gap-3 rounded-2xl bg-white shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-slate-800 px-3 py-2.5`}>
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFE9E2] text-sm font-bold text-[#E8562B]">{nama[0]?.toUpperCase()}</span>
-                    <p className={`min-w-0 flex-1 truncate font-bold text-slate-900 dark:text-white ${asModal ? "text-base" : "text-sm"}`}>{nama}</p>
+                    <p className={`min-w-0 flex-1 truncate font-bold text-slate-900 dark:text-white text-sm`}>{nama}</p>
                     <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-1 text-[10px] font-bold text-[#E8562B]">Belum kumpul</span>
                   </div>
                 );
               })
             ) : sudahK.length === 0 ? (
-              <p className="py-12 text-center text-sm font-semibold text-slate-600">Belum ada siswa di kelas ini yang mengumpulkan</p>
+              <p className="py-12 text-center text-xs font-semibold text-slate-600">Belum ada siswa di kelas ini yang mengumpulkan</p>
             ) : sudahK.map((s) => {
               const sc = statusInfo(s.status);
               const nama = namaOf(s);
@@ -156,11 +158,11 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
               const Icon = isPraktik ? Code2 : isSoal ? (tugas.tipe === "PILIHAN_GANDA" ? ListChecks : PenLine) : Download;
               return (
                 <button key={s.id} type="button" onClick={open}
-                  className={`flex w-full items-center gap-3 rounded-2xl bg-white text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.99] dark:bg-slate-800 ${asModal ? "px-5 py-4" : "px-3 py-2.5"}`}>
+                  className={`flex w-full items-center gap-3 rounded-2xl bg-white text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.99] dark:bg-slate-800 px-3 py-2.5`}>
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]"><Icon size={17} /></span>
                   <span className="min-w-0 flex-1">
-                    <span className={`block truncate font-bold text-slate-900 dark:text-white ${asModal ? "text-base" : "text-sm"}`}>{nama}</span>
-                    <span className={`block truncate text-slate-600 dark:text-slate-300 ${asModal ? "text-sm" : "text-[11px]"}`}>{formatTglJam(s.submittedAt)}</span>
+                    <span className={`block truncate font-bold text-slate-900 dark:text-white text-sm`}>{nama}</span>
+                    <span className={`block truncate text-slate-600 dark:text-slate-300 text-[11px]`}>{formatTglJam(s.submittedAt)}</span>
                   </span>
                   {isSoal && s.nilai !== null && <span className="shrink-0 rounded-xl bg-[#3E03B3] px-2 py-0.5 text-[10px] font-bold text-white">{s.nilai}</span>}
                   <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: sc.bg, color: sc.color }}>{sc.label}</span>
