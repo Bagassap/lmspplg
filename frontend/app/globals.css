@@ -448,3 +448,20 @@ html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="point
 }
 html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) * { color: #3e03b3 !important; }
 html [class*="backdrop-blur"]:not(.fixed):not([class*="inset-0"]) { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ---- TEMA GELAP: tidak boleh ada permukaan putih / abu terang ---- */
+html.dark [data-row-act] { background: #334155 !important; color: #cbd5e1 !important; }
+html.dark [data-row-act] * { color: #cbd5e1 !important; }
+html.dark [data-row-act]:hover:not(:disabled) { background: #475569 !important; }
+html.dark [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) {
+  background-color: #334155 !important; color: #e2e8f0 !important;
+}
+html.dark [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) * { color: #e2e8f0 !important; }
+html.dark :is([class~="bg-[#F1EDFA]"], [class~="bg-[#FFE9E2]"], [class~="bg-[#F1F5F9]"], [class~="bg-[#E2E8F0]"], [class~="bg-slate-50"], [class~="bg-slate-100"], [class~="bg-slate-200"], [class~="bg-gray-50"], [class~="bg-gray-100"], [class~="bg-gray-200"]):not([class*="dark:bg-"]):not([class*="bg-[#3E03B3]"]) {
+  background-color: #334155 !important;
+}
+html.dark [style*="background: rgb(241, 245, 249)"], html.dark [style*="background-color: rgb(241, 245, 249)"],
+html.dark [style*="background: rgb(241, 237, 250)"], html.dark [style*="background-color: rgb(241, 237, 250)"],
+html.dark [style*="background: rgb(255, 233, 226)"], html.dark [style*="background-color: rgb(255, 233, 226)"] { background: #273449 !important; }
+html.dark [style*="background: rgb(226, 232, 240)"], html.dark [style*="background-color: rgb(226, 232, 240)"] { background: #334155 !important; }
+html.dark :is(button, a)[class*="bg-[#F1EDFA]"]:not([class*="dark:bg-"]) { color: #c4b5fd !important; }
