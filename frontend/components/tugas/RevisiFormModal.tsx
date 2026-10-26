@@ -77,7 +77,7 @@ export function RevisiFormModal({
                 Batal
               </button>
               <button onClick={submit} disabled={!pesan.trim() || sending}
-                className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110 ${app ? "rounded-full" : "rounded-xl"}`}
+                className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-50 transition-all hover:brightness-110 ${app ? "rounded-xl" : "rounded-xl"}`}
                 style={app ? { background: "#3E03B3", color: "#fff" } : { background: "#F26A3D", color: "#FFFFFF" }}>
                 <span className="flex items-center justify-center gap-2">
                   <AlertCircle size={14} /> {sending ? "Mengirim…" : "Kirim Revisi"}

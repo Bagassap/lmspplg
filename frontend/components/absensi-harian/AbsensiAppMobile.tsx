@@ -91,7 +91,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         <p className="relative text-xs font-semibold text-white/80">{formatTgl(today)}</p>
         <p className="relative mt-2 font-digital text-[34px] font-bold tracking-wider tabular-nums" style={{ color: "#FFFFFF", textShadow: "0 0 18px rgba(255,255,255,0.45)" }}>{jam}</p>
         <div
-          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold"
           style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#3E03B3" : data?.sudahAbsen ? "#3E03B3" : "#64748B" }}
         >
           <Clock size={12} /> {statusText}
@@ -102,7 +102,7 @@ export function AbsensiAppMobile<R extends RowLite>({
         whileTap={mainNeedsAction ? { scale: 0.97 } : undefined} type="button"
         disabled={!mainNeedsAction}
         onClick={() => mainNeedsAction && onOpenWizard(mainTab)}
-        className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold"
+        className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold"
         style={mainNeedsAction
           ? { background: ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
           : { background: "#E2E8F0", color: "#64748B" }}
@@ -145,7 +145,7 @@ export function AbsensiAppMobile<R extends RowLite>({
               >
                 {label}
                 {active && (
-                  <motion.span layoutId="app-absen-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: "#F26A3D" }} />
+                  <motion.span layoutId="app-absen-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-xl" style={{ background: "#F26A3D" }} />
                 )}
               </button>
             );

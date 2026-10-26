@@ -83,11 +83,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
           </div>
           <div className="flex items-center gap-1">
             <button onClick={() => setViewDate(new Date(year, month - 1, 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
+              className="w-7 h-7 flex items-center justify-center rounded-xl bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
               <ChevronLeft size={14}/>
             </button>
             <button onClick={() => setViewDate(new Date(year, month + 1, 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
+              className="w-7 h-7 flex items-center justify-center rounded-xl bg-white text-[#3E03B3] hover:bg-[#F1EDFA] transition-colors">
               <ChevronRight size={14}/>
             </button>
           </div>
@@ -110,16 +110,16 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             const weekend   = (i - (firstDay === 0 ? 6 : firstDay - 1)) % 7 >= 5;
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
-                <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
+                <div className={`relative w-7 h-7 flex items-center justify-center rounded-xl text-[12px] font-medium transition-all
                   ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#C4B5FD]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
-                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-xl"
                       style={{ backgroundColor: dotColor(d) }}/>
                   )}
                   {hasAnn && todayFlag && (
-                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white/80"/>
+                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-xl bg-white/80"/>
                   )}
                 </div>
               </div>
@@ -129,11 +129,11 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
 
         <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-4 h-4 rounded-full" style={{ background: CALENDAR_GRADIENT }}/>
+            <div className="w-4 h-4 rounded-xl" style={{ background: CALENDAR_GRADIENT }}/>
             <span className="text-[10px] text-slate-400">Hari ini</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DOT_COLOR }}/>
+            <div className="w-1.5 h-1.5 rounded-xl" style={{ backgroundColor: DOT_COLOR }}/>
             <span className="text-[10px] text-slate-400">Ada pengumuman</span>
           </div>
         </div>
@@ -209,7 +209,7 @@ function AccordionCard({
                 <Clock size={9} />{timeAgo(p.createdAt)}
               </p>
             </div>
-            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-slate-200" : "bg-white"} ${isOpen ? "rotate-180" : ""}`}>
+            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 ${onLime ? "bg-slate-200" : "bg-white"} ${isOpen ? "rotate-180" : ""}`}>
               <ChevronDown size={13} className="text-[#3E03B3]" />
             </div>
           </div>
@@ -274,8 +274,8 @@ function AccordionCard({
                       textClassName="text-[11px] font-extrabold"
                       className="shadow-lg ring-2 ring-white dark:ring-slate-700"
                     />
-                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#3E03B3] ring-1 ring-white dark:ring-[#1E293B]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-xl bg-[#3E03B3] ring-1 ring-white dark:ring-[#1E293B]">
+                      <span className="h-1.5 w-1.5 rounded-xl bg-white" />
                     </span>
                   </div>
 
@@ -330,7 +330,7 @@ function AccordionCard({
               {detailLoading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <div className="h-10 w-10 rounded-full bg-slate-100" />
+                    <div className="h-10 w-10 rounded-xl bg-slate-100" />
                     <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-[#3E03B3]" />
                   </div>
                   <span className="text-[12px] text-slate-400">Memuat diskusi...</span>
@@ -565,7 +565,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
             <motion.button
               onClick={() => { setEditItem(null); setModalOpen(true); }}
               whileTap={{ scale: 0.97 }}
-              className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold text-white"
               style={{ background: "#3E03B3", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }}>
               <Plus size={18} /> Buat Pengumuman
             </motion.button>
@@ -593,7 +593,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                        <span className="rounded-full px-2 py-0.5" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{p.kategori}</span>
+                        <span className="rounded-xl px-2 py-0.5" style={{ background: "#FFE9E2", color: "#F26A3D" }}>{p.kategori}</span>
                         {p.isPinned && <span className="flex items-center gap-0.5"><Pin size={10} /> Disematkan</span>}
                         {p.prioritas === "MENDESAK" && <span className="font-bold" style={{ color: "#3E03B3" }}>Mendesak</span>}
                       </div>
@@ -643,7 +643,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
           </div>
         ) : sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1EDFA" }}>
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1EDFA" }}>
               <Bell size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="font-bold text-slate-600 dark:text-slate-300">Belum ada pengumuman</p>

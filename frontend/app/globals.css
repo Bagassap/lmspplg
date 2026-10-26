@@ -291,7 +291,7 @@ html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) 
 }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input, select, textarea):focus { outline: 2px solid #3e03b3 !important; outline-offset: 0 !important; box-shadow: none !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input, textarea)::placeholder { color: #64748b; }
-html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) button:not(.rounded-full) { border-radius: 9999px; }
+html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) button:not(.rounded-full) { border-radius: 12px; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) button[class*="rounded-xl"]:not([class*="px-"]) { border-radius: 14px; }
 html:not(.dark)[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(.text-slate-400, .text-slate-300, .text-gray-400) { color: #64748b !important; }
 html:not(.dark)[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is([class*="text-slate-400/"], [class*="text-white/"]):not(.app-sheet-header *) { color: #64748b !important; }
@@ -300,7 +300,7 @@ html[data-app-mode] .app-plain-header { border-bottom: 0 !important; padding-bot
 html[data-app-mode] .app-plain-header :is(h1, h2, h3) { color: #0f172a !important; font-weight: 800 !important; }
 html[data-app-mode] .app-plain-header :is(h1, h2, h3) + p, html[data-app-mode] .app-plain-header p { color: #64748b !important; }
 html[data-app-mode] .app-plain-header > button:last-child, html[data-app-mode] .app-plain-header > div:last-child > button:last-child {
-  background: #f1edfa !important; color: #3e03b3 !important; border-radius: 9999px;
+  background: #f1edfa !important; color: #3e03b3 !important; border-radius: 12px;
 }
 
 /* Modal polos: tanpa lingkaran/logo hiasan di latar */

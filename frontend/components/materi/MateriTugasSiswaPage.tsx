@@ -143,7 +143,7 @@ export function MateriTugasSiswaPage() {
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
-                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Materi & Tugas</h1>
@@ -182,7 +182,7 @@ export function MateriTugasSiswaPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
                   {perluDikerjakan > 0 && (
-                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-xl bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
                       {perluDikerjakan}
                     </span>
                   )}

@@ -205,7 +205,7 @@ export function JadwalAbsenCard() {
                     </p>
                   </div>
                   <button type="button" onClick={() => handleDelete(o.tanggal)} aria-label="Hapus"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#F26A3D]">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-[#F26A3D]">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -214,7 +214,7 @@ export function JadwalAbsenCard() {
           )}
 
           <button type="button" onClick={() => openForm()}
-            className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white active:scale-[0.98]">
+            className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white active:scale-[0.98]">
             <Plus size={16} /> Atur Jadwal
           </button>
         </div>
@@ -222,7 +222,7 @@ export function JadwalAbsenCard() {
         <AppSheet open={showForm} onClose={() => setShowForm(false)} title="Atur Jadwal Absen" subtitle="Kosongkan jam yang tidak ingin diubah · WIB"
           footer={
             <button type="submit" form="jadwal-form" disabled={saving}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-60">
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-60">
               {saving && <Loader2 size={15} className="animate-spin" />}
               {saving ? "Menyimpan..." : "Simpan Jadwal"}
             </button>
@@ -363,7 +363,7 @@ export function JadwalAbsenCard() {
                   <h2 className="text-lg font-bold text-slate-800 dark:text-white">Atur Jadwal Absen</h2>
                   <p className="text-xs text-slate-400 dark:text-slate-500">Kosongkan jam yang tidak ingin diubah · Semua jam WIB (GMT+7)</p>
                 </div>
-                <button type="button" onClick={() => setShowForm(false)} className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
+                <button type="button" onClick={() => setShowForm(false)} className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
                   <X size={16} />
                 </button>
               </div>

@@ -104,7 +104,7 @@ export default function AdminMagangRekapPage() {
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/admin/dashboard")}
-                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Rekap &amp; Laporan PKL</h1>

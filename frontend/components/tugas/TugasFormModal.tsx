@@ -268,7 +268,7 @@ export function TugasFormModal({
                 <h2 className={`text-base font-extrabold ${h.title}`}>{isEdit ? "Edit Tugas" : "Tambah Tugas"}</h2>
               </div>
               <button onClick={onClose}
-                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${h.close}`}>
+                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-xl transition-colors ${h.close}`}>
                 <X size={15} />
               </button>
             </div>
@@ -436,19 +436,19 @@ export function TugasFormModal({
                         onChange={(e) => setBulk(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addMany(); } }}
                         placeholder="Jumlah"
-                        className="h-9 w-20 rounded-full border-0 bg-white px-3 text-center text-sm font-bold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+                        className="h-9 w-20 rounded-xl border-0 bg-white px-3 text-center text-sm font-bold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
                       <button type="button" onClick={addMany} disabled={!(parseInt(bulk, 10) > 0)}
-                        className="flex h-9 items-center gap-1 rounded-full bg-[#3E03B3] px-3.5 text-[11px] font-bold text-white disabled:opacity-50">
+                        className="flex h-9 items-center gap-1 rounded-xl bg-[#3E03B3] px-3.5 text-[11px] font-bold text-white disabled:opacity-50">
                         <Plus size={12} /> Tambah {parseInt(bulk, 10) > 0 ? parseInt(bulk, 10) : ""} soal
                       </button>
                     </div>
                     <div className="ml-auto flex items-center gap-1.5">
                       <button type="button" onClick={() => downloadTemplateSoal(tipe)}
-                        className="flex h-9 items-center gap-1 rounded-full bg-white px-3 text-[11px] font-bold text-[#3E03B3]">
+                        className="flex h-9 items-center gap-1 rounded-xl bg-white px-3 text-[11px] font-bold text-[#3E03B3]">
                         <FileDown size={13} /> Templat Word
                       </button>
                       <button type="button" onClick={() => wordRef.current?.click()} disabled={wordBusy}
-                        className="flex h-9 items-center gap-1 rounded-full bg-white px-3 text-[11px] font-bold text-[#3E03B3] disabled:opacity-60">
+                        className="flex h-9 items-center gap-1 rounded-xl bg-white px-3 text-[11px] font-bold text-[#3E03B3] disabled:opacity-60">
                         {wordBusy ? <Loader2 size={13} className="animate-spin" /> : <FileUp size={13} />} Impor dari Word
                       </button>
                       <input ref={wordRef} type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="hidden" onChange={handleWord} />
@@ -481,7 +481,7 @@ export function TugasFormModal({
                                   <div key={huruf} className="flex items-center gap-2">
                                     <button type="button" onClick={() => updateSoal(idx, { jawabanBenar: huruf })}
                                       title="Tandai sebagai jawaban benar"
-                                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold transition-all ${
+                                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border-2 text-xs font-bold transition-all ${
                                         isKey ? "border-[#F26A3D] bg-[#3E03B3] text-white" : "border-gray-300 bg-white text-gray-400 hover:border-[#F26A3D] dark:bg-slate-700 dark:border-slate-600"
                                       }`}>
                                       {isKey ? <CheckCircle2 size={15} /> : huruf}
@@ -537,7 +537,7 @@ export function TugasFormModal({
                 Batal
               </button>
               <button type="button" onClick={handleSubmit} disabled={saving}
-                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full" : "rounded-xl"}`}
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-xl" : "rounded-xl"}`}
                 style={{ background: h.app ? "#3E03B3" : "#3E03B3" }}>
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Tugas"}

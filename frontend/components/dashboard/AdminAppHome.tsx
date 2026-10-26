@@ -136,8 +136,8 @@ export function AdminAppHome({ data, onOpenPengumuman }: { data: AdminHomeData; 
                   <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{c.kelas}</p>
                   <span className="shrink-0 text-sm font-extrabold" style={{ color: "#F26A3D" }}>{c.persentase}%</span>
                 </div>
-                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                  <div className="h-full rounded-full" style={{ width: `${c.persentase}%`, background: APP_ACCENT }} />
+                <div className="mt-1.5 h-2 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                  <div className="h-full rounded-xl" style={{ width: `${c.persentase}%`, background: APP_ACCENT }} />
                 </div>
                 <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{c.hadir} hadir dari {c.totalSiswa} siswa</p>
               </div>

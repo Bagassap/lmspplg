@@ -149,7 +149,7 @@ function EditProfilModal({
             </div>
             <button
               onClick={onClose}
-              className={`flex h-7 w-7 items-center justify-center rounded-full transition ${app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}
+              className={`flex h-7 w-7 items-center justify-center rounded-xl transition ${app ? "bg-white text-slate-600" : "bg-white/20 text-white hover:bg-white/30"}`}
             >
               <X size={15} />
             </button>
@@ -235,7 +235,7 @@ function EditProfilModal({
               onClick={handleSave} disabled={saving}
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(14,165,233,0.4)" }}
               whileTap={{ scale: 0.97 }}
-              className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 ${app ? "rounded-full" : "rounded-xl"}`}
+              className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60 ${app ? "rounded-xl" : "rounded-xl"}`}
               style={{ background: app ? "#3E03B3" : kelasGradient }}
             >
               {saving
@@ -442,7 +442,7 @@ export default function SiswaProfilPage() {
 
           <div className="flex flex-col items-center px-6 pb-6">
             <div className="relative -mt-12 mb-4">
-              <div className="rounded-full shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
+              <div className="rounded-xl shadow-xl ring-4 ring-white dark:ring-[#1E293B]">
                 <Avatar
                   src={profil.user?.fotoProfil}
                   nama={nama}
@@ -455,7 +455,7 @@ export default function SiswaProfilPage() {
                 type="button"
                 onClick={() => setShowChangeFoto(true)}
                 title="Ganti foto profil"
-                className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-white shadow-md transition hover:brightness-90 dark:border-[#000000]"
+                className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-xl border-2 border-white text-white shadow-md transition hover:brightness-90 dark:border-[#000000]"
                 style={{ background: kelasGrad }}
               >
                 <Camera size={13} />

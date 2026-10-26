@@ -74,7 +74,7 @@ function SubmitPraktikModal({
             </p>
           </div>
           <button onClick={onClose}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-black transition-colors hover:bg-slate-200">
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-black transition-colors hover:bg-slate-200">
             <X size={16} />
           </button>
         </div>
@@ -104,7 +104,7 @@ function SubmitPraktikModal({
                 className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none ${app ? "focus:border-[#3E03B3]" : "focus:border-[#F26A3D]"} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200`} />
             </div>
             <button onClick={submit} disabled={saving}
-              className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
+              className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold shadow-sm disabled:opacity-60 ${app ? "rounded-xl text-white" : "rounded-xl text-white"}`}
               style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Tugas</>}
             </button>
@@ -198,11 +198,11 @@ function SubmitFileModal({
           </div>
           <div className="flex gap-3">
             <button type="button" onClick={onClose}
-              className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-full" : "rounded-xl"}`}>
+              className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-xl" : "rounded-xl"}`}>
               Batal
             </button>
             <button type="submit" disabled={saving || !file}
-              className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
+              className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-xl text-white" : "rounded-xl text-white"}`}
               style={{ background: app ? "#3E03B3" : "#F26A3D" }}>
               {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kumpulkan</>}
             </button>
@@ -272,7 +272,7 @@ function SubmitSoalModal({
             </p>
           </div>
           <button onClick={onClose}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors hover:opacity-80"
             style={{ backgroundColor: isPg ? "#0F172A26" : "#FFFFFF26" }}>
             <X size={16} />
           </button>
@@ -305,7 +305,7 @@ function SubmitSoalModal({
                             className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-all ${
                               active ? "border-[#F26A3D] bg-[#FFFFFF] dark:bg-slate-700" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
                             }`}>
-                            <span style={app && active ? { background: "#3E03B3", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                            <span style={app && active ? { background: "#3E03B3", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
                               active ? "bg-[#3E03B3] text-[#000000] dark:text-[#C4B5FD]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"
                             }`}>{huruf}</span>
                             <span className="text-slate-700 dark:text-slate-200">{teks}</span>
@@ -333,7 +333,7 @@ function SubmitSoalModal({
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 outline-none focus:border-[#8F6DD3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
           </div>
           <button onClick={submit} disabled={saving || soalList.length === 0}
-            className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-sm disabled:opacity-60 ${app ? "rounded-full" : "rounded-xl"}`}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-sm disabled:opacity-60 ${app ? "rounded-xl" : "rounded-xl"}`}
             style={{ background: warna }}>
             {saving ? <><Loader2 size={14} className="animate-spin" /> Mengirim...</> : <><Send size={14} /> Kirim Jawaban</>}
           </button>

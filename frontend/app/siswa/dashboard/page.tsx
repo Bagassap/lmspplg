@@ -211,7 +211,7 @@ export default function SiswaDashboardPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20">
                 <ClipboardCheck size={17} />
               </div>
-              <span className="rounded-full bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
+              <span className="rounded-xl bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
                 Absensi Harian
               </span>
             </div>
@@ -244,7 +244,7 @@ export default function SiswaDashboardPage() {
                     style={icon3dStyle(s.tone)}>
                     <s.icon size={19} style={{ color: "#fff" }} />
                     {!!s.badge && (
-                      <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
+                      <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-xl bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
                         {s.badge}
                       </span>
                     )}

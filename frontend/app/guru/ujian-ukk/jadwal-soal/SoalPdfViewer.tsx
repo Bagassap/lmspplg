@@ -74,12 +74,12 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
       {numPages > 1 && (
         <div className={`flex shrink-0 items-center justify-center gap-3 py-2.5 dark:border-slate-700/60 dark:bg-slate-800 ${app ? "bg-white" : "border-t border-gray-100 bg-gray-50"}`}>
           <button onClick={() => setPageNumber(p => Math.max(1, p - 1))} disabled={pageNumber <= 1}
-            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-full bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
+            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-xl bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
             <ChevronLeft size={16} />
           </button>
           <span className="text-xs font-semibold text-gray-600 dark:text-slate-300">Halaman {pageNumber} / {numPages}</span>
           <button onClick={() => setPageNumber(p => Math.min(numPages, p + 1))} disabled={pageNumber >= numPages}
-            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-full bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
+            className={`flex h-8 w-8 items-center justify-center disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300 ${app ? "rounded-xl bg-[#F1EDFA] text-[#3E03B3]" : "rounded-lg bg-white text-gray-600 shadow-sm hover:bg-gray-100"}`}>
             <ChevronRight size={16} />
           </button>
         </div>
@@ -88,7 +88,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
         <p className="truncate max-w-md text-sm text-slate-600 dark:text-slate-300">{soal.fileName}</p>
         <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-          className="flex h-12 items-center gap-2 rounded-full px-7 text-base font-bold shrink-0"
+          className="flex h-12 items-center gap-2 rounded-xl px-7 text-base font-bold shrink-0"
           style={{ background: "#3E03B3", color: "#FFFFFF" }}>
           <Download size={18} /> Unduh PDF
         </motion.a>

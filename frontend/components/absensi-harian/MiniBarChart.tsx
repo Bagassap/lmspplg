@@ -7,7 +7,7 @@ export function MiniBarChart({ color = "#FFFFFF", size = 40 }: { color?: string;
   return (
     <div className="flex shrink-0 items-end gap-1" style={{ height: size }}>
       {BAR_HEIGHTS.map((h, i) => (
-        <span key={i} className="w-2 rounded-full" style={{ height: `${h}%`, backgroundColor: color }} />
+        <span key={i} className="w-2 rounded-xl" style={{ height: `${h}%`, backgroundColor: color }} />
       ))}
     </div>
   );

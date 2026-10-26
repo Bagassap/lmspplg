@@ -49,7 +49,7 @@ export function AppProfileCard({ fallback }: { fallback?: { nama: string; fotoPr
         <div className="relative shrink-0">
           <Avatar src={me?.fotoProfil ?? fallback?.fotoProfil} nama={nama || "?"} sizePx={64} fallbackBg="#3E03B3" textClassName="text-lg font-extrabold" />
           <button type="button" onClick={() => setFoto(true)} aria-label="Ganti foto profil"
-            className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#F26A3D] text-white">
+            className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl border-2 border-white bg-[#F26A3D] text-white">
             <Camera size={12} />
           </button>
         </div>

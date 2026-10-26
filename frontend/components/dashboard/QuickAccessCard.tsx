@@ -48,7 +48,7 @@ function QuickAccessCard({ card, index }: { card: QuickAccessCardData; index: nu
             <p className="text-[8px] font-medium uppercase tracking-widest sm:text-[10px]" style={{ color: `${fg}B3` }}>Akses Cepat</p>
             <p className="mt-0.5 truncate text-xs font-bold sm:text-sm">{card.label}</p>
           </div>
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9" style={{ background: "#FFFFFF", color: card.gradient }}>
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl sm:h-9 sm:w-9" style={{ background: "#FFFFFF", color: card.gradient }}>
             <card.icon size={14} className="sm:hidden" />
             <card.icon size={17} className="hidden sm:block" />
           </div>

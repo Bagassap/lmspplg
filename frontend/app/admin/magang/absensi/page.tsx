@@ -113,8 +113,8 @@ function KehadiranSlimCard({ hadirPct, tempatNama, onClick }: { hadirPct: number
           <ArrowRight size={16} className="text-slate-300" />
         </div>
       </div>
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-        <div className="h-full rounded-full transition-all" style={{ width: `${hadirPct}%`, background: "#3E03B3" }} />
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+        <div className="h-full rounded-xl transition-all" style={{ width: `${hadirPct}%`, background: "#3E03B3" }} />
       </div>
     </button>
   );
@@ -398,11 +398,11 @@ export default function AdminMagangAbsensiPage() {
                     <span className="text-xs font-semibold text-slate-400">{tempatPage + 1} / {tempatPageCount}</span>
                   )}
                   <button type="button" onClick={() => setTempatPage((p) => Math.max(0, p - 1))} disabled={tempatPage === 0}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                    className="flex h-6 w-6 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
                     <ChevronLeft size={13} />
                   </button>
                   <button type="button" onClick={() => setTempatPage((p) => (p + 1 < tempatPageCount ? p + 1 : p))} disabled={tempatPage + 1 >= tempatPageCount}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                    className="flex h-6 w-6 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
                     <ChevronRight size={13} />
                   </button>
                 </div>
@@ -591,7 +591,7 @@ export default function AdminMagangAbsensiPage() {
         <div className="space-y-6 lg:hidden">
           <div className="flex items-center gap-2">
             <button type="button" onClick={() => setTempatPickerOpen(true)}
-              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-full bg-[#F1EDFA] px-4 text-left">
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-[#F1EDFA] px-4 text-left">
               <span className="truncate text-sm font-bold text-[#3E03B3]">
                 {selected ? selected.tempatMagang.namaTempat : "Pilih tempat"}
               </span>
@@ -657,7 +657,7 @@ export default function AdminMagangAbsensiPage() {
       <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/admin/dashboard")}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
@@ -718,7 +718,7 @@ export default function AdminMagangAbsensiPage() {
                 <div className="flex items-center justify-between px-5 pt-5">
                   <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Pilih Tempat PKL</h3>
                   <button type="button" onClick={() => setTempatPickerOpen(false)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                     <X size={15} />
                   </button>
                 </div>
@@ -761,14 +761,14 @@ export default function AdminMagangAbsensiPage() {
               <div className="shrink-0 pb-3 pt-4" style={{ background: appMode ? "#F1EDFA" : "#3E03B3" }}>
                 <div className="relative flex items-center justify-between px-4">
                   <button type="button" onClick={() => setStatusPageOpen(false)}
-                    className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${appMode ? "bg-white text-slate-700" : "bg-white/15 text-white active:bg-white/25"}`}>
+                    className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${appMode ? "bg-white text-slate-700" : "bg-white/15 text-white active:bg-white/25"}`}>
                     <ChevronLeft size={18} />
                   </button>
                   <h1 className={`absolute inset-x-0 text-center text-base font-bold ${appMode ? "text-slate-900" : "text-white"}`}>
                     Status Kehadiran <span className={`font-medium ${appMode ? "text-slate-500" : "text-white/70"}`}>({total})</span>
                   </h1>
                   <button type="button" onClick={() => setLaporanOpen(true)}
-                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#3E03B3" } : { color: "#3E03B3" }}>
+                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#3E03B3" } : { color: "#3E03B3" }}>
                     <Download size={12} />
                     <span className="text-[11px] font-bold">Unduh</span>
                   </button>
@@ -831,12 +831,12 @@ export default function AdminMagangAbsensiPage() {
                     {tablePageCount > 1 && (
                       <div className="flex items-center justify-center gap-1">
                         <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                          className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                          className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
                           <ChevronLeft size={14} />
                         </button>
                         <span className="px-1.5 text-xs font-bold text-slate-500 dark:text-slate-300">{tablePage + 1}/{tablePageCount}</span>
                         <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                          className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+                          className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
                           <ArrowRight size={14} />
                         </button>
                       </div>
@@ -872,7 +872,7 @@ export default function AdminMagangAbsensiPage() {
                     </div>
                   </div>
                   <button type="button" onClick={() => setLaporanOpen(false)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                     <X size={15} />
                   </button>
                 </div>

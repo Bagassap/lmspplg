@@ -139,7 +139,7 @@ export function TugasListCard({
                   <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                           <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -212,7 +212,7 @@ export function TugasListCard({
           <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{shown.length} tugas</span>
           {canCreate && (
             <button type="button" onClick={onAddTugas}
-              className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95"
+              className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white active:scale-95"
               style={{ background: "#3E03B3" }}>
               <Plus size={14} /> Tambah
             </button>
@@ -227,7 +227,7 @@ export function TugasListCard({
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[null, ...uniqueMapel].map((mp) => (
               <button key={mp ?? "all"} type="button" onClick={() => setMapelFilter(mp)}
-                className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors"
+                className="shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-colors"
                 style={mapelFilter === mp ? { background: "#3E03B3", color: "#fff" } : { background: "#F1F5F9", color: "#475569" }}>
                 {mp ?? "Semua"}
               </button>
@@ -257,7 +257,7 @@ export function TugasListCard({
                       </p>
                     </div>
                     {cnt > 0 && (
-                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-2 text-xs font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>{cnt}</span>
+                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-xl px-2 text-xs font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>{cnt}</span>
                     )}
                     <ChevronRight size={18} className="shrink-0 text-slate-300" />
                   </AppCard>
@@ -296,15 +296,15 @@ export function TugasListCard({
           <div className="flex items-center gap-1.5">
             {uniqueMapel.length > 1 && (
               <button type="button" onClick={() => setShowFilterSheet(true)}
-                className={`relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${mapelFilter ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
+                className={`relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${mapelFilter ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
                 style={{ background: mapelFilter ? "#3E03B318" : "#FFFFFF" }}>
                 <SlidersHorizontal size={14} />
-                {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#3E03B3" }} />}
+                {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-xl border-2 border-white" style={{ background: "#3E03B3" }} />}
               </button>
             )}
             {canCreate && (
               <button type="button" onClick={onAddTugas}
-                className="mb-1.5 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-white shadow-sm"
+                className="mb-1.5 flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-white shadow-sm"
                 style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                 <Plus size={13} /> Tambah
               </button>
@@ -319,7 +319,7 @@ export function TugasListCard({
         )}
         {!loading && shown.length === 0 && (
           <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
               <ClipboardList size={24} className="text-[#5D900F] dark:text-[#C4B5FD]" />
             </div>
             <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"}</p>
@@ -352,7 +352,7 @@ export function TugasListCard({
                         </div>
                       </div>
                       {cnt > 0 && (
-                        <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1.5 text-[10px] font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>
+                        <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-xl px-1.5 text-[10px] font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>
                           {cnt}
                         </span>
                       )}
@@ -375,7 +375,7 @@ export function TugasListCard({
             <div className="relative px-6 pb-6 pt-10 text-center">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
               <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
-              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/25 shadow-lg">
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-white/25 shadow-lg">
                 {(() => { const Icon = TIPE_BADGE[detailItem.tipe]?.icon ?? ClipboardList; return <Icon size={24} className="text-white" />; })()}
               </div>
               <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
@@ -405,17 +405,17 @@ export function TugasListCard({
 
             <div className="relative flex flex-col gap-2 px-6 pb-6 pt-4">
               <button type="button" onClick={() => { setDetailItem(null); onLihatSubmisi(detailItem); }}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold text-[#3E03B3] shadow-lg">
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3.5 text-sm font-extrabold text-[#3E03B3] shadow-lg">
                 <Send size={16} /> Lihat Submisi{cnt > 0 ? ` (${cnt})` : ""}
               </button>
               {canEdit(detailItem) && (
                 <div className="flex gap-2">
                   <button type="button" onClick={() => { onEditTugas(detailItem); setDetailItem(null); }}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white/15 py-3 text-sm font-bold text-white">
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white/15 py-3 text-sm font-bold text-white">
                     <Pencil size={14} /> Edit
                   </button>
                   <button type="button" onClick={() => { onDeleteTugas(detailItem.id); setDetailItem(null); }}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white/15 py-3 text-sm font-bold text-white">
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white/15 py-3 text-sm font-bold text-white">
                     <Trash2 size={14} /> Hapus
                   </button>
                 </div>
@@ -470,7 +470,7 @@ export function TugasListCard({
             <div className="flex items-center justify-between px-5 pt-5">
               <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Filter Mata Pelajaran</h3>
               <button type="button" onClick={() => setShowFilterSheet(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                 <X size={15} />
               </button>
             </div>

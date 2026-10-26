@@ -121,7 +121,7 @@ export function TugasListCardSiswa({
               return (
                 <div key={t.id} className="flex flex-col gap-2 px-4 py-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                       <span className="text-[11px] font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                     </div>
                     <div className="min-w-0 flex-1">
@@ -185,7 +185,7 @@ export function TugasListCardSiswa({
                   <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                           <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <p className="max-w-[180px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -260,10 +260,10 @@ export function TugasListCardSiswa({
 
         {uniqueMapel.length > 1 && (
           <button type="button" onClick={() => setShowFilterSheet(true)}
-            className={`relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${mapelFilter ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
+            className={`relative -mb-px mb-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${mapelFilter ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-[#94a3b8]"}`}
             style={{ background: mapelFilter ? "#3E03B318" : "#FFFFFF" }}>
             <SlidersHorizontal size={14} />
-            {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-full border-2 border-white" style={{ background: "#3E03B3" }} />}
+            {mapelFilter && <span className="absolute right-0 top-0 h-2 w-2 rounded-xl border-2 border-white" style={{ background: "#3E03B3" }} />}
           </button>
         )}
       </div>
@@ -275,7 +275,7 @@ export function TugasListCardSiswa({
       )}
       {!loading && shown.length === 0 && (
         <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
             <ClipboardList size={24} className="text-[#5D900F] dark:text-[#C4B5FD]" />
           </div>
           <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : "Belum ada tugas tersedia"}</p>
@@ -307,7 +307,7 @@ export function TugasListCardSiswa({
                         </span>
                       </div>
                     </div>
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: d.btn.bg, color: d.btn.clr }}>
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: d.btn.bg, color: d.btn.clr }}>
                       {d.btn.icon}
                     </span>
                     <ChevronRight size={15} className="shrink-0 text-slate-300 dark:text-slate-600" />
@@ -326,7 +326,7 @@ export function TugasListCardSiswa({
           <div className="relative px-6 pb-6 pt-10 text-center">
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
-            <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/25 shadow-lg">
+            <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-white/25 shadow-lg">
               {(() => { const Icon = TIPE_BADGE[detailItem.tipe]?.icon ?? ClipboardList; return <Icon size={24} className="text-white" />; })()}
             </div>
             <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
@@ -356,7 +356,7 @@ export function TugasListCardSiswa({
           <div className="relative px-6 pb-6 pt-4">
             <button type="button"
               onClick={() => { setDetailItem(null); detail.btn.onClick(); }}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3.5 text-sm font-extrabold shadow-lg disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3.5 text-sm font-extrabold shadow-lg disabled:opacity-60"
               style={{ color: detail.btn.clr }}>
               {detail.btn.icon}{detail.btn.label}
             </button>
@@ -383,7 +383,7 @@ export function TugasListCardSiswa({
             <div className="flex items-center justify-between px-5 pt-5">
               <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Filter Mata Pelajaran</h3>
               <button type="button" onClick={() => setShowFilterSheet(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                 <X size={15} />
               </button>
             </div>

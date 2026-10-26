@@ -155,7 +155,7 @@ export function MateriTugasAdminPage() {
                   value={category === "materi" ? searchMateri : searchTugas}
                   onChange={(e) => (category === "materi" ? setSearchMateri(e.target.value) : setSearchTugas(e.target.value))}
                   placeholder={category === "materi" ? "Cari materi..." : "Cari tugas..."}
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-xl bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
               <AppTabs
                 tabs={[["materi", "Materi"], ["tugas", perluReview > 0 ? `Tugas (${perluReview})` : "Tugas"]] as const}
@@ -165,7 +165,7 @@ export function MateriTugasAdminPage() {
           <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
             <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/admin/dashboard")}
-                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Materi & Tugas</h1>
@@ -204,7 +204,7 @@ export function MateriTugasAdminPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-1.5"><Send size={15} /> Tugas</span>
                   {perluReview > 0 && (
-                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
+                    <span className="absolute -right-1 -top-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-xl bg-[#3E03B3] px-1 text-[9px] font-bold text-white">
                       {perluReview}
                     </span>
                   )}

@@ -60,7 +60,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
       <nav
         className={
           appMode
-            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-center gap-1 rounded-full border border-slate-100 bg-white p-1.5 shadow-[0_16px_36px_-10px_rgba(62,3,179,0.45)] dark:border-white/10 dark:bg-[#1E293B] lg:hidden"
+            ? "fixed inset-x-4 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex items-center gap-1 rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_16px_36px_-10px_rgba(62,3,179,0.45)] dark:border-white/10 dark:bg-[#1E293B] lg:hidden"
             : "fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t border-slate-100 bg-white pb-[env(safe-area-inset-bottom)] dark:border-white/6 dark:bg-[#1E293B] lg:hidden"
         }
       >
@@ -70,12 +70,12 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               key: item.key, href: item.href ?? "#", Icon: item.icon, label: PINNED_LABELS[item.key], active: isItemActive(item, pathname), dot: false,
             })), { key: "menu", href: menuHref, Icon: LayoutGrid, label: "Menu", active: moreActive, dot: pendingResetCount > 0 }].map((t) => (
               <Link key={t.key} href={t.href} aria-label={t.label}
-                className={`relative flex items-center justify-center gap-1.5 rounded-full transition-all duration-300 ease-out ${
+                className={`relative flex items-center justify-center gap-1.5 rounded-xl transition-all duration-300 ease-out ${
                   t.active ? "h-12 flex-[2.4] bg-[#3E03B3] px-3 text-white shadow-[0_8px_18px_-6px_rgba(62,3,179,0.65)]" : "h-12 flex-1 text-slate-500 dark:text-slate-400"
                 }`}>
                 <t.Icon size={20} />
                 {t.active && <span className="truncate text-[12px] font-bold">{t.label}</span>}
-                {t.dot && !t.active && <span className="absolute right-[28%] top-2.5 h-2 w-2 rounded-full bg-[#F26A3D]" />}
+                {t.dot && !t.active && <span className="absolute right-[28%] top-2.5 h-2 w-2 rounded-xl bg-[#F26A3D]" />}
               </Link>
             ))}
           </>
@@ -89,7 +89,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
+              <span className={`flex h-8 w-14 items-center justify-center rounded-xl transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
               <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
@@ -100,7 +100,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
         {dashboardItem && (
           <Link href={dashboardItem.href ?? "#"} className="relative flex flex-1 flex-col items-center">
             <span
-              className={`absolute -top-6 flex h-14 w-14 items-center justify-center rounded-full text-white ring-4 ring-white dark:ring-[#1E293B]`}
+              className={`absolute -top-6 flex h-14 w-14 items-center justify-center rounded-xl text-white ring-4 ring-white dark:ring-[#1E293B]`}
               style={{ background: ACT, boxShadow: "0 10px 24px -6px rgba(62,3,179,0.55)" }}
             >
               <dashboardItem.icon size={22} />
@@ -122,7 +122,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
               href={item.href ?? "#"}
               className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
             >
-              <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
+              <span className={`flex h-8 w-14 items-center justify-center rounded-xl transition-colors ${appMode && active ? "bg-[#F1EDFA]" : ""}`}><item.icon size={20} style={{ color: active ? ON : OFF }} /></span>
               <span className={`text-[10px] font-semibold ${active ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
                 {PINNED_LABELS[item.key]}
               </span>
@@ -134,9 +134,9 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
           onClick={() => setMoreOpen(true)}
           className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5"
         >
-          <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${appMode && moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
+          <span className={`flex h-8 w-14 items-center justify-center rounded-xl transition-colors ${appMode && moreActive ? "bg-[#F1EDFA]" : ""}`}><LayoutGrid size={20} style={{ color: moreActive ? ON : OFF }} /></span>
           {pendingResetCount > 0 && (
-            <span className={`absolute right-[30%] top-1.5 h-2 w-2 rounded-full ${appMode ? "bg-[#F26A3D]" : "bg-[#3E03B3]"}`} />
+            <span className={`absolute right-[30%] top-1.5 h-2 w-2 rounded-xl ${appMode ? "bg-[#F26A3D]" : "bg-[#3E03B3]"}`} />
           )}
           <span className={`text-[10px] font-semibold ${moreActive ? "text-[#3E03B3]" : "text-slate-400 dark:text-slate-500"}`}>
             Lainnya
@@ -164,7 +164,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
                 <button
                   type="button"
                   onClick={() => setMoreOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"
                 >
                   <X size={16} />
                 </button>
@@ -226,7 +226,7 @@ function MoreMenuItem({ item, pendingResetCount, onNavigate }: {
       </span>
       <span className="flex-1">{item.label}</span>
       {item.key === "manajemen-password" && pendingResetCount > 0 && (
-        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] px-1.5 text-[10px] font-bold text-white">
+        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] px-1.5 text-[10px] font-bold text-white">
           {pendingResetCount > 99 ? "99+" : pendingResetCount}
         </span>
       )}

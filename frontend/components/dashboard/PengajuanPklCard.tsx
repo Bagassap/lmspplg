@@ -23,7 +23,7 @@ export function PengajuanPklCard({ list }: { list: PengajuanPkl[] }) {
           <p className="text-[15px] font-extrabold text-slate-900 dark:text-white">Pengajuan PKL menunggu guru pembimbing</p>
           <p className="text-xs text-slate-600 dark:text-slate-300">{groups.length} pengajuan dari siswa perlu ditetapkan guru pembimbingnya</p>
         </div>
-        <span className="rounded-full bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
+        <span className="rounded-xl bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
       </div>
 
       <div className="mt-3 space-y-2">
@@ -40,7 +40,7 @@ export function PengajuanPklCard({ list }: { list: PengajuanPkl[] }) {
       </div>
 
       <Link href="/admin/magang/penempatan"
-        className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white">
+        className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white">
         <UserCheck size={16} /> Tetapkan guru pembimbing <ArrowRight size={15} />
       </Link>
     </div>

@@ -52,7 +52,7 @@ export function FilterBar({
           {kelasList.length > 1 && (
             <div className="relative w-[4.5rem] shrink-0">
               <select value={selectedKelasId} onChange={(e) => onSelectKelas(e.target.value)}
-                className="h-10 w-full appearance-none rounded-full border-0 bg-[#F1EDFA] pl-3 pr-6 text-xs font-bold text-[#3E03B3] focus:outline-none focus:ring-2 focus:ring-[#3E03B3]">
+                className="h-10 w-full appearance-none rounded-xl border-0 bg-[#F1EDFA] pl-3 pr-6 text-xs font-bold text-[#3E03B3] focus:outline-none focus:ring-2 focus:ring-[#3E03B3]">
                 {kelasList.map((k) => <option key={k.id} value={k.id}>{kelasShort(k.nama)}</option>)}
               </select>
               <ChevronDown size={12} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#3E03B3]" />
@@ -62,15 +62,15 @@ export function FilterBar({
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <input type="search" name="data-siswa-search" autoComplete="off" value={search} onChange={(e) => onSearch(e.target.value)}
               placeholder="Cari nama / NIS"
-              className="h-10 w-full rounded-full border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+              className="h-10 w-full rounded-xl border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
           </div>
-          <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#F1EDFA] p-1">
+          <div className="flex shrink-0 items-center gap-1 rounded-xl bg-[#F1EDFA] p-1">
             {GENDER_PILLS.map((opt) => {
               const active = filterGender === opt.value;
               const OptIcon = opt.icon;
               return (
                 <button key={opt.label} type="button" title={opt.label} aria-label={opt.label} onClick={() => onFilterGender(opt.value)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${active ? "bg-[#3E03B3] text-white" : "text-[#3E03B3]"}`}>
+                  className={`flex h-8 w-8 items-center justify-center rounded-xl ${active ? "bg-[#3E03B3] text-white" : "text-[#3E03B3]"}`}>
                   <OptIcon size={14} />
                 </button>
               );
@@ -224,18 +224,18 @@ export function FilterBar({
                 <Users size={11} />
                 Ringkasan Jenis Kelamin
               </p>
-              <div className="flex h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-600">
+              <div className="flex h-2 w-full overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-600">
                 {lPct > 0 && <div style={{ width: `${lPct}%`, backgroundColor: REF_MALE }} />}
                 {pPct > 0 && <div style={{ width: `${pPct}%`, backgroundColor: REF_FEMALE }} />}
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-                  <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_MALE }} />
+                  <span className="h-2 w-2 shrink-0 rounded-xl" style={{ backgroundColor: REF_MALE }} />
                   Laki-laki <span className="font-bold text-slate-800 dark:text-white">{lCount}</span>
                   <span className="text-slate-400 dark:text-slate-500">({lPct}%)</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-                  <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: REF_FEMALE }} />
+                  <span className="h-2 w-2 shrink-0 rounded-xl" style={{ backgroundColor: REF_FEMALE }} />
                   Perempuan <span className="font-bold text-slate-800 dark:text-white">{pCount}</span>
                   <span className="text-slate-400 dark:text-slate-500">({pPct}%)</span>
                 </span>

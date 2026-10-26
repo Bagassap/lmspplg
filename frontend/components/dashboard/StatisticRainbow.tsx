@@ -84,7 +84,7 @@ export function StatisticRainbow({ hadir, sakit, izin, alpha, total }: Props) {
         {LEGEND.map((l) => (
           <div key={l.label} className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: l.color }} />
+              <span className="h-2.5 w-2.5 shrink-0 rounded-xl" style={{ backgroundColor: l.color }} />
               <span className="text-[12px] text-slate-600 dark:text-slate-400">
                 {l.label} ({l.pct}%)
               </span>

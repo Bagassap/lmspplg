@@ -142,7 +142,7 @@ export default function ManajemenPasswordClient() {
       <div className="app-hide relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
           <button type="button" onClick={() => router.push("/admin/dashboard")}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
           </button>
           <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Manajemen Password</h1>
@@ -164,8 +164,8 @@ export default function ManajemenPasswordClient() {
                 { label: "Buat Akun", icon: UserPlus, tone: "amber" as const, onClick: () => setCreateAccountOpen(true) },
               ]).map((b) => (
                 <button key={b.label} type="button" onClick={b.onClick}
-                  className="flex h-12 w-44 items-center gap-2.5 rounded-full bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={icon3dStyle(b.tone)}>
+                  className="flex h-12 w-44 items-center gap-2.5 rounded-xl bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={icon3dStyle(b.tone)}>
                     <b.icon size={16} color="#fff" />
                   </span>
                   {b.label}

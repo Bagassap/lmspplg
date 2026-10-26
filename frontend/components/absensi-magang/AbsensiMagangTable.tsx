@@ -234,7 +234,7 @@ export function AbsensiMagangTable({
             {tablePageCount > 1 && (
               <div className="flex items-center gap-1">
                 <button onClick={() => setTablePage((p) => Math.max(0, p - 1))} disabled={tablePage === 0}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+                  className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
                   <ChevronLeft size={14} />
                 </button>
                 {Array.from({ length: tablePageCount }, (_, i) => i)
@@ -245,7 +245,7 @@ export function AbsensiMagangTable({
                         <span className="px-1 text-xs font-semibold text-slate-300 dark:text-slate-600">…</span>
                       )}
                       <button onClick={() => setTablePage(i)}
-                        className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                        className={`flex h-7 w-7 items-center justify-center rounded-xl text-xs font-bold transition-colors ${
                           i === tablePage
                             ? "bg-[#3E03B3] text-white shadow-sm"
                             : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
@@ -255,7 +255,7 @@ export function AbsensiMagangTable({
                     </span>
                   ))}
                 <button onClick={() => setTablePage((p) => Math.min(tablePageCount - 1, p + 1))} disabled={tablePage >= tablePageCount - 1}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+                  className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
                   <ChevronRight size={14} />
                 </button>
               </div>

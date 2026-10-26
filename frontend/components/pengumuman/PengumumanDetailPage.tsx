@@ -80,18 +80,18 @@ export function PengumumanDetailPage({
     <div className="mx-auto w-full max-w-2xl space-y-4 pb-6">
       <div className="flex items-center gap-2">
         <button type="button" onClick={() => router.push(back)} aria-label="Kembali"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
           <ArrowLeft size={18} />
         </button>
         <p className="flex-1 text-sm font-bold text-slate-900 dark:text-white">Pengumuman</p>
         {canManage && p && (
           <>
-            <button onClick={() => setEditOpen(true)} aria-label="Edit" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]"><Pencil size={16} /></button>
+            <button onClick={() => setEditOpen(true)} aria-label="Edit" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><Pencil size={16} /></button>
             <button onClick={sematkan} disabled={pinning} aria-label="Sematkan"
-              className={`flex h-10 w-10 items-center justify-center rounded-full bg-[#F1EDFA] ${p.isPinned ? "text-[#F26A3D]" : "text-[#3E03B3]"}`}>
+              className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[#F1EDFA] ${p.isPinned ? "text-[#F26A3D]" : "text-[#3E03B3]"}`}>
               {pinning ? <Loader2 size={16} className="animate-spin" /> : <Pin size={16} />}
             </button>
-            <button onClick={hapus} disabled={deleting} aria-label="Hapus" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFE9E2] text-[#F26A3D]">
+            <button onClick={hapus} disabled={deleting} aria-label="Hapus" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFE9E2] text-[#F26A3D]">
               {deleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
             </button>
           </>
@@ -117,10 +117,10 @@ export function PengumumanDetailPage({
         <>
           <article className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
             <div className="mb-2 flex flex-wrap items-center gap-1.5">
-              {p.isPinned && <span className="flex items-center gap-1 rounded-full bg-[#FFE9E2] px-2.5 py-0.5 text-[10px] font-bold text-[#F26A3D]"><Pin size={9} />Disematkan</span>}
-              <span className="rounded-full bg-[#F1EDFA] px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">{p.kategori}</span>
+              {p.isPinned && <span className="flex items-center gap-1 rounded-xl bg-[#FFE9E2] px-2.5 py-0.5 text-[10px] font-bold text-[#F26A3D]"><Pin size={9} />Disematkan</span>}
+              <span className="rounded-xl bg-[#F1EDFA] px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">{p.kategori}</span>
               {(p.prioritas === "PENTING" || p.prioritas === "MENDESAK") && (
-                <span className="flex items-center gap-1 rounded-full bg-[#F26A3D] px-2.5 py-0.5 text-[10px] font-bold text-white">
+                <span className="flex items-center gap-1 rounded-xl bg-[#F26A3D] px-2.5 py-0.5 text-[10px] font-bold text-white">
                   <AlertCircle size={9} />{p.prioritas === "MENDESAK" ? "Mendesak" : "Penting"}
                 </span>
               )}

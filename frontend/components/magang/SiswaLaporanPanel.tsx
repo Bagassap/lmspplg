@@ -74,7 +74,7 @@ export function SiswaLaporanPanel() {
   if (!status?.hasPenempatan) {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
+        <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
           <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
@@ -105,7 +105,7 @@ export function SiswaLaporanPanel() {
           style={{ background: app ? "#F1EDFA" : laporan.status === "DITERIMA" ? "#F26A3D" : laporan.status === "REVISI" ? "#0F172A" : "#0EA5E9" }}>
           <div className="relative px-6 py-8 text-center" style={{ color: app ? "#1E293B" : laporan.status === "DITERIMA" ? "#0F172A" : "#FFFFFF" }}>
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-              className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg"
+              className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-xl shadow-lg"
               style={{ background: app ? "#FFFFFF" : laporan.status === "DITERIMA" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.25)", color: app ? (laporan.status === "DITERIMA" ? "#3E03B3" : "#3E03B3") : undefined }}>
               {laporan.status === "DITERIMA" ? <CheckCircle2 size={30} />
                 : laporan.status === "REVISI" ? <AlertTriangle size={30} />
@@ -164,7 +164,7 @@ export function SiswaLaporanPanel() {
           </div>
 
           <button type="button" onClick={handleSubmit} disabled={submitting || !file}
-            className={`mt-4 flex w-full items-center justify-center gap-2 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-full py-4" : "rounded-xl py-3"}`}
+            className={`mt-4 flex w-full items-center justify-center gap-2 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-xl py-4" : "rounded-xl py-3"}`}
           style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
             {submitting ? "Mengirim..." : laporan ? "Kirim Ulang" : "Kirim Laporan"}

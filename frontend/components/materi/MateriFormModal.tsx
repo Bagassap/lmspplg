@@ -139,7 +139,7 @@ export function MateriFormModal({
               </div>
               <button
                 onClick={onClose}
-                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${h.close}`}
+                className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-xl transition-colors ${h.close}`}
               >
                 <X size={15} />
               </button>
@@ -255,7 +255,7 @@ export function MateriFormModal({
                 type="button"
                 onClick={handleSubmit}
                 disabled={saving}
-                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-full bg-[#3E03B3]" : "rounded-xl bg-[#3E03B3]"}`}
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60 ${h.app ? "rounded-xl bg-[#3E03B3]" : "rounded-xl bg-[#3E03B3]"}`}
               >
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {saving ? "Menyimpan…" : isEdit ? "Simpan Perubahan" : "Tambah Materi"}

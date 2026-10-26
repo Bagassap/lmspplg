@@ -41,7 +41,7 @@ export function BrandedLoadingOverlay({
       >
         <div className="relative mb-8 flex items-center justify-center">
           <motion.div
-            className="absolute rounded-full"
+            className="absolute rounded-xl"
             style={{
               width: 180,
               height: 180,
@@ -72,7 +72,7 @@ export function BrandedLoadingOverlay({
           {DOT_COLORS.map((color, i) => (
             <motion.span
               key={i}
-              className="rounded-full"
+              className="rounded-xl"
               style={{ width: 9, height: 9, background: color, boxShadow: `0 0 8px ${color}` }}
               animate={{ y: [0, -9, 0], opacity: [0.35, 1, 0.35], scale: [0.88, 1.18, 0.88] }}
               transition={{ duration: 1.05, repeat: Infinity, ease: "easeInOut", delay: i * 0.22 }}

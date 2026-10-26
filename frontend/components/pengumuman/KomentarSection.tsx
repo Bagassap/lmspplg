@@ -113,7 +113,7 @@ export function KomentarSection({
             <div key={k.id}>
               {showDay && (
                 <div className="my-2 flex justify-center">
-                  <span className="rounded-full bg-white px-3 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">{day}</span>
+                  <span className="rounded-xl bg-white px-3 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">{day}</span>
                 </div>
               )}
               <div className={`flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
@@ -173,7 +173,7 @@ export function KomentarSection({
             type="button"
             onClick={kirim}
             disabled={sending || !teks.trim()}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] text-white shadow-md transition-opacity disabled:opacity-40"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white shadow-md transition-opacity disabled:opacity-40"
             aria-label="Kirim"
           >
             {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}

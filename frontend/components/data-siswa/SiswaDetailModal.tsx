@@ -102,7 +102,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               <ProgressRing percent={pct} size={28} />
               <p className="text-xs font-bold text-slate-800">Data {pct}% lengkap</p>
             </div>
-            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${sudahGanti === null ? "bg-[#F1EDFA] text-slate-700" : sudahGanti ? "bg-[#E3F8EF] text-[#059669]" : "bg-[#FFE9E2] text-[#F26A3D]"}`}>
+            <span className={`inline-flex items-center gap-1 rounded-xl px-2.5 py-0.5 text-[11px] font-bold ${sudahGanti === null ? "bg-[#F1EDFA] text-slate-700" : sudahGanti ? "bg-[#E3F8EF] text-[#059669]" : "bg-[#FFE9E2] text-[#F26A3D]"}`}>
               <KeyRound size={11} />
               {sudahGanti === null ? "Belum ada akun" : sudahGanti ? "Password sudah diganti" : "Password masih NIS"}
             </span>
@@ -173,7 +173,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
             </button>
 
             <div className="relative flex items-center gap-4">
-              <div className="rounded-full border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
+              <div className="rounded-xl border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
                 <Avatar
                   src={siswa.user?.fotoProfil}
                   nama={displayNama}
@@ -332,7 +332,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               )}
             </>
           )}
-          <div className="relative mx-auto w-fit rounded-full border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
+          <div className="relative mx-auto w-fit rounded-xl border border-white/40" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.18)" }}>
             <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
           </div>
           <h2 className={`relative mt-3 break-words text-lg font-extrabold ${h.title}`}>{displayNama}</h2>
@@ -393,7 +393,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
           {onEdit && (
             <div className="mx-auto mt-4 max-w-md px-6">
               <button type="button" onClick={onEdit}
-                className="flex w-full items-center justify-center gap-1.5 rounded-full py-3.5 text-sm font-extrabold text-white shadow-sm"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl py-3.5 text-sm font-extrabold text-white shadow-sm"
                 style={{ background: h.app ? "#3E03B3" : HEADER_GRADIENT }}>
                 <Pencil size={14} /> Edit Data
               </button>

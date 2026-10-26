@@ -56,7 +56,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
         {pageCount > 1 && (
           <div className="flex items-center gap-1">
             <button onClick={() => onPage(page - 1)} disabled={page === 0}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+              className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
               <ChevronLeft size={14} />
             </button>
             {Array.from({ length: pageCount }, (_, i) => i)
@@ -67,7 +67,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
                     <span className="px-1 text-xs font-semibold text-slate-300 dark:text-slate-600">…</span>
                   )}
                   <button onClick={() => onPage(i)}
-                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                    className={`flex h-7 w-7 items-center justify-center rounded-xl text-xs font-bold transition-colors ${
                       i === page
                         ? (app ? "bg-[#3E03B3] text-white shadow-sm" : "bg-[#3E03B3] text-white shadow-sm")
                         : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
@@ -77,7 +77,7 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
                 </span>
               ))}
             <button onClick={() => onPage(page + 1)} disabled={page >= pageCount - 1}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
+              className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500 dark:hover:bg-slate-700">
               <ChevronRight size={14} />
             </button>
           </div>
@@ -135,7 +135,7 @@ export function SiswaTable({
                       <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{displayNama}</p>
                       <p className="mt-0.5 truncate text-[11px] text-slate-600 dark:text-slate-400">NIS {s.nis}</p>
                     </div>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    <span className="shrink-0 rounded-xl px-2 py-0.5 text-[10px] font-bold"
                       style={pct === 100 ? { background: "#E3F8EF", color: "#059669" } : { background: "#F1EDFA", color: "#3E03B3" }}>
                       {pct}%
                     </span>

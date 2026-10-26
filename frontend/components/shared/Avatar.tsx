@@ -34,7 +34,7 @@ export function Avatar({
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-full ${className ?? ""}`}
+      className={`relative shrink-0 overflow-hidden rounded-xl ${className ?? ""}`}
       style={{ width: sizePx, height: sizePx, ...(ring ? { boxShadow: ring } : {}) }}
     >
       {showPhoto ? (

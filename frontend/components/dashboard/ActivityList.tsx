@@ -53,11 +53,11 @@ export default function ActivityList({
           >
             <div className="flex shrink-0 items-center self-stretch gap-2">
               <div
-                className="w-1 self-stretch rounded-full"
+                className="w-1 self-stretch rounded-xl"
                 style={{ backgroundColor: item.stripColor }}
               />
               <div
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
                 style={{ backgroundColor: "#F1F5F9" }}
               >
                 <Icon size={15} style={{ color: item.iconColor }} />

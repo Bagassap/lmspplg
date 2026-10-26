@@ -101,11 +101,11 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
         <span className="text-sm font-bold text-slate-800 dark:text-slate-100 capitalize">{monthLabel}</span>
         <div className="flex gap-1">
           <button onClick={prevWeek}
-            className="w-7 h-7 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
+            className="w-7 h-7 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
             <ChevronLeft size={13} />
           </button>
           <button onClick={nextWeek}
-            className="w-7 h-7 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
+            className="w-7 h-7 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
             <ChevronRight size={13} />
           </button>
         </div>
@@ -120,7 +120,7 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
             <div key={i} className="flex flex-col items-center gap-1.5 relative group">
               <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">{dayNames[i]}</span>
               <div
-                className="w-9 h-9 flex items-center justify-center rounded-full text-sm transition-all cursor-default select-none"
+                className="w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-all cursor-default select-none"
                 style={{
                   background: isUkk ? "#3E03B3" : "transparent",
                   color:      isUkk ? "#fff" : isToday ? "#3E03B3" : "inherit",
@@ -631,27 +631,27 @@ export default function AdminJadwalSoalPage() {
                       {allSoal.length > 1 && (
                         <>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                            className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
                             <ChevronLeft size={18}/>
                           </button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                            className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
                             <ChevronRight size={18}/>
                           </button>
                         </>
                       )}
                       {curSoal && (
                         <button onClick={async()=>{ await deleteSoal(curSoal.id); setSoalJadwalIdx(i=>Math.max(0,i-1)); }}
-                          className="w-10 h-10 rounded-full bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus jadwal ini">
+                          className="w-10 h-10 rounded-xl bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus jadwal ini">
                           <Trash2 size={14}/>
                         </button>
                       )}
                       <button onClick={()=>{ setOpenJadwalModal(false); setOpenTambahJadwal(true); }}
-                        className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-full bg-[#3E03B3] text-white transition-colors">
+                        className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-xl bg-[#3E03B3] text-white transition-colors">
                         <Plus size={13}/> Tambah
                       </button>
                       <button onClick={()=>setOpenJadwalModal(false)}
-                        className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
+                        className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
                         <X size={18}/>
                       </button>
                     </div>
@@ -707,27 +707,27 @@ export default function AdminJadwalSoalPage() {
                             {allSoal.length > 1 && (
                               <>
                                 <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                                  className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                                  className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
                                   <ChevronLeft size={18}/>
                                 </button>
                                 <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                                  className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
+                                  className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] disabled:opacity-40 transition-colors">
                                   <ChevronRight size={18}/>
                                 </button>
                               </>
                             )}
                             {curSoal && (
                               <button onClick={async()=>{ await deleteSoal(curSoal.id); setSoalSoalIdx(i=>Math.max(0,i-1)); }}
-                                className="w-10 h-10 rounded-full bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus soal ini">
+                                className="w-10 h-10 rounded-xl bg-[#FFE9E2] flex items-center justify-center text-[#E8562B] transition-colors" title="Hapus soal ini">
                                 <Trash2 size={14}/>
                               </button>
                             )}
                             <button onClick={()=>{ setOpenSoalModal(false); setOpenTambahSoal(true); }}
-                              className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-full bg-[#3E03B3] text-white transition-colors">
+                              className="flex items-center gap-1.5 text-sm font-bold px-5 h-10 rounded-xl bg-[#3E03B3] text-white transition-colors">
                               <CloudUpload size={13}/> Tambah
                             </button>
                             <button onClick={()=>setOpenSoalModal(false)}
-                              className="w-10 h-10 rounded-full bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
+                              className="w-10 h-10 rounded-xl bg-[#F1EDFA] flex items-center justify-center text-[#3E03B3] transition-colors">
                               <X size={18}/>
                             </button>
                           </div>
@@ -817,7 +817,7 @@ export default function AdminJadwalSoalPage() {
               <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
                 <div className="app-header-row relative flex items-center px-4 pb-3 pt-4">
                   <button type="button" onClick={() => router.push("/admin/dashboard")}
-                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                     <ChevronLeft size={18} />
                   </button>
                   <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
@@ -861,14 +861,14 @@ export default function AdminJadwalSoalPage() {
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
                 <button type="button" onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
-                  className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white active:scale-95" style={{ background: APP_ACCENT }}>
+                  className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white active:scale-95" style={{ background: APP_ACCENT }}>
                   <Plus size={14} /> Tambah
                 </button>
               </div>
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-xl bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
               <AppTabs
                 tabs={[["active", `Aktif (${active.length})`], ["completed", `Selesai (${completed.length})`]] as const}
@@ -891,18 +891,18 @@ export default function AdminJadwalSoalPage() {
                         <div className="min-w-0 flex-1">
                           <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                           <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
-                          <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                          <span className="mt-1.5 inline-block rounded-xl px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                             {submisiList.filter((x) => x.tahapan?.id === t.id).length} pengumpulan
                           </span>
                         </div>
                       </button>
                       <div className="mt-3 flex gap-2">
                         <button type="button" onClick={() => { setEditTarget(t); setOpenTahapan(true); }}
-                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                           <Pencil size={12} /> Edit
                         </button>
                         <button type="button" onClick={() => deleteTahapan(t.id)}
-                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-red-50 py-2.5 text-xs font-bold text-red-600">
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-red-50 py-2.5 text-xs font-bold text-red-600">
                           <Trash2 size={12} /> Hapus
                         </button>
                       </div>
@@ -980,7 +980,7 @@ export default function AdminJadwalSoalPage() {
                         <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2.5">
-                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{background:rp.gradient}}>
                                 <span className="text-xs font-bold" style={{color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF"}}>{idx+1}</span>
                               </div>
                               <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -992,8 +992,8 @@ export default function AdminJadwalSoalPage() {
                           <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
                           <td className="whitespace-nowrap px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                <div className="h-full rounded-full" style={{width:`${pct}%`, background:rp.gradient}}/>
+                              <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                                <div className="h-full rounded-xl" style={{width:`${pct}%`, background:rp.gradient}}/>
                               </div>
                               <span className="text-xs font-bold" style={{color:rp.bar}}>{pct}%</span>
                             </div>
@@ -1033,15 +1033,15 @@ export default function AdminJadwalSoalPage() {
                     const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSiswaAll, 1)) * 100), 100);
                     return (
                       <div key={t.id} className="flex items-center gap-3 p-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                           <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                           <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                           <div className="mt-1.5 flex items-center gap-2">
-                            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />
+                            <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                              <div className="h-full rounded-xl" style={{ width: `${pct}%`, background: rp.gradient }} />
                             </div>
                             <span className="text-[11px] font-bold" style={{ color: rp.bar }}>{pct}%</span>
                           </div>
@@ -1091,7 +1091,7 @@ export default function AdminJadwalSoalPage() {
 
                 <div className="flex shrink-0 items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
                   <button type="button" onClick={() => setSubmisiModalTahapan(null)} aria-label="Tutup"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                     <X size={18}/>
                   </button>
                   <div className="min-w-0 flex-1">

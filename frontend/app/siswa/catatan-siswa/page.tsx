@@ -124,7 +124,7 @@ export default function SiswaCatatanSayaPage() {
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-[15px] font-bold text-slate-900 dark:text-white">{c.judul}</p>
                       {c.poin != null && (
-                        <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                        <span className="shrink-0 rounded-xl px-3 py-1 text-[11px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                           {c.poin} poin
                         </span>
                       )}
@@ -169,7 +169,7 @@ export default function SiswaCatatanSayaPage() {
             )}
             {!loading && (!data || data.catatan.length === 0) && (
               <div className="flex flex-col items-center px-6 py-14 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
                   <NotebookPen size={24} style={{ color: "#3E03B3" }} />
                 </div>
                 <p className="mt-4 text-sm text-slate-400">Belum ada catatan untukmu. Pertahankan!</p>
@@ -190,7 +190,7 @@ export default function SiswaCatatanSayaPage() {
                           <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                         </div>
                         {c.poin != null && (
-                          <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#F1F5F9", color: accent }}>
+                          <span className="shrink-0 rounded-xl px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#F1F5F9", color: accent }}>
                             {c.poin} poin
                           </span>
                         )}

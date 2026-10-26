@@ -66,7 +66,7 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
           <motion.div
             animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.15, 0.5] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-            className={`absolute inset-0 rounded-full ${app ? "bg-[#F1EDFA]" : "bg-white/20"}`}
+            className={`absolute inset-0 rounded-xl ${app ? "bg-[#F1EDFA]" : "bg-white/20"}`}
           />
           <motion.div
             animate={{ y: [0, -4, 0] }}

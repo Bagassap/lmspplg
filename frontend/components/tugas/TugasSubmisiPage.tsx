@@ -92,7 +92,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
     <div className={asModal ? "w-full space-y-5" : "mx-auto w-full max-w-3xl space-y-4 pb-6"}>
       <div className="flex items-center gap-3">
         <button type="button" onClick={() => (onClose ? onClose() : router.push(back))} aria-label={asModal ? "Tutup" : "Kembali"}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
           {asModal ? <X size={18} /> : <ArrowLeft size={18} />}
         </button>
         <div className="min-w-0 flex-1">
@@ -117,7 +117,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
               const on = aktif === k.id;
               return (
                 <button key={k.id} type="button" onClick={() => setKelasAktif(k.id)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-full font-bold ${asModal ? "px-5 py-2.5 text-sm" : "px-4 py-2 text-xs"} ${on ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800"}`}>
+                  className={`flex shrink-0 items-center gap-1.5 rounded-xl font-bold ${asModal ? "px-5 py-2.5 text-sm" : "px-4 py-2 text-xs"} ${on ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800"}`}>
                   {k.nama}
                 </button>
               );
@@ -127,7 +127,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
           <div className="flex gap-2">
             {([["sudah", `Sudah mengumpulkan (${sudahK.length})`, CheckCircle], ["belum", `Belum mengumpulkan (${belumK.length})`, UserX]] as const).map(([k, label, Icon]) => (
               <button key={k} type="button" onClick={() => setTab(k)}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-full font-bold ${asModal ? "py-3 text-sm" : "py-2 text-xs"} ${tab === k ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl font-bold ${asModal ? "py-3 text-sm" : "py-2 text-xs"} ${tab === k ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
                 <Icon size={13} /> {label}
               </button>
             ))}
@@ -141,9 +141,9 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
                 const nama = s.user?.nama || s.nama || "Siswa";
                 return (
                   <div key={s.id} className={`flex items-center gap-3 rounded-2xl bg-white shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-slate-800 ${asModal ? "px-5 py-4" : "px-3 py-2.5"}`}>
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFE9E2] text-sm font-bold text-[#E8562B]">{nama[0]?.toUpperCase()}</span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFE9E2] text-sm font-bold text-[#E8562B]">{nama[0]?.toUpperCase()}</span>
                     <p className={`min-w-0 flex-1 truncate font-bold text-slate-900 dark:text-white ${asModal ? "text-base" : "text-sm"}`}>{nama}</p>
-                    <span className="shrink-0 rounded-full bg-[#FFE9E2] px-2.5 py-1 text-[10px] font-bold text-[#E8562B]">Belum kumpul</span>
+                    <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-1 text-[10px] font-bold text-[#E8562B]">Belum kumpul</span>
                   </div>
                 );
               })
@@ -162,8 +162,8 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
                     <span className={`block truncate font-bold text-slate-900 dark:text-white ${asModal ? "text-base" : "text-sm"}`}>{nama}</span>
                     <span className={`block truncate text-slate-600 dark:text-slate-300 ${asModal ? "text-sm" : "text-[11px]"}`}>{formatTglJam(s.submittedAt)}</span>
                   </span>
-                  {isSoal && s.nilai !== null && <span className="shrink-0 rounded-full bg-[#3E03B3] px-2 py-0.5 text-[10px] font-bold text-white">{s.nilai}</span>}
-                  <span className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: sc.bg, color: sc.color }}>{sc.label}</span>
+                  {isSoal && s.nilai !== null && <span className="shrink-0 rounded-xl bg-[#3E03B3] px-2 py-0.5 text-[10px] font-bold text-white">{s.nilai}</span>}
+                  <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: sc.bg, color: sc.color }}>{sc.label}</span>
                   <ChevronRight size={16} className="shrink-0 text-slate-300" />
                 </button>
               );

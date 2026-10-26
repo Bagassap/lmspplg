@@ -374,7 +374,7 @@ export default function SiswaAbsensiHarianPage() {
                   ) : (
                     <motion.div key="datang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ background: BRAND_GRADIENT }}>
+                      <div className="flex h-16 w-16 items-center justify-center rounded-xl" style={{ background: BRAND_GRADIENT }}>
                         <Moon size={26} className="text-white" />
                       </div>
                       <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Waktunya</h2>
@@ -416,7 +416,7 @@ export default function SiswaAbsensiHarianPage() {
                   ) : (
                     <motion.div key="pulang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                      <div className={`flex h-16 w-16 items-center justify-center rounded-full ${window_ === "HADIR" ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`}
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${window_ === "HADIR" ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`}
                         style={window_ === "HADIR" ? { background: "#F1EDFA" } : undefined}>
                         {window_ === "HADIR" ? <Clock size={26} style={{ color: "#3E03B3" }} /> : <AlertCircle size={26} className="text-[#5D900F] dark:text-[#C4B5FD]" />}
                       </div>
@@ -462,7 +462,7 @@ export default function SiswaAbsensiHarianPage() {
           <div className="relative isolate -m-4 lg:hidden" style={{ background: BRAND_GRADIENT }}>
             <div className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
-                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi Harian</h1>
@@ -472,7 +472,7 @@ export default function SiswaAbsensiHarianPage() {
             <div className="rounded-[28px] p-5 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)]" style={{ background: BRAND_GRADIENT }}>
               <p className="text-xs font-semibold text-[#F1EDFA]">{formatTgl(today)}</p>
               <p className="mt-1 font-digital text-4xl font-bold tracking-wider tabular-nums text-white">{jam}</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold"
+              <div className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-bold"
                 style={{ color: data?.sudahAbsen && data?.sudahPulang ? "#F26A3D" : data?.sudahAbsen ? "#3E03B3" : "#94A3B8" }}>
                 <Clock size={12} />
                 {data?.sudahAbsen && data?.sudahPulang
@@ -555,7 +555,7 @@ export default function SiswaAbsensiHarianPage() {
                 <motion.button whileTap={mainNeedsAction ? { scale: 0.97 } : undefined} type="button"
                   disabled={!mainNeedsAction}
                   onClick={() => mainNeedsAction && openWizard(mainTab)}
-                  className="flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-extrabold shadow-[0_10px_24px_-10px_rgba(0,0,0,0.35)]"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-sm font-extrabold shadow-[0_10px_24px_-10px_rgba(0,0,0,0.35)]"
                   style={mainNeedsAction ? { background: mainAccent, color: "#fff" } : { background: "#E2E8F0", color: "#94A3B8" }}>
                   {mainTab === "DATANG" ? <LogIn size={18} /> : <LogOut size={18} />}
                   {label}
@@ -681,7 +681,7 @@ function RingkasanAbsen({
       <>
         <div className="relative px-6 py-8 text-center">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-            className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg" style={{ background: accentColor }}>
+            className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-xl shadow-lg" style={{ background: accentColor }}>
             <CheckCircle2 size={30} className="text-white" />
           </motion.div>
           <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">{title}</h2>
@@ -755,7 +755,7 @@ function RingkasanAbsen({
         <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/8" />
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-          className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/25 shadow-lg">
+          className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-xl bg-white/25 shadow-lg">
           <CheckCircle2 size={30} className="text-white" />
         </motion.div>
         <h2 className="mt-4 text-lg font-extrabold text-white">{title}</h2>
@@ -865,7 +865,7 @@ function FormAbsen({
         <div className="relative flex h-18 items-center">
           <img src={fotoPreview} alt="Preview" className="h-18 w-18 rounded-xl object-cover shadow-sm" />
           <button onClick={onFotoClear}
-            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#3E03B3] text-white shadow-md">
+            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-xl bg-[#3E03B3] text-white shadow-md">
             ×
           </button>
         </div>
@@ -1090,11 +1090,11 @@ function MobileFormAbsen({
               <div className="flex items-center justify-between px-5 pt-5">
                 <div className="flex items-center gap-1.5">
                   {steps.map((s, i) => (
-                    <span key={s} className="h-1.5 w-6 rounded-full transition-colors" style={{ background: i <= step ? accentColor : "#E2E8F0" }} />
+                    <span key={s} className="h-1.5 w-6 rounded-xl transition-colors" style={{ background: i <= step ? accentColor : "#E2E8F0" }} />
                   ))}
                 </div>
                 <button type="button" onClick={() => !submitting && onClose()}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                  className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                   <X size={15} />
                 </button>
               </div>
@@ -1142,7 +1142,7 @@ function MobileFormAbsen({
                               </>
                             ) : (
                               <>
-                                <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
+                                <div className="flex h-16 w-16 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
                                   <Camera size={26} style={{ color: accentColor }} />
                                 </div>
                                 <span className="text-xs font-bold">{isIzinSakit ? "Ketuk untuk unggah foto" : "Ketuk untuk ambil foto"}</span>
@@ -1164,7 +1164,7 @@ function MobileFormAbsen({
                         <div className={`flex items-center gap-2.5 rounded-2xl border bg-slate-50 px-3.5 py-4 dark:bg-slate-900/40 ${
                           lokasiMissing ? "border-[#F26A3D] dark:border-[#48700B]" : "border-slate-100 dark:border-slate-700"
                         }`}>
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: lokasi ? "#F26A3D18" : "#F26A3D18" }}>
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: lokasi ? "#F26A3D18" : "#F26A3D18" }}>
                             <MapPin size={16} className={lokasi ? "text-[#5D900F] dark:text-[#C4B5FD]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
                           </span>
                           {lokasiLoading ? (
@@ -1174,7 +1174,7 @@ function MobileFormAbsen({
                           ) : (
                             <div className="flex flex-1 items-center justify-between gap-2">
                               <span className="text-xs text-[#5D900F] dark:text-[#C4B5FD]">{lokasiError ?? "Lokasi belum terdeteksi"}</span>
-                              <button type="button" onClick={onRetryLokasi} className={`shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold shadow-sm dark:bg-slate-800 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`}>
+                              <button type="button" onClick={onRetryLokasi} className={`shrink-0 rounded-xl bg-white px-2.5 py-1 text-[11px] font-bold shadow-sm dark:bg-slate-800 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`}>
                                 Coba lagi
                               </button>
                             </div>
@@ -1258,7 +1258,7 @@ function MobileFormAbsen({
                 )}
                 <motion.button whileTap={{ scale: 0.97 }} type="button" onClick={goNext}
                   disabled={!stepValid || submitting}
-                  className={`flex flex-1 items-center justify-center gap-2 py-3.5 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-full" : "rounded-2xl"}`}
+                  className={`flex flex-1 items-center justify-center gap-2 py-3.5 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-xl" : "rounded-2xl"}`}
                   style={{ background: accentColor }}>
                   {lastStep
                     ? (submitting ? <Loader2 size={16} className="animate-spin" /> : (activeTipe === "PULANG" ? <LogOut size={16} /> : <LogIn size={16} />))
@@ -1310,7 +1310,7 @@ function MobileDetailModal({ onClose, accent, children }: { onClose: () => void;
         style={{ background: accent }}
       >
         <button type="button" onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300">
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300">
           <X size={15} />
         </button>
         <div className="overflow-y-auto" style={{ maxHeight: "92vh" }}>

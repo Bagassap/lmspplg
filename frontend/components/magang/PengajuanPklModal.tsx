@@ -72,7 +72,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Pengajuan Penempatan PKL</h2>
             <p className="truncate text-xs text-slate-600 dark:text-slate-300">{t.namaTempat}{t.dibuatSiswa ? " · tempat diisi siswa" : ""}</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
+          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
@@ -116,9 +116,9 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
                 className="w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(false)} disabled={saving}
-                  className="h-12 flex-1 rounded-full bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
+                  className="h-12 flex-1 rounded-xl bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
                 <button type="button" onClick={tolak} disabled={saving || !alasan.trim()}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#E8562B] text-sm font-bold text-white disabled:opacity-50">
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#E8562B] text-sm font-bold text-white disabled:opacity-50">
                   {saving && <Loader2 size={15} className="animate-spin" />} Tolak pengajuan
                 </button>
               </div>
@@ -134,9 +134,9 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(true)} disabled={saving}
-                  className="h-12 rounded-full bg-[#FFE9E2] px-5 text-sm font-bold text-[#E8562B] disabled:opacity-50">Tolak</button>
+                  className="h-12 rounded-xl bg-[#FFE9E2] px-5 text-sm font-bold text-[#E8562B] disabled:opacity-50">Tolak</button>
                 <button type="button" onClick={terima} disabled={saving || !guruId || !surat}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
                   {saving ? <Loader2 size={15} className="animate-spin" /> : <UserCheck size={15} />} Terima &amp; tetapkan guru
                 </button>
               </div>

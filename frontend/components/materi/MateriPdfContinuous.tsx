@@ -57,7 +57,7 @@ export function MateriPdfContinuous({
             className="flex w-full flex-col items-center gap-3">
             <div className="flex w-full max-w-xs items-center gap-3">
               <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-              <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
+              <span className="flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
                 <FileText size={11} className="text-[#3E03B3]" />
                 Halaman {i + 1}
               </span>

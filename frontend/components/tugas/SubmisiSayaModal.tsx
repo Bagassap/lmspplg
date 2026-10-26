@@ -99,26 +99,26 @@ export function SubmisiSayaModal({
               </div>
               {isPraktik ? (
                 <button onClick={() => setViewCode(true)}
-                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-xl" : "rounded-xl"}`}
                   style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   <Code2 size={14} /> Lihat Kode Terkirim
                 </button>
               ) : isSoalBased ? (
                 <button onClick={() => setViewJawaban(true)}
-                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-xl" : "rounded-xl"}`}
                   style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   {tipe === "PILIHAN_GANDA" ? <ListChecks size={14} /> : <PenLine size={14} />} Lihat Jawaban Saya
                 </button>
               ) : target.fileUrl && (
                 <a href={target.fileUrl} target="_blank" rel="noopener noreferrer"
-                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${app ? "rounded-xl" : "rounded-xl"}`}
                   style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
                   <Download size={14} /> Lihat File Terkirim
                 </a>
               )}
               {isRevisi && (
                 <button onClick={onKirimUlang}
-                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold ${app ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold ${app ? "rounded-xl" : "rounded-xl"}`}
                   style={app ? { background: "#F1EDFA", color: "#3E03B3" } : { background: "#F26A3D", color: "#FFFFFF" }}>
                   <Send size={13} /> Kirim Ulang Tugas
                 </button>

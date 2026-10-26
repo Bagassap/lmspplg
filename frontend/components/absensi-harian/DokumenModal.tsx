@@ -117,7 +117,7 @@ function DocumentCardsApp({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpe
         <div className={box}>
           <p className={cap}>
             <span className="flex items-center gap-1.5"><PenTool size={13} className="text-[#3E03B3]" /> Tanda Tangan</span>
-            <button onClick={() => onOpenImg(ttdSrc)} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><Download size={11} /> Simpan</button>
+            <button onClick={() => onOpenImg(ttdSrc)} className="flex items-center gap-1 rounded-xl bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><Download size={11} /> Simpan</button>
           </p>
           <button onClick={() => onOpenImg(ttdSrc)} className="flex h-28 w-full items-center justify-center rounded-xl bg-white p-2">
             <img src={ttdSrc} alt="TTD" className="h-full w-full object-contain" />
@@ -129,7 +129,7 @@ function DocumentCardsApp({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpe
           <p className={cap}>
             <span className="flex items-center gap-1.5"><MapPin size={13} className="text-[#3E03B3]" /> Lokasi</span>
             <a href={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}`} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><ExternalLink size={11} /> Maps</a>
+              className="flex items-center gap-1 rounded-xl bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><ExternalLink size={11} /> Maps</a>
           </p>
           <iframe src={`https://maps.google.com/maps?q=${lokasi.lat},${lokasi.lng}&output=embed`} className="h-36 w-full rounded-xl border-0" loading="lazy" title="Lokasi" />
           <p className="mt-2 truncate font-mono text-[11px] text-slate-600">{lokasi.lat}, {lokasi.lng}</p>
@@ -172,11 +172,11 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
     return createPortal(
       <>
         <AppSheet open onClose={onClose} title={siswa.nama} subtitle={`${kelas} · ${formatTgl(tanggal)}`}
-          footer={<button onClick={onClose} className="h-12 w-full rounded-full bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
+          footer={<button onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
           <div className="mb-3 flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
             <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={44} fallbackBg={ac} textClassName="text-sm font-extrabold" />
             <div className="min-w-0 flex-1">
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: theme.bg, color: theme.clr }}>
+              <span className="inline-flex items-center gap-1 rounded-xl px-2.5 py-0.5 text-[11px] font-bold" style={{ background: theme.bg, color: theme.clr }}>
                 <ThemeIcon size={11} /> {theme.label}
               </span>
               {catatan && <p className="mt-1 text-xs text-slate-700">{catatan}</p>}
@@ -194,7 +194,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               className="fixed inset-0 z-110 flex flex-col items-center justify-center bg-black/90 p-4"
               onClick={() => setImgOverlay(null)}>
               <img src={imgOverlay} alt="Dokumen" onClick={(e) => e.stopPropagation()} className="max-h-[75vh] max-w-full rounded-2xl object-contain" />
-              <button onClick={() => setImgOverlay(null)} className="mt-4 h-11 rounded-full bg-white px-6 text-sm font-bold text-[#3E03B3]">Tutup</button>
+              <button onClick={() => setImgOverlay(null)} className="mt-4 h-11 rounded-xl bg-white px-6 text-sm font-bold text-[#3E03B3]">Tutup</button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -238,7 +238,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-y-auto rounded-3xl shadow-2xl sm:mx-0 sm:flex-row sm:overflow-hidden">
 
           <button onClick={onClose}
-            className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+            className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-xl bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
             <X size={15} />
           </button>
 
@@ -247,7 +247,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
             <div className="pointer-events-none absolute -right-10 -top-10 hidden h-44 w-44 rounded-full bg-white/10 sm:block" />
 
             <div className="relative hidden flex-1 flex-col items-center justify-center px-5 pb-8 pt-10 text-center sm:flex">
-              <div className="relative" style={{ boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)", borderRadius: "9999px" }}>
+              <div className="relative" style={{ boxShadow: "0 0 0 4px rgba(255,255,255,0.25),0 12px 24px rgba(0,0,0,0.2)", borderRadius: "12px" }}>
                 <Avatar
                   src={siswa.fotoProfil}
                   nama={siswa.nama}
@@ -255,7 +255,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                   fallbackBg={ac}
                   textClassName="text-xl font-extrabold"
                 />
-                <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white/40 bg-white/20 shadow-lg">
+                <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl border-2 border-white/40 bg-white/20 shadow-lg">
                   <ThemeIcon size={13} className="text-white" />
                 </div>
               </div>
@@ -308,9 +308,9 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
       <AnimatePresence>
         <MobileDetailModal onClose={onClose} accent={h.app ? h.bg : BRAND_GRADIENT} className="lg:hidden">
           <div className="relative flex items-center gap-3 px-4 pb-4 pt-10">
-            <div className="relative shrink-0" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.25)", borderRadius: "9999px" }}>
+            <div className="relative shrink-0" style={{ boxShadow: "0 0 0 3px rgba(255,255,255,0.25)", borderRadius: "12px" }}>
               <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={48} fallbackBg={ac} textClassName="text-sm font-extrabold" />
-              <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${h.app ? "border-white bg-white text-[#3E03B3]" : "border-white/40 bg-white/20 text-white"}`}>
+              <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-xl border-2 ${h.app ? "border-white bg-white text-[#3E03B3]" : "border-white/40 bg-white/20 text-white"}`}>
                 <ThemeIcon size={10} />
               </div>
             </div>
@@ -338,7 +338,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               <DocumentCards fotoSrc={fotoSrc} fotoLabel={fotoLabel} ttdSrc={ttdSrc} lokasi={lokasi} rawLokasi={rawLokasi} onOpenImg={setImgOverlay} />
             </div>
             <div className="px-4 pt-4">
-              <button onClick={onClose} className={`w-full py-3 text-sm font-bold text-white shadow-sm ${h.app ? "rounded-full" : "rounded-xl"}`}
+              <button onClick={onClose} className={`w-full py-3 text-sm font-bold text-white shadow-sm ${h.app ? "rounded-xl" : "rounded-xl"}`}
                 style={{ background: h.app ? "#3E03B3" : BRAND_GRADIENT }}>
                 Tutup
               </button>

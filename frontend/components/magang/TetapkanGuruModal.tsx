@@ -76,7 +76,7 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tetapkan Guru Pembimbing</h2>
             <p className="truncate text-xs text-slate-600 dark:text-slate-300">{t.namaTempat}</p>
           </div>
-          <button onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>
+          <button onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
@@ -113,14 +113,14 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
           <div>
             <label className="mb-1 block text-xs font-bold text-slate-700">Guru pembimbing</label>
             <select value={guruId} onChange={(e) => setGuruId(e.target.value)}
-              className="h-11 w-full rounded-full border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]">
+              className="h-11 w-full rounded-xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]">
               <option value="">Pilih guru…</option>
               {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
             </select>
           </div>
 
           <button onClick={simpan} disabled={saving || !guruId}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
             {saving && <Loader2 size={15} className="animate-spin" />}
             {saving ? "Menyimpan..." : "Tetapkan untuk semua siswa"}
           </button>

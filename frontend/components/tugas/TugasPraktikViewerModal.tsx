@@ -39,7 +39,7 @@ export function TugasPraktikViewerModal({
                 {subtitle && <p className="truncate text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
               <button onClick={onClose} aria-label="Tutup"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                 <X size={18} />
               </button>
             </div>

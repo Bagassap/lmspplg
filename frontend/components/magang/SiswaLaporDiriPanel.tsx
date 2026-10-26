@@ -79,7 +79,7 @@ export function SiswaLaporDiriPanel() {
   if (!status?.hasPenempatan) {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
+        <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
           <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
@@ -106,7 +106,7 @@ export function SiswaLaporDiriPanel() {
           className="overflow-hidden rounded-3xl shadow-lg" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
           <div className="relative px-6 py-8 text-center">
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-              className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg ${app ? "bg-white" : "bg-slate-200"}`}>
+              className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-xl shadow-lg ${app ? "bg-white" : "bg-slate-200"}`}>
               <CheckCircle2 size={30} className={app ? "text-[#5D900F]" : "text-black"} />
             </motion.div>
             <h2 className="mt-4 text-lg font-extrabold text-black">Sudah Lapor Diri Bulan Ini</h2>
@@ -155,7 +155,7 @@ export function SiswaLaporDiriPanel() {
         </div>
 
         <button type="button" onClick={handleSubmit} disabled={submitting || !file}
-          className={`mt-4 flex w-full items-center justify-center gap-2 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-full py-4" : "rounded-xl py-3"}`}
+          className={`mt-4 flex w-full items-center justify-center gap-2 text-sm font-bold text-white shadow-md disabled:opacity-50 ${app ? "rounded-xl py-4" : "rounded-xl py-3"}`}
           style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
           {submitting ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
           {submitting ? "Mengirim..." : "Kirim Lapor Diri"}

@@ -26,13 +26,13 @@ export function RiwayatAbsenSheet({
   const cap = "mb-2 flex items-center gap-1.5 text-xs font-bold text-slate-800";
   return (
     <AppSheet open onClose={onClose} title={title} subtitle={tanggalLabel}
-      footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-full bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
+      footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
       <div className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white" style={{ color: statusColor }}>
           <CheckCircle2 size={22} />
         </span>
         <div className="min-w-0 flex-1">
-          <span className="inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: statusBg, color: statusColor }}>{statusLabel}</span>
+          <span className="inline-flex rounded-xl px-2.5 py-0.5 text-[11px] font-bold" style={{ background: statusBg, color: statusColor }}>{statusLabel}</span>
         </div>
         <p className="font-digital text-xl font-bold tracking-wider text-[#3E03B3]">{waktu ?? "—"}</p>
       </div>
@@ -56,7 +56,7 @@ export function RiwayatAbsenSheet({
               <span className="flex items-center gap-1.5"><MapPin size={13} className="text-[#3E03B3]" /> Lokasi</span>
               {titik && (
                 <a href={`https://maps.google.com/maps?q=${titik.lat},${titik.lng}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><ExternalLink size={11} /> Maps</a>
+                  className="flex items-center gap-1 rounded-xl bg-white px-3 py-1 text-[11px] font-bold text-[#3E03B3]"><ExternalLink size={11} /> Maps</a>
               )}
             </p>
             {titik && <iframe src={`https://maps.google.com/maps?q=${titik.lat},${titik.lng}&output=embed`} className="h-36 w-full rounded-xl border-0" loading="lazy" title="Lokasi absen" />}

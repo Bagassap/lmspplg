@@ -174,7 +174,7 @@ export function Splash() {
       >
         <motion.div variants={logoReveal} className="relative mb-10 flex items-center justify-center">
           <motion.div
-            className="absolute rounded-full"
+            className="absolute rounded-xl"
             style={{
               width: 200,
               height: 200,
@@ -186,7 +186,7 @@ export function Splash() {
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute rounded-full"
+            className="absolute rounded-xl"
             style={{
               width: 136,
               height: 136,
@@ -240,7 +240,7 @@ export function Splash() {
             style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}
           >
             <span
-              className="h-1.25 w-1.25 shrink-0 rounded-full"
+              className="h-1.25 w-1.25 shrink-0 rounded-xl"
               style={{ background: "#3E03B3", boxShadow: "0 0 6px #3E03B3" }}
             />
             SMK Ma&apos;arif NU 01 Limpung
@@ -252,7 +252,7 @@ export function Splash() {
             {DOT_COLORS.map((color, i) => (
               <motion.span
                 key={i}
-                className="rounded-full"
+                className="rounded-xl"
                 style={{
                   width: 8,
                   height: 8,

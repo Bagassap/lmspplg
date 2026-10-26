@@ -29,7 +29,7 @@ export function PengajuanMenungguPanel({ list, onBuka }: {
           <p className="text-sm font-extrabold text-slate-900 dark:text-white">Pengajuan Penempatan PKL</p>
           <p className="text-xs text-slate-600 dark:text-slate-300">Klik kartu untuk memeriksa surat keterangan, lalu terima atau tolak.</p>
         </div>
-        <span className="rounded-full bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
+        <span className="rounded-xl bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
       </div>
 
       <div className="grid gap-2.5 lg:grid-cols-2">
@@ -43,7 +43,7 @@ export function PengajuanMenungguPanel({ list, onBuka }: {
               <div className="min-w-0 flex-1 space-y-0.5">
                 <div className="flex items-center gap-2">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
-                  {t.dibuatSiswa && <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#E8562B] dark:bg-slate-800">Tempat sendiri</span>}
+                  {t.dibuatSiswa && <span className="shrink-0 rounded-xl bg-white px-2 py-0.5 text-[10px] font-bold text-[#E8562B] dark:bg-slate-800">Tempat sendiri</span>}
                 </div>
                 <p className="flex items-start gap-1.5 text-xs text-slate-700 dark:text-slate-200">
                   <Users size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />

@@ -45,7 +45,7 @@ export default function StatsCard({
       className="flex items-center gap-2.5 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] cursor-default sm:gap-4 sm:rounded-2xl sm:p-5"
     >
       <div
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
         style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}
       >
         <Icon size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" strokeWidth={1.8} />

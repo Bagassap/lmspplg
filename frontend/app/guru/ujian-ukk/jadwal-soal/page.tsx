@@ -141,16 +141,16 @@ export default function GuruJadwalSoalPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
                             <ChevronLeft size={18}/>
                           </button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
                             <ChevronRight size={18}/>
                           </button>
                         </>)}
                         <button onClick={()=>setOpenJadwalModal(false)}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}>
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}>
                           <X size={18}/>
                         </button>
                       </div>
@@ -194,16 +194,16 @@ export default function GuruJadwalSoalPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
                             <ChevronLeft size={18}/>
                           </button>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}>
                             <ChevronRight size={18}/>
                           </button>
                         </>)}
                         <button onClick={()=>setOpenSoalModal(false)}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}>
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}>
                           <X size={18}/>
                         </button>
                       </div>
@@ -287,7 +287,7 @@ export default function GuruJadwalSoalPage() {
               <div className="relative -mx-4 -mt-4 lg:hidden" style={{ background: "#3E03B3" }}>
                 <div className="relative flex items-center px-4 pb-3 pt-4">
                   <button type="button" onClick={() => router.push("/guru/dashboard")}
-                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                    className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                     <ChevronLeft size={18} />
                   </button>
                   <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
@@ -332,7 +332,7 @@ export default function GuruJadwalSoalPage() {
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-xl bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
               <AppTabs
                 tabs={[["all", "Semua"], ["active", "Aktif"], ["completed", "Selesai"]] as const}
@@ -358,7 +358,7 @@ export default function GuruJadwalSoalPage() {
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
                             <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
-                            <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                            <span className="mt-1.5 inline-block rounded-xl px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                               {submisiTahapan.length} pengumpulan
                             </span>
                           </div>
@@ -449,7 +449,7 @@ export default function GuruJadwalSoalPage() {
                             <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-2.5">
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
+                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{background:rp.gradient}}>
                                     <span className="text-xs font-bold" style={{color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF"}}>{idx+1}</span>
                                   </div>
                                   <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -461,8 +461,8 @@ export default function GuruJadwalSoalPage() {
                               <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
                               <td className="whitespace-nowrap px-4 py-3">
                                 <div className="flex items-center gap-2">
-                                  <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                    <div className="h-full rounded-full" style={{width:`${pct}%`, background:rp.gradient}}/>
+                                  <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                                    <div className="h-full rounded-xl" style={{width:`${pct}%`, background:rp.gradient}}/>
                                   </div>
                                   <span className="text-xs font-bold" style={{color:rp.bar}}>{pct}%</span>
                                 </div>
@@ -507,15 +507,15 @@ export default function GuruJadwalSoalPage() {
                       return (
                         <div key={t.id}>
                           <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                               <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
                               <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
                               <div className="mt-1.5 flex items-center gap-2">
-                                <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: rp.gradient }} />
+                                <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                                  <div className="h-full rounded-xl" style={{ width: `${pct}%`, background: rp.gradient }} />
                                 </div>
                                 <span className="text-[11px] font-bold" style={{ color: rp.bar }}>{pct}%</span>
                               </div>

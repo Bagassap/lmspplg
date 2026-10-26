@@ -51,13 +51,13 @@ export function PwaReinstallGate() {
         <ol className="mt-4 space-y-2.5 text-left">
           {langkah.map((l, i) => (
             <li key={i} className="flex items-start gap-3 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#3E03B3] text-white"><l.icon size={15} /></span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><l.icon size={15} /></span>
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200"><b>{i + 1}.</b> {l.teks}</span>
             </li>
           ))}
         </ol>
         <button type="button" onClick={salin}
-          className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white">
+          className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white">
           <Copy size={16} /> Salin alamat LMS
         </button>
       </div>

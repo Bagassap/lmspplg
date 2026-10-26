@@ -176,11 +176,11 @@ function SubmitModal({ open, onClose, soal, task, onSubmit }: {
 
               <div className="flex gap-3">
                 <button type="button" onClick={onClose}
-                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-full" : "rounded-xl"}`}>
+                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-600 dark:text-slate-300 ${app ? "rounded-xl" : "rounded-xl"}`}>
                   Batal
                 </button>
                 <button type="submit" disabled={saving || (!berkas && !driveUrl.trim())}
-                  className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-full text-white" : "rounded-xl text-white"}`}
+                  className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-xl text-white" : "rounded-xl text-white"}`}
                   style={{background: app ? "#3E03B3" : "#F26A3D"}}>
                   {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
                 </button>
@@ -287,7 +287,7 @@ export default function SiswaJadwalSoalPage() {
           <div className={`relative -m-4 lg:hidden ${appMode ? "hidden" : ""}`} style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-4 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
-                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+                className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
               </button>
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">UKK</h1>
@@ -319,12 +319,12 @@ export default function SiswaJadwalSoalPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.max(0,i-1))} disabled={soalJadwalIdx===0}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
                           <button onClick={()=>setSoalJadwalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalJadwalIdx===allSoal.length-1}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
                         </>)}
                         <button onClick={()=>setOpenJadwalModal(false)}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenJadwalModal(false)}/> : (
@@ -364,12 +364,12 @@ export default function SiswaJadwalSoalPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.max(0,i-1))} disabled={soalSoalIdx===0}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronLeft size={18}/></button>
                           <button onClick={()=>setSoalSoalIdx(i=>Math.min(allSoal.length-1,i+1))} disabled={soalSoalIdx===allSoal.length-1}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 bg-[#F1EDFA] text-[#3E03B3]`}><ChevronRight size={18}/></button>
                         </>)}
                         <button onClick={()=>setOpenSoalModal(false)}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[#F1EDFA] text-[#3E03B3]`}><X size={18}/></button>
                       </div>
                     </div>
                     {curSoal ? <SoalPdfViewer soal={curSoal} onClose={()=>setOpenSoalModal(false)}/> : (
@@ -494,7 +494,7 @@ export default function SiswaJadwalSoalPage() {
                           <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2.5">
-                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background: rp.gradient}}>
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{background: rp.gradient}}>
                                   <span className="text-xs font-bold" style={{color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF"}}>{idx+1}</span>
                                 </div>
                                 <p className="max-w-[160px] truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
@@ -506,8 +506,8 @@ export default function SiswaJadwalSoalPage() {
                             <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{t.penguji || "—"}</td>
                             <td className="whitespace-nowrap px-4 py-3">
                               <div className="flex items-center gap-2">
-                                <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                  <div className="h-full rounded-full" style={{width:`${pct}%`, background: isDiterima?"#F26A3D":isRevisi?"#F26A3D":rp.gradient}}/>
+                                <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                                  <div className="h-full rounded-xl" style={{width:`${pct}%`, background: isDiterima?"#F26A3D":isRevisi?"#F26A3D":rp.gradient}}/>
                                 </div>
                                 <span className="text-xs font-bold" style={{color: isDiterima?"#F26A3D":isRevisi?"#F26A3D":rp.bar}}>{pct}%</span>
                               </div>
@@ -560,7 +560,7 @@ export default function SiswaJadwalSoalPage() {
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
-                  className="w-full rounded-full bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
+                  className="w-full rounded-xl bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
 
               <AppTabs
@@ -607,7 +607,7 @@ export default function SiswaJadwalSoalPage() {
                             <span className="flex items-center gap-1"><MapPin size={10} />{t.lokasi}</span>
                           </div>
                           <button onClick={btn.onClick}
-                            className="mt-2 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold active:scale-95"
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-xs font-bold active:scale-95"
                             style={{ backgroundColor: btn.bg, color: btn.clr }}>
                             {btn.icon}{btn.label}
                           </button>
@@ -668,7 +668,7 @@ export default function SiswaJadwalSoalPage() {
             )}
             {!loading && shown.length === 0 && (
               <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
                   <CalendarDays size={24} style={{ color: "#3E03B3" }} />
                 </div>
                 <p className="mt-4 text-sm text-slate-400">{taskSearch.trim() ? `Tidak ada task dengan nama "${taskSearch.trim()}"` : tab==="active" ? "Tidak ada task aktif" : tab==="completed" ? "Tidak ada task selesai" : "Belum ada task tersedia"}</p>
@@ -716,13 +716,13 @@ export default function SiswaJadwalSoalPage() {
                       </div>
                       <div className="relative mt-3 flex items-center justify-between gap-2">
                         <div className="flex flex-1 items-center gap-2">
-                          <div className="h-1.5 flex-1 max-w-24 overflow-hidden rounded-full" style={{ background: accent ? "rgba(255,255,255,0.25)" : "#FFFFFF" }}>
-                            <div className="h-full rounded-full" style={{ width: `${pct}%`, background: accent ? "#fff" : barColor }} />
+                          <div className="h-1.5 flex-1 max-w-24 overflow-hidden rounded-xl" style={{ background: accent ? "rgba(255,255,255,0.25)" : "#FFFFFF" }}>
+                            <div className="h-full rounded-xl" style={{ width: `${pct}%`, background: accent ? "#fff" : barColor }} />
                           </div>
                           <span className={`text-[10px] font-bold ${accent ? "text-white" : ""}`} style={accent ? undefined : { color: barColor }}>{pct}%</span>
                         </div>
                         <button onClick={btn.onClick}
-                          className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
+                          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
                           style={{ backgroundColor: btn.bg, color: btn.clr }}>
                           {btn.icon}{btn.label}
                         </button>
@@ -802,7 +802,7 @@ export default function SiswaJadwalSoalPage() {
                   )}
                 </div>
                 <a href={fileHref(detailTarget.fileUrl)} target="_blank" rel="noopener noreferrer"
-                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${appMode ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white ${appMode ? "rounded-xl" : "rounded-xl"}`}
                   style={{background: appMode ? "#3E03B3" : "#3E03B3"}}>
                   <ExternalLink size={14}/> Buka Google Drive
                 </a>
@@ -864,11 +864,11 @@ export default function SiswaJadwalSoalPage() {
               </div>
               <div className="px-6 pb-6 flex gap-3">
                 <button onClick={()=>setRevisiModal(null)}
-                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 ${appMode ? "rounded-full" : "rounded-xl"}`}>
+                  className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 ${appMode ? "rounded-xl" : "rounded-xl"}`}>
                   Tutup
                 </button>
                 <button onClick={()=>{ const tk = tahapanList.find(x => x.id === revisiModal?.tahapan?.id); setRevisiModal(null); if (tk) openSubmit(tk); }}
-                  className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-full" : "rounded-xl"}`}
+                  className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-xl" : "rounded-xl"}`}
                   style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#F26A3D", color: "#FFFFFF"}}>
                   <Send size={13}/> Kirim Ulang Project
                 </button>

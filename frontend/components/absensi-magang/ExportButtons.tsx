@@ -36,7 +36,7 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
         <div className="relative">
           <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
           <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari nama atau NIS"
-            className="h-10 w-full rounded-full border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+            className="h-10 w-full rounded-xl border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
         </div>
         <div className="mt-3 space-y-2">
           {filtered.length === 0 ? (
@@ -71,7 +71,7 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
             </div>
             <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">{title}</h2>
           </div>
-          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
             <X size={16} className="text-slate-400" />
           </button>
         </div>
@@ -149,22 +149,22 @@ export function ExportButtons({ tempatMagangId, tempatNama, range, siswaList }: 
     <>
       <div className={app ? "grid grid-cols-2 gap-2" : "flex flex-nowrap items-center gap-1.5"}>
         <button type="button" onClick={() => runTempatExport("pdf-tempat")} disabled={disabled || !!loadingKind} title="PDF Per Tempat"
-          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
+          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
           {loadingKind === "pdf-tempat" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
           <span className="truncate">PDF Tempat</span>
         </button>
         <button type="button" onClick={() => setPicker("pdf")} disabled={disabled || !!loadingKind} title="PDF Per Siswa"
-          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
+          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
           {loadingKind === "pdf-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileText size={12} className="shrink-0" />}
           <span className="truncate">PDF Siswa</span>
         </button>
         <button type="button" onClick={() => runTempatExport("excel-tempat")} disabled={disabled || !!loadingKind} title="Excel Per Tempat"
-          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
+          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
           {loadingKind === "excel-tempat" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
           <span className="truncate">Excel Tempat</span>
         </button>
         <button type="button" onClick={() => setPicker("excel")} disabled={disabled || !!loadingKind} title="Excel Per Siswa"
-          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
+          className={app ? "flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-60" : "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-xl border px-1.5 py-1.5 text-[10px] font-bold transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 border-[#F26A3D] bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"}>
           {loadingKind === "excel-siswa" ? <Loader2 size={12} className="shrink-0 animate-spin" /> : <FileSpreadsheet size={12} className="shrink-0" />}
           <span className="truncate">Excel Siswa</span>
         </button>

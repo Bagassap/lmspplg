@@ -121,7 +121,7 @@ export function LengkapiFotoProfilForm() {
           whileTap={{ scale: 0.99 }}
           className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-blue/25 bg-slate-100 px-6 py-14 text-center transition-colors hover:border-blue/45 hover:bg-blue/8"
         >
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100">
             <ImagePlus size={24} className="text-blue" />
           </div>
           <div>
@@ -154,7 +154,7 @@ export function LengkapiFotoProfilForm() {
               step={0.01}
               value={zoom}
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-[#3E03B3]"
+              className="h-1.5 w-full cursor-pointer appearance-none rounded-xl bg-slate-200 accent-[#3E03B3]"
             />
           </div>
 

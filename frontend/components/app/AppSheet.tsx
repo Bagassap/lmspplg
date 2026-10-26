@@ -35,7 +35,7 @@ export function AppSheet({
                 {subtitle && <p className="truncate text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
               <button type="button" onClick={onClose} aria-label="Tutup"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                 <X size={16} />
               </button>
             </div>

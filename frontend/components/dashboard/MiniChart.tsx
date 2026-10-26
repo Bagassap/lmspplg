@@ -138,11 +138,11 @@ export function BarChart({ data, max, barHeight = 20 }: BarChartProps) {
             {item.label}
           </span>
           <div
-            className="relative flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-slate-700"
+            className="relative flex-1 overflow-hidden rounded-xl bg-gray-100 dark:bg-slate-700"
             style={{ height: barHeight }}
           >
             <motion.div
-              className="absolute inset-y-0 left-0 rounded-full"
+              className="absolute inset-y-0 left-0 rounded-xl"
               style={{ backgroundColor: item.color }}
               initial={{ width: 0 }}
               animate={{ width: `${(item.value / peak) * 100}%` }}

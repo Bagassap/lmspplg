@@ -89,7 +89,7 @@ function NaikkanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone:
       )}
 
       <button onClick={submit} disabled={!dariKelasId || !keKelasId || !jumlah || saving}
-        className={`flex w-full items-center justify-center gap-2 bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50 ${app ? "rounded-full" : "rounded-xl"}`}>
+        className={`flex w-full items-center justify-center gap-2 bg-[#3E03B3] px-5 py-3 text-sm font-bold text-white shadow-sm disabled:opacity-50 ${app ? "rounded-xl" : "rounded-xl"}`}>
         {saving ? <Loader2 size={15} className="animate-spin" /> : <ArrowUpCircle size={15} />}
         {saving ? "Memproses…" : "Naikkan Semua Siswa"}
       </button>
@@ -155,7 +155,7 @@ function LuluskanKelasTab({ kelasList, onDone }: { kelasList: KelasRef[]; onDone
       )}
 
       <button onClick={submit} disabled={!kelasId || !jumlah || saving}
-        className={`flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-bold shadow-sm disabled:opacity-50 ${app ? "rounded-full bg-[#F26A3D] text-white" : "rounded-xl bg-[#3E03B3] text-white"}`}>
+        className={`flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-bold shadow-sm disabled:opacity-50 ${app ? "rounded-xl bg-[#F26A3D] text-white" : "rounded-xl bg-[#3E03B3] text-white"}`}>
         {saving ? <Loader2 size={15} className="animate-spin" /> : <GraduationCap size={15} />}
         {saving ? "Memproses…" : "Luluskan Kelas Ini"}
       </button>
@@ -190,7 +190,7 @@ export function KenaikanKelasModal({
                 </span>
                 <h2 className="text-sm font-extrabold text-white">Kenaikan Kelas &amp; Kelulusan</h2>
               </div>
-              <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25">
+              <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 text-white hover:bg-white/25">
                 <X size={15} />
               </button>
             </div>

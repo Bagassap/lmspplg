@@ -41,7 +41,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
   if (app as boolean) {
     return (
       <AppSheet open onClose={onClose} title="Profil Saya"
-        footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-full bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
+        footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
         <AppProfileCard fallback={me ? { nama: me.nama, fotoProfil: me.fotoProfil, role: me.role } : undefined} />
         {loading && <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin text-slate-400" /></div>}
         {!loading && me && (
@@ -111,7 +111,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
             ) : (
               <div className="relative mt-4 flex items-center gap-4">
                 <div className="relative shrink-0">
-                  <div className="rounded-full ring-4 ring-white/25">
+                  <div className="rounded-xl ring-4 ring-white/25">
                     <Avatar
                       src={me.fotoProfil}
                       nama={me.nama}
@@ -124,7 +124,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                     type="button"
                     onClick={() => setShowChangeFoto(true)}
                     title="Ganti foto profil"
-                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90"
+                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-xl border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90"
                   >
                     <Camera size={11} />
                   </button>
@@ -215,11 +215,11 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
           ) : (
             <div className="relative mt-4 flex items-center gap-4">
               <div className="relative shrink-0">
-                <div className="rounded-full ring-4 ring-white/25">
+                <div className="rounded-xl ring-4 ring-white/25">
                   <Avatar src={me.fotoProfil} nama={me.nama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
                 </div>
                 <button type="button" onClick={() => setShowChangeFoto(true)} title="Ganti foto profil"
-                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90">
+                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-xl border-2 border-white bg-[#00AAFA] text-white shadow-md transition hover:brightness-90">
                   <Camera size={11} />
                 </button>
               </div>

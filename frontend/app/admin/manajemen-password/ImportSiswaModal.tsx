@@ -93,7 +93,7 @@ export function ImportSiswaModal({
                 </span>
                 <h2 className="text-sm font-extrabold text-white">Impor Massal Siswa Baru</h2>
               </div>
-              <button onClick={handleClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25">
+              <button onClick={handleClose} className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 text-white hover:bg-white/25">
                 <X size={15} />
               </button>
             </div>

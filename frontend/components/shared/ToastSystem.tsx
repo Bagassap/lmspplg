@@ -223,13 +223,13 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             <motion.div
               animate={{ scale: [1, 1.55, 1], opacity: [0.4, 0, 0.4] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute rounded-full"
+              className="absolute rounded-xl"
               style={{ width: 108, height: 108, background: tint(0.10) }}
             />
             <motion.div
               animate={{ scale: [1, 1.32, 1], opacity: [0.55, 0.1, 0.55] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-              className="absolute rounded-full"
+              className="absolute rounded-xl"
               style={{ width: 84, height: 84, background: tint(0.16) }}
             />
 
@@ -307,7 +307,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
             <motion.button
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={() => onClose(false)}
-              className={`flex-1 py-3 text-sm font-bold transition-colors ${app ? "rounded-full" : "rounded-2xl"}`}
+              className={`flex-1 py-3 text-sm font-bold transition-colors ${app ? "rounded-xl" : "rounded-2xl"}`}
               style={{ background: cancelBg, color: cancelText }}
             >
               Batal
@@ -316,7 +316,7 @@ function ConfirmDialog({ item, onClose }: { item: ConfirmItem; onClose: (val: bo
               whileHover={{ scale: 1.03, boxShadow: `0 10px 28px ${tint(0.50)}` }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onClose(true)}
-              className={`flex flex-1 items-center justify-center gap-2 py-3 text-sm font-bold text-white ${app ? "rounded-full" : "rounded-2xl"}`}
+              className={`flex flex-1 items-center justify-center gap-2 py-3 text-sm font-bold text-white ${app ? "rounded-xl" : "rounded-2xl"}`}
               style={{
                 background: accent,
                 boxShadow: `0 6px 20px ${tint(0.40)}`,

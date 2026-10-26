@@ -48,7 +48,7 @@ export function AppMobileFrame({
     <div className="relative isolate -m-4 lg:hidden" style={{ background: APP_PURPLE }}>
       <div className="relative flex items-center px-4 pb-3 pt-4">
         <button type="button" onClick={() => router.push(backHref)}
-          className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white active:bg-white/25">
+          className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
           <ChevronLeft size={18} />
         </button>
         <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">{legacyTitle ?? title}</h1>
@@ -91,7 +91,7 @@ export function AppBanner({ children, className = "", tone = "purple" }: { child
 export function AppInfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
     <div className="app-info-row flex items-start gap-3 rounded-2xl bg-slate-100 px-4 py-3.5 dark:bg-slate-800">
-      <span className="app-info-icon mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: "#F1F5F9", color: APP_PURPLE }}>
+      <span className="app-info-icon mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1F5F9", color: APP_PURPLE }}>
         <Icon size={13} />
       </span>
       <div className="min-w-0 flex-1">
@@ -119,7 +119,7 @@ export function AppTabs<T extends string>({
             className="relative pb-3 text-[15px] font-semibold transition-colors"
             style={{ color: active ? APP_ACCENT : "#64748b" }}>
             {label}
-            {active && <motion.span layoutId={layoutId} className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: APP_ORANGE }} />}
+            {active && <motion.span layoutId={layoutId} className="absolute inset-x-0 -bottom-px h-0.5 rounded-xl" style={{ background: APP_ORANGE }} />}
           </button>
         );
       })}
@@ -140,7 +140,7 @@ export function AppPillButton({
   const style = disabled
     ? { background: "#E2E8F0", color: "#94A3B8" }
     : { background: APP_ACCENT, color: "#fff", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" };
-  const cls = `flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-bold transition active:scale-[0.98] ${className}`;
+  const cls = `flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold transition active:scale-[0.98] ${className}`;
   if (href) {
     return <a href={href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{children}</a>;
   }
@@ -208,7 +208,7 @@ export function AppDetailSheet({
             <span className="mb-1.5 block text-xs font-semibold text-slate-500">{chips.label}</span>
             <div className="flex flex-wrap gap-1.5">
               {chips.values.map((v) => (
-                <span key={v} className="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700">{v}</span>
+                <span key={v} className="rounded-xl bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700">{v}</span>
               ))}
             </div>
           </div>
@@ -228,7 +228,7 @@ export function AppDetailSheet({
 
 function ActionPill({ action, primary = false }: { action: SheetAction; primary?: boolean }) {
   const Icon = action.icon;
-  const cls = `flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
+  const cls = `flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition active:scale-[0.98] ${primary ? "w-full text-white" : ""}`;
   const style = primary
     ? { background: APP_ACCENT, boxShadow: "0 10px 24px -8px rgba(62,3,179,0.7)" }
     : { background: "#FFE9E2", color: APP_ORANGE };
@@ -270,7 +270,7 @@ export function AppStatusSheet({
                 <span className="block text-[15px] font-bold text-slate-900">{o.label}</span>
                 <span className="block text-[11px] text-slate-500">{o.desc}</span>
               </span>
-              {active && <span className="rounded-full px-3 py-1 text-[10px] font-bold text-white" style={{ background: APP_ACCENT }}>Saat ini</span>}
+              {active && <span className="rounded-xl px-3 py-1 text-[10px] font-bold text-white" style={{ background: APP_ACCENT }}>Saat ini</span>}
             </button>
           );
         })}

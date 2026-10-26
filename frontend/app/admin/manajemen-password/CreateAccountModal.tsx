@@ -120,7 +120,7 @@ export function CreateAccountModal({
                 <h2 className="text-base font-extrabold text-white">Buat Akun Baru</h2>
               </div>
               <button onClick={onClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 text-white transition-colors hover:bg-white/25">
                 <X size={15} />
               </button>
             </div>

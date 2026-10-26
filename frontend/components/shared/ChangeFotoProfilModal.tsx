@@ -105,7 +105,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
             <button
               onClick={onClose}
               disabled={loading}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30 disabled:opacity-50"
+              className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 text-white transition hover:bg-white/30 disabled:opacity-50"
             >
               <X size={15} />
             </button>
@@ -132,13 +132,13 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
               <div className="grid grid-cols-2 gap-3">
                 <button type="button" onClick={() => inputRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-[#F1EDFA] px-4 py-7 text-center">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white"><ImagePlus size={20} className="text-[#3E03B3]" /></span>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white"><ImagePlus size={20} className="text-[#3E03B3]" /></span>
                   <span className="text-sm font-bold text-slate-900">Galeri</span>
                   <span className="text-[11px] text-slate-600">Pilih dari galeri</span>
                 </button>
                 <button type="button" onClick={() => cameraRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-[#F1EDFA] px-4 py-7 text-center">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white"><Camera size={20} className="text-[#3E03B3]" /></span>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white"><Camera size={20} className="text-[#3E03B3]" /></span>
                   <span className="text-sm font-bold text-slate-900">Kamera</span>
                   <span className="text-[11px] text-slate-600">Ambil foto langsung</span>
                 </button>
@@ -164,7 +164,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
                   <input
                     type="range" min={1} max={3} step={0.01} value={zoom}
                     onChange={(e) => setZoom(Number(e.target.value))}
-                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-[#3E03B3]"
+                    className="h-1.5 w-full cursor-pointer appearance-none rounded-xl bg-slate-200 accent-[#3E03B3]"
                   />
                 </div>
                 <button

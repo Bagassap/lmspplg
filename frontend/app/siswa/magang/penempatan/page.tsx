@@ -146,7 +146,7 @@ export default function SiswaMagangPenempatanPage() {
                   {aktif.tempatMagang.bidangUsaha && <p className="truncate text-xs text-white/80">{aktif.tempatMagang.bidangUsaha}</p>}
                 </div>
               </div>
-              <span className="mt-3 inline-block rounded-full bg-white px-3 py-1 text-xs font-bold" style={{ color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>
+              <span className="mt-3 inline-block rounded-xl bg-white px-3 py-1 text-xs font-bold" style={{ color: STATUS_PENEMPATAN_CFG[aktif.status].clr }}>
                 {STATUS_PENEMPATAN_CFG[aktif.status].label}
               </span>
             </AppBanner>
@@ -166,7 +166,7 @@ export default function SiswaMagangPenempatanPage() {
                 <div className="min-w-0">
                   <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
                 </div>
-                <span className="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
+                <span className="shrink-0 rounded-xl px-3 py-1 text-[11px] font-bold" style={{ backgroundColor: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   {STATUS_PENEMPATAN_CFG[p.status].label}
                 </span>
               </AppCard>
@@ -200,7 +200,7 @@ export default function SiswaMagangPenempatanPage() {
                     {aktif.tempatMagang.bidangUsaha && <p className="truncate text-[11px] text-white/70">{aktif.tempatMagang.bidangUsaha}</p>}
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-[10.5px] font-bold text-white">
+                <span className="shrink-0 rounded-xl bg-white/20 px-2.5 py-1 text-[10.5px] font-bold text-white">
                   {STATUS_PENEMPATAN_CFG[aktif.status].label}
                 </span>
               </div>

@@ -29,7 +29,7 @@ function Row({ href, icon: Icon, label, hint, tone, badge, locked, onClick, exte
         {hint && <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">{hint}</p>}
       </div>
       {!!badge && badge > 0 && (
-        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[#F26A3D] px-1.5 text-[10px] font-bold text-white">
+        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-xl bg-[#F26A3D] px-1.5 text-[10px] font-bold text-white">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -122,7 +122,7 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
       ))}
 
       <button type="button" onClick={logout} disabled={out}
-        className="flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white disabled:opacity-60"
         style={{ background: "#3E03B3", boxShadow: "0 10px 24px -8px rgba(62,3,179,0.55)" }}>
         <LogOut size={18} /> {out ? "Keluar..." : "Keluar"}
       </button>

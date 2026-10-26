@@ -56,7 +56,7 @@ function StatTrigger({
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
       style={{ borderColor: accent }}
       className="flex w-full items-center gap-3 rounded-2xl border-2 bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: gradient }}>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: gradient }}>
         <Icon size={17} className="text-white" />
       </span>
       <div className="min-w-0 flex-1">
@@ -68,8 +68,8 @@ function StatTrigger({
         <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
           dari {total} siswa hari ini
         </p>
-        <div className="mt-1.5 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-700">
-          <div className="h-1 rounded-full transition-all" style={{ width: `${pct}%`, background: gradient }} />
+        <div className="mt-1.5 h-1 w-full rounded-xl bg-slate-100 dark:bg-slate-700">
+          <div className="h-1 rounded-xl transition-all" style={{ width: `${pct}%`, background: gradient }} />
         </div>
         <p className="mt-1.5 truncate text-[10px] font-semibold" style={{ color: accent }}>{hint}</p>
       </div>
@@ -123,10 +123,10 @@ function DetailModal({
               <div className="relative min-w-0 flex-1">
                 <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama / NIS"
-                  className="h-10 w-full rounded-full border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+                  className="h-10 w-full rounded-xl border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
               </div>
               <button type="button" onClick={copyNames}
-                className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-[#3E03B3] px-4 text-xs font-bold text-white active:scale-95">
+                className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-[#3E03B3] px-4 text-xs font-bold text-white active:scale-95">
                 {copied ? <Check size={13} /> : <Copy size={13} />}
                 {copied ? "Disalin" : "Salin"}
               </button>
@@ -142,7 +142,7 @@ function DetailModal({
                       {mode === "pulang" ? `Hadir pukul ${formatJam(s.waktuAbsen)}` : s.status === "ALPA" ? "Ditandai alpa" : "Belum ada catatan absen"}
                     </p>
                   </div>
-                  <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">{s.nis ?? "—"}</span>
+                  <span className="shrink-0 rounded-xl bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">{s.nis ?? "—"}</span>
                 </div>
               ))}
             </div>
@@ -172,7 +172,7 @@ function DetailModal({
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-slate-500 hover:bg-slate-100 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
+          <button onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 hover:bg-slate-100 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
             <X size={15} />
           </button>
         </div>

@@ -49,7 +49,7 @@ export function PenempatanTable({
         </div>
         {canManage && onTetapkanTempat && target.length > 0 && (
           <button onClick={() => onTetapkanTempat(target)}
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#3E03B3] px-3.5 py-2 text-xs font-bold text-white">
+            className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#3E03B3] px-3.5 py-2 text-xs font-bold text-white">
             <UserCheck size={13} /> Tetapkan guru
           </button>
         )}
@@ -175,7 +175,7 @@ export function PenempatanTable({
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{nama}</p>
                         <p className="mt-0.5 truncate text-[11px] text-slate-500 dark:text-slate-400">{p.siswa.kelas.nama}</p>
-                        <span className="mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
+                        <span className="mt-1.5 inline-block rounded-xl px-2.5 py-0.5 text-[10px] font-bold" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                       </div>
                     </div>
                     <div className="mt-3 space-y-1.5 rounded-2xl bg-slate-100 px-4 py-3 text-[12px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
@@ -190,16 +190,16 @@ export function PenempatanTable({
                     {canManage && (
                       <div className="mt-3 flex gap-2">
                         <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus?.(p, e.target.value as StatusPenempatan)}
-                          className="flex-1 rounded-full border-0 px-3 py-2.5 text-xs font-bold focus:outline-none" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
+                          className="flex-1 rounded-xl border-0 px-3 py-2.5 text-xs font-bold focus:outline-none" style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                           <option value="MENUNGGU" disabled>Menunggu guru</option>
                             <option value="AKTIF">Aktif</option>
                           <option value="SELESAI">Selesai</option>
                           <option value="BATAL">Batal</option>
                         </select>
-                        <button onClick={() => onEdit?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-bold disabled:opacity-40" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
+                        <button onClick={() => onEdit?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold disabled:opacity-40" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                           <Pencil size={12} /> Edit
                         </button>
-                        <button onClick={() => onHapus?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-red-50 py-2.5 text-xs font-bold text-red-600 disabled:opacity-40">
+                        <button onClick={() => onHapus?.(p)} disabled={busy} className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-red-50 py-2.5 text-xs font-bold text-red-600 disabled:opacity-40">
                           <Trash2 size={12} /> Hapus
                         </button>
                       </div>

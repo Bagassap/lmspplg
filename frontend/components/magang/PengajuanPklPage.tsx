@@ -49,7 +49,7 @@ function RekanPicker({ terpilih, onPick, onRemove, excludeIds }: {
         <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-slate-100">
           {toTitleCase(terpilih.user?.nama ?? terpilih.nama ?? "Siswa")} <span className="font-medium text-slate-600">· {terpilih.kelas?.nama}</span>
         </p>
-        <button type="button" onClick={onRemove} aria-label="Hapus" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#E8562B]"><X size={14} /></button>
+        <button type="button" onClick={onRemove} aria-label="Hapus" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-[#E8562B]"><X size={14} /></button>
       </div>
     );
   }
@@ -101,7 +101,7 @@ function TempatBaruModal({ awal, onClose, onSimpan }: { awal: TempatBaru; onClos
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Data Tempat Magang Baru</h2>
             <p className="text-xs text-slate-600 dark:text-slate-300">Tempat belum ada di daftar? Isi datanya di sini.</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
+          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
@@ -132,7 +132,7 @@ function TempatBaruModal({ awal, onClose, onSimpan }: { awal: TempatBaru; onClos
             </div>
           </div>
           <button type="button" onClick={simpan}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white">
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white">
             Simpan data tempat
           </button>
         </div>
@@ -247,7 +247,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
               <p className="text-base font-extrabold text-slate-900 dark:text-white">Pengajuan terkirim</p>
               <p className="text-xs text-slate-600 dark:text-slate-300">Menunggu admin menetapkan guru pembimbing. Menu PKL lainnya terbuka setelah itu.</p>
             </div>
-            <span className="rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG.MENUNGGU.bg, color: STATUS_PENEMPATAN_CFG.MENUNGGU.clr }}>
+            <span className="rounded-xl px-3 py-1 text-[11px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG.MENUNGGU.bg, color: STATUS_PENEMPATAN_CFG.MENUNGGU.clr }}>
               {STATUS_PENEMPATAN_CFG.MENUNGGU.label}
             </span>
           </div>
@@ -269,7 +269,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
               <p className="text-xs font-bold text-[#E8562B]">Surat keterangan PKL belum diunggah. Admin baru bisa menerima pengajuan setelah surat terkirim.</p>
               <input ref={suratRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden" onChange={(e) => unggahSurat(e.target.files?.[0])} />
               <button type="button" onClick={() => suratRef.current?.click()} disabled={saving}
-                className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-50">
+                className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-50">
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />} Unggah surat keterangan
               </button>
             </div>
@@ -302,7 +302,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
             ))}
             {bolehTambah && rekan.length < maksRekan && (
               <button type="button" onClick={() => setRekan((p) => [...p, null])}
-                className="flex h-10 items-center gap-1.5 rounded-full bg-[#F1EDFA] px-4 text-xs font-bold text-[#3E03B3]">
+                className="flex h-10 items-center gap-1.5 rounded-xl bg-[#F1EDFA] px-4 text-xs font-bold text-[#3E03B3]">
                 <UserPlus size={14} /> Tambah siswa
               </button>
             )}
@@ -327,7 +327,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
                   <p className="text-xs text-slate-600 dark:text-slate-300">{baru.bidangUsaha} · {baru.namaPimpinan} · {baru.noWaUsaha}</p>
                 </div>
                 <button type="button" onClick={() => setModalBaru(true)} aria-label="Ubah data tempat"
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#3E03B3] dark:bg-slate-800"><Pencil size={14} /></button>
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E03B3] dark:bg-slate-800"><Pencil size={14} /></button>
               </div>
             )}
 
@@ -343,14 +343,14 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
                 </span>
                 {surat && (
                   <span role="button" aria-label="Hapus berkas" onClick={(e) => { e.stopPropagation(); setSurat(null); if (fileRef.current) fileRef.current.value = ""; }}
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#E8562B] dark:bg-slate-800"><X size={13} /></span>
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white text-[#E8562B] dark:bg-slate-800"><X size={13} /></span>
                 )}
               </button>
               <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-400">Wajib diisi, baik tempat dari daftar maupun tempat isi sendiri. Maksimal 10 MB.</p>
             </div>
 
             <button type="button" onClick={kirim} disabled={saving || !pilih || !surat}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} Ajukan PKL
             </button>
           </div>
@@ -366,7 +366,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-slate-900">{p.tempatMagang.namaTempat}</p>
                 </div>
-                <span className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
+                <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   <CheckCircle2 size={10} className="mr-1 inline" />{STATUS_PENEMPATAN_CFG[p.status].label}
                 </span>
               </div>

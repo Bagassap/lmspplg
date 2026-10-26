@@ -53,7 +53,7 @@ function tagRowActions(root: ParentNode) {
   root.querySelectorAll<HTMLElement>('tbody tr button, [style*="grid-template-columns"] button, tbody tr a[download], tbody tr a:has(> svg:only-child), [style*="grid-template-columns"] a:has(> svg:only-child)').forEach((b) => {
     if (b.hasAttribute("data-row-act")) return;
     if (b.matches(ACT_SKIP) || b.closest("thead, .fixed.inset-0, [role=tablist]")) return;
-    if (b.querySelector("img") || b.querySelector(".rounded-full.overflow-hidden") || b.className.toString().includes("w-full")) return;
+    if (b.querySelector("img") || b.querySelector(".rounded-xl.overflow-hidden") || b.className.toString().includes("w-full")) return;
     if (b.offsetWidth > 220 || b.offsetHeight > 48) return;
     b.setAttribute("data-row-act", "1");
   });

@@ -12,9 +12,9 @@ function ToggleSwitch({ checked, onClick, disabled }: { checked: boolean; onClic
   // Ukuran & posisi ditetapkan eksplisit (tanpa transform/translate) agar tidak terpengaruh aturan CSS global.
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={onClick} disabled={disabled}
-      className="relative block shrink-0 cursor-pointer rounded-full border-0 p-0 disabled:cursor-not-allowed disabled:opacity-60"
+      className="relative block shrink-0 cursor-pointer rounded-xl border-0 p-0 disabled:cursor-not-allowed disabled:opacity-60"
       style={{ width: 48, height: 28, minWidth: 48, minHeight: 28, background: checked ? "#3E03B3" : "#CBD5E1", transition: "background-color .2s" }}>
-      <span className="absolute block rounded-full"
+      <span className="absolute block rounded-xl"
         style={{ top: 3, left: checked ? 23 : 3, width: 22, height: 22, background: "#FFFFFF", boxShadow: "0 1px 3px rgba(15,23,42,0.3)", transition: "left .2s" }} />
     </button>
   );

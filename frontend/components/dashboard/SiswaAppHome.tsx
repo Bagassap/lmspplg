@@ -153,7 +153,7 @@ export function SiswaAppHome() {
               >
                 {label}
                 {active && (
-                  <motion.span layoutId="app-home-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ background: "#F26A3D" }} />
+                  <motion.span layoutId="app-home-tab" className="absolute inset-x-0 -bottom-px h-0.5 rounded-xl" style={{ background: "#F26A3D" }} />
                 )}
               </button>
             );

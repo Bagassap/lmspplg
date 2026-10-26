@@ -13,13 +13,13 @@ export function ZoomAvatar(props: React.ComponentProps<typeof Avatar>) {
   if (!full) return <Avatar {...props} />;
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} aria-label={`Lihat foto ${props.nama}`} className="block cursor-zoom-in rounded-full">
+      <button type="button" onClick={() => setOpen(true)} aria-label={`Lihat foto ${props.nama}`} className="block cursor-zoom-in rounded-xl">
         <Avatar {...props} />
       </button>
       {open && typeof document !== "undefined" && createPortal(
         <div data-plain className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 p-6 backdrop-blur-sm" onClick={() => setOpen(false)}>
           <button type="button" onClick={() => setOpen(false)} aria-label="Tutup"
-            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#3E03B3]">
+            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[#3E03B3]">
             <X size={20} />
           </button>
           <div className="flex max-h-full max-w-lg flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>

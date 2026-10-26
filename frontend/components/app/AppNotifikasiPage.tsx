@@ -82,7 +82,7 @@ export function AppNotifikasiPage() {
         </p>
         {unread > 0 && (
           <button type="button" onClick={markAll}
-            className="flex items-center gap-1.5 rounded-full bg-[#F1EDFA] px-3.5 py-1.5 text-xs font-bold text-[#3E03B3]">
+            className="flex items-center gap-1.5 rounded-xl bg-[#F1EDFA] px-3.5 py-1.5 text-xs font-bold text-[#3E03B3]">
             <CheckCheck size={13} /> Tandai semua
           </button>
         )}
@@ -108,7 +108,7 @@ export function AppNotifikasiPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-start gap-2">
                   <p className={`flex-1 text-sm leading-snug ${n.isRead ? "font-semibold text-slate-700 dark:text-slate-300" : "font-extrabold text-slate-900 dark:text-white"}`}>{n.title}</p>
-                  {!n.isRead && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#F26A3D]" />}
+                  {!n.isRead && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-xl bg-[#F26A3D]" />}
                 </div>
                 <p className="mt-0.5 line-clamp-2 text-xs text-slate-600 dark:text-slate-400">{n.message}</p>
                 <p className="mt-1 text-[11px] font-semibold text-slate-500">{timeAgo(n.createdAt)}</p>

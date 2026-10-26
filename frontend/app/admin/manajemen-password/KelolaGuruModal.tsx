@@ -153,7 +153,7 @@ export function KelolaGuruModal({
                 <School size={13} /> <span className="hidden sm:inline">Atur Wali Kelas</span>
               </button>
               <button onClick={onClose}
-                className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25">
+                className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white transition-colors hover:bg-white/25">
                 <X size={15} />
               </button>
             </div>
@@ -205,7 +205,7 @@ export function KelolaGuruModal({
                             <span key={m.id} className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1 text-[11px] font-semibold text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]">
                               {m.nama}
                               <button type="button" disabled={busy} onClick={() => hapusMapel(g.id, m.id)}
-                                className="rounded-full hover:bg-[#F1EDFA] dark:hover:bg-slate-600">
+                                className="rounded-xl hover:bg-[#F1EDFA] dark:hover:bg-slate-600">
                                 <X size={10} />
                               </button>
                             </span>
@@ -219,7 +219,7 @@ export function KelolaGuruModal({
                               className="w-28 rounded-lg border border-dashed border-slate-300 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-600 focus:outline-none focus:ring-1 focus:ring-[#3E03B3] dark:border-slate-600 dark:text-slate-300"
                             />
                             <button type="button" disabled={busy || !(mapelInput[g.id] ?? "").trim()} onClick={() => tambahMapel(g.id)}
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
+                              className="flex h-5 w-5 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">
                               <Plus size={11} />
                             </button>
                           </span>

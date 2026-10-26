@@ -372,11 +372,11 @@ export function Topbar({ user }: { user: UserPayload }) {
             </span>
           </button>
 
-          <div className="hidden items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700 lg:flex">
+          <div className="hidden items-center rounded-xl bg-slate-100 p-1 dark:bg-slate-700 lg:flex">
             <button
               onClick={toggleDark}
               title="Mode terang"
-              className={`flex h-7 w-7 items-center justify-center rounded-full transition-all ${
+              className={`flex h-7 w-7 items-center justify-center rounded-xl transition-all ${
                 darkMounted && !isDark
                   ? "bg-white text-primary shadow-sm"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white"
@@ -387,7 +387,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             <button
               onClick={toggleDark}
               title="Mode gelap"
-              className={`flex h-7 w-7 items-center justify-center rounded-full transition-all ${
+              className={`flex h-7 w-7 items-center justify-center rounded-xl transition-all ${
                 darkMounted && isDark
                   ? "bg-slate-600 text-primary shadow-sm dark:text-white"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white"
@@ -400,7 +400,7 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => (appMode ? router.push(`/${user.role.toLowerCase()}/notifikasi`) : setNotifOpen((v) => !v))}
-              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
                 purpleMobile
                   ? "bg-white/15 text-white hover:bg-white/25"
                   : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
@@ -408,7 +408,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#3E03B3] text-white ring-white dark:ring-slate-900"}`}>
+                <span className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-xl text-[8px] font-bold ring-2 ${appMode ? "bg-[#F26A3D] text-white ring-[#3E03B3] lg:ring-white" : "bg-[#3E03B3] text-white ring-white dark:ring-slate-900"}`}>
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
@@ -474,7 +474,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                                 {n.title}
                               </p>
                               {!n.isRead && (
-                                <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: style.color }} />
+                                <span className="h-1.5 w-1.5 shrink-0 rounded-xl" style={{ backgroundColor: style.color }} />
                               )}
                             </div>
                             <p className="mt-0.5 text-[11px] leading-snug text-gray-500 dark:text-slate-400">{n.message}</p>
@@ -496,7 +496,7 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={dropdownRef}>
             {appMode && (
               <button ref={appAvatarRef} type="button" onClick={() => setDropdownOpen((v) => !v)} aria-label="Profil"
-                className="flex shrink-0 rounded-full lg:hidden" style={{ boxShadow: "0 0 0 2px #fff" }}>
+                className="flex shrink-0 rounded-xl lg:hidden" style={{ boxShadow: "0 0 0 2px #fff" }}>
                 <Avatar src={user.fotoProfil} nama={user.nama} sizePx={36} fallbackBg="#F26A3D" textClassName="text-xs font-bold" />
               </button>
             )}

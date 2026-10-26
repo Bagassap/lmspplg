@@ -26,13 +26,13 @@ function RankBadge({ index }: { index: number }) {
   if (index < 3) {
     const style = RANK_STYLE[index];
     return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: style.bg }}>
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: style.bg }}>
         <Medal size={15} style={{ color: style.clr }} />
       </span>
     );
   }
   return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[11px] font-extrabold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[11px] font-extrabold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
       {index + 1}
     </span>
   );
@@ -202,7 +202,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
               { key: "bulanan", label: "30 Hari" },
             ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
               <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
-                className={`rounded-full px-4 py-1.5 text-xs font-bold ${periode === opt.key ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                className={`rounded-xl px-4 py-1.5 text-xs font-bold ${periode === opt.key ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
                 {opt.label}
               </button>
             ))}
@@ -230,7 +230,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
             <div className="mt-3 space-y-2">
               {rows.map((r, i) => (
                 <div key={r.siswaId} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-extrabold text-[#3E03B3]">{i + 1}</span>
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-extrabold text-[#3E03B3]">{i + 1}</span>
                   <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={34} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold text-slate-900">{r.nama}</p>
@@ -286,7 +286,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                     ))}
                   </div>
                   <button onClick={() => setShowModal(false)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300">
                     <X size={15} />
                   </button>
                 </div>
@@ -342,8 +342,8 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                               {r.summary.ALPA}x
                             </span>
                             <div className="flex items-center gap-2">
-                              <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                                <span className="block h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: bar }} />
+                              <span className="h-1.5 flex-1 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
+                                <span className="block h-full rounded-xl transition-[width] duration-500 ease-out" style={{ width: `${r.summary.persentaseKehadiran}%`, backgroundColor: bar }} />
                               </span>
                               <span className="w-9 shrink-0 text-right text-[10px] font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
                             </div>

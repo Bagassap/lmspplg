@@ -58,7 +58,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                 <p className="truncate text-sm text-slate-500 dark:text-slate-400">{row.tempatMagang.namaTempat}</p>
               </div>
               <button onClick={handleClose} aria-label="Tutup"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                 <X size={18} />
               </button>
             </div>
@@ -109,11 +109,11 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                 {showRevisiForm ? (
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(false)}
-                      className="h-12 flex-1 rounded-full bg-[#F1EDFA] text-base font-bold text-[#3E03B3]">
+                      className="h-12 flex-1 rounded-xl bg-[#F1EDFA] text-base font-bold text-[#3E03B3]">
                       Batal
                     </button>
                     <button type="button" onClick={handleKirimRevisi} disabled={!pesanRevisi.trim() || !!busy}
-                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl text-base font-bold disabled:opacity-50"
                       style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                       {busy === "revisi" ? <Loader2 size={18} className="animate-spin" /> : <AlertTriangle size={18} />}
                       Kirim Revisi
@@ -122,12 +122,12 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
                 ) : (
                   <>
                     <button type="button" onClick={() => setShowRevisiForm(true)} disabled={!!busy}
-                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl text-base font-bold disabled:opacity-50"
                       style={{ background: "#F26A3D", color: "#FFFFFF" }}>
                       <AlertTriangle size={18} /> Minta Revisi
                     </button>
                     <button type="button" onClick={handleTerima} disabled={!!busy}
-                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-base font-bold disabled:opacity-50"
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl text-base font-bold disabled:opacity-50"
                       style={{ background: "#3E03B3", color: "#FFFFFF" }}>
                       {busy === "terima" ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
                       Terima

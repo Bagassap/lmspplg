@@ -234,10 +234,10 @@ export default function GuruDashboardPage() {
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-slate-100 px-3 py-1.5 text-[11px] dark:border-slate-700/40">
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: P }} />Hadir
+                <span className="inline-block h-2 w-2 rounded-xl" style={{ backgroundColor: P }} />Hadir
               </span>
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#F26A3D" }} />Total
+                <span className="inline-block h-2 w-2 rounded-xl" style={{ backgroundColor: "#F26A3D" }} />Total
               </span>
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function GuruDashboardPage() {
                   initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + i * 0.06 }}
                   className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[11px] font-extrabold text-white"
                     style={{ background: "#3E03B3" }}>
                     {k.nama.charAt(0)}
                   </div>
@@ -347,7 +347,7 @@ export default function GuruDashboardPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20">
               <ClipboardCheck size={17} />
             </div>
-            <span className="rounded-full bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
+            <span className="rounded-xl bg-white/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-wide">
               Absensi Harian
             </span>
           </div>
@@ -380,7 +380,7 @@ export default function GuruDashboardPage() {
                   style={icon3dStyle(s.tone)}>
                   <s.icon size={19} style={{ color: "#fff" }} />
                   {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-xl bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
                       {s.badge}
                     </span>
                   )}
@@ -438,7 +438,7 @@ export default function GuruDashboardPage() {
           <ul className="mt-2 divide-y divide-slate-100 dark:divide-slate-700/40">
             {kelasWali.map((k) => (
               <li key={k.id} className="flex items-center gap-3 px-5 py-3.5">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[11px] font-extrabold text-white"
                   style={{ background: "#3E03B3" }}>
                   {k.nama.charAt(0)}
                 </div>

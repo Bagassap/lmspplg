@@ -132,7 +132,7 @@ export function PengumumanFormModal({
               </div>
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#3E03B3] transition-colors hover:bg-[#F1EDFA]"
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#3E03B3] transition-colors hover:bg-[#F1EDFA]"
               >
                 <X size={15} />
               </button>

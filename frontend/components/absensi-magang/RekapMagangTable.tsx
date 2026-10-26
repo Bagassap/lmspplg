@@ -108,8 +108,8 @@ export function RekapMagangRangeTable({ loading, siswa }: { loading: boolean; si
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold" style={{ color: pctColor }}>{pct}%</span>
-                        <div className="h-1.5 w-24 rounded-full bg-slate-100 dark:bg-slate-700">
-                          <div className="h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, pct)}%`, backgroundColor: pctColor }} />
+                        <div className="h-1.5 w-24 rounded-xl bg-slate-100 dark:bg-slate-700">
+                          <div className="h-1.5 rounded-xl transition-all" style={{ width: `${Math.min(100, pct)}%`, backgroundColor: pctColor }} />
                         </div>
                       </div>
                       <p className="mt-1 text-[10px] text-slate-400">{s.summary.totalHariEfektif} hari efektif</p>

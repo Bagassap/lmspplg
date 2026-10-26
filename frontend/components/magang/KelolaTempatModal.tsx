@@ -80,7 +80,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
             <p className="text-xs text-slate-600 dark:text-slate-300">Siswa memilih dari daftar ini saat mengajukan PKL</p>
           </div>
           <button onClick={onClose} aria-label="Tutup"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
             <X size={16} />
           </button>
         </div>
@@ -97,16 +97,16 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                 <input type="number" inputMode="numeric" min={1} value={kuota} onChange={(e) => setKuota(e.target.value)} className={`${INPUT_CLS} !bg-white`} />
               </div>
               <div className="flex justify-end gap-2 pt-1">
-                <button onClick={() => setEditing(null)} className="rounded-full px-4 py-2 text-xs font-bold text-slate-700">Batal</button>
+                <button onClick={() => setEditing(null)} className="rounded-xl px-4 py-2 text-xs font-bold text-slate-700">Batal</button>
                 <button onClick={save} disabled={saving}
-                  className="rounded-full bg-[#3E03B3] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
+                  className="rounded-xl bg-[#3E03B3] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
                   {saving ? "Menyimpan..." : "Simpan"}
                 </button>
               </div>
             </div>
           ) : (
             <button onClick={startCreate}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#3E03B3] text-sm font-bold text-white">
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white">
               <Plus size={15} /> Tambah tempat
             </button>
           )}
@@ -123,10 +123,10 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                     </p>
                   </div>
                   <div className="flex shrink-0 gap-1.5">
-                    <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#3E03B3]">
+                    <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#3E03B3]">
                       <Pencil size={13} />
                     </button>
-                    <button onClick={() => remove(t)} aria-label="Hapus" className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#F26A3D]">
+                    <button onClick={() => remove(t)} aria-label="Hapus" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#F26A3D]">
                       <Trash2 size={13} />
                     </button>
                   </div>

@@ -70,7 +70,7 @@ export function TugasJawabanViewerModal({
                 </div>
               )}
               <button onClick={onClose} aria-label="Tutup"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
                 <X size={18} />
               </button>
             </div>
@@ -106,7 +106,7 @@ export function TugasJawabanViewerModal({
                                     : isSelected ? "bg-[#FFE9E2]"
                                     : "bg-white dark:bg-slate-800"
                                   }`}>
-                                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${
                                     isKey ? "bg-[#5D900F] text-white" : isSelected ? "bg-[#E8562B] text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-700"
                                   }`}>{huruf}</span>
                                   <span className="text-slate-800 dark:text-slate-100">{teks}</span>
@@ -149,7 +149,7 @@ export function TugasJawabanViewerModal({
                     onBlur={handleSaveNilai}
                     onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
                     placeholder="0-100"
-                    className="h-12 w-32 rounded-full border-0 bg-[#F1EDFA] px-5 text-center text-lg font-bold text-[#3E03B3] outline-none focus:ring-2 focus:ring-[#3E03B3] disabled:opacity-60" />
+                    className="h-12 w-32 rounded-xl border-0 bg-[#F1EDFA] px-5 text-center text-lg font-bold text-[#3E03B3] outline-none focus:ring-2 focus:ring-[#3E03B3] disabled:opacity-60" />
                   {saving && (
                     <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />
                   )}

@@ -81,7 +81,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
       </div>
       {fileUrl && (
         <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-          className={`relative flex shrink-0 items-center gap-2 px-3 py-2 text-sm font-bold text-white transition-colors sm:px-4 ${app ? "rounded-full" : "rounded-xl bg-white/15 hover:bg-white/25"}`}
+          className={`relative flex shrink-0 items-center gap-2 px-3 py-2 text-sm font-bold text-white transition-colors sm:px-4 ${app ? "rounded-xl" : "rounded-xl bg-white/15 hover:bg-white/25"}`}
           style={app ? { background: "#3E03B3" } : undefined}>
           <Download size={14} /> <span className="hidden sm:inline">Unduh</span>
         </a>
@@ -140,7 +140,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
               <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">File ini bukan PDF, jadi tidak bisa ditampilkan di sini</p>
             </div>
             <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md ${app ? "rounded-full" : "rounded-xl"}`} style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
+              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white shadow-md ${app ? "rounded-xl" : "rounded-xl"}`} style={{ background: app ? "#3E03B3" : "#3E03B3" }}>
               <Download size={14} /> Unduh File
             </a>
           </div>

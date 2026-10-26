@@ -60,7 +60,7 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
         className={`relative z-10 flex shrink-0 items-center gap-1.5 ${
           flat
             ? "h-11 rounded-xl bg-slate-50 px-3 text-slate-700 dark:bg-slate-700 dark:text-slate-200"
-            : `rounded-full ${app && !light ? "h-11 bg-[#F1EDFA] px-4 text-[#3E03B3]" : `px-3 py-1.5 ${light ? "bg-white text-[#3E03B3]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`}`
+            : `rounded-xl ${app && !light ? "h-11 bg-[#F1EDFA] px-4 text-[#3E03B3]" : `px-3 py-1.5 ${light ? "bg-white text-[#3E03B3]" : "border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"}`}`
         }`}>
         <CalendarDays size={13} className={light || app ? "text-[#3E03B3]" : "text-slate-400"} />
         <span className="text-xs font-bold">{label}</span>
@@ -80,19 +80,19 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Pilih Tanggal</h3>
                   <button type="button" onClick={() => setOpen(false)}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                     <X size={15} />
                   </button>
                 </div>
 
                 <div className="mt-4 flex items-center justify-between">
                   <button type="button" onClick={prevMonth}
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
                     <ChevronLeft size={16} />
                   </button>
                   <p className="text-sm font-bold text-slate-800 dark:text-white">{BULAN[viewM - 1]} {viewY}</p>
                   <button type="button" onClick={nextMonth}
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
+                    className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
                     <ChevronRight size={16} />
                   </button>
                 </div>
