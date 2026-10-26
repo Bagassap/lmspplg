@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsIn, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class TempatBaruDto {
@@ -45,11 +45,11 @@ export class AjukanPenempatanDto {
   rekanSiswaIds?: string[];
 }
 
-// Admin menolak pengajuan PKL; alasan (opsional) diteruskan ke siswa lewat notifikasi.
+// Admin menolak pengajuan PKL; alasan wajib diisi dan diteruskan ke siswa lewat notifikasi.
 export class TolakPenempatanDto {
   @IsString()
-  @IsOptional()
-  alasan?: string;
+  @IsNotEmpty({ message: 'Alasan penolakan wajib diisi' })
+  alasan!: string;
 }
 
 // Admin menetapkan guru pembimbing setelah siswa mengajukan.

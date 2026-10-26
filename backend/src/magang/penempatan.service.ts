@@ -175,7 +175,8 @@ export class PenempatanService {
   }
 
   // Admin menolak pengajuan: baris MENUNGGU (satu kelompok) dihapus agar siswa bisa mengajukan ulang.
-  async tolak(id: string, alasan?: string) {
+  async tolak(id: string, alasan: string) {
+    if (!alasan?.trim()) throw new BadRequestException('Alasan penolakan wajib diisi');
     const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
     if (!target) throw new NotFoundException('Pengajuan tidak ditemukan');
     const rows = await this.prisma.penempatanMagang.findMany({
@@ -187,7 +188,7 @@ export class PenempatanService {
     await this.prisma.penempatanMagang.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
 
     const userIds = rows.map((r) => r.siswa.userId).filter((u): u is string => !!u);
-    const catatan = alasan?.trim() ? ` Alasan: ${alasan.trim()}` : '';
+    const catatan = ` Alasan: ${alasan.trim()}`;
     await this.notificationService.createMany(userIds, {
       title: 'Pengajuan PKL ditolak',
       message: `Pengajuan PKL di ${rows[0].tempatMagang.namaTempat} ditolak admin.${catatan} Silakan ajukan ulang.`,

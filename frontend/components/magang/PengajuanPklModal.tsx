@@ -54,7 +54,8 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   }
 
   function tolak() {
-    return kirim(`/api/magang/penempatan/${rows[0].id}/tolak`, { alasan: alasan.trim() || undefined },
+    if (!alasan.trim()) { toast.error("Isi alasan penolakan", "Siswa perlu tahu mengapa pengajuannya ditolak."); return; }
+    return kirim(`/api/magang/penempatan/${rows[0].id}/tolak`, { alasan: alasan.trim() },
       ["Pengajuan ditolak", "Siswa diberi tahu dan bisa mengajukan ulang."]);
   }
 
@@ -110,13 +111,13 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
 
           {tolakMode ? (
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan (opsional)</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan <span className="text-[#E8562B]">*</span></label>
               <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Contoh: surat tidak terbaca, mohon unggah ulang"
                 className="w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(false)} disabled={saving}
                   className="h-12 flex-1 rounded-full bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
-                <button type="button" onClick={tolak} disabled={saving}
+                <button type="button" onClick={tolak} disabled={saving || !alasan.trim()}
                   className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#E8562B] text-sm font-bold text-white disabled:opacity-50">
                   {saving && <Loader2 size={15} className="animate-spin" />} Tolak pengajuan
                 </button>
