@@ -913,7 +913,7 @@ export default function AdminJadwalSoalPage() {
           )}
 
           <div className={`flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden ${appMode ? "max-lg:hidden" : ""}`}>
-            <div className="px-5 pt-5 pb-0" style={{background:"rgba(62,3,179,0.05)"}}>
+            <div className="px-5 pt-5 pb-0" style={{background: "#F1F5F9"}}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"#3E03B3"}}>
@@ -931,7 +931,7 @@ export default function AdminJadwalSoalPage() {
                 <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)}
                   placeholder="Cari nama task..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
               </div>
               <div className="flex gap-6 border-b border-slate-100 dark:border-slate-700">
                 <button onClick={() => setTab("active")}
@@ -959,7 +959,7 @@ export default function AdminJadwalSoalPage() {
                 <>
                 <div className="hidden overflow-x-auto lg:block">
                 <table className="w-full min-w-170 text-left text-sm">
-                  <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
+                  <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700">
                     <tr>
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Task</th>
                       <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal</th>
@@ -976,7 +976,7 @@ export default function AdminJadwalSoalPage() {
                       const sudahKumpul = submisiList.filter((x) => x.tahapan?.id === t.id).length;
                       const pct = Math.min(Math.round((sudahKumpul / Math.max(totalSiswaAll, 1)) * 100), 100);
                       return (
-                        <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                        <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2.5">
                               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
@@ -1013,7 +1013,7 @@ export default function AdminJadwalSoalPage() {
                                 <Pencil size={12}/>
                               </button>
                               <button onClick={() => deleteTahapan(t.id)}
-                                className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                                className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                                 <Trash2 size={12}/>
                               </button>
                             </div>
@@ -1057,7 +1057,7 @@ export default function AdminJadwalSoalPage() {
                             <Pencil size={12} />
                           </button>
                           <button onClick={() => deleteTahapan(t.id)}
-                            className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                            className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                             <Trash2 size={12} />
                           </button>
                         </div>
@@ -1168,7 +1168,7 @@ export default function AdminJadwalSoalPage() {
                     const nama  = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
                     const isDone = s.status === "DITERIMA";
                     return (
-                      <div key={s.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-6">
+                      <div key={s.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-6">
                         <div className="flex items-center gap-3 sm:contents">
                           <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
                             style={{backgroundColor: isDone ? "#F26A3D" : sc.text}}>
@@ -1198,7 +1198,7 @@ export default function AdminJadwalSoalPage() {
                   })}
                 </div>
 
-                <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/60">
+                <div className="px-6 py-4 shrink-0 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-700">
                   <p className="text-sm text-slate-500">Project yang dikumpulkan siswa otomatis tercatat selesai.</p>
                   <button onClick={() => setSubmisiModalTahapan(null)}
                     className="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shrink-0 transition-colors">

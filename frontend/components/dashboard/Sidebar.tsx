@@ -23,7 +23,7 @@ const ROLE_LABEL: Record<string, string> = {
 const SIDEBAR_ACCENT = "#3E03B3";
 
 const TOGGLE_BTN_CLASS =
-  "flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-white/15 dark:hover:text-white";
+  "flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary dark:border-white/10 dark:bg-slate-700 dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-slate-600 dark:hover:text-white";
 
 const GREETINGS = [
   "Semoga harimu menyenangkan!",
@@ -173,7 +173,7 @@ export function Sidebar({
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-300">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif
             </p>
-            <p className="mt-2 rounded-lg bg-[#3E03B3]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#3E03B3] dark:bg-white/10 dark:text-[#C4B5FD]">
+            <p className="mt-2 rounded-lg bg-[#3E03B3]/[0.08] px-3 py-1 text-[10px] font-medium italic text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
               &ldquo;{greeting}&rdquo;
             </p>
           </div>
@@ -198,7 +198,7 @@ export function Sidebar({
                       {active && (
                         <motion.div
                           layoutId="c-pill"
-                          className="absolute inset-0 rounded-xl bg-primary/10"
+                          className="absolute inset-0 rounded-xl bg-slate-100"
                           transition={{ type: "spring", stiffness: 400, damping: 32 }}
                         />
                       )}
@@ -229,7 +229,7 @@ export function Sidebar({
                       {active && (
                         <motion.div
                           layoutId="c-pill"
-                          className="absolute inset-0 rounded-xl bg-primary/10"
+                          className="absolute inset-0 rounded-xl bg-slate-100"
                           transition={{ type: "spring", stiffness: 400, damping: 32 }}
                         />
                       )}
@@ -256,12 +256,12 @@ export function Sidebar({
                   {active && (
                     <motion.div
                       layoutId="e-pill"
-                      className="absolute inset-0 rounded-xl bg-primary/10"
+                      className="absolute inset-0 rounded-xl bg-slate-100"
                       transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     />
                   )}
                   {!active && (
-                    <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-white/5" />
+                    <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-slate-600" />
                   )}
                   <span
                     className={[
@@ -335,7 +335,7 @@ export function Sidebar({
                                   className={[
                                     "flex items-center gap-2 rounded-lg px-2 py-1.5 text-[12.5px] transition-all duration-150",
                                     subActive
-                                      ? "bg-primary/10 font-semibold text-[#3E03B3] dark:text-white"
+                                      ? "bg-slate-100 font-semibold text-[#3E03B3] dark:text-white"
                                       : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
                                   ].join(" ")}
                                 >
@@ -373,12 +373,12 @@ export function Sidebar({
                   {active && (
                     <motion.div
                       layoutId="e-pill"
-                      className="absolute inset-0 rounded-xl bg-primary/10"
+                      className="absolute inset-0 rounded-xl bg-slate-100"
                       transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     />
                   )}
                   {!active && (
-                    <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-white/5" />
+                    <span className="absolute inset-0 rounded-xl transition-colors hover:bg-slate-50 dark:hover:bg-slate-600" />
                   )}
 
                   <span
@@ -439,7 +439,7 @@ export function Sidebar({
                 const on = pathname.startsWith(sub.href);
                 return (
                   <Link key={sub.href} href={sub.href} onClick={() => setFlyout(null)}
-                    className={`block rounded-xl px-3 py-2 text-[13px] font-semibold ${on ? "bg-[#3E03B3] text-white" : "text-slate-700 hover:bg-[#F1EDFA] dark:text-slate-200 dark:hover:bg-white/10"}`}>
+                    className={`block rounded-xl px-3 py-2 text-[13px] font-semibold ${on ? "bg-[#3E03B3] text-white" : "text-slate-700 hover:bg-[#F1EDFA] dark:text-slate-200 dark:hover:bg-slate-600"}`}>
                     {sub.label}
                   </Link>
                 );

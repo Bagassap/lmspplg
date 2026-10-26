@@ -18,7 +18,7 @@ export function MobileDetailModal({ onClose, accent, children, className = "" }:
         className="relative z-10 w-full overflow-hidden rounded-t-3xl"
         style={{ background: accent }}>
         <button type="button" onClick={onClose}
-          className={`absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm ${onLime ? "bg-black/10 text-slate-700" : "bg-white/20 text-white"}`}>
+          className={`absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm ${onLime ? "bg-slate-200 text-slate-700" : "bg-white/20 text-white"}`}>
           <X size={15} />
         </button>
         <div className="overflow-y-auto" style={{ maxHeight: "92vh" }}>

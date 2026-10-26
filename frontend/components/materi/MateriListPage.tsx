@@ -124,7 +124,7 @@ export function MateriListPage({
       )}
 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-        <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
+        <div className="px-5 pt-5 pb-0" style={{ background: "#F1F5F9" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#3E03B3" }}>
@@ -145,21 +145,21 @@ export function MateriListPage({
             <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
             <input value={search} onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari judul materi, mapel, atau kelas..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
           </div>
         </div>
 
         <AnimatePresence>
           {!canCreate && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#C4B5FD]">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-slate-700 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />
               Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi. Hubungi admin bila ini keliru.
             </motion.div>
           )}
           {error && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
+              className="mx-5 mb-4 flex items-center gap-2 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-slate-700 dark:text-[#C4B5FD]">
               <AlertCircle size={14} className="shrink-0" />{error}
             </motion.div>
           )}
@@ -184,7 +184,7 @@ export function MateriListPage({
           )}
           {!loading && filtered.length > 0 && (
             <table className="w-full min-w-[820px] text-left text-sm">
-              <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
+              <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700">
                 <tr>
                   <th className="whitespace-nowrap px-5 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Materi</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Mata Pelajaran</th>
@@ -198,7 +198,7 @@ export function MateriListPage({
                 {filtered.map((m, idx) => {
                   const rp = rowPalette(idx);
                   return (
-                    <tr key={m.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                    <tr key={m.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
@@ -357,14 +357,14 @@ export function MateriListPage({
           <AnimatePresence>
             {!canCreate && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2 rounded-2xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-[#000000]/20 dark:text-[#C4B5FD]">
+                className="flex items-center gap-2 rounded-2xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 text-sm text-[#000000] dark:border-[#000000]/40 dark:bg-slate-700 dark:text-[#C4B5FD]">
                 <AlertCircle size={14} className="shrink-0" />
                 Anda belum terdaftar sebagai pengampu mata pelajaran apa pun, jadi belum bisa menambahkan materi.
               </motion.div>
             )}
             {error && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]">
+                className="flex items-center gap-2 rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] px-4 py-3 text-sm text-[#5D900F] dark:border-[#48700B]/40 dark:bg-slate-700 dark:text-[#C4B5FD]">
                 <AlertCircle size={14} className="shrink-0" />{error}
               </motion.div>
             )}
@@ -377,7 +377,7 @@ export function MateriListPage({
           )}
           {!loading && filtered.length === 0 && (
             <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+              <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
                 <BookOpen size={24} style={{ color: "#3E03B3" }} />
               </div>
               <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada materi dengan kata kunci "${search.trim()}"` : "Belum ada materi"}</p>
@@ -401,7 +401,7 @@ export function MateriListPage({
                   {group.map((m) => (
                     <button key={m.id} type="button" onClick={() => setDetailItem(m)}
                       className="flex w-full items-center gap-3 p-4 text-left">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318" }}>
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#F1F5F9" }}>
                         <FileText size={18} style={{ color: "#3E03B3" }} />
                       </span>
                       <div className="min-w-0 flex-1">
@@ -415,7 +415,7 @@ export function MateriListPage({
                           </span>
                         </div>
                       </div>
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B314", color: "#3E03B3" }}>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9", color: "#3E03B3" }}>
                         <ChevronRight size={15} />
                       </span>
                     </button>

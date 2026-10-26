@@ -49,7 +49,7 @@ export default function ActivityList({
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.35, delay: 0.05 + i * 0.06 }}
-            className="group flex items-start gap-3 px-1 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/30 rounded-xl"
+            className="group flex items-start gap-3 px-1 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-slate-600 rounded-xl"
           >
             <div className="flex shrink-0 items-center self-stretch gap-2">
               <div
@@ -58,7 +58,7 @@ export default function ActivityList({
               />
               <div
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: item.iconColor + "22" }}
+                style={{ backgroundColor: "#F1F5F9" }}
               >
                 <Icon size={15} style={{ color: item.iconColor }} />
               </div>
@@ -83,7 +83,7 @@ export default function ActivityList({
               {item.badge && (
                 <span
                   className="mt-1 inline-block rounded px-1.5 py-0.5 text-[9px] font-bold"
-                  style={{ backgroundColor: item.stripColor + "22", color: item.stripColor }}
+                  style={{ backgroundColor: "#F1F5F9", color: item.stripColor }}
                 >
                   {item.badge}
                 </span>

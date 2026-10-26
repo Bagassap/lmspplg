@@ -74,7 +74,7 @@ export function SiswaLaporanPanel() {
   if (!status?.hasPenempatan) {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-[#48700B]/20"}`} style={app ? { background: "#F1EDFA" } : undefined}>
+        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
           <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
@@ -123,7 +123,7 @@ export function SiswaLaporanPanel() {
               <FileIcon size={14} /> {laporan.fileName}
             </a>
             {laporan.status === "REVISI" && laporan.pesanRevisi && (
-              <p className="mx-auto mt-4 max-w-sm rounded-xl px-4 py-3 text-left text-sm" style={{ background: "rgba(0,0,0,0.08)" }}>
+              <p className="mx-auto mt-4 max-w-sm rounded-xl px-4 py-3 text-left text-sm" style={{ background: "#E2E8F0" }}>
                 <span className="block text-[10px] font-bold uppercase tracking-wider opacity-70">Catatan Revisi</span>
                 {laporan.pesanRevisi}
               </p>
@@ -140,7 +140,7 @@ export function SiswaLaporanPanel() {
           <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">File PDF, Word, atau PPT/PPTX, maks. 20MB. Hanya bisa dikirim sekali kecuali diminta revisi.</p>
 
           <div className="mt-4">
-            <label className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors dark:border-slate-600 dark:bg-slate-700/40 ${app ? "hover:border-[#3E03B3]/50 hover:bg-[#F1EDFA]" : "hover:border-[#3E03B3]/40 hover:bg-slate-100"}`}>
+            <label className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors dark:border-slate-600 dark:bg-slate-700 ${app ? "hover:border-[#3E03B3]/50 hover:bg-[#F1EDFA]" : "hover:border-[#3E03B3]/40 hover:bg-slate-100"}`}>
               <Upload size={16} className={`shrink-0 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`} />
               <div className="min-w-0 flex-1">
                 {file ? (
@@ -160,7 +160,7 @@ export function SiswaLaporanPanel() {
           <div className="mt-3">
             <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
               placeholder="Catatan (opsional)..."
-              className={`w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3] focus:ring-[#3E03B3]/20" : "focus:border-[#3E03B3] focus:ring-[#3E03B3]/15"} focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100`} />
+              className={`w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3] focus:ring-[#3E03B3]/20" : "focus:border-[#3E03B3] focus:ring-[#3E03B3]/15"} focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100`} />
           </div>
 
           <button type="button" onClick={handleSubmit} disabled={submitting || !file}

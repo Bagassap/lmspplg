@@ -93,7 +93,7 @@ export function FilterBar({
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: "#F1F5F9", color: REF_PRIMARY }}>
               <Filter size={13} />
             </span>
             Data Siswa <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
@@ -146,7 +146,7 @@ export function FilterBar({
             </div>
 
             {compact && (
-              <div className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 p-1 dark:bg-slate-700/50">
+              <div className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 p-1 dark:bg-slate-700">
                 {GENDER_PILLS.map((opt) => {
                   const active = filterGender === opt.value;
                   const OptIcon = opt.icon;
@@ -219,7 +219,7 @@ export function FilterBar({
           </div>
 
           {total > 0 && (
-            <div className="flex flex-1 flex-col justify-center rounded-2xl bg-slate-50 p-3 dark:bg-slate-700/20">
+            <div className="flex flex-1 flex-col justify-center rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
               <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 <Users size={11} />
                 Ringkasan Jenis Kelamin
@@ -252,13 +252,13 @@ export function FilterBar({
             Filter aktif:
           </span>
           {search && (
-            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: "#F1F5F9", color: REF_PRIMARY }}>
               <Search size={12} /> &ldquo;{search}&rdquo;
               <button type="button" onClick={() => onSearch("")}><X size={12} /></button>
             </span>
           )}
           {filterGender && (
-            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${filterGender === "Laki-laki" ? REF_MALE : REF_FEMALE}1a`, color: filterGender === "Laki-laki" ? REF_MALE : REF_FEMALE }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium" style={{ backgroundColor: "#F1F5F9", color: filterGender === "Laki-laki" ? REF_MALE : REF_FEMALE }}>
               {filterGender === "Laki-laki" ? <Mars size={12} /> : <Venus size={12} />} {filterGender}
               <button type="button" onClick={() => onFilterGender("")}><X size={12} /></button>
             </span>

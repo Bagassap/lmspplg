@@ -37,7 +37,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
         <>
           <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
             <table className="w-full min-w-175 text-left text-sm">
-              <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+              <thead className="border-b border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                 <tr>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Tempat PKL{showPembimbing ? " & Pembimbing" : ""}</th>
@@ -50,7 +50,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                   const nama = toTitleCase(r.siswa.nama ?? "—");
                   const cfg = r.laporan ? STATUS_CFG[r.laporan.status] : null;
                   return (
-                    <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                    <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                       <td className="whitespace-nowrap px-4 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar src={r.siswa.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />

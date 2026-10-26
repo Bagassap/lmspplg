@@ -121,7 +121,7 @@ export default function SiswaMagangRekapPage() {
               <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Rekap PKL</h1>
             </div>
             <div className="rounded-t-[28px] bg-[#FFFFFF] px-4 py-3 dark:bg-[#1E293B]">
-            <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+            <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-700">
               <button type="button" onClick={() => setCategory("lapor-diri")}
                 className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
                 style={{ color: category === "lapor-diri" ? "#fff" : "#94a3b8" }}>

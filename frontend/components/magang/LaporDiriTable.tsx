@@ -35,7 +35,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
         <>
           <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
             <table className="w-full min-w-190 text-left text-sm">
-              <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+              <thead className="border-b border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                 <tr>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Tempat PKL{showPembimbing ? " & Pembimbing" : ""}</th>
@@ -47,7 +47,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                 {rows.map((r) => {
                   const nama = toTitleCase(r.siswa.nama ?? "—");
                   return (
-                    <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                    <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                       <td className="whitespace-nowrap px-4 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar src={r.siswa.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
@@ -69,7 +69,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                             <CheckCircle2 size={10} /> Sudah Lapor
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]/20">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-slate-700">
                             <XCircle size={10} /> Belum Lapor
                           </span>
                         )}
@@ -112,7 +112,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                           <CheckCircle2 size={10} /> Lapor
                         </span>
                       ) : (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]/20">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#F6FEE8] px-2 py-1 text-[10px] font-semibold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-slate-700">
                           <XCircle size={10} /> Belum
                         </span>
                       )}

@@ -111,7 +111,7 @@ function MiniCalendar({ announcementDates }: { announcementDates: Set<string> })
             return (
               <div key={i} className="flex flex-col items-center py-0.5">
                 <div className={`relative w-7 h-7 flex items-center justify-center rounded-full text-[12px] font-medium transition-all
-                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#C4B5FD]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                  ${todayFlag ? "text-white font-bold shadow-md" : weekend ? "text-[#3E03B3] dark:text-[#C4B5FD]" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600"}`}
                   style={todayFlag ? { background: CALENDAR_GRADIENT } : {}}>
                   {d}
                   {hasAnn && !todayFlag && (
@@ -200,7 +200,7 @@ function AccordionCard({
         <div className="relative overflow-hidden px-4 py-4" style={{ background: gradient }}>
 
           <div className="relative flex items-start gap-3">
-            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${onLime ? "bg-black/10" : "bg-white"}`}>
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${onLime ? "bg-slate-200" : "bg-white"}`}>
               {p.isPinned ? <Pin size={15} className="text-[#3E03B3]" /> : <Bell size={15} className="text-[#3E03B3]" />}
             </div>
             <div className="min-w-0 flex-1">
@@ -209,20 +209,20 @@ function AccordionCard({
                 <Clock size={9} />{timeAgo(p.createdAt)}
               </p>
             </div>
-            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-black/10" : "bg-white"} ${isOpen ? "rotate-180" : ""}`}>
+            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${onLime ? "bg-slate-200" : "bg-white"} ${isOpen ? "rotate-180" : ""}`}>
               <ChevronDown size={13} className="text-[#3E03B3]" />
             </div>
           </div>
 
           <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
-            <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white text-slate-800"}`}>
+            <span className={`rounded-lg px-2.5 py-0.5 text-[10px] font-semibold ${onLime ? "bg-slate-200 text-black" : "bg-white text-slate-800"}`}>
               {p.kategori}
             </span>
             {p.isPinned && (
-              <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${onLime ? "bg-black/15 text-black" : "bg-white text-slate-800"}`}>Disematkan</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${onLime ? "bg-slate-200 text-black" : "bg-white text-slate-800"}`}>Disematkan</span>
             )}
             {p.prioritas === "PENTING" && (
-              <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-black/10 text-black" : "bg-white text-slate-800"}`}>Penting</span>
+              <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${onLime ? "bg-slate-200 text-black" : "bg-white text-slate-800"}`}>Penting</span>
             )}
             {p.prioritas === "MENDESAK" && (
               <span className="animate-pulse rounded-lg bg-[#F1EDFA] px-2 py-0.5 text-[10px] font-bold text-black">Mendesak</span>

@@ -164,13 +164,13 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
                   <input
                     type="range" min={1} max={3} step={0.01} value={zoom}
                     onChange={(e) => setZoom(Number(e.target.value))}
-                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-[#3E03B3]"
+                    className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-[#3E03B3]"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={() => { setImageSrc(null); setCroppedAreaPixels(null); }}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold text-black/60 transition-colors hover:bg-black/5"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold text-black/60 transition-colors hover:bg-slate-200"
                 >
                   <RotateCcw size={14} />
                   Pilih Ulang
@@ -183,7 +183,7 @@ export function ChangeFotoProfilModal({ onClose, gradient }: { onClose: () => vo
 
           <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">
             <button onClick={onClose} disabled={loading}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5">
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
               Batal
             </button>
             <motion.button

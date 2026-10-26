@@ -80,7 +80,7 @@ export function EditPenempatanModal({
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-5">
           <div>
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Siswa</label>
-            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-800/60">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700">
               <Avatar src={penempatan.siswa.user?.fotoProfil} nama={nama} sizePx={32}
                 fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
               <div className="min-w-0 flex-1">

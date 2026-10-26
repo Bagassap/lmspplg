@@ -59,10 +59,10 @@ function formatTanggal(iso: string | null): string {
 }
 
 const INPUT_DEFAULT =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00AAFA]/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#00AAFA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00AAFA]/12 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 const INPUT_APP =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 function EditProfilModal({
   siswa, kelasGradient, onClose, onSave,
@@ -155,7 +155,7 @@ function EditProfilModal({
             </button>
           </div>
           <div className="max-h-[60vh] space-y-4 overflow-y-auto px-6 py-5">
-            <p className="rounded-xl bg-[#F1EDFA] px-3.5 py-2.5 text-xs text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
+            <p className="rounded-xl bg-[#F1EDFA] px-3.5 py-2.5 text-xs text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]">
               Lengkapi data diri kamu di bawah ini.
             </p>
             <div className="flex flex-col gap-1.5">
@@ -187,7 +187,7 @@ function EditProfilModal({
               <input type="tel" value={noHp} onChange={(e) => setNoHp(e.target.value)}
                 placeholder="Contoh: 08123456789" className={INPUT} />
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 dark:border-slate-700 dark:bg-white/4">
+            <div className="rounded-xl border border-slate-200 bg-slate-100 p-3.5 dark:border-slate-700 dark:bg-slate-700">
               <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">Alamat Lengkap</p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="flex flex-col gap-1.5">
@@ -228,7 +228,7 @@ function EditProfilModal({
           </div>
           <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">
             <button onClick={onClose}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5">
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
               Batal
             </button>
             <motion.button
@@ -291,7 +291,7 @@ function SectionCard({
         style={{ background: gradient, color: fg, borderBottom: "1px solid rgba(255,255,255,0.15)" }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: `${fg}1A` }}>
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: "#F1F5F9" }}>
             <Icon size={14} />
           </div>
           <span className="text-sm font-semibold">{title}</span>
@@ -309,7 +309,7 @@ function MiniStat({
   const fg = gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF";
   return (
     <div className="relative overflow-hidden rounded-xl p-3 text-center" style={{ background: gradient, color: fg }}>
-      <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: `${fg}1a` }} />
+      <div className="pointer-events-none absolute -right-3 -top-3 h-12 w-12 rounded-full" style={{ backgroundColor: "#F1F5F9" }} />
       <div className="relative flex items-center justify-center gap-1">
         <Icon size={11} style={{ color: `${fg}B3` }} />
         <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: `${fg}B3` }}>{label}</p>
@@ -464,7 +464,7 @@ export default function SiswaProfilPage() {
             </div>
 
             <h2 className="text-center text-lg font-extrabold text-slate-800 dark:text-white">{nama}</h2>
-            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3.5 py-1.5 dark:bg-[#8F6DD3]/15">
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3.5 py-1.5 dark:bg-slate-700">
               <IdCard size={14} className="text-[#3E03B3] dark:text-[#8F6DD3]" />
               <span className="font-mono text-sm font-extrabold tracking-wide text-[#3E03B3] dark:text-[#8F6DD3]">
                 NIS {profil.nis}
@@ -480,8 +480,8 @@ export default function SiswaProfilPage() {
             {profil.jenisKelamin && (
               <span className={`mt-3 rounded-lg px-3.5 py-1.5 text-[11px] font-bold ${
                 isP
-                  ? "bg-[#3E03B3] text-[#3E03B3] dark:bg-[#00AAFA]/20 dark:text-[#3E03B3]"
-                  : "bg-[#3E03B3] text-[#3E03B3] dark:bg-[#00AAFA]/20 dark:text-[#3E03B3]"
+                  ? "bg-[#3E03B3] text-[#3E03B3] dark:bg-slate-700 dark:text-[#3E03B3]"
+                  : "bg-[#3E03B3] text-[#3E03B3] dark:bg-slate-700 dark:text-[#3E03B3]"
               }`}>
                 {profil.jenisKelamin}
               </span>

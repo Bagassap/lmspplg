@@ -252,7 +252,7 @@ export function CatatanSiswaClient() {
                     {pageItems.map((s, idx) => (
                       <motion.div key={s.siswaId}
                         initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
-                        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                        className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600"
                         style={{ gridTemplateColumns: GRID_COLS }}>
                         <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{start + idx}</span>
                         <Avatar src={null} nama={s.nama ?? "?"} sizePx={36} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-[10px] font-extrabold" />
@@ -569,7 +569,7 @@ function CatatanDetailModal({
           )}
 
           {showForm && (
-            <form onSubmit={submit} className="mb-5 space-y-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 dark:border-slate-700 dark:bg-slate-700/20">
+            <form onSubmit={submit} className="mb-5 space-y-3 rounded-xl border border-slate-100 bg-slate-100 p-4 dark:border-slate-700 dark:bg-slate-700">
               <p className="text-xs font-bold text-slate-600 dark:text-slate-300">{editTarget ? "Edit Catatan" : "Catatan Baru"}</p>
               <input value={judul} onChange={(e) => setJudul(e.target.value)} placeholder="Judul (mis. Terlambat masuk kelas)"
                 className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" />
@@ -625,7 +625,7 @@ function CatatanDetailModal({
                         <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700">
                           <Pencil size={12} />
                         </button>
-                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                        <button onClick={() => handleDelete(c.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                           <Trash2 size={12} />
                         </button>
                       </div>

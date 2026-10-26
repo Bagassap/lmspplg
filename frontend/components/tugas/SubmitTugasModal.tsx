@@ -12,8 +12,8 @@ function LampiranGuru({ tugas }: { tugas: TugasItem }) {
   if (!tugas.fileUrl) return null;
   return (
     <a href={tugas.fileUrl} target="_blank" rel="noopener noreferrer"
-      className="mb-4 flex shrink-0 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-[#8F6DD3] hover:bg-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/40 dark:text-slate-200 dark:hover:bg-slate-700">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#00AAFA] dark:bg-[#000000]/30 dark:text-[#8F6DD3]">
+      className="mb-4 flex shrink-0 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-[#8F6DD3] hover:bg-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#00AAFA] dark:bg-slate-700 dark:text-[#8F6DD3]">
         <Download size={14} />
       </span>
       <span className="min-w-0 flex-1 truncate">
@@ -64,8 +64,8 @@ function SubmitPraktikModal({
         className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
         <div className="relative flex shrink-0 items-center gap-3 overflow-hidden px-6 py-4"
           style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/10">
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-200">
             <Code2 size={18} className="text-black" />
           </div>
           <div className="min-w-0 flex-1">
@@ -75,7 +75,7 @@ function SubmitPraktikModal({
             </p>
           </div>
           <button onClick={onClose}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/10 text-black transition-colors hover:bg-black/20">
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-black transition-colors hover:bg-slate-200">
             <X size={16} />
           </button>
         </div>
@@ -83,7 +83,7 @@ function SubmitPraktikModal({
         <div className="flex flex-1 flex-col overflow-y-auto p-5">
           <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
-            <p className="mb-4 shrink-0 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700/40 dark:text-slate-300">
+            <p className="mb-4 shrink-0 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700 dark:text-slate-300">
               {tugas.deskripsi}
             </p>
           )}
@@ -154,10 +154,10 @@ function SubmitFileModal({
         style={{ maxHeight: "92vh" }}
         onClick={(e) => e.stopPropagation()}>
         <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-          <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-black/10" />
+          <div className="pointer-events-none absolute -right-6 -top-6 w-24 h-24 rounded-full bg-slate-200" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-black/10 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center shrink-0">
                 <Send size={18} className="text-black" />
               </div>
               <div className="min-w-0">
@@ -165,7 +165,7 @@ function SubmitFileModal({
                 <p className="text-base font-extrabold text-black leading-tight line-clamp-1">{tugas.judul}</p>
               </div>
             </div>
-            <button onClick={onClose} className="w-8 h-8 shrink-0 rounded-xl bg-black/10 flex items-center justify-center text-black hover:bg-black/20">
+            <button onClick={onClose} className="w-8 h-8 shrink-0 rounded-xl bg-slate-200 flex items-center justify-center text-black hover:bg-slate-200">
               <X size={15} />
             </button>
           </div>
@@ -176,7 +176,7 @@ function SubmitFileModal({
         <form onSubmit={submit} className="space-y-4 overflow-y-auto p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]" style={{ maxHeight: "calc(92vh - 84px)" }}>
           <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
-            <div className="rounded-xl bg-slate-50 dark:bg-slate-700/40 px-3.5 py-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <div className="rounded-xl bg-slate-50 dark:bg-slate-700 px-3.5 py-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               {tugas.deskripsi}
             </div>
           )}
@@ -283,7 +283,7 @@ function SubmitSoalModal({
         <div className="flex-1 overflow-y-auto p-5">
           <LampiranGuru tugas={tugas} />
           {tugas.deskripsi && (
-            <p className="mb-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700/40 dark:text-slate-300">
+            <p className="mb-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-700 dark:text-slate-300">
               {tugas.deskripsi}
             </p>
           )}
@@ -305,7 +305,7 @@ function SubmitSoalModal({
                             style={app && active ? { borderColor: "#3E03B3", background: "#F1EDFA" } : undefined}
                             onClick={() => setJawaban((prev) => ({ ...prev, [s.id]: huruf }))}
                             className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-all ${
-                              active ? "border-[#F26A3D] bg-[#FFFFFF] dark:bg-[#000000]/20" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
+                              active ? "border-[#F26A3D] bg-[#FFFFFF] dark:bg-slate-700" : "border-slate-200 hover:border-[#FFFFFF] dark:border-slate-600"
                             }`}>
                             <span style={app && active ? { background: "#3E03B3", color: "#fff" } : undefined} className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                               active ? "bg-[#3E03B3] text-[#000000] dark:text-[#C4B5FD]" : "bg-slate-100 text-slate-500 dark:bg-slate-700"

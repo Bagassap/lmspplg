@@ -9,7 +9,7 @@ import { JURUSAN_OPTIONS } from "@/components/data-siswa/shared";
 type Role = "ADMIN" | "GURU" | "SISWA";
 type KelasOption = { id: string; nama: string };
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
+const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
 
 const ROLE_OPTIONS: { value: Role; label: string; icon: typeof Shield }[] = [
   { value: "SISWA", label: "Siswa", icon: UserIcon },
@@ -196,7 +196,7 @@ export function CreateAccountModal({
                       <option value="Perempuan">Perempuan</option>
                     </select>
                   </div>
-                  <p className="rounded-xl bg-[#F1EDFA] px-4 py-2.5 text-xs text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
+                  <p className="rounded-xl bg-[#F1EDFA] px-4 py-2.5 text-xs text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]">
                     Login siswa memakai NIS, dengan password awal = NIS (wajib diganti saat login pertama).
                   </p>
                 </>
@@ -230,14 +230,14 @@ export function CreateAccountModal({
                       </div>
                     </div>
                   )}
-                  <p className="rounded-xl bg-[#F1EDFA] px-4 py-2.5 text-xs text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
+                  <p className="rounded-xl bg-[#F1EDFA] px-4 py-2.5 text-xs text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]">
                     Akun akan diwajibkan mengganti password saat login pertama.
                   </p>
                 </>
               )}
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">{error}</p>
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]">{error}</p>
               )}
             </form>
 

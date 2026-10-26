@@ -97,7 +97,7 @@ export function VBarChart({ data, height = 120 }: { data: VBarItem[]; height?: n
             </span>
             <div
               className="relative w-full overflow-hidden rounded-t-lg"
-              style={{ height: barH, backgroundColor: d.color + "25" }}
+              style={{ height: barH, backgroundColor: "#F1F5F9" }}
             >
               <motion.div
                 className="absolute inset-x-0 bottom-0 rounded-t-lg"

@@ -9,7 +9,7 @@ import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
 const INPUT =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 pr-10 text-sm text-slate-800 placeholder:text-slate-400 transition-all hover:border-slate-300 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/12 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:bg-slate-800";
 
 function printSlip(opts: { nama: string; loginId?: string; password: string }) {
   const w = window.open("", "_blank", "width=420,height=600");
@@ -117,10 +117,10 @@ export function ResetPasswordModal({
           {successPassword ? (
             <>
               <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
-                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
+                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
                 <div className="relative flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black/10 backdrop-blur-sm">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                       <CheckCircle2 size={20} className="text-black" />
                     </div>
                     <div>
@@ -129,13 +129,13 @@ export function ResetPasswordModal({
                     </div>
                   </div>
                   <button onClick={onClose}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-black/10 text-black/80 transition-all hover:bg-black/20 hover:text-black">
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-black/80 transition-all hover:bg-slate-200 hover:text-black">
                     <X size={15} />
                   </button>
                 </div>
               </div>
               <div className="space-y-4 px-5 py-5">
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
                   <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
@@ -143,7 +143,7 @@ export function ResetPasswordModal({
                   </p>
                 </div>
 
-                <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-700">
                   {effectiveLoginId && (
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Login</p>
@@ -180,10 +180,10 @@ export function ResetPasswordModal({
           ) : (
           <>
           <div className="relative overflow-hidden bg-[#3E03B3] px-6 py-5">
-            <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-black/10" />
+            <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-slate-200" />
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black/10 backdrop-blur-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                   <KeyRound size={20} className="text-black" />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ export function ResetPasswordModal({
                 </div>
               </div>
               <button onClick={onClose}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-black/10 text-black/80 transition-all hover:bg-black/20 hover:text-black">
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-black/80 transition-all hover:bg-slate-200 hover:text-black">
                 <X size={15} />
               </button>
             </div>
@@ -200,14 +200,14 @@ export function ResetPasswordModal({
           <div className="space-y-4 px-5 py-5">
             {resetToNis && (
               alreadyChanged ? (
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-slate-700">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                   <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#C4B5FD]">
                     <strong>Siswa ini sudah mengganti password sendiri.</strong>
                   </p>
                 </div>
               ) : (
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
                   <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
@@ -216,7 +216,7 @@ export function ResetPasswordModal({
               )
             )}
 
-            <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+            <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
               <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
               <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                 {resetToNis
@@ -232,7 +232,7 @@ export function ResetPasswordModal({
                   <KeyRound size={10} className="text-primary/70" />
                   Password Default Baru
                 </label>
-                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-slate-700">
                   <span className="font-mono text-sm font-semibold text-slate-700 dark:text-slate-200">{nis}</span>
                   <span className="text-xs text-slate-400 dark:text-slate-500">(NIS siswa)</span>
                 </div>
@@ -263,7 +263,7 @@ export function ResetPasswordModal({
                 </div>
               </div>
             )}
-            <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:bg-slate-800">
+            <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-700 dark:hover:bg-slate-800">
               <input
                 type="checkbox"
                 checked={bypassIdentity}
@@ -308,9 +308,9 @@ export function ResetPasswordModal({
         {successPassword ? (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-black/10" />
-              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-black/8" />
-              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-black/10 backdrop-blur-sm">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-slate-200" />
+              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-slate-200" />
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                 <CheckCircle2 size={24} className="text-black" />
               </div>
               <p className="relative mt-3 text-[10px] font-bold uppercase tracking-widest text-black/60">Password Direset</p>
@@ -319,7 +319,7 @@ export function ResetPasswordModal({
 
             <div className="relative -mt-4 rounded-t-3xl bg-white pb-6 pt-6 dark:bg-slate-900">
               <div className="mx-auto max-w-md space-y-4 px-6">
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
                   <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     Ini satu-satunya kesempatan melihat password ini di layar — setelah ditutup, sistem hanya
@@ -327,7 +327,7 @@ export function ResetPasswordModal({
                   </p>
                 </div>
 
-                <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-700">
                   {effectiveLoginId && (
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Login</p>
@@ -362,9 +362,9 @@ export function ResetPasswordModal({
         ) : (
           <>
             <div className="relative px-6 pb-6 pt-10 text-center">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-black/10" />
-              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-black/8" />
-              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-black/10 backdrop-blur-sm">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-slate-200" />
+              <div className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-slate-200" />
+              <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-200 backdrop-blur-sm">
                 <KeyRound size={24} className="text-black" />
               </div>
               <p className="relative mt-3 text-[10px] font-bold uppercase tracking-widest text-black/60">Reset Password</p>
@@ -375,14 +375,14 @@ export function ResetPasswordModal({
               <div className="mx-auto max-w-md space-y-4 px-6">
                 {resetToNis && (
                   alreadyChanged ? (
-                    <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-[#48700B]/10">
+                    <div className="flex items-start gap-2.5 rounded-xl border border-[#F6FEE8] bg-[#F6FEE8] px-3.5 py-3 dark:border-[#48700B]/30 dark:bg-slate-700">
                       <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                       <p className="text-xs leading-relaxed text-[#48700B] dark:text-[#C4B5FD]">
                         <strong>Siswa ini sudah mengganti password sendiri.</strong>
                       </p>
                     </div>
                   ) : (
-                    <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                    <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
                       <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                       <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                         <strong>Siswa ini belum mengganti password</strong> (masih menggunakan NIS).
@@ -391,7 +391,7 @@ export function ResetPasswordModal({
                   )
                 )}
 
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-[#000000]/10">
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-3.5 py-3 dark:border-[#000000]/30 dark:bg-slate-700">
                   <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
                   <p className="text-xs leading-relaxed text-[#000000] dark:text-[#C4B5FD]">
                     {resetToNis
@@ -407,7 +407,7 @@ export function ResetPasswordModal({
                       <KeyRound size={10} className="text-primary/70" />
                       Password Default Baru
                     </label>
-                    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-slate-700">
                       <span className="font-mono text-sm font-semibold text-slate-700 dark:text-slate-200">{nis}</span>
                       <span className="text-xs text-slate-400 dark:text-slate-500">(NIS siswa)</span>
                     </div>
@@ -438,7 +438,7 @@ export function ResetPasswordModal({
                     </div>
                   </div>
                 )}
-                <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:bg-slate-800">
+                <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-700 dark:hover:bg-slate-800">
                   <input
                     type="checkbox"
                     checked={bypassIdentity}

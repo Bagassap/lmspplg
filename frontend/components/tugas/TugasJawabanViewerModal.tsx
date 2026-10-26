@@ -85,7 +85,7 @@ export function TugasJawabanViewerModal({
                     const isCorrect = isPg && !!soal?.jawabanBenar && j.jawabanPilihan === soal.jawabanBenar;
                     const isWrong = isPg && !!soal?.jawabanBenar && !!j.jawabanPilihan && j.jawabanPilihan !== soal.jawabanBenar;
                     return (
-                      <div key={j.id} className="rounded-3xl bg-slate-50 p-5 dark:bg-slate-700/30">
+                      <div key={j.id} className="rounded-3xl bg-slate-50 p-5 dark:bg-slate-700">
                         <div className="mb-4 flex items-start justify-between gap-3">
                           <p className="text-base font-bold text-slate-900 dark:text-white">{idx + 1}. {soal?.pertanyaan}</p>
                           {isPg && soal?.jawabanBenar && (
@@ -102,7 +102,7 @@ export function TugasJawabanViewerModal({
                               return (
                                 <div key={huruf}
                                   className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-base ${
-                                    isKey ? "bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                    isKey ? "bg-[#F6FEE8] dark:bg-slate-700"
                                     : isSelected ? "bg-[#FFE9E2]"
                                     : "bg-white dark:bg-slate-800"
                                   }`}>

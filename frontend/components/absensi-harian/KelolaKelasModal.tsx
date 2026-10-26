@@ -99,7 +99,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {editing ? (
-            <div className="space-y-3 rounded-2xl border border-[#F1EDFA] bg-slate-100 p-4 dark:border-[#000000]/40 dark:bg-[#000000]/10">
+            <div className="space-y-3 rounded-2xl border border-[#F1EDFA] bg-slate-100 p-4 dark:border-[#000000]/40 dark:bg-slate-700">
               <div>
                 <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Nama Kelas</label>
                 <input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: XII RPL 1"
@@ -153,11 +153,11 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                     <Users size={10} /> {k._count?.siswa ?? 0}
                   </span>
                   <button onClick={() => startEdit(k)}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#3E03B3] hover:bg-[#F1EDFA] dark:bg-[#000000]/20">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#3E03B3] hover:bg-[#F1EDFA] dark:bg-slate-700">
                     <Pencil size={12} />
                   </button>
                   <button onClick={() => remove(k)} disabled={busyId === k.id}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-slate-700">
                     <Trash2 size={12} />
                   </button>
                 </div>

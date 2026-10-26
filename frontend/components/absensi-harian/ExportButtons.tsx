@@ -22,7 +22,7 @@ const RANGE_MODES: { key: ExportRangeMode; label: string }[] = [
   { key: "bulanan", label: "Per Bulan" },
 ];
 
-const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
+const selectCls = "rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
 
 export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAnchor, bulan, setBulan, tahun, setTahun, weekRange }: UseExportRangeResult) {
   const currentYear = new Date().getFullYear();
@@ -30,7 +30,7 @@ export function RangeModeToggle({ rangeMode, setRangeMode, weekAnchor, setWeekAn
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <div className="inline-flex shrink-0 gap-0.5 rounded-xl bg-slate-100 p-1 dark:bg-slate-700/50">
+      <div className="inline-flex shrink-0 gap-0.5 rounded-xl bg-slate-100 p-1 dark:bg-slate-700">
         {RANGE_MODES.map((m) => (
           <button key={m.key} type="button" onClick={() => setRangeMode(m.key)}
             className={`rounded-lg px-3 py-1.5 text-[11px] font-bold transition-colors ${
@@ -113,7 +113,7 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
         className="relative z-10 flex max-h-[80dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: `${accent}20` }}>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
               <User size={16} style={{ color: accent }} />
             </div>
             <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">{title}</h2>

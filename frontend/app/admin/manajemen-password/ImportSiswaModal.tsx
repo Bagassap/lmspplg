@@ -110,7 +110,7 @@ export function ImportSiswaModal({
                 <Download size={15} /> Unduh Template Excel
               </button>
 
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/40">
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700">
                 <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0 flex-1">
                   {file ? (
@@ -132,7 +132,7 @@ export function ImportSiswaModal({
               {result && (
                 <div className="space-y-3 border-t border-slate-100 pt-4 dark:border-slate-700">
                   {result.berhasil.length > 0 && (
-                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
+                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-slate-700">
                       <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#C4B5FD]">
                         <CheckCircle2 size={13} /> {result.berhasil.length} akun berhasil dibuat
                       </p>
@@ -142,7 +142,7 @@ export function ImportSiswaModal({
                     </div>
                   )}
                   {result.gagal.length > 0 && (
-                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-[#48700B]/20">
+                    <div className="rounded-xl bg-[#F6FEE8] p-3 dark:bg-slate-700">
                       <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#48700B] dark:text-[#C4B5FD]">
                         <XCircle size={13} /> {result.gagal.length} baris gagal
                       </p>

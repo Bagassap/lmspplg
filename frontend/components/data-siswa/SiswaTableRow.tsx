@@ -54,11 +54,11 @@ function DownloadSiswaAction({ siswaId, siswaNama }: { siswaId: string; siswaNam
             className="absolute right-0 top-full z-20 mt-1 w-40 overflow-hidden rounded-xl border border-slate-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
           >
             <button type="button" onClick={() => run("pdf")}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700/50">
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-600">
               <FileText size={13} /> Unduh PDF
             </button>
             <button type="button" onClick={() => run("excel")}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700/50">
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-600">
               <FileSpreadsheet size={13} /> Unduh Excel
             </button>
           </div>
@@ -105,7 +105,7 @@ export function SiswaTableRow({
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: (index % 15) * 0.02 }}
-      className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+      className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600"
       style={{ gridTemplateColumns: GRID_COLS }}
     >
       <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{index + 1}</span>
@@ -145,7 +145,7 @@ export function SiswaTableRow({
           onClick={() => onViewDetail(siswa)}
           title="Lihat data lengkap"
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors hover:brightness-95"
-          style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}
+          style={{ backgroundColor: "#F1F5F9", color: REF_PRIMARY }}
         >
           <Eye size={13} />
         </button>
@@ -194,7 +194,7 @@ export function SiswaTableRow({
             whileTap={{ scale: 0.92 }}
             onClick={() => onKeluarkan(siswa)}
             title="Hapus permanen (siswa keluar/pindah sekolah)"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] dark:bg-slate-700"
           >
             <Trash2 size={13} />
           </motion.button>

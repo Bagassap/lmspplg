@@ -35,7 +35,7 @@ import { AppStatusSheet } from "@/components/app/AppUI";
 
 function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
-    <div className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-slate-50 px-3 py-2.5 dark:bg-slate-700/30">
+    <div className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-slate-50 px-3 py-2.5 dark:bg-slate-700">
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
         <Icon size={14} />
       </span>
@@ -176,8 +176,8 @@ function RingkasanKehadiranCard({
                 <button type="button" key={k.id} onClick={() => onSelectKelas(k.id)}
                   className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
                     isSelected
-                      ? "border-[#3E03B3] bg-[#F1EDFA] dark:border-[#8F6DD3] dark:bg-[#000000]/20"
-                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700/40 dark:hover:border-slate-600"
+                      ? "border-[#3E03B3] bg-[#F1EDFA] dark:border-[#8F6DD3] dark:bg-slate-700"
+                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700 dark:hover:border-slate-600"
                   }`}>
                   <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
                     isSelected ? "bg-[#3E03B3] text-white" : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
@@ -612,7 +612,7 @@ export default function GuruAbsensiHarianPage() {
                 </p>
                 <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700 sm:w-full sm:max-w-xs">
                 <CalendarDays size={14} className="shrink-0 text-slate-400" />
                 <DateInputID value={tanggal} onChange={(v) => setTanggal(v)} className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
               </div>
@@ -695,17 +695,17 @@ export default function GuruAbsensiHarianPage() {
               </div>
 
               {exportRange.rangeMode === "mingguan" && (
-                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
@@ -979,17 +979,17 @@ export default function GuruAbsensiHarianPage() {
                   </div>
 
                   {exportRange.rangeMode === "mingguan" && (
-                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                   )}
 
                   {exportRange.rangeMode === "bulanan" && (
                     <div className="mt-3 flex items-center gap-1.5">
                       <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                       </select>
                       <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                       </select>
                     </div>

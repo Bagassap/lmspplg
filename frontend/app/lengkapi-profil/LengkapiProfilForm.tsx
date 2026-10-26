@@ -50,7 +50,7 @@ const EMPTY: FormState = {
 };
 
 const INPUT_CLASS =
-  "w-full rounded-xl border border-black/10 bg-black/3 px-3.5 py-2.5 text-sm text-black placeholder:text-black/35 outline-none transition-all focus:border-blue focus:bg-white focus:ring-2 focus:ring-blue/15";
+  "w-full rounded-xl border border-black/10 bg-slate-200 px-3.5 py-2.5 text-sm text-black placeholder:text-black/35 outline-none transition-all focus:border-blue focus:bg-white focus:ring-2 focus:ring-blue/15";
 
 export function LengkapiProfilForm() {
   const [values, setValues] = useState<FormState>(EMPTY);
@@ -118,7 +118,7 @@ export function LengkapiProfilForm() {
     >
       <motion.div
         variants={item}
-        className="flex items-start gap-2.5 rounded-xl border border-blue/15 bg-blue/5 px-3.5 py-3"
+        className="flex items-start gap-2.5 rounded-xl border border-blue/15 bg-slate-100 px-3.5 py-3"
       >
         <Sparkles size={16} className="mt-0.5 shrink-0 text-blue" />
         <p className="text-xs leading-relaxed text-black/65">

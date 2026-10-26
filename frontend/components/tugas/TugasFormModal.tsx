@@ -30,7 +30,7 @@ function emptySoal(): SoalDraft {
   return { pertanyaan: "", pilihanA: "", pilihanB: "", pilihanC: "", pilihanD: "", jawabanBenar: "" };
 }
 
-const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
+const INPUT_CLS = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
 
 function toLocalInputValue(iso?: string | null) {
   const d = iso ? new Date(iso) : new Date(Date.now() + 24 * 3600 * 1000);
@@ -384,7 +384,7 @@ export function TugasFormModal({
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                   File Soal / Lampiran <span className="font-normal text-gray-400">(opsional)</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/40">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700">
                   <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0 flex-1">
                     {file ? (
@@ -456,7 +456,7 @@ export function TugasFormModal({
                   </div>
                   <div className="space-y-3">
                     {soalList.map((s, idx) => (
-                      <div key={idx} className="rounded-xl border border-gray-200 bg-gray-50/60 p-3.5 dark:border-slate-600 dark:bg-slate-700/30">
+                      <div key={idx} className="rounded-xl border border-gray-200 bg-gray-50/60 p-3.5 dark:border-slate-600 dark:bg-slate-700">
                         <div className="mb-2 flex items-center justify-between">
                           <span className="text-[11px] font-bold text-gray-500 dark:text-slate-400">Soal {idx + 1}</span>
                           {soalList.length > 1 && (
@@ -512,7 +512,7 @@ export function TugasFormModal({
                             </label>
                             <textarea rows={2} value={s.jawabanBenar} onChange={(e) => updateSoal(idx, { jawabanBenar: e.target.value })}
                               placeholder="Tulis jawaban ideal / poin kunci yang harus ada..."
-                              className={`w-full resize-none rounded-lg border bg-[#F6FEE8]/50 px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#F26A3D] dark:bg-[#48700B]/10 dark:text-slate-100 ${
+                              className={`w-full resize-none rounded-lg border bg-[#F6FEE8]/50 px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#F26A3D] dark:bg-slate-700 dark:text-slate-100 ${
                                 s.pertanyaan.trim() && !s.jawabanBenar.trim() ? "border-[#F26A3D] dark:border-[#48700B]" : "border-[#F6FEE8] dark:border-[#48700B]"
                               }`} />
                             {s.pertanyaan.trim() && !s.jawabanBenar.trim() && (
@@ -527,7 +527,7 @@ export function TugasFormModal({
               )}
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">{error}</p>
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]">{error}</p>
               )}
             </form>
 

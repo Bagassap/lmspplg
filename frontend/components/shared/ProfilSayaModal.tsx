@@ -143,7 +143,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
             <div className="space-y-3 px-6 py-5">
               {me.email && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-[#000000]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-slate-700">
                     <Mail size={15} className="text-[#00AAFA]" />
                   </div>
                   <div className="min-w-0">
@@ -154,7 +154,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-[#00AAFA]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-slate-700">
                     <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">
@@ -165,7 +165,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-slate-700">
                     <IdCard size={15} className="text-[#5D900F] dark:text-[#C4B5FD]" />
                   </div>
                   <div className="min-w-0">
@@ -186,7 +186,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
           <div className="flex justify-end border-t border-slate-100 px-6 py-4 dark:border-slate-700/50">
             <button
               onClick={onClose}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5"
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
             >
               Tutup
             </button>
@@ -244,7 +244,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
             <div className="mx-auto max-w-md space-y-3 px-6">
               {me.email && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-[#000000]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] dark:bg-slate-700">
                     <Mail size={15} className="text-[#00AAFA]" />
                   </div>
                   <div className="min-w-0">
@@ -255,7 +255,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-[#00AAFA]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-slate-700">
                     <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">
@@ -266,7 +266,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.guru?.nip && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-[#48700B]/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F6FEE8] dark:bg-slate-700">
                     <IdCard size={15} className="text-[#5D900F] dark:text-[#C4B5FD]" />
                   </div>
                   <div className="min-w-0">

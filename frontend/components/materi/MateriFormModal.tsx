@@ -21,9 +21,9 @@ export type MateriItem = {
 
 type KelasOption = { id: string; nama: string };
 
-const INPUT_CLS_BASE = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
+const INPUT_CLS_BASE = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#00AAFA] dark:focus:bg-slate-700";
 
-const INPUT_CLS_APP = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-700";
+const INPUT_CLS_APP = "w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 transition-all focus:border-[#3E03B3] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/15 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-700";
 
 export function MateriFormModal({
   open, materi, onClose, onSaved, mapelOptions,
@@ -179,7 +179,7 @@ export function MateriFormModal({
                     {selectedKelasIds.length === 0 ? "(Semua Kelas)" : `(${selectedKelasIds.length} kelas dipilih)`}
                   </span>
                 </label>
-                <div className="flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-slate-600 dark:bg-slate-700/40">
+                <div className="flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-slate-600 dark:bg-slate-700">
                   {kelasOptions.length === 0 && (
                     <p className="text-sm text-gray-400 dark:text-slate-500">Memuat daftar kelas…</p>
                   )}
@@ -218,7 +218,7 @@ export function MateriFormModal({
                 <label className="mb-1.5 block text-xs font-bold text-gray-700 dark:text-slate-300">
                   File Modul <span className="text-[#5D900F] dark:text-[#C4B5FD]">*</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/40">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors hover:border-[#3E03B3]/40 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700">
                   <Upload size={16} className="shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0 flex-1">
                     {file ? (
@@ -237,7 +237,7 @@ export function MateriFormModal({
               </div>
 
               {error && (
-                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-[#48700B]/30 dark:text-[#C4B5FD]">
+                <p className="rounded-xl bg-[#F6FEE8] px-4 py-2.5 text-sm text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]">
                   {error}
                 </p>
               )}

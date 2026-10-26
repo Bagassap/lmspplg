@@ -37,7 +37,7 @@ export function PengajuanMenungguPanel({ list, onTetapkan, onTolak }: {
         {groups.map((rows) => {
           const t = rows[0].tempatMagang;
           return (
-            <div key={rows[0].id} className="flex flex-col gap-2 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700/40">
+            <div key={rows[0].id} className="flex flex-col gap-2 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700">
               <div className="flex items-start gap-2.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E03B3]"><Building2 size={16} /></span>
                 <div className="min-w-0 flex-1">

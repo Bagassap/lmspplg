@@ -132,7 +132,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
           </div>
         ) : !pdf ? (
           <div className="flex min-h-full flex-col items-center justify-center gap-4 p-14 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-[#000000]/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-slate-700">
               <FileText size={28} className="text-[#00AAFA]" />
             </div>
             <div>
@@ -168,7 +168,7 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
 
       {pdf && !pdfError && blobUrl && totalPages > 1 && (
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[10000] flex justify-center">
-          <span className="pointer-events-auto rounded-full bg-slate-900/85 px-4 py-2 text-xs font-bold text-white shadow-lg backdrop-blur-sm dark:bg-slate-700/90">
+          <span className="pointer-events-auto rounded-full bg-slate-900/85 px-4 py-2 text-xs font-bold text-white shadow-lg backdrop-blur-sm dark:bg-slate-700">
             Halaman {currentPage} / {totalPages}
           </span>
         </div>

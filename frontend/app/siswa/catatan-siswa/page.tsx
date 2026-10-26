@@ -48,7 +48,7 @@ export default function SiswaCatatanSayaPage() {
 
       <div className="hidden lg:grid lg:grid-cols-2 lg:gap-3">
         <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#3E03B31a", color: "#3E03B3" }}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9", color: "#3E03B3" }}>
             <NotebookPen size={16} />
           </span>
           <div className="leading-tight">
@@ -57,7 +57,7 @@ export default function SiswaCatatanSayaPage() {
           </div>
         </div>
         <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-3 dark:border-slate-700/50 dark:bg-slate-800">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#F26A3D1a", color: "#3E03B3" }}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black" style={{ backgroundColor: "#F1F5F9", color: "#3E03B3" }}>
             ±
           </span>
           <div className="leading-tight">
@@ -153,7 +153,7 @@ export default function SiswaCatatanSayaPage() {
               </div>
             </div>
             <div className="flex items-center gap-2.5 rounded-2xl p-4" style={{ background: "#F26A3D" }}>
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-black bg-black/10">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-black text-black bg-slate-200">
                 ±
               </span>
               <div className="min-w-0 leading-tight">
@@ -169,7 +169,7 @@ export default function SiswaCatatanSayaPage() {
             )}
             {!loading && (!data || data.catatan.length === 0) && (
               <div className="flex flex-col items-center px-6 py-14 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#3E03B318" }}>
+                <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
                   <NotebookPen size={24} style={{ color: "#3E03B3" }} />
                 </div>
                 <p className="mt-4 text-sm text-slate-400">Belum ada catatan untukmu. Pertahankan!</p>
@@ -184,13 +184,13 @@ export default function SiswaCatatanSayaPage() {
                       <span className="absolute inset-y-0 left-0 w-1.5" style={{ background: accent }} />
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex min-w-0 items-center gap-2">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${accent}18`, color: accent }}>
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9", color: accent }}>
                             <ClipboardList size={15} />
                           </span>
                           <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{c.judul}</p>
                         </div>
                         {c.poin != null && (
-                          <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: `${accent}18`, color: accent }}>
+                          <span className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ backgroundColor: "#F1F5F9", color: accent }}>
                             {c.poin} poin
                           </span>
                         )}

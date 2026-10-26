@@ -41,7 +41,7 @@ const R = "#3E03B3";
 const G = "#3E03B3";
 
 function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
+  return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700 ${className}`} />;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
@@ -67,7 +67,7 @@ function SectionCard({
         <div className="flex items-center gap-2.5">
           {Icon && (
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: `${iconColor}18` }}>
+              style={{ background: "#F1F5F9" }}>
               <Icon size={14} style={{ color: iconColor }} />
             </div>
           )}
@@ -266,7 +266,7 @@ export default function GuruDashboardPage() {
                 <motion.li key={k.id}
                   initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + i * 0.06 }}
-                  className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30">
+                  className="flex items-center gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
                     style={{ background: "#3E03B3" }}>
                     {k.nama.charAt(0)}
@@ -283,7 +283,7 @@ export default function GuruDashboardPage() {
             <div className="flex items-center gap-2">
               {data.pengumuman.length > 0 &&
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold"
-                  style={{ background: `${R}18`, color: R }}>{data.pengumuman.length}</span>
+                  style={{ background: "#F1F5F9", color: R }}>{data.pengumuman.length}</span>
               }
               <ViewAll href="/guru/pengumuman" />
             </div>
@@ -298,10 +298,10 @@ export default function GuruDashboardPage() {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   transition={{ delay: 0.55 + i * 0.06 }}
                   onClick={() => setSelectedSlug(p.slug)}
-                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden px-5 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden px-5 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-600">
                   <div className="absolute inset-y-0 left-0 w-0.5 rounded-r" style={{ backgroundColor: kColor(p.kategori) }} />
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                    style={{ background: `${kColor(p.kategori)}18` }}>
+                    style={{ background: "#F1F5F9" }}>
                     <Bell size={14} style={{ color: kColor(p.kategori) }} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -315,7 +315,7 @@ export default function GuruDashboardPage() {
                     </div>
                   </div>
                   <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"
-                    style={{ background: `${kColor(p.kategori)}18`, color: kColor(p.kategori) }}>{p.kategori}</span>
+                    style={{ background: "#F1F5F9", color: kColor(p.kategori) }}>{p.kategori}</span>
                 </motion.li>
               ))}
             </ul>
@@ -462,7 +462,7 @@ export default function GuruDashboardPage() {
               <li key={p.id}
                 onClick={() => setSelectedSlug(p.slug)}
                 className="flex cursor-pointer items-center gap-3 px-5 py-3.5 active:bg-slate-50 dark:active:bg-slate-700/20">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${kColor(p.kategori)}18` }}>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1F5F9" }}>
                   <Bell size={14} style={{ color: kColor(p.kategori) }} />
                 </div>
                 <div className="min-w-0 flex-1">

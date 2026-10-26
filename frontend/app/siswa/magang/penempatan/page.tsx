@@ -79,7 +79,7 @@ export default function SiswaMagangPenempatanPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                 <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
@@ -87,7 +87,7 @@ export default function SiswaMagangPenempatanPage() {
                 </div>
               </div>
               {aktif.tempatMagang.kontak && (
-                <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+                <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                   <Phone size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Kontak</p>
@@ -95,7 +95,7 @@ export default function SiswaMagangPenempatanPage() {
                   </div>
                 </div>
               )}
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                 <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>
@@ -180,7 +180,7 @@ export default function SiswaMagangPenempatanPage() {
           <div className="h-40 animate-pulse rounded-3xl bg-white dark:bg-[#1E293B]" />
         ) : !aktif ? (
           <div className="flex flex-col items-center justify-center gap-3 rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318" }}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: "#F1F5F9" }}>
               <Users size={24} style={{ color: "#3E03B3" }} />
             </div>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Kamu belum ditempatkan PKL</p>
@@ -207,7 +207,7 @@ export default function SiswaMagangPenempatanPage() {
             </div>
 
             <div className="space-y-2 rounded-t-3xl bg-white p-4 dark:bg-[#1E293B]">
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                 <MapPin size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Alamat</p>
@@ -215,7 +215,7 @@ export default function SiswaMagangPenempatanPage() {
                 </div>
               </div>
               {aktif.tempatMagang.kontak && (
-                <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+                <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                   <Phone size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                   <div className="min-w-0">
                     <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Kontak</p>
@@ -223,7 +223,7 @@ export default function SiswaMagangPenempatanPage() {
                   </div>
                 </div>
               )}
-              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700/30">
+              <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                 <User size={15} className="mt-0.5 shrink-0 text-[#3E03B3]" />
                 <div className="min-w-0">
                   <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">Guru Pembimbing</p>

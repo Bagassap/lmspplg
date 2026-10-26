@@ -39,7 +39,7 @@ export function PenempatanFilterBar({
       <div className="relative flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-white">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: "#F1F5F9", color: REF_PRIMARY }}>
               <Filter size={13} />
             </span>
             Daftar Penempatan <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>

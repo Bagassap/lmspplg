@@ -322,7 +322,7 @@ export default function SiswaAbsensiHarianPage() {
                 </span>
               </div>
 
-              <div className="mb-4 flex gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+              <div className="mb-4 flex gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-700">
                 {TABS.map((t) => {
                   const active = activeTab === t.key;
                   const Icon = t.icon;
@@ -416,7 +416,7 @@ export default function SiswaAbsensiHarianPage() {
                   ) : (
                     <motion.div key="pulang-closed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-                      <div className={`flex h-16 w-16 items-center justify-center rounded-full ${window_ === "HADIR" ? "" : "bg-[#F6FEE8] dark:bg-[#48700B]/20"}`}
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-full ${window_ === "HADIR" ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`}
                         style={window_ === "HADIR" ? { background: "#F1EDFA" } : undefined}>
                         {window_ === "HADIR" ? <Clock size={26} style={{ color: "#3E03B3" }} /> : <AlertCircle size={26} className="text-[#5D900F] dark:text-[#C4B5FD]" />}
                       </div>
@@ -1142,7 +1142,7 @@ function MobileFormAbsen({
                               </>
                             ) : (
                               <>
-                                <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ backgroundColor: `${accentColor}18` }}>
+                                <div className="flex h-16 w-16 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
                                   <Camera size={26} style={{ color: accentColor }} />
                                 </div>
                                 <span className="text-xs font-bold">{isIzinSakit ? "Ketuk untuk unggah foto" : "Ketuk untuk ambil foto"}</span>
@@ -1203,7 +1203,7 @@ function MobileFormAbsen({
                             <button key={s} type="button" onClick={() => setStatusPilihan(s)}
                               className="flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left transition-colors"
                               style={active ? { borderColor: c.clr, background: c.bg } : { borderColor: "#FFFFFF", background: "transparent" }}>
-                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${c.clr}18` }}>
+                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
                                 <Icon size={18} style={{ color: c.clr }} />
                               </span>
                               <div className="min-w-0 flex-1">

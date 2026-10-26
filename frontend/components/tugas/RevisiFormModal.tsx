@@ -38,9 +38,9 @@ export function RevisiFormModal({
             onClick={(e) => e.stopPropagation()}>
 
             <div className="relative px-6 py-5 overflow-hidden" style={{ background: app ? "#F1EDFA" : "#F26A3D", color: app ? "#0F172A" : "#FFFFFF" }}>
-              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#000000]/10 pointer-events-none" />
+              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-slate-100 pointer-events-none" />
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#000000]/15 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
                   <AlertCircle size={18} className="text-[#000000] dark:text-[#C4B5FD]" />
                 </div>
                 <div>

@@ -55,8 +55,8 @@ export function PenempatanTable({
         )}
       </div>
     );
-    if (colSpan) return <tr key={`h-${p.id}`}><td colSpan={colSpan} className="bg-[#F1EDFA] px-4 py-2.5 dark:bg-slate-700/40">{isi}</td></tr>;
-    return <div key={`h-${p.id}`} className="rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700/40">{isi}</div>;
+    if (colSpan) return <tr key={`h-${p.id}`}><td colSpan={colSpan} className="bg-[#F1EDFA] px-4 py-2.5 dark:bg-slate-700">{isi}</td></tr>;
+    return <div key={`h-${p.id}`} className="rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700">{isi}</div>;
   };
 
   return (
@@ -82,7 +82,7 @@ export function PenempatanTable({
         <>
           <div className={mobileNative ? "hidden overflow-x-auto lg:block" : "overflow-x-auto"}>
             <table className="w-full min-w-225 text-left text-sm">
-              <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+              <thead className="border-b border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                 <tr>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Nama</th>
                   <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Kelas</th>
@@ -102,7 +102,7 @@ export function PenempatanTable({
                   return (
                     <Fragment key={p.id}>
                     {judulTempat(p, i, canManage ? 6 : 5)}
-                    <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                    <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                       <td className="whitespace-nowrap px-4 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
@@ -136,11 +136,11 @@ export function PenempatanTable({
                         <td className="whitespace-nowrap px-4 py-3">
                           <div className="flex items-center gap-1.5">
                             <button onClick={() => onEdit?.(p)} disabled={busy}
-                              className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-[#000000]/20">
+                              className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-slate-700">
                               <Pencil size={12} /> Edit
                             </button>
                             <button onClick={() => onHapus?.(p)} disabled={busy}
-                              className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                              className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-slate-700">
                               <Trash2 size={12} /> Hapus
                             </button>
                           </div>
@@ -240,11 +240,11 @@ export function PenempatanTable({
                     {canManage && (
                       <div className="flex items-center gap-1.5 pl-[50px]">
                         <button onClick={() => onEdit?.(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-[#000000]/20">
+                          className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:bg-[#F1EDFA] disabled:opacity-40 dark:bg-slate-700">
                           <Pencil size={12} /> Edit
                         </button>
                         <button onClick={() => onHapus?.(p)} disabled={busy}
-                          className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-[#48700B]/20">
+                          className="flex items-center gap-1 rounded-lg bg-[#F6FEE8] px-2.5 py-1.5 text-xs font-bold text-[#5D900F] dark:text-[#C4B5FD] shadow-sm transition-colors hover:bg-[#F6FEE8] disabled:opacity-40 dark:bg-slate-700">
                           <Trash2 size={12} /> Hapus
                         </button>
                       </div>

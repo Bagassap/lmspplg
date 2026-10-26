@@ -39,7 +39,7 @@ export function RekapMagangHarianTable({ loading, siswa }: { loading: boolean; s
       {loading ? <LoadingRows /> : siswa.length === 0 ? <EmptyState /> : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-160 text-left text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+            <thead className="border-b border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
               <tr>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Status</th>
@@ -51,7 +51,7 @@ export function RekapMagangHarianTable({ loading, siswa }: { loading: boolean; s
               {siswa.map((s) => {
                 const nama = toTitleCase(s.nama);
                 return (
-                  <tr key={s.siswaId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                  <tr key={s.siswaId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <Avatar src={s.fotoProfil} nama={nama} sizePx={34} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
@@ -82,7 +82,7 @@ export function RekapMagangRangeTable({ loading, siswa }: { loading: boolean; si
       {loading ? <LoadingRows /> : siswa.length === 0 ? <EmptyState /> : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-170 text-left text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+            <thead className="border-b border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
               <tr>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Siswa</th>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold tracking-wide text-slate-400 uppercase dark:text-slate-500">Kehadiran</th>
@@ -95,7 +95,7 @@ export function RekapMagangRangeTable({ loading, siswa }: { loading: boolean; si
                 const pct = s.summary.persentaseKehadiran;
                 const pctColor = pct >= 70 ? STATUS_CFG.HADIR.clr : STATUS_CFG.ALPA.clr;
                 return (
-                  <tr key={s.siswaId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                  <tr key={s.siswaId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <Avatar src={null} nama={nama} sizePx={34} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />

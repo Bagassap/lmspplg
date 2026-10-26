@@ -66,7 +66,7 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
         className="relative z-10 flex max-h-[80dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700/50">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: `${accent}20` }}>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: "#F1F5F9" }}>
               <User size={16} style={{ color: accent }} />
             </div>
             <h2 className="text-sm font-extrabold text-slate-800 dark:text-white">{title}</h2>

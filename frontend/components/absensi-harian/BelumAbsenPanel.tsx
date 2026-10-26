@@ -183,7 +183,7 @@ function DetailModal({
           </div>
         ) : (
           <>
-            <div className="flex shrink-0 items-start gap-1.5 border-b border-slate-100 bg-slate-50/70 px-4 py-2 dark:border-slate-700 dark:bg-slate-800/40">
+            <div className="flex shrink-0 items-start gap-1.5 border-b border-slate-100 bg-slate-50/70 px-4 py-2 dark:border-slate-700 dark:bg-slate-700">
               <Info size={12} className="mt-0.5 shrink-0 text-slate-400" />
               <p className="text-[10px] font-medium leading-snug text-slate-400 dark:text-slate-500">
                 Klik <span className="font-bold" style={{ color: iconColor }}>Salin</span> untuk menyalin daftar nama, lalu tempel ke grup WhatsApp sebagai pesan pengingat.

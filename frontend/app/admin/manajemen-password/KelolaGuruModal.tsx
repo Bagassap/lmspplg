@@ -177,7 +177,7 @@ export function KelolaGuruModal({
                         className={`relative overflow-hidden rounded-2xl border p-3.5 pl-4 transition-colors ${
                           g.isActive
                             ? "border-slate-100 dark:border-slate-700/50"
-                            : "border-[#F6FEE8] bg-[#F6FEE8]/30 dark:border-[#48700B]/30 dark:bg-[#48700B]/5"
+                            : "border-[#F6FEE8] bg-[#F6FEE8]/30 dark:border-[#48700B]/30 dark:bg-slate-700"
                         }`}>
                         <div className={`absolute inset-y-0 left-0 w-1 ${g.isActive ? "bg-[#3E03B3]" : "bg-[#3E03B3]"}`} />
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -192,8 +192,8 @@ export function KelolaGuruModal({
                           </div>
                           <span className={`shrink-0 rounded-lg px-2.5 py-1 text-[10px] font-bold ${
                             g.isActive
-                              ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
-                              : "bg-[#F6FEE8] text-[#5D900F] dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"
+                              ? "bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"
+                              : "bg-[#F6FEE8] text-[#5D900F] dark:bg-slate-700 dark:text-[#C4B5FD]"
                           }`}>
                             {g.isActive ? "Aktif" : "Nonaktif"}
                           </span>
@@ -202,10 +202,10 @@ export function KelolaGuruModal({
                         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                           <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Mapel:</span>
                           {(g.guru?.mapelDiampu ?? []).map((m) => (
-                            <span key={m.id} className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1 text-[11px] font-semibold text-[#3E03B3] dark:bg-[#000000]/20 dark:text-[#8F6DD3]">
+                            <span key={m.id} className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1 text-[11px] font-semibold text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]">
                               {m.nama}
                               <button type="button" disabled={busy} onClick={() => hapusMapel(g.id, m.id)}
-                                className="rounded-full hover:bg-[#F1EDFA] dark:hover:bg-[#2D0281]/40">
+                                className="rounded-full hover:bg-[#F1EDFA] dark:hover:bg-slate-600">
                                 <X size={10} />
                               </button>
                             </span>
@@ -247,8 +247,8 @@ export function KelolaGuruModal({
                           <button type="button" disabled={busy} onClick={() => toggleAktif(g)}
                             className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold disabled:opacity-40 ${
                               g.isActive
-                                ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
-                                : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-[#48700B]/20"
+                                ? "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-slate-700"
+                                : "bg-[#F6FEE8] text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:bg-slate-700"
                             }`}>
                             {busy ? <Loader2 size={11} className="animate-spin" /> : g.isActive ? <Ban size={11} /> : <RotateCcw size={11} />}
                             {g.isActive ? "Nonaktifkan" : "Aktifkan"}

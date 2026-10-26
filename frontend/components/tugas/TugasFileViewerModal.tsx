@@ -48,7 +48,7 @@ export function TugasFileViewerModal({
             <div className="flex-1 space-y-5 overflow-y-auto px-6 pb-6 sm:px-8">
               {fileUrl ? (
                 <a href={fileUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-4 rounded-3xl bg-[#F1EDFA] px-5 py-5 dark:bg-slate-700/40">
+                  className="flex items-center gap-4 rounded-3xl bg-[#F1EDFA] px-5 py-5 dark:bg-slate-700">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#3E03B3]">
                     <Download size={22} />
                   </span>
@@ -65,7 +65,7 @@ export function TugasFileViewerModal({
               {catatan && (
                 <div>
                   <p className="mb-2 text-sm font-bold text-slate-900 dark:text-white">Catatan siswa</p>
-                  <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 px-5 py-4 text-base text-slate-700 dark:bg-slate-700/40 dark:text-slate-200">
+                  <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 px-5 py-4 text-base text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                     {catatan}
                   </p>
                 </div>

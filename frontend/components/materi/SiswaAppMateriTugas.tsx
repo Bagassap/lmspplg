@@ -46,7 +46,7 @@ function Tile({ i, icon: Icon, size, iconSize, rounded }: {
 
 function MetaIcon({ children, color }: { children: React.ReactNode; color: string }) {
   return (
-    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md" style={{ background: `${color}22`, color }}>
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md" style={{ background: "#F1F5F9", color }}>
       {children}
     </span>
   );
@@ -55,7 +55,7 @@ function MetaIcon({ children, color }: { children: React.ReactNode; color: strin
 function Row({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-slate-100 px-4 py-3.5 dark:bg-slate-800">
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: `${PURPLE}22`, color: PURPLE }}>
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: "#F1F5F9", color: PURPLE }}>
         <Icon size={13} />
       </span>
       <span className="flex-1 text-[13px] font-medium text-slate-600 dark:text-slate-300">{label}</span>

@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 
 const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
-  ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
-  GURU:  { label: "Guru",   cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
-  SISWA: { label: "Siswa",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-[#000000]/30 dark:text-[#8F6DD3]" },
+  ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]" },
+  GURU:  { label: "Guru",   cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]" },
+  SISWA: { label: "Siswa",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]" },
 };
 
 function jakartaHour(): number {

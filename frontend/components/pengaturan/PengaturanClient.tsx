@@ -120,7 +120,7 @@ export function PengaturanClient() {
             />
           </div>
 
-          <div className="flex items-start gap-2.5 rounded-2xl border border-[#F1EDFA] bg-slate-100 px-4 py-3.5 text-xs leading-relaxed text-[#2D0281] dark:border-[#000000]/40 dark:bg-[#000000]/10 dark:text-[#8F6DD3]">
+          <div className="flex items-start gap-2.5 rounded-2xl border border-[#F1EDFA] bg-slate-100 px-4 py-3.5 text-xs leading-relaxed text-[#2D0281] dark:border-[#000000]/40 dark:bg-slate-700 dark:text-[#8F6DD3]">
             <Info size={15} className="mt-0.5 shrink-0" />
             <p>
               Periode PKL dan UKK berbeda-beda tiap tahun ajaran, jadi tidak diaktifkan otomatis berdasarkan tanggal —

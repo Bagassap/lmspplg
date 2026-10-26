@@ -41,7 +41,7 @@ const R = "#3E03B3";
 const G = "#3E03B3";
 
 function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60 ${className}`} />;
+  return <div className={`animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700 ${className}`} />;
 }
 
 const KATEGORI_COLOR: Record<string, string> = {
@@ -67,7 +67,7 @@ function SectionCard({
         <div className="flex items-center gap-2.5">
           {Icon && (
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: `${iconColor}18` }}>
+              style={{ background: "#F1F5F9" }}>
               <Icon size={14} style={{ color: iconColor }} />
             </div>
           )}
@@ -306,7 +306,7 @@ export default function SiswaDashboardPage() {
                 <li key={p.id}
                   onClick={() => setSelectedSlug(p.slug)}
                   className="flex cursor-pointer items-center gap-3 px-5 py-3.5 active:bg-slate-50 dark:active:bg-slate-700/20">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${kColor(p.kategori)}18` }}>
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1F5F9" }}>
                     <Bell size={14} style={{ color: kColor(p.kategori) }} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -351,7 +351,7 @@ export default function SiswaDashboardPage() {
               total={absensi.total}
             />
             <div className="mt-4 flex items-center gap-2.5 border-t border-slate-100 pt-4 dark:border-slate-700/40">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${P}18` }}>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1F5F9" }}>
                 <Calendar size={16} style={{ color: P }} />
               </div>
               <div className="min-w-0">
@@ -366,7 +366,7 @@ export default function SiswaDashboardPage() {
               <div className="flex items-center gap-2">
                 {data.pengumuman.length > 0 &&
                   <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: `${P}18`, color: P }}>{data.pengumuman.length}</span>
+                    style={{ background: "#F1F5F9", color: P }}>{data.pengumuman.length}</span>
                 }
                 <ViewAll href="/siswa/pengumuman" />
               </div>
@@ -381,10 +381,10 @@ export default function SiswaDashboardPage() {
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     transition={{ delay: 0.35 + i * 0.06 }}
                     onClick={() => setSelectedSlug(p.slug)}
-                    className="group relative flex cursor-pointer items-center gap-3 overflow-hidden px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                    className="group relative flex cursor-pointer items-center gap-3 overflow-hidden px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-600">
                     <div className="absolute inset-y-0 left-0 w-0.5 rounded-r" style={{ backgroundColor: kColor(p.kategori) }} />
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                      style={{ background: `${kColor(p.kategori)}18` }}>
+                      style={{ background: "#F1F5F9" }}>
                       <Bell size={14} style={{ color: kColor(p.kategori) }} />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -398,7 +398,7 @@ export default function SiswaDashboardPage() {
                       </div>
                     </div>
                     <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"
-                      style={{ background: `${kColor(p.kategori)}18`, color: kColor(p.kategori) }}>{p.kategori}</span>
+                      style={{ background: "#F1F5F9", color: kColor(p.kategori) }}>{p.kategori}</span>
                   </motion.li>
                 ))}
               </ul>

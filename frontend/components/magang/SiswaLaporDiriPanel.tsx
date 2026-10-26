@@ -79,7 +79,7 @@ export function SiswaLaporDiriPanel() {
   if (!status?.hasPenempatan) {
     return (
       <div className="flex flex-col items-center rounded-3xl border border-slate-100 bg-white px-6 py-14 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-[#48700B]/20"}`} style={app ? { background: "#F1EDFA" } : undefined}>
+        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${app ? "" : "bg-[#F6FEE8] dark:bg-slate-700"}`} style={app ? { background: "#F1EDFA" } : undefined}>
           <AlertCircle size={26} className={app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"} />
         </div>
         <h2 className="mt-4 text-lg font-extrabold text-slate-800 dark:text-white">Belum Ada Penempatan PKL</h2>
@@ -106,20 +106,20 @@ export function SiswaLaporDiriPanel() {
           className="overflow-hidden rounded-3xl shadow-lg" style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
           <div className="relative px-6 py-8 text-center">
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 10, delay: 0.1 }}
-              className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg ${app ? "bg-white" : "bg-black/10"}`}>
+              className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-lg ${app ? "bg-white" : "bg-slate-200"}`}>
               <CheckCircle2 size={30} className={app ? "text-[#5D900F]" : "text-black"} />
             </motion.div>
             <h2 className="mt-4 text-lg font-extrabold text-black">Sudah Lapor Diri Bulan Ini</h2>
             <p className="mt-1 text-sm text-black/70">Periode {periodeLabel(status.periode)}</p>
             <a href={`/api/uploads${status.current.fileUrl}`} target="_blank" rel="noopener noreferrer"
-              className="mx-auto mt-5 flex w-fit items-center gap-2 rounded-xl bg-black/10 px-4 py-2.5 text-sm font-bold text-black backdrop-blur-sm hover:bg-black/20">
+              className="mx-auto mt-5 flex w-fit items-center gap-2 rounded-xl bg-slate-200 px-4 py-2.5 text-sm font-bold text-black backdrop-blur-sm hover:bg-slate-200">
               <FileIcon size={14} /> {status.current.fileName}
             </a>
             <p className="mt-4 text-xs text-black/60">Ingin ganti file? Unggah ulang di bawah ini untuk menimpa laporan bulan ini.</p>
           </div>
         </motion.div>
       ) : (
-        <div className={`px-4 py-3 text-sm font-semibold ${app ? "rounded-3xl text-[#3E03B3]" : "rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] text-[#5D900F] dark:border-[#48700B]/40 dark:bg-[#48700B]/20 dark:text-[#C4B5FD]"}`} style={app ? { background: "#F1EDFA" } : undefined}>
+        <div className={`px-4 py-3 text-sm font-semibold ${app ? "rounded-3xl text-[#3E03B3]" : "rounded-2xl border border-[#F6FEE8] bg-[#F6FEE8] text-[#5D900F] dark:border-[#48700B]/40 dark:bg-slate-700 dark:text-[#C4B5FD]"}`} style={app ? { background: "#F1EDFA" } : undefined}>
           Anda belum lapor diri untuk periode {status?.periode ? periodeLabel(status.periode) : "bulan ini"}.
         </div>
       )}
@@ -131,7 +131,7 @@ export function SiswaLaporDiriPanel() {
         <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">File presentasi PDF atau PPT/PPTX, maks. 20MB</p>
 
         <div className="mt-4">
-          <label className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors dark:border-slate-600 dark:bg-slate-700/40 ${app ? "hover:border-[#3E03B3]/50 hover:bg-[#F1EDFA]" : "hover:border-[#3E03B3]/40 hover:bg-slate-100"}`}>
+          <label className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors dark:border-slate-600 dark:bg-slate-700 ${app ? "hover:border-[#3E03B3]/50 hover:bg-[#F1EDFA]" : "hover:border-[#3E03B3]/40 hover:bg-slate-100"}`}>
             <Upload size={16} className={`shrink-0 ${app ? "text-[#3E03B3]" : "text-[#3E03B3]"}`} />
             <div className="min-w-0 flex-1">
               {file ? (
@@ -151,7 +151,7 @@ export function SiswaLaporDiriPanel() {
         <div className="mt-3">
           <textarea value={catatan} onChange={(e) => setCatatan(e.target.value)} rows={2}
             placeholder="Catatan (opsional)..."
-            className={`w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3] focus:ring-[#3E03B3]/20" : "focus:border-[#3E03B3] focus:ring-[#3E03B3]/15"} focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100`} />
+            className={`w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 ${app ? "focus:border-[#3E03B3] focus:ring-[#3E03B3]/20" : "focus:border-[#3E03B3] focus:ring-[#3E03B3]/15"} focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100`} />
         </div>
 
         <button type="button" onClick={handleSubmit} disabled={submitting || !file}

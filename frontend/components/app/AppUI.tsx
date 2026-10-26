@@ -91,7 +91,7 @@ export function AppBanner({ children, className = "", tone = "purple" }: { child
 export function AppInfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
     <div className="app-info-row flex items-start gap-3 rounded-2xl bg-slate-100 px-4 py-3.5 dark:bg-slate-800">
-      <span className="app-info-icon mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: `${APP_PURPLE}22`, color: APP_PURPLE }}>
+      <span className="app-info-icon mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: "#F1F5F9", color: APP_PURPLE }}>
         <Icon size={13} />
       </span>
       <div className="min-w-0 flex-1">

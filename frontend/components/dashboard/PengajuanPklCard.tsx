@@ -28,7 +28,7 @@ export function PengajuanPklCard({ list }: { list: PengajuanPkl[] }) {
 
       <div className="mt-3 space-y-2">
         {groups.slice(0, 4).map((rows) => (
-          <div key={rows[0].id} className="flex items-center gap-2.5 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5 dark:bg-slate-700/40">
+          <div key={rows[0].id} className="flex items-center gap-2.5 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5 dark:bg-slate-700">
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{rows[0].tempat}</p>
               <p className="truncate text-xs text-slate-600 dark:text-slate-300">

@@ -132,7 +132,7 @@ export function AbsensiHarianTable({
               return (
                 <motion.div key={s.siswaId}
                   initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
-                  className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/20"
+                  className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600"
                   style={{ gridTemplateColumns: GRID_COLS }}>
                   <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tableStart + idx}</span>
                   <Avatar

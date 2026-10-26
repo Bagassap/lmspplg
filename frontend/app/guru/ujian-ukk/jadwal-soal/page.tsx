@@ -403,7 +403,7 @@ export default function GuruJadwalSoalPage() {
                           <ChevronRight size={18} className={`shrink-0 text-slate-300 transition-transform ${exp ? "rotate-90" : ""}`} />
                         </button>
                         {exp && (
-                          <div className="border-t border-slate-100 bg-slate-50/60 dark:border-slate-700/40 dark:bg-slate-700/20">
+                          <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                             <div className="px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">Hasil Kerja Siswa</div>
                             <SubmisiList items={submisiTahapan} />
                           </div>
@@ -417,7 +417,7 @@ export default function GuruJadwalSoalPage() {
           )}
 
           <div className={`flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden ${appMode ? "max-lg:hidden" : ""}`}>
-              <div className="px-5 pt-5 pb-0" style={{background:"rgba(62,3,179,0.05)"}}>
+              <div className="px-5 pt-5 pb-0" style={{background: "#F1F5F9"}}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background:"#3E03B3"}}>
@@ -430,7 +430,7 @@ export default function GuruJadwalSoalPage() {
                   <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
                   <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)}
                     placeholder="Cari nama task..."
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#8F6DD3] focus:ring-2 focus:ring-[#F1EDFA] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
                 </div>
                 <div className="flex gap-5 border-b border-slate-100 dark:border-slate-700">
                   <button onClick={()=>setTab("all")}
@@ -464,7 +464,7 @@ export default function GuruJadwalSoalPage() {
                 <>
                   <div className="hidden overflow-x-auto lg:block">
                   <table className="w-full min-w-170 text-left text-sm">
-                    <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
+                    <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700">
                       <tr>
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Task</th>
                         <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tanggal</th>
@@ -484,7 +484,7 @@ export default function GuruJadwalSoalPage() {
                         const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
                         return (
                           <Fragment key={t.id}>
-                            <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                            <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-2.5">
                                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{background:rp.gradient}}>
@@ -519,7 +519,7 @@ export default function GuruJadwalSoalPage() {
                             </tr>
                             {exp && (
                               <tr className="border-b border-slate-100 dark:border-slate-700/40">
-                                <td colSpan={7} className="bg-slate-50/50 p-0 dark:bg-slate-700/20">
+                                <td colSpan={7} className="bg-slate-100 p-0 dark:bg-slate-700">
                                   <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:border-slate-700">
                                     <span>Hasil Kerja Siswa</span>
                                     <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
@@ -565,7 +565,7 @@ export default function GuruJadwalSoalPage() {
                             </span>
                           </button>
                           {exp && (
-                            <div className="border-t border-slate-100 bg-slate-50/50 dark:border-slate-700/40 dark:bg-slate-700/20">
+                            <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                               <div className="flex items-center justify-between px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
                                 <span>Hasil Kerja Siswa</span>
                                 <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>

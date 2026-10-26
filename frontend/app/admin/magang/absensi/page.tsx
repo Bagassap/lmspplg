@@ -472,7 +472,7 @@ export default function AdminMagangAbsensiPage() {
                   Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
                 </p>
               </div>
-              <div className="relative flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700/50 sm:w-full sm:max-w-xs">
+              <div className="relative flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700 sm:w-full sm:max-w-xs">
                 <CalendarDays size={14} className="shrink-0 text-slate-400" />
                 <span className="pointer-events-none w-full min-w-0 text-sm font-semibold text-slate-700 dark:text-slate-200">
                   {formatTglSlash(tanggal)}
@@ -560,17 +560,17 @@ export default function AdminMagangAbsensiPage() {
             </div>
 
             {exportRange.rangeMode === "mingguan" && (
-              <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+              <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
             )}
 
             {exportRange.rangeMode === "bulanan" && (
               <div className="mt-2 flex items-center gap-1.5">
                 <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                   {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                 </select>
                 <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                   {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                 </select>
               </div>
@@ -667,7 +667,7 @@ export default function AdminMagangAbsensiPage() {
 
           <div className="flex items-center gap-2 rounded-3xl bg-white p-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
             <button type="button" onClick={() => setTempatPickerOpen(true)}
-              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-slate-50 px-3 text-left dark:bg-slate-700/40">
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-slate-50 px-3 text-left dark:bg-slate-700">
               <span className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">
                 {selected ? `${selected.tempatMagang.namaTempat} · ${hadirPct}% hadir` : "Pilih tempat"}
               </span>
@@ -886,17 +886,17 @@ export default function AdminMagangAbsensiPage() {
                   </div>
 
                   {exportRange.rangeMode === "mingguan" && (
-                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200" />
+                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                   )}
 
                   {exportRange.rangeMode === "bulanan" && (
                     <div className="mt-3 flex items-center gap-1.5">
                       <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                       </select>
                       <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
+                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                       </select>
                     </div>

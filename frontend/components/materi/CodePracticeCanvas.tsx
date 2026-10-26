@@ -81,7 +81,7 @@ export function CodePracticeCanvas({
 
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
-      <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/60 px-3 py-2 dark:border-slate-700 dark:bg-slate-700/20">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-700">
         <div className="flex items-center gap-1">
           {TABS.map((t) => {
             const active = tab === t.key;

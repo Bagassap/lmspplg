@@ -69,7 +69,7 @@ export function FilterBarPassword({
           ))}
         </div>
         {wali && (
-          <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2 dark:bg-slate-700/30">
+          <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2 dark:bg-slate-700">
             <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={28} fallbackBg="#3E03B3" textClassName="text-[10px] font-bold" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-bold text-slate-800 dark:text-white">{wali.nama}</p>
@@ -89,7 +89,7 @@ export function FilterBarPassword({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="shrink-0">
           <p className="flex items-center gap-1.5 whitespace-nowrap text-sm font-bold text-slate-700 dark:text-white">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: `${REF_PRIMARY}1a`, color: REF_PRIMARY }}>
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: "#F1F5F9", color: REF_PRIMARY }}>
               <Filter size={13} />
             </span>
             Kelola Password <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
@@ -180,7 +180,7 @@ export function FilterBarPassword({
                 Belum Ganti
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-semibold" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+              <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-semibold" style={{ backgroundColor: "#F1F5F9", color: REF_SUCCESS }}>
                 Sudah Ganti
               </span>
             )}

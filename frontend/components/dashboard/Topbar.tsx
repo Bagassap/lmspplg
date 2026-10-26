@@ -370,7 +370,7 @@ export function Topbar({ user }: { user: UserPayload }) {
 
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 lg:flex"
+            className="hidden items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-left transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700 lg:flex"
           >
             <Search size={14} className="shrink-0 text-slate-500 dark:text-slate-400" />
             <span className="w-32 text-sm text-slate-500 dark:text-slate-400">Cari sesuatu...</span>
@@ -379,7 +379,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             </span>
           </button>
 
-          <div className="hidden items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700/50 lg:flex">
+          <div className="hidden items-center rounded-full bg-slate-100 p-1 dark:bg-slate-700 lg:flex">
             <button
               onClick={toggleDark}
               title="Mode terang"
@@ -407,10 +407,10 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => (appMode ? router.push(`/${user.role.toLowerCase()}/notifikasi`) : setNotifOpen((v) => !v))}
-              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700/50 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors lg:bg-slate-100 lg:text-slate-500 lg:hover:bg-slate-200 lg:hover:text-slate-700 lg:dark:bg-slate-700 lg:dark:text-slate-400 lg:dark:hover:bg-slate-700 lg:dark:hover:text-white ${
                 purpleMobile
                   ? "bg-white/15 text-white hover:bg-white/25"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700/50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
               }`}
             >
               <Bell size={16} />
@@ -440,7 +440,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllRead}
-                        className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary hover:bg-primary/20"
+                        className="flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-primary hover:bg-primary/20"
                       >
                         <CheckCheck size={10} />
                         Tandai semua
@@ -465,13 +465,13 @@ export function Topbar({ user }: { user: UserPayload }) {
                         <button
                           key={n.id}
                           onClick={() => handleNotifClick(n)}
-                          className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50 ${
-                            !n.isRead ? "bg-slate-100 dark:bg-[#000000]/10" : ""
+                          className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-600 ${
+                            !n.isRead ? "bg-slate-100 dark:bg-slate-700" : ""
                           }`}
                         >
                           <div
                             className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-                            style={{ backgroundColor: `${style.color}22` }}
+                            style={{ backgroundColor: "#F1F5F9" }}
                           >
                             <NIcon size={14} style={{ color: style.color }} />
                           </div>
@@ -509,8 +509,8 @@ export function Topbar({ user }: { user: UserPayload }) {
             )}
             <button
               onClick={() => setDropdownOpen((v) => !v)}
-              className={`${appMode ? "hidden lg:flex" : "flex"} items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700/50 lg:dark:hover:bg-slate-700 ${
-                purpleMobile ? "bg-white/15 hover:bg-white/25" : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700"
+              className={`${appMode ? "hidden lg:flex" : "flex"} items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-3 transition-colors lg:bg-slate-100 lg:hover:bg-slate-200 lg:dark:bg-slate-700 lg:dark:hover:bg-slate-700 ${
+                purpleMobile ? "bg-white/15 hover:bg-white/25" : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700"
               }`}
             >
               <Avatar
@@ -547,14 +547,14 @@ export function Topbar({ user }: { user: UserPayload }) {
 
                   <button
                     onClick={() => { setDropdownOpen(false); setSearchOpen(true); }}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50 lg:hidden"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-600 lg:hidden"
                   >
                     <Search size={14} />
                     Cari
                   </button>
                   <button
                     onClick={toggleDark}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50 lg:hidden"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-600 lg:hidden"
                   >
                     {darkMounted && isDark ? <Sun size={14} /> : <Moon size={14} />}
                     {darkMounted && isDark ? "Mode Terang" : "Mode Gelap"}
@@ -567,7 +567,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                       if (user.role === "SISWA") router.push("/siswa/profil");
                       else setProfilOpen(true);
                     }}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-600"
                   >
                     <UserCircle size={14} />
                     Profil Saya
@@ -578,7 +578,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700/50"
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-600"
                     >
                       <CreditCard size={14} />
                       Kartu Pelajar Digital
@@ -586,7 +586,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] dark:text-[#C4B5FD] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-[#48700B]/20"
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5D900F] dark:text-[#C4B5FD] transition-colors hover:bg-[#F6FEE8] dark:hover:bg-slate-600"
                   >
                     <LogOut size={14} />
                     Keluar
@@ -632,7 +632,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                 {searchQuery ? (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:bg-slate-700/50"
+                    className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:bg-slate-600"
                   >
                     <X size={14} />
                   </button>
@@ -656,8 +656,8 @@ export function Topbar({ user }: { user: UserPayload }) {
                         key={item.href}
                         onClick={() => { setSearchOpen(false); router.push(item.href); }}
                         onMouseEnter={() => setSelectedIdx(i)}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50"
-                        style={isSelected ? { backgroundColor: "rgba(62,3,179,0.1)" } : {}}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-600"
+                        style={isSelected ? { backgroundColor: "#F1F5F9" } : {}}
                       >
                         <div
                           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${

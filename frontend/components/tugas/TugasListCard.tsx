@@ -20,9 +20,9 @@ function chunkOf4<T>(items: T[]): T[][] {
 }
 
 const TIPE_BADGE: Record<string, { icon: typeof Code2; cls: string }> = {
-  PRAKTIK: { icon: Code2, cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-[#48700B]/40 dark:text-[#C4B5FD]" },
-  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#FFFFFF] text-[#000000] dark:bg-[#000000]/40 dark:text-[#C4B5FD]" },
-  ESSAY: { icon: PenLine, cls: "bg-[#F1EDFA] text-[#2D0281] dark:bg-[#000000]/40 dark:text-[#8F6DD3]" },
+  PRAKTIK: { icon: Code2, cls: "bg-[#F6FEE8] text-[#48700B] dark:bg-slate-700 dark:text-[#C4B5FD]" },
+  PILIHAN_GANDA: { icon: ListChecks, cls: "bg-[#FFFFFF] text-[#000000] dark:bg-slate-700 dark:text-[#C4B5FD]" },
+  ESSAY: { icon: PenLine, cls: "bg-[#F1EDFA] text-[#2D0281] dark:bg-slate-700 dark:text-[#8F6DD3]" },
 };
 
 const ROW_PALETTES = [
@@ -75,7 +75,7 @@ export function TugasListCard({
   return (
     <div className="min-w-0">
     <div className="hidden flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden lg:flex">
-      <div className="px-5 pt-5 pb-0" style={{ background: "rgba(62,3,179,0.05)" }}>
+      <div className="px-5 pt-5 pb-0" style={{ background: "#F1F5F9" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#F26A3D" }}>
@@ -95,7 +95,7 @@ export function TugasListCard({
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
           <input value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari nama tugas atau mapel..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#F26A3D] focus:ring-2 focus:ring-[#FFFFFF] dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-700 outline-none focus:border-[#F26A3D] focus:ring-2 focus:ring-[#FFFFFF] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:focus:ring-[#000000]/30" />
         </div>
         <div className="flex gap-6 border-b border-slate-100 dark:border-slate-700">
           <button onClick={() => setTab("active")}
@@ -121,7 +121,7 @@ export function TugasListCard({
         )}
         {!loading && shown.length > 0 && (
           <table className="w-full min-w-170 text-left text-sm">
-            <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700/60">
+            <thead className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50/90 backdrop-blur dark:border-slate-700/40 dark:bg-slate-700">
               <tr>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Tugas</th>
                 <th className="whitespace-nowrap px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Mapel</th>
@@ -136,7 +136,7 @@ export function TugasListCard({
                 const rp = rowPalette(idx);
                 const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
                 return (
-                  <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-700/20">
+                  <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm" style={{ background: rp.gradient }}>
@@ -180,7 +180,7 @@ export function TugasListCard({
                       <div className="flex items-center justify-end gap-1">
                         <button onClick={() => onLihatSubmisi(t)}
                           className="flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
-                          style={{ borderColor: rp.bar, color: rp.bar, backgroundColor: `${rp.bar}14` }}>
+                          style={{ borderColor: rp.bar, color: rp.bar, backgroundColor: "#F1F5F9" }}>
                           <Send size={11} /> Lihat
                           {cnt > 0 && <span className="rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-white" style={{ backgroundColor: rp.bar }}>{cnt}</span>}
                         </button>
@@ -191,7 +191,7 @@ export function TugasListCard({
                               <Pencil size={12} />
                             </button>
                             <button onClick={() => onDeleteTugas(t.id)}
-                              className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-[#48700B]/20">
+                              className="rounded-lg p-1.5 text-slate-300 hover:bg-[#F6FEE8] hover:text-[#5D900F] hover:dark:text-[#C4B5FD] dark:hover:bg-slate-600">
                               <Trash2 size={12} />
                             </button>
                           </>
@@ -320,7 +320,7 @@ export function TugasListCard({
         )}
         {!loading && shown.length === 0 && (
           <div className="flex flex-col items-center rounded-3xl bg-white px-6 py-14 text-center shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-[#1E293B]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F26A3D30" }}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#F1F5F9" }}>
               <ClipboardList size={24} className="text-[#5D900F] dark:text-[#C4B5FD]" />
             </div>
             <p className="mt-4 text-sm text-slate-400">{search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"}</p>
@@ -338,7 +338,7 @@ export function TugasListCard({
                   return (
                     <button key={t.id} type="button" onClick={() => setDetailItem(t)}
                       className="flex w-full items-center gap-3 p-4 text-left">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#3E03B318" }}>
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ backgroundColor: "#F1F5F9" }}>
                         {(() => { const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList; return <Icon size={18} style={{ color: "#3E03B3" }} />; })()}
                       </span>
                       <div className="min-w-0 flex-1">

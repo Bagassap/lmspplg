@@ -21,9 +21,9 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
   return (
     <>
       {fotoSrc && (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-700 shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/50 px-4 py-2.5 sm:py-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#F26A3D18" }}>
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#F1F5F9" }}>
               <Camera size={13} style={{ color: "#3E03B3" }} />
             </div>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{fotoLabel}</span>
@@ -34,10 +34,10 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
         </div>
       )}
       {ttdSrc && (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-700 shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#3E03B318" }}>
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#F1F5F9" }}>
                 <PenTool size={13} style={{ color: "#3E03B3" }} />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tanda Tangan</span>
@@ -56,10 +56,10 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
         </div>
       )}
       {lokasi && (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-700 shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#3E03B318" }}>
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#F1F5F9" }}>
                 <MapPin size={13} style={{ color: "#3E03B3" }} />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lokasi</span>
@@ -78,7 +78,7 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
         </div>
       )}
       {rawLokasi && !lokasi && (
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 shadow-sm p-4 sm:col-span-3">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-700 shadow-sm p-4 sm:col-span-3">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Lokasi Absensi</p>
           <p className="text-sm text-slate-600 dark:text-slate-300">{rawLokasi}</p>
         </div>
@@ -238,7 +238,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
           className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-y-auto rounded-3xl shadow-2xl sm:mx-0 sm:flex-row sm:overflow-hidden">
 
           <button onClick={onClose}
-            className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-800/90 dark:text-slate-300 dark:hover:bg-slate-800">
+            className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-500 shadow-md transition-colors hover:bg-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
             <X size={15} />
           </button>
 
@@ -260,10 +260,10 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                 </div>
               </div>
               <h2 className="mt-4 text-sm font-extrabold leading-tight text-white">{siswa.nama}</h2>
-              <div className="mt-2 rounded-lg px-3 py-1 text-xs font-extrabold text-white" style={{ background: "rgba(255,255,255,0.22)" }}>
+              <div className="mt-2 rounded-lg px-3 py-1 text-xs font-extrabold text-white" style={{ background: "#2D0281" }}>
                 {theme.label}
               </div>
-              <div className="mt-1 rounded-lg px-2.5 py-0.5 text-[10px] font-semibold text-white/80" style={{ background: "rgba(255,255,255,0.12)" }}>
+              <div className="mt-1 rounded-lg px-2.5 py-0.5 text-[10px] font-semibold text-white/80" style={{ background: "#2D0281" }}>
                 {kelas}
               </div>
               <div className="my-4 h-px w-full bg-white/20" />

@@ -76,7 +76,7 @@ function SectionCard({
         <div className="flex items-center gap-2.5">
           {Icon && (
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: `${iconColor}20` }}>
+              style={{ background: "#F1F5F9" }}>
               <Icon size={14} style={{ color: iconColor }} />
             </div>
           )}
@@ -279,7 +279,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center gap-2">
               {data.pengumuman.length > 0 &&
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold"
-                  style={{ background: R + "18", color: R }}>{data.pengumuman.length}</span>
+                  style={{ background: "#F1F5F9", color: R }}>{data.pengumuman.length}</span>
               }
               <ViewAll href="/admin/pengumuman" />
             </div>
@@ -294,9 +294,9 @@ export default function AdminDashboardPage() {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 + i * 0.05 }}
                   onClick={() => setSelectedSlug(p.slug)}
-                  className="group flex cursor-pointer items-center gap-3 px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-700/30">
+                  className="group flex cursor-pointer items-center gap-3 px-6 py-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-600">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                    style={{ background: kColor(p.kategori) + "18" }}>
+                    style={{ background: "#F1F5F9" }}>
                     <Bell size={14} style={{ color: kColor(p.kategori) }} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -310,7 +310,7 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                   <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"
-                    style={{ background: kColor(p.kategori) + "18", color: kColor(p.kategori) }}>{p.kategori}</span>
+                    style={{ background: "#F1F5F9", color: kColor(p.kategori) }}>{p.kategori}</span>
                 </motion.li>
               ))}
             </ul>
@@ -337,7 +337,7 @@ export default function AdminDashboardPage() {
           action={
             <div className="flex items-center gap-2">
               <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold"
-                style={{ background: B + "18", color: B }}>{kelasData.length} kelas</span>
+                style={{ background: "#F1F5F9", color: B }}>{kelasData.length} kelas</span>
               <ViewAll href="/admin/magang/absensi" />
             </div>
           }
@@ -514,7 +514,7 @@ export default function AdminDashboardPage() {
                         <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{row.hadir} hadir · {row.tidakHadir} tidak hadir</p>
                       </div>
                       <span className="shrink-0 rounded-lg px-2 py-0.5 text-xs font-bold"
-                        style={{ color: row.persentase >= 75 ? G : R, background: `${row.persentase >= 75 ? G : R}18` }}>
+                        style={{ color: row.persentase >= 75 ? G : R, background: "#F1F5F9" }}>
                         {row.persentase}%
                       </span>
                     </li>
@@ -539,7 +539,7 @@ export default function AdminDashboardPage() {
               <li key={p.id}
                 onClick={() => setSelectedSlug(p.slug)}
                 className="flex cursor-pointer items-center gap-3 px-5 py-3.5 active:bg-slate-50 dark:active:bg-slate-700/20">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: `${kColor(p.kategori)}18` }}>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: "#F1F5F9" }}>
                   <Bell size={14} style={{ color: kColor(p.kategori) }} />
                 </div>
                 <div className="min-w-0 flex-1">

@@ -20,7 +20,7 @@ function MobileRow({ icon: Icon, label, value, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; href?: string | null;
 }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700/30">
+    <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700">
       <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500">
         <Icon size={13} /> {label}
       </span>
@@ -221,7 +221,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/30">
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700">
                   <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-white">
                     <KeyRound size={14} style={{ color: REF_PRIMARY }} />
                     Status Password
@@ -229,7 +229,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   {sudahGanti === null ? (
                     <span className="text-xs text-slate-400 dark:text-slate-500">Belum ada akun</span>
                   ) : sudahGanti ? (
-                    <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium" style={{ backgroundColor: `${REF_SUCCESS}26`, color: REF_SUCCESS }}>
+                    <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium" style={{ backgroundColor: "#F1F5F9", color: REF_SUCCESS }}>
                       <CheckCircle2 size={12} />
                       Sudah Ganti
                     </span>
@@ -241,7 +241,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                   )}
                 </div>
 
-                <div className="flex items-center gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/30">
+                <div className="flex items-center gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700">
                   <ProgressRing percent={pct} size={40} />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-slate-700 dark:text-white">Kelengkapan Data {pct}%</p>
@@ -262,7 +262,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                     <GraduationCap size={12} />
                     Informasi Sekolah
                   </p>
-                  <div className="grid grid-cols-2 gap-3 rounded-2xl p-3" style={{ borderWidth: 1, borderColor: `${REF_PRIMARY}33`, backgroundColor: `${REF_PRIMARY}0d` }}>
+                  <div className="grid grid-cols-2 gap-3 rounded-2xl p-3" style={{ borderWidth: 1, borderColor: `${REF_PRIMARY}33`, backgroundColor: "#F1F5F9" }}>
                     <FieldItem icon={BookOpen} label="Jurusan" value={siswa.jurusan} full />
                     <FieldItem icon={GraduationCap} label="Angkatan" value={String(siswa.angkatan)} />
                     <FieldItem icon={UserCheck} label="Wali Kelas" value={waliKelas} full />
@@ -312,19 +312,19 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
                 <div className="absolute right-4 top-14 z-30 w-56 overflow-hidden rounded-2xl bg-white text-left shadow-xl dark:bg-slate-800">
                   {onResetPassword && siswa.user && (
                     <button type="button" onClick={() => { onResetPassword(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                      className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-600">
                       <KeyRound size={15} className="text-[#3E03B3]" /> Reset Password
                     </button>
                   )}
                   {onImpersonate && siswa.user && (
                     <button type="button" onClick={() => { onImpersonate(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/50 dark:text-slate-200 dark:hover:bg-slate-600">
                       <Eye size={15} className="text-[#3E03B3]" /> Pantau Akun
                     </button>
                   )}
                   {onKeluarkan && (
                     <button type="button" onClick={() => { onKeluarkan(); setActionsOpen(false); }}
-                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-[#48700B]/20">
+                      className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm font-semibold text-[#5D900F] dark:text-[#C4B5FD] hover:bg-[#F6FEE8] dark:border-slate-700/50 dark:hover:bg-slate-600">
                       <Trash2 size={15} /> Keluarkan Siswa
                     </button>
                   )}
@@ -349,7 +349,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
             <MobileRow icon={Phone} label="No. HP" value={siswa.noHp} href={waLink(siswa.noHp)} />
             <MobileRow icon={MapPin} label="Alamat" value={alamatLengkap} />
 
-            <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700/30">
+            <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700">
               <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
                 <KeyRound size={13} style={{ color: REF_PRIMARY }} /> Status Password
               </span>
@@ -366,7 +366,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               )}
             </div>
 
-            <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700/30">
+            <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-700">
               <div className="flex items-center gap-3">
                 <ProgressRing percent={pct} size={36} />
                 <div className="min-w-0 flex-1">

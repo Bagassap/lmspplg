@@ -14,7 +14,7 @@ export function PlaceholderPage({
       ? "bg-slate-100 text-[#3E03B3]"
       : badgeVariant === "lihat"
         ? "bg-slate-100 text-[#3E03B3]"
-        : "bg-[#00AAFA]/15 text-[#00AAFA]";
+        : "bg-slate-100 text-[#00AAFA]";
 
   return (
     <div>
@@ -32,8 +32,8 @@ export function PlaceholderPage({
           <p className="max-w-sm text-xs text-slate-500 dark:text-slate-400">Halaman ini akan segera tersedia.</p>
         </div>
       </div>
-      <div className="app-hide flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-white/60 py-20 text-center dark:border-slate-700/50 dark:bg-slate-800/40">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+      <div className="app-hide flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-white/60 py-20 text-center dark:border-slate-700/50 dark:bg-slate-700">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
           <Icon size={26} className="text-primary" />
         </div>
         <p className="font-medium text-slate-500 dark:text-slate-400">{title}</p>

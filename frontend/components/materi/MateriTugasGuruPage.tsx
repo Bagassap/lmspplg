@@ -195,7 +195,7 @@ export function MateriTugasGuruPage() {
                 )}
               </div>
 
-              <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800/60">
+              <div className="isolate flex gap-1.5 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-700">
                 <button type="button" onClick={() => setCategory("materi")}
                   className="relative flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-colors"
                   style={{ color: category === "materi" ? "#fff" : "#94a3b8" }}>

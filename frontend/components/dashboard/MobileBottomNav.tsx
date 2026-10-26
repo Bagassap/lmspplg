@@ -164,7 +164,7 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
                 <button
                   type="button"
                   onClick={() => setMoreOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-300"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"
                 >
                   <X size={16} />
                 </button>
@@ -202,7 +202,7 @@ function MoreMenuItem({ item, pendingResetCount, onNavigate }: {
               key={sub.href}
               href={sub.href}
               onClick={onNavigate}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-white/5"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-600"
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/[0.07]">
                 <sub.icon size={14} className="text-slate-500 dark:text-slate-300" />
@@ -219,7 +219,7 @@ function MoreMenuItem({ item, pendingResetCount, onNavigate }: {
     <Link
       href={item.href ?? "#"}
       onClick={onNavigate}
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-white/5"
+      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-600"
     >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/[0.07]">
         <item.icon size={16} className="text-slate-500 dark:text-slate-300" />

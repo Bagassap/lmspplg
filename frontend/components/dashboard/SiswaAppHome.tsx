@@ -37,7 +37,7 @@ function relDeadline(deadline: string) {
 
 function MetaIcon({ children, color }: { children: React.ReactNode; color: string }) {
   return (
-    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md" style={{ background: `${color}22`, color }}>
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md" style={{ background: "#F1F5F9", color }}>
       {children}
     </span>
   );
@@ -48,10 +48,10 @@ function ListSkeleton() {
     <div className="space-y-4">
       {[0, 1, 2].map((i) => (
         <div key={i} className="flex animate-pulse items-center gap-4">
-          <div className="h-16 w-16 shrink-0 rounded-2xl bg-slate-200 dark:bg-slate-700/60" />
+          <div className="h-16 w-16 shrink-0 rounded-2xl bg-slate-200 dark:bg-slate-700" />
           <div className="flex-1 space-y-2">
-            <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700/60" />
-            <div className="h-4 w-4/5 rounded bg-slate-200 dark:bg-slate-700/60" />
+            <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" />
+            <div className="h-4 w-4/5 rounded bg-slate-200 dark:bg-slate-700" />
           </div>
         </div>
       ))}
