@@ -1,4 +1,8 @@
+import type { Viewport } from "next";
 import { LoginCard } from "./LoginCard";
+
+// Bilah status HP di halaman login ikut abu-abu (bawaan aplikasi: ungu).
+export const viewport: Viewport = { themeColor: "#E5E7EB" };
 
 export default function LoginPage() {
   return (
