@@ -1,6 +1,6 @@
 "use client";
 
-import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
+import { isTaskAktif, formatRentang, daftarTanggal, statusPengumpulan } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -253,6 +253,9 @@ export default function SiswaJadwalSoalPage() {
   const totalSoal   = soalFiles.length;
   const submisiMap = new Map(mySubmisi.filter(s=>s.tahapan?.id).map(s=>[s.tahapan!.id, s]));
   const openSubmit = (t: Tahapan) => {
+    const w = statusPengumpulan(t);
+    if (w === "belum") { toast.error("Pengumpulan belum dibuka", `Dibuka ${formatRentang(t)} pukul ${t.jamMulai} WIB.`); return; }
+    if (w === "tutup") { toast.error("Pengumpulan sudah ditutup", `Batas akhir ${formatRentang({ ...t, tanggal: t.tanggalSelesai || t.tanggal })} pukul ${t.jamSelesai} WIB.`); return; }
     const g = soalFiles[0] ?? null;
     if (!g) { toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru."); return; }
     setSubmitTask(t); setSubmitSoal(g);
@@ -485,7 +488,7 @@ export default function SiswaJadwalSoalPage() {
                           ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F2F2F2", clr:"#0F172A", border:"#0F172A", onClick:()=>setRevisiModal(myS!) }
                           : isTerkirim
                           ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#3E03B3", onClick:()=>setDetailTarget(myS!) }
-                          : { label:"Kirim", icon:<Send size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>openSubmit(t) };
+                          : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon:<Send size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>openSubmit(t) };
 
                         return (
                           <tr key={t.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
@@ -590,7 +593,7 @@ export default function SiswaJadwalSoalPage() {
                       ? { label: "Revisi", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
                       : isTerkirim
                       ? { label: "Terkirim", icon: <CheckCircle size={12} />, bg: "#EEF2FF", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
-                      : { label: "Kirim", icon: <Send size={12} />, bg: APP_ACCENT, clr: "#FFFFFF", onClick: () => openSubmit(t) };
+                      : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon: <Send size={12} />, bg: statusPengumpulan(t) === "buka" ? APP_ACCENT : "#64748B", clr: "#FFFFFF", onClick: () => openSubmit(t) };
                     return (
                       <li key={t.id} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
                         <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>
@@ -688,7 +691,7 @@ export default function SiswaJadwalSoalPage() {
                     ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F2F2F2", clr: accent ? "#fff" : "#0F172A", onClick:()=>setRevisiModal(myS!) }
                     : isTerkirim
                     ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
-                    : { label:"Kirim", icon:<Send size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>openSubmit(t) };
+                    : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon:<Send size={11}/>, bg: accent ? "#2D0281" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>openSubmit(t) };
 
                   return (
                     <motion.div key={t.id}

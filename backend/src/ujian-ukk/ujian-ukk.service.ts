@@ -203,6 +203,20 @@ export class UjianUkkService {
     const task = await this.prisma.tahapanUKK.findUnique({ where: { id: dto.tahapanId } });
     if (!task || task.hariKe === 0) throw new NotFoundException('Task tidak ditemukan');
 
+    // Pengumpulan hanya dibuka dari tanggal mulai + jam mulai sampai tanggal selesai + jam selesai (WIB).
+    const ymd = (d: Date) => d.toISOString().slice(0, 10);
+    const buka = new Date(`${ymd(task.tanggal)}T${task.jamMulai}:00+07:00`);
+    const tutup = new Date(`${ymd(task.tanggalSelesai ?? task.tanggal)}T${task.jamSelesai}:00+07:00`);
+    const label = (d: Date) =>
+      new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(d) + ' WIB';
+    const sekarang = new Date();
+    if (!Number.isNaN(buka.getTime()) && sekarang < buka) {
+      throw new BadRequestException(`Pengumpulan task "${task.judul}" belum dibuka. Dibuka ${label(buka)}.`);
+    }
+    if (!Number.isNaN(tutup.getTime()) && sekarang > tutup) {
+      throw new BadRequestException(`Waktu pengumpulan task "${task.judul}" sudah berakhir (${label(tutup)}).`);
+    }
+
     // Satu hari hanya boleh mengirim untuk satu task: tolak jika siswa sudah
     // mengirim untuk task lain yang rentang tanggalnya beririsan.
     const akhir = task.tanggalSelesai ?? task.tanggal;

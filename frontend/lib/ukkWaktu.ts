@@ -44,3 +44,14 @@ export function daftarTanggal(t: TaskWaktu): Date[] {
   for (let i = 0; cur <= end && i < 62; i++) { out.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
   return out;
 }
+
+/** Status jendela pengumpulan: "belum" (sebelum mulai), "buka", atau "tutup" (lewat tanggal+jam selesai), WIB. */
+export function statusPengumpulan(t: TaskWaktu): "belum" | "buka" | "tutup" {
+  const now = jakartaNow();
+  const nowKey = `${now.tgl}T${String(Math.floor(now.menit / 60)).padStart(2, "0")}:${String(now.menit % 60).padStart(2, "0")}`;
+  const mulai = `${String(t.tanggal).slice(0, 10)}T${t.jamMulai ?? "00:00"}`;
+  const akhir = `${tanggalAkhir(t)}T${t.jamSelesai ?? "23:59"}`;
+  if (nowKey < mulai) return "belum";
+  if (nowKey > akhir) return "tutup";
+  return "buka";
+}
