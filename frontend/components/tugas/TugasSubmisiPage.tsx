@@ -96,7 +96,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
           {asModal ? <X size={18} /> : <ArrowLeft size={18} />}
         </button>
         <div className="min-w-0 flex-1">
-          <p className={`truncate font-extrabold text-slate-900 dark:text-white ${asModal ? "text-xl sm:text-2xl" : "text-base"}`}>{tugas?.judul ?? "Submisi Tugas"}</p>
+          <p className={`truncate font-extrabold text-slate-900 dark:text-white text-base`}>{tugas?.judul ?? "Submisi Tugas"}</p>
           {tugas && (
             <p className={`flex flex-wrap items-center gap-x-2 text-slate-600 dark:text-slate-300 ${asModal ? "text-sm" : "text-xs"}`}>
               <span>{tugas.mapel}</span><span>· {tipeLabel(tugas.tipe)}</span>

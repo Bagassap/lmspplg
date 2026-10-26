@@ -622,7 +622,7 @@ export default function AdminJadwalSoalPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         {allSoal.length > 1 && <span className="text-sm text-slate-500">{soalJadwalIdx+1} / {allSoal.length}</span>}
                       </div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
+                      <h2 className="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
                         {curSoal ? curSoal.judul : "Jadwal UKK"}
                       </h2>
                       <p className="mt-0.5 text-sm text-slate-500">{curSoal?.fileName ?? (allSoal.length === 0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
@@ -698,7 +698,7 @@ export default function AdminJadwalSoalPage() {
                             <div className="flex items-center gap-2 flex-wrap">
                               {allSoal.length > 1 && <span className="text-sm text-slate-500">{soalSoalIdx+1} / {allSoal.length}</span>}
                             </div>
-                            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
+                            <h2 className="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
                               {curSoal ? curSoal.judul : "Soal UKK"}
                             </h2>
                             <p className="mt-0.5 text-sm text-slate-500">{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
@@ -1095,7 +1095,7 @@ export default function AdminJadwalSoalPage() {
                     <X size={18}/>
                   </button>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-xl font-extrabold leading-tight text-slate-900 dark:text-white sm:text-2xl">{sm.judul}</h3>
+                    <h3 className="text-base font-extrabold leading-tight text-slate-900 dark:text-white">{sm.judul}</h3>
                     <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-600 dark:text-slate-300">
                       <span className="flex items-center gap-1"><MapPin size={12}/>{sm.lokasi}</span>
                       {sm.penguji && <span className="flex items-center gap-1">· <User size={12}/>{sm.penguji}</span>}

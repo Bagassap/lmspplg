@@ -32,12 +32,12 @@ export function TugasFileViewerModal({
             className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
             <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("sky")}>
-                <FileText size={26} color="#fff" />
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("sky")}>
+                <FileText size={20} color="#fff" />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{title}</h2>
-                {subtitle && <p className="truncate text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>}
+                <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{title}</h2>
+                {subtitle && <p className="truncate text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
               <button onClick={onClose} aria-label="Tutup"
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F1EDFA] text-[#3E03B3]">

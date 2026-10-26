@@ -63,7 +63,7 @@ export function SubmisiSayaModal({
               {(tipe === "PILIHAN_GANDA" || tipe === "ESSAY") && target.nilai !== null && (
                 <div className="flex items-center justify-between rounded-xl border border-[#FFFFFF] bg-[#FFFFFF] px-4 py-3 dark:border-[#F26A3D] dark:bg-slate-700">
                   <p className="text-sm font-bold text-[#000000] dark:text-[#C4B5FD]">Nilai Kamu</p>
-                  <p className="text-2xl font-black leading-none text-[#000000] dark:text-[#C4B5FD]">{target.nilai}</p>
+                  <p className="text-lg font-black leading-none text-[#000000] dark:text-[#C4B5FD]">{target.nilai}</p>
                 </div>
               )}
               {isDiterima && (

@@ -54,7 +54,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
             <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
               <Avatar src={row.siswa.fotoProfil} nama={nama} sizePx={56} fallbackBg={avatarColorFor(nama)} textClassName="text-lg font-extrabold" />
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{nama}</h2>
+                <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{nama}</h2>
                 <p className="truncate text-sm text-slate-500 dark:text-slate-400">{row.tempatMagang.namaTempat}</p>
               </div>
               <button onClick={handleClose} aria-label="Tutup"

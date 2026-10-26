@@ -133,7 +133,7 @@ export default function GuruJadwalSoalPage() {
                         <CalendarDays size={26}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h2 className={`text-xl sm:text-2xl font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
+                        <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
                         <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
@@ -186,7 +186,7 @@ export default function GuruJadwalSoalPage() {
                         <FileText size={22}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h2 className={`text-xl sm:text-2xl font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
+                        <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
                         <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>

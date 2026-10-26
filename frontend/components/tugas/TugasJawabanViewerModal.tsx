@@ -54,11 +54,11 @@ export function TugasJawabanViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex h-[90dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl">
             <div className="flex shrink-0 items-center gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(isPg ? "amber" : "sky")}>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(isPg ? "amber" : "sky")}>
                 {isPg ? <ListChecks size={26} color="#fff" /> : <PenLine size={26} color="#fff" />}
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-xl font-extrabold text-slate-900 dark:text-white sm:text-2xl">{judul}</h2>
+                <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{judul}</h2>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
                   {isPg ? `${benar} dari ${sorted.length} soal benar` : `${sorted.length} soal esai`}
                 </p>
@@ -66,7 +66,7 @@ export function TugasJawabanViewerModal({
               {(isPg ? nilaiAkhir : nilai) != null && (
                 <div className="shrink-0 rounded-2xl bg-[#F1EDFA] px-5 py-2 text-center">
                   <p className="text-[11px] font-bold text-slate-600">Nilai</p>
-                  <p className="text-2xl font-black leading-none text-[#3E03B3]">{isPg ? nilaiAkhir : nilai}</p>
+                  <p className="text-lg font-black leading-none text-[#3E03B3]">{isPg ? nilaiAkhir : nilai}</p>
                 </div>
               )}
               <button onClick={onClose} aria-label="Tutup"
