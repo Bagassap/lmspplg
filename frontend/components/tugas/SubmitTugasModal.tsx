@@ -86,7 +86,7 @@ function SubmitPraktikModal({
               {tugas.deskripsi}
             </p>
           )}
-          <div className="min-h-0 flex-1">
+          <div>
             <CodePracticeCanvas
               key={tugas.id}
               initialHtml={code.html}

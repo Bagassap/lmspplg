@@ -81,26 +81,26 @@ export function CodePracticeCanvas({
 
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-900" : "relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"}>
-      <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-700">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-700">
         <div className="flex items-center gap-1">
           {TABS.map((t) => {
             const active = tab === t.key;
             return (
               <button key={t.key} type="button" onClick={() => setTab(t.key)}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all sm:px-3 ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
                 style={active ? { background: "#3E03B3" } : {}}>
                 <t.icon size={13} /> {t.label}
               </button>
             );
           })}
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="ml-auto flex items-center gap-1.5">
           <button type="button" onClick={reset}
             className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
             <RotateCcw size={12} /> Reset
           </button>
           <button type="button" onClick={runNow}
-            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold text-white shadow-sm hover:brightness-105"
+            className="flex items-center gap-1 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-sm hover:brightness-105 sm:px-3 sm:py-1.5 sm:text-[11px]"
             style={{ background: "#F26A3D" }}>
             <Play size={12} /> Run
           </button>
@@ -111,7 +111,7 @@ export function CodePracticeCanvas({
         </div>
       </div>
 
-      <div className="grid flex-1 grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1" style={fullscreen ? undefined : { minHeight }}>
+      <div className={`grid flex-1 grid-cols-1 grid-rows-[minmax(260px,1fr)_minmax(260px,1fr)] md:grid-cols-2 md:grid-rows-1 ${fullscreen ? "" : "min-h-130 md:min-h-(--canvas-h)"}`} style={fullscreen ? undefined : ({ "--canvas-h": `${minHeight}px` } as React.CSSProperties)}>
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}

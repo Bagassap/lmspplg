@@ -30,7 +30,7 @@ export function TugasPraktikViewerModal({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative flex h-[95dvh] w-full max-w-[1400px] flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-800 sm:rounded-3xl"
           >
-            <div className="flex shrink-0 items-center gap-4 px-6 pb-3 pt-5 sm:px-8">
+            <div className="flex shrink-0 items-center gap-3 px-4 pb-3 pt-5 sm:gap-4 sm:px-8">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle("violet")}>
                 <Code2 size={20} color="#fff" />
               </span>
@@ -44,8 +44,8 @@ export function TugasPraktikViewerModal({
               </button>
             </div>
 
-            <div className="flex flex-1 flex-col overflow-y-auto px-6 pb-4 sm:px-8">
-              <div className="min-h-0 flex-1">
+            <div className="flex-1 overflow-y-auto px-3 pb-4 sm:px-8">
+              <div>
                 <CodePracticeCanvas
                   key={`${html.length}-${css.length}-${js.length}`}
                   initialHtml={html}
