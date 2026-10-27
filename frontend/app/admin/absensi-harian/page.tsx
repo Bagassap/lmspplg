@@ -404,13 +404,13 @@ export default function AdminAbsensiHarianPage() {
               </div>
 
               {kelasList.length === 0 ? (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-4 gap-2.5">
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-4 gap-2.5">
                   {kelasPageSlice.map((k, i) => {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
@@ -418,13 +418,13 @@ export default function AdminAbsensiHarianPage() {
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
                         style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
-                        className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl border-2 bg-white px-4 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ background: warna }}>
-                          <BookOpen size={18} className="text-white" />
+                        className="relative flex w-full items-center gap-2.5 overflow-hidden rounded-2xl border-2 bg-white px-3 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: warna }}>
+                          <BookOpen size={17} className="text-white" />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-base font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
-                          <span className="block truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                          <span className="block truncate text-sm font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
+                          <span className="block truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
                             {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
                           </span>
                         </span>
