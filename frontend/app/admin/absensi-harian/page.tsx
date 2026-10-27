@@ -417,7 +417,7 @@ export default function AdminAbsensiHarianPage() {
                     const warna = KELAS_WARNA[i % KELAS_WARNA.length];
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        style={{ borderColor: warna, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}33` } : {}) }}
+                        style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
                         className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl border-2 bg-white px-4 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
                         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ background: warna }}>
                           <BookOpen size={18} className="text-white" />
