@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Users, Eye, ChevronLeft, ChevronRight, Pencil, X } from "lucide-react";
+import { Users, Eye, Camera, PenTool, ChevronLeft, ChevronRight, Pencil, X } from "lucide-react";
 import { PageSizeToggle } from "@/components/shared/PageSizeToggle";
 import { Avatar } from "@/components/shared/Avatar";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -10,7 +10,7 @@ import { StatusBadge } from "./StatusBadge";
 import { STATUS_CFG, PULANG_CFG, avatarColor, parseLokasi } from "./shared";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "./types";
 
-const GRID_COLS = "28px 40px 2.2fr 1.3fr 1fr 1fr 1.3fr 116px";
+const GRID_COLS = "28px 40px 2.2fr 1.3fr 1fr 1fr 1.3fr 60px 60px 116px";
 
 type Props = {
   loading: boolean;
@@ -103,7 +103,7 @@ export function AbsensiHarianTable({
   return (
     <>
       <div className="flex-1 overflow-x-auto">
-        <div className="min-w-175">
+        <div className="min-w-225">
           <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
             <span />
             <span />
@@ -112,6 +112,8 @@ export function AbsensiHarianTable({
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
             <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Waktu</span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Lokasi</span>
+            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Foto</span>
+            <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">TTD</span>
             <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
           </div>
           <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
@@ -183,6 +185,22 @@ export function AbsensiHarianTable({
                     ) : (
                       <span className="text-[11px] text-slate-300">—</span>
                     )}
+                  </div>
+                  <div className="flex justify-center">
+                    {fotoRaw ? (
+                      <button onClick={openDokumen} title="Lihat foto selfie"
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#F6FEE8] dark:hover:bg-slate-600">
+                        <Camera size={13} className="text-[#5D900F] dark:text-[#C4B5FD]" />
+                      </button>
+                    ) : <Camera size={13} className="text-slate-200 dark:text-slate-700" />}
+                  </div>
+                  <div className="flex justify-center">
+                    {ttdRaw ? (
+                      <button onClick={openDokumen} title="Lihat tanda tangan"
+                        className="flex h-6 w-6 items-center justify-center rounded-lg hover:bg-[#3E03B3] dark:hover:bg-slate-600">
+                        <PenTool size={13} className="text-[#3E03B3]" />
+                      </button>
+                    ) : <PenTool size={13} className="text-slate-200 dark:text-slate-700" />}
                   </div>
                   <div className="flex items-center justify-end gap-1.5">
                     {!isPulangView && canEdit && (
