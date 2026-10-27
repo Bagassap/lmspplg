@@ -134,6 +134,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
             </span>
             <div>
               <p className="text-sm font-bold text-slate-800 dark:text-white">Siswa Bermasalah</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Jarang absen{kelasNama ? ` di ${kelasNama}` : ""}</p>
             </div>
           </div>
           <div className="flex rounded-lg bg-slate-100 p-1 dark:bg-slate-700">
@@ -166,12 +167,16 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           </div>
         ) : (
           <div className="mt-4 space-y-2">
-            {inlineRows.map((r) => {
+            {inlineRows.map((r, i) => {
               const bar = severityColor(r.summary.persentaseKehadiran);
               return (
                 <div key={r.siswaId} className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700">
+                  <RankBadge index={i} />
                   <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={32} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
-                  <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                    <p className="truncate text-[10px] text-slate-400">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
+                  </div>
                   <span className="shrink-0 text-xs font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
                 </div>
               );
