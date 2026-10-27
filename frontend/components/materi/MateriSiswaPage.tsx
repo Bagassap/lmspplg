@@ -69,21 +69,6 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
   return (
     <div className="min-w-0 space-y-5">
       <div className="hidden space-y-5 lg:block">
-      {!embedded && (
-        <div className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="relative flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-              style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
-              <BookOpen size={26} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Belajar Mandiri</span>
-              <h1 className="text-2xl font-extrabold leading-tight text-slate-800 dark:text-white">Materi Pembelajaran</h1>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
         <div className="px-5 pt-5 pb-0" style={{ background: "#F1F5F9" }}>
           <div className="flex items-center gap-2 mb-4">

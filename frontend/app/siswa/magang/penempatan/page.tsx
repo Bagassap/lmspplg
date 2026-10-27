@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Briefcase, Building2, CalendarDays, MapPin, Phone, User, Users } from "lucide-react";
+import { Building2, MapPin, Phone, User, Users } from "lucide-react";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "@/components/magang/types";
 import type { PenempatanMagang } from "@/components/magang/types";
@@ -36,19 +36,6 @@ export default function SiswaMagangPenempatanPage() {
 
   return (
     <div className="space-y-5 lg:p-1">
-      <div className="relative hidden overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
-        <div className="relative flex items-center gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
-            <Briefcase size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
-            <Briefcase size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
-          </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">PKL</span>
-            <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Penempatan PKL Saya</h1>
-          </div>
-        </div>
-      </div>
 
       <div className="hidden space-y-5 lg:block">
         {loading ? (

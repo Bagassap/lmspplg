@@ -408,24 +408,6 @@ export default function SiswaProfilPage() {
         </>
       )}
       <div className={appMode ? "hidden space-y-5 lg:block" : "space-y-5"}>
-      <motion.div
-        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
-      >
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)] sm:h-14 sm:w-14"
-              style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
-              <User size={22} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:hidden" />
-              <User size={26} className="hidden text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)] sm:block" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Profil Saya</span>
-              <h1 className="text-xl font-extrabold leading-tight text-slate-800 dark:text-white sm:text-2xl">Profil Saya</h1>
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}

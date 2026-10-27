@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, CheckCircle2, Clock, FileText, Loader2, MapPin, Pencil, Phone, Plus, Search, Send, Upload, User, UserPlus, Users, X } from "lucide-react";
+import { Building2, CheckCircle2, Clock, FileText, Loader2, MapPin, Pencil, Phone, Plus, Search, Send, Upload, User, UserPlus, Users, X } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
@@ -229,15 +229,6 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
 
   return (
     <div className="space-y-5 lg:p-1">
-      <div className="hidden rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-800 lg:block">
-        <div className="flex items-center gap-4">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#3E03B3] text-white"><Briefcase size={26} /></span>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">PKL</span>
-            <h1 className="text-2xl font-extrabold leading-tight text-slate-800 dark:text-white">Penempatan PKL Saya</h1>
-          </div>
-        </div>
-      </div>
 
       {menunggu.length > 0 ? (
         <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
