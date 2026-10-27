@@ -278,7 +278,6 @@ export function JadwalAbsenCard() {
           </span>
           <div>
             <p className="text-sm font-bold text-slate-800 dark:text-white">Jadwal Absen</p>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">Atur jam absen datang & pulang (WIB)</p>
           </div>
         </div>
         <motion.button
@@ -298,21 +297,19 @@ export function JadwalAbsenCard() {
             <Clock size={11} className="text-[#3E03B3]" />
             {formatTanggalWib(hariIni.tanggal, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · WIB
           </p>
-          <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
-            <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogIn size={11} className="text-[#5D900F] dark:text-[#C4B5FD]" /> Absen Datang
-            </p>
-            <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
-              {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.hadirStartMinutes, hariIni.hadirEndMinutes)}
-            </p>
+          <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap rounded-2xl border border-slate-100 px-2.5 py-2 dark:border-slate-700/50">
+            <LogIn size={12} className="shrink-0 text-[#5D900F] dark:text-[#C4B5FD]" />
+            <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">Datang</span>
+            <span className="truncate text-[11px] font-bold text-slate-800 dark:text-white">
+              {hariIni.isWeekend ? "Libur" : `${fmtMinutes(hariIni.hadirStartMinutes)}–${fmtMinutes(hariIni.hadirEndMinutes)}`}
+            </span>
           </div>
-          <div className="rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
-            <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-              <LogOut size={11} className="text-[#00AAFA]" /> Absen Pulang
-            </p>
-            <p className="mt-1 text-sm font-bold text-slate-800 dark:text-white">
-              {hariIni.isWeekend ? "Libur" : fmtRangeWib(hariIni.pulangStartMinutes, hariIni.pulangEndMinutes)}
-            </p>
+          <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap rounded-2xl border border-slate-100 px-2.5 py-2 dark:border-slate-700/50">
+            <LogOut size={12} className="shrink-0 text-[#00AAFA]" />
+            <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">Pulang</span>
+            <span className="truncate text-[11px] font-bold text-slate-800 dark:text-white">
+              {hariIni.isWeekend ? "Libur" : `${fmtMinutes(hariIni.pulangStartMinutes)}–${fmtMinutes(hariIni.pulangEndMinutes)}`}
+            </span>
           </div>
           {isOverriddenToday && (
             <div className="col-span-2 flex items-start gap-1.5 rounded-xl bg-[#FFFFFF] px-3 py-2 text-[11px] text-[#000000] dark:bg-slate-700 dark:text-[#C4B5FD]">

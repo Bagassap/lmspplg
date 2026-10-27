@@ -102,7 +102,7 @@ export function OptionCard3D({
       <Icon3D icon={icon} tone={tone} size={34} iconSize={16} />
       <span className={`min-w-0 max-w-full ${stack ? "text-center" : ""}`}>
         <span className="block truncate text-[11px] font-bold text-slate-800 dark:text-white">{label}</span>
-        {caption && <span className="block truncate text-[9.5px] leading-tight text-slate-400 dark:text-slate-500">{caption}</span>}
+        {caption && <span className={`block text-[9.5px] leading-tight text-slate-400 dark:text-slate-500 ${stack ? "" : "truncate"}`}>{caption}</span>}
       </span>
     </button>
   );

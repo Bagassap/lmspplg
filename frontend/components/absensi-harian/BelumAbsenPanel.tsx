@@ -59,19 +59,10 @@ function StatTrigger({
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: gradient }}>
         <Icon size={17} className="text-white" />
       </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-1.5">
-          <p className="text-xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</p>
-          <span className="text-[10px] font-bold" style={{ color: accent }}>{pct}%</span>
-        </div>
-        <p className="truncate text-[11px] font-semibold text-slate-400 dark:text-slate-500">{title}</p>
-        <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
-          dari {total} siswa hari ini
-        </p>
-        <div className="mt-1.5 h-1 w-full rounded-xl bg-slate-100 dark:bg-slate-700">
-          <div className="h-1 rounded-xl transition-all" style={{ width: `${pct}%`, background: gradient }} />
-        </div>
-        <p className="mt-1.5 truncate text-[10px] font-semibold" style={{ color: accent }}>{hint}</p>
+      <div className="flex min-w-0 flex-1 items-baseline gap-1.5 whitespace-nowrap">
+        <span className="text-xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</span>
+        <span className="text-[11px] font-bold" style={{ color: accent }}>{pct}%</span>
+        <span className="truncate text-xs font-semibold text-slate-500 dark:text-slate-400">{title.toLowerCase()}</span>
       </div>
     </motion.button>
   );

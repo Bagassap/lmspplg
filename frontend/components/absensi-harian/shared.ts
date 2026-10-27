@@ -62,9 +62,9 @@ export const WALLET_DOT_PATTERN = "radial-gradient(circle, rgba(255,255,255,0.55
 export const WALLET_DOT_SIZE = "18px 18px";
 
 export const RANGE_MODE_CARDS: { key: "harian" | "mingguan" | "bulanan"; label: string; caption: string; icon: React.ElementType; tone: Tone3D }[] = [
-  { key: "harian", label: "Harian", caption: "Rekap hari ini", icon: CalendarDays, tone: "sky" },
-  { key: "mingguan", label: "Mingguan", caption: "Rekap minggu ini", icon: CalendarRange, tone: "emerald" },
-  { key: "bulanan", label: "Bulanan", caption: "Rekap bulan ini", icon: CalendarCheck2, tone: "violet" },
+  { key: "harian", label: "Harian", caption: "PDF & Excel hari ini", icon: CalendarDays, tone: "sky" },
+  { key: "mingguan", label: "Mingguan", caption: "PDF & Excel minggu ini", icon: CalendarRange, tone: "emerald" },
+  { key: "bulanan", label: "Bulanan", caption: "PDF & Excel bulan ini", icon: CalendarCheck2, tone: "violet" },
 ];
 
 export function reportCardFg(gradient: string): string {

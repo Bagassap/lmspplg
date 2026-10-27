@@ -5,11 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ClipboardCheck, CalendarDays, BookOpen,
-  Settings2, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Eye, X,
-  Users, TrendingUp, LogOut, FileText, Download, Bell, Check,
-} from "lucide-react";
+import { ClipboardCheck, CalendarDays, BookOpen, Settings2, ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Eye, X, Users, TrendingUp, FileText, Download, Bell, Check } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
@@ -89,10 +85,7 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{sent ? "Terkirim!" : "Kirim Pengingat Absen (Semua Kelas)"}</p>
-        <p className="truncate text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-          {belum.length > 0 ? `${belum.length} siswa belum absen di seluruh kelas` : "Semua siswa di seluruh kelas sudah absen"}
-        </p>
+        <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{sent ? "Terkirim!" : "Kirim Pengingat"}</p>
       </div>
     </button>
   );
@@ -386,7 +379,7 @@ export default function AdminAbsensiHarianPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div className="grid items-start gap-4 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
+        <div className="grid items-start gap-4 lg:grid-cols-[300px_minmax(0,1fr)_320px]">
           <div className="flex flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -479,41 +472,24 @@ export default function AdminAbsensiHarianPage() {
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-1.5 pb-1 sm:gap-2.5">
-              <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
+            <div className="mt-3 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
                 return (
                   <button key={String(opt.key)} type="button"
                     onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                    className="rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-5 sm:py-2.5 sm:text-sm"
+                    className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors"
                     style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
                     <span className={`flex items-center gap-1 sm:gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
-                      <opt.icon size={13} className="sm:hidden" />
-                      <opt.icon size={16} className="hidden sm:block" />
+                      <opt.icon size={13} />
                       {opt.label}
-                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] sm:px-2 sm:text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                         {opt.count}
                       </span>
                     </span>
                   </button>
                 );
               })}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <Users size={12} className="text-[#3E03B3]" />
-                Total {total} siswa
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <TrendingUp size={12} className="text-[#3E03B3]" />
-                Kehadiran {hadirPct}%
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <LogOut size={12} className="text-[#3E03B3]" />
-                Sudah pulang {pulangCount} siswa
-              </span>
             </div>
 
             <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
@@ -547,7 +523,6 @@ export default function AdminAbsensiHarianPage() {
                 </span>
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-2">
@@ -579,7 +554,7 @@ export default function AdminAbsensiHarianPage() {
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
                 <Download size={11} className="shrink-0 text-[#3E03B3]" />
-                Pilih rentang waktu, lalu klik salah satu tombol ekspor
+                Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per kelas (semua siswa) atau per siswa.
               </p>
             </div>
 
