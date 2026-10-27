@@ -379,10 +379,9 @@ export default function AdminAbsensiHarianPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-
-        <div className="mb-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
-            <div className="lg:col-span-2">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-3">
+          <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
+            <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
                 <div className="flex items-center gap-2">
@@ -405,13 +404,13 @@ export default function AdminAbsensiHarianPage() {
               </div>
 
               {kelasList.length === 0 ? (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+                    <div key={i} className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3">
                   {kelasPageSlice.map((k, i) => {
                     const s = kelasStat(k);
                     const isSelected = k.id === selectedId;
@@ -419,49 +418,31 @@ export default function AdminAbsensiHarianPage() {
                     return (
                       <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
                         style={{ borderColor: warna, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}33` } : {}) }}
-                        className="relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border-2 bg-white px-4 py-4 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
-                        <div className="relative flex items-center justify-between">
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25)]"
-                            style={{ background: warna }}>
-                            <BookOpen size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
-                          </span>
-                          <span className="text-[11px] font-bold tabular-nums text-slate-400 dark:text-slate-500">{s.pct}%</span>
-                        </div>
-
-                        <div className="relative">
-                          <p className="truncate text-lg font-black leading-tight text-slate-800 dark:text-white">{k.nama}</p>
-                          <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        className="relative flex w-full items-center gap-3 overflow-hidden rounded-2xl border-2 bg-white px-4 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ background: warna }}>
+                          <BookOpen size={18} className="text-white" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-base font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
+                          <span className="block truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
                             {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                          </p>
-                        </div>
+                          </span>
+                        </span>
                       </button>
                     );
                   })}
                 </div>
               )}
 
-              {rekapAll.length > 0 && (
-                <div className="mt-4">
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {rekapAll.length > 0 ? (
                   <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
-                <a href="#status-kehadiran-hari-ini"
-                  className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  More <ArrowRight size={12} />
-                </a>
+                ) : <span />}
+                <BelumAbsenPanel siswaList={siswaList} inline />
               </div>
-              <BelumAbsenPanel siswaList={siswaList} />
             </div>
-          </div>
-        </div>
 
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+          <div id="status-kehadiran-hari-ini" className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -520,8 +501,9 @@ export default function AdminAbsensiHarianPage() {
               />
             </div>
           </div>
+          </div>
 
-          <div className="flex h-full flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>

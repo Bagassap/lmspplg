@@ -239,7 +239,7 @@ function DetailModal({
   );
 }
 
-export function BelumAbsenPanel({ siswaList, compact }: { siswaList: SiswaAbsensi[]; compact?: boolean }) {
+export function BelumAbsenPanel({ siswaList, compact, inline }: { siswaList: SiswaAbsensi[]; compact?: boolean; inline?: boolean }) {
   const [activeModal, setActiveModal] = useState<"hadir" | "pulang" | null>(null);
 
   const belumHadir = siswaList.filter((s) => !s.status || s.status === "ALPA");
@@ -249,7 +249,7 @@ export function BelumAbsenPanel({ siswaList, compact }: { siswaList: SiswaAbsens
 
   return (
     <>
-      <div className={compact ? "grid grid-cols-2 gap-2.5" : "flex h-full flex-col justify-center gap-3"}>
+      <div className={inline ? "contents" : compact ? "grid grid-cols-2 gap-2.5" : "flex h-full flex-col justify-center gap-3"}>
         <StatTrigger
           title="Belum Absen Hadir"
           compactTitle="Belum Hadir"

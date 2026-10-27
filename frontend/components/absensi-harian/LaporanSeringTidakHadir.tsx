@@ -170,6 +170,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
               const bar = severityColor(r.summary.persentaseKehadiran);
               return (
                 <div key={r.siswaId} className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700">
+                  <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={32} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
                   <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
                   <span className="shrink-0 text-xs font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
                 </div>
