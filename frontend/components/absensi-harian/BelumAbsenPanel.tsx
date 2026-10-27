@@ -54,14 +54,13 @@ function StatTrigger({
   return (
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
-      style={{ borderColor: accent, backgroundColor: `${accent}1F` }}
-      className="flex w-full items-center gap-3 rounded-2xl border-2 bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-slate-800 dark:shadow-none">
+      className="flex w-full items-center gap-3 rounded-2xl border-2 border-slate-300 bg-slate-100 p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:border-slate-500 dark:bg-slate-700 dark:shadow-none">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: gradient }}>
         <Icon size={17} className="text-white" />
       </span>
       <div className="flex min-w-0 flex-1 items-baseline gap-1.5 whitespace-nowrap">
         <span className="text-xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</span>
-        <span className="text-[11px] font-bold" style={{ color: accent }}>{pct}%</span>
+        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300">{pct}%</span>
         <span className="truncate text-xs font-semibold text-slate-500 dark:text-slate-400">{title.toLowerCase()}</span>
       </div>
     </motion.button>
