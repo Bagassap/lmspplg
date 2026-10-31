@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   CalendarDays, FileText, BookOpen, Loader2,
-  ChevronLeft, ChevronRight, X, Search,
+  ChevronLeft, ChevronRight, X, Search, MapPin, User,
 } from "lucide-react";
 import { todayJakarta } from "@/components/absensi-harian/shared";
 import { AppTabs, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
@@ -344,7 +344,7 @@ export default function GuruJadwalSoalPage() {
                           <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>{idx + 1}</span>
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
-                            <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                            <div className="mt-1 space-y-0.5 text-[11px] text-slate-500 dark:text-slate-400"><p className="truncate"><MapPin size={10} className="mr-1 inline -mt-0.5" />{t.lokasi}</p><p className="truncate"><User size={10} className="mr-1 inline -mt-0.5" />{t.penguji || "—"}</p></div>
                             <span className="mt-1.5 inline-block rounded-xl px-2.5 py-0.5 text-[10px] font-bold" style={{ background: "#FFE9E2", color: "#F26A3D" }}>
                               {submisiTahapan.length} pengumpulan
                             </span>
@@ -499,7 +499,7 @@ export default function GuruJadwalSoalPage() {
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{t.judul}</p>
-                              <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{formatRentang(t)} · {t.jamMulai}–{t.jamSelesai} · {t.lokasi}</p>
+                              <div className="space-y-0.5 text-[11px] text-slate-400 dark:text-slate-500"><p className="truncate"><MapPin size={10} className="mr-1 inline -mt-0.5" />{t.lokasi}</p><p className="truncate"><User size={10} className="mr-1 inline -mt-0.5" />{t.penguji || "—"}</p></div>
                               <div className="mt-1.5 flex items-center gap-2">
                                 <div className="h-1.5 w-16 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700">
                                   <div className="h-full rounded-xl" style={{ width: `${pct}%`, background: rp.gradient }} />

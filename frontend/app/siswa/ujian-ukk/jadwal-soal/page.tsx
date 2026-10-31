@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import { CalendarDays, FileText, Send, BookOpen, Loader2, ChevronLeft, ChevronRight, X, Search, MapPin, Clock, CheckCircle, AlertCircle, Link2, ExternalLink } from "lucide-react";
+import { CalendarDays, FileText, Send, BookOpen, Loader2, ChevronLeft, ChevronRight, X, Search, MapPin, User, Clock, CheckCircle, AlertCircle, Link2, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { todayJakarta } from "@/components/absensi-harian/shared";
 import { AppTabs, APP_ACCENT, APP_SOFT } from "@/components/app/AppUI";
@@ -588,6 +588,7 @@ export default function SiswaJadwalSoalPage() {
                             <span className="flex items-center gap-1"><CalendarDays size={10} />{formatRentang(t)}</span>
                             <span className="flex items-center gap-1"><Clock size={10} />{t.jamMulai}–{t.jamSelesai}</span>
                             <span className="flex items-center gap-1"><MapPin size={10} />{t.lokasi}</span>
+                            <span className="flex items-center gap-1"><User size={10} />{t.penguji || "—"}</span>
                           </div>
                           <button onClick={btn.onClick}
                             className="mt-2 inline-flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-xs font-bold active:scale-95"
@@ -694,6 +695,7 @@ export default function SiswaJadwalSoalPage() {
                             <span className="flex items-center gap-1"><CalendarDays size={9} />{formatRentang(t)}</span>
                             <span className="flex items-center gap-1"><Clock size={9} />{t.jamMulai}–{t.jamSelesai}</span>
                             <span className="flex items-center gap-1"><MapPin size={9} />{t.lokasi}</span>
+                            <span className="flex items-center gap-1"><User size={9} />{t.penguji || "—"}</span>
                           </div>
                         </div>
                       </div>
