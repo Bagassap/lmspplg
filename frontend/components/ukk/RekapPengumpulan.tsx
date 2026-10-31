@@ -92,9 +92,9 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
 
   return (
     <>
-      <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">
+      <div className="flex shrink-0 flex-col gap-2 px-4 pb-3 sm:flex-row sm:items-center sm:gap-3 sm:px-8">
       {kelasList.length > 0 && (
-        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
+        <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 sm:flex-1 sm:pb-0">
           {kelasList.map((k) => {
             const on = k.id === aktifId;
             const n = new Set(submisi.filter((s) => kelasOf(s) === k.id).map((s) => s.siswa?.id)).size;
@@ -109,14 +109,14 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
         </div>
       )}
 
-      <div className="flex shrink-0 gap-2">
+      <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
         {tiles.map((t) => {
           const on = tab === t.key;
           const Icon = t.key === "sudah" ? CheckCircle2 : UserX;
           return (
             <button key={t.key} type="button" onClick={() => setTab(t.key)}
-              className={`flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-colors ${on ? "bg-[#F26A3D] text-white" : "bg-[#FFE9E2] text-[#E8562B] dark:bg-slate-700"}`}>
-              <Icon size={14} /> {t.label} ({t.val})
+              className={`flex min-w-0 items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-bold transition-colors sm:gap-2 sm:px-4 sm:text-xs ${on ? "bg-[#F26A3D] text-white" : "bg-[#FFE9E2] text-[#E8562B] dark:bg-slate-700"}`}>
+              <Icon size={14} className="shrink-0" /> <span className="truncate">{t.label} ({t.val})</span>
             </button>
           );
         })}
@@ -124,7 +124,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
       </div>
 
       {tab === "sudah" && folderKelas && (
-        <div className="flex shrink-0 items-center gap-3 px-6 pb-3 sm:px-8">
+        <div className="flex shrink-0 items-center gap-3 px-4 pb-3 sm:px-8">
           <button type="button" onClick={() => salin(folderKelas, `Link folder ${aktif?.nama ?? "kelas"} disalin`)}
             className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-700">
             <FolderOpen size={13} /> Salin link folder {aktif?.nama} (Google Drive)
@@ -132,7 +132,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
         </div>
       )}
 
-      <div className="flex-1 space-y-2.5 overflow-y-auto px-6 pb-4 sm:px-8">
+      <div className="flex-1 space-y-2.5 overflow-y-auto px-4 pb-4 sm:px-8">
         {total === 0 ? (
           <p className="py-14 text-center text-xs font-semibold text-slate-500">
             {tab === "sudah" ? "Belum ada siswa di kelas ini yang mengumpulkan" : "Semua siswa di kelas ini sudah mengumpulkan"}
@@ -187,7 +187,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
       </div>
 
       {(total > 0 || submisi.length > 0) && (
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-6 pb-6 pt-1 sm:px-8 sm:pb-8">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 pb-6 pt-1 sm:px-8 sm:pb-8">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {total > 0 && <span className="mr-1 text-xs font-semibold text-slate-600">{from + 1}–{to} dari {total} siswa</span>}
             {submisi.length > 0 && (
