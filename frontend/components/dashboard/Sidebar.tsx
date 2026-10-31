@@ -8,7 +8,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ChevronRight, ChevronDown,
-  ChevronsLeft, ChevronsRight, Lock,
+  Lock,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { Avatar } from "@/components/shared/Avatar";
@@ -42,7 +42,7 @@ function jakartaWeekday(): number {
 }
 
 export function Sidebar({
-  user, open, collapsed, onClose, onToggleCollapse,
+  user, open, collapsed, onClose,
 }: {
   user: UserPayload;
   open: boolean;
@@ -51,6 +51,13 @@ export function Sidebar({
   onToggleCollapse: () => void;
 }) {
   const pathname = usePathname();
+  // Desktop: sidebar ringkas (ikon) yang melebar otomatis saat disorot kursor dan menutup sendiri
+  // saat kursor keluar atau setelah memilih menu; melebar di atas konten tanpa menggeser halaman.
+  // `hoverPath` mengingat halaman saat kursor masuk: begitu pindah menu, sidebar menutup sendiri
+  // dan baru melebar lagi setelah kursor keluar lalu masuk kembali.
+  const [hoverPath, setHoverPath] = useState<string | null>(null);
+  const hover = hoverPath === pathname;
+  const compact = collapsed && !hover;
   const { items, pendingResetCount } = useDashboardMenu(user);
   const PRIMARY  = SIDEBAR_ACCENT;
   const greeting = GREETINGS[jakartaWeekday() % GREETINGS.length];
@@ -81,10 +88,15 @@ export function Sidebar({
 
   return (
     <aside
+      onMouseEnter={() => { if (collapsed) { setHoverPath(pathname); setFlyout(null); } }}
+      onMouseLeave={() => setHoverPath(null)}
       className={[
-        "fixed inset-y-0 left-0 z-40 flex flex-col bg-white transition-all duration-300 ease-in-out",
-        "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:bg-[#1E293B] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
-        collapsed ? "w-18" : "w-64",
+        "fixed inset-y-0 left-0 z-40 flex flex-col overflow-x-hidden whitespace-nowrap bg-white transition-all duration-300 ease-in-out",
+        collapsed && hover
+          ? "shadow-[8px_0_40px_rgba(62,3,179,0.18)] dark:shadow-[8px_0_40px_rgba(0,0,0,0.5)]"
+          : "shadow-[4px_0_24px_rgba(62,3,179,0.08)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.3)]",
+        "dark:bg-[#1E293B]",
+        compact ? "w-18" : "w-64",
         open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       ].join(" ")}
       style={{ "--color-primary": PRIMARY } as React.CSSProperties}
@@ -93,10 +105,10 @@ export function Sidebar({
       <div
         className={[
           "flex h-16 shrink-0 items-center border-b border-slate-100 dark:border-white/6",
-          collapsed ? "justify-center" : "justify-between px-5",
+          compact ? "justify-center" : "justify-between px-5",
         ].join(" ")}
       >
-        {collapsed ? (
+        {compact ? (
           <Image src="/favicon.png" alt="LMS PPLG" title="LMS PPLG" width={36} height={36} className="h-9 w-9 shrink-0 rounded-2xl" />
         ) : (
           <>
@@ -120,19 +132,12 @@ export function Sidebar({
               <X size={16} />
             </button>
 
-            <button
-              onClick={onToggleCollapse}
-              title="Sembunyikan sidebar"
-              className={`hidden h-8 w-8 ${TOGGLE_BTN_CLASS} lg:flex`}
-            >
-              <ChevronsLeft size={18} />
-            </button>
           </>
         )}
       </div>
 
       <div className="border-b border-slate-100 dark:border-white/6">
-        {collapsed ? (
+        {compact ? (
           <div className="flex justify-center py-3" title={user.nama}>
             <Avatar
               src={user.fotoProfil}
@@ -169,13 +174,13 @@ export function Sidebar({
         )}
       </div>
 
-      <nav className={["flex-1 overflow-y-auto", collapsed ? "px-2 py-1" : "px-3 py-1"].join(" ")}>
+      <nav className={["flex-1 overflow-y-auto", compact ? "px-2 py-1" : "px-3 py-1"].join(" ")}>
         <ul className="space-y-0.5">
           {items.map((item) => {
             const active = isItemActive(item);
             const isExp  = expanded.has(item.key);
 
-            if (collapsed) {
+            if (compact) {
               return (
                 <li key={item.key}>
                   {item.href ? (
@@ -406,7 +411,7 @@ export function Sidebar({
         </ul>
       </nav>
 
-      {!collapsed && (
+      {!compact && (
         <div className="shrink-0 border-t border-slate-100 px-5 py-4 dark:border-white/6">
           <p className="text-[10px] leading-relaxed text-slate-400 dark:text-slate-600">
             LMS PPLG — SMK Ma&apos;arif NU 01 Limpung
