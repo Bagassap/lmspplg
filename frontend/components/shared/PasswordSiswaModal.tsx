@@ -33,7 +33,7 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
   }
 
   const isi = (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="fixed inset-0 z-70 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="w-full max-w-md rounded-t-[28px] bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl sm:p-6">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">

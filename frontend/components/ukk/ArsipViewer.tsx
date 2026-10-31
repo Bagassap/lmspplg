@@ -64,7 +64,7 @@ export function ArsipViewer({ submisiId, nama, siswa, onClose }: { submisiId: st
   };
 
   const isi = (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="fixed inset-0 z-70 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="flex h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl dark:bg-slate-900 sm:h-[85vh] sm:rounded-3xl">
         <div className="flex shrink-0 items-center gap-3 px-4 pb-3 pt-4 sm:px-6 sm:pt-5">
           {pilih && (
