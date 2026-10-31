@@ -3,8 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { todayJakarta as todayStr } from '../common/utils/jakarta-date.util';
 import type { Prisma } from '../../generated/prisma/client';
 
-// "YYYY-MM" — satu laporan wajib per siswa per bulan berjalan, bukan per
-// tanggal upload (siswa boleh unggah kapan saja dalam bulan itu).
 function currentPeriode(): string {
   return todayStr().slice(0, 7);
 }

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND = process.env.BACKEND_URL || "http://localhost:3001";
 
-// Menayangkan satu berkas di dalam arsip pengumpulan secara inline (teks/gambar/PDF).
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const token = (await cookies()).get("token")?.value;
   if (!token) return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });

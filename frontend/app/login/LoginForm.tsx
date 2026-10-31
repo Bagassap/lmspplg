@@ -36,7 +36,6 @@ export function LoginForm() {
   const router = useRouter();
   const appMode = useIsAppMode();
 
-  // Aplikasi mobile/terpasang dibuka langsung di /login: tampilkan dulu layar pembuka (splash) seperti di desktop, sekali per sesi.
   useEffect(() => {
     if (!appMode) return;
     try {
@@ -83,7 +82,6 @@ export function LoginForm() {
         setRedirecting(greeting);
         setTimeout(() => window.location.replace(dest), 1600);
       };
-      // Tawarkan pasang aplikasi dulu, baru layar Selamat Datang.
       if (canInstall) {
         (document.activeElement as HTMLElement | null)?.blur?.();
         markInstallHandled();

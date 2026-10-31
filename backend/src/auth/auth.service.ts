@@ -35,11 +35,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // Single source of truth for what goes into a session JWT — every field
-  // the middleware or a page needs to make a routing decision without a DB
-  // round-trip (mustChangePassword, profileCompleted, hasFotoProfil, ...)
-  // has to flow through here so a new onboarding-gate field can't be added
-  // in one JWT-issuing call site and silently missed in the other three.
   private signToken(user: TokenUser): string {
     return this.jwtService.sign({
       sub: user.id,
@@ -67,15 +62,6 @@ export class AuthService {
       guru: { select: { id: true, nip: true } },
     };
 
-    // Trim stray leading/trailing whitespace — a mobile keyboard
-    // autosuggest, voice-to-text, or copy-paste from chat can easily append
-    // one. Every lookup below is an EXACT match (email/nis/loginId), so an
-    // untrimmed value silently fails to find the account at all and the
-    // student sees a generic "kredensial tidak valid" that looks identical
-    // to an actually-wrong password — even though what they typed was
-    // otherwise correct. Password itself is intentionally left untouched:
-    // unlike a login ID, a password may legitimately contain meaningful
-    // leading/trailing characters.
     const loginId = dto.login.trim();
 
     let user = await this.prisma.user.findUnique({
@@ -121,8 +107,6 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
-    // Siswa lama (password diganti sebelum ada fitur "lihat password"): salin terenkripsi diisi
-    // otomatis dari password yang baru saja terbukti benar ini. Tidak menghambat login bila gagal.
     if (user.role === 'SISWA' && !user.passwordTampil) {
       this.prisma.user
         .update({ where: { id: user.id }, data: { passwordTampil: enkripsiPassword(dto.password) } })
@@ -200,25 +184,9 @@ export class AuthService {
         );
       }
     } else if (!user.bypassIdentityVerification) {
-      // Forced change (first login, or reset by admin) — a bare "I know the
-      // NIS" isn't proof of identity, since a classmate can read/guess it.
-      // Require one more piece of identity data before letting the new
-      // password through, so someone else's login attempt can't lock the
-      // real account owner out. Skipped when an admin has already verified
-      // the account owner's identity themselves and set the one-time
-      // bypassIdentityVerification flag via resetPassword() — needed for
-      // cases where the nama/tanggalLahir on file is itself wrong or
-      // incomplete, which would otherwise lock the real owner out with no
-      // self-service recovery.
       const mismatchMessage =
         'Data konfirmasi tidak sesuai dengan data akun ini. Pastikan Anda login dengan akun milik Anda sendiri.';
       if (!user.profileCompleted) {
-        // Never completed lengkapi-profil yet — the only identity data on
-        // file at all is the name imported from the school's CSV roster.
-        // Guru names on file are frequently stored with a trailing academic
-        // title ("Candra Tanu Wibowo, S.Kom") that nobody types when asked
-        // to "confirm your full name" — compare only the part before the
-        // first comma so the title can't block a legitimate owner forever.
         const coreName = (s: string) => s.split(',')[0].trim().toLowerCase();
         const expected = user.nama ? coreName(user.nama) : '';
         const given = dto.namaKonfirmasi ? coreName(dto.namaKonfirmasi) : '';
@@ -229,10 +197,6 @@ export class AuthService {
           throw new BadRequestException(mismatchMessage);
         }
       } else {
-        // Already completed lengkapi-profil at some earlier point (so this
-        // is an admin-triggered reset) — a birth date the student entered
-        // themselves is much harder for a classmate to know or guess than
-        // their own name.
         const tanggalLahir = user.siswa?.tanggalLahir;
         if (!tanggalLahir) {
           throw new BadRequestException(
@@ -279,8 +243,6 @@ export class AuthService {
       data: { fotoProfil: fotoUrl },
     });
 
-    // Best-effort cleanup of the previous photo file (if any) — never block
-    // the response over a stale file staying on disk.
     if (existing?.fotoProfil && existing.fotoProfil !== fotoUrl) {
       const oldPath = join(process.cwd(), existing.fotoProfil);
       fs.unlink(oldPath, () => {});
@@ -302,11 +264,6 @@ export class AuthService {
       siswa?.userId ??
       (await this.prisma.user.findFirst({ where: { loginId }, select: { id: true } }))?.id;
 
-    // One outstanding request at a time — otherwise a student who keeps
-    // resubmitting (or a spammer) buries the admin's queue in duplicates for
-    // the same account. Matched by userId when we could resolve one, and
-    // always also by the raw loginId so an unresolved/typo'd NIS still gets
-    // deduped against itself.
     const existingPending = await this.prisma.passwordResetRequest.findFirst({
       where: {
         status: StatusPasswordReset.PENDING,

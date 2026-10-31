@@ -41,7 +41,6 @@ function formatAlamat(s: SiswaExportRow): string {
   return parts.length > 0 ? parts.join(', ') : '-';
 }
 
-// Excel sheet names can't exceed 31 chars or contain []:*?/\
 function safeSheetName(name: string, used: Set<string>): string {
   let base = name.replace(/[\[\]:*?/\\]/g, ' ').trim().slice(0, 31) || 'Kelas';
   let candidate = base;
@@ -97,9 +96,6 @@ export class SiswaExcelService {
           alamat: formatAlamat(s),
           status: s.user?.mustChangePassword === false ? 'Sudah ganti password' : 'Belum ganti password',
         });
-        // wrapText: true - alamat lengkap kadang lebih panjang dari lebar
-        // kolomnya; tanpa wrap, Excel akan menampilkannya seolah terpotong
-        // di batas kolom (datanya sendiri sebenarnya utuh di dalam sel).
         row.alignment = { vertical: 'middle', wrapText: true };
         const statusCell = row.getCell('status');
         statusCell.font = {

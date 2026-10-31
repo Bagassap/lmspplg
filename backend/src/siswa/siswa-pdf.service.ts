@@ -71,7 +71,6 @@ export class SiswaPdfService {
 
     groups.forEach((group) => {
       doc.addPage();
-      // doc.page only exists once a page has been added (autoFirstPage: false)
       this.renderKelasSection(doc, group, margin, doc.page.width);
     });
 
@@ -111,10 +110,6 @@ export class SiswaPdfService {
     });
   }
 
-  // Alamat lengkap (dan sesekali nama/wali murid) bisa lebih panjang dari
-  // lebar kolomnya - dihitung dulu tinggi barisnya di sini (bukan dipotong
-  // paksa dengan ellipsis) supaya isinya turun ke baris berikutnya di dalam
-  // sel yang sama alih-alih terpotong.
   private measureRowHeight(doc: PDFKit.PDFDocument, s: SiswaExportRow): number {
     doc.fontSize(7.5);
     const texts = this.rowValues(s, 1).map(([text]) => text);
@@ -158,10 +153,6 @@ export class SiswaPdfService {
     doc.fontSize(7.5);
     values.forEach(([text, color], i) => {
       const col = COLS[i];
-      // Tanpa `height`/`ellipsis` - teks yang lebih panjang dari lebar kolom
-      // (mis. alamat lengkap) turun ke baris berikutnya di dalam sel yang
-      // sama, bukan dipotong dengan "...". Tinggi baris sudah dihitung pas
-      // di measureRowHeight() supaya wrap ini selalu muat.
       doc.fillColor(color).text(text, x + 3, y + 6, { width: col.width - 6 });
       x += col.width;
     });

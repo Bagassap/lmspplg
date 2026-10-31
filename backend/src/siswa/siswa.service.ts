@@ -205,9 +205,6 @@ export class SiswaService {
     return groups;
   }
 
-  // Kenaikan kelas: pindahkan semua siswa AKTIF dari satu kelas ke kelas
-  // lain sekaligus (mis. "X PPLG 1" -> "XI PPLG 1" di awal tahun ajaran
-  // baru). Kelas tujuan harus sudah dibuat lebih dulu lewat Kelola Kelas.
   async naikkanKelas(dariKelasId: string, keKelasId: string) {
     if (dariKelasId === keKelasId) {
       throw new BadRequestException('Kelas asal dan tujuan tidak boleh sama');
@@ -226,10 +223,6 @@ export class SiswaService {
     return { jumlahSiswa: result.count, dariKelas: dari.nama, keKelas: ke.nama };
   }
 
-  // Kumpulkan path file fisik (foto absensi/tugas/PKL/UKK) milik satu siswa
-  // SEBELUM baris-baris riwayatnya dihapus, supaya file-nya bisa ikut
-  // dibersihkan dari disk setelah transaksi database sukses. ttd/ttdPulang
-  // sengaja tidak ikut — itu data URI base64 inline, bukan path file.
   private async collectFilePaths(siswaId: string): Promise<string[]> {
     const [absensiHarian, tugasSubmisi, absensiMagang, laporDiri, laporanAkhir, submisiUkk, absensiUjianUkk, berkasJawabanUkk] =
       await Promise.all([
@@ -266,29 +259,6 @@ export class SiswaService {
     }
   }
 
-  // Hapus PERMANEN satu siswa beserta SELURUH riwayatnya (absensi harian,
-  // tugas, PKL, UKK) dan akun login-nya (kalau ada) — atas permintaan
-  // eksplisit sekolah, BUKAN sekadar soft-delete/ubah status. TIDAK BISA
-  // DIBATALKAN. Dipanggil oleh keluarkanSiswa() (satu siswa) maupun
-  // luluskanKelas() (satu kelas sekaligus).
-  //
-  // Urutan penghapusan wajib begini karena FK Restrict (default Prisma/
-  // Postgres untuk relasi wajib tanpa onDelete eksplisit) menolak hapus
-  // parent selama masih ada child yang menunjuknya:
-  //   1. Anak-anak PenempatanMagang (AbsensiMagang/IzinMagang/LaporDiri/
-  //      LaporanAkhir) dulu — mereka punya FK penempatanId ke
-  //      PenempatanMagang, baru PenempatanMagang sendiri.
-  //   2. AbsensiHarian, TugasSubmisi (TugasJawaban ikut cascade otomatis),
-  //      SubmisiProjectUKK, AbsensiUjianUKK, BerkasJawabanUKK, NilaiUKK.
-  //   3. Kalau siswa punya akun (userId): KomentarPengumuman & DiskusiUKK
-  //      Restrict ke User (bukan ke Siswa) — wajib dihapus dulu sebelum User
-  //      dihapus. Ini otomatis ikut menghapus balasan siswa/guru LAIN pada
-  //      komentar/diskusi milik siswa ini (parentId-nya onDelete: Cascade)
-  //      — konsekuensi yang diterima demi penghapusan total.
-  //   4. Baris Siswa (CatatanSiswa & PesertaUKK sudah onDelete: Cascade di
-  //      skema, otomatis ikut terhapus di sini tanpa langkah manual).
-  //   5. Baris User (kalau ada) — Notification ikut cascade otomatis,
-  //      PasswordResetRequest otomatis di-SetNull.
   private async hardDeleteSatuSiswa(siswaId: string): Promise<{ id: string; nama: string | null } | null> {
     const siswa = await this.prisma.siswa.findUnique({ where: { id: siswaId } });
     if (!siswa) return null;
@@ -328,18 +298,12 @@ export class SiswaService {
     return { id: siswaId, nama: siswa.nama };
   }
 
-  // Siswa keluar/pindah sekolah: hapus permanen (lihat hardDeleteSatuSiswa).
   async keluarkanSiswa(id: string) {
     const result = await this.hardDeleteSatuSiswa(id);
     if (!result) throw new NotFoundException('Siswa tidak ditemukan');
     return result;
   }
 
-  // Kelulusan: hapus permanen semua siswa AKTIF di satu kelas (biasanya
-  // kelas XII) satu per satu (lihat hardDeleteSatuSiswa) — bukan lagi
-  // ditandai status LULUS. Kalau satu siswa gagal dihapus (mis. state tak
-  // terduga), siswa lain tetap lanjut diproses; nama yang gagal dilaporkan
-  // balik di `gagal` supaya admin tahu siapa yang perlu ditangani manual.
   async luluskanKelas(kelasId: string) {
     const kelas = await this.prisma.kelas.findUnique({ where: { id: kelasId } });
     if (!kelas) throw new NotFoundException('Kelas tidak ditemukan');

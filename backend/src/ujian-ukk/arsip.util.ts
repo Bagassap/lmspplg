@@ -14,7 +14,6 @@ export const jenisArsip = (nama: string): 'zip' | 'rar' | null => {
 
 const norm = (p: string) => p.replace(/\\/g, '/').replace(/^\/+/, '');
 
-// Daftar isi arsip tanpa mengekstrak ke disk.
 export async function daftarArsip(abs: string, jenis: 'zip' | 'rar'): Promise<EntriArsip[]> {
   try {
     if (jenis === 'zip') {
@@ -32,7 +31,6 @@ export async function daftarArsip(abs: string, jenis: 'zip' | 'rar'): Promise<En
   }
 }
 
-// Membaca satu berkas di dalam arsip (dibatasi ukurannya).
 export async function bacaEntri(abs: string, jenis: 'zip' | 'rar', path: string): Promise<Buffer> {
   const target = norm(path);
   try {
@@ -47,7 +45,6 @@ export async function bacaEntri(abs: string, jenis: 'zip' | 'rar', path: string)
     const h = [...ex.getFileList().fileHeaders].find((x) => !x.flags.directory && norm(x.name) === target);
     if (!h) throw new BadRequestException('Berkas tidak ada di arsip');
     if (h.unpSize > BATAS_BACA) throw new BadRequestException('Berkas terlalu besar untuk dilihat');
-    // Arsip RAR solid hanya bisa diekstrak berurutan; extract() memakai nama asli dari header.
     const hasil = ex.extract({ files: [h.name] });
     for (const f of hasil.files) {
       if (f.extraction) return Buffer.from(f.extraction);
@@ -68,7 +65,6 @@ const TEKS = new Set([
   '.env', '.py', '.java', '.c', '.cpp', '.cs', '.yml', '.yaml', '.ini', '.log', '.csv', '.vue', '.blade', '.sh',
 ]);
 
-// Jenis tayang aman: html/svg selalu dilayani sebagai teks agar skrip siswa tidak dieksekusi.
 export function jenisTayang(path: string): { tipe: string; ext: string } | null {
   const ext = extname(path).toLowerCase();
   if (ext === '.svg') return { tipe: 'text/plain; charset=utf-8', ext };

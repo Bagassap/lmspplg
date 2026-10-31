@@ -7,15 +7,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter } as any);
 
-// Sumber: frontend/public/mapel.xlsx (kolom No | Nama Guru | Mata Pelajaran).
-// Baris tanpa Nama Guru mewarisi guru dari baris terakhir yang punya nama —
-// itu sebabnya kolom Nama Guru kosong di baris ke-2+ untuk guru yang sama.
 const XLSX_PATH = path.join(__dirname, '../../frontend/public/mapel.xlsx');
 
-// Normalisasi ringan untuk mencocokkan nama guru di xlsx dengan nama user di
-// database walau beda tanda baca/spasi (mis. "Bagas Saputra S.Kom" di xlsx
-// vs "Bagas Saputra, S.Kom" di database) — tetap exact match, cuma abaikan
-// koma & spasi berlebih supaya tidak salah gandeng ke orang lain.
 function normalizeName(s: string): string {
   return s.replace(/,/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
@@ -29,7 +22,7 @@ async function main() {
   let currentNama: string | null = null;
 
   sheet.eachRow((row, rowNumber) => {
-    if (rowNumber === 1) return; // header
+    if (rowNumber === 1) return;
     const nama = row.getCell(2).text?.trim();
     const mapel = row.getCell(3).text?.trim();
     if (nama) currentNama = nama;

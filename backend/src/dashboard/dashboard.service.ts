@@ -43,7 +43,6 @@ export class DashboardService {
       this.prisma.kelas.findMany({ select: { id: true, nama: true } }),
     ]);
 
-    // Pengajuan PKL dari siswa yang menunggu guru pembimbing (ditetapkan admin)
     const pengajuanPklRaw = await this.prisma.penempatanMagang.findMany({
       where: { status: 'MENUNGGU' },
       orderBy: { createdAt: 'desc' },
@@ -229,10 +228,6 @@ export class DashboardService {
       }),
     ]);
 
-    // Statistik dihitung sejak absen pertama siswa mana pun tercatat di LMS (awal pemakaian LMS)
-    // sampai kemarin: hari sekolah (Senin-Jumat) tanpa catatan dihitung Alpa, sama seperti rekap
-    // berkala. Hari ini baru ikut bila sudah ada catatannya, karena jendela absen belum tentu tutup.
-    // Hari selama PKL tidak dihitung karena absensinya lewat Absensi PKL.
     const today = todayStr();
     const awalLms = awalLmsAgg._min.tanggal;
     const records = new Map(absensiList.map((a) => [a.tanggal, a.status]));

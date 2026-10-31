@@ -50,7 +50,6 @@ export class NotificationService {
         link:    input.link,
       })),
     });
-    // Link notifikasi relatif terhadap role ("/absensi-harian"), jadi push dikirim per kelompok role.
     const users = await this.prisma.user.findMany({ where: { id: { in: userIds } }, select: { id: true, role: true } });
     const byRole = new Map<string, string[]>();
     for (const u of users) byRole.set(u.role, [...(byRole.get(u.role) ?? []), u.id]);

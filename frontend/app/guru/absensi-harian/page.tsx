@@ -92,7 +92,6 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: st
   );
 }
 
-// Warna tiap kartu kelas (biru, hijau, ungu, oranye) dipakai untuk ikon, latar tipis, dan border.
 const KELAS_WARNA = ["#0EA5E9", "#10B981", "#8B5CF6", "#F59E0B"];
 
 function KehadiranSlimCard({ hadirPct, kelasNama, onClick }: { hadirPct: number; kelasNama?: string; onClick: () => void }) {

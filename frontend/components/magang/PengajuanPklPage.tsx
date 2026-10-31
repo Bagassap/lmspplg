@@ -75,7 +75,6 @@ function RekanPicker({ terpilih, onPick, onRemove, excludeIds }: {
   );
 }
 
-/** Modal isian data tempat magang yang tidak ada di daftar. */
 function TempatBaruModal({ awal, onClose, onSimpan }: { awal: TempatBaru; onClose: () => void; onSimpan: (v: TempatBaru) => void }) {
   const toast = useToast();
   const [v, setV] = useState(awal);
@@ -141,7 +140,6 @@ function TempatBaruModal({ awal, onClose, onSimpan }: { awal: TempatBaru; onClos
   );
 }
 
-/** Halaman PKL siswa sebelum penempatan aktif: formulir pengajuan, atau status menunggu guru pembimbing. */
 export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]; onChanged: () => void }) {
   const toast = useToast();
   const [me, setMe] = useState<Me | null>(null);
@@ -182,7 +180,6 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
 
   const suratRef = useRef<HTMLInputElement>(null);
 
-  // Untuk pengajuan lama yang belum punya surat: lengkapi tanpa mengajukan ulang.
   async function unggahSurat(f?: File) {
     if (!f) return;
     if (f.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }

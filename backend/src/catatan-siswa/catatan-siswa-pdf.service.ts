@@ -56,7 +56,6 @@ export class CatatanSiswaPdfService {
     const pageHeight = doc.page.height;
     const contentWidth = pageWidth - margin * 2;
 
-    // Tanggal | Judul | Catatan | Poin | Dicatat Oleh
     const colFrac = [0.13, 0.19, 0.38, 0.1, 0.2];
     const colWidths = colFrac.map((f) => f * contentWidth);
     const headers = ['Tanggal', 'Judul', 'Catatan', 'Poin', 'Dicatat Oleh'];
@@ -138,7 +137,6 @@ export class CatatanSiswaPdfService {
           const rowH = Math.max(20, catatanHeight + 8, judulHeight + 8);
 
           if (ensureSpace(rowH, true)) {
-            // header row already redrawn by ensureSpace
           }
 
           if (ci % 2 === 1) doc.rect(margin, y, contentWidth, rowH).fill('#F8FAFC');

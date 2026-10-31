@@ -5,12 +5,6 @@ import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { jakartaParts, monthToDateRange } from '../common/utils/jakarta-date.util';
 
-// Hemat storage server: baris absensi harian (termasuk foto & tanda tangan
-// per baris, yang paling berat) dihapus PERMANEN begitu sudah lewat 2 bulan
-// kalender dari bulan berjalan — bulan berjalan + 1 bulan sebelumnya selalu
-// tersedia, sisanya dibersihkan otomatis tiap hari.
-// Contoh: begitu masuk September, data absensi Juli (dan yang lebih lama)
-// terhapus; Agustus & September tetap ada.
 @Injectable()
 export class AbsensiHarianRetensiService {
   private readonly logger = new Logger(AbsensiHarianRetensiService.name);
@@ -28,9 +22,6 @@ export class AbsensiHarianRetensiService {
     return monthToDateRange(prevMonth, prevYear).start;
   }
 
-  // Jalan tiap hari jam 03:00 WIB (jam sepi trafik) — dihitung ulang tiap
-  // kali jalan (bukan cuma nunggu tanggal 1) supaya tidak ada risiko
-  // kelewat kalau server sempat mati pas awal bulan.
   @Cron('0 3 * * *', { timeZone: 'Asia/Jakarta' })
   async bersihkanAbsensiLama() {
     const cutoff = this.cutoffTanggal();

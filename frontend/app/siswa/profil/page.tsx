@@ -536,7 +536,6 @@ export default function SiswaProfilPage() {
         </div>
       </motion.div>
 
-
       </div>
 
       {showEdit && (

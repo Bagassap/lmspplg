@@ -1,4 +1,3 @@
-// Waktu task UKK: bisa berlangsung beberapa hari (tanggal – tanggalSelesai), jam selesai berlaku di hari terakhir.
 export type TaskWaktu = { tanggal: string; tanggalSelesai?: string | null; jamMulai?: string; jamSelesai?: string };
 
 const ymd = (s: string) => s.slice(0, 10);
@@ -13,7 +12,6 @@ function jakartaNow() {
   return { tgl: `${get("year")}-${get("month")}-${get("day")}`, menit: Number(get("hour")) * 60 + Number(get("minute")) };
 }
 
-/** Task masih aktif sampai tanggal akhir pukul jam selesai (WIB). */
 export function isTaskAktif(t: TaskWaktu) {
   const now = jakartaNow();
   const akhir = tanggalAkhir(t);
@@ -26,7 +24,6 @@ export function isTaskAktif(t: TaskWaktu) {
 const fmt = (s: string, withYear: boolean) =>
   new Date(`${ymd(s)}T00:00:00Z`).toLocaleDateString("id-ID", { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}), timeZone: "UTC" });
 
-/** "20 Okt 2026" atau "20 Okt – 22 Okt 2026". */
 export function formatRentang(t: TaskWaktu) {
   const a = ymd(t.tanggal);
   const b = tanggalAkhir(t);
@@ -34,7 +31,6 @@ export function formatRentang(t: TaskWaktu) {
   return `${fmt(a, false)} – ${fmt(b, true)}`;
 }
 
-/** Semua tanggal (00:00 lokal) dalam rentang task, untuk kalender. */
 export function daftarTanggal(t: TaskWaktu): Date[] {
   const [y1, m1, d1] = ymd(t.tanggal).split("-").map(Number);
   const [y2, m2, d2] = tanggalAkhir(t).split("-").map(Number);
@@ -45,7 +41,6 @@ export function daftarTanggal(t: TaskWaktu): Date[] {
   return out;
 }
 
-/** Status jendela pengumpulan: "belum" (sebelum mulai), "buka", atau "tutup" (lewat tanggal+jam selesai), WIB. */
 export function statusPengumpulan(t: TaskWaktu): "belum" | "buka" | "tutup" {
   const now = jakartaNow();
   const nowKey = `${now.tgl}T${String(Math.floor(now.menit / 60)).padStart(2, "0")}:${String(now.menit % 60).padStart(2, "0")}`;

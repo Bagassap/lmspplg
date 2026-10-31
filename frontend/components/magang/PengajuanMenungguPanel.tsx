@@ -5,7 +5,6 @@ import { Clock, Building2, ChevronRight, FileText, Users } from "lucide-react";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
 
-/** Pengajuan PKL dari siswa yang menunggu admin (dikelompokkan per rombongan). Klik kartu untuk membuka modal pengajuan. */
 export function PengajuanMenungguPanel({ list, onBuka }: {
   list: PenempatanMagang[];
   onBuka: (rows: PenempatanMagang[]) => void;

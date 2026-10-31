@@ -4,7 +4,6 @@ import { CheckCircle2, MapPin, MessageSquareText, ExternalLink, Camera, FileSign
 import { AppSheet } from "@/components/app/AppSheet";
 import { parseLokasi, resolveMediaSrc } from "./shared";
 
-/** Rincian absen (datang/pulang) yang sudah tercatat: sheet bersih bergaya aplikasi. */
 export function RiwayatAbsenSheet({
   title, tanggalLabel, statusLabel, statusBg = "#E3F8EF", statusColor = "#059669", waktu, foto, fotoLabel = "Foto Selfie", ttd, lokasi, catatan, onClose,
 }: {

@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 const BACKEND = process.env.BACKEND_URL || "http://localhost:3001";
 
-// Mengalirkan ZIP semua berkas pengumpulan UKK (admin/guru) dari backend ke browser.
 export async function GET(request: Request) {
   const token = (await cookies()).get("token")?.value;
   if (!token) return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });

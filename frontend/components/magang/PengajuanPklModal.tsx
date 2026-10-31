@@ -11,7 +11,6 @@ type GuruOption = { id: string; user: { id: string; nama: string } };
 
 const FIELD = "h-11 w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100";
 
-/** Modal pengajuan penempatan PKL dari siswa: periksa data tempat & surat, lalu terima (pilih guru) atau tolak. */
 export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
 }) {

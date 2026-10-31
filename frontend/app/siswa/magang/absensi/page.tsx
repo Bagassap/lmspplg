@@ -205,7 +205,6 @@ export default function SiswaMagangAbsensiPage() {
   return (
     <div className="space-y-5">
 
-
       {loading ? (
         <>
           <div className="hidden items-center justify-center rounded-2xl border border-slate-100 bg-white py-20 dark:border-slate-700 dark:bg-slate-800 lg:flex">
@@ -499,7 +498,6 @@ export default function SiswaMagangAbsensiPage() {
                 </div>
               </motion.div>
             )}
-
 
             </div>
           </div>

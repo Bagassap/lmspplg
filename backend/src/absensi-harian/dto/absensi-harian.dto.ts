@@ -46,9 +46,6 @@ export class UpsertAbsensiHarianDto {
 }
 
 export class KirimPengingatDto {
-  // Kosong (tidak dikirim) khusus dari ADMIN berarti "semua kelas" — GURU
-  // wajib selalu mengisi ini (divalidasi di service, dibatasi ke kelas
-  // yang benar-benar diwalikannya).
   @IsString()
   @IsOptional()
   kelasId?: string;

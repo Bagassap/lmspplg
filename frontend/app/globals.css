@@ -109,15 +109,6 @@ html.dark .text-\[\#3E03B3\]:not(.bg-white):not([class*="dark:text-"]) {
   color: #c4b5fd !important;
 }
 
-/* =====================================================================
-   Mode aplikasi terpasang (PWA). Atribut data-app-mode dipasang di <html>
-   oleh <AppModeFlag />. Warna utama tetap ungu brand (#3E03B3) seperti
-   halaman login; lapisan ini hanya merapikan komponen lama agar mengikuti
-   pola tampilan aplikasi.
-   ===================================================================== */
-
-/* Header modal/panel berlatar ungu -> lavender dengan teks gelap (pola aplikasi).
-   Pasang class "app-sheet-header" pada kontainer header. */
 html[data-app-mode] .app-sheet-header { background: #f1edfa !important; }
 html[data-app-mode] .app-sheet-header [class*="text-white"] { color: #0f172a !important; }
 html[data-app-mode] .app-sheet-header [class*="text-white/5"],
@@ -128,8 +119,6 @@ html[data-app-mode] .app-sheet-header [class*="bg-white/"] { background: #ffffff
 html[data-app-mode] .app-sheet-header button[class*="bg-white/"],
 html[data-app-mode] .app-sheet-header button[class*="bg-white/"] svg { color: #475569 !important; }
 
-/* Strip judul mobile berlatar ungu (tombol kembali + judul tengah) -> judul besar
-   rata kiri tanpa latar. Pasang class "app-header-row" pada baris header. */
 html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { background: transparent !important; }
 html[data-app-mode] .app-header-row { padding-bottom: 0.25rem !important; }
 html[data-app-mode] .app-header-row > button { display: none !important; }
@@ -139,7 +128,6 @@ html[data-app-mode] .app-header-row h1 {
 }
 html.dark[data-app-mode] .app-header-row h1 { color: #ffffff !important; }
 
-/* Tombol/latar lime di komponen lama -> ungu brand dengan teks putih. */
 html [style*="background: rgb(161, 249, 25)"]:not(button):not(a),
 html [style*="background-color: rgb(161, 249, 25)"]:not(button):not(a) { background: #3e03b3 !important; color: #ffffff !important; }
 html [style*="background: rgb(161, 249, 25)"]:not(button):not(a) *,
@@ -155,12 +143,10 @@ html button[style*="background: rgb(161, 249, 25)"] *,
 html a[style*="background: rgb(161, 249, 25)"] *,
 html button[style*="background-color: rgb(161, 249, 25)"] * { color: #ffffff !important; }
 
-/* Biru muda lama -> ungu brand. */
 html .bg-\[\#00AAFA\] { background-color: #3e03b3 !important; }
 html [style*="background: rgb(0, 170, 250)"],
 html [style*="background-color: rgb(0, 170, 250)"] { background: #3e03b3 !important; }
 
-/* ---- Dialog tengah -> panel dari bawah (bottom sheet) ---- */
 html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):not(.pointer-events-none):not([data-plain]) {
   align-items: flex-end !important;
   padding: 0 !important;
@@ -170,19 +156,14 @@ html[data-app-mode] .fixed.inset-0.items-center.justify-center:not(.flex-col):no
   max-height: 92vh;
 }
 
-/* Konten khusus mode aplikasi (komponen server tidak bisa memakai hook). */
 .app-only { display: none; }
 html[data-app-mode] .app-only { display: block; }
 html[data-app-mode] .app-hide { display: none !important; }
 
-/* Variasi warna ikon baris info (ungu dominan, selang-seling oranye/hijau/biru). */
 html[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background: #ffe9e2 !important; color: #f26a3d !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+3) .app-info-icon { background: #e3f8ef !important; color: #059669 !important; }
 html[data-app-mode] .app-info-row:nth-of-type(4n+4) .app-info-icon { background: #e0f2fe !important; color: #0284c7 !important; }
 
-/* ================= PALET 5 WARNA (mode aplikasi) =================
-   Ungu #3E03B3 utama; ikon: hijau, biru, oranye, ungu. Warna lain
-   (lime, hijau tua, hitam, biru langit lama, merah) dipetakan ke palet. */
 html {
   --color-red-50: #ffe9e2; --color-red-100: #ffe9e2; --color-red-200: #ffd0c2; --color-red-300: #f9a98f;
   --color-red-400: #f58a66; --color-red-500: #f26a3d; --color-red-600: #f26a3d; --color-red-700: #d9532a; --color-red-800: #b84320; --color-red-900: #8f3318;
@@ -196,7 +177,6 @@ html {
   --color-lime-50: #e3f8ef; --color-lime-100: #e3f8ef; --color-lime-500: #10b981; --color-lime-600: #059669;
   --color-green-50: #e3f8ef; --color-green-100: #d1f4e4; --color-green-500: #10b981; --color-green-600: #059669; --color-green-700: #047857;
 }
-/* lime / hijau tua lama -> ungu */
 html [class*="text-[#5D900F]"], html [class*="text-[#48700B]"],
 html [class*="text-[#A1F919]"], html [class*="text-[#8F6DD3]"] { color: #3e03b3 !important; }
 html.dark [class*="text-[#5D900F]"], html.dark [class*="text-[#A1F919]"],
@@ -210,7 +190,6 @@ html [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #e2e8f0 !important;
 html [class*="from-[#A1F919]"], html [class*="to-[#A1F919]"] { --tw-gradient-from: #3e03b3; --tw-gradient-to: #5b16d9; }
 html .text-black { color: #0f172a !important; }
 html .bg-\[\#A1F919\] .text-black, html .bg-\[\#A1F919\].text-black { color: #ffffff !important; }
-/* gaya inline: warna lime / hijau tua / biru lama / hitam */
 html [style*="color: rgb(93, 144, 15)"], html [style*="color: rgb(72, 112, 11)"],
 html [style*="color: rgb(161, 249, 25)"] { color: #3e03b3 !important; }
 html [style*="color: rgb(0, 170, 250)"] { color: #0284c7 !important; }
@@ -224,9 +203,6 @@ html [style*="color: rgb(0, 0, 0)"] { color: #0f172a !important; }
 html [style*="background: rgb(0, 0, 0)"], html [style*="background-color: rgb(0, 0, 0)"] { background: #3e03b3 !important; color: #fff !important; }
 html [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
 
-/* ---- Tabel -> kartu ringkas (tabel asli aplikasi native) ----
-   Kolom pertama = judul kartu; kolom lain = pasangan "label: nilai" kecil;
-   kolom Aksi/File di baris bawah. data-* diisi otomatis oleh AppModeFlag. */
 @media (max-width: 1023px) {
   html[data-app-mode] table { display: block !important; width: 100% !important; min-width: 0 !important; }
   html[data-app-mode] table.hidden { display: none !important; }
@@ -263,7 +239,6 @@ html [style*="border-color: rgb(0, 0, 0)"] { border-color: #f26a3d !important; }
   html[data-app-mode] table tbody td[colspan]::before { display: none; }
 }
 
-/* Sisa warna di luar palet (hitam, biru lama, tepi lime) */
 html [class*="text-[#000000]"] { color: #0f172a !important; }
 html [class*="bg-[#000000]/"] { background-color: rgba(62,3,179,0.10) !important; }
 html [class*="bg-[#000000]"]:not([class*="bg-[#000000]/"]) { background-color: #3e03b3 !important; color: #fff !important; }
@@ -277,13 +252,11 @@ html [class*="bg-[#EEF2FF]"], html [style*="background: rgb(238, 242, 255)"] { b
 html [class*="text-[#F6FEE8]"] { color: #f1edfa !important; }
 html [style*="rgba(161, 249, 25"][style*="box-shadow"] { box-shadow: 0 6px 18px rgba(62,3,179,0.25) !important; }
 
-/* ---- Tanpa judul ganda: nama menu sudah ada di topbar, judul besar di bawahnya disembunyikan ---- */
 html[data-app-mode] div:not(:has(button, a, input, select, textarea)):has(> h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
 html[data-app-mode] h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight) { display: none !important; }
 html[data-app-mode] p:has(+ h1.text-2xl.font-extrabold.text-slate-900:not(.leading-tight)) { display: none !important; }
 html[data-app-mode] [style*="background: rgb(62, 3, 179)"]:has(> .app-header-row) { display: none !important; }
 
-/* ---- Semua modal/sheet: gaya aplikasi seragam (form, tombol, header polos, teks terbaca, tanpa transparansi) ---- */
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > .absolute.inset-0 { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0,0,0,0.5) !important; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
   background-color: #ffffff !important; border: 0 !important; border-radius: 16px !important; color: #0f172a;
@@ -303,10 +276,8 @@ html[data-app-mode] .app-plain-header > button:last-child, html[data-app-mode] .
   background: #f1edfa !important; color: #3e03b3 !important; border-radius: 12px;
 }
 
-/* Modal polos: tanpa lingkaran/logo hiasan di latar */
 html[data-app-mode] .fixed.inset-0:not([data-plain]) .pointer-events-none.absolute:is([class*="-right-"], [class*="-top-"], [class*="-bottom-"], [class*="-left-"]) { display: none !important; }
 
-/* Kartu tabel maksimal 2 baris: judul + aksi sebaris, lalu <=3 pasangan label:nilai sebaris */
 @media (max-width: 1023px) {
   html[data-app-mode] table tbody td[data-extra] { display: none !important; }
   html[data-app-mode] table tbody td[data-title] { flex: 1 1 0 !important; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap !important; display: block !important; }
@@ -318,7 +289,6 @@ html[data-app-mode] .fixed.inset-0:not([data-plain]) .pointer-events-none.absolu
   }
 }
 
-/* ---- Modal tanpa transparansi: panel dan isi memakai warna solid ---- */
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute):not(.pointer-events-none) { background-color: #ffffff; opacity: 1 !important; }
 html.dark[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute):not(.pointer-events-none) { background-color: #1e293b; }
 html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) > :not(.absolute) [class*="bg-white/"]:not(.app-sheet-header *) { background-color: #f1f5f9 !important; }
@@ -332,19 +302,15 @@ html[data-app-mode] .fixed.inset-0:not([class*="bg-black/9"]):not([data-plain]) 
 html[data-app-mode] .app-sheet-header [class*="bg-white/"], html[data-app-mode] .app-sheet-header [class*="bg-black/"] { background-color: #ffffff !important; }
 html[data-app-mode] .app-sheet-header [class*="bg-[#A1F919]"] { background-color: #ffe9e2 !important; color: #f26a3d !important; }
 
-/* Header sheet UKK (jadwal/soal): tanpa kotak ikon besar & lencana, ringkas */
 html[data-app-mode] .app-sheet-header > .w-12.h-12 { display: none !important; }
 html[data-app-mode] .app-sheet-header > .flex-1 span.rounded-lg { display: none !important; }
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) { padding: 14px 16px !important; gap: 10px !important; align-items: center !important; }
 html[data-app-mode] .app-sheet-header:has(> .w-12.h-12) h2 { font-size: 15px !important; margin-top: 0 !important; }
 
-/* Penanda "wajib diisi"/error di formulir absensi -> oranye */
 html [class*="text-[#5D900F]"][class*="text-[11px]"], html [class*="text-[#5D900F]"].normal-case { color: #e8562b !important; }
 html [class*="border-[#A1F919]"], html [class*="border-[#48700B]"] { border-color: #f26a3d !important; }
 html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
 
-/* ---- Desktop: tanpa border di komponen mana pun (kecuali tabel, yang tampil dengan gayanya sendiri) ----
-   Pengecualian: spinner (animate-spin) dan kotak kecil (kotak centang, penanda) agar tidak hilang. */
 @media (min-width: 1024px) {
   *:not(.animate-spin):not(.h-3):not(.h-4):not(.h-5):not(.h-6):not(.size-3):not(.size-4):not(.size-5):not(.size-6):not(table):not(thead):not(tbody):not(tfoot):not(tr):not(th):not(td):not([style*="grid-template-columns"]):not([style*="grid-template-columns"] > *) {
     border-width: 0 !important;
@@ -352,7 +318,6 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
   html:not(.dark) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
     background-color: #f1f5f9 !important;
   }
-  /* isian form di dalam modal: putih (tepi dibuat dengan bayangan tipis, bukan border) */
   html:not(.dark) .fixed.inset-0:not([data-plain]) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
     background-color: #ffffff !important; box-shadow: inset 0 0 0 1px #cbd5e1;
   }
@@ -361,11 +326,6 @@ html [class*="ring-[#A1F919]"] { --tw-ring-color: #f26a3d !important; }
   }
 }
 
-/* =====================================================================
-   TEMA GELAP: permukaan & teks yang tidak punya varian dark: dipaksa solid
-   dan terbaca (kartu transparan/pastel, filter, kolom isian). Berlaku di
-   desktop dan mode aplikasi.
-   ===================================================================== */
 html.dark :is(.bg-white, .bg-\[\#FFFFFF\], .bg-\[\#ffffff\]):not([class*="dark:bg-"]):not([class*="dark:from-"]):not([class*="bg-[#3E03B3]"] *):not([class*="bg-[#F26A3D]"] *):not([style*="background: rgb(62, 3, 179)"] *):not([style*="background: rgb(242, 106, 61)"] *):not([style*="linear-gradient"] *) { background-color: #1e293b; }
 html.dark :is(.bg-slate-50, .bg-gray-50, .bg-slate-100, .bg-gray-100):not([class*="dark:bg-"]) { background-color: #273449; }
 html.dark :is(.bg-slate-200, .bg-gray-200):not([class*="dark:bg-"]) { background-color: #334155; }
@@ -376,11 +336,9 @@ html.dark [class*="bg-[#E0F2FE]"]:not([class*="dark:bg-"]), html.dark [style*="b
 html.dark [class*="bg-[#FFF4E0]"]:not([class*="dark:bg-"]), html.dark [style*="background: rgb(255, 244, 224)"], html.dark [style*="background-color: rgb(255, 244, 224)"] { background-color: #4a3a17 !important; }
 html.dark [style*="background: rgb(255, 255, 255)"], html.dark [style*="background-color: rgb(255, 255, 255)"] { background-color: #1e293b !important; }
 
-/* transparan -> solid (di luar header/topbar ungu & backdrop modal) */
 html.dark :is([class*="bg-white/"], [class*="bg-black/"], [class*="bg-slate-"][class*="/"], [class*="bg-gray-"][class*="/"], [class*="bg-[#F1EDFA]/"], [class*="bg-[#3E03B3]/"], [class*="bg-[#F26A3D]/"]):not([class*="dark:bg-"]):not(.fixed.inset-0):not(.absolute.inset-0):not(.pointer-events-none):not(header *):not([class*="bg-[#3E03B3]"] *):not(.app-sheet-header *):not([style*="linear-gradient"] *) { background-color: #273449 !important; }
 html.dark [class*="opacity-"]:is(.bg-white, [class*="bg-slate-"]) { opacity: 1; }
 
-/* teks */
 html.dark :is(.text-black, .text-slate-900, .text-slate-800, .text-gray-900, .text-gray-800, [class*="text-[#0F172A]"], [class*="text-[#000000]"]):not([class*="dark:text-"]) { color: #f1f5f9; }
 html.dark :is(.text-slate-700, .text-gray-700, .text-slate-600, .text-gray-600):not([class*="dark:text-"]) { color: #cbd5e1; }
 html.dark :is(.text-slate-500, .text-gray-500, .text-slate-400, .text-gray-400):not([class*="dark:text-"]) { color: #94a3b8; }
@@ -392,14 +350,12 @@ html.dark :is(input, textarea, select) { color: #f1f5f9; }
 html.dark :is(input, textarea)::placeholder { color: #94a3b8; }
 html.dark :is(select option) { background-color: #1e293b; color: #f1f5f9; }
 
-/* Kontras teks: abu terang (slate-400) di latar terang dinaikkan; label grafik di tema gelap */
 html:not(.dark) :is(.text-slate-400, .text-gray-400):not([class*="dark:text-"]):not([class*="text-white"]) { color: #64748b; }
 html.dark :is(.apexcharts-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-legend-text) { fill: #94a3b8 !important; color: #94a3b8 !important; }
 html.dark .apexcharts-gridline { stroke: #334155; }
 html.dark [style*="color: rgb(62, 3, 179)"]:not([style*="background: rgb(62, 3, 179)"]):not([style*="background-color: rgb(62, 3, 179)"]):not([style*="linear-gradient"]) { color: #c4b5fd !important; }
 html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important; }
 
-/* ---- Latar oranye: teks dan ikon selalu putih ---- */
 :is(
   [class~="bg-[#F26A3D]"], [class~="bg-[#E8562B]"],
   [style*="background: rgb(242, 106, 61)"], [style*="background-color: rgb(242, 106, 61)"],
@@ -417,21 +373,17 @@ html:not(.dark) [style*="color: rgb(148, 163, 184)"] { color: #64748b !important
   color: #ffffff !important;
 }
 
-/* ---- Tombol aksi di baris tabel: latar abu-abu, ikon & teks abu-abu tua ---- */
 html [data-row-act] { background: #e2e8f0 !important; color: #475569 !important; border-color: transparent !important; box-shadow: none !important; }
 html [data-row-act] * { color: #475569 !important; }
 html [data-row-act]:hover:not(:disabled) { background: #cbd5e1 !important; }
 html [data-row-act]:disabled { opacity: 0.5; }
 
-/* ---- Layar mobile: tahan tampilan sampai hidrasi selesai (maks. 2,5 dtk) agar tidak berkedip tampilan lama ---- */
 @keyframes boot-reveal { to { visibility: visible; } }
 html[data-boot-mobile]:not([data-hydrated]) body { visibility: hidden; animation: boot-reveal 0s 2.5s forwards; }
 
-/* ---- Pemisah antar kartu (Unduh Laporan, Siswa Bermasalah, Jadwal Absen): garis tipis lewat bayangan, bukan border ---- */
 html:not(.dark) .card-pisah { box-shadow: 0 0 0 1px #d6cdee, 0 6px 18px -8px rgba(62,3,179,0.18) !important; }
 html.dark .card-pisah { box-shadow: 0 0 0 1px #475569 !important; }
 
-/* ---- Desktop: kartu utama tanpa garis; kartu DI DALAM kartu lain diberi garis tepi tipis (tabel, tombol, isian tidak) ---- */
 @media (min-width: 1024px) {
   html:not(.dark) :is([class*="rounded-2xl"], [class*="rounded-3xl"], [class*="rounded-xl"]):is(.bg-white, [class~="border"]) :is([class*="rounded-2xl"], [class*="rounded-3xl"], [class*="rounded-xl"]):is(.bg-white, [class~="border"]):not(table *):not(thead *):not(button):not(a):not(input):not(select):not(textarea):not(label):not([data-plain] *) {
     outline: 1px solid #dbe2ec; outline-offset: -1px;
@@ -441,7 +393,6 @@ html.dark .card-pisah { box-shadow: 0 0 0 1px #475569 !important; }
   }
 }
 
-/* ---- Tanpa warna transparan: lingkaran dekorasi disembunyikan, chip kaca (putih/NN) jadi putih solid ---- */
 html [class*="bg-white/"][class*="rounded-full"][class*="pointer-events-none"] { display: none !important; }
 html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) {
   background-color: #ffffff !important; color: #3e03b3 !important; backdrop-filter: none !important;
@@ -449,7 +400,6 @@ html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="point
 html [class*="bg-white/"]:not(.fixed):not([class*="inset-0"]):not([class*="pointer-events-none"]):not([class*="blur-"]):not(thead *) * { color: #3e03b3 !important; }
 html [class*="backdrop-blur"]:not(.fixed):not([class*="inset-0"]) { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 
-/* ---- TEMA GELAP: tidak boleh ada permukaan putih / abu terang ---- */
 html.dark [data-row-act] { background: #334155 !important; color: #cbd5e1 !important; }
 html.dark [data-row-act] * { color: #cbd5e1 !important; }
 html.dark [data-row-act]:hover:not(:disabled) { background: #475569 !important; }
@@ -466,17 +416,14 @@ html.dark [style*="background: rgb(255, 233, 226)"], html.dark [style*="backgrou
 html.dark [style*="background: rgb(226, 232, 240)"], html.dark [style*="background-color: rgb(226, 232, 240)"] { background: #334155 !important; }
 html.dark :is(button, a)[class*="bg-[#F1EDFA]"]:not([class*="dark:bg-"]) { color: #c4b5fd !important; }
 
-/* ---- Tema gelap (lanjutan): sisa permukaan putih ---- */
 html.dark [class*="bg-[#F6FEE8]"], html.dark [class*="bg-[#EAF8D2]"] { background-color: #334155 !important; color: #c4b5fd !important; }
 html.dark [class*="hover:bg-[#F6FEE8]"]:hover { background-color: #475569 !important; }
-/* chip / kotak ikon putih di dalam bar berwarna (oranye, ungu, gradien) */
 html.dark :is([style*="background: rgb("], [style*="linear-gradient"], [class*="bg-[#3E03B3]"], [class*="bg-[#F26A3D]"]) :is(.bg-white, [class*="bg-white/"], [class*="bg-[#FFFFFF]"]) {
   background-color: #1e293b !important; color: #e2e8f0 !important;
 }
 html.dark :is([style*="background: rgb("], [style*="linear-gradient"], [class*="bg-[#3E03B3]"], [class*="bg-[#F26A3D]"]) :is(.bg-white, [class*="bg-white/"], [class*="bg-[#FFFFFF]"]) * { color: #e2e8f0 !important; }
 html.dark :is(.bg-white, [class*="bg-[#FFFFFF]"]):is(button, a, span, div)[class*="text-[#3E03B3]"] { background-color: #1e293b !important; color: #c4b5fd !important; }
 
-/* ---- Gaya inline hex (hasil render server) untuk tema gelap & latar oranye ---- */
 html.dark [style*="background:#F1F5F9" i], html.dark [style*="background: #F1F5F9" i], html.dark [style*="background-color:#F1F5F9" i], html.dark [style*="background-color: #F1F5F9" i], html.dark [style*="background:#F1EDFA" i], html.dark [style*="background: #F1EDFA" i], html.dark [style*="background-color:#F1EDFA" i], html.dark [style*="background-color: #F1EDFA" i], html.dark [style*="background:#FFE9E2" i], html.dark [style*="background: #FFE9E2" i], html.dark [style*="background-color:#FFE9E2" i], html.dark [style*="background-color: #FFE9E2" i] { background: #273449 !important; }
 html.dark [style*="background:#E2E8F0" i], html.dark [style*="background: #E2E8F0" i], html.dark [style*="background-color:#E2E8F0" i], html.dark [style*="background-color: #E2E8F0" i] { background: #334155 !important; }
 html.dark button[role="switch"][aria-checked="false"] { background: #475569 !important; }
@@ -484,7 +431,6 @@ html.dark .app-info-icon, html.dark[data-app-mode] .app-info-row .app-info-icon 
 :is([style*="background:#F26A3D" i], [style*="background: #F26A3D" i], [style*="background-color:#F26A3D" i], [style*="background-color: #F26A3D" i], [style*="background:#E8562B" i], [style*="background: #E8562B" i], [style*="background-color:#E8562B" i], [style*="background-color: #E8562B" i]) { color: #ffffff !important; }
 :is([style*="background:#F26A3D" i], [style*="background: #F26A3D" i], [style*="background-color:#F26A3D" i], [style*="background-color: #F26A3D" i], [style*="background:#E8562B" i], [style*="background: #E8562B" i], [style*="background-color:#E8562B" i], [style*="background-color: #E8562B" i]) :not([class*="bg-white"]):not([class*="bg-white"] *):not([style*="background: rgb(255, 255, 255)"]):not([style*="background:#FFFFFF" i]):not([style*="background: #FFFFFF" i]):not([style*="background:#FFFFFF" i] *):not([style*="background: #FFFFFF" i] *) { color: #ffffff !important; }
 
-/* ---- Tema gelap: kembaran otomatis aturan mode aplikasi yang berlatar terang ---- */
 html.dark[data-app-mode] .app-sheet-header { background-color: #273449 !important; }
 html.dark[data-app-mode] .app-sheet-header [class*="bg-white/"] { background-color: #273449 !important; }
 html.dark[data-app-mode] .app-info-row:nth-of-type(4n+2) .app-info-icon { background-color: #273449 !important; }
@@ -508,7 +454,6 @@ html.dark .fixed.inset-0:not([data-plain]) :is(input:not([type="checkbox"]):not(
 html.dark .fixed.inset-0:not([data-plain]) :is(button, label):is([class*="bg-[#F1EDFA]"], [class*="bg-slate-"], [class*="bg-gray-"], .bg-white) { background-color: #334155 !important; color: #e2e8f0 !important; }
 html.dark .fixed.inset-0:not([data-plain]) .sticky.bottom-0 { background-color: #1e293b !important; }
 
-/* ---- Tema gelap: teks tidak boleh hitam / terlalu gelap (selalu menang atas aturan lain) ---- */
 html.dark :is(.text-black, .text-slate-900, .text-slate-800, .text-slate-950, .text-gray-900, .text-gray-800, [class*="text-[#0F172A]"], [class*="text-[#000000]"], [class*="text-[#1E293B]"], [class*="text-[#111827]"]):not([class*="dark:text-"]),
 html.dark .text-black { color: #f1f5f9 !important; }
 html.dark :is(.text-slate-700, .text-gray-700, .text-slate-600, .text-gray-600, [class*="text-[#334155]"], [class*="text-[#475569]"]):not([class*="dark:text-"]) { color: #cbd5e1 !important; }
@@ -517,10 +462,8 @@ html.dark [style*="color:#0F172A" i], html.dark [style*="color: #0F172A" i], htm
 html.dark [style*="color:#475569" i], html.dark [style*="color: #475569" i], html.dark [style*="color:#64748B" i], html.dark [style*="color: #64748B" i], html.dark [style*="color:#334155" i], html.dark [style*="color: #334155" i] { color: #cbd5e1 !important; }
 html.dark[data-app-mode] .fixed.inset-0:not([data-plain]) :is([class*="text-white/"], [class*="text-black/"], [class*="text-[#000000]/"]) { color: #cbd5e1 !important; }
 html.dark[data-app-mode] .fixed.inset-0:not([data-plain]) :is(.text-slate-400, .text-slate-300, .text-gray-400) { color: #94a3b8 !important; }
-/* kecuali di atas latar terang yang memang dipertahankan (kotak ikon putih di kartu berwarna) */
 html.dark [style*="background: rgb(255, 255, 255)"] *, html.dark [style*="background:#FFFFFF" i] * { color: inherit; }
 
-/* ---- Tema gelap: teks gelap selalu dinaikkan walau kelasnya punya dark:text-* (kalah oleh aturan !important global) ---- */
 html.dark :is(.text-black, .text-slate-900, .text-slate-800, .text-slate-950, .text-gray-900, .text-gray-800, [class*="text-[#0F172A]"], [class*="text-[#000000]"], [class*="text-[#1E293B]"], [class*="text-[#111827]"]) { color: #f1f5f9 !important; }
 html.dark :is(.text-slate-700, .text-gray-700, .text-slate-600, .text-gray-600, [class*="text-[#334155]"], [class*="text-[#475569]"]) { color: #cbd5e1 !important; }
 html.dark :is([class*="text-[#3E03B3]"], [class*="text-primary"], [class*="text-[#8F6DD3]"], [class*="text-[#5D900F]"], [class*="text-[#48700B]"], [class*="text-[#2D0281]"]):not([class*="bg-[#3E03B3]"]):not(.bg-white):not([class*="bg-[#F26A3D]"]) { color: #c4b5fd !important; }
@@ -528,5 +471,4 @@ html.dark [class*="dark:text-[#C4B5FD]"] { color: #c4b5fd !important; }
 html.dark [class*="dark:text-white"] { color: #ffffff !important; }
 html.dark :is([style*="color:#3E03B3" i], [style*="color: #3E03B3" i], [style*="color: rgb(62, 3, 179)"]):not([style*="background"]):not(.bg-white):not([class*="bg-[#3E03B3]"]) { color: #c4b5fd !important; }
 
-/* tema gelap: teks ungu pada latar pastel inline (yang digelapkan) */
 html.dark [style*="color:#3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color:#3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color:#3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color:#3E03B3" i][style*="#E2E8F0" i], html.dark [style*="color: #3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color: #3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color: #3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color: #3E03B3" i][style*="#E2E8F0" i] { color: #c4b5fd !important; }

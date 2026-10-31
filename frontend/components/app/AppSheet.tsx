@@ -4,10 +4,6 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-/**
- * Sheet dari bawah bergaya aplikasi: header putih (judul + tombol tutup), isi bisa digulir.
- * Tanpa warna tembus pandang; hanya putih, ungu, dan aksen palet.
- */
 export function AppSheet({
   open, onClose, title, subtitle, children, footer,
 }: {

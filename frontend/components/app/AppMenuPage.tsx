@@ -12,7 +12,6 @@ import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useDashboardMenu, type MenuItem } from "@/components/dashboard/useDashboardMenu";
 import { AppCard } from "@/components/app/AppUI";
 
-// Sudah ada di bilah bawah, jadi tidak diulang di daftar menu.
 const SKIP_KEYS = ["dashboard", "absensi-harian", "materi", "pengumuman"];
 
 function Row({ href, icon: Icon, label, hint, tone, badge, locked, onClick, external }: {
@@ -51,10 +50,6 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-/**
- * Halaman "Menu" mode aplikasi: kepala profil + daftar menu bergrup + tombol
- * keluar. Menggantikan bottom sheet "Lainnya" di versi lama.
- */
 export function AppMenuPage({ user }: { user: UserPayload }) {
   const { items, pendingResetCount } = useDashboardMenu(user);
   const [dark, setDark] = useState(false);

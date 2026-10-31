@@ -69,9 +69,6 @@ const UPLOADS_ROOT = join(process.cwd(), 'uploads');
 const FONT_REGULAR = join(process.cwd(), 'src', 'assets', 'fonts', 'Satoshi-Regular.ttf');
 const FONT_BOLD = join(process.cwd(), 'src', 'assets', 'fonts', 'Satoshi-Bold.ttf');
 
-// App's primary brand blue (sidebar, Pulang status, etc.) — used to give the
-// weekly/monthly recap table a matching "menarik" blue identity instead of
-// the plain gray chrome the per-day report still uses.
 const BRAND_BLUE = '#0082FB';
 const BRAND_BLUE_TINT = '#EAF3FF';
 const BRAND_BLUE_ROW = '#EAF3FF';
@@ -83,9 +80,6 @@ function registerFonts(doc: PDFKit.PDFDocument) {
   doc.font('Satoshi');
 }
 
-// lokasi is stored as "lat,lng" (see parseLokasi in frontend/shared.ts) — but
-// can also be the "GPS tidak tersedia" fallback string when geolocation was
-// blocked, so validate both parts are actually numeric before linking.
 function googleMapsUrl(lokasi?: string | null): string | null {
   if (!lokasi) return null;
   const parts = lokasi.split(',');
@@ -179,14 +173,6 @@ export class AbsensiHarianPdfService {
     return done;
   }
 
-  // Weekly/monthly recap: still one page per student, but instead of the
-  // full-size per-day foto/TTD/map dokumentasi block (which would mean dozens
-  // of large images per student for a month), each page shows a summary + a
-  // Tanggal/Status/Waktu/Selfie/TTD/GPS table for every effective school day
-  // in the range, with the Selfie/TTD photos embedded as small thumbnails
-  // (GPS stays a Maps link — a thumbnail per row for that too would be too
-  // much). A month tops out around ~23 rows, which comfortably fits one A4
-  // page alongside the header/summary — no pagination-within-student.
   async buildRange(rekap: RekapRangeData, opts: { entityLabel?: string; emptyMessage?: string } = {}): Promise<Buffer> {
     const entityLabel = opts.entityLabel ?? 'Kelas';
     const emptyMessage = opts.emptyMessage ?? 'Tidak ada siswa di kelas ini.';
@@ -274,10 +260,6 @@ export class AbsensiHarianPdfService {
     doc.fontSize(7).fillColor('#94a3b8').text(`Total hari efektif: ${summary.totalHariEfektif}`, margin, y);
     y += 16;
 
-    // Small thumbnails need real vertical room per row — rowH=22 leaves
-    // enough headroom that even a full month (~23 effective weekdays) still
-    // fits comfortably above the footer (measured against the ~560pt left
-    // after the header/summary block above).
     const colFrac = [0.19, 0.11, 0.135, 0.135, 0.13, 0.13, 0.14];
     const colWidths = colFrac.map((f) => f * contentWidth);
     const headers = ['Tanggal', 'Status', 'Waktu Hadir', 'Waktu Pulang', 'Selfie', 'TTD', 'GPS'];
@@ -329,10 +311,6 @@ export class AbsensiHarianPdfService {
       doc.fontSize(8).fillColor('#334155').text(rec?.waktuPulang || '-', cx, rowMidY, { width: colWidths[3], align: 'center' });
       cx += colWidths[3];
 
-      // Selfie thumbnail — centered in its column/row; falls back to a dash
-      // both when there's no photo at all and when the file exists but can't
-      // be decoded (corrupt/unsupported format), same defensive pattern as
-      // drawMediaBox() below for the per-day report.
       const fotoX = cx + (colWidths[4] - thumb) / 2;
       const thumbY = rowTop + (rowH - thumb) / 2;
       if (fotoBuf) {
@@ -346,9 +324,6 @@ export class AbsensiHarianPdfService {
       }
       cx += colWidths[4];
 
-      // TTD thumbnail — small white backing box since signatures are drawn
-      // on a transparent/white canvas and would be hard to read directly on
-      // the alternating light-blue row tint.
       const ttdX = cx + (colWidths[5] - thumb) / 2;
       if (ttdBuf) {
         try {
@@ -447,11 +422,6 @@ export class AbsensiHarianPdfService {
 
     const lokasiUrl = googleMapsUrl(s.lokasi);
     const lokasiPulangUrl = googleMapsUrl(s.lokasiPulang);
-    // Map thumbnails are best-effort — getStaticMapImage() never throws and
-    // resolves to null on any failure (invalid coords, network error,
-    // timeout), so a slow/unreachable tile server can never block PDF
-    // generation. The lokasi text + Google Maps link above always render
-    // regardless of whether the thumbnail comes back.
     const [mapBuf, mapPulangBuf] = await Promise.all([
       getStaticMapImage(s.lokasi),
       getStaticMapImage(s.lokasiPulang),
@@ -479,10 +449,10 @@ export class AbsensiHarianPdfService {
     const mapW = 110;
     const mapH = 82.5;
     if (mapBuf) {
-      try { doc.image(mapBuf, margin, mapY, { width: mapW, height: mapH }); } catch { /* corrupt/unreadable — skip, text+link above already cover it */ }
+      try { doc.image(mapBuf, margin, mapY, { width: mapW, height: mapH }); } catch { }
     }
     if (mapPulangBuf) {
-      try { doc.image(mapPulangBuf, margin + colW, mapY, { width: mapW, height: mapH }); } catch { /* same */ }
+      try { doc.image(mapPulangBuf, margin + colW, mapY, { width: mapW, height: mapH }); } catch { }
     }
     y = (mapBuf || mapPulangBuf) ? mapY + mapH + 10 : y + rowH;
 
@@ -554,7 +524,6 @@ export class AbsensiHarianPdfService {
         doc.image(buffer, x + 10, imgTop, { fit: [w - 20, imgH], align: 'center', valign: 'center' });
         return;
       } catch {
-        // fall through to placeholder — unreadable/corrupt/unsupported image
       }
     }
     doc.fontSize(9).fillColor('#cbd5e1').text(placeholder, x + 10, y + h / 2 - 5, { width: w - 20, align: 'center' });

@@ -51,10 +51,6 @@ export function Sidebar({
   onToggleCollapse: () => void;
 }) {
   const pathname = usePathname();
-  // Desktop: sidebar ringkas (ikon) yang melebar otomatis saat disorot kursor dan menutup sendiri
-  // saat kursor keluar atau setelah memilih menu; melebar di atas konten tanpa menggeser halaman.
-  // `hoverPath` mengingat halaman saat kursor masuk: begitu pindah menu, sidebar menutup sendiri
-  // dan baru melebar lagi setelah kursor keluar lalu masuk kembali.
   const [hoverPath, setHoverPath] = useState<string | null>(null);
   const hover = hoverPath === pathname;
   const compact = collapsed && !hover;

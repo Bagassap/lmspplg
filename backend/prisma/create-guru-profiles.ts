@@ -5,8 +5,6 @@ import { PrismaPg } from '@prisma/adapter-pg';
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter } as any);
 
-// Muhammad Syukron, S.Kom & Bagas Saputra, S.Kom — role ADMIN tapi juga
-// mengajar (ada di mapel.xlsx), belum punya profil Guru sama sekali.
 const TARGET_USER_IDS = ['cmrrs7exo000jkrnsw5v2cd2a', 'cmrrs7ev0000gkrns1dhitl07'];
 
 async function main() {

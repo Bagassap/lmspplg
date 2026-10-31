@@ -95,7 +95,6 @@ function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenIm
   );
 }
 
-
 function DocumentCardsApp({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenImg }: {
   fotoSrc: string | null; fotoLabel: string; ttdSrc: string | null;
   lokasi: { lat: string; lng: string } | null; rawLokasi: string | null | undefined;

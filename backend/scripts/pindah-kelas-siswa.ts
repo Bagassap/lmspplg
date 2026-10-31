@@ -1,12 +1,3 @@
-// Memindahkan satu siswa ke kelas lain.
-//
-//   npm run siswa:pindah-kelas -- "Bagas Demo" "12 PG 1"
-//   npm run siswa:pindah-kelas -- "Bagas Demo" "12 PG 1" --dry-run
-//   npm run siswa:pindah-kelas -- "Bagas Demo" "12 PG 1" --buat-kelas
-//
-// Argumen pertama bisa nama siswa, NIS, atau loginId. Kalau lebih dari satu
-// siswa cocok, skrip berhenti dan menampilkan daftarnya (tidak menebak).
-// Kelas tujuan harus sudah ada, kecuali diberi --buat-kelas.
 import 'dotenv/config';
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';

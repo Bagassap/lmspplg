@@ -8,7 +8,6 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Nama tidak boleh kosong' })
   nama: string;
 
-  // ADMIN & GURU login with a loginId + admin-chosen password.
   @ValidateIf((o) => o.role !== 'SISWA')
   @IsString()
   @IsNotEmpty({ message: 'Login ID tidak boleh kosong' })
@@ -28,7 +27,6 @@ export class CreateUserDto {
   @IsString()
   noWa?: string;
 
-  // SISWA logs in with NIS (password defaults to NIS, forced change on first login).
   @ValidateIf((o) => o.role === 'SISWA')
   @IsString()
   @IsNotEmpty({ message: 'NIS tidak boleh kosong' })

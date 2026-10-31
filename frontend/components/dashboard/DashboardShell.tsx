@@ -16,7 +16,6 @@ export function DashboardShell({
   user: UserPayload;
   children: React.ReactNode;
 }) {
-  // Sidebar desktop selalu dalam bentuk ringkas (jalur ikon); versi terbuka tidak dipakai lagi.
   const sidebarCollapsed = true;
   const pathname = usePathname();
   const appMode = useIsAppMode();

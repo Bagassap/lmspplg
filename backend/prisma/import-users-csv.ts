@@ -40,12 +40,8 @@ function parseCSVLine(line: string): string[] {
 
 const VALID_ROLES: Row['role'][] = ['SISWA', 'GURU', 'ADMIN'];
 
-// Mapping eksplisit nama admin (di-strip gelar, lowercase) → loginId unik + mustChangePassword.
-// Semua admin di CSV berbagi NIS "111111" (kolom NIS = kode akun bersama, bukan identitas unik),
-// jadi loginId tidak bisa diturunkan dari NIS — mapping ini di-keyed by nama sebagai gantinya.
-// Tambahkan entri baru di sini kalau ada admin baru yang perlu loginId unik.
 const ADMIN_LOGIN_OVERRIDES: Record<string, { loginId: string; mustChangePassword: boolean }> = {
-  'bagas saputra': { loginId: '02082021080', mustChangePassword: false }, // superadmin
+  'bagas saputra': { loginId: '02082021080', mustChangePassword: false },
   'wahyu hidayat': { loginId: '19082013040', mustChangePassword: true },
   'muhammad syukron': { loginId: '13072015051', mustChangePassword: true },
 };

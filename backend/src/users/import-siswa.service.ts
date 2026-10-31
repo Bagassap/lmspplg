@@ -7,9 +7,6 @@ import { Role } from '../../generated/prisma/client';
 
 const SALT_ROUNDS = 10;
 
-// Sama seperti JURUSAN_OPTIONS di frontend/components/data-siswa/shared.ts —
-// dijaga tetap sinkron manual (bukan di-share lintas paket) karena keduanya
-// kecil & jarang berubah.
 const JURUSAN_VALID = [
   'Pengembangan Perangkat Lunak dan Gim',
   'Pengembangan Gim',
@@ -70,10 +67,10 @@ export class ImportSiswaService {
 
     const rows: { rowNumber: number; nama: string; nis: string; kelasNama: string; jurusan: string; angkatan: string; jenisKelamin: string }[] = [];
     sheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; // header
+      if (rowNumber === 1) return;
       const nama = row.getCell(2).text?.trim();
       const nis = row.getCell(3).text?.trim();
-      if (!nama && !nis) return; // baris kosong (mis. baris contoh yang dihapus, atau pemisah)
+      if (!nama && !nis) return;
       rows.push({
         rowNumber,
         nama,

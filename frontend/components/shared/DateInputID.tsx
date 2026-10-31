@@ -10,14 +10,8 @@ function parse(v: string) {
   return m ? { y: m[1], m: m[2], d: m[3] } : { y: "", m: "", d: "" };
 }
 
-/**
- * Input tanggal format Indonesia (tanggal / bulan / tahun) — tidak bergantung bahasa browser,
- * tidak seperti <input type="date"> yang bisa tampil bulan/tanggal/tahun.
- * value & onChange memakai format "YYYY-MM-DD" ("" bila belum lengkap).
- */
 export function DateInputID({ value, onChange, className, required, disabled, birth, min, max }: {
   value: string; onChange: (v: string) => void; className?: string; required?: boolean; disabled?: boolean;
-  /** rentang tahun untuk tanggal lahir (30 tahun ke belakang s.d. tahun ini) */
   birth?: boolean; min?: string; max?: string;
 }) {
   const [p, setP] = useState(() => parse(value));
@@ -46,7 +40,6 @@ export function DateInputID({ value, onChange, className, required, disabled, bi
     onChange(y && m && d ? `${y}-${m}-${d}` : "");
   }
 
-  // margin dipindah ke pembungkus; lebar & padding diatur sendiri supaya muat di kolom sempit
   const tokens = (className ?? "").split(/\s+/).filter(Boolean);
   const wrapCls = tokens.filter((t) => /^-?m[trblxy]?-/.test(t)).join(" ");
   const cls = `${tokens.filter((t) => !/^-?m[trblxy]?-/.test(t) && !/^(w|min-w|max-w|p[xlr]?)-/.test(t)).join(" ")} w-full min-w-0 px-1.5 text-center`;

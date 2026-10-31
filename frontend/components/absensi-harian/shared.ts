@@ -135,8 +135,6 @@ export function parseLokasi(raw: string | null | undefined) {
 
 export { API_BASE, resolveMediaSrc } from "@/lib/media";
 
-/* Mode aplikasi: warna status memakai palet 5 warna (ungu + hijau, biru, oranye, ungu).
-   Dijalankan sekali di klien sebelum komponen merender; browser biasa tidak berubah. */
 if (typeof window !== "undefined") {
   Object.assign(STATUS_CFG.HADIR, { bg: "#E3F8EF", clr: "#059669", darkBg: "#05966933" });
   Object.assign(STATUS_CFG.IZIN, { bg: "#E0F2FE", clr: "#0284C7", darkBg: "#0284C733" });

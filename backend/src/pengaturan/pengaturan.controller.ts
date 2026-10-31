@@ -11,8 +11,6 @@ import { Role } from '../../generated/prisma/client';
 export class PengaturanController {
   constructor(private readonly service: PengaturanService) {}
 
-  // Dibaca oleh Sidebar untuk SEMUA role (siswa perlu tahu apakah menu
-  // Magang/UKK sudah dibuka tahun ini) — tidak dibatasi role, cukup login.
   @Get()
   get() {
     return this.service.get();

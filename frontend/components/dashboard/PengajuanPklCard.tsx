@@ -6,7 +6,6 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export type PengajuanPkl = { id: string; kelompokId: string | null; siswa: string; kelas: string; tempat: string; createdAt: string };
 
-/** Kartu dashboard admin: pengajuan PKL dari siswa yang menunggu guru pembimbing. */
 export function PengajuanPklCard({ list }: { list: PengajuanPkl[] }) {
   if (!list || list.length === 0) return null;
   const grup = new Map<string, PengajuanPkl[]>();

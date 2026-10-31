@@ -1,8 +1,5 @@
 import type { StatusAbsensi, SiswaAbsensi } from "@/components/absensi-harian/types";
 
-// Bentuknya sengaja identik dengan Absensi Harian (lihat
-// components/absensi-harian/types.ts) supaya tabel/modal dari sana bisa
-// dipakai ulang langsung — bedanya di sini di-scope oleh TempatMagang.
 export type { StatusAbsensi, FilterAbsensi, SiswaAbsensi } from "@/components/absensi-harian/types";
 
 export type TempatMagang = {
@@ -23,8 +20,6 @@ export type RekapTempat = {
   siswa: SiswaAbsensi[];
 };
 
-// Bentuk hasil rekap rentang (mingguan/bulanan) — 1 baris ringkasan per
-// siswa, bukan status harian tunggal seperti RekapTempat.
 export type RangeSiswaSummary = {
   HADIR: number; IZIN: number; SAKIT: number; ALPA: number;
   totalHariEfektif: number; persentaseKehadiran: number;

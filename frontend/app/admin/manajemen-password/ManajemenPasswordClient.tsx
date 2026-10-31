@@ -109,7 +109,6 @@ export default function ManajemenPasswordClient() {
     if (selectedKelasId) fetchSiswaPage(selectedKelasId);
   }
 
-
   const accountById = useMemo(() => {
     const map: Record<string, AccountStatus> = {};
     for (const a of accountList) map[a.id] = a;

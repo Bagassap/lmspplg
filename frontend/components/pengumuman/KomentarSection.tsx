@@ -31,7 +31,6 @@ function hari(iso: string): string {
   return d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-/** Komentar pengumuman bergaya chat (ala BBM/WhatsApp): gelembung kiri/kanan, kutipan balasan, kolom ketik di bawah. */
 export function KomentarSection({
   initialKomentar, pengumumanId, currentUserId, canManage,
 }: {

@@ -53,8 +53,6 @@ export class TugasService {
     return siswa?.kelasId ?? null;
   }
 
-  // kelasIds kosong ([]) berarti tugas ini untuk "Semua Kelas" — notifikasi
-  // dikirim ke seluruh siswa, bukan hanya kelas tertentu.
   private async notifySiswaBaru(kelasIds: string[], title: string, message: string) {
     const siswaUsers = await this.prisma.siswa.findMany({
       where: { userId: { not: null }, ...(kelasIds.length ? { kelasId: { in: kelasIds } } : {}) },
@@ -66,8 +64,6 @@ export class TugasService {
     );
   }
 
-  // Guru hanya boleh membuat/mengubah Tugas untuk mapel yang benar-benar ia
-  // ampu (sumber: GuruMapel, diimpor dari mapel.xlsx) — ADMIN tidak dibatasi.
   private async assertGuruMapel(actor: Actor, mapel: string) {
     if (actor.role !== 'GURU') return;
     const guru = await this.prisma.guru.findUnique({ where: { userId: actor.id } });
@@ -85,17 +81,6 @@ export class TugasService {
     }
   }
 
-  // Update di tempat berdasarkan posisi (urutan), BUKAN delete-semua-lalu-
-  // buat-ulang. TugasJawaban.soalId punya onDelete: Cascade ke TugasSoal —
-  // delete+recreate berarti id soal lama hilang, jadi setiap guru edit tugas
-  // (walau cuma benerin typo satu soal) diam-diam menghapus permanen jawaban
-  // SEMUA siswa yang sudah submit untuk tugas itu, dan submisi yang sedang
-  // "in-flight" (sudah buka lembar pengerjaan sebelum edit ini) akan gagal
-  // submit dengan foreign key error karena soalId yang dikirim sudah tidak
-  // ada. Dengan update di tempat, id soal yang masih ada tetap sama →
-  // jawaban lama & submisi yang sedang berjalan tidak ikut rusak. Soal baru
-  // (kalau nambah) ditambahkan di akhir; soal yang dihapus (kalau
-  // mengurangi) baru di-cascade di baris paling akhir.
   private async replaceSoal(tugasId: string, tipe: string, soalJson: string | undefined) {
     if (!NEEDS_SOAL.has(tipe)) return;
     const soal = parseJsonArray<SoalInput>(soalJson, 'soal');
@@ -138,13 +123,6 @@ export class TugasService {
     }
   }
 
-  // Dipakai oleh submitTugas. Query ulang soal yang BENAR-
-  // BENAR masih ada sekarang & saring jawaban ke soalId yang valid saja:
-  // kalau guru mengedit tugas ini persis di antara siswa membuka lembar
-  // pengerjaan dan submit, soalId yang dikirim klien bisa merujuk ke
-  // TugasSoal yang sudah tidak ada lagi — tanpa penyaringan ini,
-  // createMany gagal foreign key dan submisi siswa nyangkut TERKIRIM tanpa
-  // nilai (lihat replaceSoal untuk perbaikan akar masalahnya).
   private async simpanJawabanSoal(tugasId: string, submisiId: string, tipe: string, jawabanJson: string | undefined) {
     const jawaban = parseJsonArray<JawabanInput>(jawabanJson, 'jawaban');
     const soalList = await this.prisma.tugasSoal.findMany({
@@ -166,9 +144,6 @@ export class TugasService {
       });
     }
 
-    // Pilihan ganda dinilai otomatis 0-100 (dibulatkan, tidak pernah koma) —
-    // tipe soal-based lain (ESSAY) tetap butuh penilaian manual guru lewat
-    // kunci jawaban, jadi nilai-nya dibiarkan null.
     if (tipe === 'PILIHAN_GANDA') {
       const totalSoal = soalList.length;
       const jumlahBenar = soalList.filter((s) => {
@@ -205,8 +180,6 @@ export class TugasService {
       });
       return list;
     }
-    // Guru hanya melihat tugas buatan sendiri — meski kelasnya sama, tugas
-    // guru lain tidak boleh terlihat. ADMIN tetap melihat semua.
     return this.prisma.tugas.findMany({
       where: actor.role === 'GURU' ? { createdById: actor.id } : undefined,
       orderBy: [{ deadline: 'asc' }],
@@ -251,8 +224,6 @@ export class TugasService {
   async create(dto: CreateTugasDto, fileUrl: string | undefined, fileName: string | undefined, actor: Actor) {
     await this.assertGuruMapel(actor, dto.mapel);
     const tipe = dto.tipe || 'SUBMIT';
-    // dto.kelasId (tunggal) adalah fallback dari bundle frontend lama — lihat
-    // catatan di CreateTugasDto.
     const kelasIds = dto.kelasIds ?? (dto.kelasId ? [dto.kelasId] : []);
     const tugas = await this.prisma.tugas.create({
       data: {
@@ -288,9 +259,6 @@ export class TugasService {
       where: { id },
       data: {
         ...(dto.mapel !== undefined ? { mapel: dto.mapel } : {}),
-        // dto.kelasId (tunggal) adalah fallback dari bundle frontend lama —
-        // lihat catatan di UpdateTugasDto — hanya dipakai kalau kelasIds
-        // (field baru) tidak dikirim sama sekali.
         ...(dto.kelasIds !== undefined
           ? { kelasList: { set: dto.kelasIds.map((id) => ({ id })) } }
           : dto.kelasId !== undefined
@@ -347,8 +315,6 @@ export class TugasService {
     return target.filter((s) => !sudahMengumpulkan.has(s.id));
   }
 
-  // Guru hanya melihat submisi untuk tugas buatan sendiri — mencegah guru
-  // lain membaca jawaban/menilai tugas yang bukan buatannya. ADMIN melihat semua.
   findAllSubmisi(actor: Actor) {
     return this.prisma.tugasSubmisi.findMany({
       where: actor.role === 'GURU' ? { tugas: { createdById: actor.id } } : undefined,
@@ -446,9 +412,6 @@ export class TugasService {
     return updated;
   }
 
-  // Nilai manual (0-100, integer) untuk tugas essay — guru mengisi ini setelah
-  // membaca jawaban siswa dan membandingkan dengan kunci jawaban. Pilihan ganda
-  // tidak pernah lewat sini karena sudah dinilai otomatis saat submit.
   async updateNilaiSubmisi(id: string, nilai: number, actor: Actor) {
     const submisi = await this.prisma.tugasSubmisi.findUnique({
       where: { id },
@@ -456,8 +419,6 @@ export class TugasService {
     });
     if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
     this.assertOwnerOrAdmin(actor, submisi.tugas.createdById);
-    // Memberi nilai = selesai menilai — otomatis DITERIMA, tidak perlu klik
-    // tombol Terima terpisah lagi.
     const updated = await this.prisma.tugasSubmisi.update({
       where: { id },
       data: { nilai, status: 'DITERIMA', pesanRevisi: null },

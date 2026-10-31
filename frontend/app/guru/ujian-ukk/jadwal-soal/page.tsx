@@ -46,14 +46,12 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
 };
 
 function SubmisiList({ items, tahapanId }: { items: Submisi[]; tahapanId?: string }) {
-  // rekap per kelas XII: "sudah" & "belum mengumpulkan" bisa diklik, 10 siswa per halaman
   return (
     <div className="flex max-h-[34rem] flex-col">
       <RekapPengumpulan submisi={items} tahapanId={tahapanId} />
     </div>
   );
 }
-
 
 export default function GuruJadwalSoalPage() {
   const router = useRouter();
@@ -101,7 +99,6 @@ export default function GuruJadwalSoalPage() {
 
   return (
     <div className="space-y-6">
-
 
       <AnimatePresence>
             {openJadwalModal && (()=>{

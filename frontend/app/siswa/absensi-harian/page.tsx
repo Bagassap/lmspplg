@@ -281,7 +281,6 @@ export default function SiswaAbsensiHarianPage() {
   return (
     <div className="space-y-5">
 
-
       {loading ? (
         <div className="flex items-center justify-center rounded-2xl border border-slate-100 bg-white py-20 dark:border-slate-700 dark:bg-slate-800">
           <Loader2 size={24} className="animate-spin text-[#3E03B3]" />
@@ -539,8 +538,6 @@ export default function SiswaAbsensiHarianPage() {
                 </motion.button>
               );
             })()}
-
-
 
             </div>
           </div>

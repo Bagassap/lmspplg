@@ -59,11 +59,6 @@ function ListSkeleton() {
   );
 }
 
-/**
- * Beranda siswa untuk aplikasi terpasang (PWA). Header (avatar, sapaan, lonceng)
- * ditangani Topbar; komponen ini berisi banner absen, aksi cepat, dan daftar
- * Materi/Tugas.
- */
 export function SiswaAppHome() {
   const fitur = useSiswaFitur();
   const [tab, setTab] = useState<Tab>("materi");

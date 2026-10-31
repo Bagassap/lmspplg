@@ -35,8 +35,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Akun tidak ditemukan atau tidak aktif');
     }
 
-    // Siswa wajib melengkapi data dan foto profil: selama belum, seluruh API terkunci kecuali
-    // yang dipakai untuk melengkapinya (middleware frontend hanya menjaga halaman, bukan API).
     if (user.role === 'SISWA' && !payload.impersonatedBy && (!user.fotoProfil || !user.profileCompleted)) {
       const path = (req.originalUrl ?? req.url ?? '').split('?')[0];
       const boleh = path.startsWith('/api/auth/') || path === '/api/siswa/lengkapi-profil';

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
-/** Memberi data-label pada sel tabel dari teks kepala kolom, agar CSS mode aplikasi bisa menampilkan tabel sebagai kartu. */
 function labelTables(root: ParentNode) {
   root.querySelectorAll("table").forEach((table) => {
     const heads = Array.from(table.querySelectorAll("thead th")).map((th) => (th.textContent ?? "").trim());
@@ -17,13 +16,11 @@ function labelTables(root: ParentNode) {
         const label = heads[i] ?? "";
         if (!cell.hasAttribute("data-label")) cell.setAttribute("data-label", label);
         const text = (cell.textContent ?? "").trim();
-        // kolom nomor urut (kepala kosong, isi angka) disembunyikan; kolom pertama berlabel jadi judul kartu
         if (!label && /^\d*$/.test(text) && !cell.querySelector("button,a,input")) cell.setAttribute("data-skip", "1");
         else if (!titled && label) { cell.setAttribute("data-title", "1"); titled = true; }
         if (/^(aksi|file|detail|rincian)$/i.test(label)) cell.setAttribute("data-aksi", "1");
         else if (!cell.hasAttribute("data-skip") && !cell.hasAttribute("data-title")) {
           pairs += 1;
-          // maksimal 3 pasangan label:nilai per kartu agar tidak lebih dari 2 baris
           if (pairs > 3) cell.setAttribute("data-extra", "1");
         }
         i += Number((cell as HTMLTableCellElement).colSpan) || 1;
@@ -32,7 +29,6 @@ function labelTables(root: ParentNode) {
   });
 }
 
-/** Header modal berlatar warna (gradien/ungu/lime) diberi class app-sheet-header agar tampil seperti sheet aplikasi. */
 function tagSheetHeaders(root: ParentNode) {
   root.querySelectorAll<HTMLElement>(".fixed.inset-0:not([data-plain])").forEach((modal) => {
     Array.from(modal.children).forEach((panel) => {
@@ -47,7 +43,6 @@ function tagSheetHeaders(root: ParentNode) {
   });
 }
 
-/** Tombol aksi di baris tabel (table maupun grid-baris) ditandai data-row-act agar seragam: ungu, ikon/teks putih. */
 const ACT_SKIP = '[role="switch"],[role="checkbox"],[role="tab"],[aria-pressed],[data-keep-style]';
 function tagRowActions(root: ParentNode) {
   root.querySelectorAll<HTMLElement>('tbody tr button, [style*="grid-template-columns"] button, tbody tr a[download], tbody tr a:has(> svg:only-child), [style*="grid-template-columns"] a:has(> svg:only-child)').forEach((b) => {
@@ -59,7 +54,6 @@ function tagRowActions(root: ParentNode) {
   });
 }
 
-/** Menandai <html data-app-mode> saat dibuka sebagai aplikasi terpasang, agar CSS mode aplikasi aktif. */
 export function AppModeFlag() {
   const app = useIsAppMode();
   useEffect(() => {
@@ -75,7 +69,6 @@ export function AppModeFlag() {
     return () => { mo.disconnect(); cancelAnimationFrame(raf); };
   }, [app]);
   useEffect(() => {
-    // hidrasi selesai: tampilkan halaman (lihat aturan data-boot-mobile di globals.css)
     const t = window.setTimeout(() => document.documentElement.setAttribute("data-hydrated", "1"), 60);
     return () => window.clearTimeout(t);
   }, []);

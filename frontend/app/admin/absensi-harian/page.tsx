@@ -271,7 +271,6 @@ function MobileSiswaCard({
   );
 }
 
-// Warna tiap kartu kelas (biru, hijau, ungu, oranye) dipakai untuk ikon dan border.
 const KELAS_WARNA = ["#0EA5E9", "#10B981", "#8B5CF6", "#F59E0B"];
 
 export default function AdminAbsensiHarianPage() {

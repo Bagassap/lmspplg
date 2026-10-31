@@ -28,9 +28,6 @@ export class UpdateMateriDto {
   @IsOptional()
   mapel?: string;
 
-  // undefined = field tidak dikirim (tidak diubah). Array kosong [] dikirim
-  // eksplisit sebagai '[]' saat user memang ingin mengosongkan jadi "Semua
-  // Kelas" — dibedakan dari "tidak diisi" lewat sentinel di service.
   @Transform(({ value }) => parseKelasIds(value))
   @IsArray()
   @IsString({ each: true })

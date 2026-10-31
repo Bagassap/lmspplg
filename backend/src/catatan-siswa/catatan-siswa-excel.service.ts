@@ -20,7 +20,6 @@ type KelasGroup = {
   siswa: SiswaExportRow[];
 };
 
-// Excel sheet names can't exceed 31 chars or contain []:*?/\
 function safeSheetName(name: string, used: Set<string>): string {
   let base = name.replace(/[\[\]:*?/\\]/g, ' ').trim().slice(0, 31) || 'Kelas';
   let candidate = base;

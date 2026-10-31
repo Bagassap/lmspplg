@@ -33,7 +33,6 @@ export function PenempatanTable({
   const start = list.length ? page * PAGE_SIZE + 1 : 0;
   const end = Math.min((page + 1) * PAGE_SIZE, list.length);
 
-  // Baris judul per tempat: tampil di awal tiap kelompok tempat pada halaman ini.
   const barisTempat = (p: PenempatanMagang) => list.filter((x) => x.tempatMagang.id === p.tempatMagang.id && (x.status === "MENUNGGU" || x.status === "AKTIF"));
   const judulTempat = (p: PenempatanMagang, i: number, colSpan?: number) => {
     if (i > 0 && pageItems[i - 1].tempatMagang.id === p.tempatMagang.id) return null;

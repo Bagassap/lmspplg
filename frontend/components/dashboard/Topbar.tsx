@@ -18,7 +18,6 @@ import { LiveClock } from "@/components/shared/LiveClock";
 import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
-
 const PAGE_TITLES: Record<string, [string, string]> = {
   dashboard:      ["Dashboard",          "Ringkasan aktivitas Anda"],
   "absensi-harian": ["Absensi Harian",   "Presensi kehadiran harian siswa"],
@@ -62,7 +61,6 @@ function getPageInfo(pathname: string) {
       };
 }
 
-
 type SearchItem = {
   href: string;
   label: string;
@@ -94,7 +92,6 @@ const SEARCH_ITEMS: SearchItem[] = [
   { href: "/siswa/magang/absensi",       label: "Absensi PKL",        desc: "Data kehadiran PKL",            icon: CheckCircle2,    roles: ["SISWA"] },
   { href: "/siswa/ujian-ukk/nilai-saya", label: "Nilai Saya",         desc: "Hasil ujian kompetensi",        icon: FileText,        roles: ["SISWA"] },
 ];
-
 
 type NotifType = "info" | "success" | "warning" | "error";
 type ApiNotifType = "PENGUMUMAN" | "ABSENSI" | "TUGAS" | "MAGANG" | "UKK" | "SISTEM";
@@ -152,14 +149,11 @@ function hasPurpleMobileHeader(pathname: string): boolean {
   return PURPLE_MOBILE_HEADER_PATHS.has(pathname.replace(/^\/(admin|guru|siswa)/, ""));
 }
 
-
 export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { title, subtitle } = getPageInfo(pathname);
   const appMode = useIsAppMode();
-  // Di aplikasi terpasang, dashboard siswa memakai header ala aplikasi:
-  // avatar + sapaan di kiri, lonceng di kanan (tanpa latar ungu).
   const appHome = appMode && (pathname === "/siswa/dashboard" || pathname === "/guru/dashboard" || pathname === "/admin/dashboard");
   const purpleMobile = hasPurpleMobileHeader(pathname) || appMode;
 
@@ -233,7 +227,6 @@ export function Topbar({ user }: { user: UserPayload }) {
   const [notifLoading,   setNotifLoading]   = useState(false);
   const [unreadCount,    setUnreadCount]    = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
-
 
   function handleSessionExpired() {
     window.location.href = "/login";
@@ -316,7 +309,6 @@ export function Topbar({ user }: { user: UserPayload }) {
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.replace("/login");
   }
-
 
   return (
     <>

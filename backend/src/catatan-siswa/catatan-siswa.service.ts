@@ -133,8 +133,6 @@ export class CatatanSiswaService {
 
   async create(dto: CreateCatatanSiswaDto, actor: Actor) {
     if (actor.role === 'GURU') {
-      // guru boleh mencatat siswa manapun (bukan hanya wali kelasnya sendiri),
-      // jadi di sini cukup pastikan siswanya benar ada, bukan pakai assertCanViewSiswa.
       const siswa = await this.prisma.siswa.findUnique({ where: { id: dto.siswaId } });
       if (!siswa) throw new NotFoundException('Siswa tidak ditemukan');
     }

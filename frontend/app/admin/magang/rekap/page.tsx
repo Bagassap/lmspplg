@@ -30,7 +30,6 @@ export default function AdminMagangRekapPage() {
     }).finally(() => setLoading(false));
   }, []);
 
-
   return (
     <div className="space-y-6">
 

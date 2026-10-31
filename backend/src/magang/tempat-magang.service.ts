@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTempatMagangDto } from './dto/create-tempat-magang.dto';
 import { UpdateTempatMagangDto } from './dto/update-tempat-magang.dto';
 
-// Kuota terpakai = penempatan yang sudah aktif + yang masih menunggu guru pembimbing.
 const INCLUDE_COUNT = {
   _count: { select: { penempatan: { where: { status: { in: ['MENUNGGU', 'AKTIF'] as ('MENUNGGU' | 'AKTIF')[] } } } } },
 } as const;
@@ -19,7 +18,6 @@ export class TempatMagangService {
     });
   }
 
-  // Daftar pilihan untuk siswa: nama + sisa kuota saja.
   async findPilihan() {
     const list = await this.prisma.tempatMagang.findMany({
       include: INCLUDE_COUNT,

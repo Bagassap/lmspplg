@@ -31,7 +31,6 @@ export default function SiswaMagangPenempatanPage() {
   const aktif = list.find((p) => p.status === "AKTIF");
   const riwayat = list.filter((p) => p.status !== "AKTIF");
 
-  // Belum ada penempatan aktif: siswa mengajukan sendiri / menunggu guru pembimbing ditetapkan admin.
   if (!loading && !aktif) return <PengajuanPklPage list={list} onChanged={reload} />;
 
   return (

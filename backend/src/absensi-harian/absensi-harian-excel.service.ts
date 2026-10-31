@@ -71,18 +71,12 @@ function formatTanggalFull(tanggal: string): string {
   }
 }
 
-// Excel embeds only the font NAME, not the glyphs themselves (unlike PDF) —
-// a viewer without Satoshi installed falls back to their default font, but
-// we still set it everywhere so it renders correctly wherever it is available.
 const FONT_NAME = 'Satoshi';
 const NA_FONT = { name: FONT_NAME, color: { argb: 'FFCBD5E1' }, italic: true };
 const LINK_FONT = { name: FONT_NAME, color: { argb: 'FF2563EB' }, underline: true };
 
 const UPLOADS_ROOT = join(process.cwd(), 'uploads');
 
-// lokasi is stored as "lat,lng" (see parseLokasi in frontend/shared.ts) — but
-// can also be the "GPS tidak tersedia" fallback string when geolocation was
-// blocked, so validate both parts are actually numeric before linking.
 function googleMapsUrl(lokasi?: string | null): string | null {
   if (!lokasi) return null;
   const parts = lokasi.split(',');
@@ -96,7 +90,6 @@ function googleMapsUrl(lokasi?: string | null): string | null {
 const FOTO_SIZE = { width: 80, height: 80 };
 const TTD_SIZE = { width: 100, height: 50 };
 const MAP_SIZE = { width: 120, height: 90 };
-// 90px-tall map images (the tallest embed) need ~68pt of row height (96dpi: 1pt = 1.333px); add padding so images aren't clipped.
 const MEDIA_ROW_HEIGHT = 76;
 
 async function readFotoBuffer(fotoUrl?: string | null): Promise<Buffer | null> {
@@ -121,7 +114,6 @@ function decodeTtdBuffer(ttd?: string | null): Buffer | null {
   }
 }
 
-// exceljs only embeds jpeg/png/gif, so sniff the real format instead of trusting the upload extension.
 function detectImageExtension(buffer: Buffer): 'png' | 'jpeg' | 'gif' | null {
   if (buffer.length >= 4 && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) return 'png';
   if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return 'jpeg';
@@ -191,11 +183,6 @@ export class AbsensiHarianExcelService {
         cell.font = LINK_FONT;
       }
 
-      // Map thumbnails are best-effort — getStaticMapImage() never throws and
-      // resolves to null on any failure (invalid coords, network error,
-      // timeout), so a slow/unreachable tile server can never block the
-      // export. The Lokasi Hadir/Pulang hyperlink cells above always work
-      // regardless of whether the thumbnail comes back.
       const [fotoBuf, fotoPulangBuf, mapBuf, mapPulangBuf] = await Promise.all([
         readFotoBuffer(s.foto),
         readFotoBuffer(s.fotoPulang),
@@ -221,13 +208,6 @@ export class AbsensiHarianExcelService {
     return Buffer.from(buf);
   }
 
-  // Weekly/monthly recap has two very different shapes: a per-kelas export
-  // is a matrix (rows = siswa, one column per date, cell = H/I/S/A) so a
-  // whole class fits on one screen/printout, while a per-siswa export is a
-  // tall date-by-date table (single student, no point in a 1-row matrix)
-  // with a summary block at the end. No foto/TTD/map embeds in either —
-  // that's harian-only, per spec, and would be far too much data across a
-  // week/month.
   async buildRange(rekap: RekapRangeData, scope: 'kelas' | 'siswa'): Promise<Buffer> {
     return scope === 'kelas' ? this.buildRangeMatrix(rekap) : this.buildRangeSiswa(rekap);
   }
@@ -339,7 +319,6 @@ export class AbsensiHarianExcelService {
     return Buffer.from(buf);
   }
 
-  /** Embeds the image into the cell at (row, col) if possible; otherwise writes a text placeholder. Returns whether an image was embedded. */
   private embedOrClear(
     wb: ExcelJS.Workbook,
     ws: ExcelJS.Worksheet,

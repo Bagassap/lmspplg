@@ -21,8 +21,6 @@ export class SubmitTugasDto {
   @IsOptional()
   submittedJs?: string;
 
-  // JSON string dari array jawaban [{soalId, jawabanPilihan?, jawabanEssay?}]
-  // — dipakai untuk tugas tipe PILIHAN_GANDA/ESSAY.
   @IsString()
   @IsOptional()
   jawaban?: string;

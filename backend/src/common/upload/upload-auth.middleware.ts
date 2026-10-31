@@ -43,16 +43,11 @@ export function createUploadAuthMiddleware(
       return;
     }
 
-    // Staff (admin/guru) oversee all attendance/exam evidence — no ownership check needed.
     if (user.role === 'ADMIN' || user.role === 'GURU') {
       next();
       return;
     }
 
-    // Exam question documents are shared material for every participant of a tahapan.
-    // Materi modules and tugas attachments are likewise shared instructional
-    // material — visibility (kelas/jurusan scope) is already enforced at the
-    // API/DB-query layer, not per-file, so no ownership check applies here.
     if (
       req.path.startsWith('/ukk-soal/') ||
       req.path.startsWith('/materi/') ||
@@ -75,9 +70,6 @@ export function createUploadAuthMiddleware(
     let owned = false;
 
     if (req.path.startsWith('/foto-profil/')) {
-      // Every siswa needs to see their own photo (topbar, sidebar, profil
-      // saya) but not classmates' — data-siswa's cross-student photo view is
-      // ADMIN/GURU-only and already short-circuits above.
       owned = user.fotoProfil === requestedUrl;
     } else if (req.path.startsWith('/absensi-harian/')) {
       const row = await prisma.absensiHarian.findFirst({

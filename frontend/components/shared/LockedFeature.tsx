@@ -32,8 +32,6 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
   const app = useIsAppMode();
   const isGuru = role === "guru";
   const cfg = CONFIG[type];
-  // Siswa kelas XII yang fiturnya sudah diaktifkan admin tidak perlu melihat halaman
-  // "belum aktif" ini: langsung arahkan ke halaman fitur.
   const fitur = useSiswaFitur(role === "siswa");
   const aktif = role === "siswa" && fitur.kelasXII && (type === "magang" ? fitur.magangAktif : fitur.ukkAktif);
   const target = type === "magang" ? fitur.magangHref : fitur.ukkHref;

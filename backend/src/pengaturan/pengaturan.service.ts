@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdatePengaturanDto } from './dto/update-pengaturan.dto';
 
-// Satu baris singleton (id tetap "singleton") — lihat catatan di model
-// PengaturanSistem pada schema.prisma untuk alasan kenapa ini bukan
-// berbasis tanggal.
 const SINGLETON_ID = 'singleton';
 
 @Injectable()

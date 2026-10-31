@@ -10,9 +10,6 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-// Converts react-easy-crop's croppedAreaPixels callback output into an
-// uploadable JPEG File — react-easy-crop only reports the crop rectangle,
-// the actual pixel extraction has to happen via canvas.
 export async function getCroppedImg(imageSrc: string, crop: PixelCrop): Promise<File> {
   const image = await loadImage(imageSrc);
   const canvas = document.createElement("canvas");

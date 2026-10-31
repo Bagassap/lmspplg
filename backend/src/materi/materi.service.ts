@@ -22,8 +22,6 @@ export class MateriService {
     return siswa?.kelasId ?? null;
   }
 
-  // kelasIds kosong ([]) berarti materi ini untuk "Semua Kelas" — notifikasi
-  // dikirim ke seluruh siswa, bukan hanya kelas tertentu.
   private async notifySiswaBaru(kelasIds: string[], title: string, message: string) {
     const siswaUsers = await this.prisma.siswa.findMany({
       where: { userId: { not: null }, ...(kelasIds.length ? { kelasId: { in: kelasIds } } : {}) },
@@ -35,8 +33,6 @@ export class MateriService {
     );
   }
 
-  // Guru hanya boleh membuat/mengubah Materi untuk mapel yang benar-benar ia
-  // ampu (sumber: GuruMapel, diimpor dari mapel.xlsx) — ADMIN tidak dibatasi.
   private async assertGuruMapel(actor: Actor, mapel: string) {
     if (actor.role !== 'GURU') return;
     const guru = await this.prisma.guru.findUnique({ where: { userId: actor.id } });
@@ -68,8 +64,6 @@ export class MateriService {
         include: { createdBy: INCLUDE_CREATED_BY, kelasList: INCLUDE_KELAS_LIST },
       });
     }
-    // Guru hanya melihat materi buatan sendiri — meski kelasnya sama, materi
-    // guru lain tidak boleh terlihat. ADMIN tetap melihat semua.
     return this.prisma.materi.findMany({
       where: actor.role === 'GURU' ? { createdById: actor.id } : undefined,
       orderBy: [{ mapel: 'asc' }, { createdAt: 'desc' }],

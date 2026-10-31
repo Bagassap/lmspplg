@@ -9,7 +9,6 @@ import type { PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-/** Admin menetapkan guru pembimbing untuk satu pengajuan (atau satu kelompok siswa). */
 export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
 }) {
@@ -23,7 +22,6 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
     if (!guruId) { toast.error("Pilih guru pembimbing", ""); return; }
     setSaving(true);
     try {
-      // Siswa yang masih menunggu: tetapkan per pengajuan/kelompok. Siswa yang sudah aktif: ganti gurunya.
       const seen = new Set<string>();
       const reqs: Promise<Response>[] = [];
       for (const r of rows) {

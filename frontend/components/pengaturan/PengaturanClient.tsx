@@ -9,7 +9,6 @@ type Pengaturan = { magangAktif: boolean; ukkAktif: boolean };
 type Key = keyof Pengaturan;
 
 function ToggleSwitch({ checked, onClick, disabled }: { checked: boolean; onClick: () => void; disabled?: boolean }) {
-  // Ukuran & posisi ditetapkan eksplisit (tanpa transform/translate) agar tidak terpengaruh aturan CSS global.
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={onClick} disabled={disabled}
       className="relative block shrink-0 cursor-pointer rounded-xl border-0 p-0 disabled:cursor-not-allowed disabled:opacity-60"

@@ -42,7 +42,6 @@ export class UjianUkkService {
       taskList = peserta.map(p => p.tahapan);
     }
 
-    // Belum ada pembagian peserta khusus: semua siswa melihat seluruh task UKK.
     if (taskList.length === 0) {
       taskList = await this.prisma.tahapanUKK.findMany({
         where: { hariKe: { gt: 0 } },
@@ -100,11 +99,6 @@ export class UjianUkkService {
     });
   }
 
-  // Wadah umum (hariKe:0) menampung file Jadwal/Soal yang tidak terikat ke
-  // task harian tertentu — dibuat sekali secara lazy saat admin mengupload
-  // file pertamanya, bukan lewat seed manual. Tanpa ini, upload pertama di
-  // instalasi baru gagal senyap: frontend butuh tahapanId sebelum submit,
-  // tapi belum ada tahapan hariKe:0 untuk diambil id-nya.
   private async getOrCreateGlobalContainer() {
     const existing = await this.prisma.tahapanUKK.findFirst({ where: { hariKe: 0 } });
     if (existing) return existing;
@@ -152,7 +146,6 @@ export class UjianUkkService {
     return row;
   }
 
-  // Data untuk ZIP "unduh semua": berkas pengumpulan (opsional per task / per kelas).
   submisiUntukZip(filter: { tahapanId?: string; kelasId?: string }) {
     return this.prisma.submisiProjectUKK.findMany({
       where: {
@@ -167,7 +160,6 @@ export class UjianUkkService {
     });
   }
 
-  // Daftar kelas XII beserta siswa aktifnya (untuk rekap "sudah / belum mengumpulkan").
   async pesertaKelasXII() {
     const kelas = await this.prisma.kelas.findMany({
       where: { nama: { startsWith: 'XII', mode: 'insensitive' } },
@@ -225,7 +217,6 @@ export class UjianUkkService {
     const task = await this.prisma.tahapanUKK.findUnique({ where: { id: dto.tahapanId } });
     if (!task || task.hariKe === 0) throw new NotFoundException('Task tidak ditemukan');
 
-    // Pengumpulan hanya dibuka dari tanggal mulai + jam mulai sampai tanggal selesai + jam selesai (WIB).
     const ymd = (d: Date) => d.toISOString().slice(0, 10);
     const buka = new Date(`${ymd(task.tanggal)}T${task.jamMulai}:00+07:00`);
     const tutup = new Date(`${ymd(task.tanggalSelesai ?? task.tanggal)}T${task.jamSelesai}:00+07:00`);
@@ -239,8 +230,6 @@ export class UjianUkkService {
       throw new BadRequestException(`Waktu pengumpulan task "${task.judul}" sudah berakhir (${label(tutup)}).`);
     }
 
-    // Satu hari hanya boleh mengirim untuk satu task: tolak jika siswa sudah
-    // mengirim untuk task lain yang rentang tanggalnya beririsan.
     const akhir = task.tanggalSelesai ?? task.tanggal;
     const kembar = await this.prisma.submisiProjectUKK.findFirst({
       where: {
@@ -272,7 +261,6 @@ export class UjianUkkService {
           include,
         });
 
-    // Berkas yang diunggah siswa juga disalin ke Google Drive admin: folder per kelas, nama file = nama siswa.
     if (localPath && this.drive.isConfigured()) {
       try {
         const bersih = (s: string) => s.replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim();
@@ -289,7 +277,6 @@ export class UjianUkkService {
           include,
         });
       } catch (e) {
-        // Gagal ke Drive tidak menggagalkan pengumpulan; berkas tetap tersimpan di server.
         console.error('[UKK] Gagal unggah ke Google Drive:', (e as Error).message);
       }
     }

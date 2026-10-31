@@ -17,10 +17,6 @@ type SubmisiRow = TugasSubmisiItem & { siswa?: TugasSubmisiItem["siswa"] & { kel
 
 const SEMUA = "__semua__";
 
-/**
- * Submisi Tugas: halaman sendiri di aplikasi mobile, modal besar di web desktop (prop onClose). Tiap kelas punya tab sendiri,
- * jadi satu tugas untuk beberapa kelas tidak tercampur: 1 kelas = 1 daftar submisi.
- */
 export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; role: "ADMIN" | "GURU"; onClose?: () => void }) {
   const asModal = !!onClose;
   const toast = useToast();
@@ -54,7 +50,6 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
 
   useEffect(() => { load(); }, [load]);
 
-  // Daftar kelas: dari target tugas; kalau "semua kelas", dari siswa yang muncul di data.
   const kelasList: Kelas[] = useMemo(() => {
     if (tugas?.kelasList?.length) return tugas.kelasList;
     const map = new Map<string, Kelas>();

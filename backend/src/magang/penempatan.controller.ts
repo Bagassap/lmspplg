@@ -27,7 +27,6 @@ const suratStorage = diskStorage({
   },
 });
 
-// Surat keterangan boleh berupa PDF, dokumen Word, atau foto/scan surat.
 const SURAT_EXT = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.webp'];
 const suratUploadOptions = {
   fileFilter: ((_req, file, cb) => {
@@ -66,7 +65,6 @@ export class PenempatanController {
   @UseInterceptors(FileInterceptor('surat', { storage: suratStorage, ...suratUploadOptions }))
   async ajukan(@Body() body: Record<string, string>, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
     if (!file) throw new BadRequestException('Bukti surat keterangan PKL wajib diunggah');
-    // multipart hanya membawa string: field bersarang dikirim sebagai JSON.
     let raw: Record<string, unknown>;
     try {
       raw = {

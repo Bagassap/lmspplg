@@ -26,7 +26,6 @@ const R = "#3E03B3";
 const B = "#3E03B3";   
 const G = "#3E03B3";   
 
-
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
   isPinned: boolean; createdAt: string;
@@ -45,7 +44,6 @@ interface DashboardData {
   kehadiranPerKelas: KehadiranKelas[];
   pengajuanPkl?: PengajuanPkl[];
 }
-
 
 function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded-[10px] bg-slate-100 dark:bg-[#1E293B] ${className}`} />;
@@ -96,7 +94,6 @@ function ViewAll({ href }: { href: string }) {
     </Link>
   );
 }
-
 
 export default function AdminDashboardPage() {
   const appMode = useIsAppMode();

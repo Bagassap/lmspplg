@@ -6,7 +6,6 @@ import { X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { resolveMediaSrc } from "@/lib/media";
 
-/** Avatar yang bisa diklik untuk melihat foto profil dalam ukuran besar (admin/guru). */
 export function ZoomAvatar(props: React.ComponentProps<typeof Avatar>) {
   const [open, setOpen] = useState(false);
   const full = resolveMediaSrc(props.src);

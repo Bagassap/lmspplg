@@ -62,7 +62,6 @@ export class PenempatanService {
     });
   }
 
-  // Cari rekan satu tempat PKL: siswa lain yang belum punya pengajuan/penempatan aktif.
   async cariRekan(userId: string, q?: string) {
     const me = await this.prisma.siswa.findUnique({ where: { userId } });
     const key = (q ?? '').trim();
@@ -78,7 +77,6 @@ export class PenempatanService {
     });
   }
 
-  // Siswa mengajukan tempat PKL sendiri (pilih tempat atau isi tempat baru), boleh bersama rekan.
   async ajukan(userId: string, dto: AjukanPenempatanDto, surat: { url: string; nama: string }) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { user: { select: { nama: true } } } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
@@ -161,7 +159,6 @@ export class PenempatanService {
     return this.findSaya(userId);
   }
 
-  // Siswa melengkapi/mengganti surat keterangan pada pengajuannya yang masih menunggu (berlaku untuk satu kelompok).
   async unggahSurat(userId: string, surat: { url: string; nama: string }) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
@@ -174,7 +171,6 @@ export class PenempatanService {
     return this.findSaya(userId);
   }
 
-  // Admin menolak pengajuan: baris MENUNGGU (satu kelompok) dihapus agar siswa bisa mengajukan ulang.
   async tolak(id: string, alasan: string) {
     if (!alasan?.trim()) throw new BadRequestException('Alasan penolakan wajib diisi');
     const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
@@ -198,7 +194,6 @@ export class PenempatanService {
     return this.findAll({});
   }
 
-  // Admin menetapkan guru pembimbing: penempatan menjadi AKTIF dan menu guru terbuka.
   async tetapkanGuru(id: string, dto: TetapkanGuruDto) {
     const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
     if (!target) throw new NotFoundException('Pengajuan tidak ditemukan');
@@ -286,8 +281,6 @@ export class PenempatanService {
         include: INCLUDE_DETAIL,
       });
 
-      // Absensi/lapor-diri/laporan-akhir menyimpan tempatMagangId secara
-      // denormalisasi; kalau tempat penempatan diganti, ikut disamakan.
       if (tempatBerubah && dto.tempatMagangId) {
         await Promise.all([
           tx.absensiMagang.updateMany({ where: { penempatanId: id }, data: { tempatMagangId: dto.tempatMagangId } }),

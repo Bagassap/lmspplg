@@ -40,10 +40,6 @@ function labelBerkas(url: string) {
   return /\.(pdf|png|jpe?g|webp|gif)$/i.test(url) ? "Buka" : "Unduh";
 }
 
-/**
- * Rekap pengumpulan satu task UKK per kelas XII: kartu "Sudah" dan "Belum mengumpulkan"
- * bisa diklik untuk melihat siswanya, ditampilkan 10 siswa per halaman.
- */
 export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]; tahapanId?: string }) {
   const toast = useToast();
   async function salin(teks: string, pesan: string) {

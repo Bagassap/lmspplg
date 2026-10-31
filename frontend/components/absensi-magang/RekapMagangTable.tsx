@@ -32,7 +32,6 @@ function LoadingRows() {
   );
 }
 
-/** Mode harian — status tunggal per siswa untuk 1 tanggal, sama seperti tabel Absensi. */
 export function RekapMagangHarianTable({ loading, siswa }: { loading: boolean; siswa: SiswaAbsensi[] }) {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -75,7 +74,6 @@ export function RekapMagangHarianTable({ loading, siswa }: { loading: boolean; s
   );
 }
 
-/** Mode mingguan/bulanan — rekap H/I/S/A + persentase kehadiran per siswa selama periode. */
 export function RekapMagangRangeTable({ loading, siswa }: { loading: boolean; siswa: RangeSiswaRow[] }) {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">

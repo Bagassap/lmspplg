@@ -11,18 +11,10 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 export const APP_ACCENT = "#3E03B3";
 export const APP_SOFT = "#F1EDFA";
 export const APP_PURPLE = "#3E03B3";
-/** Warna kedua setelah ungu (aksen kecil: roket, lencana, tombol tengah). */
 export const APP_ORANGE = "#F26A3D";
-/** Latar banner kartu roket: oranye (warna kedua). */
 export const APP_HERO = "linear-gradient(135deg, #F26A3D 0%, #FF8A4C 100%)";
-/** Banner ungu (identitas/akun). */
 export const APP_HERO_PURPLE = "linear-gradient(135deg, #3E03B3 0%, #5B16D9 100%)";
 
-/**
- * Rangka halaman mobile. Di aplikasi terpasang: judul besar tanpa header ungu
- * (pola dashboard/Materi & Tugas). Di browser biasa: header ungu lama dengan
- * tombol kembali, jadi halaman lama tidak berubah.
- */
 export function AppMobileFrame({
   eyebrow, title, legacyTitle, backHref = "/siswa/dashboard", children, legacyBodyClass = "space-y-4",
 }: {
@@ -159,7 +151,6 @@ export function AppEmpty({ icon: Icon, title, desc }: { icon: React.ElementType;
   );
 }
 
-/** Kelas warna header modal: lavender di aplikasi terpasang, gaya lama di browser. */
 export function useSheetHeader(defaultBg: string) {
   const app = useIsAppMode();
   return app
@@ -169,11 +160,6 @@ export function useSheetHeader(defaultBg: string) {
 
 type SheetAction = { label: string; icon?: React.ElementType; onClick?: () => void; href?: string; danger?: boolean };
 
-/**
- * Panel detail dari bawah untuk aplikasi terpasang (pola detail Materi/Tugas):
- * ikon besar, judul, baris info abu-abu, satu tombol utama ungu, dan tombol
- * sekunder (Edit/Hapus/Unduh).
- */
 export function AppDetailSheet({
   onClose, icon: Icon, tone = "indigo", title, subtitle, rows, chips, primary, secondary = [],
 }: {
@@ -239,7 +225,6 @@ function ActionPill({ action, primary = false }: { action: SheetAction; primary?
 
 type StatusOption = { key: string; label: string; desc: string; icon: React.ElementType; tone: "indigo" | "emerald" | "amber" | "violet" | "sky" };
 
-/** Panel dari bawah untuk mengubah status kehadiran satu siswa (pengganti chip kecil di baris). */
 export function AppStatusSheet({
   nama, current, saving, options, onPick, onClose,
 }: {
@@ -279,7 +264,6 @@ export function AppStatusSheet({
   );
 }
 
-/** Di mode aplikasi: isi disembunyikan di balik satu baris judul yang bisa dibuka (supaya layar tidak ramai). Di browser: tampil biasa. */
 export function AppFold({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   const app = useIsAppMode();
   const [open, setOpen] = useState(false);

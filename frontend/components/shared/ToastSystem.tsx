@@ -78,10 +78,6 @@ const TOAST_META: Record<ToastType, { icon: React.ElementType; tone: Tone3D }> =
   info:    { icon: Info, tone: "violet" },
 };
 
-/**
- * Pecah teks jadi maksimal `maxLines` baris berbentuk "piramida": baris pertama
- * paling panjang, baris berikutnya makin pendek (potongan hanya di batas kata).
- */
 function pyramidLines(text: string, maxLines: number, perLine: number): string[] {
   const clean = text.trim().replace(/\s+/g, " ");
   if (!clean) return [];
@@ -98,7 +94,6 @@ function pyramidLines(text: string, maxLines: number, perLine: number): string[]
     const idx = lines.length;
     const isLast = idx >= n - 1;
     const target = total * weights[Math.min(idx, n - 1)];
-    // Pindah baris kalau menambah kata membuat baris melewati target (dan baris belum kosong).
     if (!isLast && cur && next.length > target && cur.length >= target * 0.6) {
       lines.push(cur);
       used += cur.length + 1;
@@ -112,7 +107,6 @@ function pyramidLines(text: string, maxLines: number, perLine: number): string[]
   return lines;
 }
 
-/** Toast sukses/gagal versi simpel: kotak persegi di tengah layar berisi ikon 3D + keterangan, animasi pop sederhana. */
 function NotificationCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
   const meta = TOAST_META[toast.type];
   const Icon = meta.icon;

@@ -17,11 +17,6 @@ type Me = {
 
 const ROLE_LABEL: Record<string, string> = { ADMIN: "Administrator", GURU: "Guru", SISWA: "Siswa" };
 
-/**
- * Kartu profil mode aplikasi: foto sebaris dengan keterangan.
- * Baris 1 nama; baris 2 NIS · kelas (siswa), NIP (guru), atau peran (admin).
- * Foto bisa diganti dari galeri atau kamera lewat tombol kamera kecil.
- */
 export function AppProfileCard({ fallback }: { fallback?: { nama: string; fotoProfil?: string | null; role?: string } }) {
   const [me, setMe] = useState<Me | null>(null);
   const [foto, setFoto] = useState(false);

@@ -3,10 +3,6 @@
 const JAM = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const MENIT = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
 
-/**
- * Input jam format 24 jam (00–23 : 00–59), tanpa AM/PM — tidak bergantung bahasa browser.
- * value & onChange memakai format "HH:mm" seperti <input type="time">.
- */
 export function TimeInput24({ value, onChange, className, disabled }: {
   value: string; onChange: (v: string) => void; className?: string; disabled?: boolean;
 }) {

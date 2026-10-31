@@ -7,9 +7,6 @@ export type InstallEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-// Event install bisa muncul kapan saja setelah halaman dimuat (mis. saat user
-// masih mengetik di halaman login), jadi ditangkap di level modul dan disimpan
-// di sini supaya layar pasang di alur login pun bisa memakainya.
 let installEvent: InstallEvent | null = null;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
@@ -48,8 +45,6 @@ function isIos() {
 
 export function isAppModeNow() { return isAppMode(); }
 
-// Layar sempit (di bawah breakpoint lg = 1024px) selalu memakai tampilan aplikasi,
-// baik aplikasi sudah dipasang maupun hanya dibuka di browser HP / mode mobile DevTools.
 const MOBILE_QUERY = "(max-width: 1023px)";
 
 function subscribeViewport(cb: () => void) {
@@ -61,7 +56,6 @@ function subscribeViewport(cb: () => void) {
 function isAppMode() {
   if (isStandalone()) return true;
   if (window.matchMedia(MOBILE_QUERY).matches) return true;
-  // Untuk uji di browser biasa: buka halaman dengan ?app=1 (diingat selama tab terbuka).
   try {
     if (new URLSearchParams(window.location.search).get("app") === "1") {
       sessionStorage.setItem("lms_force_app", "1");
@@ -72,12 +66,10 @@ function isAppMode() {
   }
 }
 
-/** true bila dibuka dari aplikasi yang sudah dipasang (mode standalone). */
 export function useIsAppMode() {
   return useSyncExternalStore(subscribeViewport, isAppMode, () => false);
 }
 
-/** true bila aplikasi bisa dipasang sekarang (belum terpasang & didukung). */
 export function useCanInstall() {
   const standalone = useSyncExternalStore(noopSubscribe, isStandalone, () => true);
   const ios = useSyncExternalStore(noopSubscribe, isIos, () => false);
@@ -85,12 +77,10 @@ export function useCanInstall() {
   return !standalone && (!!event || ios);
 }
 
-/** true bila ada dialog install bawaan browser (Android/Chrome/Edge). */
 export function useHasNativePrompt() {
   return !!useSyncExternalStore(subscribe, () => installEvent, () => null);
 }
 
-/** Tampilkan dialog install bawaan browser. false kalau tidak tersedia (iOS). */
 export async function promptInstall() {
   if (!installEvent) return false;
   const ev = installEvent;
@@ -101,8 +91,6 @@ export async function promptInstall() {
   return true;
 }
 
-// Penanda bahwa layar pasang baru saja ditampilkan di alur login, supaya tidak
-// muncul dobel di dashboard tepat setelahnya.
 const HANDLED_KEY = "lms_install_handled_at";
 const HANDLED_WINDOW_MS = 60_000;
 

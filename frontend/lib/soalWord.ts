@@ -15,11 +15,6 @@ function kosong(): SoalWord {
   return { pertanyaan: "", pilihanA: "", pilihanB: "", pilihanC: "", pilihanD: "", jawabanBenar: "" };
 }
 
-/**
- * Baca teks hasil ekstraksi Word menjadi daftar soal.
- * Format: "1. Pertanyaan", pilihan "A. ... D.", lalu "Jawaban: B" (pilihan ganda)
- * atau "Kunci: ..." (essay). Teks sebelum penanda "=== MULAI SOAL ===" dilewati.
- */
 export function parseSoalText(raw: string, tipe: TugasTipe | string): SoalWord[] {
   let text = raw.replace(/\r/g, "");
   const m = text.indexOf(MARK);
@@ -78,7 +73,6 @@ export function parseSoalText(raw: string, tipe: TugasTipe | string): SoalWord[]
   return out.filter((s) => s.pertanyaan.trim());
 }
 
-/** Baca file .docx di browser dan jadikan daftar soal. */
 export async function parseSoalDocx(file: File, tipe: TugasTipe | string): Promise<SoalWord[]> {
   const mammoth = await import("mammoth");
   const arrayBuffer = await file.arrayBuffer();
@@ -86,7 +80,6 @@ export async function parseSoalDocx(file: File, tipe: TugasTipe | string): Promi
   return parseSoalText(value, tipe);
 }
 
-/** Unduh templat Word untuk menulis soal + jawaban. */
 export async function downloadTemplateSoal(tipe: TugasTipe | string): Promise<void> {
   const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import("docx");
   const isPG = tipe === "PILIHAN_GANDA";

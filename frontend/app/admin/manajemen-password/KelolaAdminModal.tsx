@@ -12,7 +12,6 @@ function toTitleCase(str: string): string {
   return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 }
 
-/** Superadmin: daftar akun admin + reset password. */
 export function KelolaAdminModal({ open, onClose, onResetPassword }: {
   open: boolean;
   onClose: () => void;

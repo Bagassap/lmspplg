@@ -81,11 +81,6 @@ export const MENUS: Record<string, MenuItem[]> = {
   ],
 };
 
-/**
- * Status akses fitur siswa: PKL/UKK hanya terbuka untuk kelas XII (ditulis
- * romawi "XII RPL 1" atau angka "12 PG 1") dan kalau admin sudah mengaktifkannya
- * di menu Pengaturan.
- */
 export function useSiswaFitur(enabled = true) {
   const [kelasXII, setKelasXII] = useState(false);
   const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
@@ -115,7 +110,6 @@ export function useSiswaFitur(enabled = true) {
     kelasXII,
     magangAktif: pengaturan.magangAktif,
     ukkAktif: pengaturan.ukkAktif,
-    /** Tujuan menu PKL: halaman fitur bila aktif, halaman "belum aktif" bila belum. */
     magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/penempatan" : "/siswa/magang",
     ukkHref: kelasXII && pengaturan.ukkAktif ? "/siswa/ujian-ukk/jadwal-soal" : "/siswa/ujian-ukk",
   };
@@ -139,7 +133,6 @@ export function useDashboardMenu(user: UserPayload): { items: MenuItem[]; pendin
     return () => { cancelled = true; };
   }, [isGuru]);
 
-  // Menu PKL guru baru terbuka setelah admin menetapkan guru sebagai pembimbing siswa.
   const [guruHasBimbingan, setGuruHasBimbingan] = useState<boolean | null>(null);
   useEffect(() => {
     if (!isGuru) return;

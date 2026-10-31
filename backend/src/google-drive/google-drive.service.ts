@@ -13,12 +13,6 @@ const MIME: Record<string, string> = {
   '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 };
 
-/**
- * Unggah berkas ke Google Drive milik admin lewat OAuth (refresh token).
- * Struktur: <folder induk> / <nama kelas> / <nama siswa - judul task>.<ext>
- * Dikonfigurasi lewat env: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN,
- * dan (opsional) GOOGLE_DRIVE_ROOT_FOLDER_ID. Bila belum diisi, fitur ini dilewati.
- */
 @Injectable()
 export class GoogleDriveService {
   private readonly logger = new Logger(GoogleDriveService.name);
@@ -63,7 +57,6 @@ export class GoogleDriveService {
     return `https://drive.google.com/drive/folders/${id}`;
   }
 
-  /** Cari folder (nama + induk); buat bila belum ada. */
   async ensureFolder(name: string, parentId?: string): Promise<string> {
     const key = `${parentId ?? 'root'}/${name}`;
     const cached = this.folderCache.get(key);
@@ -94,7 +87,6 @@ export class GoogleDriveService {
     return process.env.GOOGLE_DRIVE_ROOT_FOLDER_ID || (await this.ensureFolder('Asset UKK'));
   }
 
-  /** Unggah satu berkas ke <root>/<kelas>/ dan kembalikan tautannya. */
   async uploadKeFolderKelas(opts: { kelasNama: string; fileName: string; localPath: string }) {
     const root = await this.rootFolder();
     const folderId = await this.ensureFolder(opts.kelasNama, root);

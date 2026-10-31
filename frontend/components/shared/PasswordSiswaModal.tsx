@@ -7,7 +7,6 @@ import { useToast } from "@/components/shared/ToastSystem";
 
 type Hasil = { nama: string; nis: string; password: string | null; masihAwal: boolean; pesan: string | null };
 
-/** Admin/guru melihat password siswa (pengganti reset berulang). */
 export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId: string; nama: string; onClose: () => void; onReset?: () => void }) {
   const toast = useToast();
   const [data, setData] = useState<Hasil | null>(null);

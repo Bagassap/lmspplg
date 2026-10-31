@@ -138,7 +138,6 @@ export function TugasFormModal({
   }
   const isKosong = (x: SoalDraft) => !x.pertanyaan.trim() && !x.pilihanA && !x.pilihanB && !x.pilihanC && !x.pilihanD && !x.jawabanBenar.trim();
 
-  // Tambah banyak soal sekaligus: cukup ketik jumlahnya (2/3/4/5/...).
   const [bulk, setBulk] = useState("");
   function addMany() {
     const n = Math.min(100, Math.max(0, parseInt(bulk, 10) || 0));
@@ -148,7 +147,6 @@ export function TugasFormModal({
     toast.success(`${n} soal ditambahkan`, "Tinggal isi pertanyaan dan jawabannya.");
   }
 
-  // Impor soal + jawaban dari berkas Word (.docx) sesuai templat.
   const wordRef = useRef<HTMLInputElement>(null);
   const [wordBusy, setWordBusy] = useState(false);
   async function handleWord(e: React.ChangeEvent<HTMLInputElement>) {

@@ -19,7 +19,6 @@ import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { GuruAppHome } from "@/components/dashboard/GuruAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
-
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
   isPinned: boolean; createdAt: string;
@@ -34,7 +33,6 @@ interface DashboardData {
   weeklyAbsensi: WeeklyItem[];
   pengumuman: Pengumuman[];
 }
-
 
 const P = "#3E03B3";
 const R = "#3E03B3";
@@ -88,7 +86,6 @@ function ViewAll({ href }: { href: string }) {
     </Link>
   );
 }
-
 
 export default function GuruDashboardPage() {
   const appMode = useIsAppMode();

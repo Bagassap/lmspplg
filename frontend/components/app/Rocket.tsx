@@ -1,6 +1,5 @@
 "use client";
 
-/** Ilustrasi roket oranye untuk banner beranda aplikasi. */
 export function Rocket() {
   return (
     <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">

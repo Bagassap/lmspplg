@@ -1,6 +1,5 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
-// Kunci dari PASSWORD_VIEW_KEY (disarankan), jatuh ke JWT_SECRET agar tanpa konfigurasi tambahan tetap jalan.
 function kunci(): Buffer {
   const sumber = process.env.PASSWORD_VIEW_KEY || process.env.JWT_SECRET;
   if (!sumber) throw new Error('PASSWORD_VIEW_KEY / JWT_SECRET belum diset');

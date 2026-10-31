@@ -8,10 +8,6 @@ import type { TempatMagang } from "./types";
 
 const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
 
-/**
- * Kelola tempat PKL oleh guru/admin: cukup nama tempat dan kuota siswa.
- * Alamat, bidang usaha, pimpinan, dan WA usaha diisi siswa saat mengajukan tempat baru.
- */
 export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   tempatList: TempatMagang[]; onClose: () => void; onSaved: () => void;
 }) {

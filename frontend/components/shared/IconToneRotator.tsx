@@ -5,7 +5,6 @@ import { TONE_3D, TONE_ORDER, icon3dStyle } from "@/components/shared/Icon3D";
 
 const PURPLE = "rgb(62, 3, 179)";
 
-/** Kotak ikon: persegi kecil bermotif ungu polos yang membungkus satu ikon svg. */
 function isPurpleIconBox(el: HTMLElement | null): el is HTMLElement {
   if (!el || el.dataset.tone === "1") return false;
   const w = el.offsetWidth;
@@ -23,11 +22,6 @@ function sig(el: HTMLElement): string {
   return `${el.tagName}|${el.className}`;
 }
 
-/**
- * Kartu yang sejajar (grid/daftar) dengan kotak ikon ungu polos diberi warna ikon
- * bergantian: biru, hijau, ungu, oranye (palet 4 ikon), supaya tidak monoton ungu.
- * Kotak ikon tunggal (tidak punya saudara sejenis) tetap ungu.
- */
 function rotate(root: ParentNode) {
   const seen = new Set<HTMLElement>();
   root.querySelectorAll("svg").forEach((svg) => {

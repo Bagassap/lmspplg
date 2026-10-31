@@ -8,8 +8,6 @@ export interface PushPayload {
   url?: string;
 }
 
-// Web Push (VAPID). Kalau VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY belum diisi di
-// .env, semua method jadi no-op supaya server tetap jalan seperti biasa.
 @Injectable()
 export class PushService {
   private readonly logger = new Logger(PushService.name);
@@ -44,8 +42,6 @@ export class PushService {
     return { ok: true };
   }
 
-  // Kirim ke semua perangkat milik daftar user. Tidak pernah melempar error:
-  // kegagalan push tidak boleh menggagalkan pembuatan notifikasi.
   async sendToUsers(userIds: string[], payload: PushPayload): Promise<void> {
     if (!this.enabled || userIds.length === 0) return;
     try {

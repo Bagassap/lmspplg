@@ -28,7 +28,6 @@ function timeAgo(iso: string): string {
   return `${Math.floor(diff / 86400)} hari lalu`;
 }
 
-/** Halaman Notifikasi (menu sendiri, bukan dropdown): daftar kartu ringkas, yang belum dibaca ditandai titik oranye. */
 export function AppNotifikasiPage() {
   const router = useRouter();
   const pathname = usePathname();

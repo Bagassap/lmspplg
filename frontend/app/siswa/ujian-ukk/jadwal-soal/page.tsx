@@ -42,7 +42,6 @@ const ROW_PALETTES = [
 ];
 function rowPalette(i: number) { return ROW_PALETTES[i % ROW_PALETTES.length]; }
 
-
 function fileHref(url: string) {
   return url.startsWith("http") ? url : `/api${url}`;
 }
@@ -189,7 +188,6 @@ function SubmitModal({ open, onClose, soal, task, onSubmit }: {
   );
 }
 
-
 export default function SiswaJadwalSoalPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -265,7 +263,6 @@ export default function SiswaJadwalSoalPage() {
       <div className="flex flex-col xl:flex-row gap-6">
 
         <div className="flex-1 min-w-0 space-y-6">
-
 
           <div className={`relative -m-4 lg:hidden ${appMode ? "hidden" : ""}`} style={{ background: "#3E03B3" }}>
             <div className="relative flex items-center px-4 pb-4 pt-4">

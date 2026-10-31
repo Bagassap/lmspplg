@@ -20,7 +20,6 @@ import { SiswaAppHome } from "@/components/dashboard/SiswaAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 
-
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
   isPinned: boolean; createdAt: string;
@@ -34,7 +33,6 @@ interface DashboardData {
   magang: { status: "BELUM_MAGANG" | "AKTIF" | "SELESAI"; tempat?: string; hadir?: number };
   pengumuman: Pengumuman[];
 }
-
 
 const P = "#3E03B3";
 const R = "#3E03B3";
@@ -88,7 +86,6 @@ function ViewAll({ href }: { href: string }) {
     </Link>
   );
 }
-
 
 export default function SiswaDashboardPage() {
   const appMode = useIsAppMode();

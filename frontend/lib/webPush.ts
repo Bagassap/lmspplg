@@ -12,7 +12,6 @@ function urlBase64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
 
 export type PushState = "loading" | "unsupported" | "server-off" | "denied" | "off" | "on";
 
-/** Status & kontrol notifikasi push di perangkat ini (Web Push + service worker). */
 export function useWebPush() {
   const [state, setState] = useState<PushState>("loading");
   const [busy, setBusy] = useState(false);

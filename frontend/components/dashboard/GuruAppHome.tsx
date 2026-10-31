@@ -31,11 +31,6 @@ const QUICK = [
   { href: "/guru/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "violet" as const },
 ];
 
-/**
- * Beranda guru untuk aplikasi terpasang (PWA). Header (avatar, sapaan, lonceng)
- * ditangani Topbar; komponen ini berisi banner kehadiran, aksi cepat, ringkasan,
- * kelas wali, dan pengumuman terbaru.
- */
 export function GuruAppHome({ data, onOpenPengumuman }: { data: GuruHomeData; onOpenPengumuman: (slug: string) => void }) {
   const k = data.kehadiran;
   const rekap = [

@@ -34,8 +34,6 @@ export class AbsensiMagangService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  // Daftar penempatan AKTIF di mana user ini adalah guru pembimbingnya —
-  // dasar dari pembatasan "guru pembimbing hanya lihat siswa bimbingannya".
   private async getBimbinganAktif(userId: string): Promise<BimbinganPenempatan[]> {
     const guru = await this.prisma.guru.findUnique({ where: { userId } });
     if (!guru) return [];
@@ -276,8 +274,6 @@ export class AbsensiMagangService {
     return result;
   }
 
-  // Guru pembimbing hanya boleh mengekspor tempat yang punya minimal satu
-  // siswa bimbingannya di sana — sama seperti pola akses baca (getForActor).
   private async assertTempatAccessible(tempatMagangId: string, userId: string, role: string): Promise<string[] | undefined> {
     if (role !== 'GURU') return undefined;
     const bimbingan = await this.getBimbinganAktif(userId);
@@ -291,12 +287,6 @@ export class AbsensiMagangService {
     return this.getRekapTempat(tempatMagangId, tanggal, onlySiswaIds);
   }
 
-  // Dipanggil dari tombol "Kirim Pengingat" admin/guru pembimbing — mengirim
-  // notifikasi in-app ke siswa PKL yang belum tercatat absen (status kosong
-  // atau ALPA) hari ini. ADMIN sengaja tidak perlu memilih tempat —
-  // tempatMagangId kosong dari ADMIN berarti "semua tempat PKL sekaligus".
-  // GURU tetap wajib mengisi tempatMagangId dan dibatasi ke siswa
-  // bimbingannya (assertTempatAccessible).
   async kirimPengingatBelumAbsen(
     tempatMagangId: string | undefined,
     tanggal: string,
@@ -463,8 +453,6 @@ export class AbsensiMagangService {
     return siswa;
   }
 
-  // Dipakai endpoint self-service siswa (export rekap sendiri) — siswaId tidak
-  // pernah dipercaya dari klien, selalu diturunkan dari token JWT sendiri.
   async resolveOwnSiswaId(userId: string): Promise<string> {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId }, select: { id: true } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');

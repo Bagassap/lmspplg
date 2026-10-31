@@ -18,7 +18,6 @@ export function PlaceholderPage({
 
   return (
     <div>
-      {/* Tampilan aplikasi terpasang (ditampilkan lewat CSS html[data-app-mode]) */}
       <div className="app-only space-y-5">
         <div>
           <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">Segera hadir</p>

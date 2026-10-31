@@ -32,13 +32,6 @@ export const imageUploadOptions: Pick<MulterOptions, 'fileFilter' | 'limits'> = 
 };
 
 export const documentUploadOptions: Pick<MulterOptions, 'fileFilter' | 'limits'> = {
-  // Divalidasi lewat ekstensi nama file, bukan MIME type — banyak HP
-  // Android melaporkan MIME type generik/salah (mis. application/octet-stream)
-  // untuk PDF/PPT/ZIP yang sebenarnya valid, menyebabkan file sah ditolak.
   fileFilter: extFileFilter(DOCUMENT_EXTENSIONS),
-  // PPT/PPTX dengan gambar/video tertanam bisa jauh lebih besar dari
-  // 20-50MB — dinaikkan ke 100MB (samakan dengan client_max_body_size
-  // Nginx di deploy/nginx-lms.conf, yang diberi headroom lebih untuk
-  // overhead multipart).
   limits: { fileSize: 100 * 1024 * 1024 },
 };

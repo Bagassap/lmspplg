@@ -116,11 +116,6 @@ export class UjianUkkController {
     const fileUrl  = file ? `/uploads/ukk-submisi/${file.filename}` : (dto.driveUrl ?? '').trim();
     const fileName = file ? file.originalname : 'Google Drive';
 
-    // Siswa hanya diberi opsi "Link Google Drive" di UI (tanpa upload file),
-    // jadi wajibkan & validasi formatnya di sini juga — supaya tidak bisa
-    // dilewati dengan memanggil endpoint ini langsung (mis. lewat API client
-    // lain), bukan cuma ditolak oleh validasi di sisi frontend
-    // (isValidDriveUrl() di jadwal-soal/page.tsx).
     if (!file) {
       if (!fileUrl) throw new BadRequestException('Link Google Drive wajib diisi');
       if (!/^https:\/\/(drive|docs)\.google\.com\//.test(fileUrl)) {
@@ -136,7 +131,6 @@ export class UjianUkkController {
   @Get('peserta-xii')
   pesertaKelasXII() { return this.service.pesertaKelasXII(); }
 
-  // Satu alamat untuk mengunduh semua berkas pengumpulan (ZIP): <Kelas>/<Nama siswa - Judul task>.<ext>
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('submisi/unduh-semua')
@@ -178,7 +172,6 @@ export class UjianUkkController {
     await arsip.finalize();
   }
 
-  // Pratinjau isi arsip ZIP/RAR pengumpulan tanpa mengunduhnya.
   private async arsipSubmisi(id: string) {
     const row = await this.service.findSubmisiById(id);
     const jenis = jenisArsip(row.fileName || row.fileUrl);

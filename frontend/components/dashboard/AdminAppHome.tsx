@@ -37,11 +37,6 @@ const QUICK = [
   { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: "emerald" as const },
 ];
 
-/**
- * Beranda admin untuk aplikasi terpasang (PWA). Header (avatar, sapaan, lonceng)
- * ditangani Topbar; komponen ini berisi banner kehadiran, aksi cepat, ringkasan
- * data, kehadiran per kelas, dan pengumuman terbaru.
- */
 export function AdminAppHome({ data, onOpenPengumuman }: { data: AdminHomeData; onOpenPengumuman: (slug: string) => void }) {
   const k = data.kehadiran;
   const ringkas = [

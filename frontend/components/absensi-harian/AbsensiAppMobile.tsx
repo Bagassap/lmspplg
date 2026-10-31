@@ -25,12 +25,6 @@ type StatusLite = { sudahAbsen: boolean; sudahPulang: boolean } | null;
 
 type Summary = { hadir: number; izin: number; sakit: number; alpa: number } | null;
 
-/**
- * Tampilan mobile Absensi Harian untuk aplikasi terpasang, mengikuti pola
- * dashboard dan Materi & Tugas: judul besar, banner lavender, tab bergaris bawah
- * ungu, kartu putih, dan tombol aksi ungu. Wizard absen dan modal detail
- * dirender oleh halaman induk (dipakai bersama tampilan biasa).
- */
 export function AbsensiAppMobile<R extends RowLite>({
   today, jam, data, summary, window_, needsActionDatang, needsActionPulang,
   selectedRiwayatTab, setSelectedRiwayatTab, riwayatData, riwayatLoading, onDetail, onOpenWizard,

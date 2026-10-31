@@ -5,21 +5,16 @@ import Image from "next/image";
 import { Copy, Download, Smartphone, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
-// Naikkan PWA_VERSION bersama start_url di app/manifest.ts bila aplikasi terpasang wajib dipasang ulang lagi.
-// Penanda "lms_pwa_ok" hanya ditulis oleh pemasangan baru: saat event appinstalled, atau saat aplikasi
-// terpasang dibuka lewat start_url "/?pwa=<versi>" (skrip di <head> app/layout.tsx). Aplikasi lama tidak
-// pernah menuliskannya, jadi di halaman mana pun ia dibuka (termasuk dari daftar aplikasi terakhir) ia terkunci.
 export const PWA_VERSION = "2";
 export const PWA_KEY = "lms_pwa_ok";
 
-/** Aplikasi terpasang versi lama tidak bisa dibuka: pengguna diminta menghapus dan memasangnya ulang. */
 export function PwaReinstallGate() {
   const toast = useToast();
   const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
     let ok = false;
-    try { ok = localStorage.getItem(PWA_KEY) === PWA_VERSION; } catch { ok = true; /* tanpa penyimpanan: jangan mengunci */ }
+    try { ok = localStorage.getItem(PWA_KEY) === PWA_VERSION; } catch { ok = true; }
     if (window.matchMedia("(display-mode: standalone)").matches && !ok) setBlocked(true); // eslint-disable-line react-hooks/set-state-in-effect
   }, []);
 

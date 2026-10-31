@@ -7,18 +7,10 @@ import { motion } from "framer-motion";
 import { Download, Share } from "lucide-react";
 import { promptInstall } from "@/lib/pwaInstall";
 
-/**
- * Layar penuh ajakan memasang aplikasi (gaya sama dengan layar Selamat Datang).
- * onDone dipanggil saat user selesai: memilih Pasang (Android: setelah dialog
- * install ditutup), Lewati, atau Mengerti (iOS, setelah membaca petunjuk).
- */
 export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
   const [showIosGuide, setShowIosGuide] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    // iPhone: tutup keyboard & kembalikan posisi gulir sebelum layar tampil. Kalau keyboard
-    // masih menutup saat ketukan, tata letak bergeser di antara sentuh dan lepas sehingga
-    // ketukan pada tombol hilang.
     (document.activeElement as HTMLElement | null)?.blur?.();
     window.scrollTo(0, 0);
     setMounted(true);
@@ -32,8 +24,6 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
 
   if (!mounted) return null;
 
-  // Dirender lewat portal ke <body>: di dalam kartu login (yang punya transform/animasi)
-  // elemen fixed bisa terpotong dan tidak bisa diketuk di iPhone.
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}

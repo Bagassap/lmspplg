@@ -19,7 +19,6 @@ function formatDate(iso: string) {
   })} WIB`;
 }
 
-/** Halaman detail pengumuman (menu baru, bukan modal): isi singkat + diskusi bergaya chat. */
 export function PengumumanDetailPage({
   slug, role, currentUserId,
 }: {

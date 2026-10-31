@@ -46,8 +46,6 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   return (
     <>
       {appMode && (
-        // Lapisan blur di belakang bilah mengambang: konten yang lewat di
-        // bawahnya jadi buram dengan batas yang halus.
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-x-0 bottom-0 z-20 h-32 bg-linear-to-t from-surface via-surface/70 to-transparent backdrop-blur-md dark:from-[#0F172A] dark:via-[#0F172A]/70 lg:hidden"

@@ -27,7 +27,6 @@ export class TempatBaruDto {
   noWaUsaha!: string;
 }
 
-// Pengajuan PKL oleh siswa: pilih tempat yang tersedia ATAU isi tempat baru.
 export class AjukanPenempatanDto {
   @IsString()
   @IsOptional()
@@ -38,21 +37,18 @@ export class AjukanPenempatanDto {
   @IsOptional()
   tempatBaru?: TempatBaruDto;
 
-  // siswa lain yang ikut ke tempat yang sama (hanya bila kuota lebih dari satu)
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
   rekanSiswaIds?: string[];
 }
 
-// Admin menolak pengajuan PKL; alasan wajib diisi dan diteruskan ke siswa lewat notifikasi.
 export class TolakPenempatanDto {
   @IsString()
   @IsNotEmpty({ message: 'Alasan penolakan wajib diisi' })
   alasan!: string;
 }
 
-// Admin menetapkan guru pembimbing setelah siswa mengajukan.
 export class TetapkanGuruDto {
   @IsString()
   guruPembimbingId!: string;

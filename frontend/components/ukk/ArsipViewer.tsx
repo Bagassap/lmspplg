@@ -13,10 +13,6 @@ const BISA_DILIHAT = /\.(pdf)$/i;
 const bisaDilihat = (p: string) => TEKS.test(p) || GAMBAR.test(p) || BISA_DILIHAT.test(p) || !/\.[^/]+$/.test(p);
 const ukuran = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : n >= 1024 ? `${Math.round(n / 1024)} KB` : `${n} B`);
 
-/**
- * Melihat isi arsip ZIP/RAR pengumpulan UKK langsung di aplikasi (tanpa mengunduh arsipnya).
- * Daftar berkas + pratinjau teks/kode, gambar, dan PDF. Di HP daftar dan pratinjau bergantian layar.
- */
 export function ArsipViewer({ submisiId, nama, siswa, onClose }: { submisiId: string; nama: string; siswa: string; onClose: () => void }) {
   const [entri, setEntri] = useState<Entri[] | null>(null);
   const [galat, setGalat] = useState("");

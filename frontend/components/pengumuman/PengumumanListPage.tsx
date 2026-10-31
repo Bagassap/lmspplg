@@ -465,7 +465,6 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
   return (
     <div className="space-y-5">
 
-
       <div className="hidden gap-5 lg:grid lg:grid-cols-[280px_1fr]">
 
       <div className="space-y-4">

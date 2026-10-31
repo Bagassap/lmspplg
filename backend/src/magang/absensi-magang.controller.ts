@@ -114,8 +114,6 @@ export class AbsensiMagangController {
     @Request() req: any,
     @Res() res: Response,
   ) {
-    // Siswa tidak pernah dipercaya mengirim siswaId sendiri — selalu
-    // diturunkan dari token JWT-nya, bukan dari query string.
     const siswaId = req.user.role === 'SISWA' ? await this.service.resolveOwnSiswaId(req.user.id) : siswaIdQ;
     if (!siswaId) throw new BadRequestException('siswaId wajib diisi');
     const mode = this.parseExportMode(modeQ);
@@ -224,8 +222,6 @@ export class AbsensiMagangController {
     res.send(buffer);
   }
 
-  // Data JSON di balik export-pdf/export-excel di atas, dipakai halaman
-  // Rekap & Laporan untuk menampilkan tabel rekap sebelum diunduh.
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get('rekap')

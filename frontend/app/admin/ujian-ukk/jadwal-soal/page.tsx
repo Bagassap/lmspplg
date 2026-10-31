@@ -587,7 +587,6 @@ export default function AdminJadwalSoalPage() {
 
         <div className="flex-1 min-w-0 space-y-6">
 
-
           <AnimatePresence>
             {openJadwalModal && (()=>{
               const allSoal = jadwalFiles;
