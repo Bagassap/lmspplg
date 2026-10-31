@@ -66,6 +66,8 @@ model User {
   // Path to the mandatory 1:1 profile photo (uploads/foto-profil/*), null
   // until the user completes /lengkapi-foto-profil. Applies to every role.
   fotoProfil                 String?
+  // Salinan terenkripsi (AES-256-GCM) password akun SISWA agar admin/guru bisa melihatnya tanpa reset.
+  passwordTampil             String?
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
 

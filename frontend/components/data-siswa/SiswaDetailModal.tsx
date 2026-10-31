@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, XCircle, Hash, KeyRound,
-  MoreVertical, Eye, Trash2,
+  MoreVertical, Eye, Trash2, Lock,
 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
@@ -68,12 +68,12 @@ function FieldItem({ icon: Icon, label, value, full, href }: {
   );
 }
 
-export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate, onKeluarkan, onClose }: {
-  siswa: SiswaCardData; onEdit?: () => void; onResetPassword?: () => void; onImpersonate?: () => void; onKeluarkan?: () => void; onClose: () => void;
+export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onLihatPassword, onImpersonate, onKeluarkan, onClose }: {
+  siswa: SiswaCardData; onEdit?: () => void; onResetPassword?: () => void; onLihatPassword?: () => void; onImpersonate?: () => void; onKeluarkan?: () => void; onClose: () => void;
 }) {
   const h = useSheetHeader("#3E03B3");
   const [actionsOpen, setActionsOpen] = useState(false);
-  const hasMobileActions = !!((onResetPassword || onImpersonate) && siswa.user) || !!onKeluarkan;
+  const hasMobileActions = !!((onResetPassword || onLihatPassword || onImpersonate) && siswa.user) || !!onKeluarkan;
   const displayNama = toTitleCase(getNama(siswa));
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ?? null;
@@ -135,6 +135,10 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
           {onEdit && (
             <button type="button" onClick={onEdit}
               className="flex flex-col items-center gap-1 rounded-2xl bg-[#3E03B3] px-1 py-2.5 text-[11px] font-bold text-white"><Pencil size={16} /> Edit</button>
+          )}
+          {onLihatPassword && siswa.user && (
+            <button type="button" onClick={onLihatPassword}
+              className="flex flex-col items-center gap-1 rounded-2xl bg-[#3E03B3] px-1 py-2.5 text-[11px] font-bold text-white"><Lock size={16} /> Password</button>
           )}
           {onResetPassword && siswa.user && (
             <button type="button" onClick={onResetPassword}
@@ -310,6 +314,12 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onImpersonate
               </button>
               {actionsOpen && (
                 <div className="absolute right-4 top-14 z-30 w-56 overflow-hidden rounded-2xl bg-white text-left shadow-xl dark:bg-slate-800">
+                  {onLihatPassword && siswa.user && (
+                    <button type="button" onClick={() => { onLihatPassword(); setActionsOpen(false); }}
+                      className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-600">
+                      <Lock size={15} className="text-[#3E03B3]" /> Lihat Password
+                    </button>
+                  )}
                   {onResetPassword && siswa.user && (
                     <button type="button" onClick={() => { onResetPassword(); setActionsOpen(false); }}
                       className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-600">

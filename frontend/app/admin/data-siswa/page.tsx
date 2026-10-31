@@ -119,6 +119,7 @@ export default function AdminDataSiswaPage() {
               siswas={displayed}
               onEdit={setEditTarget}
               onResetPassword={setResetTarget}
+              lihatPassword
               onImpersonate={handleImpersonate}
               onKeluarkan={handleKeluarkan}
               mobileNative

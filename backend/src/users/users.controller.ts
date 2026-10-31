@@ -59,6 +59,11 @@ export class UsersController {
     );
   }
 
+  @Get('admin')
+  findAdminList() {
+    return this.service.findAdminList();
+  }
+
   @Get('guru')
   findGuruList() {
     return this.service.findGuruList();

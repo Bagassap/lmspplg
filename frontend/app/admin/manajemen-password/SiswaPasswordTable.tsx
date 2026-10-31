@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, KeyRound, CheckCircle2, XCircle, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, KeyRound, Lock, CheckCircle2, XCircle, Users } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -32,11 +32,12 @@ function belumGantiLabel(iso: string): string {
 }
 
 export function SiswaPasswordTable({
-  loading, siswas, onReset, mobileNative = false,
+  loading, siswas, onReset, onLihat, mobileNative = false,
 }: {
   loading: boolean;
   siswas: SiswaPasswordItem[];
   onReset: (s: SiswaPasswordItem) => void;
+  onLihat?: (s: SiswaPasswordItem) => void;
   mobileNative?: boolean;
 }) {
   const app = useIsAppMode();
@@ -113,14 +114,20 @@ export function SiswaPasswordTable({
                       </span>
                     )}
                   </div>
-                  <div className="flex justify-end">
-                    {s.user ? (
+                  <div className="flex justify-end gap-1.5">
+                    {s.user ? (<>
+                      {onLihat && (
+                        <button onClick={() => onLihat(s)}
+                          className="flex items-center gap-1 rounded-lg bg-[#F1EDFA] px-2.5 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm transition-colors hover:brightness-95">
+                          <Lock size={12} /> Lihat
+                        </button>
+                      )}
                       <button onClick={() => onReset(s)}
                         className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:brightness-95"
                         style={{ backgroundColor: REF_PRIMARY }}>
                         <KeyRound size={12} /> Reset
                       </button>
-                    ) : (
+                    </>) : (
                       <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
                     )}
                   </div>
@@ -158,6 +165,12 @@ export function SiswaPasswordTable({
                   <span className={`shrink-0 rounded-xl px-2 py-0.5 text-[10px] font-bold ${mustChange === null ? "bg-[#F1EDFA] text-slate-600" : mustChange ? "bg-[#FFE9E2] text-[#F26A3D]" : "bg-[#E3F8EF] text-[#059669]"}`}>
                     {mustChange === null ? "Tanpa akun" : mustChange ? "Belum" : "Sudah"}
                   </span>
+                )}
+                {s.user && onLihat && (
+                  <button onClick={() => onLihat(s)}
+                    className={`flex shrink-0 items-center gap-1 bg-[#F1EDFA] px-3 py-1.5 text-xs font-bold text-[#3E03B3] shadow-sm ${app ? "rounded-xl" : "rounded-lg"}`}>
+                    <Lock size={12} /> Lihat
+                  </button>
                 )}
                 {s.user && (
                   <button onClick={() => onReset(s)}

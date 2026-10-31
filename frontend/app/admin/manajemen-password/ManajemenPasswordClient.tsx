@@ -5,7 +5,9 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft } from "lucide-react";
+import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft, ShieldCheck } from "lucide-react";
+import { PasswordSiswaModal } from "@/components/shared/PasswordSiswaModal";
+import { KelolaAdminModal } from "./KelolaAdminModal";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { FilterBarPassword, type StatusFilter } from "./FilterBarPassword";
@@ -61,6 +63,8 @@ export default function ManajemenPasswordClient() {
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const [importSiswaOpen, setImportSiswaOpen] = useState(false);
   const [kelolaGuruOpen, setKelolaGuruOpen] = useState(false);
+  const [kelolaAdminOpen, setKelolaAdminOpen] = useState(false);
+  const [lihatTarget, setLihatTarget] = useState<{ id: string; nama: string; nis: string; mustChangePassword: boolean } | null>(null);
 
   const fetchHeader = useCallback(async () => {
     setLoadingHeader(true);
@@ -144,14 +148,15 @@ export default function ManajemenPasswordClient() {
               <p className="text-sm font-extrabold text-slate-900 dark:text-white">Aksi akun</p>
               <p className="text-xs text-slate-600 dark:text-slate-300">Kelola guru, impor siswa massal, atau buat akun baru</p>
             </div>
-            <div className="grid shrink-0 grid-cols-3 gap-2.5">
+            <div className="grid shrink-0 grid-cols-4 gap-2.5">
               {([
                 { label: "Kelola Guru", icon: GraduationCap, tone: "sky" as const, onClick: () => setKelolaGuruOpen(true) },
+                { label: "Kelola Admin", icon: ShieldCheck, tone: "violet" as const, onClick: () => setKelolaAdminOpen(true) },
                 { label: "Impor Massal", icon: FileSpreadsheet, tone: "emerald" as const, onClick: () => setImportSiswaOpen(true) },
                 { label: "Buat Akun", icon: UserPlus, tone: "amber" as const, onClick: () => setCreateAccountOpen(true) },
               ]).map((b) => (
                 <button key={b.label} type="button" onClick={b.onClick}
-                  className="flex h-12 w-44 items-center gap-2.5 rounded-xl bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
+                  className="flex h-12 w-40 items-center gap-2.5 rounded-xl bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={icon3dStyle(b.tone)}>
                     <b.icon size={16} color="#fff" />
                   </span>
@@ -176,6 +181,7 @@ export default function ManajemenPasswordClient() {
               loading={loadingSiswa}
               siswas={displayed}
               onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
+              onLihat={(s) => s.user && setLihatTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
               mobileNative
             />
           </div>
@@ -183,7 +189,7 @@ export default function ManajemenPasswordClient() {
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:hidden">
           <AppFold title="Aksi akun" hint="Kelola guru, impor massal, buat akun">
-          <div className="grid grid-cols-3 gap-2 p-5">
+          <div className="grid grid-cols-4 gap-2 p-5">
             <motion.button
               onClick={() => setKelolaGuruOpen(true)}
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -192,6 +198,15 @@ export default function ManajemenPasswordClient() {
               style={{ background: "#3E03B3" }}>
               <GraduationCap size={18} />
               <span className="text-[10px] font-bold leading-tight">Kelola Guru</span>
+            </motion.button>
+            <motion.button
+              onClick={() => setKelolaAdminOpen(true)}
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              title="Kelola Admin"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-white shadow-sm transition-all hover:brightness-105"
+              style={{ background: "#3E03B3" }}>
+              <ShieldCheck size={18} />
+              <span className="text-[10px] font-bold leading-tight">Kelola Admin</span>
             </motion.button>
             <motion.button
               onClick={() => setImportSiswaOpen(true)}
@@ -230,6 +245,21 @@ export default function ManajemenPasswordClient() {
           }}
         />
       )}
+
+      {lihatTarget && (
+        <PasswordSiswaModal
+          userId={lihatTarget.id}
+          nama={lihatTarget.nama}
+          onClose={() => setLihatTarget(null)}
+          onReset={() => { setResetTarget({ id: lihatTarget.id, nama: lihatTarget.nama, nis: lihatTarget.nis, mustChangePassword: lihatTarget.mustChangePassword }); setLihatTarget(null); }}
+        />
+      )}
+
+      <KelolaAdminModal
+        open={kelolaAdminOpen}
+        onClose={() => setKelolaAdminOpen(false)}
+        onResetPassword={(t) => setResetTarget(t)}
+      />
 
       <CreateAccountModal
         open={createAccountOpen}

@@ -1,4 +1,4 @@
-import { Controller, Post, Patch, Param, Body, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Request, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -31,5 +31,13 @@ export class ImpersonationController {
   @Patch(':id/reset-password')
   resetPassword(@Param('id') id: string, @Body() dto: ResetPasswordDto, @Request() req: any) {
     return this.service.resetPassword(req.user, id, dto);
+  }
+
+  // Admin & guru boleh melihat password siswa (mengurangi permintaan reset berulang).
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get(':id/password-siswa')
+  lihatPasswordSiswa(@Param('id') id: string, @Request() req: any) {
+    return this.service.lihatPasswordSiswa(id, req.user);
   }
 }

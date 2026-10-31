@@ -11,6 +11,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role, StatusPasswordReset } from '../../generated/prisma/client';
 import { SUPER_ADMIN_LOGIN_ID } from '../auth/guards/super-admin.guard';
+import { enkripsiPassword, dekripsiPassword } from '../common/password-vault';
 import * as bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10;
@@ -63,6 +64,7 @@ export class UsersService {
       data: {
         password: hashed,
         mustChangePassword: true,
+        ...(user.role === Role.SISWA ? { passwordTampil: enkripsiPassword(newPassword) } : {}),
         ...(dto.bypassIdentityVerification ? { bypassIdentityVerification: true } : {}),
       },
     });
@@ -70,6 +72,42 @@ export class UsersService {
     return {
       message: `Password ${user.nama} berhasil direset${user.role === Role.SISWA ? ' ke NIS' : ''}`,
     };
+  }
+
+  // Admin/guru melihat password siswa (pengganti reset berulang). Akun lama yang belum punya salinan
+  // dan masih memakai NIS terisi otomatis lewat pencocokan hash; selain itu perlu reset/ganti sekali.
+  async lihatPasswordSiswa(userId: string, actor: { id: string; role: string }) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, nama: true, role: true, password: true, passwordTampil: true, mustChangePassword: true, siswa: { select: { nis: true, kelasId: true } } },
+    });
+    if (!user || user.role !== Role.SISWA || !user.siswa) throw new NotFoundException('Siswa tidak ditemukan');
+    // Guru hanya boleh untuk siswa kelas yang diwalikannya (sama seperti daftar Data Siswa guru).
+    if (actor.role === Role.GURU) {
+      const wali = await this.prisma.kelas.findFirst({ where: { id: user.siswa.kelasId, waliKelasGuru: { userId: actor.id } }, select: { id: true } });
+      if (!wali) throw new ForbiddenException('Hanya wali kelas yang dapat melihat password siswa kelasnya');
+    }
+
+    let password = user.passwordTampil ? dekripsiPassword(user.passwordTampil) : null;
+    if (!password && (await bcrypt.compare(user.siswa.nis, user.password))) {
+      password = user.siswa.nis;
+      await this.prisma.user.update({ where: { id: user.id }, data: { passwordTampil: enkripsiPassword(password) } });
+    }
+    return {
+      nama: user.nama,
+      nis: user.siswa.nis,
+      password,
+      masihAwal: user.mustChangePassword,
+      pesan: password ? null : 'Password siswa ini belum tersimpan (diganti sebelum fitur ini ada). Reset sekali, setelah itu akan terlihat.',
+    };
+  }
+
+  findAdminList() {
+    return this.prisma.user.findMany({
+      where: { role: Role.ADMIN },
+      select: { id: true, nama: true, loginId: true, isActive: true, mustChangePassword: true, fotoProfil: true, updatedAt: true },
+      orderBy: { nama: 'asc' },
+    });
   }
 
   async createAccount(dto: CreateUserDto) {
@@ -80,6 +118,7 @@ export class UsersService {
           data: {
             nama: dto.nama,
             password: hashed,
+            passwordTampil: enkripsiPassword(dto.nis!),
             role: Role.SISWA,
             mustChangePassword: true,
             siswa: {

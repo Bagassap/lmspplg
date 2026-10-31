@@ -8,11 +8,13 @@ import { type SiswaCardData, toTitleCase, getNama, avatarColorFor, completeness 
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { PasswordSiswaModal } from "@/components/shared/PasswordSiswaModal";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
 type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
+  onLihatPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
   onViewDetail: (s: SiswaCardData) => void;
   onKeluarkan?: (s: SiswaCardData) => void;
@@ -88,8 +90,9 @@ function PaginationBar({ page, pageCount, start, end, total, onPage, pageSize, o
 }
 
 export function SiswaTable({
-  loading, siswas, onEdit, onResetPassword, onImpersonate, onKeluarkan, mobileNative = false,
-}: Omit<ActionProps, "onViewDetail"> & {
+  loading, siswas, onEdit, onResetPassword, lihatPassword = false, onImpersonate, onKeluarkan, mobileNative = false,
+}: Omit<ActionProps, "onViewDetail" | "onLihatPassword"> & {
+  lihatPassword?: boolean;
   loading: boolean;
   siswas: SiswaCardData[];
   mobileNative?: boolean;
@@ -99,7 +102,9 @@ export function SiswaTable({
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(10);
   useEffect(() => setPage(0), [siswas]);
-  const actions: ActionProps = { onEdit, onResetPassword, onImpersonate, onViewDetail: setDetailSiswa, onKeluarkan };
+  const [passwordSiswa, setPasswordSiswa] = useState<SiswaCardData | null>(null);
+  const onLihatPassword = lihatPassword ? setPasswordSiswa : undefined;
+  const actions: ActionProps = { onEdit, onResetPassword, onLihatPassword, onImpersonate, onViewDetail: setDetailSiswa, onKeluarkan };
 
   const { pageItems, pageCount, start, end } = paginate(siswas, page, pageSize);
 
@@ -183,11 +188,16 @@ export function SiswaTable({
   return (
     <>
       {content}
+      {passwordSiswa?.user && (
+        <PasswordSiswaModal userId={passwordSiswa.user.id} nama={toTitleCase(getNama(passwordSiswa))} onClose={() => setPasswordSiswa(null)}
+          onReset={onResetPassword ? () => { onResetPassword(passwordSiswa); setPasswordSiswa(null); } : undefined} />
+      )}
       {detailSiswa && (
         <SiswaDetailModal
           siswa={detailSiswa}
           onEdit={onEdit ? () => { onEdit(detailSiswa); setDetailSiswa(null); } : undefined}
           onResetPassword={onResetPassword ? () => { onResetPassword(detailSiswa); setDetailSiswa(null); } : undefined}
+          onLihatPassword={lihatPassword ? () => { setPasswordSiswa(detailSiswa); setDetailSiswa(null); } : undefined}
           onImpersonate={onImpersonate ? () => { onImpersonate(detailSiswa); setDetailSiswa(null); } : undefined}
           onKeluarkan={onKeluarkan ? () => { onKeluarkan(detailSiswa); setDetailSiswa(null); } : undefined}
           onClose={() => setDetailSiswa(null)}

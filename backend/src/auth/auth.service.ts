@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
+import { enkripsiPassword } from '../common/password-vault';
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import { join } from 'path';
@@ -248,7 +249,10 @@ export class AuthService {
     const hashed = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
     const updated = await this.prisma.user.update({
       where: { id: userId },
-      data: { password: hashed, mustChangePassword: false, bypassIdentityVerification: false },
+      data: {
+        password: hashed, mustChangePassword: false, bypassIdentityVerification: false,
+        ...(user.role === 'SISWA' ? { passwordTampil: enkripsiPassword(dto.newPassword) } : {}),
+      },
     });
 
     const token = this.signToken(updated);

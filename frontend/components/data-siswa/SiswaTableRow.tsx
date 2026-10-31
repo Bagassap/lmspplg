@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, ScanEye, KeyRound, Pencil, Trash2, Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
+import { Eye, ScanEye, KeyRound, Lock, Pencil, Trash2, Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
 import {
   type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
 } from "./shared";
@@ -85,12 +85,13 @@ export function SiswaTableHead() {
 }
 
 export function SiswaTableRow({
-  siswa, index, onEdit, onResetPassword, onImpersonate, onViewDetail, onKeluarkan,
+  siswa, index, onEdit, onResetPassword, onLihatPassword, onImpersonate, onViewDetail, onKeluarkan,
 }: {
   siswa: SiswaCardData;
   index: number;
   onEdit?: (s: SiswaCardData) => void;
   onResetPassword?: (s: SiswaCardData) => void;
+  onLihatPassword?: (s: SiswaCardData) => void;
   onImpersonate?: (s: SiswaCardData) => void;
   onViewDetail: (s: SiswaCardData) => void;
   onKeluarkan?: (s: SiswaCardData) => void;
@@ -174,6 +175,17 @@ export function SiswaTableRow({
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] text-[#000000] dark:text-[#C4B5FD] shadow-sm transition-colors hover:brightness-95"
           >
             <ScanEye size={13} />
+          </motion.button>
+        )}
+        {onLihatPassword && siswa.user && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={() => onLihatPassword(siswa)}
+            title="Lihat password"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] text-white shadow-sm transition-colors hover:brightness-95"
+          >
+            <Lock size={13} />
           </motion.button>
         )}
         {onResetPassword && siswa.user && (

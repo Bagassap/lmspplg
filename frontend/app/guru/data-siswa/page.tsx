@@ -85,6 +85,7 @@ export default function GuruDataSiswaPage() {
           <SiswaTable
             loading={loading}
             siswas={displayed}
+            lihatPassword
             mobileNative
           />
         </div>

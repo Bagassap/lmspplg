@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import ExcelJS from 'exceljs';
+import { enkripsiPassword } from '../common/password-vault';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { Role } from '../../generated/prisma/client';
@@ -111,6 +112,7 @@ export class ImportSiswaService {
           data: {
             nama: r.nama,
             password: hashed,
+            passwordTampil: enkripsiPassword(r.nis),
             role: Role.SISWA,
             mustChangePassword: true,
             siswa: {
