@@ -386,7 +386,7 @@ export default function AdminDashboardPage() {
       </div>
     ) : (
     <div className="relative isolate -m-4 overflow-hidden lg:hidden">
-      <div className="absolute inset-x-0 top-0 h-40 rounded-b-[32px]" style={{ background: "#3E03B3" }} />
+      <div className="absolute inset-x-0 top-0 h-40 rounded-b-4xl" style={{ background: "#3E03B3" }} />
 
       <div className="relative z-10 space-y-5 p-4">
 
@@ -435,7 +435,7 @@ export default function AdminDashboardPage() {
                   style={icon3dStyle(s.tone)}>
                   <s.icon size={19} style={{ color: "#fff" }} />
                   {!!s.badge && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-xl bg-[#3E03B3] px-1 text-[9px] font-bold text-white shadow-sm">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-xl bg-primary px-1 text-[9px] font-bold text-white shadow-sm">
                       {s.badge}
                     </span>
                   )}

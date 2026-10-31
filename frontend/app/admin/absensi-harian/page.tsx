@@ -19,7 +19,7 @@ import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
 import { OptionCard3D } from "@/components/shared/Icon3D";
 import type { Kelas, RekapKelas, SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "@/components/absensi-harian/types";
 import { AppCard, AppSectionTitle } from "@/components/app/AppUI";
@@ -65,7 +65,7 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
       <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
         className="flex h-full w-full flex-col justify-between rounded-3xl p-4 text-left transition-transform active:scale-[0.98] disabled:opacity-60"
         style={{ background: app ? "#F1EDFA" : "#F26A3D" }}>
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-white ${app ? "text-[#3E03B3]" : "text-[#5D900F] dark:text-[#C4B5FD]"}`}>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-white ${app ? "text-primary" : "text-[#5D900F] dark:text-[#C4B5FD]"}`}>
           {sent ? <Check size={16} /> : <Bell size={16} />}
         </span>
         <div className="mt-2 min-w-0">
@@ -81,7 +81,7 @@ function KirimPengingatCard({ tanggal, siswaList, bold }: { tanggal: string; sis
   return (
     <button type="button" onClick={kirim} disabled={belum.length === 0 || sending}
       className="flex w-full items-center gap-2.5 rounded-2xl bg-slate-100 px-4 py-3 text-left transition-all hover:bg-slate-200 disabled:cursor-default disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-white">
         {sent ? <Check size={15} /> : <Bell size={15} />}
       </span>
       <div className="min-w-0">
@@ -521,17 +521,17 @@ export default function AdminAbsensiHarianPage() {
               </div>
 
               {exportRange.rangeMode === "mingguan" && (
-                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
               )}
 
               {exportRange.rangeMode === "bulanan" && (
                 <div className="mt-2 flex items-center gap-1.5">
                   <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                     {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                   </select>
                   <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                     {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
@@ -541,7 +541,7 @@ export default function AdminAbsensiHarianPage() {
                 <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                <Download size={11} className="shrink-0 text-[#3E03B3]" />
+                <Download size={11} className="shrink-0 text-primary" />
                 Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per kelas (semua siswa) atau per siswa.
               </p>
             </div>
@@ -557,15 +557,15 @@ export default function AdminAbsensiHarianPage() {
         <div className="space-y-6 lg:hidden">
           <div className="flex items-center gap-2">
             <button type="button" onClick={() => setKelasPickerOpen(true)}
-              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-[#F1EDFA] px-4 text-left">
-              <span className="truncate text-sm font-bold text-[#3E03B3]">
+              className="flex h-11 min-w-0 flex-1 items-center justify-between rounded-xl bg-primary-light px-4 text-left">
+              <span className="truncate text-sm font-bold text-primary">
                 {selected ? selected.kelas.nama : "Pilih kelas"}
               </span>
-              <ChevronDown size={16} className="ml-2 shrink-0 text-[#3E03B3]" />
+              <ChevronDown size={16} className="ml-2 shrink-0 text-primary" />
             </button>
             <MobileDatePicker value={tanggal} onChange={setTanggal} />
             <button type="button" onClick={() => setShowKelola(true)} aria-label="Kelola kelas"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
               <Settings2 size={16} />
             </button>
           </div>
@@ -689,7 +689,7 @@ export default function AdminAbsensiHarianPage() {
       {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {kelasPickerOpen && (
-            <div className="fixed inset-0 z-[60] flex items-end justify-center">
+            <div className="fixed inset-0 z-60 flex items-end justify-center">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={() => setKelasPickerOpen(false)} />
@@ -719,7 +719,7 @@ export default function AdminAbsensiHarianPage() {
                           <p className="truncate text-[11px] text-slate-400">{s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}</p>
                         </div>
                         <span className={`shrink-0 rounded-lg px-2 py-1 text-xs font-bold ${
-                            isSelected ? "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]" : "bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-300"
+                            isSelected ? "bg-primary-light text-primary dark:bg-slate-700 dark:text-[#C4B5FD]" : "bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-300"
                           }`}>
                           {s.pct}%
                         </span>
@@ -868,17 +868,17 @@ export default function AdminAbsensiHarianPage() {
                   </div>
 
                   {exportRange.rangeMode === "mingguan" && (
-                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+                    <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
                   )}
 
                   {exportRange.rangeMode === "bulanan" && (
                     <div className="mt-3 flex items-center gap-1.5">
                       <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                       </select>
                       <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                        className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
                         {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
                       </select>
                     </div>
@@ -888,7 +888,7 @@ export default function AdminAbsensiHarianPage() {
                     <ExportButtons kelasId={selectedId} kelasNama={selected?.kelas.nama ?? "Kelas"} range={exportRange.range} siswaList={siswaList} />
                   </div>
                   <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                    <Download size={11} className="shrink-0 text-[#3E03B3]" />
+                    <Download size={11} className="shrink-0 text-primary" />
                     Pilih rentang waktu, lalu ketuk salah satu tombol ekspor
                   </p>
                 </div>

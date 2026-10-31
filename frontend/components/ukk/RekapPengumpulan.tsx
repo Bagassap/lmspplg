@@ -100,9 +100,9 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
             const n = new Set(submisi.filter((s) => kelasOf(s) === k.id).map((s) => s.siswa?.id)).size;
             return (
               <button key={k.id} type="button" onClick={() => setKelasId(k.id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold ${on ? "bg-[#3E03B3] text-white" : "bg-slate-100 text-[#3E03B3] dark:bg-slate-700"}`}>
+                className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold ${on ? "bg-primary text-white" : "bg-slate-100 text-primary dark:bg-slate-700"}`}>
                 {k.nama}
-                <span className={`rounded-xl px-1.5 text-[10px] ${on ? "bg-white text-[#3E03B3]" : "bg-white text-slate-600"}`}>{n}/{k.siswa.length}</span>
+                <span className={`rounded-xl px-1.5 text-[10px] ${on ? "bg-white text-primary" : "bg-white text-slate-600"}`}>{n}/{k.siswa.length}</span>
               </button>
             );
           })}
@@ -126,7 +126,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
       {tab === "sudah" && folderKelas && (
         <div className="flex shrink-0 items-center gap-3 px-4 pb-3 sm:px-8">
           <button type="button" onClick={() => salin(folderKelas, `Link folder ${aktif?.nama ?? "kelas"} disalin`)}
-            className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-700">
+            className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-primary dark:bg-slate-700">
             <FolderOpen size={13} /> Salin link folder {aktif?.nama} (Google Drive)
           </button>
         </div>
@@ -142,16 +142,16 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
             const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
             return (
               <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-xs font-bold text-white">{nama[0]?.toUpperCase()}</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary text-xs font-bold text-white">{nama[0]?.toUpperCase()}</span>
                 <div className="min-w-0 flex-1 basis-40">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{nama}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-300">Dikirim {tglJam(s.submittedAt)}</p>
                 </div>
-                <span className="shrink-0 rounded-xl bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-slate-800">Terkumpul</span>
+                <span className="shrink-0 rounded-xl bg-white px-2.5 py-0.5 text-[10px] font-bold text-primary dark:bg-slate-800">Terkumpul</span>
                 <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {s.driveUrl && (
                     <button type="button" onClick={() => salin(s.driveUrl!, "Link Google Drive disalin")} title="Salin link Google Drive"
-                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-800">
+                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-[11px] font-bold text-primary dark:bg-slate-800">
                       <Copy size={13} /> Salin link
                     </button>
                   )}
@@ -162,7 +162,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
                     </button>
                   )}
                   <a href={s.driveUrl ?? (s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`)} target="_blank" rel="noopener noreferrer"
-                    className="shrink-0 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
+                    className="shrink-0 rounded-xl bg-primary px-3 py-1.5 text-[11px] font-bold text-white">
                     {s.driveUrl ? "Drive" : labelBerkas(s.fileUrl)}
                   </a>
                 </div>
@@ -193,17 +193,17 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
             {submisi.length > 0 && (
               <>
                 <a href={urlZip({ tahapanId })} download
-                  className="flex items-center gap-2 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
+                  className="flex items-center gap-2 rounded-xl bg-primary px-3 py-1.5 text-[11px] font-bold text-white">
                   <Download size={13} /> Unduh semua (ZIP)
                 </a>
                 {aktif && (
                   <a href={urlZip({ tahapanId, kelasId: aktif.id })} download
-                    className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-700">
+                    className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-primary dark:bg-slate-700">
                     <Download size={13} /> Unduh {aktif.nama}
                   </a>
                 )}
                 <button type="button" onClick={() => salin(`${window.location.origin}${urlZip({ tahapanId, kelasId: aktif?.id })}`, "Alamat unduh disalin (harus login admin/guru)")}
-                  className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-700">
+                  className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-primary dark:bg-slate-700">
                   <Copy size={13} /> Salin alamat unduh
                 </button>
               </>
@@ -212,10 +212,10 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
           {total > 0 && (
             <div className="flex items-center gap-2">
               <button type="button" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={16} /></button>
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-primary disabled:opacity-40 dark:bg-slate-700"><ChevronLeft size={16} /></button>
               <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{page + 1}/{pageCount}</span>
               <button type="button" disabled={page >= pageCount - 1} onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#3E03B3] disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={16} /></button>
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-primary disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={16} /></button>
             </div>
           )}
         </div>
