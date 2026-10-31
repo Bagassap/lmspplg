@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import type { Response } from 'express';
 import archiver from 'archiver';
 import { UjianUkkService } from './ujian-ukk.service';
+import { jenisArsip, daftarArsip, bacaEntri, jenisTayang } from './arsip.util';
 import { UjianUkkExcelService } from './ujian-ukk-excel.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { CreateSoalDto } from './dto/create-soal.dto';
@@ -175,6 +176,44 @@ export class UjianUkkController {
     }
     if (tautan.length) arsip.append(tautan.join('\n'), { name: 'Link Google Drive & catatan.txt' });
     await arsip.finalize();
+  }
+
+  // Pratinjau isi arsip ZIP/RAR pengumpulan tanpa mengunduhnya.
+  private async arsipSubmisi(id: string) {
+    const row = await this.service.findSubmisiById(id);
+    const jenis = jenisArsip(row.fileName || row.fileUrl);
+    if (!row.fileUrl.startsWith('/uploads/') || !jenis) throw new BadRequestException('Pengumpulan ini bukan arsip ZIP/RAR yang diunggah');
+    const abs = join(process.cwd(), row.fileUrl);
+    if (!fs.existsSync(abs)) throw new BadRequestException('Berkas tidak ditemukan di server');
+    return { abs, jenis, nama: row.fileName };
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('submisi/:id/isi')
+  async isiArsip(@Param('id') id: string) {
+    const { abs, jenis, nama } = await this.arsipSubmisi(id);
+    return { nama, jenis, entri: (await daftarArsip(abs, jenis)).sort((a, b) => a.path.localeCompare(b.path)) };
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('submisi/:id/isi/berkas')
+  async berkasArsip(@Param('id') id: string, @Query('path') path: string, @Res() res: Response) {
+    if (!path) throw new BadRequestException('path wajib diisi');
+    const { abs, jenis } = await this.arsipSubmisi(id);
+    const tayang = jenisTayang(path);
+    if (!tayang) throw new BadRequestException('Jenis berkas ini tidak bisa dilihat langsung');
+    const data = await bacaEntri(abs, jenis, path);
+    res.set({
+      'Content-Type': tayang.tipe,
+      'Content-Disposition': 'inline',
+      'X-Content-Type-Options': 'nosniff',
+      'Content-Security-Policy': "sandbox; default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'",
+      'Cache-Control': 'no-store',
+      'Content-Length': data.length,
+    });
+    res.send(data);
   }
 
   @UseGuards(RolesGuard)

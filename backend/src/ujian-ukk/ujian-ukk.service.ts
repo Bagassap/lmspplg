@@ -146,6 +146,12 @@ export class UjianUkkService {
     });
   }
 
+  async findSubmisiById(id: string) {
+    const row = await this.prisma.submisiProjectUKK.findUnique({ where: { id }, select: { id: true, fileUrl: true, fileName: true } });
+    if (!row) throw new NotFoundException('Pengumpulan tidak ditemukan');
+    return row;
+  }
+
   // Data untuk ZIP "unduh semua": berkas pengumpulan (opsional per task / per kelas).
   submisiUntukZip(filter: { tahapanId?: string; kelasId?: string }) {
     return this.prisma.submisiProjectUKK.findMany({

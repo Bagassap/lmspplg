@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, Copy, Download, FolderOpen, UserX } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, UserX } from "lucide-react";
+import { ArsipViewer } from "@/components/ukk/ArsipViewer";
 import { useToast } from "@/components/shared/ToastSystem";
 
 type SubmisiRow = {
@@ -27,6 +28,13 @@ function urlZip(o: { tahapanId?: string; kelasId?: string }) {
 function tgl(s: string) {
   return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
+function tglJam(s: string) {
+  const d = new Date(s);
+  const t = d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
+  const j = d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" }).replace(".", ":");
+  return `${t}, ${j} WIB`;
+}
+const adalahArsip = (s: SubmisiRow) => s.fileUrl.startsWith("/uploads/") && /\.(zip|rar)$/i.test(s.fileName || s.fileUrl);
 function labelBerkas(url: string) {
   if (url.startsWith("http")) return "GDrive";
   return /\.(pdf|png|jpe?g|webp|gif)$/i.test(url) ? "Buka" : "Unduh";
@@ -46,6 +54,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
   const [kelasId, setKelasId] = useState("");
   const [tab, setTab] = useState<"sudah" | "belum">("sudah");
   const [page, setPage] = useState(0);
+  const [arsip, setArsip] = useState<{ id: string; nama: string; siswa: string } | null>(null);
 
   useEffect(() => {
     fetch("/api/ujian-ukk/peserta-xii", { cache: "no-store" })
@@ -132,23 +141,31 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
           sudahRows.slice(from, to).map((s) => {
             const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
             return (
-              <div key={s.id} className="flex items-center gap-3 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
+              <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-xs font-bold text-white">{nama[0]?.toUpperCase()}</span>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 basis-40">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{nama}</p>
-                  <p className="truncate text-xs text-slate-600 dark:text-slate-300">{tgl(s.submittedAt)}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">Dikirim {tglJam(s.submittedAt)}</p>
                 </div>
                 <span className="shrink-0 rounded-xl bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:bg-slate-800">Terkumpul</span>
-                {s.driveUrl && (
-                  <button type="button" onClick={() => salin(s.driveUrl!, "Link Google Drive disalin")} title="Salin link Google Drive"
-                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-800">
-                    <Copy size={13} /> Salin link
-                  </button>
-                )}
-                <a href={s.driveUrl ?? (s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`)} target="_blank" rel="noopener noreferrer"
-                  className="shrink-0 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
-                  {s.driveUrl ? "Drive" : labelBerkas(s.fileUrl)}
-                </a>
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
+                  {s.driveUrl && (
+                    <button type="button" onClick={() => salin(s.driveUrl!, "Link Google Drive disalin")} title="Salin link Google Drive"
+                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-800">
+                      <Copy size={13} /> Salin link
+                    </button>
+                  )}
+                  {adalahArsip(s) && (
+                    <button type="button" onClick={() => setArsip({ id: s.id, nama: s.fileName, siswa: nama })}
+                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#F26A3D] px-3 py-1.5 text-[11px] font-bold text-white">
+                      <Eye size={13} /> Lihat isi
+                    </button>
+                  )}
+                  <a href={s.driveUrl ?? (s.fileUrl.startsWith("http") ? s.fileUrl : `/api${s.fileUrl}`)} target="_blank" rel="noopener noreferrer"
+                    className="shrink-0 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
+                    {s.driveUrl ? "Drive" : labelBerkas(s.fileUrl)}
+                  </a>
+                </div>
               </div>
             );
           })
@@ -203,6 +220,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
           )}
         </div>
       )}
+      {arsip && <ArsipViewer submisiId={arsip.id} nama={arsip.nama} siswa={arsip.siswa} onClose={() => setArsip(null)} />}
     </>
   );
 }

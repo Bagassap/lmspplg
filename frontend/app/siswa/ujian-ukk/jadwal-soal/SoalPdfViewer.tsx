@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { AlertCircle, Loader2, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertCircle, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
@@ -13,7 +12,6 @@ interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string;
 export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: () => void }) {
   const app = useIsAppMode();
   const proxyUrl     = `/api/ujian-ukk/soal/file?path=${encodeURIComponent(soal.fileUrl)}`;
-  const directUrl    = `http://localhost:3001${soal.fileUrl}`;
   const [blobUrl,    setBlobUrl]    = useState<string | null>(null);
   const [pdfError,   setPdfError]   = useState(false);
   const [numPages,   setNumPages]   = useState(0);
@@ -41,7 +39,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
 
   return (
     <>
-      <div ref={containerRef} className={`relative flex-1 overflow-y-auto dark:bg-slate-800 ${app ? "bg-[#F1EDFA]" : "bg-gray-100"}`} style={{ minHeight: 340 }}>
+      <div ref={containerRef} onContextMenu={(e) => e.preventDefault()} className={`relative flex-1 overflow-y-auto dark:bg-slate-800 ${app ? "bg-[#F1EDFA]" : "bg-gray-100"}`} style={{ minHeight: 340 }}>
         {pdfError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-10 text-center" style={{ minHeight: 340 }}>
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFFFFF]">
@@ -49,7 +47,7 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
             </div>
             <div>
               <p className="font-bold text-gray-700 dark:text-slate-200">PDF tidak dapat dimuat</p>
-              <p className="mt-1 text-sm text-gray-500">Gunakan tombol Unduh untuk mengakses file</p>
+              <p className="mt-1 text-sm text-gray-500">Muat ulang halaman atau hubungi admin</p>
             </div>
           </div>
         ) : !blobUrl ? (
@@ -86,12 +84,6 @@ export default function SoalPdfViewer({ soal, onClose }: { soal: Soal; onClose: 
       )}
       <div className="shrink-0 flex items-center justify-between gap-3 bg-white px-6 py-4 dark:bg-slate-900 sm:px-8 sm:py-5">
         <p className="truncate max-w-md text-sm text-slate-600 dark:text-slate-300">{soal.fileName}</p>
-        <motion.a href={directUrl} target="_blank" rel="noopener noreferrer"
-          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-          className="flex h-12 items-center gap-2 rounded-xl px-7 text-base font-bold shrink-0"
-          style={{ background: "#3E03B3", color: "#FFFFFF" }}>
-          <Download size={18} /> Unduh PDF
-        </motion.a>
       </div>
     </>
   );
