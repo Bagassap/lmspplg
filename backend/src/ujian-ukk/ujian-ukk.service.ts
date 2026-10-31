@@ -269,7 +269,7 @@ export class UjianUkkService {
     const simpan = ada
       ? await this.prisma.submisiProjectUKK.update({
           where: { id: ada.id },
-          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
+          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', pesanRevisi: null, submittedAt: new Date(), updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
           include,
         })
       : await this.prisma.submisiProjectUKK.create({
