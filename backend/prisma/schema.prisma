@@ -57,16 +57,8 @@ model User {
   isActive                   Boolean  @default(true)
   mustChangePassword         Boolean  @default(false)
   profileCompleted           Boolean  @default(false)
-  // One-time escape hatch for changePassword()'s identity-verification step
-  // (nama/tanggalLahir) — set by an admin who has already confirmed the
-  // account owner's identity themselves (e.g. in person) when the stored
-  // nama/tanggalLahir data is wrong or the student can't otherwise pass it.
-  // Consumed automatically the next time changePassword() succeeds.
   bypassIdentityVerification Boolean  @default(false)
-  // Path to the mandatory 1:1 profile photo (uploads/foto-profil/*), null
-  // until the user completes /lengkapi-foto-profil. Applies to every role.
   fotoProfil                 String?
-  // Salinan terenkripsi (AES-256-GCM) password akun SISWA agar admin/guru bisa melihatnya tanpa reset.
   passwordTampil             String?
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
@@ -107,12 +99,6 @@ model PasswordResetRequest {
   @@map("password_reset_requests")
 }
 
-// Override jadwal jendela absen (jam buka/tutup Absen Datang & Absen Pulang)
-// untuk SATU tanggal tertentu - menggantikan pola lama "tambah konstanta
-// tanggal hardcode + deploy ulang" di absensi-harian.service.ts. Field yang
-// null berarti "pakai jadwal normal hari itu" untuk batas tersebut; hanya
-// batas yang benar-benar berubah yang perlu diisi (mis. cuma
-// pulangStartMinutes untuk kasus "pulang lebih awal").
 model JadwalAbsenOverride {
   id                 String   @id @default(cuid())
   tanggal            String   @unique
@@ -152,10 +138,6 @@ model Siswa {
   tanggalLahir DateTime?
   namaOrtu     String?
 
-  // AKTIF = siswa berjalan biasa. LULUS = sudah lulus (kelas XII naik jadi
-  // alumni) — otomatis disembunyikan dari Data Siswa aktif, dan akun
-  // login-nya (jika ada) dinonaktifkan. Riwayat (absensi/nilai/tugas dst)
-  // tetap disimpan, tidak dihapus.
   status    StatusSiswa @default(AKTIF)
   lulusPada DateTime?
 
@@ -200,9 +182,6 @@ model Guru {
   @@map("guru")
 }
 
-// Mata pelajaran yang diampu tiap guru — sumber data: mapel.xlsx (diimpor
-// sekali via prisma/import-guru-mapel.ts). Dipakai untuk membatasi pilihan
-// mapel saat guru membuat Materi/Tugas (lihat MateriService/TugasService).
 model GuruMapel {
   id     String @id @default(cuid())
   guruId String
@@ -293,16 +272,11 @@ model Pengumuman {
   @@map("pengumuman")
 }
 
-// Materi murni modul/dokumen (unduhan) — mode praktik kode dipindah ke Tugas.
-// kelasId null berarti materi berlaku untuk semua kelas.
 model Materi {
   id          String  @id @default(cuid())
   judul       String
   deskripsi   String? @db.Text
   mapel       String
-  // Kelas target materi ini — kosong (tidak ada relasi) berarti "Semua Kelas".
-  // Dulu relasi 1 kelas per materi (kelasId), sekarang bisa banyak kelas
-  // sekaligus (lihat migrasi 20260821_materi_multi_kelas).
   kelasList   Kelas[]
   fileUrl     String?
   fileName    String?
@@ -321,17 +295,6 @@ enum StatusTugas {
   REVISI
 }
 
-// Tugas independen dari Materi — di-scope langsung lewat mapel (teks bebas,
-// sama seperti Materi.mapel) dan kelasList (kosong berarti berlaku untuk
-// semua kelas — dulu relasi 1 kelas per tugas lewat kelasId, sekarang bisa
-// banyak kelas sekaligus, sama seperti Materi.kelasList). deadline dipakai
-// utnuk membedakan tugas Aktif/Selesai di tampilan, mengikuti pola
-// tahapan_ukk pada fitur Jadwal & Soal UKK.
-// tipe: "SUBMIT" (guru kirim PDF, siswa unggah balik file jawaban tanpa mode
-// pengerjaan apapun), "PRAKTIK" (siswa mengetik HTML/CSS/JS langsung di
-// canvas LMS — starterHtml/Css/Js adalah kode awal), "PILIHAN_GANDA" (soal
-// pilihan ganda A-D, dikerjakan & bisa diperiksa otomatis via TugasSoal),
-// atau "ESSAY" (soal esai, siswa mengetik jawaban teks per soal).
 model Tugas {
   id          String   @id @default(cuid())
   mapel       String
@@ -357,9 +320,6 @@ model Tugas {
   @@map("tugas")
 }
 
-// Satu baris per soal pada tugas tipe PILIHAN_GANDA/ESSAY. Untuk pilihan
-// ganda, pilihanA-D + jawabanBenar diisi; untuk esai, hanya pertanyaan yang
-// dipakai. jawabanBenar tidak pernah dikirim ke siswa sebelum ia submit.
 model TugasSoal {
   id           String  @id @default(cuid())
   tugasId      String
@@ -377,9 +337,6 @@ model TugasSoal {
   @@map("tugas_soal")
 }
 
-// Submisi tugas tipe SUBMIT mengisi fileUrl/fileName; tipe PRAKTIK mengisi
-// submittedHtml/Css/Js; tipe PILIHAN_GANDA/ESSAY mengisi relasi jawaban
-// (satu TugasJawaban per TugasSoal).
 model TugasSubmisi {
   id            String      @id @default(cuid())
   tugasId       String
@@ -394,9 +351,6 @@ model TugasSubmisi {
   catatan       String?
   pesanRevisi   String?
   status        StatusTugas @default(TERKIRIM)
-  // Nilai otomatis 0-100, dibulatkan — hanya diisi untuk tugas PILIHAN_GANDA
-  // (dihitung server-side saat submit). Tipe lain (ESSAY dst.) tetap null
-  // karena butuh penilaian manual guru.
   nilai         Int?
   submittedAt   DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -477,7 +431,6 @@ model TempatMagang {
   kabupaten   String?
   namaPimpinan String?
   noWaUsaha   String?
-  // true bila tempat ditambahkan sendiri oleh siswa lewat pengajuan PKL
   dibuatSiswa Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -499,9 +452,7 @@ model PenempatanMagang {
   tempatMagang     TempatMagang     @relation(fields: [tempatMagangId], references: [id])
   guruPembimbingId String?
   guruPembimbing   Guru?            @relation(fields: [guruPembimbingId], references: [id])
-  // siswa yang mengajukan bersama-sama ke satu tempat memakai kelompokId yang sama
   kelompokId       String?
-  // bukti surat keterangan PKL yang diunggah siswa saat mengajukan
   suratKeteranganUrl  String?
   suratKeteranganNama String?
   tanggalMulai     DateTime         @db.Date
@@ -520,8 +471,6 @@ model PenempatanMagang {
   @@map("penempatan_magang")
 }
 
-// Laporan bulanan wajib PKL — 1 file (PDF/PPT presentasi) per siswa per
-// bulan selama masa penempatan aktif, bukan per hari seperti AbsensiMagang.
 model LaporDiriMagang {
   id             String           @id @default(cuid())
   siswaId        String
@@ -530,7 +479,6 @@ model LaporDiriMagang {
   penempatan     PenempatanMagang @relation(fields: [penempatanId], references: [id])
   tempatMagangId String
   tempatMagang   TempatMagang     @relation(fields: [tempatMagangId], references: [id])
-  // Format "YYYY-MM" — periode bulan laporan ini, bukan tanggal upload.
   periode        String
   fileUrl        String
   fileName       String
@@ -549,9 +497,6 @@ enum StatusLaporanAkhirMagang {
   REVISI
 }
 
-// Laporan akhir PKL — 1 file (PDF/Word/PPT) per penempatan, dikirim sekali
-// lalu direview admin/guru (Terima/Revisi). Beda dari LaporDiriMagang yang
-// bulanan & tanpa review — ini satu dokumen final yang perlu di-acc.
 model LaporanAkhirMagang {
   id             String                    @id @default(cuid())
   siswaId        String
@@ -572,10 +517,6 @@ model LaporanAkhirMagang {
   @@map("laporan_akhir_magang")
 }
 
-// Sengaja dibuat semirip mungkin dengan AbsensiHarian (1 baris per siswa per
-// hari, status HADIR/IZIN/SAKIT/ALPA + pasangan field *Pulang) supaya pola UI
-// & komponen frontend-nya bisa dipakai ulang - bedanya di-scope oleh
-// TempatMagang/PenempatanMagang, bukan Kelas.
 model AbsensiMagang {
   id             String           @id @default(cuid())
   siswaId        String
@@ -643,7 +584,6 @@ model TahapanUKK {
   hariKe     Int
   judul      String
   tanggal    DateTime @db.Date
-  // Tanggal terakhir task dibuka; null = hanya satu hari (sama dengan tanggal).
   tanggalSelesai DateTime? @db.Date
   jamMulai   String
   jamSelesai String
@@ -691,14 +631,12 @@ model SubmisiProjectUKK {
   id          String           @id @default(cuid())
   soalId      String
   soal        SoalTahapanUKK   @relation(fields: [soalId], references: [id], onDelete: Cascade)
-  // Tiap task (TahapanUKK) punya pengiriman sendiri; soalId menunjuk berkas soal umum.
   tahapanId   String?
   tahapan     TahapanUKK?      @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
   siswaId     String
   siswa       Siswa            @relation(fields: [siswaId], references: [id])
   fileUrl     String
   fileName    String
-  // Salinan di Google Drive admin (folder per kelas); null bila Drive belum dikonfigurasi / gagal.
   driveFileId    String?
   driveUrl       String?
   driveFolderUrl String?
@@ -812,13 +750,6 @@ model NilaiUKK {
   @@map("nilai_ukk")
 }
 
-// Satu baris singleton (id tetap "singleton") menyimpan saklar aktif/
-// nonaktif menu PKL & UKK untuk siswa kelas XII. Periode PKL/UKK berbeda
-// tiap tahun ajaran dan tanggalnya tidak bisa di-hardcode, jadi admin
-// menyalakannya manual dari menu Pengaturan begitu jadwal resmi tahun itu
-// dimulai — bukan berdasarkan tanggal. Guru/Admin tidak terpengaruh saklar
-// ini (selalu akses penuh, lihat Sidebar.tsx), siswa kelas X/XI juga tidak
-// terpengaruh (tetap terkunci apa pun nilai saklar ini).
 model PengaturanSistem {
   id          String   @id
   magangAktif Boolean  @default(false)
