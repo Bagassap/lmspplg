@@ -7,6 +7,8 @@ import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
 import { GoogleDriveService } from '../google-drive/google-drive.service';
 import { NotificationService } from '../notification/notification.service';
+import { unlink } from 'fs';
+import { join } from 'path';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
@@ -136,6 +138,7 @@ export class UjianUkkService {
 
   findAllSubmisi() {
     return this.prisma.submisiProjectUKK.findMany({
+      where: { status: { not: 'REVISI' } },
       orderBy: { submittedAt: 'desc' },
       include: {
         soal:  { select: { id: true, judul: true } },
@@ -154,6 +157,7 @@ export class UjianUkkService {
   submisiUntukZip(filter: { tahapanId?: string; kelasId?: string }) {
     return this.prisma.submisiProjectUKK.findMany({
       where: {
+        status: { not: 'REVISI' },
         ...(filter.tahapanId ? { tahapanId: filter.tahapanId } : {}),
         ...(filter.kelasId ? { siswa: { kelasId: filter.kelasId } } : {}),
       },
@@ -204,7 +208,7 @@ export class UjianUkkService {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) return [];
     return this.prisma.submisiProjectUKK.findMany({
-      where: { siswaId: siswa.id },
+      where: { siswaId: siswa.id, status: { not: 'REVISI' } },
       orderBy: { submittedAt: 'desc' },
       include: {
         soal: { select: { id: true, judul: true } },
@@ -240,6 +244,7 @@ export class UjianUkkService {
       where: {
         siswaId: siswa.id,
         tahapanId: { not: task.id },
+        status: { not: 'REVISI' },
         tahapan: { tanggal: { lte: akhir }, OR: [{ tanggalSelesai: { gte: task.tanggal } }, { tanggalSelesai: null, tanggal: { gte: task.tanggal } }] },
       },
       include: { tahapan: { select: { judul: true } } },
@@ -305,10 +310,12 @@ export class UjianUkkService {
     if (submisi.status === 'REVISI' && status === 'DITERIMA') throw new BadRequestException('Pengiriman yang sudah ditolak tidak bisa diterima, tunggu siswa mengirim ulang');
     const alasan = status === 'REVISI' ? (pesanRevisi ?? '').trim() : '';
     if (status === 'REVISI' && !alasan) throw new BadRequestException('Alasan penolakan wajib diisi');
-    const hasil = await this.prisma.submisiProjectUKK.update({
-      where: { id },
-      data: { status, pesanRevisi: status === 'REVISI' ? (alasan || null) : null },
-    });
+    const hasil = status === 'REVISI'
+      ? await this.prisma.submisiProjectUKK.delete({ where: { id } })
+      : await this.prisma.submisiProjectUKK.update({ where: { id }, data: { status, pesanRevisi: null } });
+    if (status === 'REVISI' && submisi.fileUrl.startsWith('/uploads/')) {
+      unlink(join(process.cwd(), submisi.fileUrl), () => undefined);
+    }
     const judul = submisi.tahapan?.judul ?? 'UKK';
     if (submisi.siswa?.userId) {
       void this.notificationService.create(

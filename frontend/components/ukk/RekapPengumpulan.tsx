@@ -42,7 +42,7 @@ function labelBerkas(url: string) {
   return /\.(pdf|png|jpe?g|webp|gif)$/i.test(url) ? "Buka" : "Unduh";
 }
 
-export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]; tahapanId?: string }) {
+export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: SubmisiRow[]; tahapanId?: string }) {
   const toast = useToast();
   async function salin(teks: string, pesan: string) {
     try { await navigator.clipboard.writeText(teks); toast.success(pesan, ""); }
@@ -57,6 +57,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
   const [alasan, setAlasan] = useState("");
   const [proses, setProses] = useState<string | null>(null);
   const statusOf = (s: SubmisiRow): "TERKIRIM" | "DITERIMA" | "REVISI" => lokal[s.id]?.status ?? s.status ?? "TERKIRIM";
+  const submisi = useMemo(() => semua.filter((s) => (lokal[s.id]?.status ?? s.status) !== "REVISI"), [semua, lokal]);
 
   async function putuskan(id: string, status: "DITERIMA" | "REVISI", pesan?: string) {
     setProses(id);
