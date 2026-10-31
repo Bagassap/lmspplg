@@ -1,17 +1,22 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
-import { TipeUKK } from '../../generated/prisma/client';
+import { NotificationType, TipeUKK } from '../../generated/prisma/client';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
 import { GoogleDriveService } from '../google-drive/google-drive.service';
+import { NotificationService } from '../notification/notification.service';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
 @Injectable()
 export class UjianUkkService {
-  constructor(private readonly prisma: PrismaService, private readonly drive: GoogleDriveService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly drive: GoogleDriveService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   findAllTahapan() {
     return this.prisma.tahapanUKK.findMany({
@@ -250,6 +255,12 @@ export class UjianUkkService {
       tahapan: { select: { id: true, judul: true } },
     };
     const ada = await this.prisma.submisiProjectUKK.findFirst({ where: { tahapanId: task.id, siswaId: siswa.id } });
+    if (ada && ada.status === 'TERKIRIM') {
+      throw new BadRequestException(`Pengiriman task "${task.judul}" masih menunggu persetujuan admin. Kamu bisa mengirim lagi jika file ditolak.`);
+    }
+    if (ada && ada.status === 'DITERIMA') {
+      throw new BadRequestException(`Pengiriman task "${task.judul}" sudah diterima admin.`);
+    }
     const simpan = ada
       ? await this.prisma.submisiProjectUKK.update({
           where: { id: ada.id },
@@ -284,15 +295,38 @@ export class UjianUkkService {
   }
 
   async updateStatusSubmisi(id: string, status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', pesanRevisi?: string) {
-    const submisi = await this.prisma.submisiProjectUKK.findUnique({ where: { id } });
-    if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
-    return this.prisma.submisiProjectUKK.update({
+    if (status !== 'DITERIMA' && status !== 'REVISI') throw new BadRequestException('Status harus DITERIMA atau REVISI');
+    const submisi = await this.prisma.submisiProjectUKK.findUnique({
       where: { id },
-      data: {
-        status,
-        pesanRevisi: status === 'REVISI' ? (pesanRevisi ?? null) : null,
-      },
+      include: { tahapan: { select: { judul: true } }, siswa: { select: { userId: true } } },
     });
+    if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    const alasan = status === 'REVISI' ? (pesanRevisi ?? '').trim() : '';
+    const hasil = await this.prisma.submisiProjectUKK.update({
+      where: { id },
+      data: { status, pesanRevisi: status === 'REVISI' ? (alasan || null) : null },
+    });
+    const judul = submisi.tahapan?.judul ?? 'UKK';
+    if (submisi.siswa?.userId) {
+      void this.notificationService.create(
+        status === 'DITERIMA'
+          ? {
+              userId: submisi.siswa.userId,
+              title: 'Project UKK diterima',
+              message: `Pengiriman task "${judul}" telah diterima admin.`,
+              type: NotificationType.UKK,
+              link: '/ujian-ukk/jadwal-soal',
+            }
+          : {
+              userId: submisi.siswa.userId,
+              title: 'Project UKK ditolak',
+              message: `Pengiriman task "${judul}" ditolak${alasan ? `: ${alasan}` : ''}. Silakan kirim ulang.`,
+              type: NotificationType.UKK,
+              link: '/ujian-ukk/jadwal-soal',
+            },
+      ).catch(() => undefined);
+    }
+    return hasil;
   }
 
   findAllDiskusi() {

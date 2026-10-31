@@ -29,8 +29,8 @@ function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", {
 
 function statusInfo(s: "TERKIRIM"|"DITERIMA"|"REVISI") {
   if (s === "DITERIMA") return { bg:"#F1EDFA", color:"#3E03B3", label:"Diterima",      icon: <CheckCircle size={10}/> };
-  if (s === "REVISI")   return { bg:"#FFFFFF", color:"#3E03B3", label:"Perlu Revisi",  icon: <AlertCircle size={10}/> };
-  return                       { bg:"#F1EDFA", color:"#3E03B3", label:"Menunggu Review", icon: <Clock size={10}/> };
+  if (s === "REVISI")   return { bg:"#FFFFFF", color:"#3E03B3", label:"Ditolak",  icon: <AlertCircle size={10}/> };
+  return                       { bg:"#F1EDFA", color:"#3E03B3", label:"Menunggu Persetujuan", icon: <Clock size={10}/> };
 }
 
 const ROW_PALETTES = [
@@ -465,9 +465,9 @@ export default function SiswaJadwalSoalPage() {
                         const btn = isDiterima
                           ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>setDetailTarget(myS!) }
                           : isRevisi
-                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#F2F2F2", clr:"#0F172A", border:"#0F172A", onClick:()=>setRevisiModal(myS!) }
+                          ? { label:"Ditolak", icon:<AlertCircle size={11}/>, bg:"#F2F2F2", clr:"#0F172A", border:"#0F172A", onClick:()=>setRevisiModal(myS!) }
                           : isTerkirim
-                          ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#3E03B3", onClick:()=>setDetailTarget(myS!) }
+                          ? { label:"Menunggu", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#3E03B3", onClick:()=>setDetailTarget(myS!) }
                           : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon:<Send size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>openSubmit(t) };
 
                         return (
@@ -570,9 +570,9 @@ export default function SiswaJadwalSoalPage() {
                     const btn = isDiterima
                       ? { label: "Diterima", icon: <CheckCircle size={12} />, bg: "#F1EDFA", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
                       : isRevisi
-                      ? { label: "Revisi", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
+                      ? { label: "Ditolak", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
                       : isTerkirim
-                      ? { label: "Terkirim", icon: <CheckCircle size={12} />, bg: "#EEF2FF", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
+                      ? { label: "Menunggu", icon: <CheckCircle size={12} />, bg: "#EEF2FF", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
                       : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon: <Send size={12} />, bg: statusPengumpulan(t) === "buka" ? APP_ACCENT : "#64748B", clr: "#FFFFFF", onClick: () => openSubmit(t) };
                     return (
                       <li key={t.id} className="flex items-center gap-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
@@ -669,9 +669,9 @@ export default function SiswaJadwalSoalPage() {
                   const btn = isDiterima
                     ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
                     : isRevisi
-                    ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F2F2F2", clr: accent ? "#fff" : "#0F172A", onClick:()=>setRevisiModal(myS!) }
+                    ? { label:"Ditolak", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F2F2F2", clr: accent ? "#fff" : "#0F172A", onClick:()=>setRevisiModal(myS!) }
                     : isTerkirim
-                    ? { label:"Terkirim", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
+                    ? { label:"Menunggu", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
                     : { label: statusPengumpulan(t) === "buka" ? "Kirim" : statusPengumpulan(t) === "belum" ? "Belum dibuka" : "Ditutup", icon:<Send size={11}/>, bg: accent ? "#2D0281" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>openSubmit(t) };
 
                   return (
@@ -744,7 +744,7 @@ export default function SiswaJadwalSoalPage() {
                     </div>
                     <div>
                       <p className={`text-[10px] font-bold uppercase tracking-widest ${appMode ? "text-slate-500" : "text-white/60"}`}>
-                        {detailTarget.status==="DITERIMA" ? "Project Diterima ✓" : "Project Terkirim"}
+                        {detailTarget.status==="DITERIMA" ? "Project Diterima ✓" : "Menunggu Persetujuan Admin"}
                       </p>
                       <p className={`text-base font-extrabold leading-tight ${appMode ? "text-slate-900" : "text-white"}`}>{detailTarget.soal?.judul}</p>
                     </div>
@@ -767,7 +767,7 @@ export default function SiswaJadwalSoalPage() {
                     <span className="text-xs font-bold px-2.5 py-1 rounded-lg"
                       style={{backgroundColor: detailTarget.status==="DITERIMA"?"#F1EDFA":"#F1EDFA",
                               color: detailTarget.status==="DITERIMA"?"#F26A3D":"#3E03B3"}}>
-                      {detailTarget.status==="DITERIMA" ? "Diterima" : "Menunggu Review"}
+                      {detailTarget.status==="DITERIMA" ? "Diterima" : "Menunggu Persetujuan"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700">
@@ -812,7 +812,7 @@ export default function SiswaJadwalSoalPage() {
                       <AlertCircle size={18} className="text-[#000000] dark:text-[#C4B5FD]"/>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-[#000000]/70 uppercase tracking-widest">Perlu Revisi</p>
+                      <p className="text-[10px] font-bold text-[#000000]/70 uppercase tracking-widest">Ditolak</p>
                       <p className="text-base font-extrabold text-[#000000] dark:text-[#C4B5FD] leading-tight">{revisiModal.soal?.judul}</p>
                     </div>
                   </div>
@@ -828,7 +828,7 @@ export default function SiswaJadwalSoalPage() {
                     <div>
                       <p className="text-xs font-bold text-[#000000] dark:text-[#C4B5FD] mb-1.5">Catatan dari Penguji</p>
                       <p className="text-sm text-[#000000] dark:text-[#C4B5FD] leading-relaxed whitespace-pre-line">
-                        {revisiModal.pesanRevisi || "Silakan perbaiki project kamu dan kirim ulang."}
+                        {revisiModal.pesanRevisi || "Project ditolak admin. Silakan perbaiki lalu kirim ulang."}
                       </p>
                     </div>
                   </div>
