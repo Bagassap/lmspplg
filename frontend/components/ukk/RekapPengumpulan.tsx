@@ -191,7 +191,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
                       {proses === s.id ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Terima
                     </button>
                   )}
-                  {statusOf(s) !== "REVISI" && (
+                  {statusOf(s) === "TERKIRIM" && (
                     <button type="button" disabled={proses === s.id} onClick={() => { setTolak({ id: s.id, nama }); setAlasan(""); }}
                       className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#FFE9E2] px-3 py-1.5 text-[11px] font-bold text-[#E8562B] disabled:opacity-50">
                       <X size={13} /> Tolak

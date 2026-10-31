@@ -301,6 +301,7 @@ export class UjianUkkService {
       include: { tahapan: { select: { judul: true } }, siswa: { select: { userId: true } } },
     });
     if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
+    if (submisi.status === 'DITERIMA' && status === 'REVISI') throw new BadRequestException('Pengiriman yang sudah diterima tidak bisa ditolak');
     const alasan = status === 'REVISI' ? (pesanRevisi ?? '').trim() : '';
     const hasil = await this.prisma.submisiProjectUKK.update({
       where: { id },
