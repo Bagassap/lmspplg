@@ -56,7 +56,7 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
   const [tolak, setTolak] = useState<{ id: string; nama: string } | null>(null);
   const [alasan, setAlasan] = useState("");
   const [proses, setProses] = useState<string | null>(null);
-  const statusOf = (s: SubmisiRow) => lokal[s.id]?.status ?? s.status ?? "TERKIRIM";
+  const statusOf = (s: SubmisiRow): "TERKIRIM" | "DITERIMA" | "REVISI" => lokal[s.id]?.status ?? s.status ?? "TERKIRIM";
   const pesanOf = (s: SubmisiRow) => (lokal[s.id] ? lokal[s.id].pesanRevisi : s.pesanRevisi) ?? null;
 
   async function putuskan(id: string, status: "DITERIMA" | "REVISI", pesan?: string) {
