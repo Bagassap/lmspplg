@@ -271,11 +271,11 @@ export function RekapPengumpulan({ submisi, tahapanId }: { submisi: SubmisiRow[]
           <div className="w-full max-w-md rounded-t-[28px] bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl sm:p-6">
             <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Tolak pengiriman {tolak.nama}?</h3>
             <p className="mt-1 text-xs text-slate-500">Siswa akan menerima notifikasi dan wajib mengirim ulang file.</p>
-            <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Alasan penolakan (opsional)"
+            <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Alasan penolakan (wajib diisi)"
               className="mt-3 w-full resize-none rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-800 outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:text-white" />
             <div className="mt-4 flex gap-2">
               <button type="button" onClick={() => setTolak(null)} className="flex-1 rounded-xl bg-slate-100 py-2.5 text-sm font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">Batal</button>
-              <button type="button" disabled={proses === tolak.id} onClick={() => putuskan(tolak.id, "REVISI", alasan)}
+              <button type="button" disabled={proses === tolak.id || !alasan.trim()} onClick={() => putuskan(tolak.id, "REVISI", alasan.trim())}
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#E8562B] py-2.5 text-sm font-bold text-white disabled:opacity-50">
                 {proses === tolak.id && <Loader2 size={14} className="animate-spin" />} Tolak
               </button>

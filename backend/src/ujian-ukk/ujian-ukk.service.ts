@@ -304,6 +304,7 @@ export class UjianUkkService {
     if (submisi.status === 'DITERIMA' && status === 'REVISI') throw new BadRequestException('Pengiriman yang sudah diterima tidak bisa ditolak');
     if (submisi.status === 'REVISI' && status === 'DITERIMA') throw new BadRequestException('Pengiriman yang sudah ditolak tidak bisa diterima, tunggu siswa mengirim ulang');
     const alasan = status === 'REVISI' ? (pesanRevisi ?? '').trim() : '';
+    if (status === 'REVISI' && !alasan) throw new BadRequestException('Alasan penolakan wajib diisi');
     const hasil = await this.prisma.submisiProjectUKK.update({
       where: { id },
       data: { status, pesanRevisi: status === 'REVISI' ? (alasan || null) : null },
@@ -322,7 +323,7 @@ export class UjianUkkService {
           : {
               userId: submisi.siswa.userId,
               title: 'Project UKK ditolak',
-              message: `Pengiriman task "${judul}" ditolak${alasan ? `: ${alasan}` : ''}. Silakan kirim ulang.`,
+              message: `Pengiriman task "${judul}" ditolak. Alasan: ${alasan}. Silakan kirim ulang.`,
               type: NotificationType.UKK,
               link: '/ujian-ukk/jadwal-soal',
             },
