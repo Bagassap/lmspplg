@@ -121,6 +121,14 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
+    // Siswa lama (password diganti sebelum ada fitur "lihat password"): salin terenkripsi diisi
+    // otomatis dari password yang baru saja terbukti benar ini. Tidak menghambat login bila gagal.
+    if (user.role === 'SISWA' && !user.passwordTampil) {
+      this.prisma.user
+        .update({ where: { id: user.id }, data: { passwordTampil: enkripsiPassword(dto.password) } })
+        .catch(() => {});
+    }
+
     const token = this.signToken(user);
 
     return {
