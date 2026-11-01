@@ -42,17 +42,16 @@ function jakartaWeekday(): number {
 }
 
 export function Sidebar({
-  user, open, collapsed, onClose,
+  user, open, collapsed, hover, onHoverChange, onClose,
 }: {
   user: UserPayload;
   open: boolean;
   collapsed: boolean;
+  hover: boolean;
+  onHoverChange: (hover: boolean) => void;
   onClose: () => void;
-  onToggleCollapse: () => void;
 }) {
   const pathname = usePathname();
-  const [hoverPath, setHoverPath] = useState<string | null>(null);
-  const hover = hoverPath === pathname;
   const compact = collapsed && !hover;
   const { items, pendingResetCount } = useDashboardMenu(user);
   const PRIMARY  = SIDEBAR_ACCENT;
@@ -84,8 +83,8 @@ export function Sidebar({
 
   return (
     <aside
-      onMouseEnter={() => { if (collapsed) { setHoverPath(pathname); setFlyout(null); } }}
-      onMouseLeave={() => setHoverPath(null)}
+      onMouseEnter={() => { if (collapsed) { onHoverChange(true); setFlyout(null); } }}
+      onMouseLeave={() => onHoverChange(false)}
       className={[
         "fixed inset-y-0 left-0 z-40 flex flex-col overflow-x-hidden whitespace-nowrap bg-white transition-all duration-300 ease-in-out",
         collapsed && hover

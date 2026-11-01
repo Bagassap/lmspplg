@@ -19,6 +19,8 @@ export function DashboardShell({
   const sidebarCollapsed = true;
   const pathname = usePathname();
   const appMode = useIsAppMode();
+  const [hoverPath, setHoverPath] = useState<string | null>(null);
+  const sidebarHover = hoverPath === pathname;
 
   useEffect(() => {
     if (!sessionStorage.getItem("lms_session")) {
@@ -38,14 +40,15 @@ export function DashboardShell({
         user={user}
         open={false}
         collapsed={sidebarCollapsed}
+        hover={sidebarHover}
+        onHoverChange={(h) => setHoverPath(h ? pathname : null)}
         onClose={() => {}}
-        onToggleCollapse={() => {}}
       />
 
       <div
         className={[
           "flex min-w-0 flex-1 flex-col bg-surface transition-[padding] duration-300 ease-in-out dark:bg-[#0F172A]",
-          sidebarCollapsed ? "lg:pl-18" : "lg:pl-64",
+          sidebarCollapsed && !sidebarHover ? "lg:pl-18" : "lg:pl-64",
         ].join(" ")}
       >
         <ImpersonationBanner impersonatedBy={user.impersonatedBy} nama={user.nama} />
