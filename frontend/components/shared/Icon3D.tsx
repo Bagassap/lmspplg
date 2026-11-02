@@ -3,11 +3,11 @@ import type { CSSProperties, ElementType } from "react";
 export type Tone3D = "indigo" | "emerald" | "amber" | "violet" | "sky";
 
 export const TONE_3D: Record<Tone3D, [string, string]> = {
-  indigo: ["#7C3AED", "#6B21A8"],
-  emerald: ["#10B981", "#0F766E"],
-  amber: ["#F59E0B", "#EA580C"],
-  violet: ["#7C3AED", "#6B21A8"],
-  sky: ["#38BDF8", "#2563EB"],
+  indigo: ["#8B5CF6", "#EFE9FD"],
+  emerald: ["#22A06B", "#E4F5EC"],
+  amber: ["#F26A3D", "#FDEDE4"],
+  violet: ["#8B5CF6", "#EFE9FD"],
+  sky: ["#3B82F6", "#E7EFFE"],
 };
 
 export const TONE_ORDER: Tone3D[] = ["sky", "emerald", "violet", "amber"];
@@ -56,10 +56,12 @@ export function toneFromColor(color: string | undefined | null, fallback: Tone3D
 }
 
 export function icon3dStyle(tone: Tone3D): CSSProperties {
-  const [c1, c2] = TONE_3D[tone];
+  const [warna, latar] = TONE_3D[tone];
   return {
-    background: `linear-gradient(155deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 55%), linear-gradient(135deg, ${c1}, ${c2})`,
-    boxShadow: `0 5px 10px -3px ${c1}80, inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(0,0,0,0.18)`,
+    background: latar,
+    color: warna,
+    boxShadow: "none",
+    ["--icon-tile-color" as string]: warna,
   };
 }
 
@@ -71,10 +73,10 @@ export function Icon3D({
 }) {
   return (
     <span
-      className={`relative flex shrink-0 items-center justify-center text-white ${rounded} ${className}`}
+      className={`relative flex shrink-0 items-center justify-center ${rounded} ${className}`}
       style={{ width: size, height: size, ...icon3dStyle(tone) }}
     >
-      {Icon && <Icon size={iconSize ?? Math.round(size * 0.44)} color="#fff" />}
+      {Icon && <Icon size={iconSize ?? Math.round(size * 0.44)} />}
       {children}
     </span>
   );

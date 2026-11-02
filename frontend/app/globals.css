@@ -472,3 +472,9 @@ html.dark [class*="dark:text-white"] { color: #ffffff !important; }
 html.dark :is([style*="color:#3E03B3" i], [style*="color: #3E03B3" i], [style*="color: rgb(62, 3, 179)"]):not([style*="background"]):not(.bg-white):not([class*="bg-[#3E03B3]"]) { color: #c4b5fd !important; }
 
 html.dark [style*="color:#3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color:#3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color:#3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color:#3E03B3" i][style*="#E2E8F0" i], html.dark [style*="color: #3E03B3" i][style*="#F1EDFA" i], html.dark [style*="color: #3E03B3" i][style*="#F1F5F9" i], html.dark [style*="color: #3E03B3" i][style*="#FFE9E2" i], html.dark [style*="color: #3E03B3" i][style*="#E2E8F0" i] { color: #c4b5fd !important; }
+
+[style*="--icon-tile-color"] svg {
+  stroke: var(--icon-tile-color) !important;
+  color: var(--icon-tile-color) !important;
+  stroke-width: 1.75;
+}

@@ -49,9 +49,10 @@ function rotate(root: ParentNode) {
         const tone = TONE_ORDER[order % TONE_ORDER.length];
         const st = icon3dStyle(tone);
         b.dataset.tone = "1";
-        b.style.background = String(st.background ?? `linear-gradient(135deg, ${TONE_3D[tone][0]}, ${TONE_3D[tone][1]})`);
-        if (st.boxShadow) b.style.boxShadow = String(st.boxShadow);
-        b.style.color = "#fff";
+        b.style.background = String(st.background);
+        b.style.boxShadow = "none";
+        b.style.color = TONE_3D[tone][0];
+        b.style.setProperty("--icon-tile-color", TONE_3D[tone][0]);
       });
       return;
     }
