@@ -487,3 +487,5 @@ html.dark [style*="color:#3E03B3" i][style*="#F1EDFA" i], html.dark [style*="col
   color: #8B5CF6 !important;
   stroke-width: 1.75;
 }
+
+html body [class*="text-white"][style*="background-color"]:not(#x):not(#y) { color: #ffffff !important; }
