@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
+import { Code2, Palette, FileCode, Play, RotateCcw, Maximize2, Minimize2, Eye } from "lucide-react";
 
 type Tab = "html" | "css" | "js";
 
@@ -55,6 +55,7 @@ export function CodePracticeCanvas({
   const [srcDoc, setSrcDoc] = useState(() => buildSrcDoc(initialHtml, initialCss, initialJs));
   const [runKey, setRunKey] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
+  const [lihatHasil, setLihatHasil] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export function CodePracticeCanvas({
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setSrcDoc(buildSrcDoc(html, css, js));
     setRunKey((k) => k + 1);
+    setLihatHasil(true);
   }
 
   function reset() {
@@ -86,13 +88,18 @@ export function CodePracticeCanvas({
           {TABS.map((t) => {
             const active = tab === t.key;
             return (
-              <button key={t.key} type="button" onClick={() => setTab(t.key)}
-                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all sm:px-3 ${active ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
-                style={active ? { background: "#3E03B3" } : {}}>
+              <button key={t.key} type="button" onClick={() => { setTab(t.key); setLihatHasil(false); }}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all sm:px-3 ${active && !lihatHasil ? "text-white shadow-sm" : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"}`}
+                style={active && !lihatHasil ? { background: "#3E03B3" } : {}}>
                 <t.icon size={13} /> {t.label}
               </button>
             );
           })}
+          <button type="button" onClick={() => setLihatHasil(true)}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all md:hidden ${lihatHasil ? "text-white shadow-sm" : "text-slate-500 dark:text-slate-400"}`}
+            style={lihatHasil ? { background: "#3E03B3" } : {}}>
+            <Eye size={13} /> Hasil
+          </button>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <button type="button" onClick={reset}
@@ -111,20 +118,20 @@ export function CodePracticeCanvas({
         </div>
       </div>
 
-      <div className={`grid flex-1 grid-cols-1 grid-rows-[minmax(260px,1fr)_minmax(260px,1fr)] md:grid-cols-2 md:grid-rows-1 ${fullscreen ? "" : "min-h-130 md:min-h-(--canvas-h)"}`} style={fullscreen ? undefined : ({ "--canvas-h": `${minHeight}px` } as React.CSSProperties)}>
+      <div className={`grid min-h-0 flex-1 grid-cols-1 grid-rows-1 md:grid-cols-2 ${fullscreen ? "" : "min-h-[55dvh] md:min-h-(--canvas-h)"}`} style={fullscreen ? undefined : ({ "--canvas-h": `${minHeight}px` } as React.CSSProperties)}>
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
           spellCheck={false}
           placeholder={tab === "html" ? "<h1>Halo dunia!</h1>" : tab === "css" ? "h1 { color: #3E03B3; }" : "console.log('halo');"}
-          className="h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100"
+          className={`${lihatHasil ? "max-md:hidden " : ""}h-full w-full resize-none border-b border-slate-100 bg-slate-50/40 p-3.5 font-mono text-[13px] leading-relaxed text-slate-800 outline-none md:border-b-0 md:border-r dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100`}
         />
         <iframe
           key={runKey}
           title="Hasil"
           srcDoc={srcDoc}
           sandbox="allow-scripts"
-          className="h-full w-full bg-white"
+          className={`${lihatHasil ? "" : "max-md:hidden "}h-full w-full bg-white`}
         />
       </div>
     </div>

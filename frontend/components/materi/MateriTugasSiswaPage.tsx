@@ -49,6 +49,10 @@ export function MateriTugasSiswaPage() {
   useEffect(() => { loadAll(); }, [loadAll]);
 
   function handleKumpulkan(t: TugasItem) {
+    if (t.tipe === "PRAKTIK") {
+      router.push(`/siswa/tugas/${t.id}/praktik`);
+      return;
+    }
     setSubmitTarget(t);
   }
 
