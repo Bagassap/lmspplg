@@ -55,8 +55,8 @@ function StatTrigger({
     <motion.button type="button" onClick={onOpen}
       whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}
       className="flex w-full items-center gap-3 rounded-2xl border-2 border-slate-300 bg-slate-100 p-3 text-left shadow-sm transition-shadow hover:shadow-md dark:border-slate-500 dark:bg-slate-700 dark:shadow-none">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: gradient }}>
-        <Icon size={17} className="text-white" />
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: pastel, color: accent }}>
+        <Icon size={17} />
       </span>
       <div className="flex min-w-0 flex-1 items-baseline gap-1.5 whitespace-nowrap">
         <span className="text-xl font-extrabold tabular-nums text-slate-800 dark:text-white">{items.length}</span>

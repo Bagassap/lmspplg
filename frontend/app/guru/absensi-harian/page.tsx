@@ -416,8 +416,8 @@ export default function GuruAbsensiHarianPage() {
                     <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
                       style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
                       className="relative flex w-full items-center gap-2.5 overflow-hidden rounded-2xl border-2 px-3 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: warna }}>
-                        <BookOpen size={17} className="text-white" />
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: `${warna}33`, color: warna }}>
+                        <BookOpen size={17} />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
@@ -751,7 +751,7 @@ export default function GuruAbsensiHarianPage() {
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: appMode ? "#3E03B3" : "#3E03B3" }}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-primary" style={{ background: "#EFE9FD" }}>
                       <FileText size={16} />
                     </span>
                     <div>

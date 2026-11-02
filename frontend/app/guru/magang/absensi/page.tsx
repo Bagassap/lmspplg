@@ -876,7 +876,7 @@ export default function GuruMagangAbsensiPage() {
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: appMode ? "#3E03B3" : "#3E03B3" }}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-primary" style={{ background: "#EFE9FD" }}>
                       <FileText size={16} />
                     </span>
                     <div>
