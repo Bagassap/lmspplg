@@ -29,7 +29,7 @@ export function UnduhDataSiswaCard({
   return (
     <div className="flex flex-1 flex-col">
       <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
+        <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
           <FileText size={18} />
         </span>
         <div>

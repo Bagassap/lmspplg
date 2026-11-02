@@ -478,3 +478,12 @@ html.dark [style*="color:#3E03B3" i][style*="#F1EDFA" i], html.dark [style*="col
   color: var(--icon-tile-color) !important;
   stroke-width: 1.75;
 }
+
+.icon-tile {
+  color: #8B5CF6;
+}
+.icon-tile svg {
+  stroke: #8B5CF6 !important;
+  color: #8B5CF6 !important;
+  stroke-width: 1.75;
+}

@@ -273,7 +273,7 @@ export function JadwalAbsenCard() {
     <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
+          <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
             <CalendarClock size={18} />
           </span>
           <div>

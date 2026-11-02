@@ -144,7 +144,7 @@ export default function AdminDataSiswaPage() {
             <button onClick={() => setKenaikanOpen(true)}
               className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 text-left transition-colors hover:border-[#8F6DD3] hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-600">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "#3E03B3" }}>
+                <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
                   <ArrowUpCircle size={18} />
                 </span>
                 <div>

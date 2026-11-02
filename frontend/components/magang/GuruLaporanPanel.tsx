@@ -67,7 +67,7 @@ export function GuruLaporanPanel() {
       <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "#3E03B3" }}>
+            <span className="icon-tile flex h-8 w-8 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
               <Filter size={14} className="text-white" />
             </span>
             <p className="text-sm font-bold text-slate-800 dark:text-white">Daftar Laporan Akhir <span className="font-medium text-slate-400">({filtered.length})</span></p>

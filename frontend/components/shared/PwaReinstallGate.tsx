@@ -46,7 +46,7 @@ export function PwaReinstallGate() {
         <ol className="mt-4 space-y-2.5 text-left">
           {langkah.map((l, i) => (
             <li key={i} className="flex items-start gap-3 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><l.icon size={15} /></span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#EFE9FD] icon-tile"><l.icon size={15} /></span>
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200"><b>{i + 1}.</b> {l.teks}</span>
             </li>
           ))}

@@ -197,7 +197,7 @@ export function Sidebar({
                       <span
                         className={[
                           "relative flex h-7 w-7 items-center justify-center rounded-lg",
-                          active ? "bg-[#3E03B3]" : "",
+                          active ? "bg-[#EFE9FD] icon-tile" : "",
                         ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
@@ -228,7 +228,7 @@ export function Sidebar({
                       <span
                         className={[
                           "relative flex h-7 w-7 items-center justify-center rounded-lg",
-                          active ? "bg-[#3E03B3]" : "",
+                          active ? "bg-[#EFE9FD] icon-tile" : "",
                         ].join(" ")}
                       >
                         <item.icon size={16} style={{ color: active ? "#fff" : "#94a3b8" }} />
@@ -255,7 +255,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                      active ? "bg-[#3E03B3]" : "",
+                      active ? "bg-[#EFE9FD] icon-tile" : "",
                     ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}
@@ -373,7 +373,7 @@ export function Sidebar({
                   <span
                     className={[
                       "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                      active ? "bg-[#3E03B3]" : "",
+                      active ? "bg-[#EFE9FD] icon-tile" : "",
                     ].join(" ")}
                   >
                     {!active && <span className="absolute inset-0 rounded-xl bg-slate-100 dark:bg-white/[0.07]" />}

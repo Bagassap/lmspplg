@@ -154,7 +154,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-slate-700">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EFE9FD] icon-tile dark:bg-slate-700">
                     <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">
@@ -255,7 +255,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
               )}
               {me.loginId && (
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3E03B3] dark:bg-slate-700">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EFE9FD] icon-tile dark:bg-slate-700">
                     <IdCard size={15} className="text-[#3E03B3]" />
                   </div>
                   <div className="min-w-0">

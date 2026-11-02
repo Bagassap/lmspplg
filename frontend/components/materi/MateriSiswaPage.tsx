@@ -72,7 +72,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
       <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
         <div className="px-5 pt-5 pb-0" style={{ background: "#F1F5F9" }}>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#3E03B3" }}>
+            <div className="icon-tile w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#EFE9FD" }}>
               <BookOpen size={14} className="text-white" />
             </div>
             <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>

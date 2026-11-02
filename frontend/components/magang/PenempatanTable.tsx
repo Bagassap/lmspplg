@@ -41,7 +41,7 @@ export function PenempatanTable({
     const tanpaGuru = target.filter((x) => !x.guruPembimbing).length;
     const isi = (
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><Building2 size={16} /></span>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EFE9FD] icon-tile"><Building2 size={16} /></span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-extrabold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
           <p className="truncate text-[11px] text-slate-600 dark:text-slate-300">{semua.length} siswa · {tanpaGuru > 0 ? `${tanpaGuru} belum punya pembimbing` : "semua sudah punya pembimbing"}</p>

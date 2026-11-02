@@ -308,7 +308,7 @@ export function PengajuanPklPage({ list, onChanged }: { list: PenempatanMagang[]
 
             {modeBaru && baruLengkap && (
               <div className="flex items-start gap-3 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><Building2 size={16} /></span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EFE9FD] icon-tile"><Building2 size={16} /></span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{baru.namaTempat}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-300">Dukuh {baru.dukuh}, Desa {baru.desa}, Kec. {baru.kecamatan}, Kab. {baru.kabupaten}</p>

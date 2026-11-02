@@ -112,7 +112,7 @@ export function MateriListPage({
         <div className="px-5 pt-5 pb-0" style={{ background: "#F1F5F9" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#3E03B3" }}>
+              <div className="icon-tile w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "#EFE9FD" }}>
                 <BookOpen size={14} className="text-white" />
               </div>
               <p className="text-base font-bold text-slate-800 dark:text-slate-100">Daftar Materi</p>
