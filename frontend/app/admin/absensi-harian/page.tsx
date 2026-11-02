@@ -516,9 +516,9 @@ export default function AdminAbsensiHarianPage() {
                   <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="flex flex-col gap-2">
                 {RANGE_MODE_CARDS.map((opt) => (
-                  <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                  <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                     active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
                 ))}
               </div>
