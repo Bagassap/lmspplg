@@ -271,7 +271,7 @@ function MobileSiswaCard({
   );
 }
 
-const KELAS_WARNA = ["#0EA5E9", "#10B981", "#8B5CF6", "#F59E0B"];
+const KELAS_TONE = ["sky", "emerald", "violet", "amber"] as const;
 
 export default function AdminAbsensiHarianPage() {
   const router = useRouter();
@@ -378,10 +378,10 @@ export default function AdminAbsensiHarianPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-3">
-          <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem]">
+          <div className="flex min-w-0 flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
                 <div className="flex items-center gap-2">
                   <button onClick={() => setShowKelola(true)}
@@ -403,45 +403,27 @@ export default function AdminAbsensiHarianPage() {
               </div>
 
               {kelasList.length === 0 ? (
-                <div className="grid grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 gap-2">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
+                    <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 gap-2">
                   {kelasPageSlice.map((k, i) => {
                     const s = kelasStat(k);
-                    const isSelected = k.id === selectedId;
-                    const warna = KELAS_WARNA[i % KELAS_WARNA.length];
                     return (
-                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                        style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
-                        className="relative flex w-full items-center gap-2.5 overflow-hidden rounded-2xl border-2 bg-white px-3 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: `${warna}33`, color: warna }}>
-                          <BookOpen size={17} />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
-                          <span className="block truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                            {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                          </span>
-                        </span>
-                      </button>
+                      <OptionCard3D key={k.id} stack icon={BookOpen} tone={KELAS_TONE[i % KELAS_TONE.length]} label={k.nama}
+                        caption={`${s.hd}/${s.tt} hadir`} active={k.id === selectedId} onClick={() => setSelectedId(k.id)} />
                     );
                   })}
                 </div>
               )}
-
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {rekapAll.length > 0 ? (
-                  <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
-                ) : <span />}
-                <BelumAbsenPanel siswaList={siswaList} inline />
-              </div>
             </div>
+            <JadwalAbsenCard />
+          </div>
 
-          <div id="status-kehadiran-hari-ini" className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex min-w-0 flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -458,7 +440,12 @@ export default function AdminAbsensiHarianPage() {
                   className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
               </div>
             </div>
-
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {rekapAll.length > 0 ? (
+                <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
+              ) : <span />}
+              <BelumAbsenPanel siswaList={siswaList} inline />
+            </div>
             <div className="mt-3 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
@@ -500,9 +487,9 @@ export default function AdminAbsensiHarianPage() {
               />
             </div>
           </div>
-          </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex min-w-0 flex-col gap-4">
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
             <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
@@ -544,10 +531,6 @@ export default function AdminAbsensiHarianPage() {
                 Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per kelas (semua siswa) atau per siswa.
               </p>
             </div>
-
-            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.kelas.nama} />
-
-            <JadwalAbsenCard />
           </div>
         </div>
       </div>
