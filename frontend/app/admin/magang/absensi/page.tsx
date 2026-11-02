@@ -611,27 +611,6 @@ export default function AdminMagangAbsensiPage() {
             </div>
           </section>
 
-          <section>
-            <AppSectionTitle>Rincian Status</AppSectionTitle>
-            <div className="mt-4 grid grid-cols-4 gap-3">
-              {([
-                { key: "HADIR" as const, label: "Hadir", value: rekap.HADIR, tone: "emerald" as const, icon: STATUS_CFG.HADIR.icon },
-                { key: "IZIN" as const, label: "Izin", value: rekap.IZIN, tone: "sky" as const, icon: STATUS_CFG.IZIN.icon },
-                { key: "SAKIT" as const, label: "Sakit", value: rekap.SAKIT, tone: "amber" as const, icon: STATUS_CFG.SAKIT.icon },
-                { key: "ALPA" as const, label: "Alpa", value: rekap.ALPA, tone: "violet" as const, icon: STATUS_CFG.ALPA.icon },
-              ]).map((r) => (
-                <button key={r.key} type="button" onClick={() => { setActiveFilter(r.key); setStatusPageOpen(true); }}
-                  className="flex flex-col items-center gap-2 active:scale-95">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(r.tone)}>
-                    <r.icon size={26} color="#fff" />
-                  </span>
-                  <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{r.value}</span>
-                  <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{r.label}</span>
-                </button>
-              ))}
-            </div>
-          </section>
-
           <section className="space-y-3">
             <AppSectionTitle>Belum Absen</AppSectionTitle>
             <AppCard><BelumAbsenPanel siswaList={siswaList} compact /></AppCard>
