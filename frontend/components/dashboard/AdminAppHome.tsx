@@ -3,8 +3,17 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  ClipboardCheck, Megaphone, Users, BookOpen, NotebookPen, Briefcase, FileText, Settings,
-  GraduationCap, School, CheckCircle2, FileSignature, Thermometer, XCircle, Bell, ChevronRight,
+  ClipboardCheck,
+  Megaphone,
+  Users,
+  BookOpen,
+  NotebookPen,
+  Briefcase,
+  FileText,
+  Settings,
+  School,
+  Bell,
+  ChevronRight,
 } from "lucide-react";
 import { Rocket } from "@/components/app/Rocket";
 import { AppCard, AppEmpty, AppSectionTitle, APP_ACCENT, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
@@ -39,17 +48,6 @@ const QUICK = [
 
 export function AdminAppHome({ data, onOpenPengumuman }: { data: AdminHomeData; onOpenPengumuman: (slug: string) => void }) {
   const k = data.kehadiran;
-  const ringkas = [
-    { label: "Siswa", value: data.totalSiswa, icon: GraduationCap, tone: "indigo" as const },
-    { label: "Guru", value: data.totalGuru, icon: Users, tone: "sky" as const },
-    { label: "Kelas", value: data.totalKelas, icon: School, tone: "amber" as const },
-  ];
-  const rekap = [
-    { label: "Hadir", value: k.hadir, icon: CheckCircle2, tone: "emerald" as const },
-    { label: "Izin", value: k.izin, icon: FileSignature, tone: "sky" as const },
-    { label: "Sakit", value: k.sakit, icon: Thermometer, tone: "amber" as const },
-    { label: "Alpa", value: k.alpa, icon: XCircle, tone: "violet" as const },
-  ];
 
   return (
     <div className="space-y-6">
@@ -82,36 +80,6 @@ export function AdminAppHome({ data, onOpenPengumuman }: { data: AdminHomeData; 
                 <span className="text-center text-xs font-semibold text-slate-600 dark:text-slate-300">{a.label}</span>
               </Link>
             </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Ringkasan Data</h2>
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          {ringkas.map((r) => (
-            <div key={r.label} className="flex flex-col items-center gap-2">
-              <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(r.tone)}>
-                <r.icon size={26} color="#fff" />
-              </span>
-              <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{r.value}</span>
-              <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{r.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Rekap Kehadiran</h2>
-        <div className="mt-4 grid grid-cols-4 gap-3">
-          {rekap.map((r) => (
-            <div key={r.label} className="flex flex-col items-center gap-2">
-              <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(r.tone)}>
-                <r.icon size={26} color="#fff" />
-              </span>
-              <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{r.value}</span>
-              <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{r.label}</span>
-            </div>
           ))}
         </div>
       </section>
