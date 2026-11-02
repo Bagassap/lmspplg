@@ -992,7 +992,7 @@ export default function AdminJadwalSoalPage() {
                                 <BookOpen size={11}/>
                                 Lihat
                                 {sudahKumpul > 0 && (
-                                  <span className="rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-white" style={{backgroundColor:rp.bar}}>{sudahKumpul}</span>
+                                  <span className="rounded-lg px-1.5 py-0.5 text-[10px] font-bold" style={{backgroundColor:rp.bar, color:"#FFFFFF"}}>{sudahKumpul}</span>
                                 )}
                               </button>
                               <button onClick={() => { setEditTarget(t); setOpenTahapan(true); }}

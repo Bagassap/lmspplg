@@ -131,7 +131,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
               <button key={k.id} type="button" onClick={() => setKelasId(k.id)}
                 className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold ${on ? "bg-primary text-white" : "bg-slate-100 text-primary dark:bg-slate-700"}`}>
                 {k.nama}
-                <span className={`rounded-xl px-1.5 text-[10px] ${on ? "bg-white text-primary" : "bg-white text-slate-600"}`}>{n}/{k.siswa.length}</span>
+                <span className="rounded-xl px-1.5 text-[10px] font-extrabold" style={{ background: "#FFFFFF", color: on ? "#3E03B3" : "#334155" }}>{n}/{k.siswa.length}</span>
               </button>
             );
           })}
