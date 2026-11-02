@@ -271,7 +271,7 @@ function MobileSiswaCard({
   );
 }
 
-const KELAS_TONE = ["sky", "emerald", "violet", "amber"] as const;
+const KELAS_WARNA = ["#3E03B3", "#F26A3D"];
 
 export default function AdminAbsensiHarianPage() {
   const router = useRouter();
@@ -409,12 +409,29 @@ export default function AdminAbsensiHarianPage() {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-3">
                   {kelasPageSlice.map((k, i) => {
                     const s = kelasStat(k);
+                    const warna = KELAS_WARNA[i % KELAS_WARNA.length];
+                    const isSelected = k.id === selectedId;
                     return (
-                      <OptionCard3D key={k.id} stack icon={BookOpen} tone={KELAS_TONE[i % KELAS_TONE.length]} label={k.nama}
-                        caption={`${s.hd}/${s.tt} hadir`} active={k.id === selectedId} onClick={() => setSelectedId(k.id)} />
+                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                        className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-4 py-4 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        style={{
+                          background: warna,
+                          boxShadow: isSelected ? `0 8px 24px ${warna}59` : "0 8px 24px rgba(0,0,0,0.15)",
+                          outline: isSelected ? `2px solid ${warna}` : "none",
+                          outlineOffset: "3px",
+                        }}>
+                        <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                        <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                          <BookOpen size={16} />
+                        </div>
+                        <div className="relative min-w-0 flex-1">
+                          <p className="truncate text-base font-black leading-tight">{k.nama}</p>
+                          <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{s.hd}/{s.tt} hadir</p>
+                        </div>
+                      </button>
                     );
                   })}
                 </div>
