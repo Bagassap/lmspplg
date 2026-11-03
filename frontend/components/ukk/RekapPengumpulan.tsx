@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Check, CheckCircle2, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, Loader2, UserX, X } from "lucide-react";
 import { ArsipViewer } from "@/components/ukk/ArsipViewer";
 import { useToast } from "@/components/shared/ToastSystem";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColor } from "@/components/absensi-harian/shared";
 
 type SubmisiRow = {
   id: string;
@@ -14,9 +16,9 @@ type SubmisiRow = {
   pesanRevisi?: string | null;
   driveUrl?: string | null;
   driveFolderUrl?: string | null;
-  siswa?: { id: string; nama?: string | null; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user?: { nama?: string } | null } | null;
+  siswa?: { id: string; nama?: string | null; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user?: { nama?: string; fotoProfil?: string | null } | null } | null;
 };
-type KelasXII = { id: string; nama: string; siswa: { id: string; nama: string | null; nis: string; user?: { nama: string } | null }[] };
+type KelasXII = { id: string; nama: string; siswa: { id: string; nama: string | null; nis: string; user?: { nama: string; fotoProfil?: string | null } | null }[] };
 
 const PER_PAGE = 10;
 
@@ -171,7 +173,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
             const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
             return (
               <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary text-xs font-bold text-white">{nama[0]?.toUpperCase()}</span>
+                <Avatar src={s.siswa?.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
                 <div className="min-w-0 flex-1 basis-40">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{nama}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-300">Dikirim {tglJam(s.submittedAt)}</p>
@@ -221,7 +223,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
             const nama = s.user?.nama || s.nama || "Siswa";
             return (
               <div key={s.id} className="flex items-center gap-3 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-300 text-xs font-bold text-slate-700">{nama[0]?.toUpperCase()}</span>
+                <Avatar src={s.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{nama}</p>
                   <p className="truncate text-xs text-slate-600 dark:text-slate-300">NIS {s.nis}</p>

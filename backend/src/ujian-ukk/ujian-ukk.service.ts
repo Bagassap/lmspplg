@@ -143,7 +143,7 @@ export class UjianUkkService {
       include: {
         soal:  { select: { id: true, judul: true } },
         tahapan: { select: { id: true, judul: true } },
-        siswa: { include: { user: { select: { id: true, nama: true } }, kelas: { select: { id: true, nama: true } } } },
+        siswa: { include: { user: { select: { id: true, nama: true, fotoProfil: true } }, kelas: { select: { id: true, nama: true } } } },
       },
     });
   }
@@ -179,7 +179,7 @@ export class UjianUkkService {
         siswa: {
           where: { status: 'AKTIF' },
           orderBy: { nama: 'asc' },
-          select: { id: true, nama: true, nis: true, user: { select: { nama: true } } },
+          select: { id: true, nama: true, nis: true, user: { select: { nama: true, fotoProfil: true } } },
         },
       },
     });
