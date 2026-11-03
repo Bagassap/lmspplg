@@ -60,6 +60,7 @@ export default function GuruJadwalSoalPage() {
   const [semuaTahapan, setSemuaTahapan] = useState<Tahapan[]>([]);
   const [submisiList, setSubmisiList] = useState<Submisi[]>([]);
   const [loading, setLoading]         = useState(true);
+  const [totalXII, setTotalXII]       = useState(0);
   const [tab, setTab]                 = useState<"active"|"completed"|"all">("all");
   const [taskSearch, setTaskSearch]   = useState("");
   const [expanded, setExpanded]       = useState<Set<string>>(new Set());
@@ -86,6 +87,12 @@ export default function GuruJadwalSoalPage() {
     if (!hasActive && list.length > 0) setTab("completed");
   }, []);
   useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => {
+    fetch("/api/kelas", { cache: "no-store" }).then(r => r.json()).then(d => {
+      const xii = Array.isArray(d) ? d.filter((k: { nama: string }) => /^XII(\s|$)/i.test(k.nama)) : [];
+      setTotalXII(xii.reduce((n: number, k: { _count?: { siswa: number } }) => n + (k._count?.siswa ?? 0), 0));
+    }).catch(() => {});
+  }, []);
 
   function toggleExpand(id: string) { setExpanded(p=>{ const n=new Set(p); n.has(id)?n.delete(id):n.add(id); return n; }); }
 
@@ -427,7 +434,7 @@ export default function GuruJadwalSoalPage() {
                         const exp = expanded.has(t.id);
                         const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                         const sudahKumpul = submisiTahapan.length;
-                        const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
+                        const pct = Math.min(Math.round((sudahKumpul / Math.max(totalXII, 1)) * 100), 100);
                         return (
                           <Fragment key={t.id}>
                             <tr className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
@@ -487,7 +494,7 @@ export default function GuruJadwalSoalPage() {
                       const exp = expanded.has(t.id);
                       const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                       const sudahKumpul = submisiTahapan.length;
-                      const pct = Math.min(Math.round((sudahKumpul / Math.max(submisiList.length || 12, 1)) * 100), 100);
+                      const pct = Math.min(Math.round((sudahKumpul / Math.max(totalXII, 1)) * 100), 100);
                       return (
                         <div key={t.id}>
                           <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">

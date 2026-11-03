@@ -516,11 +516,11 @@ export default function AdminJadwalSoalPage() {
 
   useEffect(() => { loadAll(); }, [loadAll]);
   useEffect(() => {
-    fetch("/api/kelas", { cache: "no-store" }).then((r) => r.json()).then((d) => setKelasUkk(Array.isArray(d) ? [...d].filter((k) => /^XII(\s|$)/i.test(k.nama)).sort((a, b) => a.nama.localeCompare(b.nama, "id")) : [])).catch(() => {});
-    fetch("/api/dashboard/admin", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => setTotalSiswaAll(Number(d?.totalSiswa) || 0))
-      .catch(() => {});
+    fetch("/api/kelas", { cache: "no-store" }).then((r) => r.json()).then((d) => {
+      const xii = Array.isArray(d) ? [...d].filter((k) => /^XII(\s|$)/i.test(k.nama)).sort((a, b) => a.nama.localeCompare(b.nama, "id")) : [];
+      setKelasUkk(xii);
+      setTotalSiswaAll(xii.reduce((n, k) => n + (k._count?.siswa ?? 0), 0));
+    }).catch(() => {});
   }, []);
 
   async function saveTahapan(data: TahapanForm) {
