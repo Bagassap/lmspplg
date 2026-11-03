@@ -3,16 +3,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, X, CalendarClock, CheckCircle, Code2, Download, ListChecks, PenLine, UserX, ChevronRight } from "lucide-react";
+import { ArrowLeft, X, CalendarClock, CheckCircle, UserX, ChevronRight } from "lucide-react";
 import type { TugasItem, TugasSubmisiItem } from "./types";
 import { formatTgl, formatTglJam, statusInfo, tipeLabel } from "./types";
 import { TugasPraktikViewerModal } from "./TugasPraktikViewerModal";
 import { TugasJawabanViewerModal } from "./TugasJawabanViewerModal";
 import { TugasFileViewerModal } from "./TugasFileViewerModal";
 import { useToast } from "@/components/shared/ToastSystem";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 
 type Kelas = { id: string; nama: string };
-type BelumSiswa = { id: string; nama: string | null; kelas: Kelas | null; user: { id: string; nama: string } | null };
+type BelumSiswa = { id: string; nama: string | null; kelas: Kelas | null; user: { id: string; nama: string; fotoProfil?: string | null } | null };
 type SubmisiRow = TugasSubmisiItem & { siswa?: TugasSubmisiItem["siswa"] & { kelasId?: string | null; kelas?: Kelas | null } };
 
 const SEMUA = "__semua__";
@@ -138,7 +140,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
                 const nama = s.user?.nama || s.nama || "Siswa";
                 return (
                   <div key={s.id} className={`flex items-center gap-3 rounded-2xl bg-white shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-slate-800 px-3 py-2.5`}>
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFE9E2] text-sm font-bold text-[#E8562B]">{nama[0]?.toUpperCase()}</span>
+                    <Avatar src={s.user?.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-xs font-extrabold" />
                     <p className={`min-w-0 flex-1 truncate font-bold text-slate-900 dark:text-white text-sm`}>{nama}</p>
                     <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-1 text-[10px] font-bold text-[#E8562B]">Belum kumpul</span>
                   </div>
@@ -150,11 +152,10 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
               const sc = statusInfo(s.status);
               const nama = namaOf(s);
               const open = () => (isPraktik ? setCodeT(s) : isSoal ? setJawabanT(s) : setFileT(s));
-              const Icon = isPraktik ? Code2 : isSoal ? (tugas.tipe === "PILIHAN_GANDA" ? ListChecks : PenLine) : Download;
               return (
                 <button key={s.id} type="button" onClick={open}
                   className={`flex w-full items-center gap-3 rounded-2xl bg-white text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.99] dark:bg-slate-800 px-3 py-2.5`}>
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]"><Icon size={17} /></span>
+                  <Avatar src={s.siswa?.user?.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-xs font-extrabold" />
                   <span className="min-w-0 flex-1">
                     <span className={`block truncate font-bold text-slate-900 dark:text-white text-sm`}>{nama}</span>
                     <span className={`block truncate text-slate-600 dark:text-slate-300 text-[11px]`}>{formatTglJam(s.submittedAt)}</span>

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, FileText, UserCheck, Loader2, MapPin, Phone, Briefcase, User } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { toTitleCase } from "@/components/data-siswa/shared";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
@@ -82,10 +83,13 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
             <p className="mb-1.5 text-xs font-bold text-slate-700">Semua siswa di tempat ini ({rows.length}) otomatis memakai guru yang dipilih</p>
             <div className="space-y-1">
               {rows.map((r) => (
-                <p key={r.id} className="text-sm font-bold text-slate-900">
+                <div key={r.id} className="flex items-center gap-2.5 py-0.5">
+                  <Avatar src={r.siswa.user?.fotoProfil} nama={r.siswa.nama ?? r.siswa.user?.nama ?? "—"} sizePx={32} fallbackBg={avatarColorFor(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} textClassName="text-[10px] font-extrabold" />
+                  <p className="min-w-0 flex-1 text-sm font-bold text-slate-900">
                   {toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600">· {r.siswa.kelas?.nama}</span>
                   {r.guruPembimbing && <span className="font-medium text-slate-600"> · {toTitleCase(r.guruPembimbing.user.nama)}</span>}
-                </p>
+                  </p>
+                </div>
               ))}
             </div>
           </div>

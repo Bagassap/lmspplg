@@ -38,7 +38,7 @@ export type TugasSubmisiItem = {
   submittedAt: string;
   updatedAt: string;
   tugas?: { id: string; judul: string; tipe?: string; mapel?: string };
-  siswa?: { id: string; nama: string | null; user?: { id: string; nama: string } | null };
+  siswa?: { id: string; nama: string | null; user?: { id: string; nama: string; fotoProfil?: string | null } | null };
   jawaban?: TugasJawabanItem[];
 };
 

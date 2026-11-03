@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, Briefcase, Building2, FileText, Loader2, MapPin, Phone, User, UserCheck, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { toTitleCase } from "@/components/data-siswa/shared";
+import { Avatar } from "@/components/shared/Avatar";
+import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
@@ -79,9 +80,12 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
             <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200"><Users size={13} /> Siswa yang mengajukan ({rows.length})</p>
             <div className="space-y-1">
               {rows.map((r) => (
-                <p key={r.id} className="text-sm font-bold text-slate-900 dark:text-white">
-                  {toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600 dark:text-slate-300">· {r.siswa.kelas?.nama}</span>
-                </p>
+                <div key={r.id} className="flex items-center gap-2.5 py-0.5">
+                  <Avatar src={r.siswa.user?.fotoProfil} nama={r.siswa.nama ?? r.siswa.user?.nama ?? "—"} sizePx={32} fallbackBg={avatarColorFor(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} textClassName="text-[10px] font-extrabold" />
+                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">
+                    {toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600 dark:text-slate-300">· {r.siswa.kelas?.nama}</span>
+                  </p>
+                </div>
               ))}
             </div>
           </div>
