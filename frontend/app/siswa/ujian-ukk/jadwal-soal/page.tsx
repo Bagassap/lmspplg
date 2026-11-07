@@ -1,5 +1,6 @@
 "use client";
 
+import { DriveButton } from "@/components/ukk/DriveButton";
 import { isTaskAktif, formatRentang, daftarTanggal, statusPengumpulan } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +23,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 });
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; driveLink?: string | null; soal: Soal[]; }
 interface MySubmisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric", timeZone: "Asia/Jakarta" }); }
@@ -493,6 +494,7 @@ export default function SiswaJadwalSoalPage() {
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 text-right">
+                              <DriveButton href={t.driveLink} className="mr-1.5 align-middle" />
                               <button onClick={btn.onClick}
                                 className="inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"
                                 style={{borderColor:btn.border, color:btn.clr, backgroundColor:btn.bg}}>
@@ -587,11 +589,14 @@ export default function SiswaJadwalSoalPage() {
                             <span className="flex items-center gap-1"><MapPin size={10} />{t.lokasi}</span>
                             <span className="flex items-center gap-1"><User size={10} />{t.penguji || "—"}</span>
                           </div>
-                          <button onClick={btn.onClick}
-                            className="mt-2 inline-flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-xs font-bold active:scale-95"
-                            style={{ backgroundColor: btn.bg, color: btn.clr }}>
-                            {btn.icon}{btn.label}
-                          </button>
+                          <div className="mt-2 flex flex-wrap items-center gap-2">
+                            <button onClick={btn.onClick}
+                              className="inline-flex items-center gap-1.5 rounded-xl px-4 py-1.5 text-xs font-bold active:scale-95"
+                              style={{ backgroundColor: btn.bg, color: btn.clr }}>
+                              {btn.icon}{btn.label}
+                            </button>
+                            <DriveButton href={t.driveLink} />
+                          </div>
                         </div>
                       </li>
                     );
@@ -703,11 +708,14 @@ export default function SiswaJadwalSoalPage() {
                           </div>
                           <span className={`text-[10px] font-bold ${accent ? "text-white" : ""}`} style={accent ? undefined : { color: barColor }}>{pct}%</span>
                         </div>
-                        <button onClick={btn.onClick}
-                          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
-                          style={{ backgroundColor: btn.bg, color: btn.clr }}>
-                          {btn.icon}{btn.label}
-                        </button>
+                        <div className="flex shrink-0 items-center gap-1.5">
+                          <DriveButton href={t.driveLink} compact />
+                          <button onClick={btn.onClick}
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
+                            style={{ backgroundColor: btn.bg, color: btn.clr }}>
+                            {btn.icon}{btn.label}
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   );

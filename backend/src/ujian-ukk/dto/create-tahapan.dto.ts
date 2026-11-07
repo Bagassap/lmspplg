@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsDateString, IsUrl, ValidateIf } from 'class-validator';
 
 export class CreateTahapanDto {
   @IsInt()
@@ -30,4 +30,9 @@ export class CreateTahapanDto {
   @IsString()
   @IsOptional()
   keterangan?: string;
+
+  @ValidateIf((o) => o.driveLink !== undefined && o.driveLink !== null && o.driveLink !== '')
+  @IsUrl({ require_protocol: true, protocols: ['http', 'https'] })
+  @IsOptional()
+  driveLink?: string;
 }

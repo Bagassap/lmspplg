@@ -66,6 +66,7 @@ export class UjianUkkService {
     return this.prisma.tahapanUKK.create({
       data: {
         ...dto,
+        driveLink: dto.driveLink?.trim() || null,
         tipe: TipeUKK.INTERNAL,
         tanggal: new Date(dto.tanggal),
         tanggalSelesai: dto.tanggalSelesai ? new Date(dto.tanggalSelesai) : null,
@@ -79,6 +80,7 @@ export class UjianUkkService {
       where: { id },
       data: {
         ...dto,
+        ...(dto.driveLink !== undefined ? { driveLink: dto.driveLink?.trim() || null } : {}),
         ...(dto.tanggal ? { tanggal: new Date(dto.tanggal) } : {}),
         ...(dto.tanggalSelesai !== undefined ? { tanggalSelesai: dto.tanggalSelesai ? new Date(dto.tanggalSelesai) : null } : {}),
       },

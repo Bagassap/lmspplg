@@ -1,5 +1,6 @@
 "use client";
 
+import { DriveButton } from "@/components/ukk/DriveButton";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, Fragment } from "react";
@@ -25,7 +26,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 });
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; driveLink?: string | null; soal: Soal[]; }
 interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; kelasId?: string | null; kelas?: { id: string; nama: string } | null; nama: string; user: { id: string; nama: string } }; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
@@ -459,6 +460,7 @@ export default function GuruJadwalSoalPage() {
                                 </div>
                               </td>
                               <td className="whitespace-nowrap px-4 py-3 text-right">
+                                <DriveButton href={t.driveLink} compact className="mr-1.5 align-middle" />
                                 <button onClick={()=>toggleExpand(t.id)}
                                   className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                   style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
@@ -517,6 +519,7 @@ export default function GuruJadwalSoalPage() {
                               <BookOpen size={11} />
                             </span>
                           </button>
+                          {t.driveLink && <div className="px-3 pb-3 pl-14"><DriveButton href={t.driveLink} compact /></div>}
                           {exp && (
                             <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
                               <div className="flex items-center justify-between px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">

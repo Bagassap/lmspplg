@@ -1,5 +1,6 @@
 "use client";
 
+import { DriveButton } from "@/components/ukk/DriveButton";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { DateInputID } from "@/components/shared/DateInputID";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
@@ -11,7 +12,7 @@ import {
   CalendarDays, FileText, Trash2, Plus, Clock,
   MapPin, User, Send, CheckCircle,
   AlertCircle, X, Pencil, BookOpen, ChevronLeft,
-  ChevronRight, CloudUpload, Loader2, Search,
+  ChevronRight, CloudUpload, Loader2, Search, HardDrive,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -39,7 +40,7 @@ function rowPalette(idx: number) { return PALETTE[idx % PALETTE.length]; }
 type StatusSubmisi = "TERKIRIM" | "DITERIMA" | "REVISI";
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; _count?: { submisi: number }; }
-interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; soal: Soal[]; }
+interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; driveLink?: string | null; soal: Soal[]; }
 interface Submisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: StatusSubmisi; submittedAt: string; soal: { id: string; judul: string }; siswa: { id: string; nama: string; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user: { id: string; nama: string } }; }
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
 function statusBadge(s: StatusSubmisi) {
@@ -147,15 +148,15 @@ function Calendar({ tahapanList }: { tahapanList: Tahapan[] }) {
   );
 }
 
-interface TahapanForm { hariKe: number; judul: string; tanggal: string; tanggalSelesai: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji: string; keterangan: string; }
+interface TahapanForm { hariKe: number; judul: string; tanggal: string; tanggalSelesai: string; jamMulai: string; jamSelesai: string; lokasi: string; penguji: string; keterangan: string; driveLink: string; }
 
 const INPUT_CLS = "w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-[#3E03B3] focus:ring-2 focus:ring-[#3E03B3] dark:focus:ring-[#00AAFA]/30 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500";
 
 function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClose: () => void; onSave: (d: TahapanForm) => Promise<void>; initial?: Partial<TahapanForm>; }) {
-  const [form, setForm] = useState<TahapanForm>({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial });
+  const [form, setForm] = useState<TahapanForm>({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", driveLink: "", ...initial });
   const [saving, setSaving] = useState(false);
   const isEdit = !!initial?.judul;
-  useEffect(() => { if (open) setForm({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", ...initial }); }, [open, initial]);
+  useEffect(() => { if (open) setForm({ hariKe: 1, judul: "", tanggal: "", tanggalSelesai: "", jamMulai: "08:00", jamSelesai: "12:00", lokasi: "", penguji: "", keterangan: "", driveLink: "", ...initial }); }, [open, initial]);
   function set(k: keyof TahapanForm, v: string | number) { setForm((p) => ({ ...p, [k]: v })); }
   async function submit(e: React.FormEvent) { e.preventDefault(); if (!form.tanggal) { alert("Tanggal mulai wajib diisi"); return; } if (form.tanggalSelesai && form.tanggalSelesai < form.tanggal) { alert("Tanggal selesai tidak boleh sebelum tanggal mulai"); return; } setSaving(true); await onSave(form); setSaving(false); };
 
@@ -261,6 +262,16 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                   <input value={form.penguji} onChange={(e) => set("penguji", e.target.value)}
                     placeholder="Nama penguji (opsional)"
                     className={INPUT_CLS}/>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
+                    <HardDrive size={11}/> Link Drive
+                  </label>
+                  <input type="url" value={form.driveLink} onChange={(e) => set("driveLink", e.target.value)}
+                    placeholder="https://drive.google.com/... (opsional)"
+                    className={INPUT_CLS}/>
+                  <p className="mt-1 text-[11px] text-slate-400">Siswa dan guru melihat tombol Drive di task ini untuk membuka penyimpanan hasil pekerjaan.</p>
                 </div>
 
                 <div>
@@ -986,6 +997,7 @@ export default function AdminJadwalSoalPage() {
                           </td>
                           <td className="whitespace-nowrap px-4 py-3">
                             <div className="flex items-center justify-end gap-1">
+                              <DriveButton href={t.driveLink} compact />
                               <button onClick={() => setSubmisiModalTahapan(t)}
                                 className="flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                 style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
@@ -1033,6 +1045,7 @@ export default function AdminJadwalSoalPage() {
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
+                          <DriveButton href={t.driveLink} compact />
                           <button onClick={() => setSubmisiModalTahapan(t)}
                             className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[10px] font-bold"
                             style={{ color: rp.bar, backgroundColor: rp.bg }}>
@@ -1100,7 +1113,7 @@ export default function AdminJadwalSoalPage() {
       </AnimatePresence>
 
       <TahapanModal open={openTahapan} onClose={() => { setOpenTahapan(false); setEditTarget(null); }} onSave={saveTahapan}
-        initial={editTarget ? { hariKe: editTarget.hariKe, judul: editTarget.judul, tanggal: editTarget.tanggal.slice(0, 10), tanggalSelesai: editTarget.tanggalSelesai ? editTarget.tanggalSelesai.slice(0, 10) : "", jamMulai: editTarget.jamMulai, jamSelesai: editTarget.jamSelesai, lokasi: editTarget.lokasi, penguji: editTarget.penguji ?? "", keterangan: editTarget.keterangan ?? "" } : undefined} />
+        initial={editTarget ? { hariKe: editTarget.hariKe, judul: editTarget.judul, tanggal: editTarget.tanggal.slice(0, 10), tanggalSelesai: editTarget.tanggalSelesai ? editTarget.tanggalSelesai.slice(0, 10) : "", jamMulai: editTarget.jamMulai, jamSelesai: editTarget.jamSelesai, lokasi: editTarget.lokasi, penguji: editTarget.penguji ?? "", keterangan: editTarget.keterangan ?? "", driveLink: editTarget.driveLink ?? "" } : undefined} />
       <UploadSoalModal open={openSoal} onClose={() => setOpenSoal(false)} onUpload={uploadSoal} tahapanList={tahapanList} />
 
       <TambahFileModal
