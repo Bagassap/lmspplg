@@ -115,9 +115,84 @@ export class GoogleDriveService {
     return { nama: f.name, data: Buffer.from(await res.arrayBuffer()) };
   }
 
+  private namaDariHeader(res: Response, cadangan: string) {
+    const cd = res.headers.get('content-disposition') ?? '';
+    const utf = cd.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utf) { try { return decodeURIComponent(utf[1]); } catch { return utf[1]; } }
+    const biasa = cd.match(/filename="?([^";]+)"?/i);
+    return biasa ? biasa[1] : cadangan;
+  }
+
+  private decodeHtml(t: string) {
+    return t.replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  }
+
+  private async isiFolderPublik(id: string) {
+    const res = await fetch(`https://drive.google.com/embeddedfolderview?id=${id}`);
+    if (!res.ok) throw new Error(`Folder tidak bisa dibuka (${res.status})`);
+    const html = await res.text();
+    const hasil: { id: string; name: string; jenis: 'folder' | 'file' | 'doc' | 'sheet' | 'slide' }[] = [];
+    const blok = html.split('class="flip-entry"').slice(1);
+    for (const b of blok) {
+      const href = b.match(/href="([^"]+)"/)?.[1] ?? '';
+      const judul = b.match(/class="flip-entry-title"[^>]*>([^<]*)</)?.[1] ?? '';
+      const m = href.match(/\/(folders|d)\/([\w-]+)/) ?? href.match(/[?&]id=([\w-]+)/);
+      const fid = m ? m[m.length - 1] : b.match(/id="entry-([\w-]+)"/)?.[1];
+      if (!fid) continue;
+      const jenis = href.includes('/folders/') ? 'folder'
+        : href.includes('/document/') ? 'doc'
+        : href.includes('/spreadsheets/') ? 'sheet'
+        : href.includes('/presentation/') ? 'slide' : 'file';
+      hasil.push({ id: fid, name: this.decodeHtml(judul) || fid, jenis });
+    }
+    return hasil;
+  }
+
+  private async unduhPublik(id: string, jenis: string, nama: string) {
+    const EKS: Record<string, [string, string]> = {
+      doc: [`https://docs.google.com/document/d/${id}/export?format=docx`, '.docx'],
+      sheet: [`https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`, '.xlsx'],
+      slide: [`https://docs.google.com/presentation/d/${id}/export/pptx`, '.pptx'],
+    };
+    if (EKS[jenis]) {
+      const [u, ext] = EKS[jenis];
+      const res = await fetch(u);
+      if (!res.ok) throw new Error(`Drive ${res.status}`);
+      return { nama: nama.endsWith(ext) ? nama : `${nama}${ext}`, data: Buffer.from(await res.arrayBuffer()) };
+    }
+    const res = await fetch(`https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`);
+    const tipe = res.headers.get('content-type') ?? '';
+    if (!res.ok || tipe.includes('text/html')) throw new Error(`Drive ${res.ok ? 'meminta akses' : res.status}`);
+    return { nama: this.namaDariHeader(res, nama), data: Buffer.from(await res.arrayBuffer()) };
+  }
+
+  private async unduhDariLinkPublik(ref: { id: string; folder: boolean }, aksi: (e: { path: string; data: Buffer }) => void, gagal: (pesan: string) => void) {
+    const bersih = (s: string) => s.replace(/[\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'tanpa-nama';
+    let jumlah = 0;
+    const jalan = async (items: { id: string; name: string; jenis: string }[], dasar: string) => {
+      for (const it of items) {
+        if (it.jenis === 'folder') {
+          await jalan(await this.isiFolderPublik(it.id), dasar ? `${dasar}/${bersih(it.name)}` : bersih(it.name));
+          continue;
+        }
+        try {
+          const b = await this.unduhPublik(it.id, it.jenis, it.name);
+          aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(b.nama)}`, data: b.data });
+          jumlah++;
+        } catch (e: any) {
+          gagal(`${it.name}: ${e.message}`);
+        }
+      }
+    };
+    if (ref.folder) await jalan(await this.isiFolderPublik(ref.id), '');
+    else await jalan([{ id: ref.id, name: 'berkas', jenis: 'file' }], '');
+    return jumlah;
+  }
+
   async unduhDariLink(url: string, aksi: (e: { path: string; data: Buffer }) => void, gagal: (pesan: string) => void) {
     const ref = this.idDariLink(url);
     if (!ref) throw new Error('Link Drive tidak dikenali');
+    if (!this.canDownload()) return this.unduhDariLinkPublik(ref, aksi, gagal);
     const bersih = (s: string) => s.replace(/[\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'tanpa-nama';
     let jumlah = 0;
     const telusuri = async (f: { id: string; name: string; mimeType: string }, dasar: string) => {

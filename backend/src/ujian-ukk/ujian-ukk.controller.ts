@@ -187,7 +187,7 @@ export class UjianUkkController {
       } else {
         tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
         let terunduh = 0;
-        if (this.drive.canDownload()) {
+        {
           try {
             terunduh = await this.drive.unduhDariLink(
               r.fileUrl,
