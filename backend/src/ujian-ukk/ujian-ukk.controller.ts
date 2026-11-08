@@ -156,13 +156,17 @@ export class UjianUkkController {
       const kelas = bersih(r.siswa?.kelas?.nama ?? 'Tanpa Kelas');
       const nama = bersih(r.siswa?.nama ?? 'Siswa');
       const task = bersih(r.tahapan?.judul ?? 'Task');
+      let folder = `${kelas}/${nama} - ${task}`;
+      for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
+      dipakai.add(folder);
       if (r.fileUrl.startsWith('/uploads/')) {
         const path = join(process.cwd(), r.fileUrl);
-        if (!fs.existsSync(path)) { tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`); continue; }
+        if (!fs.existsSync(path)) {
+          tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`);
+          arsip.append('Berkas tidak ditemukan di server', { name: `${folder}/Berkas tidak ditemukan.txt` });
+          continue;
+        }
         const ext = extname(r.fileName || r.fileUrl);
-        let folder = `${kelas}/${nama} - ${task}`;
-        for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
-        dipakai.add(folder);
         const jenis = jenisArsip(r.fileName || r.fileUrl);
         let terekstrak = 0;
         if (jenis) {
@@ -180,6 +184,10 @@ export class UjianUkkController {
         }
       } else {
         tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
+        arsip.append(`[InternetShortcut]
+URL=${r.fileUrl}
+`, { name: `${folder}/Link Google Drive.url` });
+        arsip.append(r.fileUrl, { name: `${folder}/Link Google Drive.txt` });
       }
     }
     if (tautan.length) arsip.append(tautan.join('\n'), { name: 'Link Google Drive & catatan.txt' });
