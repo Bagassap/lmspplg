@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import type { Response } from 'express';
 import archiver from 'archiver';
 import { UjianUkkService } from './ujian-ukk.service';
-import { jenisArsip, daftarArsip, bacaEntri, jenisTayang } from './arsip.util';
+import { jenisArsip, daftarArsip, bacaEntri, jenisTayang, ekstrakArsip } from './arsip.util';
 import { UjianUkkExcelService } from './ujian-ukk-excel.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { CreateSoalDto } from './dto/create-soal.dto';
@@ -160,10 +160,24 @@ export class UjianUkkController {
         const path = join(process.cwd(), r.fileUrl);
         if (!fs.existsSync(path)) { tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`); continue; }
         const ext = extname(r.fileName || r.fileUrl);
-        let dalam = `${kelas}/${nama} - ${task}${ext}`;
-        for (let i = 2; dipakai.has(dalam); i++) dalam = `${kelas}/${nama} - ${task} (${i})${ext}`;
-        dipakai.add(dalam);
-        arsip.file(path, { name: dalam });
+        let folder = `${kelas}/${nama} - ${task}`;
+        for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
+        dipakai.add(folder);
+        const jenis = jenisArsip(r.fileName || r.fileUrl);
+        let terekstrak = 0;
+        if (jenis) {
+          try {
+            terekstrak = await ekstrakArsip(path, jenis, (e) => {
+              arsip.append(e.data as any, { name: `${folder}/${e.path}` });
+            });
+          } catch {
+            terekstrak = 0;
+          }
+        }
+        if (!terekstrak) {
+          arsip.file(path, { name: `${folder}/${bersih(r.fileName || `berkas${ext}`)}` });
+          if (jenis) tautan.push(`${kelas} | ${nama} | ${task} | arsip tidak bisa dibuka, disertakan apa adanya`);
+        }
       } else {
         tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
       }

@@ -31,6 +31,38 @@ export async function daftarArsip(abs: string, jenis: 'zip' | 'rar'): Promise<En
   }
 }
 
+export type IsiArsip = { path: string; data: Buffer | NodeJS.ReadableStream };
+
+const amanPath = (p: string) =>
+  norm(p).split('/').filter((s) => s && s !== '.' && s !== '..').join('/');
+
+export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: IsiArsip) => void): Promise<number> {
+  let jumlah = 0;
+  try {
+    if (jenis === 'zip') {
+      const dir = await unzipper.Open.file(abs);
+      const berkas = dir.files.filter((f) => f.type === 'File' && amanPath(f.path));
+      for (const f of berkas) {
+        aksi({ path: amanPath(f.path), data: f.stream() });
+        jumlah++;
+      }
+      return jumlah;
+    }
+    const ex = await createExtractorFromFile({ filepath: abs });
+    const nama = [...ex.getFileList().fileHeaders].filter((h) => !h.flags.directory).map((h) => h.name);
+    const hasil = ex.extract({ files: nama });
+    for (const f of hasil.files) {
+      if (f.extraction && amanPath(f.fileHeader.name)) {
+        aksi({ path: amanPath(f.fileHeader.name), data: Buffer.from(f.extraction) });
+        jumlah++;
+      }
+    }
+    return jumlah;
+  } catch {
+    throw new BadRequestException('Arsip tidak bisa dibaca (rusak atau berpassword)');
+  }
+}
+
 export async function bacaEntri(abs: string, jenis: 'zip' | 'rar', path: string): Promise<Buffer> {
   const target = norm(path);
   try {
