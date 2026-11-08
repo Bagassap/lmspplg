@@ -53,6 +53,96 @@ export class GoogleDriveService {
     return data;
   }
 
+  idDariLink(url: string): { id: string; folder: boolean } | null {
+    const folder = url.match(/\/folders\/([\w-]+)/);
+    if (folder) return { id: folder[1], folder: true };
+    const berkas = url.match(/\/d\/([\w-]+)/) ?? url.match(/[?&]id=([\w-]+)/);
+    return berkas ? { id: berkas[1], folder: false } : null;
+  }
+
+  canDownload() {
+    return this.isConfigured() || !!process.env.GOOGLE_API_KEY;
+  }
+
+  private async ambil(url: string): Promise<Response> {
+    const key = process.env.GOOGLE_API_KEY;
+    const sambung = (u: string) => `${u}${u.includes('?') ? '&' : '?'}supportsAllDrives=true`;
+    let terakhir: Response | null = null;
+    if (key) {
+      terakhir = await fetch(`${sambung(url)}&key=${key}`);
+      if (terakhir.ok) return terakhir;
+    }
+    if (this.isConfigured()) {
+      const res = await fetch(sambung(url), { headers: { Authorization: `Bearer ${await this.accessToken()}` } });
+      if (res.ok) return res;
+      terakhir = res;
+    }
+    throw new Error(`Drive ${terakhir?.status ?? 'tidak dikonfigurasi'}`);
+  }
+
+  private async metaBerkas(id: string) {
+    const res = await this.ambil(`https://www.googleapis.com/drive/v3/files/${id}?fields=id,name,mimeType`);
+    return (await res.json()) as { id: string; name: string; mimeType: string };
+  }
+
+  private async isiFolder(id: string) {
+    const hasil: { id: string; name: string; mimeType: string }[] = [];
+    let halaman = '';
+    do {
+      const q = encodeURIComponent(`'${id}' in parents and trashed = false`);
+      const res = await this.ambil(
+        `https://www.googleapis.com/drive/v3/files?q=${q}&fields=nextPageToken,files(id,name,mimeType)&pageSize=200&includeItemsFromAllDrives=true${halaman ? `&pageToken=${halaman}` : ''}`,
+      );
+      const data: any = await res.json();
+      hasil.push(...(data.files ?? []));
+      halaman = data.nextPageToken ?? '';
+    } while (halaman);
+    return hasil;
+  }
+
+  private async unduhBerkas(f: { id: string; name: string; mimeType: string }) {
+    const EKSPOR: Record<string, [string, string]> = {
+      'application/vnd.google-apps.document': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.docx'],
+      'application/vnd.google-apps.spreadsheet': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx'],
+      'application/vnd.google-apps.presentation': ['application/vnd.openxmlformats-officedocument.presentationml.presentation', '.pptx'],
+    };
+    if (f.mimeType.startsWith('application/vnd.google-apps.')) {
+      const [mime, ext] = EKSPOR[f.mimeType] ?? ['application/pdf', '.pdf'];
+      const res = await this.ambil(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=${encodeURIComponent(mime)}`);
+      return { nama: f.name.endsWith(ext) ? f.name : `${f.name}${ext}`, data: Buffer.from(await res.arrayBuffer()) };
+    }
+    const res = await this.ambil(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`);
+    return { nama: f.name, data: Buffer.from(await res.arrayBuffer()) };
+  }
+
+  async unduhDariLink(url: string, aksi: (e: { path: string; data: Buffer }) => void, gagal: (pesan: string) => void) {
+    const ref = this.idDariLink(url);
+    if (!ref) throw new Error('Link Drive tidak dikenali');
+    const bersih = (s: string) => s.replace(/[\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'tanpa-nama';
+    let jumlah = 0;
+    const telusuri = async (f: { id: string; name: string; mimeType: string }, dasar: string) => {
+      if (f.mimeType === 'application/vnd.google-apps.folder') {
+        const isi = await this.isiFolder(f.id);
+        for (const anak of isi) await telusuri(anak, dasar ? `${dasar}/${bersih(f.name)}` : bersih(f.name));
+        return;
+      }
+      try {
+        const berkas = await this.unduhBerkas(f);
+        aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(berkas.nama)}`, data: berkas.data });
+        jumlah++;
+      } catch (e: any) {
+        gagal(`${f.name}: ${e.message}`);
+      }
+    };
+    const root = await this.metaBerkas(ref.id);
+    if (root.mimeType === 'application/vnd.google-apps.folder') {
+      for (const anak of await this.isiFolder(root.id)) await telusuri(anak, '');
+    } else {
+      await telusuri(root, '');
+    }
+    return jumlah;
+  }
+
   folderUrl(id: string) {
     return `https://drive.google.com/drive/folders/${id}`;
   }

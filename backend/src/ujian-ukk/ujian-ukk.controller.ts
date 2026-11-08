@@ -10,6 +10,7 @@ import type { Response } from 'express';
 import archiver from 'archiver';
 import { UjianUkkService } from './ujian-ukk.service';
 import { jenisArsip, daftarArsip, bacaEntri, jenisTayang, ekstrakArsip } from './arsip.util';
+import { GoogleDriveService } from '../google-drive/google-drive.service';
 import { UjianUkkExcelService } from './ujian-ukk-excel.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { CreateSoalDto } from './dto/create-soal.dto';
@@ -51,6 +52,7 @@ export class UjianUkkController {
   constructor(
     private readonly service: UjianUkkService,
     private readonly excelService: UjianUkkExcelService,
+    private readonly drive: GoogleDriveService,
   ) {}
 
   @Get('tahapan')
@@ -184,10 +186,24 @@ export class UjianUkkController {
         }
       } else {
         tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
-        arsip.append(`[InternetShortcut]
+        let terunduh = 0;
+        if (this.drive.canDownload()) {
+          try {
+            terunduh = await this.drive.unduhDariLink(
+              r.fileUrl,
+              (e) => { arsip.append(e.data, { name: `${folder}/${e.path}` }); },
+              (pesan) => { tautan.push(`${kelas} | ${nama} | ${task} | gagal unduh ${pesan}`); },
+            );
+          } catch (e: any) {
+            tautan.push(`${kelas} | ${nama} | ${task} | gagal unduh dari Drive (${e.message})`);
+          }
+        }
+        if (!terunduh) {
+          arsip.append(`[InternetShortcut]
 URL=${r.fileUrl}
 `, { name: `${folder}/Link Google Drive.url` });
-        arsip.append(r.fileUrl, { name: `${folder}/Link Google Drive.txt` });
+          arsip.append(r.fileUrl, { name: `${folder}/Link Google Drive.txt` });
+        }
       }
     }
     if (tautan.length) arsip.append(tautan.join('\n'), { name: 'Link Google Drive & catatan.txt' });
