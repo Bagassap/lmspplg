@@ -47,14 +47,6 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
   TERKIRIM: { label: "Menunggu", color: "#3E03B3", bg: "#F1EDFA" },
 };
 
-function SubmisiList({ items, tahapanId }: { items: Submisi[]; tahapanId?: string }) {
-  return (
-    <div className="flex max-h-[34rem] flex-col">
-      <RekapPengumpulan submisi={items} tahapanId={tahapanId} />
-    </div>
-  );
-}
-
 export default function GuruJadwalSoalPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -65,7 +57,7 @@ export default function GuruJadwalSoalPage() {
   const [totalXII, setTotalXII]       = useState(0);
   const [tab, setTab]                 = useState<"active"|"completed"|"all">("all");
   const [taskSearch, setTaskSearch]   = useState("");
-  const [expanded, setExpanded]       = useState<Set<string>>(new Set());
+  const [submisiModalTahapan, setSubmisiModalTahapan] = useState<Tahapan | null>(null);
   const [openJadwalModal, setOpenJadwalModal] = useState(false);
   const [openSoalModal,   setOpenSoalModal]   = useState(false);
   const [soalJadwalIdx,   setSoalJadwalIdx]   = useState(0);
@@ -96,7 +88,6 @@ export default function GuruJadwalSoalPage() {
     }).catch(() => {});
   }, []);
 
-  function toggleExpand(id: string) { setExpanded(p=>{ const n=new Set(p); n.has(id)?n.delete(id):n.add(id); return n; }); }
 
   const now      = new Date();
   const todayStr = todayJakarta();
@@ -345,11 +336,10 @@ export default function GuruJadwalSoalPage() {
               ) : (
                 <ul className="space-y-3">
                   {shown.map((t, idx) => {
-                    const exp = expanded.has(t.id);
                     const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                     return (
                       <li key={t.id} className="overflow-hidden rounded-3xl bg-white shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
-                        <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-4 p-3 text-left active:opacity-80">
+                        <button type="button" onClick={() => setSubmisiModalTahapan(t)} className="flex w-full items-center gap-4 p-3 text-left active:opacity-80">
                           <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white" style={icon3dStyle("violet")}>{idx + 1}</span>
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
@@ -358,14 +348,8 @@ export default function GuruJadwalSoalPage() {
                               {submisiTahapan.length} pengumpulan
                             </span>
                           </div>
-                          <ChevronRight size={18} className={`shrink-0 text-slate-300 transition-transform ${exp ? "rotate-90" : ""}`} />
+                          <ChevronRight size={18} className={`shrink-0 text-slate-300 transition-transform`} />
                         </button>
-                        {exp && (
-                          <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
-                            <div className="px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">Hasil Kerja Siswa</div>
-                            <SubmisiList items={submisiTahapan} tahapanId={t.id} />
-                          </div>
-                        )}
                       </li>
                     );
                   })}
@@ -437,7 +421,6 @@ export default function GuruJadwalSoalPage() {
                     <tbody>
                       {shown.map((t, idx) => {
                         const rp  = rowPalette(idx);
-                        const exp = expanded.has(t.id);
                         const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                         const sudahKumpul = submisiTahapan.length;
                         const pct = Math.min(Math.round((sudahKumpul / Math.max(totalXII, 1)) * 100), 100);
@@ -466,7 +449,7 @@ export default function GuruJadwalSoalPage() {
                               </td>
                               <td className="whitespace-nowrap px-4 py-3 text-right">
                                 <DriveButton href={t.driveLink} compact className="mr-1.5 align-middle" />
-                                <button onClick={()=>toggleExpand(t.id)}
+                                <button onClick={()=>setSubmisiModalTahapan(t)}
                                   className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                   style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
                                   <BookOpen size={11}/>
@@ -477,17 +460,6 @@ export default function GuruJadwalSoalPage() {
                                 </button>
                               </td>
                             </tr>
-                            {exp && (
-                              <tr className="border-b border-slate-100 dark:border-slate-700/40">
-                                <td colSpan={7} className="bg-slate-100 p-0 dark:bg-slate-700">
-                                  <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:border-slate-700">
-                                    <span>Hasil Kerja Siswa</span>
-                                    <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
-                                  </div>
-                                  <SubmisiList items={submisiTahapan} tahapanId={t.id} />
-                                </td>
-                              </tr>
-                            )}
                           </Fragment>
                         );
                       })}
@@ -498,13 +470,12 @@ export default function GuruJadwalSoalPage() {
                   <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
                     {shown.map((t, idx) => {
                       const rp = rowPalette(idx);
-                      const exp = expanded.has(t.id);
                       const submisiTahapan = submisiList.filter((x) => x.tahapan?.id === t.id);
                       const sudahKumpul = submisiTahapan.length;
                       const pct = Math.min(Math.round((sudahKumpul / Math.max(totalXII, 1)) * 100), 100);
                       return (
                         <div key={t.id}>
-                          <button type="button" onClick={() => toggleExpand(t.id)} className="flex w-full items-center gap-3 p-3 text-left">
+                          <button type="button" onClick={() => setSubmisiModalTahapan(t)} className="flex w-full items-center gap-3 p-3 text-left">
                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm" style={{ background: rp.gradient }}>
                               <span className="text-xs font-bold" style={{ color: rp.gradient === "#F26A3D" ? "#0F172A" : "#FFFFFF" }}>{idx + 1}</span>
                             </div>
@@ -525,15 +496,6 @@ export default function GuruJadwalSoalPage() {
                             </span>
                           </button>
                           {t.driveLink && <div className="px-3 pb-3 pl-14"><DriveButton href={t.driveLink} compact /></div>}
-                          {exp && (
-                            <div className="border-t border-slate-100 bg-slate-100 dark:border-slate-700/40 dark:bg-slate-700">
-                              <div className="flex items-center justify-between px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                                <span>Hasil Kerja Siswa</span>
-                                <span className="text-[10px] normal-case font-semibold">{submisiTahapan.length} pengumpulan</span>
-                              </div>
-                              <SubmisiList items={submisiTahapan} tahapanId={t.id} />
-                            </div>
-                          )}
                         </div>
                       );
                     })}
@@ -548,6 +510,37 @@ export default function GuruJadwalSoalPage() {
           </>
           )})()}
 
+      <AnimatePresence>
+        {submisiModalTahapan && (() => {
+          const sm = submisiModalTahapan;
+          const rowsTask = submisiList.filter((x) => x.tahapan?.id === sm.id);
+          return (
+            <motion.div key="submisi-modal-overlay"
+              initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+              className={`fixed inset-0 z-50 flex justify-center bg-black/50 backdrop-blur-sm ${appMode ? "items-end" : "items-center p-4"}`}
+              onClick={(e) => { if (e.target === e.currentTarget) setSubmisiModalTahapan(null); }}>
+              <motion.div initial={{scale:0.95,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0.95,opacity:0}}
+                className={`bg-white dark:bg-slate-800 shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden ${appMode ? "rounded-t-3xl" : "rounded-3xl"}`}>
+                <div className="flex shrink-0 items-start gap-4 px-6 pb-4 pt-6 sm:px-8 sm:pt-8">
+                  <button type="button" onClick={() => setSubmisiModalTahapan(null)} aria-label="Tutup"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
+                    <X size={18}/>
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-base font-extrabold leading-tight text-slate-900 dark:text-white">{sm.judul}</h3>
+                    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-600 dark:text-slate-300">
+                      <span className="flex items-center gap-1"><MapPin size={12}/>{sm.lokasi}</span>
+                      {sm.penguji && <span className="flex items-center gap-1">· <User size={12}/>{sm.penguji}</span>}
+                      <span className="flex items-center gap-1">· <CalendarDays size={12}/>{formatRentang(sm)}</span>
+                    </p>
+                  </div>
+                </div>
+                <RekapPengumpulan submisi={rowsTask} tahapanId={sm.id} />
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }
