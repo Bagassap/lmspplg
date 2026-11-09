@@ -5,7 +5,7 @@ type SubmisiExportRow = {
   status: 'TERKIRIM' | 'DITERIMA' | 'REVISI';
   fileUrl: string;
   submittedAt: Date;
-  soal: { judul: string };
+  soal: { judul: string } | null;
 };
 
 type SiswaExportRow = {
@@ -94,7 +94,7 @@ export class UjianUkkExcelService {
             no: i === 0 ? no : '',
             nama: i === 0 ? s.nama || '-' : '',
             nis: i === 0 ? s.nis : '',
-            soal: sub.soal.judul,
+            soal: sub.soal?.judul ?? '-',
             status: STATUS_LABEL[sub.status],
             link: sub.fileUrl,
             waktu: `${sub.submittedAt.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta', hourCycle: 'h23' })} WIB`,

@@ -630,8 +630,8 @@ model SoalTahapanUKK {
 
 model SubmisiProjectUKK {
   id          String           @id @default(cuid())
-  soalId      String
-  soal        SoalTahapanUKK   @relation(fields: [soalId], references: [id], onDelete: Cascade)
+  soalId      String?
+  soal        SoalTahapanUKK?  @relation(fields: [soalId], references: [id], onDelete: SetNull)
   tahapanId   String?
   tahapan     TahapanUKK?      @relation(fields: [tahapanId], references: [id], onDelete: Cascade)
   siswaId     String
