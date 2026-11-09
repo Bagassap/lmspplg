@@ -1,7 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { extname } from 'path';
+import { readFile } from 'fs/promises';
 import * as unzipper from 'unzipper';
-import { createExtractorFromFile } from 'node-unrar-js';
+import { createExtractorFromData } from 'node-unrar-js';
 
 export type EntriArsip = { path: string; size: number };
 
@@ -10,6 +11,11 @@ const BATAS_BACA = 8 * 1024 * 1024;
 export const jenisArsip = (nama: string): 'zip' | 'rar' | null => {
   const ext = extname(nama).toLowerCase();
   return ext === '.zip' ? 'zip' : ext === '.rar' ? 'rar' : null;
+};
+
+const bukaRar = async (abs: string) => {
+  const buf = await readFile(abs);
+  return createExtractorFromData({ data: buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer });
 };
 
 const norm = (p: string) => p.replace(/\\/g, '/').replace(/^\/+/, '');
@@ -22,7 +28,7 @@ export async function daftarArsip(abs: string, jenis: 'zip' | 'rar'): Promise<En
         .filter((f) => f.type === 'File')
         .map((f) => ({ path: norm(f.path), size: f.uncompressedSize }));
     }
-    const ex = await createExtractorFromFile({ filepath: abs });
+    const ex = await bukaRar(abs);
     return [...ex.getFileList().fileHeaders]
       .filter((h) => !h.flags.directory)
       .map((h) => ({ path: norm(h.name), size: h.unpSize }));
@@ -48,7 +54,7 @@ export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: 
       }
       return jumlah;
     }
-    const ex = await createExtractorFromFile({ filepath: abs });
+    const ex = await bukaRar(abs);
     const nama = [...ex.getFileList().fileHeaders].filter((h) => !h.flags.directory).map((h) => h.name);
     const hasil = ex.extract({ files: nama });
     for (const f of hasil.files) {
@@ -73,7 +79,7 @@ export async function bacaEntri(abs: string, jenis: 'zip' | 'rar', path: string)
       if (f.uncompressedSize > BATAS_BACA) throw new BadRequestException('Berkas terlalu besar untuk dilihat');
       return await f.buffer();
     }
-    const ex = await createExtractorFromFile({ filepath: abs });
+    const ex = await bukaRar(abs);
     const h = [...ex.getFileList().fileHeaders].find((x) => !x.flags.directory && norm(x.name) === target);
     if (!h) throw new BadRequestException('Berkas tidak ada di arsip');
     if (h.unpSize > BATAS_BACA) throw new BadRequestException('Berkas terlalu besar untuk dilihat');
