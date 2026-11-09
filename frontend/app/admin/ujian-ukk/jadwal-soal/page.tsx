@@ -1,6 +1,7 @@
 "use client";
 
 import { DriveButton } from "@/components/ukk/DriveButton";
+import { UnduhSemuaTask } from "@/components/ukk/UnduhSemuaTask";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { DateInputID } from "@/components/shared/DateInputID";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
@@ -919,11 +920,14 @@ export default function AdminJadwalSoalPage() {
                   </div>
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                 </div>
+                <div className="flex items-center gap-2">
+                <UnduhSemuaTask />
                 <button onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
                   className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-white shadow-sm sm:px-4"
                   style={{background:"#3E03B3"}}>
                   <Plus size={13} /> <span className="hidden sm:inline">Tambah Task</span>
                 </button>
+                </div>
               </div>
               <div className="relative mb-3">
                 <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />

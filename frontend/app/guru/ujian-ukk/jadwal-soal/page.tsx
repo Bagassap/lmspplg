@@ -1,6 +1,7 @@
 "use client";
 
 import { DriveButton } from "@/components/ukk/DriveButton";
+import { UnduhSemuaTask } from "@/components/ukk/UnduhSemuaTask";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, Fragment } from "react";
@@ -320,7 +321,10 @@ export default function GuruJadwalSoalPage() {
 
           {appMode && (
             <div className="space-y-4 lg:hidden">
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
+                <UnduhSemuaTask />
+              </div>
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Cari task..."
@@ -379,6 +383,7 @@ export default function GuruJadwalSoalPage() {
                     </div>
                     <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                   </div>
+                  <UnduhSemuaTask />
                 </div>
                 <div className="relative mb-3">
                   <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
