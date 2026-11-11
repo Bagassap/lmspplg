@@ -14,7 +14,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
       },
-      max_memory_restart: "400M",
+      max_memory_restart: "1536M",
       out_file: path.join(ROOT, "logs", "lms-backend.out.log"),
       error_file: path.join(ROOT, "logs", "lms-backend.err.log"),
       time: true,

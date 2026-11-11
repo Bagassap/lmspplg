@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import { extname } from 'path';
+import { Readable } from 'stream';
 
 const MIME: Record<string, string> = {
   '.pdf': 'application/pdf',
@@ -12,6 +13,10 @@ const MIME: Record<string, string> = {
   '.ppt': 'application/vnd.ms-powerpoint',
   '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 };
+
+const BATAS_UNDUH = 1024 * 1024 * 1024;
+
+type IsiDrive = { path: string; data: Readable };
 
 @Injectable()
 export class GoogleDriveService {
@@ -109,10 +114,10 @@ export class GoogleDriveService {
     if (f.mimeType.startsWith('application/vnd.google-apps.')) {
       const [mime, ext] = EKSPOR[f.mimeType] ?? ['application/pdf', '.pdf'];
       const res = await this.ambil(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=${encodeURIComponent(mime)}`);
-      return { nama: f.name.endsWith(ext) ? f.name : `${f.name}${ext}`, data: Buffer.from(await res.arrayBuffer()) };
+      return { nama: f.name.endsWith(ext) ? f.name : `${f.name}${ext}`, data: this.alirkan(res) };
     }
     const res = await this.ambil(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`);
-    return { nama: f.name, data: Buffer.from(await res.arrayBuffer()) };
+    return { nama: f.name, data: this.alirkan(res) };
   }
 
   private namaDariHeader(res: Response, cadangan: string) {
@@ -121,6 +126,16 @@ export class GoogleDriveService {
     if (utf) { try { return decodeURIComponent(utf[1]); } catch { return utf[1]; } }
     const biasa = cd.match(/filename="?([^";]+)"?/i);
     return biasa ? biasa[1] : cadangan;
+  }
+
+  private alirkan(res: Response) {
+    const ukuran = Number(res.headers.get('content-length') ?? 0);
+    if (ukuran > BATAS_UNDUH) {
+      void res.body?.cancel();
+      throw new Error(`berkas terlalu besar (${Math.round(ukuran / 1048576)} MB)`);
+    }
+    if (!res.body) throw new Error('berkas kosong');
+    return Readable.fromWeb(res.body as any);
   }
 
   private decodeHtml(t: string) {
@@ -157,16 +172,19 @@ export class GoogleDriveService {
     if (EKS[jenis]) {
       const [u, ext] = EKS[jenis];
       const res = await fetch(u);
-      if (!res.ok) throw new Error(`Drive ${res.status}`);
-      return { nama: nama.endsWith(ext) ? nama : `${nama}${ext}`, data: Buffer.from(await res.arrayBuffer()) };
+      if (!res.ok) { void res.body?.cancel(); throw new Error(`Drive ${res.status}`); }
+      return { nama: nama.endsWith(ext) ? nama : `${nama}${ext}`, data: this.alirkan(res) };
     }
     const res = await fetch(`https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`);
     const tipe = res.headers.get('content-type') ?? '';
-    if (!res.ok || tipe.includes('text/html')) throw new Error(`Drive ${res.ok ? 'meminta akses' : res.status}`);
-    return { nama: this.namaDariHeader(res, nama), data: Buffer.from(await res.arrayBuffer()) };
+    if (!res.ok || tipe.includes('text/html')) {
+      void res.body?.cancel();
+      throw new Error(`Drive ${res.ok ? 'meminta akses' : res.status}`);
+    }
+    return { nama: this.namaDariHeader(res, nama), data: this.alirkan(res) };
   }
 
-  private async unduhDariLinkPublik(ref: { id: string; folder: boolean }, aksi: (e: { path: string; data: Buffer }) => void, gagal: (pesan: string) => void) {
+  private async unduhDariLinkPublik(ref: { id: string; folder: boolean }, aksi: (e: IsiDrive) => Promise<void>, gagal: (pesan: string) => void) {
     const bersih = (s: string) => s.replace(/[\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'tanpa-nama';
     let jumlah = 0;
     const jalan = async (items: { id: string; name: string; jenis: string }[], dasar: string) => {
@@ -177,7 +195,7 @@ export class GoogleDriveService {
         }
         try {
           const b = await this.unduhPublik(it.id, it.jenis, it.name);
-          aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(b.nama)}`, data: b.data });
+          await aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(b.nama)}`, data: b.data });
           jumlah++;
         } catch (e: any) {
           gagal(`${it.name}: ${e.message}`);
@@ -189,7 +207,7 @@ export class GoogleDriveService {
     return jumlah;
   }
 
-  async unduhDariLink(url: string, aksi: (e: { path: string; data: Buffer }) => void, gagal: (pesan: string) => void) {
+  async unduhDariLink(url: string, aksi: (e: IsiDrive) => Promise<void>, gagal: (pesan: string) => void) {
     const ref = this.idDariLink(url);
     if (!ref) throw new Error('Link Drive tidak dikenali');
     if (!this.canDownload()) return this.unduhDariLinkPublik(ref, aksi, gagal);
@@ -203,7 +221,7 @@ export class GoogleDriveService {
       }
       try {
         const berkas = await this.unduhBerkas(f);
-        aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(berkas.nama)}`, data: berkas.data });
+        await aksi({ path: `${dasar}${dasar ? '/' : ''}${bersih(berkas.nama)}`, data: berkas.data });
         jumlah++;
       } catch (e: any) {
         gagal(`${f.name}: ${e.message}`);

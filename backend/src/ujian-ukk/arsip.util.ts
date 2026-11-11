@@ -1,12 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { extname } from 'path';
-import { readFile } from 'fs/promises';
+import { readFile, stat } from 'fs/promises';
 import * as unzipper from 'unzipper';
 import { createExtractorFromData } from 'node-unrar-js';
 
 export type EntriArsip = { path: string; size: number };
 
 const BATAS_BACA = 8 * 1024 * 1024;
+const BATAS_RAR = 200 * 1024 * 1024;
 
 export const jenisArsip = (nama: string): 'zip' | 'rar' | null => {
   const ext = extname(nama).toLowerCase();
@@ -14,6 +15,7 @@ export const jenisArsip = (nama: string): 'zip' | 'rar' | null => {
 };
 
 const bukaRar = async (abs: string) => {
+  if ((await stat(abs)).size > BATAS_RAR) throw new BadRequestException('Arsip RAR terlalu besar untuk dibuka (maks 200 MB)');
   const buf = await readFile(abs);
   return createExtractorFromData({ data: buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer });
 };
@@ -42,14 +44,14 @@ export type IsiArsip = { path: string; data: Buffer | NodeJS.ReadableStream };
 const amanPath = (p: string) =>
   norm(p).split('/').filter((s) => s && s !== '.' && s !== '..').join('/');
 
-export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: IsiArsip) => void): Promise<number> {
+export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: IsiArsip) => Promise<void>): Promise<number> {
   let jumlah = 0;
   try {
     if (jenis === 'zip') {
       const dir = await unzipper.Open.file(abs);
       const berkas = dir.files.filter((f) => f.type === 'File' && amanPath(f.path));
       for (const f of berkas) {
-        aksi({ path: amanPath(f.path), data: f.stream() });
+        await aksi({ path: amanPath(f.path), data: f.stream() });
         jumlah++;
       }
       return jumlah;
@@ -59,7 +61,7 @@ export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: 
     const hasil = ex.extract({ files: nama });
     for (const f of hasil.files) {
       if (f.extraction && amanPath(f.fileHeader.name)) {
-        aksi({ path: amanPath(f.fileHeader.name), data: Buffer.from(f.extraction) });
+        await aksi({ path: amanPath(f.fileHeader.name), data: Buffer.from(f.extraction) });
         jumlah++;
       }
     }

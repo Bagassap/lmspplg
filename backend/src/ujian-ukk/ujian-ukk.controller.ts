@@ -5,6 +5,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { tmpdir } from 'os';
+import { pipeline } from 'stream/promises';
 import * as fs from 'fs';
 import type { Response } from 'express';
 import archiver from 'archiver';
@@ -149,65 +151,106 @@ export class UjianUkkController {
       'Content-Disposition': `attachment; filename="Asset UKK - ${judul}.zip"`,
     });
     const arsip = archiver('zip', { zlib: { level: 5 } });
-    arsip.on('error', () => res.end());
+    const sementara = fs.mkdtempSync(join(tmpdir(), 'lms-ukk-zip-'));
+    let putus = false;
+    let batal = () => {};
+    const hentikan = () => { putus = true; batal(); };
+    res.on('close', hentikan);
+    arsip.on('error', () => { hentikan(); res.end(); });
     arsip.pipe(res);
 
-    const dipakai = new Set<string>();
-    const tautan: string[] = [];
-    for (const r of rows) {
-      const kelas = bersih(r.siswa?.kelas?.nama ?? 'Tanpa Kelas');
-      const nama = bersih(r.siswa?.nama ?? 'Siswa');
-      const task = bersih(r.tahapan?.judul ?? 'Task');
-      let folder = `${kelas}/${nama} - ${task}`;
-      for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
-      dipakai.add(folder);
-      if (r.fileUrl.startsWith('/uploads/')) {
-        const path = join(process.cwd(), r.fileUrl);
-        if (!fs.existsSync(path)) {
-          tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`);
-          arsip.append('Berkas tidak ditemukan di server', { name: `${folder}/Berkas tidak ditemukan.txt` });
-          continue;
-        }
-        const ext = extname(r.fileName || r.fileUrl);
-        const jenis = jenisArsip(r.fileName || r.fileUrl);
-        let terekstrak = 0;
-        if (jenis) {
-          try {
-            terekstrak = await ekstrakArsip(path, jenis, (e) => {
-              arsip.append(e.data as any, { name: `${folder}/${e.path}` });
-            });
-          } catch {
-            terekstrak = 0;
+    const tunggu = () => new Promise<void>((ok, gagal) => {
+      if (putus) return gagal(new Error('Unduhan dibatalkan'));
+      const selesai = () => { batal = () => {}; ok(); };
+      arsip.once('entry', selesai);
+      batal = () => { arsip.off('entry', selesai); gagal(new Error('Unduhan dibatalkan')); };
+    });
+    let urut = 0;
+    const masuk = async (data: string | Buffer | NodeJS.ReadableStream, name: string) => {
+      if (putus) {
+        if (typeof data === 'object' && 'destroy' in data && typeof data.destroy === 'function') data.destroy();
+        throw new Error('Unduhan dibatalkan');
+      }
+      if (typeof data === 'string' || Buffer.isBuffer(data)) {
+        const t = tunggu();
+        arsip.append(data, { name });
+        return t;
+      }
+      const tmp = join(sementara, String(urut++));
+      try {
+        await pipeline(data, fs.createWriteStream(tmp));
+        const t = tunggu();
+        arsip.file(tmp, { name });
+        await t;
+      } finally {
+        await fs.promises.unlink(tmp).catch(() => undefined);
+      }
+    };
+    const berkas = (path: string, name: string) => masuk(fs.createReadStream(path), name);
+
+    try {
+      const dipakai = new Set<string>();
+      const tautan: string[] = [];
+      for (const r of rows) {
+        if (putus) break;
+        const kelas = bersih(r.siswa?.kelas?.nama ?? 'Tanpa Kelas');
+        const nama = bersih(r.siswa?.nama ?? 'Siswa');
+        const task = bersih(r.tahapan?.judul ?? 'Task');
+        let folder = `${kelas}/${nama} - ${task}`;
+        for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
+        dipakai.add(folder);
+        if (r.fileUrl.startsWith('/uploads/')) {
+          const path = join(process.cwd(), r.fileUrl);
+          if (!fs.existsSync(path)) {
+            tautan.push(`${kelas} | ${nama} | berkas tidak ditemukan di server`);
+            await masuk('Berkas tidak ditemukan di server', `${folder}/Berkas tidak ditemukan.txt`);
+            continue;
           }
-        }
-        if (!terekstrak) {
-          arsip.file(path, { name: `${folder}/${bersih(r.fileName || `berkas${ext}`)}` });
-          if (jenis) tautan.push(`${kelas} | ${nama} | ${task} | arsip tidak bisa dibuka, disertakan apa adanya`);
-        }
-      } else {
-        tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
-        let terunduh = 0;
-        {
+          const ext = extname(r.fileName || r.fileUrl);
+          const jenis = jenisArsip(r.fileName || r.fileUrl);
+          let terekstrak = 0;
+          if (jenis) {
+            try {
+              terekstrak = await ekstrakArsip(path, jenis, (e) => masuk(e.data, `${folder}/${e.path}`));
+            } catch {
+              terekstrak = 0;
+            }
+          }
+          if (putus) break;
+          if (!terekstrak) {
+            await berkas(path, `${folder}/${bersih(r.fileName || `berkas${ext}`)}`);
+            if (jenis) tautan.push(`${kelas} | ${nama} | ${task} | arsip tidak bisa dibuka, disertakan apa adanya`);
+          }
+        } else {
+          tautan.push(`${kelas} | ${nama} | ${task} | ${r.fileUrl}`);
+          let terunduh = 0;
           try {
             terunduh = await this.drive.unduhDariLink(
               r.fileUrl,
-              (e) => { arsip.append(e.data, { name: `${folder}/${e.path}` }); },
+              (e) => masuk(e.data, `${folder}/${e.path}`),
               (pesan) => { tautan.push(`${kelas} | ${nama} | ${task} | gagal unduh ${pesan}`); },
             );
           } catch (e: any) {
             tautan.push(`${kelas} | ${nama} | ${task} | gagal unduh dari Drive (${e.message})`);
           }
-        }
-        if (!terunduh) {
-          arsip.append(`[InternetShortcut]
-URL=${r.fileUrl}
-`, { name: `${folder}/Link Google Drive.url` });
-          arsip.append(r.fileUrl, { name: `${folder}/Link Google Drive.txt` });
+          if (putus) break;
+          if (!terunduh) {
+            await masuk(`[InternetShortcut]\r\nURL=${r.fileUrl}\r\n`, `${folder}/Link Google Drive.url`);
+            await masuk(r.fileUrl, `${folder}/Link Google Drive.txt`);
+          }
         }
       }
+      if (!putus) {
+        if (tautan.length) await masuk(tautan.join('\n'), 'Link Google Drive & catatan.txt');
+        await arsip.finalize();
+      }
+    } catch {
+      if (!putus) arsip.abort();
+    } finally {
+      res.off('close', hentikan);
+      fs.rmSync(sementara, { recursive: true, force: true });
+      if (putus) arsip.abort();
     }
-    if (tautan.length) arsip.append(tautan.join('\n'), { name: 'Link Google Drive & catatan.txt' });
-    await arsip.finalize();
   }
 
   private async arsipSubmisi(id: string) {
