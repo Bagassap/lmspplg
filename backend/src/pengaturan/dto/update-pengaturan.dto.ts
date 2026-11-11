@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsUrl, ValidateIf } from 'class-validator';
 
 export class UpdatePengaturanDto {
   @IsBoolean()
@@ -8,4 +8,9 @@ export class UpdatePengaturanDto {
   @IsBoolean()
   @IsOptional()
   ukkAktif?: boolean;
+
+  @ValidateIf((o) => o.ukkDriveLink !== undefined && o.ukkDriveLink !== null && o.ukkDriveLink !== '')
+  @IsUrl({ require_protocol: true, protocols: ['http', 'https'] })
+  @IsOptional()
+  ukkDriveLink?: string | null;
 }

@@ -21,10 +21,12 @@ export class PengaturanService {
         id: SINGLETON_ID,
         magangAktif: dto.magangAktif ?? false,
         ukkAktif: dto.ukkAktif ?? false,
+        ukkDriveLink: dto.ukkDriveLink || null,
       },
       update: {
         ...(dto.magangAktif !== undefined ? { magangAktif: dto.magangAktif } : {}),
         ...(dto.ukkAktif !== undefined ? { ukkAktif: dto.ukkAktif } : {}),
+        ...(dto.ukkDriveLink !== undefined ? { ukkDriveLink: dto.ukkDriveLink || null } : {}),
       },
     });
   }

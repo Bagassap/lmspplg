@@ -1,6 +1,6 @@
 "use client";
 
-import { DriveButton } from "@/components/ukk/DriveButton";
+import { UkkDriveHeader } from "@/components/ukk/UkkDriveHeader";
 import { UnduhSemuaTask } from "@/components/ukk/UnduhSemuaTask";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { DateInputID } from "@/components/shared/DateInputID";
@@ -13,7 +13,7 @@ import {
   CalendarDays, FileText, Trash2, Plus, Clock,
   MapPin, User, Send, CheckCircle,
   AlertCircle, X, Pencil, BookOpen, ChevronLeft,
-  ChevronRight, CloudUpload, Loader2, Search, HardDrive,
+  ChevronRight, CloudUpload, Loader2, Search,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -263,16 +263,6 @@ function TahapanModal({ open, onClose, onSave, initial }: { open: boolean; onClo
                   <input value={form.penguji} onChange={(e) => set("penguji", e.target.value)}
                     placeholder="Nama penguji (opsional)"
                     className={INPUT_CLS}/>
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-1.5">
-                    <HardDrive size={11}/> Link Drive
-                  </label>
-                  <input type="url" value={form.driveLink} onChange={(e) => set("driveLink", e.target.value)}
-                    placeholder="https://drive.google.com/... (opsional)"
-                    className={INPUT_CLS}/>
-                  <p className="mt-1 text-[11px] text-slate-400">Siswa dan guru melihat tombol Drive di task ini untuk membuka penyimpanan hasil pekerjaan.</p>
                 </div>
 
                 <div>
@@ -921,6 +911,7 @@ export default function AdminJadwalSoalPage() {
                   <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                 </div>
                 <div className="flex items-center gap-2">
+                <UkkDriveHeader admin />
                 <UnduhSemuaTask />
                 <button onClick={() => { setEditTarget(null); setOpenTahapan(true); }}
                   className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-white shadow-sm sm:px-4"
@@ -1001,7 +992,6 @@ export default function AdminJadwalSoalPage() {
                           </td>
                           <td className="whitespace-nowrap px-4 py-3">
                             <div className="flex items-center justify-end gap-1">
-                              <DriveButton href={t.driveLink} compact />
                               <button onClick={() => setSubmisiModalTahapan(t)}
                                 className="flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all"
                                 style={{borderColor:rp.bar, color:rp.bar, backgroundColor:rp.bg}}>
@@ -1049,7 +1039,6 @@ export default function AdminJadwalSoalPage() {
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
-                          <DriveButton href={t.driveLink} compact />
                           <button onClick={() => setSubmisiModalTahapan(t)}
                             className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[10px] font-bold"
                             style={{ color: rp.bar, backgroundColor: rp.bg }}>

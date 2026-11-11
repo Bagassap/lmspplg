@@ -755,6 +755,7 @@ model PengaturanSistem {
   id          String   @id
   magangAktif Boolean  @default(false)
   ukkAktif    Boolean  @default(false)
+  ukkDriveLink String?
   updatedAt   DateTime @updatedAt
 
   @@map("pengaturan_sistem")

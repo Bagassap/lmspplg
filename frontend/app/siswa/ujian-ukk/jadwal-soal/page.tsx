@@ -1,6 +1,6 @@
 "use client";
 
-import { DriveButton } from "@/components/ukk/DriveButton";
+import { UkkDriveHeader } from "@/components/ukk/UkkDriveHeader";
 import { isTaskAktif, formatRentang, daftarTanggal, statusPengumpulan } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -405,7 +405,8 @@ export default function SiswaJadwalSoalPage() {
                   <div className="icon-tile w-8 h-8 rounded-xl flex items-center justify-center" style={{background: "#EFE9FD"}}>
                     <BookOpen size={14} className="text-white"/>
                   </div>
-                  <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
+                  <p className="flex-1 text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
+                  <UkkDriveHeader />
                 </div>
                 <div className="relative mb-3">
                   <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -494,7 +495,6 @@ export default function SiswaJadwalSoalPage() {
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 text-right">
-                              <DriveButton href={t.driveLink} className="mr-1.5 align-middle" />
                               <button onClick={btn.onClick}
                                 className="inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all hover:brightness-95"
                                 style={{borderColor:btn.border, color:btn.clr, backgroundColor:btn.bg}}>
@@ -537,7 +537,10 @@ export default function SiswaJadwalSoalPage() {
                 </div>
               </section>
 
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
+                <UkkDriveHeader />
+              </div>
 
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -595,7 +598,6 @@ export default function SiswaJadwalSoalPage() {
                               style={{ backgroundColor: btn.bg, color: btn.clr }}>
                               {btn.icon}{btn.label}
                             </button>
-                            <DriveButton href={t.driveLink} />
                           </div>
                         </div>
                       </li>
@@ -709,7 +711,6 @@ export default function SiswaJadwalSoalPage() {
                           <span className={`text-[10px] font-bold ${accent ? "text-white" : ""}`} style={accent ? undefined : { color: barColor }}>{pct}%</span>
                         </div>
                         <div className="flex shrink-0 items-center gap-1.5">
-                          <DriveButton href={t.driveLink} compact />
                           <button onClick={btn.onClick}
                             className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[10.5px] font-bold transition-all active:scale-95"
                             style={{ backgroundColor: btn.bg, color: btn.clr }}>
