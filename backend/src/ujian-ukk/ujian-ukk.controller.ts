@@ -113,8 +113,8 @@ export class UjianUkkController {
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Get('submisi/saya/nilai-pdf')
-  async nilaiSayaPdf(@Request() req: any, @Res() res: Response) {
-    const data = await this.service.nilaiSayaUntukPdf(req.user.id);
+  async nilaiSayaPdf(@Request() req: any, @Query('submisiId') submisiId: string | undefined, @Res() res: Response) {
+    const data = await this.service.nilaiSayaUntukPdf(req.user.id, submisiId || undefined);
     const buffer = await this.pdfService.buildNilai(data);
     const nama = data.nama.replace(/[^a-zA-Z0-9]+/g, '_');
     res.set({

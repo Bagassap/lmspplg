@@ -317,14 +317,14 @@ export class UjianUkkService {
     return hasil;
   }
 
-  async nilaiSayaUntukPdf(userId: string) {
+  async nilaiSayaUntukPdf(userId: string, submisiId?: string) {
     const siswa = await this.prisma.siswa.findUnique({
       where: { userId },
       include: { kelas: { select: { nama: true } }, user: { select: { nama: true } } },
     });
     if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
     const rows = await this.prisma.submisiProjectUKK.findMany({
-      where: { siswaId: siswa.id, status: { not: 'REVISI' }, penilaian: { isNot: null } },
+      where: { siswaId: siswa.id, status: { not: 'REVISI' }, penilaian: { isNot: null }, ...(submisiId ? { id: submisiId } : {}) },
       orderBy: { submittedAt: 'asc' },
       include: { tahapan: { select: { judul: true } }, penilaian: true },
     });

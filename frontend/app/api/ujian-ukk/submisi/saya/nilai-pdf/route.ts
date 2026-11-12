@@ -3,13 +3,16 @@ import { NextResponse } from "next/server";
 
 const BACKEND = process.env.BACKEND_URL || "http://localhost:3001";
 
-export async function GET() {
+export async function GET(request: Request) {
   const token = (await cookies()).get("token")?.value;
   if (!token) return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
 
+  const submisiId = new URL(request.url).searchParams.get("submisiId") ?? "";
+  const qs = submisiId ? `?submisiId=${encodeURIComponent(submisiId)}` : "";
+
   let res: Response;
   try {
-    res = await fetch(`${BACKEND}/api/ujian-ukk/submisi/saya/nilai-pdf`, {
+    res = await fetch(`${BACKEND}/api/ujian-ukk/submisi/saya/nilai-pdf${qs}`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
