@@ -306,13 +306,6 @@ export class UjianUkkController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
-  @Put('submisi/:id/status')
-  updateStatus(@Param('id') id: string, @Body('status') status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', @Body('pesanRevisi') pesanRevisi?: string) {
-    return this.service.updateStatusSubmisi(id, status, pesanRevisi);
-  }
-
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.GURU)
   @Put('submisi/:id/penilaian')
   nilaiSubmisi(@Request() req: any, @Param('id') id: string, @Body('skor') skor: Record<string, unknown>, @Body('pesanRevisi') pesanRevisi?: string) {
     return this.service.nilaiSubmisi(id, req.user.id, skor, pesanRevisi);

@@ -7,8 +7,6 @@ import { SubmitProjectDto } from './dto/submit-project.dto';
 import { CreateDiskusiDto } from './dto/create-diskusi.dto';
 import { GoogleDriveService } from '../google-drive/google-drive.service';
 import { NotificationService } from '../notification/notification.service';
-import { unlink } from 'fs';
-import { join } from 'path';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
@@ -377,46 +375,6 @@ export class UjianUkkService {
       }
     }
     return simpan;
-  }
-
-  async updateStatusSubmisi(id: string, status: 'TERKIRIM' | 'DITERIMA' | 'REVISI', pesanRevisi?: string) {
-    if (status !== 'DITERIMA' && status !== 'REVISI') throw new BadRequestException('Status harus DITERIMA atau REVISI');
-    const submisi = await this.prisma.submisiProjectUKK.findUnique({
-      where: { id },
-      include: { tahapan: { select: { judul: true } }, siswa: { select: { userId: true } } },
-    });
-    if (!submisi) throw new NotFoundException('Submisi tidak ditemukan');
-    if (submisi.status === 'DITERIMA' && status === 'REVISI') throw new BadRequestException('Pengiriman yang sudah diterima tidak bisa ditolak');
-    if (submisi.status === 'REVISI' && status === 'DITERIMA') throw new BadRequestException('Pengiriman yang sudah ditolak tidak bisa diterima, tunggu siswa mengirim ulang');
-    const alasan = status === 'REVISI' ? (pesanRevisi ?? '').trim() : '';
-    if (status === 'REVISI' && !alasan) throw new BadRequestException('Alasan penolakan wajib diisi');
-    const hasil = status === 'REVISI'
-      ? await this.prisma.submisiProjectUKK.delete({ where: { id } })
-      : await this.prisma.submisiProjectUKK.update({ where: { id }, data: { status, pesanRevisi: null } });
-    if (status === 'REVISI' && submisi.fileUrl.startsWith('/uploads/')) {
-      unlink(join(process.cwd(), submisi.fileUrl), () => undefined);
-    }
-    const judul = submisi.tahapan?.judul ?? 'UKK';
-    if (submisi.siswa?.userId) {
-      void this.notificationService.create(
-        status === 'DITERIMA'
-          ? {
-              userId: submisi.siswa.userId,
-              title: 'Project UKK diterima',
-              message: `Pengiriman task "${judul}" telah diterima admin.`,
-              type: NotificationType.UKK,
-              link: '/ujian-ukk/jadwal-soal',
-            }
-          : {
-              userId: submisi.siswa.userId,
-              title: 'Project UKK ditolak',
-              message: `Pengiriman task "${judul}" ditolak. Alasan: ${alasan}. Silakan kirim ulang.`,
-              type: NotificationType.UKK,
-              link: '/ujian-ukk/jadwal-soal',
-            },
-      ).catch(() => undefined);
-    }
-    return hasil;
   }
 
   findAllDiskusi() {
