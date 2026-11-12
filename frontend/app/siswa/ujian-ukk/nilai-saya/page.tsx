@@ -88,15 +88,8 @@ export default function SiswaUkkNilaiSayaPage() {
 
   return (
     <div className="space-y-4 pb-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EFE9FD] text-[#3E03B3] dark:bg-[#3E03B3]/30 dark:text-[#C4B5FD]"><Trophy size={18} /></span>
-          <div>
-            <h1 className="text-lg font-extrabold leading-tight text-slate-900 dark:text-white">Nilai Saya</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Nilai ujian kompetensi keahlian</p>
-          </div>
-        </div>
-        {rataSemua !== null && terlihat.length > 1 && (
+      {rataSemua !== null && terlihat.length > 1 && (
+        <div className="flex justify-end">
           <div className="flex items-center gap-2 rounded-2xl bg-[#EFE9FD] px-4 py-2 dark:bg-[#3E03B3]/30">
             <Award size={16} className="text-[#3E03B3] dark:text-[#C4B5FD]" />
             <div>
@@ -104,8 +97,8 @@ export default function SiswaUkkNilaiSayaPage() {
               <p className="text-lg font-extrabold leading-none text-[#3E03B3] dark:text-[#C4B5FD]">{rataSemua}</p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="h-40 animate-pulse rounded-2xl bg-white dark:bg-slate-800" />
