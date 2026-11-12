@@ -48,15 +48,6 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
   TERKIRIM: { label: "Menunggu", color: "#3E03B3", bg: "#F1EDFA" },
 };
 
-function NilaiSemuaTombol({ onClick }: { onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick}
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 py-2 text-xs font-bold text-white">
-      <Trophy size={13} /> <span>Nilai Siswa</span>
-    </button>
-  );
-}
-
 export default function GuruJadwalSoalPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -224,16 +215,16 @@ export default function GuruJadwalSoalPage() {
             <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="flex flex-col gap-4">
-              <button type="button" onClick={()=>{ setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+              <button type="button" onClick={()=>setOpenNilai(true)}
                 className="relative flex h-24 items-center gap-4 overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#3E03B3", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
-                  <CalendarDays size={16} />
+                  <Trophy size={16} />
                 </div>
                 <div className="relative min-w-0 flex-1">
-                  <p className="truncate text-xl font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Nilai<span className="text-white/70"> Siswa</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">Lihat dan unduh nilai</p>
                 </div>
               </button>
 
@@ -262,7 +253,7 @@ export default function GuruJadwalSoalPage() {
                     <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Berkas UKK</h2>
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       {[
-                        { label: "Jadwal UKK", sub: `${jadwalFiles.length} file`, icon: CalendarDays, tone: "sky" as const, onClick: () => { setSoalJadwalIdx(0); setOpenJadwalModal(true); } },
+                        { label: "Nilai Siswa", sub: "Lihat nilai", icon: Trophy, tone: "sky" as const, onClick: () => setOpenNilai(true) },
                         { label: "Soal UKK", sub: `${totalSoal} soal`, icon: FileText, tone: "violet" as const, onClick: () => { setSoalSoalIdx(0); setOpenSoalModal(true); } },
                       ].map((b) => (
                         <button key={b.label} type="button" onClick={b.onClick}
@@ -289,16 +280,16 @@ export default function GuruJadwalSoalPage() {
                 </div>
                 <div className="rounded-t-[28px] bg-[#FFFFFF] px-4 pb-1 pt-3 dark:bg-[#1E293B]">
                   <div className="grid grid-cols-2 gap-2.5">
-                    <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+                    <button type="button" onClick={() => setOpenNilai(true)}
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
                       style={{ background: "#3E03B3" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
                       <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
-                        <CalendarDays size={14} />
+                        <Trophy size={14} />
                       </div>
                       <div className="relative min-w-0">
-                        <p className="truncate text-sm font-black leading-tight">Jadwal UKK</p>
-                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
+                        <p className="truncate text-sm font-black leading-tight">Nilai Siswa</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">Lihat dan unduh nilai</p>
                       </div>
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
@@ -325,7 +316,7 @@ export default function GuruJadwalSoalPage() {
             <div className="space-y-4 lg:hidden">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
-                <div className="flex items-center gap-2"><UkkDriveHeader /><NilaiSemuaTombol onClick={() => setOpenNilai(true)} /><UnduhSemuaTask /></div>
+                <div className="flex items-center gap-2"><UkkDriveHeader /><UnduhSemuaTask /></div>
               </div>
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -378,7 +369,7 @@ export default function GuruJadwalSoalPage() {
                     </div>
                     <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                   </div>
-                  <div className="flex items-center gap-2"><UkkDriveHeader /><NilaiSemuaTombol onClick={() => setOpenNilai(true)} /><UnduhSemuaTask /></div>
+                  <div className="flex items-center gap-2"><UkkDriveHeader /><UnduhSemuaTask /></div>
                 </div>
                 <div className="relative mb-3">
                   <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
