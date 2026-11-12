@@ -269,7 +269,7 @@ export class UjianUkkService {
           title: 'Revisi project UKK',
           message: `Task "${judul}" perlu direvisi: ${pesan}. Nilai keluar setelah revisi kamu selesaikan.`,
           type: NotificationType.UKK,
-          link: '/ujian-ukk/jadwal-soal',
+          link: '/ujian-ukk/nilai-saya',
         }).catch(() => undefined);
       } else if (rataRata !== null && !pesan) {
         void this.notificationService.create({
@@ -277,11 +277,39 @@ export class UjianUkkService {
           title: 'Nilai UKK keluar',
           message: `Nilai task "${judul}": ${rataRata}.`,
           type: NotificationType.UKK,
-          link: '/ujian-ukk/jadwal-soal',
+          link: '/ujian-ukk/nilai-saya',
         }).catch(() => undefined);
       }
     }
     return hasil;
+  }
+
+  async nilaiSayaUntukPdf(userId: string) {
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { userId },
+      include: { kelas: { select: { nama: true } }, user: { select: { nama: true } } },
+    });
+    if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
+    const rows = await this.prisma.submisiProjectUKK.findMany({
+      where: { siswaId: siswa.id, status: { not: 'REVISI' }, penilaian: { isNot: null } },
+      orderBy: { submittedAt: 'asc' },
+      include: { tahapan: { select: { judul: true } }, penilaian: true },
+    });
+    const terlihat = rows.filter((r) => {
+      const p = r.penilaian;
+      return p && p.rataRata !== null && !(p.pesanRevisi && !p.revisiSelesai);
+    });
+    if (terlihat.length === 0) throw new BadRequestException('Belum ada nilai yang bisa diunduh');
+    return {
+      nama: siswa.user?.nama ?? siswa.nama ?? 'Siswa',
+      nis: siswa.nis,
+      kelas: siswa.kelas?.nama ?? '-',
+      rows: terlihat.map((r) => ({
+        judul: r.tahapan?.judul ?? 'Task UKK',
+        skor: r.penilaian!.skor as Record<string, number>,
+        rataRata: r.penilaian!.rataRata as number,
+      })),
+    };
   }
 
   async selesaikanRevisi(userId: string, id: string) {

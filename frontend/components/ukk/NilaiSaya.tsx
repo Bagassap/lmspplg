@@ -7,7 +7,7 @@ import { ASPEK_NILAI, type PenilaianUkk } from "@/lib/ukkAspek";
 
 export type SubmisiBernilai = { id: string; tahapan?: { id: string; judul: string }; penilaian?: PenilaianUkk | null };
 
-export function NilaiSaya({ items, onChanged }: { items: SubmisiBernilai[]; onChanged: () => void }) {
+export function NilaiSaya({ items, onChanged, judul = true }: { items: SubmisiBernilai[]; onChanged: () => void; judul?: boolean }) {
   const toast = useToast();
   const [proses, setProses] = useState<string | null>(null);
   const [buka, setBuka] = useState<string | null>(null);
@@ -32,10 +32,10 @@ export function NilaiSaya({ items, onChanged }: { items: SubmisiBernilai[]; onCh
 
   return (
     <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <div className="mb-3 flex items-center gap-2">
+      {judul && <div className="mb-3 flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EFE9FD] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]"><ClipboardCheck size={15} /></span>
         <p className="text-base font-bold text-slate-800 dark:text-slate-100">Nilai UKK</p>
-      </div>
+      </div>}
       <div className="space-y-2.5">
         {rows.map((s) => {
           const p = s.penilaian!;
@@ -59,11 +59,11 @@ export function NilaiSaya({ items, onChanged }: { items: SubmisiBernilai[]; onCh
                 )}
               </div>
 
-              {p.pesanRevisi && (
+              {p.pesanRevisi && tertahan && (
                 <div className="mt-2.5 rounded-xl bg-[#FFE9E2] px-3 py-2">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-[#E8562B]">Revisi dari guru</p>
                   <p className="mt-0.5 whitespace-pre-wrap text-xs text-slate-800">{p.pesanRevisi}</p>
-                  {tertahan && (
+                  {(
                     <button type="button" disabled={proses === s.id} onClick={() => selesai(s.id)}
                       className="mt-2 flex items-center gap-1.5 rounded-xl bg-[#E8562B] px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-60">
                       {proses === s.id && <Loader2 size={12} className="animate-spin" />} Saya sudah menyelesaikan revisi

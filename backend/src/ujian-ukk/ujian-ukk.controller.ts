@@ -14,6 +14,7 @@ import { UjianUkkService } from './ujian-ukk.service';
 import { jenisArsip, daftarArsip, bacaEntri, jenisTayang, ekstrakArsip } from './arsip.util';
 import { GoogleDriveService } from '../google-drive/google-drive.service';
 import { UjianUkkExcelService } from './ujian-ukk-excel.service';
+import { UjianUkkPdfService } from './ujian-ukk-pdf.service';
 import { CreateTahapanDto } from './dto/create-tahapan.dto';
 import { CreateSoalDto } from './dto/create-soal.dto';
 import { SubmitProjectDto } from './dto/submit-project.dto';
@@ -55,6 +56,7 @@ export class UjianUkkController {
     private readonly service: UjianUkkService,
     private readonly excelService: UjianUkkExcelService,
     private readonly drive: GoogleDriveService,
+    private readonly pdfService: UjianUkkPdfService,
   ) {}
 
   @Get('tahapan')
@@ -107,6 +109,21 @@ export class UjianUkkController {
   @Roles(Role.SISWA)
   @Get('submisi/saya')
   findMySubmisi(@Request() req: any) { return this.service.findMySubmisi(req.user.id); }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Get('submisi/saya/nilai-pdf')
+  async nilaiSayaPdf(@Request() req: any, @Res() res: Response) {
+    const data = await this.service.nilaiSayaUntukPdf(req.user.id);
+    const buffer = await this.pdfService.buildNilai(data);
+    const nama = data.nama.replace(/[^a-zA-Z0-9]+/g, '_');
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="Nilai_UKK_${nama}.pdf"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
 
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
