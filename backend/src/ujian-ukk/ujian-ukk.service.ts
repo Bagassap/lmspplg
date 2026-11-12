@@ -217,7 +217,7 @@ export class UjianUkkService {
           include: {
             user: { select: { nama: true } },
             submisiProjectUkk: {
-              where: { status: { not: 'REVISI' } },
+              where: { status: { not: 'REVISI' }, penilaian: { isNot: null } },
               orderBy: { submittedAt: 'asc' },
               include: { tahapan: { select: { judul: true, lokasi: true, penguji: true } }, penilaian: true },
             },
@@ -231,7 +231,6 @@ export class UjianUkkService {
     type Grup = { grup: string; lokasi: string; penguji: string; siswa: Map<string, SiswaGrup> };
     const grupMap = new Map<string, Grup>();
     const belum: SiswaGrup[] = [];
-    const semuaTask = await this.prisma.tahapanUKK.findMany({ where: { hariKe: { not: 0 } }, select: { lokasi: true, penguji: true } });
     const buatGrup = (lokasiMentah: string | null, pengujiMentah: string | null) => {
       const lokasi = (lokasiMentah ?? '').trim() || 'Tanpa Lokasi';
       const penguji = (pengujiMentah ?? '').trim() || 'Tanpa Pengawas';
@@ -243,7 +242,6 @@ export class UjianUkkService {
       }
       return g;
     };
-    for (const t of semuaTask) buatGrup(t.lokasi, t.penguji);
 
     for (const k of kelasList) {
       for (const s of k.siswa) {
@@ -274,7 +272,7 @@ export class UjianUkkService {
     const hasil = [...grupMap.values()]
       .sort((a, b) => a.lokasi.localeCompare(b.lokasi, 'id', { numeric: true }) || a.penguji.localeCompare(b.penguji, 'id'))
       .map((g) => ({ grup: g.grup, lokasi: g.lokasi, penguji: g.penguji, siswa: [...g.siswa.values()].sort(urut) }));
-    if (belum.length) hasil.push({ grup: 'Belum Mengumpulkan', lokasi: 'Belum Mengumpulkan', penguji: '', siswa: belum.sort(urut) });
+    if (belum.length) hasil.push({ grup: 'Belum Dinilai', lokasi: 'Belum Dinilai', penguji: '', siswa: belum.sort(urut) });
     return hasil;
   }
 

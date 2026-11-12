@@ -122,7 +122,7 @@ export class UjianUkkExcelService {
         const identitas = { kelas: s.kelas, nama: s.nama, nis: s.nis, lokasi: group.lokasi, penguji: group.penguji || '-' };
         if (s.nilai.length === 0) {
           no++;
-          const row = ws.addRow({ no, ...identitas, task: '-', status: 'Belum mengumpulkan' });
+          const row = ws.addRow({ no, ...identitas, task: '-', status: 'Belum dinilai' });
           warnai(row, no % 2 === 0);
           row.getCell('status').font = { size: 10, color: { argb: 'FF6B7280' }, bold: true };
           continue;

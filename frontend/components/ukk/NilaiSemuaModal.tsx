@@ -142,7 +142,7 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
                                   {n?.rataRata != null ? <span className="inline-block rounded-xl bg-[#3E03B3] px-3 py-1 text-sm font-extrabold text-white">{n.rataRata}</span> : <span className="text-xs text-slate-400">—</span>}
                                 </td>
                                 <td className="bg-slate-100 px-2 py-2.5 text-center text-[11px] font-bold dark:bg-slate-800">
-                                  {!n ? <span className="text-slate-400">Belum mengumpulkan</span>
+                                  {!n ? <span className="text-slate-400">Belum dinilai</span>
                                     : !n.dinilai ? <span className="text-slate-500 dark:text-slate-300">Belum dinilai</span>
                                     : n.menungguRevisi ? <span className="text-[#E8562B]">Menunggu revisi siswa</span>
                                     : n.rataRata === null ? <span className="text-slate-500">Belum lengkap</span>
