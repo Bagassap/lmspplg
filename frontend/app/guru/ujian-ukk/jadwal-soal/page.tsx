@@ -2,6 +2,7 @@
 
 import { UkkDriveHeader } from "@/components/ukk/UkkDriveHeader";
 import { UnduhSemuaTask } from "@/components/ukk/UnduhSemuaTask";
+import { NilaiSemuaModal } from "@/components/ukk/NilaiSemuaModal";
 import { RekapPengumpulan } from "@/components/ukk/RekapPengumpulan";
 import { isTaskAktif, formatRentang, daftarTanggal } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, Fragment } from "react";
@@ -9,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
-  CalendarDays, FileText, BookOpen, Loader2,
+  CalendarDays, FileText, BookOpen, Loader2, Trophy,
   ChevronLeft, ChevronRight, X, Search, MapPin, User,
 } from "lucide-react";
 import { todayJakarta } from "@/components/absensi-harian/shared";
@@ -47,6 +48,15 @@ const SUBMISI_STATUS_CFG: Record<string, { label: string; color: string; bg: str
   TERKIRIM: { label: "Menunggu", color: "#3E03B3", bg: "#F1EDFA" },
 };
 
+function NilaiSemuaTombol({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick}
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#3E03B3] px-3 py-2 text-xs font-bold text-white">
+      <Trophy size={13} /> <span>Nilai Siswa</span>
+    </button>
+  );
+}
+
 export default function GuruJadwalSoalPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -57,6 +67,7 @@ export default function GuruJadwalSoalPage() {
   const [totalXII, setTotalXII]       = useState(0);
   const [tab, setTab]                 = useState<"active"|"completed"|"all">("all");
   const [taskSearch, setTaskSearch]   = useState("");
+  const [openNilai, setOpenNilai] = useState(false);
   const [submisiModalTahapan, setSubmisiModalTahapan] = useState<Tahapan | null>(null);
   const [openJadwalModal, setOpenJadwalModal] = useState(false);
   const [openSoalModal,   setOpenSoalModal]   = useState(false);
@@ -314,7 +325,7 @@ export default function GuruJadwalSoalPage() {
             <div className="space-y-4 lg:hidden">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
-                <div className="flex items-center gap-2"><UkkDriveHeader /><UnduhSemuaTask /></div>
+                <div className="flex items-center gap-2"><UkkDriveHeader /><NilaiSemuaTombol onClick={() => setOpenNilai(true)} /><UnduhSemuaTask /></div>
               </div>
               <div className="relative">
                 <Search size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -367,7 +378,7 @@ export default function GuruJadwalSoalPage() {
                     </div>
                     <p className="text-base font-bold text-slate-800 dark:text-slate-100">My Task</p>
                   </div>
-                  <div className="flex items-center gap-2"><UkkDriveHeader /><UnduhSemuaTask /></div>
+                  <div className="flex items-center gap-2"><UkkDriveHeader /><NilaiSemuaTombol onClick={() => setOpenNilai(true)} /><UnduhSemuaTask /></div>
                 </div>
                 <div className="relative mb-3">
                   <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" />
@@ -507,6 +518,8 @@ export default function GuruJadwalSoalPage() {
 
           </>
           )})()}
+
+      {openNilai && <NilaiSemuaModal onClose={() => setOpenNilai(false)} />}
 
       <AnimatePresence>
         {submisiModalTahapan && (() => {

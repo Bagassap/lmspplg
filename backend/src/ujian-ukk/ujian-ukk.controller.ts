@@ -322,7 +322,14 @@ export class UjianUkkController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Get('nilai/rekap')
+  rekapNilai() {
+    return this.service.getNilaiForExport();
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
   @Get('nilai/export-excel')
   async exportNilaiExcel(@Res() res: Response) {
     const groups = await this.service.getNilaiForExport();
