@@ -217,7 +217,7 @@ export class UjianUkkService {
           include: {
             user: { select: { nama: true } },
             submisiProjectUkk: {
-              where: { status: { not: 'REVISI' }, penilaian: { isNot: null } },
+              where: { status: { not: 'REVISI' } },
               orderBy: { submittedAt: 'asc' },
               include: { tahapan: { select: { judul: true, lokasi: true, penguji: true } }, penilaian: true },
             },
@@ -226,11 +226,24 @@ export class UjianUkkService {
       },
     });
 
-    type Baris = { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean };
+    type Baris = { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean; dinilai: boolean };
     type SiswaGrup = { kelas: string; nama: string; nis: string; nilai: Baris[] };
     type Grup = { grup: string; lokasi: string; penguji: string; siswa: Map<string, SiswaGrup> };
     const grupMap = new Map<string, Grup>();
     const belum: SiswaGrup[] = [];
+    const semuaTask = await this.prisma.tahapanUKK.findMany({ where: { hariKe: { not: 0 } }, select: { lokasi: true, penguji: true } });
+    const buatGrup = (lokasiMentah: string | null, pengujiMentah: string | null) => {
+      const lokasi = (lokasiMentah ?? '').trim() || 'Tanpa Lokasi';
+      const penguji = (pengujiMentah ?? '').trim() || 'Tanpa Pengawas';
+      const kunci = `${lokasi}||${penguji}`;
+      let g = grupMap.get(kunci);
+      if (!g) {
+        g = { grup: `${lokasi} - ${penguji}`, lokasi, penguji, siswa: new Map() };
+        grupMap.set(kunci, g);
+      }
+      return g;
+    };
+    for (const t of semuaTask) buatGrup(t.lokasi, t.penguji);
 
     for (const k of kelasList) {
       for (const s of k.siswa) {
@@ -240,14 +253,7 @@ export class UjianUkkService {
           continue;
         }
         for (const sub of s.submisiProjectUkk) {
-          const lokasi = (sub.tahapan?.lokasi ?? '').trim() || 'Tanpa Lokasi';
-          const penguji = (sub.tahapan?.penguji ?? '').trim() || 'Tanpa Pengawas';
-          const kunci = `${lokasi}||${penguji}`;
-          let g = grupMap.get(kunci);
-          if (!g) {
-            g = { grup: `${lokasi} - ${penguji}`, lokasi, penguji, siswa: new Map() };
-            grupMap.set(kunci, g);
-          }
+          const g = buatGrup(sub.tahapan?.lokasi ?? null, sub.tahapan?.penguji ?? null);
           let sg = g.siswa.get(s.id);
           if (!sg) {
             sg = { kelas: k.nama, nama, nis: s.nis, nilai: [] };
@@ -258,6 +264,7 @@ export class UjianUkkService {
             skor: (sub.penilaian?.skor ?? {}) as Record<string, number>,
             rataRata: sub.penilaian?.rataRata ?? null,
             menungguRevisi: !!sub.penilaian?.pesanRevisi && !sub.penilaian?.revisiSelesai,
+            dinilai: !!sub.penilaian,
           });
         }
       }
@@ -267,7 +274,7 @@ export class UjianUkkService {
     const hasil = [...grupMap.values()]
       .sort((a, b) => a.lokasi.localeCompare(b.lokasi, 'id', { numeric: true }) || a.penguji.localeCompare(b.penguji, 'id'))
       .map((g) => ({ grup: g.grup, lokasi: g.lokasi, penguji: g.penguji, siswa: [...g.siswa.values()].sort(urut) }));
-    if (belum.length) hasil.push({ grup: 'Belum Dinilai', lokasi: 'Belum Dinilai', penguji: '', siswa: belum.sort(urut) });
+    if (belum.length) hasil.push({ grup: 'Belum Mengumpulkan', lokasi: 'Belum Mengumpulkan', penguji: '', siswa: belum.sort(urut) });
     return hasil;
   }
 

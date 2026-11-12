@@ -10,7 +10,7 @@ export type NilaiExportGroup = {
     kelas: string;
     nama: string;
     nis: string;
-    nilai: { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean }[];
+    nilai: { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean; dinilai: boolean }[];
   }[];
 };
 
@@ -130,7 +130,7 @@ export class UjianUkkExcelService {
       for (const s of group.siswa) {
         const abu = no % 2 === 0;
         if (s.nilai.length === 0) {
-          const row = ws.addRow({ no: no++, kelas: s.kelas, nama: s.nama, nis: s.nis, task: '-', status: 'Belum dinilai' });
+          const row = ws.addRow({ no: no++, kelas: s.kelas, nama: s.nama, nis: s.nis, task: '-', status: 'Belum mengumpulkan' });
           warnai(row, abu);
           row.getCell('status').font = { size: 10, color: { argb: 'FF6B7280' }, bold: true };
           continue;
@@ -144,7 +144,7 @@ export class UjianUkkExcelService {
             task: n.task,
             jumlah: ASPEK_NILAI.reduce((t, a) => t + (n.skor[a.key] ?? 0), 0),
             rata: n.rataRata ?? '',
-            status: n.menungguRevisi ? 'Menunggu revisi siswa' : n.rataRata === null ? 'Belum lengkap' : 'Nilai keluar',
+            status: !n.dinilai ? 'Belum dinilai' : n.menungguRevisi ? 'Menunggu revisi siswa' : n.rataRata === null ? 'Belum lengkap' : 'Nilai keluar',
           };
           for (const a of ASPEK_NILAI) data[a.key] = n.skor[a.key] ?? '';
           const row = ws.addRow(data);

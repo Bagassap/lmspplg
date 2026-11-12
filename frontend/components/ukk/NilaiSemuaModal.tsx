@@ -4,7 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Download, Loader2, Search, X } from "lucide-react";
 import { ASPEK_NILAI } from "@/lib/ukkAspek";
 
-type NilaiRow = { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean };
+type NilaiRow = { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean; dinilai: boolean };
 type SiswaNilai = { kelas: string; nama: string; nis: string; nilai: NilaiRow[] };
 type GrupNilai = { grup: string; lokasi: string; penguji: string; siswa: SiswaNilai[] };
 
@@ -142,7 +142,8 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
                                   {n?.rataRata != null ? <span className="inline-block rounded-xl bg-[#3E03B3] px-3 py-1 text-sm font-extrabold text-white">{n.rataRata}</span> : <span className="text-xs text-slate-400">—</span>}
                                 </td>
                                 <td className="bg-slate-100 px-2 py-2.5 text-center text-[11px] font-bold dark:bg-slate-800">
-                                  {!n ? <span className="text-slate-400">Belum dinilai</span>
+                                  {!n ? <span className="text-slate-400">Belum mengumpulkan</span>
+                                    : !n.dinilai ? <span className="text-slate-500 dark:text-slate-300">Belum dinilai</span>
                                     : n.menungguRevisi ? <span className="text-[#E8562B]">Menunggu revisi siswa</span>
                                     : n.rataRata === null ? <span className="text-slate-500">Belum lengkap</span>
                                     : <span className="text-[#3E03B3] dark:text-[#C4B5FD]">Nilai keluar</span>}
