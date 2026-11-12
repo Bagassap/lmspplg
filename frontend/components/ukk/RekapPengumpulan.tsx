@@ -161,7 +161,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                   if (!p) return null;
                   const tertahan = !!p.pesanRevisi && !p.revisiSelesai;
                   if (tertahan) return <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-0.5 text-[10px] font-bold text-[#E8562B]">Menunggu revisi siswa</span>;
-                  return p.rataRata != null ? <span className="shrink-0 rounded-xl bg-[#EFE9FD] px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">Nilai {p.rataRata}</span> : null;
+                  return p.rataRata != null ? <span className="shrink-0 rounded-xl bg-[#EFE9FD] dark:bg-[#3E03B3]/30 px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3] dark:text-[#C4B5FD]">Nilai {p.rataRata}</span> : null;
                 })()}
                 <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {s.driveUrl && (
@@ -171,7 +171,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                     </button>
                   )}
                   <button type="button" onClick={() => setNilai({ id: s.id, nama })}
-                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#EFE9FD] px-3 py-1.5 text-[11px] font-bold text-[#3E03B3]">
+                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#EFE9FD] dark:bg-[#3E03B3]/30 px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] dark:text-[#C4B5FD]">
                     <ClipboardCheck size={13} /> Nilai
                   </button>
                   {adalahArsip(s) && (

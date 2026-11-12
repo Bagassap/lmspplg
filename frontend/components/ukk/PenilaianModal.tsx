@@ -63,13 +63,13 @@ export function PenilaianModal({
             <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Penilaian UKK</h3>
             <p className="truncate text-xs text-slate-500 dark:text-slate-400">{nama}</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>
+          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:text-[#C4B5FD]"><X size={16} /></button>
         </div>
 
         <div className="flex-1 space-y-2.5 overflow-y-auto px-5 pb-3">
           {ASPEK_NILAI.map((a, i) => (
             <div key={a.key} className="flex items-center gap-3 rounded-2xl bg-slate-100 px-3 py-2.5 dark:bg-slate-800">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#EFE9FD] text-[11px] font-extrabold text-[#3E03B3]">{i + 1}</span>
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#EFE9FD] dark:bg-[#3E03B3]/30 text-[11px] font-extrabold text-[#3E03B3] dark:text-[#C4B5FD]">{i + 1}</span>
               <p className="min-w-0 flex-1 text-xs font-semibold leading-snug text-slate-800 dark:text-slate-100">{a.label}</p>
               <input type="number" inputMode="decimal" min={0} max={100} value={skor[a.key]}
                 onChange={(e) => setSkor((p) => ({ ...p, [a.key]: e.target.value }))} placeholder="0-100"
@@ -77,14 +77,14 @@ export function PenilaianModal({
             </div>
           ))}
 
-          <div className="flex items-center justify-between rounded-2xl bg-[#EFE9FD] px-4 py-3">
+          <div className="flex items-center justify-between rounded-2xl bg-[#EFE9FD] dark:bg-[#3E03B3]/30 px-4 py-3">
             <div>
-              <p className="text-[11px] font-bold text-[#3E03B3]">Jumlah</p>
-              <p className="text-lg font-extrabold text-[#3E03B3]">{jumlah}</p>
+              <p className="text-[11px] font-bold text-[#3E03B3] dark:text-[#C4B5FD]">Jumlah</p>
+              <p className="text-lg font-extrabold text-[#3E03B3] dark:text-[#C4B5FD]">{jumlah}</p>
             </div>
             <div className="text-right">
-              <p className="text-[11px] font-bold text-[#3E03B3]">Rata-rata (nilai siswa)</p>
-              <p className="text-lg font-extrabold text-[#3E03B3]">{rata === null ? "—" : rata}</p>
+              <p className="text-[11px] font-bold text-[#3E03B3] dark:text-[#C4B5FD]">Rata-rata (nilai siswa)</p>
+              <p className="text-lg font-extrabold text-[#3E03B3] dark:text-[#C4B5FD]">{rata === null ? "—" : rata}</p>
             </div>
           </div>
 

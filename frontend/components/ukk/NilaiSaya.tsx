@@ -33,7 +33,7 @@ export function NilaiSaya({ items, onChanged }: { items: SubmisiBernilai[]; onCh
   return (
     <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EFE9FD] text-[#3E03B3]"><ClipboardCheck size={15} /></span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EFE9FD] dark:bg-[#3E03B3]/30 text-[#3E03B3] dark:text-[#C4B5FD]"><ClipboardCheck size={15} /></span>
         <p className="text-base font-bold text-slate-800 dark:text-slate-100">Nilai UKK</p>
       </div>
       <div className="space-y-2.5">
