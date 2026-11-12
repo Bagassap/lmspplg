@@ -65,17 +65,6 @@ const WARNA = {
 const ISI_ABU = 'FFE5E7EB';
 const ISI_PUTIH = 'FFFFFFFF';
 
-const ASPEK_SINGKAT: Record<string, string> = {
-  struktur_data: 'Struktur Data',
-  spesifikasi_program: 'Spesifikasi Program',
-  perintah_eksekusi: 'Perintah Eksekusi',
-  guidelines: 'Guidelines & Best Practices',
-  terstruktur: 'Pemrograman Terstruktur',
-  dokumen_kode: 'Dokumen Kode Program',
-  debugging: 'Debugging',
-  unit_test: 'Pengujian Unit',
-};
-
 @Injectable()
 export class UjianUkkExcelService {
   async buildNilai(groups: NilaiExportGroup[]): Promise<Buffer> {
@@ -92,7 +81,9 @@ export class UjianUkkExcelService {
         { header: 'Nama', key: 'nama', width: 26 },
         { header: 'NIS', key: 'nis', width: 13 },
         { header: 'Task', key: 'task', width: 28 },
-        ...ASPEK_NILAI.map((a, i) => ({ header: `${i + 1}. ${ASPEK_SINGKAT[a.key] ?? a.label}`, key: a.key, width: 15 })),
+        { header: 'RPS / Lab Komputer', key: 'lokasi', width: 18 },
+        { header: 'Guru Pengawas', key: 'penguji', width: 24 },
+        ...ASPEK_NILAI.map((a, i) => ({ header: `${i + 1}. ${a.label}`, key: a.key, width: 26 })),
         { header: 'Jumlah', key: 'jumlah', width: 9 },
         { header: 'Rata-rata', key: 'rata', width: 10 },
         { header: 'Status', key: 'status', width: 22 },
@@ -106,11 +97,11 @@ export class UjianUkkExcelService {
       barisJudul.getCell(1).font = { bold: true, size: 13, color: { argb: 'FF1F2937' } };
       barisJudul.getCell(1).alignment = { vertical: 'middle', horizontal: 'left' };
       const header = ws.addRow(kolom.map((k) => k.header));
-      header.height = 34;
-      const warnaKolom = (c: number) => (c <= 5 ? WARNA.identitas : c <= 5 + ASPEK_NILAI.length ? WARNA.aspek : WARNA.ringkasan);
+      header.height = 62;
+      const warnaKolom = (c: number) => (c <= 7 ? WARNA.identitas : c <= 7 + ASPEK_NILAI.length ? WARNA.aspek : WARNA.ringkasan);
       for (let c = 1; c <= jumlahKolom; c++) {
         const cell = header.getCell(c);
-        cell.font = { bold: true, size: 9, color: { argb: warnaKolom(c).teks } };
+        cell.font = { bold: true, size: 8, color: { argb: warnaKolom(c).teks } };
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: warnaKolom(c).header } };
         cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
         cell.border = { left: { style: 'thin', color: { argb: 'FFFFFFFF' } }, right: { style: 'thin', color: { argb: 'FFFFFFFF' } } };
@@ -121,26 +112,26 @@ export class UjianUkkExcelService {
           const cell = row.getCell(c);
           cell.font = { size: 10 };
           cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: abu ? ISI_ABU : ISI_PUTIH } };
-          cell.alignment = { vertical: 'middle', horizontal: c === 3 || c === 5 ? 'left' : 'center', shrinkToFit: true };
+          cell.alignment = { vertical: 'middle', horizontal: c === 3 || c === 5 || c === 6 || c === 7 ? 'left' : 'center', shrinkToFit: true };
           cell.border = { bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } } };
         }
       };
 
-      let no = 1;
+      let no = 0;
       for (const s of group.siswa) {
-        const abu = no % 2 === 0;
+        const identitas = { kelas: s.kelas, nama: s.nama, nis: s.nis, lokasi: group.lokasi, penguji: group.penguji || '-' };
         if (s.nilai.length === 0) {
-          const row = ws.addRow({ no: no++, kelas: s.kelas, nama: s.nama, nis: s.nis, task: '-', status: 'Belum mengumpulkan' });
-          warnai(row, abu);
+          no++;
+          const row = ws.addRow({ no, ...identitas, task: '-', status: 'Belum mengumpulkan' });
+          warnai(row, no % 2 === 0);
           row.getCell('status').font = { size: 10, color: { argb: 'FF6B7280' }, bold: true };
           continue;
         }
-        s.nilai.forEach((n, i) => {
+        for (const n of s.nilai) {
+          no++;
           const data: Record<string, string | number> = {
-            no: i === 0 ? no : '',
-            kelas: i === 0 ? s.kelas : '',
-            nama: i === 0 ? s.nama : '',
-            nis: i === 0 ? s.nis : '',
+            no,
+            ...identitas,
             task: n.task,
             jumlah: ASPEK_NILAI.reduce((t, a) => t + (n.skor[a.key] ?? 0), 0),
             rata: n.rataRata ?? '',
@@ -148,11 +139,10 @@ export class UjianUkkExcelService {
           };
           for (const a of ASPEK_NILAI) data[a.key] = n.skor[a.key] ?? '';
           const row = ws.addRow(data);
-          warnai(row, abu);
+          warnai(row, no % 2 === 0);
           row.getCell('status').font = { size: 10, color: { argb: n.menungguRevisi ? 'FFE8562B' : 'FF1D4ED8' }, bold: true };
           row.getCell('rata').font = { size: 10, bold: true };
-        });
-        no++;
+        }
       }
     }
 
