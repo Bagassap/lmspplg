@@ -53,11 +53,10 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-70 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+      <div className="flex max-h-[92vh] w-full max-w-[1600px] flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5 sm:px-8 sm:pt-7">
           <div className="min-w-0 flex-1">
             <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Nilai UKK Siswa</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Nilai semua siswa kelas XII, dipisahkan per kelas</p>
           </div>
           <a href="/api/ujian-ukk/nilai/export-excel" download
             className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#3E03B3] px-3.5 py-2 text-xs font-bold text-white">
@@ -96,20 +95,20 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
             </div>
 
             <div className="min-h-0 flex-1 overflow-auto px-5 pb-5 sm:px-8 sm:pb-7">
-              <div className="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-700">
-                <table className="w-full min-w-[1040px] border-collapse text-left">
+              <div className="rounded-2xl border border-slate-100 max-lg:overflow-x-auto dark:border-slate-700">
+                <table className="w-full border-collapse text-left max-lg:min-w-[1040px] lg:table-fixed">
                   <thead>
                     <tr className="text-[11px] font-bold uppercase tracking-wide text-white">
-                      <th className="w-12 bg-[#3E03B3] px-3 py-3 text-center">No</th>
-                      <th className="min-w-[160px] bg-[#3E03B3] px-3 py-3">Nama</th>
-                      <th className="bg-[#3E03B3] px-3 py-3">NIS</th>
-                      <th className="min-w-[150px] bg-[#3E03B3] px-3 py-3">Task</th>
+                      <th className="w-10 bg-[#3E03B3] px-1 py-3 text-center">No</th>
+                      <th className="w-[13%] bg-[#3E03B3] px-2 py-3">Nama</th>
+                      <th className="w-[7%] bg-[#3E03B3] px-2 py-3">NIS</th>
+                      <th className="w-[11%] bg-[#3E03B3] px-2 py-3">Task</th>
                       {ASPEK_NILAI.map((a) => (
-                        <th key={a.key} title={a.label} className="bg-[#F26A3D] px-2 py-3 text-center leading-tight">{SINGKAT[a.key]}</th>
+                        <th key={a.key} title={a.label} className="bg-[#F26A3D] px-1 py-3 text-center text-[10px] leading-tight">{SINGKAT[a.key]}</th>
                       ))}
-                      <th className="bg-slate-900 px-3 py-3 text-center">Jumlah</th>
-                      <th className="bg-slate-900 px-3 py-3 text-center">Rata-rata</th>
-                      <th className="bg-slate-900 px-3 py-3 text-center">Status</th>
+                      <th className="w-[6%] bg-slate-900 px-1 py-3 text-center">Jumlah</th>
+                      <th className="w-[7%] bg-slate-900 px-1 py-3 text-center">Rata-rata</th>
+                      <th className="w-[9%] bg-slate-900 px-1 py-3 text-center">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -123,24 +122,24 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
                             const jumlah = n ? ASPEK_NILAI.reduce((t, a) => t + (n.skor[a.key] ?? 0), 0) : null;
                             return (
                               <tr key={j} className="border-b border-slate-100 dark:border-slate-700/60">
-                                <td className="bg-[#F1EDFA] px-3 py-2.5 text-center text-xs font-bold text-slate-600 dark:bg-[#3E03B3]/15 dark:text-slate-300">{j === 0 ? i + 1 : ""}</td>
-                                <td className="bg-[#F1EDFA] px-3 py-2.5 text-sm font-bold text-slate-900 dark:bg-[#3E03B3]/15 dark:text-white">{j === 0 ? s.nama : ""}</td>
-                                <td className="bg-[#F1EDFA] px-3 py-2.5 text-xs text-slate-600 dark:bg-[#3E03B3]/15 dark:text-slate-300">{j === 0 ? s.nis : ""}</td>
-                                <td className="bg-[#F1EDFA] px-3 py-2.5 text-xs font-semibold text-slate-800 dark:bg-[#3E03B3]/15 dark:text-slate-100">{n ? n.task : "—"}</td>
+                                <td className="bg-[#F1EDFA] px-2 py-2.5 text-center text-xs font-bold text-slate-600 dark:bg-[#3E03B3]/15 dark:text-slate-300">{j === 0 ? i + 1 : ""}</td>
+                                <td className="bg-[#F1EDFA] px-2 py-2.5 text-sm font-bold text-slate-900 dark:bg-[#3E03B3]/15 dark:text-white">{j === 0 ? s.nama : ""}</td>
+                                <td className="bg-[#F1EDFA] px-2 py-2.5 text-xs text-slate-600 dark:bg-[#3E03B3]/15 dark:text-slate-300">{j === 0 ? s.nis : ""}</td>
+                                <td className="bg-[#F1EDFA] px-2 py-2.5 text-xs font-semibold text-slate-800 dark:bg-[#3E03B3]/15 dark:text-slate-100">{n ? n.task : "—"}</td>
                                 {ASPEK_NILAI.map((a) => {
                                   const v = n?.skor[a.key];
                                   return (
-                                    <td key={a.key} className="px-2 py-2.5 text-center">
+                                    <td key={a.key} className="px-1 py-2.5 text-center">
                                       {v === undefined || v === null ? <span className="text-xs text-slate-400">—</span>
-                                        : <span className={`inline-block min-w-9 rounded-lg px-2 py-1 text-xs font-bold ${warnaNilai(v)}`}>{v}</span>}
+                                        : <span className={`inline-block min-w-8 rounded-lg px-1.5 py-1 text-xs font-bold ${warnaNilai(v)}`}>{v}</span>}
                                     </td>
                                   );
                                 })}
-                                <td className="bg-slate-100 px-3 py-2.5 text-center text-sm font-bold text-slate-800 dark:bg-slate-800 dark:text-slate-100">{jumlah ?? "—"}</td>
-                                <td className="bg-slate-100 px-3 py-2.5 text-center dark:bg-slate-800">
+                                <td className="bg-slate-100 px-2 py-2.5 text-center text-sm font-bold text-slate-800 dark:bg-slate-800 dark:text-slate-100">{jumlah ?? "—"}</td>
+                                <td className="bg-slate-100 px-2 py-2.5 text-center dark:bg-slate-800">
                                   {n?.rataRata != null ? <span className="inline-block rounded-xl bg-[#3E03B3] px-3 py-1 text-sm font-extrabold text-white">{n.rataRata}</span> : <span className="text-xs text-slate-400">—</span>}
                                 </td>
-                                <td className="bg-slate-100 px-3 py-2.5 text-center text-[11px] font-bold dark:bg-slate-800">
+                                <td className="bg-slate-100 px-2 py-2.5 text-center text-[11px] font-bold dark:bg-slate-800">
                                   {!n ? <span className="text-slate-400">Belum dinilai</span>
                                     : n.menungguRevisi ? <span className="text-[#E8562B]">Menunggu revisi siswa</span>
                                     : n.rataRata === null ? <span className="text-slate-500">Belum lengkap</span>
