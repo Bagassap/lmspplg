@@ -322,6 +322,20 @@ export class UjianUkkController {
   }
 
   @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('nilai/export-excel')
+  async exportNilaiExcel(@Res() res: Response) {
+    const groups = await this.service.getNilaiForExport();
+    const buffer = await this.excelService.buildNilai(groups);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="Nilai_UKK_Semua_Siswa.xlsx"',
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
+
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Put('submisi/:id/penilaian')
   nilaiSubmisi(@Request() req: any, @Param('id') id: string, @Body('skor') skor: Record<string, unknown>, @Body('pesanRevisi') pesanRevisi?: string) {

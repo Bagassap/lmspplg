@@ -207,6 +207,39 @@ export class UjianUkkService {
     return kelasList.map((k) => ({ kelas: { nama: k.nama }, siswa: k.siswa }));
   }
 
+  async getNilaiForExport() {
+    const kelasList = await this.prisma.kelas.findMany({
+      where: { nama: { startsWith: 'XII', mode: 'insensitive' } },
+      orderBy: { nama: 'asc' },
+      include: {
+        siswa: {
+          orderBy: { nama: 'asc' },
+          include: {
+            user: { select: { nama: true } },
+            submisiProjectUkk: {
+              where: { status: { not: 'REVISI' }, penilaian: { isNot: null } },
+              orderBy: { submittedAt: 'asc' },
+              include: { tahapan: { select: { judul: true } }, penilaian: true },
+            },
+          },
+        },
+      },
+    });
+    return kelasList.map((k) => ({
+      kelas: k.nama,
+      siswa: k.siswa.map((s) => ({
+        nama: s.user?.nama ?? s.nama ?? '-',
+        nis: s.nis,
+        nilai: s.submisiProjectUkk.map((sub) => ({
+          task: sub.tahapan?.judul ?? 'Task UKK',
+          skor: (sub.penilaian?.skor ?? {}) as Record<string, number>,
+          rataRata: sub.penilaian?.rataRata ?? null,
+          menungguRevisi: !!sub.penilaian?.pesanRevisi && !sub.penilaian?.revisiSelesai,
+        })),
+      })),
+    }));
+  }
+
   async findMySubmisi(userId: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) return [];

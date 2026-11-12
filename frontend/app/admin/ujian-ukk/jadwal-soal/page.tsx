@@ -13,7 +13,7 @@ import {
   CalendarDays, FileText, Trash2, Plus, Clock,
   MapPin, User, Send, CheckCircle,
   AlertCircle, X, Pencil, BookOpen, ChevronLeft,
-  ChevronRight, CloudUpload, Loader2, Search,
+  ChevronRight, CloudUpload, Download, Loader2, Search,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/components/shared/ToastSystem";
@@ -747,18 +747,18 @@ export default function AdminJadwalSoalPage() {
             <div className="hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
               <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
                 <div className="flex flex-col gap-4">
-              <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+              <a href="/api/ujian-ukk/nilai/export-excel" download
                 className="relative flex h-24 items-center gap-4 overflow-hidden rounded-2xl px-5 py-5 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{ background: "#3E03B3", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
                 <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
-                  <CalendarDays size={16} />
+                  <Download size={16} />
                 </div>
                 <div className="relative min-w-0 flex-1">
-                  <p className="truncate text-xl font-black leading-tight">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
+                  <p className="truncate text-xl font-black leading-tight">Nilai<span className="text-white/70"> Siswa</span></p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">Unduh semua nilai (Excel)</p>
                 </div>
-              </button>
+              </a>
 
               <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                 className="relative flex h-24 items-center gap-4 overflow-hidden rounded-2xl px-5 py-5 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -785,10 +785,10 @@ export default function AdminJadwalSoalPage() {
                     <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Berkas UKK</h2>
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       {[
-                        { label: "Jadwal UKK", sub: `${jadwalFiles.length} file`, icon: CalendarDays, tone: "sky" as const, onClick: () => { setSoalJadwalIdx(0); setOpenJadwalModal(true); } },
+                        { label: "Nilai Siswa", sub: "Unduh Excel", icon: Download, tone: "sky" as const, href: "/api/ujian-ukk/nilai/export-excel" },
                         { label: "Soal UKK", sub: `${totalSoal} soal`, icon: FileText, tone: "violet" as const, onClick: () => { setSoalSoalIdx(0); setOpenSoalModal(true); } },
                       ].map((b) => (
-                        <button key={b.label} type="button" onClick={b.onClick}
+                        <button key={b.label} type="button" onClick={() => { if (b.href) window.location.href = b.href; else b.onClick?.(); }}
                           className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] active:scale-[0.97] dark:bg-[#1E293B]">
                           <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(b.tone)}>
                             <b.icon size={26} color="#fff" />
@@ -812,18 +812,18 @@ export default function AdminJadwalSoalPage() {
                 </div>
                 <div className="rounded-t-[28px] bg-[#FFFFFF] px-4 pb-1 pt-3 dark:bg-[#1E293B]">
                   <div className="grid grid-cols-2 gap-2.5">
-                    <button type="button" onClick={() => { setSoalJadwalIdx(0); setOpenJadwalModal(true); }}
+                    <a href="/api/ujian-ukk/nilai/export-excel" download
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
                       style={{ background: "#3E03B3" }}>
                       <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
                       <div className="relative flex h-7 w-7 items-center justify-center rounded-xl bg-white/20">
-                        <CalendarDays size={14} />
+                        <Download size={14} />
                       </div>
                       <div className="relative min-w-0">
-                        <p className="truncate text-sm font-black leading-tight">Jadwal UKK</p>
-                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{jadwalFiles.length} file jadwal</p>
+                        <p className="truncate text-sm font-black leading-tight">Nilai Siswa</p>
+                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">Unduh semua nilai (Excel)</p>
                       </div>
-                    </button>
+                    </a>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
                       className="relative flex h-24 flex-col justify-between overflow-hidden rounded-2xl px-3 py-3 text-left shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform active:scale-[0.98]"
                       style={{ background: "#F26A3D", color: "#FFFFFF" }}>
