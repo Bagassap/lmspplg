@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, CheckCircle2, ClipboardCheck, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, Loader2, UserX, X } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, UserX } from "lucide-react";
 import { ArsipViewer } from "@/components/ukk/ArsipViewer";
 import { PenilaianModal } from "@/components/ukk/PenilaianModal";
 import type { PenilaianUkk } from "@/lib/ukkAspek";
@@ -57,39 +57,11 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
   const [kelasId, setKelasId] = useState("");
   const [tab, setTab] = useState<"sudah" | "belum">("sudah");
   const [page, setPage] = useState(0);
-  const [lokal, setLokal] = useState<Record<string, { status: "DITERIMA" | "REVISI"; pesanRevisi: string | null }>>({});
-  const [tolak, setTolak] = useState<{ id: string; nama: string } | null>(null);
-  const [alasan, setAlasan] = useState("");
-  const [proses, setProses] = useState<string | null>(null);
   const [nilai, setNilai] = useState<{ id: string; nama: string } | null>(null);
   const [nilaiLokal, setNilaiLokal] = useState<Record<string, PenilaianUkk>>({});
   const penilaianOf = (s: SubmisiRow) => nilaiLokal[s.id] ?? s.penilaian ?? null;
-  const statusOf = (s: SubmisiRow): "TERKIRIM" | "DITERIMA" | "REVISI" => lokal[s.id]?.status ?? s.status ?? "TERKIRIM";
-  const submisi = useMemo(() => semua.filter((s) => (lokal[s.id]?.status ?? s.status) !== "REVISI"), [semua, lokal]);
+  const submisi = useMemo(() => semua.filter((s) => s.status !== "REVISI"), [semua]);
 
-  async function putuskan(id: string, status: "DITERIMA" | "REVISI", pesan?: string) {
-    setProses(id);
-    try {
-      const res = await fetch(`/api/ujian-ukk/submisi/${id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, pesanRevisi: pesan ?? "" }),
-      });
-      if (res.ok) {
-        setLokal((p) => ({ ...p, [id]: { status, pesanRevisi: status === "REVISI" ? (pesan?.trim() || null) : null } }));
-        toast.success(status === "DITERIMA" ? "Pengiriman diterima" : "Pengiriman ditolak", "Siswa mendapat notifikasi.");
-        setTolak(null);
-        setAlasan("");
-      } else {
-        const d = await res.json().catch(() => null);
-        toast.error("Gagal memproses", typeof d?.message === "string" ? d.message : "Coba lagi");
-      }
-    } catch {
-      toast.error("Server tidak dapat dijangkau", "");
-    } finally {
-      setProses(null);
-    }
-  }
 
   const [arsip, setArsip] = useState<{ id: string; nama: string; siswa: string } | null>(null);
 
@@ -185,31 +157,12 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                   <p className="text-xs text-slate-600 dark:text-slate-300">Dikirim {tglJam(s.submittedAt)}</p>
                 </div>
                 {(() => {
-                  const st = statusOf(s);
-                  const cfg = st === "DITERIMA" ? { t: "Diterima", c: "bg-primary text-white" } : st === "REVISI" ? { t: "Ditolak", c: "bg-[#FFE9E2] text-[#E8562B]" } : { t: "Menunggu persetujuan", c: "bg-white text-primary dark:bg-slate-800" };
-                  return <span className={`shrink-0 rounded-xl px-2.5 py-0.5 text-[10px] font-bold ${cfg.c}`}>{cfg.t}</span>;
-                })()}
-                {(() => {
                   const p = penilaianOf(s);
                   if (!p) return null;
                   const tertahan = !!p.pesanRevisi && !p.revisiSelesai;
                   if (tertahan) return <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-0.5 text-[10px] font-bold text-[#E8562B]">Menunggu revisi siswa</span>;
                   return p.rataRata != null ? <span className="shrink-0 rounded-xl bg-[#EFE9FD] px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">Nilai {p.rataRata}</span> : null;
                 })()}
-                <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto">
-                  {statusOf(s) === "TERKIRIM" && (
-                    <button type="button" disabled={proses === s.id} onClick={() => putuskan(s.id, "DITERIMA")}
-                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-50">
-                      {proses === s.id ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Terima
-                    </button>
-                  )}
-                  {statusOf(s) === "TERKIRIM" && (
-                    <button type="button" disabled={proses === s.id} onClick={() => { setTolak({ id: s.id, nama }); setAlasan(""); }}
-                      className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#FFE9E2] px-3 py-1.5 text-[11px] font-bold text-[#E8562B] disabled:opacity-50">
-                      <X size={13} /> Tolak
-                    </button>
-                  )}
-                </div>
                 <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {s.driveUrl && (
                     <button type="button" onClick={() => salin(s.driveUrl!, "Link Google Drive disalin")} title="Salin link Google Drive"
@@ -284,23 +237,6 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                 className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-primary disabled:opacity-40 dark:bg-slate-700"><ChevronRight size={16} /></button>
             </div>
           )}
-        </div>
-      )}
-      {tolak && (
-        <div className="fixed inset-0 z-70 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={(e) => { if (e.target === e.currentTarget) setTolak(null); }}>
-          <div className="w-full max-w-md rounded-t-[28px] bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl sm:p-6">
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Tolak pengiriman {tolak.nama}?</h3>
-            <p className="mt-1 text-xs text-slate-500">Siswa akan menerima notifikasi dan wajib mengirim ulang file.</p>
-            <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Alasan penolakan (wajib diisi)"
-              className="mt-3 w-full resize-none rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-800 outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:text-white" />
-            <div className="mt-4 flex gap-2">
-              <button type="button" onClick={() => setTolak(null)} className="flex-1 rounded-xl bg-slate-100 py-2.5 text-sm font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">Batal</button>
-              <button type="button" disabled={proses === tolak.id || !alasan.trim()} onClick={() => putuskan(tolak.id, "REVISI", alasan.trim())}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#E8562B] py-2.5 text-sm font-bold text-white disabled:opacity-50">
-                {proses === tolak.id && <Loader2 size={14} className="animate-spin" />} Tolak
-              </button>
-            </div>
-          </div>
         </div>
       )}
       {nilai && (
