@@ -268,7 +268,9 @@ export class UjianUkkService {
       }
     }
 
-    const urut = (a: SiswaGrup, b: SiswaGrup) => a.kelas.localeCompare(b.kelas, 'id', { numeric: true }) || a.nama.localeCompare(b.nama, 'id');
+    const urut = (a: SiswaGrup, b: SiswaGrup) =>
+      a.kelas.trim().localeCompare(b.kelas.trim(), 'id', { numeric: true, sensitivity: 'base' }) ||
+      a.nama.trim().localeCompare(b.nama.trim(), 'id', { sensitivity: 'base' });
     const hasil = [...grupMap.values()]
       .sort((a, b) => a.lokasi.localeCompare(b.lokasi, 'id', { numeric: true }) || a.penguji.localeCompare(b.penguji, 'id'))
       .map((g) => ({ grup: g.grup, lokasi: g.lokasi, penguji: g.penguji, siswa: [...g.siswa.values()].sort(urut) }));
