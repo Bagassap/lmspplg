@@ -311,6 +311,20 @@ export class UjianUkkController {
     return this.service.updateStatusSubmisi(id, status, pesanRevisi);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Put('submisi/:id/penilaian')
+  nilaiSubmisi(@Request() req: any, @Param('id') id: string, @Body('skor') skor: Record<string, unknown>, @Body('pesanRevisi') pesanRevisi?: string) {
+    return this.service.nilaiSubmisi(id, req.user.id, skor, pesanRevisi);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
+  @Put('submisi/:id/revisi-selesai')
+  selesaikanRevisi(@Request() req: any, @Param('id') id: string) {
+    return this.service.selesaikanRevisi(req.user.id, id);
+  }
+
   @Get('diskusi')
   findAllDiskusi() { return this.service.findAllDiskusi(); }
 

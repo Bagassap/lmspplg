@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, CheckCircle2, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, Loader2, UserX, X } from "lucide-react";
+import { Check, CheckCircle2, ClipboardCheck, ChevronLeft, ChevronRight, Copy, Download, Eye, FolderOpen, Loader2, UserX, X } from "lucide-react";
 import { ArsipViewer } from "@/components/ukk/ArsipViewer";
+import { PenilaianModal } from "@/components/ukk/PenilaianModal";
+import type { PenilaianUkk } from "@/lib/ukkAspek";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
@@ -14,6 +16,7 @@ type SubmisiRow = {
   submittedAt: string;
   status?: "TERKIRIM" | "DITERIMA" | "REVISI";
   pesanRevisi?: string | null;
+  penilaian?: PenilaianUkk | null;
   driveUrl?: string | null;
   driveFolderUrl?: string | null;
   siswa?: { id: string; nama?: string | null; kelasId?: string | null; kelas?: { id: string; nama: string } | null; user?: { nama?: string; fotoProfil?: string | null } | null } | null;
@@ -58,6 +61,9 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
   const [tolak, setTolak] = useState<{ id: string; nama: string } | null>(null);
   const [alasan, setAlasan] = useState("");
   const [proses, setProses] = useState<string | null>(null);
+  const [nilai, setNilai] = useState<{ id: string; nama: string } | null>(null);
+  const [nilaiLokal, setNilaiLokal] = useState<Record<string, PenilaianUkk>>({});
+  const penilaianOf = (s: SubmisiRow) => nilaiLokal[s.id] ?? s.penilaian ?? null;
   const statusOf = (s: SubmisiRow): "TERKIRIM" | "DITERIMA" | "REVISI" => lokal[s.id]?.status ?? s.status ?? "TERKIRIM";
   const submisi = useMemo(() => semua.filter((s) => (lokal[s.id]?.status ?? s.status) !== "REVISI"), [semua, lokal]);
 
@@ -183,6 +189,13 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                   const cfg = st === "DITERIMA" ? { t: "Diterima", c: "bg-primary text-white" } : st === "REVISI" ? { t: "Ditolak", c: "bg-[#FFE9E2] text-[#E8562B]" } : { t: "Menunggu persetujuan", c: "bg-white text-primary dark:bg-slate-800" };
                   return <span className={`shrink-0 rounded-xl px-2.5 py-0.5 text-[10px] font-bold ${cfg.c}`}>{cfg.t}</span>;
                 })()}
+                {(() => {
+                  const p = penilaianOf(s);
+                  if (!p) return null;
+                  const tertahan = !!p.pesanRevisi && !p.revisiSelesai;
+                  if (tertahan) return <span className="shrink-0 rounded-xl bg-[#FFE9E2] px-2.5 py-0.5 text-[10px] font-bold text-[#E8562B]">Menunggu revisi siswa</span>;
+                  return p.rataRata != null ? <span className="shrink-0 rounded-xl bg-[#EFE9FD] px-2.5 py-0.5 text-[10px] font-bold text-[#3E03B3]">Nilai {p.rataRata}</span> : null;
+                })()}
                 <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto">
                   {statusOf(s) === "TERKIRIM" && (
                     <button type="button" disabled={proses === s.id} onClick={() => putuskan(s.id, "DITERIMA")}
@@ -204,6 +217,10 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
                       <Copy size={13} /> Salin link
                     </button>
                   )}
+                  <button type="button" onClick={() => setNilai({ id: s.id, nama })}
+                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#EFE9FD] px-3 py-1.5 text-[11px] font-bold text-[#3E03B3]">
+                    <ClipboardCheck size={13} /> Nilai
+                  </button>
                   {adalahArsip(s) && (
                     <button type="button" onClick={() => setArsip({ id: s.id, nama: s.fileName, siswa: nama })}
                       className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[#F26A3D] px-3 py-1.5 text-[11px] font-bold text-white">
@@ -285,6 +302,12 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
             </div>
           </div>
         </div>
+      )}
+      {nilai && (
+        <PenilaianModal submisiId={nilai.id} nama={nilai.nama}
+          awal={(() => { const r = semua.find((x) => x.id === nilai.id); return r ? penilaianOf(r) : null; })()}
+          onClose={() => setNilai(null)}
+          onSaved={(p) => setNilaiLokal((m) => ({ ...m, [nilai.id]: p }))} />
       )}
       {arsip && <ArsipViewer submisiId={arsip.id} nama={arsip.nama} siswa={arsip.siswa} onClose={() => setArsip(null)} />}
     </>

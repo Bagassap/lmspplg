@@ -646,10 +646,26 @@ model SubmisiProjectUKK {
   status      StatusSubmisiUKK @default(TERKIRIM)
   submittedAt DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+  penilaian   PenilaianUKK?
 
   @@unique([tahapanId, siswaId])
   @@index([soalId])
   @@map("submisi_project_ukk")
+}
+
+model PenilaianUKK {
+  id            String            @id @default(cuid())
+  submisiId     String            @unique
+  submisi       SubmisiProjectUKK @relation(fields: [submisiId], references: [id], onDelete: Cascade)
+  skor          Json
+  rataRata      Float?
+  pesanRevisi   String?
+  revisiSelesai Boolean           @default(false)
+  dinilaiOleh   String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@map("penilaian_ukk")
 }
 
 model DiskusiUKK {

@@ -12,6 +12,8 @@ import { join } from 'path';
 
 const INCLUDE_USER = { select: { id: true, nama: true, role: true } };
 
+import { ASPEK_NILAI } from './aspek-nilai';
+
 @Injectable()
 export class UjianUkkService {
   constructor(
@@ -143,6 +145,7 @@ export class UjianUkkService {
       where: { status: { not: 'REVISI' } },
       orderBy: { submittedAt: 'desc' },
       include: {
+        penilaian: true,
         soal:  { select: { id: true, judul: true } },
         tahapan: { select: { id: true, judul: true } },
         siswa: { include: { user: { select: { id: true, nama: true, fotoProfil: true } }, kelas: { select: { id: true, nama: true } } } },
@@ -209,14 +212,89 @@ export class UjianUkkService {
   async findMySubmisi(userId: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) return [];
-    return this.prisma.submisiProjectUKK.findMany({
+    const rows = await this.prisma.submisiProjectUKK.findMany({
       where: { siswaId: siswa.id, status: { not: 'REVISI' } },
       orderBy: { submittedAt: 'desc' },
       include: {
         soal: { select: { id: true, judul: true } },
         tahapan: { select: { id: true, judul: true } },
+        penilaian: true,
       },
     });
+    return rows.map((r) => {
+      const p = r.penilaian;
+      if (!p) return r;
+      const tertahan = !!p.pesanRevisi && !p.revisiSelesai;
+      return {
+        ...r,
+        penilaian: {
+          pesanRevisi: p.pesanRevisi,
+          revisiSelesai: p.revisiSelesai,
+          nilaiTertahan: tertahan,
+          skor: tertahan ? null : p.skor,
+          rataRata: tertahan ? null : p.rataRata,
+        },
+      };
+    });
+  }
+
+  async nilaiSubmisi(id: string, guruUserId: string, skorMasuk: Record<string, unknown>, pesanRevisi?: string) {
+    const submisi = await this.prisma.submisiProjectUKK.findUnique({
+      where: { id },
+      include: { tahapan: { select: { judul: true } }, siswa: { select: { userId: true } }, penilaian: true },
+    });
+    if (!submisi) throw new NotFoundException('Pengumpulan tidak ditemukan');
+    const kunci: string[] = ASPEK_NILAI.map((a) => a.key);
+    const skor: Record<string, number> = {};
+    for (const [k, v] of Object.entries(skorMasuk ?? {})) {
+      if (!kunci.includes(k)) throw new BadRequestException(`Aspek penilaian "${k}" tidak dikenal`);
+      if (v === null || v === '' || v === undefined) continue;
+      const n = Number(v);
+      if (!Number.isFinite(n) || n < 0 || n > 100) throw new BadRequestException('Nilai tiap aspek harus angka 0 sampai 100');
+      skor[k] = n;
+    }
+    const lengkap = kunci.every((k) => skor[k] !== undefined);
+    const rataRata = lengkap ? Math.round((kunci.reduce((a, k) => a + skor[k], 0) / kunci.length) * 100) / 100 : null;
+    const pesan = (pesanRevisi ?? '').trim() || null;
+    const pesanBaru = !!pesan && pesan !== submisi.penilaian?.pesanRevisi;
+    const revisiSelesai = pesan ? (pesanBaru ? false : submisi.penilaian?.revisiSelesai ?? false) : false;
+    const hasil = await this.prisma.penilaianUKK.upsert({
+      where: { submisiId: id },
+      create: { submisiId: id, skor, rataRata, pesanRevisi: pesan, revisiSelesai, dinilaiOleh: guruUserId },
+      update: { skor, rataRata, pesanRevisi: pesan, revisiSelesai, dinilaiOleh: guruUserId },
+    });
+    const judul = submisi.tahapan?.judul ?? 'UKK';
+    if (submisi.siswa?.userId) {
+      if (pesanBaru) {
+        void this.notificationService.create({
+          userId: submisi.siswa.userId,
+          title: 'Revisi project UKK',
+          message: `Task "${judul}" perlu direvisi: ${pesan}. Nilai keluar setelah revisi kamu selesaikan.`,
+          type: NotificationType.UKK,
+          link: '/ujian-ukk/jadwal-soal',
+        }).catch(() => undefined);
+      } else if (rataRata !== null && !pesan) {
+        void this.notificationService.create({
+          userId: submisi.siswa.userId,
+          title: 'Nilai UKK keluar',
+          message: `Nilai task "${judul}": ${rataRata}.`,
+          type: NotificationType.UKK,
+          link: '/ujian-ukk/jadwal-soal',
+        }).catch(() => undefined);
+      }
+    }
+    return hasil;
+  }
+
+  async selesaikanRevisi(userId: string, id: string) {
+    const submisi = await this.prisma.submisiProjectUKK.findUnique({
+      where: { id },
+      include: { siswa: { select: { userId: true } }, penilaian: true },
+    });
+    if (!submisi || submisi.siswa?.userId !== userId) throw new NotFoundException('Pengumpulan tidak ditemukan');
+    if (!submisi.penilaian?.pesanRevisi) throw new BadRequestException('Tidak ada revisi untuk diselesaikan');
+    await this.prisma.penilaianUKK.update({ where: { submisiId: id }, data: { revisiSelesai: true } });
+    return { ok: true };
   }
 
   async submitProject(userId: string, dto: SubmitProjectDto, fileUrl: string, fileName: string, localPath?: string) {

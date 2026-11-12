@@ -1,5 +1,7 @@
 "use client";
 
+import { NilaiSaya } from "@/components/ukk/NilaiSaya";
+import type { PenilaianUkk } from "@/lib/ukkAspek";
 import { UkkDriveHeader } from "@/components/ukk/UkkDriveHeader";
 import { isTaskAktif, formatRentang, daftarTanggal, statusPengumpulan } from "@/lib/ukkWaktu";
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -24,7 +26,7 @@ const SoalPdfViewer = dynamic(() => import("./SoalPdfViewer"), {
 
 interface Soal { id: string; judul: string; deskripsi?: string; fileUrl: string; fileName: string; }
 interface Tahapan { id: string; hariKe: number; judul: string; tanggal: string; tanggalSelesai?: string | null; jamMulai: string; jamSelesai: string; lokasi: string; penguji?: string; keterangan?: string; driveLink?: string | null; soal: Soal[]; }
-interface MySubmisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; }
+interface MySubmisi { id: string; tahapan?: { id: string; judul: string }; fileUrl: string; fileName: string; catatan?: string; pesanRevisi?: string; status: "TERKIRIM"|"DITERIMA"|"REVISI"; submittedAt: string; soal: { id: string; judul: string }; penilaian?: PenilaianUkk | null; }
 
 function formatTgl(s: string) { return new Date(s).toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric", timeZone: "Asia/Jakarta" }); }
 
@@ -398,6 +400,7 @@ export default function SiswaJadwalSoalPage() {
               </div>
 
               <div className="hidden flex-col gap-6 lg:flex">
+                <NilaiSaya items={mySubmisi} onChanged={loadAll} />
 
           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
               <div className="px-5 pt-5 pb-0" style={{background: "#F1F5F9"}}>
@@ -536,6 +539,8 @@ export default function SiswaJadwalSoalPage() {
                   ))}
                 </div>
               </section>
+
+              <NilaiSaya items={mySubmisi} onChanged={loadAll} />
 
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Task UKK</h2>
