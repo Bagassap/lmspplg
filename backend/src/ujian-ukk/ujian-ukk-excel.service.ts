@@ -3,8 +3,11 @@ import ExcelJS from 'exceljs';
 import { ASPEK_NILAI } from './aspek-nilai';
 
 export type NilaiExportGroup = {
-  kelas: string;
+  grup: string;
+  lokasi: string;
+  penguji: string;
   siswa: {
+    kelas: string;
     nama: string;
     nis: string;
     nilai: { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean }[];
@@ -82,9 +85,10 @@ export class UjianUkkExcelService {
     const usedNames = new Set<string>();
 
     for (const group of groups) {
-      const ws = wb.addWorksheet(safeSheetName(group.kelas, usedNames), { views: [{ state: 'frozen', ySplit: 1 }] });
-      ws.columns = [
+      const ws = wb.addWorksheet(safeSheetName(group.grup, usedNames), { views: [{ state: 'frozen', ySplit: 2 }] });
+      const kolom = [
         { header: 'No', key: 'no', width: 5 },
+        { header: 'Kelas', key: 'kelas', width: 12 },
         { header: 'Nama', key: 'nama', width: 26 },
         { header: 'NIS', key: 'nis', width: 13 },
         { header: 'Task', key: 'task', width: 28 },
@@ -93,10 +97,17 @@ export class UjianUkkExcelService {
         { header: 'Rata-rata', key: 'rata', width: 10 },
         { header: 'Status', key: 'status', width: 22 },
       ];
-      const header = ws.getRow(1);
+      ws.columns = kolom.map((k) => ({ key: k.key, width: k.width }));
+      const jumlahKolom = kolom.length;
+      const judul = group.penguji ? `${group.lokasi}   |   Guru pengawas: ${group.penguji}` : group.lokasi;
+      const barisJudul = ws.addRow([judul]);
+      ws.mergeCells(1, 1, 1, jumlahKolom);
+      barisJudul.height = 24;
+      barisJudul.getCell(1).font = { bold: true, size: 13, color: { argb: 'FF1F2937' } };
+      barisJudul.getCell(1).alignment = { vertical: 'middle', horizontal: 'left' };
+      const header = ws.addRow(kolom.map((k) => k.header));
       header.height = 34;
-      const jumlahKolom = 4 + ASPEK_NILAI.length + 3;
-      const warnaKolom = (c: number) => (c <= 4 ? WARNA.identitas : c <= 4 + ASPEK_NILAI.length ? WARNA.aspek : WARNA.ringkasan);
+      const warnaKolom = (c: number) => (c <= 5 ? WARNA.identitas : c <= 5 + ASPEK_NILAI.length ? WARNA.aspek : WARNA.ringkasan);
       for (let c = 1; c <= jumlahKolom; c++) {
         const cell = header.getCell(c);
         cell.font = { bold: true, size: 9, color: { argb: warnaKolom(c).teks } };
@@ -110,7 +121,7 @@ export class UjianUkkExcelService {
           const cell = row.getCell(c);
           cell.font = { size: 10 };
           cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: abu ? ISI_ABU : ISI_PUTIH } };
-          cell.alignment = { vertical: 'middle', horizontal: c === 2 || c === 4 ? 'left' : 'center', shrinkToFit: true };
+          cell.alignment = { vertical: 'middle', horizontal: c === 3 || c === 5 ? 'left' : 'center', shrinkToFit: true };
           cell.border = { bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } } };
         }
       };
@@ -119,7 +130,7 @@ export class UjianUkkExcelService {
       for (const s of group.siswa) {
         const abu = no % 2 === 0;
         if (s.nilai.length === 0) {
-          const row = ws.addRow({ no: no++, nama: s.nama, nis: s.nis, task: '-', status: 'Belum dinilai' });
+          const row = ws.addRow({ no: no++, kelas: s.kelas, nama: s.nama, nis: s.nis, task: '-', status: 'Belum dinilai' });
           warnai(row, abu);
           row.getCell('status').font = { size: 10, color: { argb: 'FF6B7280' }, bold: true };
           continue;
@@ -127,6 +138,7 @@ export class UjianUkkExcelService {
         s.nilai.forEach((n, i) => {
           const data: Record<string, string | number> = {
             no: i === 0 ? no : '',
+            kelas: i === 0 ? s.kelas : '',
             nama: i === 0 ? s.nama : '',
             nis: i === 0 ? s.nis : '',
             task: n.task,

@@ -219,25 +219,56 @@ export class UjianUkkService {
             submisiProjectUkk: {
               where: { status: { not: 'REVISI' }, penilaian: { isNot: null } },
               orderBy: { submittedAt: 'asc' },
-              include: { tahapan: { select: { judul: true } }, penilaian: true },
+              include: { tahapan: { select: { judul: true, lokasi: true, penguji: true } }, penilaian: true },
             },
           },
         },
       },
     });
-    return kelasList.map((k) => ({
-      kelas: k.nama,
-      siswa: k.siswa.map((s) => ({
-        nama: s.user?.nama ?? s.nama ?? '-',
-        nis: s.nis,
-        nilai: s.submisiProjectUkk.map((sub) => ({
-          task: sub.tahapan?.judul ?? 'Task UKK',
-          skor: (sub.penilaian?.skor ?? {}) as Record<string, number>,
-          rataRata: sub.penilaian?.rataRata ?? null,
-          menungguRevisi: !!sub.penilaian?.pesanRevisi && !sub.penilaian?.revisiSelesai,
-        })),
-      })),
-    }));
+
+    type Baris = { task: string; skor: Record<string, number>; rataRata: number | null; menungguRevisi: boolean };
+    type SiswaGrup = { kelas: string; nama: string; nis: string; nilai: Baris[] };
+    type Grup = { grup: string; lokasi: string; penguji: string; siswa: Map<string, SiswaGrup> };
+    const grupMap = new Map<string, Grup>();
+    const belum: SiswaGrup[] = [];
+
+    for (const k of kelasList) {
+      for (const s of k.siswa) {
+        const nama = s.user?.nama ?? s.nama ?? '-';
+        if (s.submisiProjectUkk.length === 0) {
+          belum.push({ kelas: k.nama, nama, nis: s.nis, nilai: [] });
+          continue;
+        }
+        for (const sub of s.submisiProjectUkk) {
+          const lokasi = (sub.tahapan?.lokasi ?? '').trim() || 'Tanpa Lokasi';
+          const penguji = (sub.tahapan?.penguji ?? '').trim() || 'Tanpa Pengawas';
+          const kunci = `${lokasi}||${penguji}`;
+          let g = grupMap.get(kunci);
+          if (!g) {
+            g = { grup: `${lokasi} - ${penguji}`, lokasi, penguji, siswa: new Map() };
+            grupMap.set(kunci, g);
+          }
+          let sg = g.siswa.get(s.id);
+          if (!sg) {
+            sg = { kelas: k.nama, nama, nis: s.nis, nilai: [] };
+            g.siswa.set(s.id, sg);
+          }
+          sg.nilai.push({
+            task: sub.tahapan?.judul ?? 'Task UKK',
+            skor: (sub.penilaian?.skor ?? {}) as Record<string, number>,
+            rataRata: sub.penilaian?.rataRata ?? null,
+            menungguRevisi: !!sub.penilaian?.pesanRevisi && !sub.penilaian?.revisiSelesai,
+          });
+        }
+      }
+    }
+
+    const urut = (a: SiswaGrup, b: SiswaGrup) => a.kelas.localeCompare(b.kelas, 'id', { numeric: true }) || a.nama.localeCompare(b.nama, 'id');
+    const hasil = [...grupMap.values()]
+      .sort((a, b) => a.lokasi.localeCompare(b.lokasi, 'id', { numeric: true }) || a.penguji.localeCompare(b.penguji, 'id'))
+      .map((g) => ({ grup: g.grup, lokasi: g.lokasi, penguji: g.penguji, siswa: [...g.siswa.values()].sort(urut) }));
+    if (belum.length) hasil.push({ grup: 'Belum Dinilai', lokasi: 'Belum Dinilai', penguji: '', siswa: belum.sort(urut) });
+    return hasil;
   }
 
   async findMySubmisi(userId: string) {
