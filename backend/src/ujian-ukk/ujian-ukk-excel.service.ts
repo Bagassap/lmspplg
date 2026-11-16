@@ -90,7 +90,7 @@ export class UjianUkkExcelService {
       ];
       ws.columns = kolom.map((k) => ({ key: k.key, width: k.width }));
       const jumlahKolom = kolom.length;
-      const judul = group.penguji ? `${group.lokasi}   |   Guru pengawas: ${group.penguji}` : group.lokasi;
+      const judul = [group.grup, group.lokasi, group.penguji && `Guru pengawas: ${group.penguji}`].filter(Boolean).join('   |   ');
       const barisJudul = ws.addRow([judul]);
       ws.mergeCells(1, 1, 1, jumlahKolom);
       barisJudul.height = 24;
@@ -119,7 +119,7 @@ export class UjianUkkExcelService {
 
       let no = 0;
       for (const s of group.siswa) {
-        const identitas = { kelas: s.kelas, nama: s.nama, nis: s.nis, lokasi: group.lokasi, penguji: group.penguji || '-' };
+        const identitas = { kelas: s.kelas, nama: s.nama, nis: s.nis, lokasi: group.lokasi || '-', penguji: group.penguji || '-' };
         if (s.nilai.length === 0) {
           no++;
           const row = ws.addRow({ no, ...identitas, task: '-', status: 'Belum dinilai' });

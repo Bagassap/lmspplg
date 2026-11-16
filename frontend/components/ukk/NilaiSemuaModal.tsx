@@ -81,8 +81,8 @@ export function NilaiSemuaModal({ onClose }: { onClose: () => void }) {
                   return (
                     <button key={g.grup} type="button" onClick={() => setGrup(g.grup)}
                       className={`shrink-0 rounded-xl px-3.5 py-2 text-left transition-all ${on ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3] dark:text-[#C4B5FD]"}`}>
-                      <span className="block text-xs font-bold leading-tight">{g.lokasi} <span className={on ? "text-white/75" : "opacity-70"}>({g.siswa.length})</span></span>
-                      {g.penguji && <span className={`block text-[10px] font-semibold leading-tight ${on ? "text-white/80" : "opacity-75"}`}>Pengawas: {g.penguji}</span>}
+                      <span className="block text-xs font-bold leading-tight">{g.grup} <span className={on ? "text-white/75" : "opacity-70"}>({g.siswa.length})</span></span>
+                      {(g.lokasi || g.penguji) && <span className={`block text-[10px] font-semibold leading-tight ${on ? "text-white/80" : "opacity-75"}`}>{[g.lokasi, g.penguji && `Pengawas: ${g.penguji}`].filter(Boolean).join(" · ")}</span>}
                     </button>
                   );
                 })}
