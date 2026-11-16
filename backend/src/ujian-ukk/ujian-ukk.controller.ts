@@ -349,13 +349,6 @@ export class UjianUkkController {
     return this.service.nilaiSubmisi(id, req.user.id, skor, pesanRevisi);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(Role.SISWA)
-  @Put('submisi/:id/revisi-selesai')
-  selesaikanRevisi(@Request() req: any, @Param('id') id: string) {
-    return this.service.selesaikanRevisi(req.user.id, id);
-  }
-
   @Get('diskusi')
   findAllDiskusi() { return this.service.findAllDiskusi(); }
 

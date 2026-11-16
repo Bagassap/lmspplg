@@ -1,7 +1,8 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { Award, Download, Loader2, Lock, Trophy } from "lucide-react";
+import Link from "next/link";
+import { Award, Download, Loader2, Lock, Send, Trophy } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ASPEK_NILAI, type PenilaianUkk } from "@/lib/ukkAspek";
 
@@ -29,7 +30,6 @@ export default function SiswaUkkNilaiSayaPage() {
   const [items, setItems] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [unduh, setUnduh] = useState<string | null>(null);
-  const [revisi, setRevisi] = useState<string | null>(null);
 
   const muat = useCallback(async () => {
     try {
@@ -67,22 +67,6 @@ export default function SiswaUkkNilaiSayaPage() {
       URL.revokeObjectURL(url);
     } finally {
       setUnduh(null);
-    }
-  }
-
-  async function selesaiRevisi(id: string) {
-    setRevisi(id);
-    try {
-      const res = await fetch(`/api/ujian-ukk/submisi/${id}/revisi-selesai`, { method: "PUT" });
-      if (!res.ok) {
-        const d = await res.json().catch(() => null);
-        toast.error("Gagal", typeof d?.message === "string" ? d.message : "Coba lagi");
-        return;
-      }
-      toast.success("Revisi ditandai selesai", "Nilai kamu sekarang terlihat.");
-      await muat();
-    } finally {
-      setRevisi(null);
     }
   }
 
@@ -136,7 +120,7 @@ export default function SiswaUkkNilaiSayaPage() {
                         <td className="px-4 py-3 text-center text-xs font-bold text-slate-500 dark:text-slate-400">{i + 1}</td>
                         <td className="px-3 py-3">
                           <p className="text-sm font-bold text-slate-900 dark:text-white">{s.tahapan?.judul ?? "Task UKK"}</p>
-                          {tertahan && <p className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-[#E8562B]"><Lock size={11} /> Nilai keluar setelah revisi selesai</p>}
+                          {tertahan && <p className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-[#E8562B]"><Lock size={11} /> Nilai keluar setelah revisi dikirim</p>}
                         </td>
                         {ASPEK_NILAI.map((a) => {
                           const v = tertahan ? null : p.skor?.[a.key];
@@ -160,7 +144,7 @@ export default function SiswaUkkNilaiSayaPage() {
                         </td>
                         <td className="px-4 py-3 text-center">
                           <button type="button" disabled={tertahan || p.rataRata == null || unduh === s.id} onClick={() => unduhPdf(s.id)}
-                            title={tertahan ? "Selesaikan revisi dulu" : "Unduh PDF"}
+                            title={tertahan ? "Kirim revisi dulu" : "Unduh PDF"}
                             className="inline-flex items-center gap-1.5 rounded-xl bg-[#EFE9FD] px-3 py-1.5 text-[11px] font-bold text-[#3E03B3] transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#3E03B3]/30 dark:text-[#C4B5FD]">
                             {unduh === s.id ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />} PDF
                           </button>
@@ -173,10 +157,10 @@ export default function SiswaUkkNilaiSayaPage() {
                             <div className="rounded-xl bg-[#FFE9E2] px-3 py-2.5 dark:bg-[#F26A3D]/20">
                               <p className="text-[11px] font-bold uppercase tracking-wider text-[#E8562B]">Revisi dari guru</p>
                               <p className="mt-0.5 whitespace-pre-wrap text-xs text-slate-800 dark:text-slate-100">{p.pesanRevisi}</p>
-                              <button type="button" disabled={revisi === s.id} onClick={() => selesaiRevisi(s.id)}
-                                className="mt-2 inline-flex items-center gap-1.5 rounded-xl bg-[#E8562B] px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-60">
-                                {revisi === s.id && <Loader2 size={12} className="animate-spin" />} Saya sudah menyelesaikan revisi
-                              </button>
+                              <Link href="/siswa/ujian-ukk/jadwal-soal"
+                                className="mt-2 inline-flex items-center gap-1.5 rounded-xl bg-[#E8562B] px-3 py-1.5 text-[11px] font-bold text-white">
+                                <Send size={12} /> Kirim revisi
+                              </Link>
                             </div>
                           </td>
                         </tr>

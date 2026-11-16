@@ -344,9 +344,9 @@ export class UjianUkkService {
         void this.notificationService.create({
           userId: submisi.siswa.userId,
           title: 'Revisi project UKK',
-          message: `Task "${judul}" perlu direvisi: ${pesan}. Nilai keluar setelah revisi kamu selesaikan.`,
+          message: `Task "${judul}" perlu direvisi: ${pesan}. Kirim revisi project kamu, nilai keluar setelah revisi terkirim.`,
           type: NotificationType.UKK,
-          link: '/ujian-ukk/nilai-saya',
+          link: '/ujian-ukk/jadwal-soal',
         }).catch(() => undefined);
       } else if (rataRata !== null && !pesan) {
         void this.notificationService.create({
@@ -389,17 +389,6 @@ export class UjianUkkService {
     };
   }
 
-  async selesaikanRevisi(userId: string, id: string) {
-    const submisi = await this.prisma.submisiProjectUKK.findUnique({
-      where: { id },
-      include: { siswa: { select: { userId: true } }, penilaian: true },
-    });
-    if (!submisi || submisi.siswa?.userId !== userId) throw new NotFoundException('Pengumpulan tidak ditemukan');
-    if (!submisi.penilaian?.pesanRevisi) throw new BadRequestException('Tidak ada revisi untuk diselesaikan');
-    await this.prisma.penilaianUKK.update({ where: { submisiId: id }, data: { revisiSelesai: true } });
-    return { ok: true };
-  }
-
   async submitProject(userId: string, dto: SubmitProjectDto, fileUrl: string, fileName: string, localPath?: string) {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { kelas: { select: { nama: true } } } });
     if (!siswa) throw new ForbiddenException('Profil siswa tidak ditemukan');
@@ -414,16 +403,18 @@ export class UjianUkkService {
     const tutup = new Date(`${ymd(task.tanggalSelesai ?? task.tanggal)}T${task.jamSelesai}:00+07:00`);
     const label = (d: Date) =>
       new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(d) + ' WIB';
+    const ada = await this.prisma.submisiProjectUKK.findFirst({ where: { tahapanId: task.id, siswaId: siswa.id }, include: { penilaian: true } });
+    const kirimRevisi = !!ada?.penilaian?.pesanRevisi && !ada.penilaian.revisiSelesai;
     const sekarang = new Date();
-    if (!Number.isNaN(buka.getTime()) && sekarang < buka) {
+    if (!kirimRevisi && !Number.isNaN(buka.getTime()) && sekarang < buka) {
       throw new BadRequestException(`Pengumpulan task "${task.judul}" belum dibuka. Dibuka ${label(buka)}.`);
     }
-    if (!Number.isNaN(tutup.getTime()) && sekarang > tutup) {
+    if (!kirimRevisi && !Number.isNaN(tutup.getTime()) && sekarang > tutup) {
       throw new BadRequestException(`Waktu pengumpulan task "${task.judul}" sudah berakhir (${label(tutup)}).`);
     }
 
     const akhir = task.tanggalSelesai ?? task.tanggal;
-    const kembar = await this.prisma.submisiProjectUKK.findFirst({
+    const kembar = kirimRevisi ? null : await this.prisma.submisiProjectUKK.findFirst({
       where: {
         siswaId: siswa.id,
         tahapanId: { not: task.id },
@@ -442,23 +433,35 @@ export class UjianUkkService {
       soal: { select: { id: true, judul: true } },
       tahapan: { select: { id: true, judul: true } },
     };
-    const ada = await this.prisma.submisiProjectUKK.findFirst({ where: { tahapanId: task.id, siswaId: siswa.id } });
-    if (ada && ada.status === 'TERKIRIM') {
+    if (ada && !kirimRevisi && ada.status === 'TERKIRIM') {
       throw new BadRequestException(`Pengiriman task "${task.judul}" masih menunggu persetujuan admin. Kamu bisa mengirim lagi jika file ditolak.`);
     }
-    if (ada && ada.status === 'DITERIMA') {
+    if (ada && !kirimRevisi && ada.status === 'DITERIMA') {
       throw new BadRequestException(`Pengiriman task "${task.judul}" sudah diterima admin.`);
     }
     const simpan = ada
       ? await this.prisma.submisiProjectUKK.update({
           where: { id: ada.id },
-          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: 'TERKIRIM', pesanRevisi: null, submittedAt: new Date(), updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
+          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: kirimRevisi ? ada.status : 'TERKIRIM', pesanRevisi: null, submittedAt: new Date(), updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
           include,
         })
       : await this.prisma.submisiProjectUKK.create({
           data: { soalId: dto.soalId, tahapanId: task.id, siswaId: siswa.id, fileUrl, fileName, catatan: dto.catatan },
           include,
         });
+
+    if (kirimRevisi && ada?.penilaian) {
+      await this.prisma.penilaianUKK.update({ where: { submisiId: ada.id }, data: { revisiSelesai: true } });
+      if (ada.penilaian.dinilaiOleh) {
+        void this.notificationService.create({
+          userId: ada.penilaian.dinilaiOleh,
+          title: 'Revisi project UKK masuk',
+          message: `${siswa.nama ?? 'Siswa'} sudah mengirim revisi untuk task "${task.judul}".`,
+          type: NotificationType.UKK,
+          link: '/ujian-ukk/jadwal-soal',
+        }).catch(() => undefined);
+      }
+    }
 
     if (localPath && this.drive.isConfigured()) {
       try {

@@ -52,8 +52,8 @@ function isValidDriveUrl(url: string) {
   return url.startsWith("https://drive.google.com/") || url.startsWith("https://docs.google.com/");
 }
 
-function SubmitModal({ open, onClose, soal, task, onSubmit }: {
-  open: boolean; onClose: () => void; soal: Soal | null; task: Tahapan | null; onSubmit: (fd: FormData) => Promise<void>;
+function SubmitModal({ open, onClose, soal, task, onSubmit, revisi }: {
+  open: boolean; onClose: () => void; soal: Soal | null; task: Tahapan | null; onSubmit: (fd: FormData) => Promise<void>; revisi?: string | null;
 }) {
   const app = useIsAppMode();
   const [driveUrl, setDriveUrl] = useState("");
@@ -104,7 +104,7 @@ function SubmitModal({ open, onClose, soal, task, onSubmit }: {
                     <Link2 size={18} className="text-white"/>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-white uppercase tracking-widest">Kirim Project</p>
+                    <p className="text-[10px] font-bold text-white uppercase tracking-widest">{revisi ? "Kirim Revisi" : "Kirim Project"}</p>
                     <p className="text-base font-extrabold text-white leading-tight line-clamp-1">{task ? task.judul : soal.judul}</p>
                   </div>
                 </div>
@@ -114,6 +114,12 @@ function SubmitModal({ open, onClose, soal, task, onSubmit }: {
               </div>
             </div>
             <form onSubmit={submit} className="p-6 space-y-4">
+              {revisi && (
+                <div className="rounded-xl bg-[#FFE9E2] px-3.5 py-3 dark:bg-[#F26A3D]/20">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#E8562B]">Revisi dari guru</p>
+                  <p className="mt-0.5 whitespace-pre-wrap text-xs text-slate-800 dark:text-slate-100">{revisi}</p>
+                </div>
+              )}
               <div className="flex items-start gap-3 bg-primary-light dark:bg-slate-700 rounded-xl p-3.5">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background: app ? "#3E03B3" : "#3E03B3"}}>
                   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M6.18 15L3.12 9.72 9.24 0h5.51L8.63 9.72 6.18 15zm5.82 0H7.76l2.45-4.28h7.13L14.89 15h-2.89zM12 7.5l2.89-5h2.89L21 7.5h-5.78L12 7.5zM20.88 15l-2.45-4.28h2.01L24 15h-3.12z"/></svg>
@@ -179,7 +185,7 @@ function SubmitModal({ open, onClose, soal, task, onSubmit }: {
                 <button type="submit" disabled={saving || (!berkas && !driveUrl.trim())}
                   className={`flex-1 py-2.5 text-sm font-bold disabled:opacity-60 flex items-center justify-center gap-2 ${app ? "rounded-xl text-white" : "rounded-xl text-white"}`}
                   style={{background: app ? "#3E03B3" : "#F26A3D"}}>
-                  {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> Kirim Project</>}
+                  {saving ? <><Loader2 size={14} className="animate-spin"/> Mengirim...</> : <><Send size={14}/> {revisi ? "Kirim Revisi" : "Kirim Project"}</>}
                 </button>
               </div>
             </form>
@@ -201,6 +207,7 @@ export default function SiswaJadwalSoalPage() {
   const [taskSearch,   setTaskSearch]  = useState("");
   const [submitSoal,   setSubmitSoal]  = useState<Soal | null>(null);
   const [submitTask,   setSubmitTask]  = useState<Tahapan | null>(null);
+  const [submitRevisi, setSubmitRevisi] = useState<string | null>(null);
   const [detailTarget, setDetailTarget] = useState<MySubmisi | null>(null);
   const [revisiModal,  setRevisiModal]  = useState<MySubmisi | null>(null);
   const [openJadwalModal, setOpenJadwalModal] = useState(false);
@@ -231,7 +238,7 @@ export default function SiswaJadwalSoalPage() {
   async function doSubmit(fd: FormData) {
     try {
       const r = await fetch("/api/ujian-ukk/submisi", { method:"POST", body: fd });
-      if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); setSubmitTask(null); loadAll(); }
+      if (r.ok) { toast.success("Project berhasil dikirim!", "Guru akan mereview pengirimanmu."); setSubmitSoal(null); setSubmitTask(null); setSubmitRevisi(null); loadAll(); }
       else { const d = await r.json().catch(() => null); toast.error("Gagal mengirim", typeof d?.message === "string" ? d.message : "Coba lagi"); }
     } catch {
       toast.error("Server tidak dapat dijangkau", "Periksa koneksi internet dan coba lagi.");
@@ -254,7 +261,17 @@ export default function SiswaJadwalSoalPage() {
     if (w === "tutup") { toast.error("Pengumpulan sudah ditutup", `Batas akhir ${formatRentang({ ...t, tanggal: t.tanggalSelesai || t.tanggal })} pukul ${t.jamSelesai} WIB.`); return; }
     const g = soalFiles[0] ?? null;
     if (!g) { toast.error("Project belum bisa dikirim", "Soal UKK belum diunggah oleh admin/guru."); return; }
-    setSubmitTask(t); setSubmitSoal(g);
+    setSubmitRevisi(null); setSubmitTask(t); setSubmitSoal(g);
+  };
+  const perluRevisi = (s?: MySubmisi) => !!s?.penilaian?.pesanRevisi && !s.penilaian.revisiSelesai;
+  const pesanRevisiDari = (s: MySubmisi) => (perluRevisi(s) ? s.penilaian?.pesanRevisi : s.pesanRevisi) || "";
+  const kirimRevisi = (s: MySubmisi) => {
+    const tk = tahapanList.find(x => x.id === s.tahapan?.id);
+    if (!tk) return;
+    if (!perluRevisi(s)) { openSubmit(tk); return; }
+    const g = soalFiles.find(x => x.id === s.soal?.id) ?? soalFiles[0] ?? null;
+    if (!g) { toast.error("Revisi belum bisa dikirim", "Soal UKK tidak ditemukan."); return; }
+    setSubmitRevisi(s.penilaian?.pesanRevisi ?? null); setSubmitTask(tk); setSubmitSoal(g);
   };
   const diterima   = mySubmisi.filter(s=>s.status==="DITERIMA").length;
   const revisiCnt  = mySubmisi.filter(s=>s.status==="REVISI").length;
@@ -464,7 +481,9 @@ export default function SiswaJadwalSoalPage() {
                         const isTerkirim = myS?.status === "TERKIRIM";
                         const pct        = myS ? 100 : 0;
 
-                        const btn = isDiterima
+                        const btn = perluRevisi(myS)
+                          ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg:"#FFE9E2", clr:"#E8562B", border:"#E8562B", onClick:()=>setRevisiModal(myS!) }
+                          : isDiterima
                           ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg:"#F1EDFA", clr:"#3E03B3", border:"#F26A3D", onClick:()=>setDetailTarget(myS!) }
                           : isRevisi
                           ? { label:"Ditolak", icon:<AlertCircle size={11}/>, bg:"#F2F2F2", clr:"#0F172A", border:"#0F172A", onClick:()=>setRevisiModal(myS!) }
@@ -572,7 +591,9 @@ export default function SiswaJadwalSoalPage() {
                     const isDiterima = myS?.status === "DITERIMA";
                     const isRevisi = myS?.status === "REVISI";
                     const isTerkirim = myS?.status === "TERKIRIM";
-                    const btn = isDiterima
+                    const btn = perluRevisi(myS)
+                      ? { label: "Revisi", icon: <AlertCircle size={12} />, bg: "#FFE9E2", clr: "#E8562B", onClick: () => setRevisiModal(myS!) }
+                      : isDiterima
                       ? { label: "Diterima", icon: <CheckCircle size={12} />, bg: "#F1EDFA", clr: "#3E03B3", onClick: () => setDetailTarget(myS!) }
                       : isRevisi
                       ? { label: "Ditolak", icon: <AlertCircle size={12} />, bg: APP_SOFT, clr: APP_ACCENT, onClick: () => setRevisiModal(myS!) }
@@ -673,7 +694,9 @@ export default function SiswaJadwalSoalPage() {
                   const pct        = myS ? 100 : 0;
                   const barColor   = isDiterima ? "#F26A3D" : isRevisi ? "#0F172A" : "#3E03B3";
 
-                  const btn = isDiterima
+                  const btn = perluRevisi(myS)
+                    ? { label:"Revisi", icon:<AlertCircle size={11}/>, bg: accent ? "#FFFFFF" : "#FFE9E2", clr: "#E8562B", onClick:()=>setRevisiModal(myS!) }
+                    : isDiterima
                     ? { label:"Diterima", icon:<CheckCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F1EDFA", clr: accent ? "#fff" : "#3E03B3", onClick:()=>setDetailTarget(myS!) }
                     : isRevisi
                     ? { label:"Ditolak", icon:<AlertCircle size={11}/>, bg: accent ? "rgba(255,255,255,0.2)" : "#F2F2F2", clr: accent ? "#fff" : "#0F172A", onClick:()=>setRevisiModal(myS!) }
@@ -731,7 +754,7 @@ export default function SiswaJadwalSoalPage() {
         </div>
       </div>
 
-      <SubmitModal open={!!submitSoal} onClose={()=>{ setSubmitSoal(null); setSubmitTask(null); }} soal={submitSoal} task={submitTask} onSubmit={doSubmit}/>
+      <SubmitModal open={!!submitSoal} onClose={()=>{ setSubmitSoal(null); setSubmitTask(null); setSubmitRevisi(null); }} soal={submitSoal} task={submitTask} onSubmit={doSubmit} revisi={submitRevisi}/>
 
       <AnimatePresence>
         {detailTarget && (
@@ -821,8 +844,8 @@ export default function SiswaJadwalSoalPage() {
                       <AlertCircle size={18} className="text-[#000000] dark:text-[#C4B5FD]"/>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-[#000000]/70 uppercase tracking-widest">Ditolak</p>
-                      <p className="text-base font-extrabold text-[#000000] dark:text-[#C4B5FD] leading-tight">{revisiModal.soal?.judul}</p>
+                      <p className="text-[10px] font-bold text-[#000000]/70 uppercase tracking-widest">{perluRevisi(revisiModal) ? "Perlu Revisi" : "Ditolak"}</p>
+                      <p className="text-base font-extrabold text-[#000000] dark:text-[#C4B5FD] leading-tight">{revisiModal.tahapan?.judul ?? revisiModal.soal?.judul}</p>
                     </div>
                   </div>
                   <button onClick={()=>setRevisiModal(null)} className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-[#000000] dark:text-[#C4B5FD] hover:bg-slate-100">
@@ -835,9 +858,9 @@ export default function SiswaJadwalSoalPage() {
                   <div className="flex items-start gap-2.5">
                     <AlertCircle size={15} className="text-[#5D900F] dark:text-[#C4B5FD] mt-0.5 shrink-0"/>
                     <div>
-                      <p className="text-xs font-bold text-[#000000] dark:text-[#C4B5FD] mb-1.5">Catatan dari Penguji</p>
+                      <p className="text-xs font-bold text-[#000000] dark:text-[#C4B5FD] mb-1.5">{perluRevisi(revisiModal) ? "Revisi dari Guru" : "Catatan dari Penguji"}</p>
                       <p className="text-sm text-[#000000] dark:text-[#C4B5FD] leading-relaxed whitespace-pre-line">
-                        {revisiModal.pesanRevisi || "Project ditolak admin. Silakan perbaiki lalu kirim ulang."}
+                        {pesanRevisiDari(revisiModal) || "Project ditolak admin. Silakan perbaiki lalu kirim ulang."}
                       </p>
                     </div>
                   </div>
@@ -850,7 +873,9 @@ export default function SiswaJadwalSoalPage() {
                   </a>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Perbaiki project kamu sesuai catatan di atas, upload ke Google Drive, lalu kirim ulang link-nya.
+                  {perluRevisi(revisiModal)
+                    ? "Kamu wajib mengirim revisi project sesuai catatan di atas. Nilai baru terlihat setelah revisi terkirim."
+                    : "Perbaiki project kamu sesuai catatan di atas, upload ke Google Drive, lalu kirim ulang link-nya."}
                 </p>
               </div>
               <div className="px-6 pb-6 flex gap-3">
@@ -858,10 +883,10 @@ export default function SiswaJadwalSoalPage() {
                   className={`flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-sm font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 ${appMode ? "rounded-xl" : "rounded-xl"}`}>
                   Tutup
                 </button>
-                <button onClick={()=>{ const tk = tahapanList.find(x => x.id === revisiModal?.tahapan?.id); setRevisiModal(null); if (tk) openSubmit(tk); }}
+                <button onClick={()=>{ const s = revisiModal; setRevisiModal(null); if (s) kirimRevisi(s); }}
                   className={`flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2 ${appMode ? "rounded-xl" : "rounded-xl"}`}
                   style={appMode ? {background: "#3E03B3", color: "#fff"} : {background: "#F26A3D", color: "#FFFFFF"}}>
-                  <Send size={13}/> Kirim Ulang Project
+                  <Send size={13}/> {perluRevisi(revisiModal) ? "Kirim Revisi" : "Kirim Ulang Project"}
                 </button>
               </div>
             </motion.div>

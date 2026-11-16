@@ -92,7 +92,7 @@ export function PenilaianModal({
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">Revisi (opsional)</label>
             <textarea value={revisi} onChange={(e) => setRevisi(e.target.value)} rows={3} placeholder="Tulis catatan revisi untuk siswa"
               className="w-full resize-none rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-800 outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:text-white" />
-            {menunggu && <p className="mt-1 text-[11px] font-semibold text-[#E8562B]">Nilai belum terlihat oleh siswa sampai siswa menyelesaikan revisi.</p>}
+            {menunggu && <p className="mt-1 text-[11px] font-semibold text-[#E8562B]">Nilai belum terlihat oleh siswa sampai siswa mengirim revisi project.</p>}
           </div>
         </div>
 
