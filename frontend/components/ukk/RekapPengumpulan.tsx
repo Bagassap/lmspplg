@@ -24,6 +24,7 @@ type SubmisiRow = {
 type KelasXII = { id: string; nama: string; siswa: { id: string; nama: string | null; nis: string; user?: { nama: string; fotoProfil?: string | null } | null }[] };
 
 const PER_PAGE = 10;
+const urutNama = (a: string, b: string) => a.trim().localeCompare(b.trim(), "id", { sensitivity: "base" });
 
 function urlZip(o: { tahapanId?: string; kelasId?: string }) {
   const qs = new URLSearchParams();
@@ -79,13 +80,18 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
   const aktif = kelasList.find((k) => k.id === aktifId);
 
   const sudahRows = useMemo(
-    () => submisi.filter((s) => kelasOf(s) === aktifId),
+    () => submisi
+      .filter((s) => kelasOf(s) === aktifId)
+      .sort((a, b) => urutNama(a.siswa?.user?.nama || a.siswa?.nama || "", b.siswa?.user?.nama || b.siswa?.nama || "")),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [submisi, aktifId],
   );
   const sudahIds = useMemo(() => new Set(sudahRows.map((s) => s.siswa?.id)), [sudahRows]);
   const folderKelas = sudahRows.find((s) => s.driveFolderUrl)?.driveFolderUrl ?? null;
-  const belumList = useMemo(() => (aktif?.siswa ?? []).filter((s) => !sudahIds.has(s.id)), [aktif, sudahIds]);
+  const belumList = useMemo(
+    () => (aktif?.siswa ?? []).filter((s) => !sudahIds.has(s.id)).sort((a, b) => urutNama(a.user?.nama || a.nama || "", b.user?.nama || b.nama || "")),
+    [aktif, sudahIds],
+  );
 
   useEffect(() => { setPage(0); }, [aktifId, tab]);
 
