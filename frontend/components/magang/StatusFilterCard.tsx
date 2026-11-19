@@ -24,13 +24,16 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
           const aktif = value === t.value;
           return (
             <button key={t.label} type="button" onClick={() => onChange(t.value)}
-              className="flex items-center gap-2.5 rounded-2xl border-l-4 px-3 py-2.5 text-left transition-colors"
-              style={aktif ? { background: t.bg, borderColor: t.clr } : { background: "transparent", borderColor: "transparent" }}>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: t.bg, color: t.clr }}>
+              className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-left transition-all"
+              style={aktif
+                ? { background: t.clr, color: "#fff", boxShadow: `0 8px 20px -8px ${t.clr}` }
+                : { background: t.bg, color: t.clr }}>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                style={aktif ? { background: "rgba(255,255,255,0.22)", color: "#fff" } : { background: "rgba(255,255,255,0.7)", color: t.clr }}>
                 <t.icon size={17} />
               </span>
-              <span className={`min-w-0 flex-1 truncate text-sm font-bold ${aktif ? "" : "text-slate-600 dark:text-slate-300"}`} style={aktif ? { color: t.clr } : undefined}>{t.label}</span>
-              <span className="shrink-0 text-lg font-extrabold tabular-nums" style={{ color: t.clr }}>{t.count}</span>
+              <span className="min-w-0 flex-1 truncate text-sm font-bold">{t.label}</span>
+              <span className="shrink-0 text-lg font-extrabold tabular-nums">{t.count}</span>
             </button>
           );
         })}
