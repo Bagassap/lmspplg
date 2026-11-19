@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Filter, Users, Clock, CheckCircle2, XCircle, Building2, Plus } from "lucide-react";
+import { Search, X, Filter, Building2 } from "lucide-react";
 import type { StatusPenempatan } from "./types";
 
 const REF_PRIMARY = "#3E03B3";
@@ -20,12 +20,12 @@ export function PenempatanFilterBar({
   mobileNative?: boolean;
   menungguCount?: number;
 }) {
-  const STATUS_PILLS: { value: PenempatanStatusFilter; label: string; icon: typeof Users; count: number }[] = [
-    { value: "", label: "Semua", icon: Users, count: total },
-    { value: "MENUNGGU", label: "Menunggu", icon: Clock, count: menungguCount },
-    { value: "AKTIF", label: "Aktif", icon: Clock, count: aktifCount },
-    { value: "SELESAI", label: "Selesai", icon: CheckCircle2, count: selesaiCount },
-    { value: "BATAL", label: "Batal", icon: XCircle, count: batalCount },
+  const STATUS_PILLS: { value: PenempatanStatusFilter; label: string; count: number; bg: string; clr: string }[] = [
+    { value: "MENUNGGU", label: "Menunggu", count: menungguCount, bg: "#F1EDFA", clr: "#3E03B3" },
+    { value: "AKTIF", label: "Aktif", count: aktifCount, bg: "#E4F5EC", clr: "#22A06B" },
+    { value: "SELESAI", label: "Selesai", count: selesaiCount, bg: "#FFF4E0", clr: "#D97706" },
+    { value: "BATAL", label: "Batal", count: batalCount, bg: "#FEE2E2", clr: "#DC2626" },
+    { value: "", label: "Semua", count: total, bg: "#E0F2FE", clr: "#0EA5E9" },
   ];
 
   return (
@@ -92,31 +92,13 @@ export function PenempatanFilterBar({
       <div className="relative mt-4 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-4 dark:border-slate-700/50">
         {STATUS_PILLS.map((opt) => {
           const active = statusFilter === opt.value;
-          const Icon = opt.icon;
           return (
-            <motion.button
-              key={opt.value || "semua"}
-              type="button"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onStatusFilter(opt.value)}
-              className="relative rounded-lg px-3.5 py-1.5 text-xs font-semibold"
-            >
-              {active && (
-                <motion.span
-                  layoutId="penempatan-status-pill-active"
-                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                  className="absolute inset-0 rounded-lg shadow-sm"
-                  style={{ backgroundColor: REF_PRIMARY }}
-                />
-              )}
-              <span className={`relative flex items-center gap-1.5 transition-colors ${active ? "text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}>
-                <Icon size={12} />
-                {opt.label}
-                <span className={`rounded-md px-1.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
-                  {opt.count}
-                </span>
-              </span>
-            </motion.button>
+            <button key={opt.value || "semua"} type="button" onClick={() => onStatusFilter(opt.value)}
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-xs font-bold transition-colors"
+              style={active ? { background: opt.clr, color: "#fff" } : { background: opt.bg, color: opt.clr }}>
+              {opt.label}
+              <span className="rounded-lg px-1.5 text-[10px]" style={{ background: active ? "rgba(255,255,255,0.22)" : "#fff" }}>{opt.count}</span>
+            </button>
           );
         })}
       </div>
