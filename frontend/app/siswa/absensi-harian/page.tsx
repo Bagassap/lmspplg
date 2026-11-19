@@ -10,7 +10,6 @@ import { SignaturePad } from "@/components/absensi-harian/SignaturePad";
 import { RiwayatAbsenSheet } from "@/components/absensi-harian/RiwayatAbsenSheet";
 import { STATUS_CFG, PULANG_CFG, BRAND_GRADIENT, formatTgl, resolveMediaSrc, todayJakarta, parseLokasi } from "@/components/absensi-harian/shared";
 import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/types";
-import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { compressImage, readAsDataUrl, describePhotoError } from "@/lib/compressImage";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AbsensiAppMobile } from "@/components/absensi-harian/AbsensiAppMobile";
@@ -289,7 +288,7 @@ export default function SiswaAbsensiHarianPage() {
         <>
           <div className="hidden grid-cols-12 gap-4 md:gap-5 lg:grid">
 
-            <div className="col-span-12 xl:col-span-7">
+            <div className="col-span-12 xl:col-span-8 xl:col-start-3">
 
               <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="text-xs text-slate-400 dark:text-slate-500">{formatTgl(today)}</span>
@@ -410,18 +409,6 @@ export default function SiswaAbsensiHarianPage() {
               </AnimatePresence>
             </div>
 
-            {summary && (
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.25 }}
-                className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-5">
-                <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
-                <StatisticRainbow
-                  hadir={summary.hadir} sakit={summary.sakit}
-                  izin={summary.izin} alpha={summary.alpa}
-                  total={summary.total}
-                />
-              </motion.div>
-            )}
           </div>
 
           {appMode ? (
