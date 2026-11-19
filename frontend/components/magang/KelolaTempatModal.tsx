@@ -6,7 +6,7 @@ import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { TempatMagang } from "./types";
 
-const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]";
+const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
 export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   tempatList: TempatMagang[]; onClose: () => void; onSaved: () => void;
@@ -68,29 +68,29 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFE9E2] text-[#E8562B] dark:bg-[#E8562B]/20">
             <Building2 size={20} />
           </span>
           <h2 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Tempat Magang</h2>
           <button onClick={onClose} aria-label="Tutup"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
             <X size={16} />
           </button>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
           {editing ? (
-            <div className="space-y-3 rounded-2xl bg-[#F1EDFA] p-3.5">
+            <div className="space-y-3 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-800">
               <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700">Nama tempat</label>
-                <input value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} placeholder="Contoh: PT Maju Jaya Digital" className={`${INPUT_CLS} !bg-white`} />
+                <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Nama tempat</label>
+                <input value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} placeholder="Contoh: PT Maju Jaya Digital" className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700">Kuota siswa</label>
-                <input type="number" inputMode="numeric" min={1} value={kuota} onChange={(e) => setKuota(e.target.value)} className={`${INPUT_CLS} !bg-white`} />
+                <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Kuota siswa</label>
+                <input type="number" inputMode="numeric" min={1} value={kuota} onChange={(e) => setKuota(e.target.value)} className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
               </div>
               <div className="flex justify-end gap-2 pt-1">
-                <button onClick={() => setEditing(null)} className="rounded-xl px-4 py-2 text-xs font-bold text-slate-700">Batal</button>
+                <button onClick={() => setEditing(null)} className="rounded-xl px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300">Batal</button>
                 <button onClick={save} disabled={saving}
                   className="rounded-xl bg-[#3E03B3] px-5 py-2 text-xs font-bold text-white disabled:opacity-50">
                   {saving ? "Menyimpan..." : "Simpan"}
@@ -107,13 +107,13 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
           <div className="mt-3 space-y-2">
             {tempatList.map((t) => {
               return (
-                <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5">
-                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">{t.namaTempat}</p>
+                <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-800">
+                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
                   <div className="flex shrink-0 gap-1.5">
-                    <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#3E03B3]">
+                    <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] dark:bg-[#0EA5E9]/20">
                       <Pencil size={13} />
                     </button>
-                    <button onClick={() => remove(t)} aria-label="Hapus" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#F26A3D]">
+                    <button onClick={() => remove(t)} aria-label="Hapus" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] dark:bg-[#DC2626]/20 dark:text-[#F87171]">
                       <Trash2 size={13} />
                     </button>
                   </div>
