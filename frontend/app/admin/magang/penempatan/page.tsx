@@ -2,29 +2,34 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, CheckCircle2, ClipboardList, Clock, Flag, Wallet, ChevronLeft, ChevronRight as ChevronRightIcon, Users, XCircle } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { CheckCircle2, Clock, Flag, ChevronLeft, Users, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
-import StatsCard from "@/components/dashboard/StatsCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
 import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal";
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
-import { StatusFilterCard } from "@/components/magang/StatusFilterCard";
-import { STATUS_PENEMPATAN_CFG, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
-import { icon3dStyle } from "@/components/shared/Icon3D";
-import { useIsAppMode } from "@/lib/pwaInstall";
+import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
+import { formatAlamat, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-const statGridVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
+const STATUS_WARNA: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
+  { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
+  { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2 },
+  { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag },
+  { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle },
+  { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users },
+];
+
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 9.5rem";
+
 
 export default function AdminMagangPenempatanPage() {
   const router = useRouter();
-  const appMode = useIsAppMode();
   const toast = useToast();
   const [tempatList, setTempatList] = useState<TempatMagang[]>([]);
   const [penempatanList, setPenempatanList] = useState<PenempatanMagang[]>([]);
@@ -100,11 +105,6 @@ export default function AdminMagangPenempatanPage() {
     }
   }
 
-  const jumlahMenunggu = penempatanList.filter((p) => p.status === "MENUNGGU").length;
-  const jumlahAktif = penempatanList.filter((p) => p.status === "AKTIF").length;
-  const jumlahSelesai = penempatanList.filter((p) => p.status === "SELESAI").length;
-  const jumlahBatal = penempatanList.filter((p) => p.status === "BATAL").length;
-  const totalKuota = tempatList.reduce((sum, t) => sum + t.kuota, 0);
 
   const displayList = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -124,9 +124,9 @@ export default function AdminMagangPenempatanPage() {
   }, [penempatanList, search, statusFilter]);
 
   const grup = useMemo(() => {
-    const map = new Map<string, { id: string; nama: string; rows: PenempatanMagang[] }>();
+    const map = new Map<string, { id: string; nama: string; alamat: string; rows: PenempatanMagang[] }>();
     displayList.forEach((p) => {
-      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, rows: [] };
+      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, alamat: formatAlamat(p.tempatMagang), rows: [] };
       g.rows.push(p);
       map.set(p.tempatMagang.id, g);
     });
@@ -154,42 +154,9 @@ export default function AdminMagangPenempatanPage() {
       </div>
 
       <div className="mt-0 space-y-5 lg:mt-5">
-      {appMode && (
-        <div className="grid grid-cols-2 gap-3 lg:hidden">
-          {[
-            { label: "Tempat Magang", value: loading ? "—" : tempatList.length, icon: Building2, tone: "indigo" as const },
-            { label: "Siswa PKL Aktif", value: loading ? "—" : jumlahAktif, icon: Briefcase, tone: "emerald" as const },
-            { label: "Total Kuota", value: loading ? "—" : totalKuota, icon: Wallet, tone: "amber" as const },
-            { label: "Riwayat Penempatan", value: loading ? "—" : penempatanList.length, icon: ClipboardList, tone: "sky" as const },
-          ].map((t) => (
-            <div key={t.label} className="flex flex-col items-center gap-2 rounded-3xl bg-white p-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
-              <span className="flex h-14 w-14 items-center justify-center rounded-[20px]" style={icon3dStyle(t.tone)}>
-                <t.icon size={24} color="#fff" />
-              </span>
-              <span className="text-xl font-extrabold leading-none text-slate-900 dark:text-white">{t.value}</span>
-              <span className="-mt-1 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">{t.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className={appMode ? "hidden lg:block" : "contents"}>
-      <div className="mb-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <StatsCard icon={Building2} label="Tempat Magang" value={loading ? 0 : tempatList.length} sub="Tempat PKL terdaftar" delay={0.05} />
-        <StatsCard icon={Briefcase} label="Siswa PKL Aktif" value={loading ? 0 : jumlahAktif} sub="Sedang menjalani PKL" delay={0.1} />
-        <StatsCard icon={Wallet} label="Total Kuota" value={loading ? 0 : totalKuota} sub="Kapasitas semua tempat" delay={0.15} />
-        <StatsCard icon={ClipboardList} label="Riwayat Penempatan" value={loading ? 0 : penempatanList.length} sub="Seluruh penempatan" delay={0.2} />
-      </div>
-      </div>
-
       <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
       <StatusFilterCard
-        items={[
-          { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock, count: jumlahMenunggu },
-          { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2, count: jumlahAktif },
-          { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag, count: jumlahSelesai },
-          { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle, count: jumlahBatal },
-          { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users, count: penempatanList.length },
-        ]}
+        items={STATUS_WARNA.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
         value={statusFilter} onChange={setStatusFilter} />
       <div className="min-w-0 space-y-5">
       <PenempatanFilterBar
@@ -199,32 +166,53 @@ export default function AdminMagangPenempatanPage() {
         mobileNative
       />
 
-      <div className="card-pisah space-y-1.5 rounded-3xl border border-slate-100 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-4">
-        {loading ? (
-          [0, 1, 2].map((i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)
-        ) : grup.length === 0 ? (
-          <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
-        ) : grup.map((g) => {
-          const menunggu = g.rows.filter((r) => r.status === "MENUNGGU").length;
-          const aktif = g.rows.filter((r) => r.status === "AKTIF").length;
-          return (
-            <button key={g.id} type="button" onClick={() => setBukaTempat(g.id)}
-              className="flex w-full items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={15} /></span>
-              <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white">{g.nama}</p>
-              {menunggu > 0 && (
-                <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG.MENUNGGU.bg, color: STATUS_PENEMPATAN_CFG.MENUNGGU.clr }}>{menunggu} menunggu</span>
-              )}
-              {aktif > 0 && (
-                <span className="hidden shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold sm:inline" style={{ background: "#E4F5EC", color: "#22A06B" }}>{aktif} aktif</span>
-              )}
-              <span className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>
-                <Users size={11} /> {g.rows.length}
-              </span>
-              <ChevronRightIcon size={16} className="shrink-0 text-[#F26A3D]" />
-            </button>
-          );
-        })}
+      <div className="card-pisah overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="overflow-x-auto">
+          <div className="min-w-[720px]">
+            <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
+              <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white">Alamat</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
+              <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Siswa</span>
+            </div>
+            {loading ? (
+              <div className="space-y-2 p-4">
+                {[0, 1, 2].map((i) => <div key={i} className="h-10 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)}
+              </div>
+            ) : grup.length === 0 ? (
+              <p className="px-4 py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
+            ) : (
+              <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+                {grup.map((g, idx) => (
+                  <div key={g.id} className="grid items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    style={{ gridTemplateColumns: GRID_COLS }}>
+                    <span className="text-center text-xs font-bold text-slate-400">{idx + 1}</span>
+                    <p className="truncate text-sm font-bold text-slate-800 dark:text-white" title={g.nama}>{g.nama}</p>
+                    <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {STATUS_WARNA.filter((w) => w.value).map((w) => {
+                        const n = g.rows.filter((r) => r.status === w.value).length;
+                        if (!n) return null;
+                        return (
+                          <span key={w.value} className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: w.bg, color: w.clr }}>
+                            {n} {w.label.toLowerCase()}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <div className="flex justify-end">
+                      <button type="button" onClick={() => setBukaTempat(g.id)}
+                        className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
+                        <Users size={13} /> Lihat siswa ({g.rows.length})
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
       </div>
       </div>
