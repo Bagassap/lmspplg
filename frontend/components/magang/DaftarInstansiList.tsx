@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Building2, CheckCircle2, ChevronDown, Search, Users } from "lucide-react";
-import { toTitleCase } from "@/components/data-siswa/shared";
+import { AnimatePresence } from "framer-motion";
+import { Building2, ChevronRight, Search, Users } from "lucide-react";
+import { InstansiDetailModal } from "./InstansiDetailModal";
 import type { Instansi } from "./types";
 
 export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId }: {
@@ -13,7 +14,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
   pilihId?: string | null;
 }) {
   const [q, setQ] = useState("");
-  const [terbuka, setTerbuka] = useState<string | null>(null);
+  const [terbuka, setTerbuka] = useState<Instansi | null>(null);
   const tampil = useMemo(() => {
     const k = q.trim().toLowerCase();
     if (!k) return list;
@@ -44,42 +45,25 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{q ? "Tidak ada instansi yang cocok" : "Belum ada instansi terverifikasi"}</p>
           </div>
         ) : tampil.map((i) => {
-          const penuh = i.sisa !== null && i.sisa <= 0;
           const dipilih = pilihId === i.id;
-          const buka = terbuka === i.id;
           return (
-            <div key={i.id} className={`overflow-hidden rounded-xl transition-colors ${dipilih ? "bg-[#F6FEE8] ring-2 ring-[#5D900F] dark:bg-slate-600" : "bg-slate-50 dark:bg-slate-700"}`}>
-              <button type="button" onClick={() => setTerbuka(buka ? null : i.id)} aria-expanded={buka}
-                className="flex w-full items-center gap-2 px-3 py-2.5 text-left">
-                <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{i.namaTempat}</p>
-                <span className="flex shrink-0 items-center gap-1 rounded-xl px-2 py-0.5 text-[11px] font-bold" style={{ background: "#F6FEE8", color: "#5D900F" }}>
-                  <Users size={11} /> {i.siswa.length}
-                </span>
-                <ChevronDown size={16} className={`shrink-0 text-[#F26A3D] transition-transform ${buka ? "rotate-180" : ""}`} />
-              </button>
-              {buka && (
-                <div className="space-y-1.5 px-3 pb-3">
-                  {i.siswa.length === 0 ? (
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Belum ada siswa terverifikasi</p>
-                  ) : i.siswa.map((s, n) => (
-                    <div key={s.id} className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 dark:bg-slate-800">
-                      <span className="w-4 shrink-0 text-[10px] font-bold text-[#F26A3D]">{n + 1}.</span>
-                      <p className="min-w-0 flex-1 truncate text-xs font-semibold text-slate-700 dark:text-slate-100">{toTitleCase(s.nama)}</p>
-                      {s.kelas && <span className="shrink-0 text-[10px] text-slate-400">{s.kelas}</span>}
-                    </div>
-                  ))}
-                  {onPilih && !penuh && (
-                    <button type="button" onClick={() => onPilih(i)}
-                      className={`flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-bold ${dipilih ? "bg-[#5D900F] text-white" : "bg-[#F26A3D] text-white"}`}>
-                      {dipilih ? <><CheckCircle2 size={13} /> Dipilih</> : "Pilih instansi ini"}
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+            <button key={i.id} type="button" onClick={() => setTerbuka(i)}
+              className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-slate-600 ${dipilih ? "bg-[#F6FEE8] ring-2 ring-[#5D900F] dark:bg-slate-600" : "bg-slate-50 dark:bg-slate-700"}`}>
+              <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{i.namaTempat}</p>
+              <span className="flex shrink-0 items-center gap-1 rounded-xl px-2 py-0.5 text-[11px] font-bold" style={{ background: "#F6FEE8", color: "#5D900F" }}>
+                <Users size={11} /> {i.siswa.length}
+              </span>
+              <ChevronRight size={16} className="shrink-0 text-[#F26A3D]" />
+            </button>
           );
         })}
       </div>
+
+      <AnimatePresence>
+        {terbuka && (
+          <InstansiDetailModal instansi={terbuka} dipilih={pilihId === terbuka.id} onPilih={onPilih} onClose={() => setTerbuka(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
