@@ -247,7 +247,48 @@ export default function AdminMagangPenempatanPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
+        <div className="space-y-2 md:hidden">
+          {loading ? (
+            [0, 1, 2].map((i) => <div key={i} className="h-28 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />)
+          ) : grup.length === 0 ? (
+            <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
+          ) : grup.map((g) => (
+            <div key={g.id} className="rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+              <div className="flex items-start gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">{g.nama}</p>
+                  {g.alamat !== "-" && <p className="mt-0.5 line-clamp-2 text-xs text-slate-600 dark:text-slate-300">{g.alamat}</p>}
+                </div>
+                <button type="button" onClick={() => hapusInstansi(g)} disabled={hapusId === g.id} aria-label="Hapus instansi"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] disabled:opacity-50">
+                  {hapusId === g.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                </button>
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-1">
+                {g.terdaftar > 0 && (
+                  <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>{g.terdaftar} terverifikasi</span>
+                )}
+                {CHIP_STATUS.map((w) => {
+                  const n = g.rows.filter((r) => r.status === w.value).length;
+                  if (!n) return null;
+                  return <span key={w.value} className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: w.bg, color: w.clr }}>{n} {w.label}</span>;
+                })}
+              </div>
+              <div className="mt-2.5 grid grid-cols-2 gap-2">
+                <button type="button" onClick={() => unduhSurat(g.id)} disabled={unduhId === g.id}
+                  className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#22A06B] text-xs font-bold text-white disabled:opacity-50">
+                  {unduhId === g.id ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />} Unduh surat
+                </button>
+                <button type="button" onClick={() => setBukaTempat(g.id)} disabled={g.rows.length === 0}
+                  className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-40">
+                  <Users size={13} /> Siswa ({g.rows.length})
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700 md:block">
         <div className="overflow-x-auto">
           <div className="min-w-[860px]">
             <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>

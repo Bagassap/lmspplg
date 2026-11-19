@@ -115,7 +115,36 @@ export default function AdminPendaftaranPklPage() {
 
 
 
-        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
+        <div className="space-y-2 md:hidden">
+          {loading ? (
+            [0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />)
+          ) : grup.length === 0 ? (
+            <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada pendaftaran</p>
+          ) : grup.map((g) => (
+            <div key={g.key} className="rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+              <p className={`text-sm font-bold ${g.key === TANPA ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{g.nama}</p>
+              {g.alamat !== "-" && <p className="mt-0.5 line-clamp-2 text-xs text-slate-600 dark:text-slate-300">{g.alamat}</p>}
+              <div className="mt-2 flex flex-wrap items-center gap-1">
+                {(["MENUNGGU", "DITERIMA", "DITOLAK"] as StatusPendaftaran[]).map((st) => {
+                  const n = g.rows.filter((r) => r.status === st).length;
+                  if (!n) return null;
+                  const cfg = STATUS_PENDAFTARAN_CFG[st];
+                  return (
+                    <span key={st} className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>
+                      {n} {st === "MENUNGGU" ? "menunggu" : st === "DITERIMA" ? "terverifikasi" : "ditolak"}
+                    </span>
+                  );
+                })}
+              </div>
+              <button type="button" onClick={() => setBukaKey(g.key)}
+                className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white">
+                <Users size={13} /> Lihat siswa ({g.rows.length})
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700 md:block">
           <div className="overflow-x-auto">
             <div className="min-w-[720px]">
               <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
