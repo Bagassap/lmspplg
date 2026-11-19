@@ -106,49 +106,51 @@ export default function AdminPendaftaranPklPage() {
             className="h-10 w-full rounded-2xl border-0 bg-[#F1EDFA] pl-9 pr-4 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-1.5">
           {loading ? (
-            [0, 1, 2].map((i) => <div key={i} className="h-28 animate-pulse rounded-2xl bg-[#F1EDFA] dark:bg-slate-700" />)
+            [0, 1, 2].map((i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)
           ) : tampil.length === 0 ? (
             <p className="rounded-2xl bg-[#F1EDFA] px-4 py-10 text-center text-sm font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">Tidak ada pendaftaran</p>
           ) : tampil.map((p) => {
             const cfg = STATUS_PENDAFTARAN_CFG[p.status];
             const wa = waLink(p.noWa);
             const busy = busyId === p.id;
+            const alamat = formatAlamat(p);
+            const tempat = p.tempatMagang?.namaTempat ?? "Belum memilih tempat";
             return (
-              <div key={p.id} className="rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
-                <div className="flex items-center gap-2.5">
-                  <Avatar src={p.siswa?.user?.fotoProfil} nama={namaSiswa(p)} sizePx={36} fallbackBg={avatarColorFor(namaSiswa(p))} textClassName="text-[11px] font-extrabold" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-extrabold text-slate-900 dark:text-white">{namaSiswa(p)}</p>
-                    <p className="truncate text-xs text-slate-600 dark:text-slate-300">{p.siswa?.kelas?.nama ?? "-"} · NIS {p.siswa?.nis ?? "-"}</p>
-                  </div>
-                  <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
-                </div>
-                <div className="mt-2 space-y-1 text-xs text-slate-700 dark:text-slate-200">
-                  <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#E8562B]" /> {formatAlamat(p)}</p>
-                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#22A06B]" />
+              <div key={p.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700 md:flex-nowrap">
+                <Avatar src={p.siswa?.user?.fotoProfil} nama={namaSiswa(p)} sizePx={30} fallbackBg={avatarColorFor(namaSiswa(p))} textClassName="text-[10px] font-extrabold" />
+                <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white md:w-44 md:flex-none" title={namaSiswa(p)}>
+                  {namaSiswa(p)} <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{p.siswa?.kelas?.nama ?? "-"}</span>
+                </p>
+                <div className="order-last flex w-full min-w-0 items-center gap-3 text-xs text-slate-600 dark:text-slate-300 md:order-none md:w-auto md:flex-1">
+                  <span className="shrink-0 text-slate-400">NIS {p.siswa?.nis ?? "-"}</span>
+                  <span className="flex min-w-0 flex-1 items-center gap-1" title={alamat}><MapPin size={12} className="shrink-0 text-[#E8562B]" /><span className="truncate">{alamat}</span></span>
+                  <span className="flex shrink-0 items-center gap-1"><Phone size={12} className="shrink-0 text-[#22A06B]" />
                     {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{p.noWa}</a> : p.noWa}
-                  </p>
-                  <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#0EA5E9]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
-                  {p.status === "DITOLAK" && p.alasanTolak && <p className="font-semibold text-[#DC2626]">Alasan ditolak: {p.alasanTolak}</p>}
+                  </span>
+                  <span className="hidden min-w-0 max-w-[10rem] items-center gap-1 lg:flex" title={tempat}><Building2 size={12} className="shrink-0 text-[#0EA5E9]" /><span className="truncate">{tempat}</span></span>
+                  {p.status === "DITOLAK" && p.alasanTolak && (
+                    <span className="min-w-0 max-w-[12rem] truncate font-semibold text-[#DC2626]" title={`Alasan ditolak: ${p.alasanTolak}`}>{p.alasanTolak}</span>
+                  )}
                 </div>
+                <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                 {p.status === "MENUNGGU" && (
-                  <div className="mt-2.5 flex gap-2">
-                    <button type="button" onClick={() => setTolakTarget(p)} disabled={busy}
-                      className="flex h-9 items-center gap-1.5 rounded-xl bg-[#FEE2E2] px-3.5 text-xs font-bold text-[#DC2626] disabled:opacity-50">
-                      <XCircle size={13} /> Tolak
+                  <div className="flex shrink-0 gap-1.5">
+                    <button type="button" onClick={() => setTolakTarget(p)} disabled={busy} title="Tolak" aria-label="Tolak"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] disabled:opacity-50">
+                      <XCircle size={14} />
                     </button>
                     <button type="button" onClick={() => aksi(p, "terima")} disabled={busy}
-                      className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#22A06B] text-xs font-bold text-white disabled:opacity-50">
+                      className="flex h-8 items-center gap-1.5 rounded-lg bg-[#22A06B] px-3 text-xs font-bold text-white disabled:opacity-50">
                       {busy ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />} Verifikasi
                     </button>
                   </div>
                 )}
                 {p.status === "DITERIMA" && (
-                  <button type="button" onClick={() => batalVerifikasi(p)} disabled={busy}
-                    className="mt-2.5 flex h-9 items-center gap-1.5 rounded-xl bg-white px-3.5 text-xs font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-800 dark:text-[#C4B5FD]">
-                    {busy ? <Loader2 size={13} className="animate-spin" /> : <RotateCcw size={13} />} Batalkan verifikasi
+                  <button type="button" onClick={() => batalVerifikasi(p)} disabled={busy} title="Batalkan verifikasi" aria-label="Batalkan verifikasi"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#3E03B3] disabled:opacity-50 dark:bg-slate-800 dark:text-[#C4B5FD]">
+                    {busy ? <Loader2 size={13} className="animate-spin" /> : <RotateCcw size={13} />}
                   </button>
                 )}
               </div>
