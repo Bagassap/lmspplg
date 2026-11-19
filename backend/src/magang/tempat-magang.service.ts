@@ -65,15 +65,22 @@ export class TempatMagangService {
             siswa: { select: { id: true, nama: true, kelas: { select: { nama: true } }, user: { select: { nama: true } } } },
           },
         },
+        pendaftaran: {
+          where: { status: 'DITERIMA' },
+          select: {
+            siswa: { select: { id: true, nama: true, kelas: { select: { nama: true } }, user: { select: { nama: true } } } },
+          },
+        },
       },
       orderBy: { namaTempat: 'asc' },
     });
     return list.map((t) => {
       const terisi = t.penempatan.length;
-      const siswa = t.penempatan
-        .filter((p) => p.status === 'AKTIF')
-        .map((p) => ({ id: p.siswa.id, nama: p.siswa.user?.nama ?? p.siswa.nama ?? 'Siswa', kelas: p.siswa.kelas?.nama ?? '' }))
-        .sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
+      const peta = new Map<string, { id: string; nama: string; kelas: string }>();
+      [...t.pendaftaran, ...t.penempatan.filter((p) => p.status === 'AKTIF')].forEach(({ siswa: s }) => {
+        peta.set(s.id, { id: s.id, nama: s.user?.nama ?? s.nama ?? 'Siswa', kelas: s.kelas?.nama ?? '' });
+      });
+      const siswa = [...peta.values()].sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
       return {
         id: t.id,
         namaTempat: t.namaTempat,
