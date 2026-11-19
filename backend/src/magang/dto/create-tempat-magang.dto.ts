@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateTempatMagangDto {
@@ -13,32 +13,36 @@ export class CreateTempatMagangDto {
   kuota?: number;
 
   @IsString()
-  @IsNotEmpty({ message: 'Dukuh wajib diisi' })
+  @IsOptional()
   @MaxLength(100)
-  dukuh!: string;
+  dukuh?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'RT wajib diisi' })
+  @IsOptional()
   @MaxLength(5)
-  rt!: string;
+  rt?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'RW wajib diisi' })
+  @IsOptional()
   @MaxLength(5)
-  rw!: string;
+  rw?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Desa wajib diisi' })
+  @IsOptional()
   @MaxLength(100)
-  desa!: string;
+  desa?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Kecamatan wajib diisi' })
+  @IsOptional()
   @MaxLength(100)
-  kecamatan!: string;
+  kecamatan?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Kabupaten wajib diisi' })
+  @IsOptional()
   @MaxLength(100)
-  kabupaten!: string;
+  kabupaten?: string;
+
+  @IsIn(['Laki-laki', 'Perempuan', 'Semua'])
+  @IsOptional()
+  jenisKelamin?: 'Laki-laki' | 'Perempuan' | 'Semua';
 }

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import type { Alamat, TempatMagang } from "./types";
-import { ALAMAT_KOSONG, AlamatFields, alamatLengkap, pesanError } from "./pkl-form-ui";
+import { JENIS_KELAMIN_TEMPAT, labelJenisKelaminTempat, type TempatMagang } from "./types";
+import { pesanError } from "./pkl-form-ui";
 
 const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
@@ -16,29 +16,28 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   const [editing, setEditing] = useState<TempatMagang | { id: "" } | null>(null);
   const [namaTempat, setNamaTempat] = useState("");
   const [kuota, setKuota] = useState("1");
-  const [alamat, setAlamat] = useState<Alamat>(ALAMAT_KOSONG);
+  const [jenisKelamin, setJenisKelamin] = useState("Semua");
   const [saving, setSaving] = useState(false);
 
   function startCreate() {
     setEditing({ id: "" });
-    setNamaTempat(""); setKuota("1"); setAlamat(ALAMAT_KOSONG);
+    setNamaTempat(""); setKuota("1"); setJenisKelamin("Semua");
   }
   function startEdit(t: TempatMagang) {
     setEditing(t);
     setNamaTempat(t.namaTempat); setKuota(String(t.kuota));
-    setAlamat({ dukuh: t.dukuh ?? "", rt: t.rt ?? "", rw: t.rw ?? "", desa: t.desa ?? "", kecamatan: t.kecamatan ?? "", kabupaten: t.kabupaten ?? "" });
+    setJenisKelamin(t.jenisKelamin ?? "Semua");
   }
 
   async function save() {
     if (!namaTempat.trim()) { toast.error("Nama tempat wajib diisi", ""); return; }
-    if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat tempat", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
     setSaving(true);
     try {
       const isNew = !editing?.id;
       const res = await fetch(isNew ? "/api/magang/tempat" : `/api/magang/tempat/${editing!.id}`, {
         method: isNew ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ namaTempat: namaTempat.trim(), kuota: Math.max(1, Number(kuota) || 1), ...alamat }),
+        body: JSON.stringify({ namaTempat: namaTempat.trim(), kuota: Math.max(1, Number(kuota) || 1), jenisKelamin }),
       });
       if (res.ok) {
         toast.success(isNew ? "Tempat magang ditambahkan" : "Tempat magang diperbarui", "");
@@ -89,13 +88,17 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                 <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Nama tempat</label>
                 <input value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} placeholder="Contoh: PT Maju Jaya Digital" className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
               </div>
-              <div>
-                <p className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Alamat tempat</p>
-                <AlamatFields value={alamat} onChange={setAlamat} />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Kuota siswa</label>
-                <input type="number" inputMode="numeric" min={1} value={kuota} onChange={(e) => setKuota(e.target.value)} className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Kuota siswa</label>
+                  <input type="number" inputMode="numeric" min={1} value={kuota} onChange={(e) => setKuota(e.target.value)} className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Jenis kelamin</label>
+                  <select value={jenisKelamin} onChange={(e) => setJenisKelamin(e.target.value)} className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`}>
+                    {JENIS_KELAMIN_TEMPAT.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
               </div>
               <div className="flex justify-end gap-2 pt-1">
                 <button onClick={() => setEditing(null)} className="rounded-xl px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300">Batal</button>
@@ -117,6 +120,12 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
               return (
                 <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-800">
                   <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
+                  {t.jenisKelamin && (
+                    <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold"
+                      style={t.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
+                      {labelJenisKelaminTempat(t.jenisKelamin)}
+                    </span>
+                  )}
                   <div className="flex shrink-0 gap-1.5">
                     <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] dark:bg-[#0EA5E9]/20">
                       <Pencil size={13} />

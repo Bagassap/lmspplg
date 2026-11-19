@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateTempatMagangDto {
@@ -14,38 +14,36 @@ export class UpdateTempatMagangDto {
   kuota?: number;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(100)
   dukuh?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(5)
   rt?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(5)
   rw?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(100)
   desa?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(100)
   kecamatan?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   @MaxLength(100)
   kabupaten?: string;
+
+  @IsIn(['Laki-laki', 'Perempuan', 'Semua'])
+  @IsOptional()
+  jenisKelamin?: 'Laki-laki' | 'Perempuan' | 'Semua';
 }

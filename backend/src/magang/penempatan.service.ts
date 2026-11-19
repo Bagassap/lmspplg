@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 import { todayJakarta } from '../common/utils/jakarta-date.util';
+import { pastikanJenisKelaminCocok } from './jenis-kelamin.util';
 import { AjukanPenempatanDto, TetapkanGuruDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
 
 const INCLUDE_DETAIL = {
@@ -84,6 +85,7 @@ export class PenempatanService {
         include: { _count: { select: { penempatan: { where: { status: { in: AKTIF_ATAU_MENUNGGU } } } } } },
       });
       if (!tempat) throw new NotFoundException('Instansi tidak ditemukan');
+      pastikanJenisKelaminCocok(tempat, siswa);
       if (tempat.dibuatSiswa) {
         if (tempat._count.penempatan + 1 > tempat.kuota) {
           await this.prisma.tempatMagang.update({ where: { id: tempat.id }, data: { kuota: tempat._count.penempatan + 1 } });
@@ -105,6 +107,7 @@ export class PenempatanService {
         include: { _count: { select: { penempatan: { where: { status: { in: AKTIF_ATAU_MENUNGGU } } } } } },
       });
       if (ada) {
+        pastikanJenisKelaminCocok(ada, siswa);
         if (!ada.dibuatSiswa && ada.kuota - ada._count.penempatan < 1) {
           throw new BadRequestException(`Kuota "${ada.namaTempat}" sudah penuh`);
         }

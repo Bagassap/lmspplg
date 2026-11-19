@@ -3,11 +3,12 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, CheckCircle2, MapPin, Search, Users, X } from "lucide-react";
-import { formatAlamat, type Instansi } from "./types";
+import { formatAlamat, tempatCocokJenisKelamin, type Instansi } from "./types";
 
-export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
+export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }: {
   list: Instansi[];
   nilai: string;
+  jenisKelamin?: string | null;
   onPilih: (id: string) => void;
   onClose: () => void;
 }) {
@@ -16,8 +17,9 @@ export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
     const k = q.trim().toLowerCase();
     return list
       .filter((i) => i.id === nilai || i.sisa === null || i.sisa > 0)
+      .filter((i) => i.id === nilai || tempatCocokJenisKelamin(i, jenisKelamin))
       .filter((i) => !k || i.namaTempat.toLowerCase().includes(k));
-  }, [list, q, nilai]);
+  }, [list, q, nilai, jenisKelamin]);
 
   function pilih(id: string) {
     onPilih(id);
@@ -72,6 +74,11 @@ export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
               <span className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
                 <Users size={11} /> {i.siswa.length}
               </span>
+              {i.jenisKelamin && (
+                <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={i.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
+                  {i.jenisKelamin === "Perempuan" ? "Putri" : "Putra"}
+                </span>
+              )}
               {i.sisa !== null && (
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>Sisa {i.sisa}</span>
               )}

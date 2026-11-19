@@ -3,18 +3,21 @@
 import { motion } from "framer-motion";
 import { Building2, CheckCircle2, MapPin, Phone, User, Users, X } from "lucide-react";
 import { toTitleCase, waLink } from "@/components/data-siswa/shared";
-import { formatAlamat, type Instansi } from "./types";
+import { formatAlamat, labelJenisKelaminTempat, tempatCocokJenisKelamin, type Instansi } from "./types";
 
-export function InstansiDetailModal({ instansi: i, dipilih, onPilih, onClose }: {
+export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, onPilih, onClose }: {
   instansi: Instansi;
   dipilih: boolean;
+  jenisKelaminSiswa?: string | null;
   onPilih?: (i: Instansi) => void;
   onClose: () => void;
 }) {
   const wa = waLink(i.noWaUsaha);
   const penuh = i.sisa !== null && i.sisa <= 0;
+  const cocok = tempatCocokJenisKelamin(i, jenisKelaminSiswa);
   const info = [
     { icon: User, label: "Kepala instansi", value: i.namaPimpinan, bg: "#E0F2FE", fg: "#0EA5E9" },
+    { icon: Users, label: "Menerima", value: labelJenisKelaminTempat(i.jenisKelamin), bg: "#F1EDFA", fg: "#3E03B3" },
     { icon: MapPin, label: "Alamat", value: formatAlamat(i), bg: "#FFE9E2", fg: "#E8562B" },
     {
       icon: Phone, label: "WA instansi", bg: "#E4F5EC", fg: "#22A06B",
@@ -76,7 +79,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, onPilih, onClose }: 
             )}
           </div>
 
-          {onPilih && !penuh && (
+          {onPilih && !penuh && cocok && (
             <button type="button" onClick={() => { onPilih(i); onClose(); }}
               className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white ${dipilih ? "bg-[#22A06B]" : "bg-[#F26A3D]"}`}>
               {dipilih ? <><CheckCircle2 size={16} /> Instansi dipilih</> : "Pilih instansi ini"}

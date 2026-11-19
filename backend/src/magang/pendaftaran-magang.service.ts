@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 import { DaftarMagangDto } from './dto/pendaftaran-magang.dto';
+import { pastikanJenisKelaminCocok } from './jenis-kelamin.util';
 
 const INCLUDE_SISWA = {
   siswa: {
@@ -43,6 +44,7 @@ export class PendaftaranMagangService {
       profil: {
         nama: siswa.user?.nama ?? siswa.nama ?? '',
         nis: siswa.nis,
+        jenisKelamin: siswa.jenisKelamin,
         kelas: siswa.kelas?.nama ?? '',
         noHp: siswa.noHp ?? '',
         dukuh: siswa.dukuh ?? '',
@@ -69,8 +71,9 @@ export class PendaftaranMagangService {
 
     const tempatMagangId = dto.tempatMagangId?.trim() || null;
     if (tempatMagangId) {
-      const ada = await this.prisma.tempatMagang.count({ where: { id: tempatMagangId } });
-      if (!ada) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
+      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId }, select: { namaTempat: true, jenisKelamin: true } });
+      if (!tempat) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
+      pastikanJenisKelaminCocok(tempat, siswa);
     }
 
     const data = {

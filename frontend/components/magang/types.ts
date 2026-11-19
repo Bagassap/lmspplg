@@ -15,6 +15,7 @@ export type TempatMagang = {
   kabupaten?: string | null;
   namaPimpinan?: string | null;
   noWaUsaha?: string | null;
+  jenisKelamin?: string | null;
   dibuatSiswa?: boolean;
   _count?: { penempatan: number };
 };
@@ -64,7 +65,7 @@ export type PendaftaranMagang = Alamat & {
 };
 
 export type PendaftaranSaya = {
-  profil: Alamat & { nama: string; nis: string; kelas: string; noHp: string };
+  profil: Alamat & { nama: string; nis: string; kelas: string; noHp: string; jenisKelamin: string | null };
   pendaftaran: PendaftaranMagang | null;
   sudahPenempatan: boolean;
 };
@@ -81,6 +82,7 @@ export type Instansi = {
   kabupaten: string | null;
   alamat: string | null;
   noWaUsaha: string | null;
+  jenisKelamin: string | null;
   dibuatSiswa: boolean;
   kuota: number;
   terisi: number;
@@ -104,4 +106,18 @@ export function formatAlamat(a: Partial<Record<keyof Alamat, string | null>> & {
     isi(a.kecamatan) && `Kec. ${isi(a.kecamatan)}`,
     isi(a.kabupaten) && `Kab. ${isi(a.kabupaten)}`,
   ].filter(Boolean).join(", ");
+}
+
+export const JENIS_KELAMIN_TEMPAT: { value: string; label: string }[] = [
+  { value: "Semua", label: "Laki-laki & Perempuan" },
+  { value: "Laki-laki", label: "Laki-laki saja" },
+  { value: "Perempuan", label: "Perempuan saja" },
+];
+
+export function labelJenisKelaminTempat(v?: string | null) {
+  return v === "Laki-laki" ? "Laki-laki saja" : v === "Perempuan" ? "Perempuan saja" : "Laki-laki & Perempuan";
+}
+
+export function tempatCocokJenisKelamin(t: { jenisKelamin?: string | null }, jk?: string | null) {
+  return !t.jenisKelamin || !jk || t.jenisKelamin === jk;
 }

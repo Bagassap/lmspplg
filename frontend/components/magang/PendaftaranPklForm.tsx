@@ -133,7 +133,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
 
       <AnimatePresence>
         {modalTempat && (
-          <PilihTempatModal list={instansi} nilai={tempatId} onPilih={setTempatId} onClose={() => setModalTempat(false)} />
+          <PilihTempatModal list={instansi} nilai={tempatId} jenisKelamin={data.profil.jenisKelamin} onPilih={setTempatId} onClose={() => setModalTempat(false)} />
         )}
       </AnimatePresence>
     </div>

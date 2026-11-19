@@ -18,6 +18,10 @@ function susunAlamat(src: Record<KolomAlamat, string>) {
   };
 }
 
+function normalJK(v?: string | null) {
+  return v === 'Laki-laki' || v === 'Perempuan' ? v : null;
+}
+
 @Injectable()
 export class TempatMagangService {
   constructor(private readonly prisma: PrismaService) {}
@@ -38,6 +42,7 @@ export class TempatMagangService {
       id: t.id,
       namaTempat: t.namaTempat,
       alamat: t.alamat,
+      jenisKelamin: t.jenisKelamin,
       kuota: t.kuota,
       terisi: t._count.penempatan,
       sisa: Math.max(0, t.kuota - t._count.penempatan),
@@ -81,6 +86,7 @@ export class TempatMagangService {
         kabupaten: t.kabupaten,
         alamat: t.alamat,
         noWaUsaha: t.noWaUsaha ?? t.kontak,
+        jenisKelamin: t.jenisKelamin,
         dibuatSiswa: t.dibuatSiswa,
         kuota: t.kuota,
         terisi,
@@ -97,9 +103,15 @@ export class TempatMagangService {
   }
 
   create(dto: CreateTempatMagangDto) {
-    const alamat = susunAlamat(dto);
+    const adaAlamat = KOLOM_ALAMAT.every((k) => dto[k]?.trim());
+    const alamat = adaAlamat ? susunAlamat(dto as Record<KolomAlamat, string>) : null;
     return this.prisma.tempatMagang.create({
-      data: { namaTempat: dto.namaTempat.trim(), kuota: dto.kuota ?? 1, ...alamat.bagian, alamat: alamat.teks },
+      data: {
+        namaTempat: dto.namaTempat.trim(),
+        kuota: dto.kuota ?? 1,
+        jenisKelamin: normalJK(dto.jenisKelamin),
+        ...(alamat ? { ...alamat.bagian, alamat: alamat.teks } : {}),
+      },
       include: INCLUDE_COUNT,
     });
   }
@@ -115,6 +127,7 @@ export class TempatMagangService {
       data: {
         ...(dto.namaTempat !== undefined ? { namaTempat: dto.namaTempat.trim() } : {}),
         ...(dto.kuota !== undefined ? { kuota: dto.kuota } : {}),
+        ...(dto.jenisKelamin !== undefined ? { jenisKelamin: normalJK(dto.jenisKelamin) } : {}),
         ...(alamat ? { ...alamat.bagian, alamat: alamat.teks } : {}),
       },
       include: INCLUDE_COUNT,

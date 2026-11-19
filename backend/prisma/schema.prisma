@@ -440,6 +440,7 @@ model TempatMagang {
   kabupaten   String?
   namaPimpinan String?
   noWaUsaha   String?
+  jenisKelamin String?
   dibuatSiswa Boolean @default(false)
 
   createdAt DateTime @default(now())

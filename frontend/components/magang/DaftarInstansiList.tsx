@@ -6,12 +6,13 @@ import { Building2, ChevronRight, Search, Users } from "lucide-react";
 import { InstansiDetailModal } from "./InstansiDetailModal";
 import type { Instansi } from "./types";
 
-export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId }: {
+export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId, jenisKelaminSiswa }: {
   list: Instansi[];
   loading: boolean;
   judul?: string;
   onPilih?: (i: Instansi) => void;
   pilihId?: string | null;
+  jenisKelaminSiswa?: string | null;
 }) {
   const [q, setQ] = useState("");
   const [terbuka, setTerbuka] = useState<Instansi | null>(null);
@@ -61,7 +62,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
 
       <AnimatePresence>
         {terbuka && (
-          <InstansiDetailModal instansi={terbuka} dipilih={pilihId === terbuka.id} onPilih={onPilih} onClose={() => setTerbuka(null)} />
+          <InstansiDetailModal instansi={terbuka} dipilih={pilihId === terbuka.id} jenisKelaminSiswa={jenisKelaminSiswa} onPilih={onPilih} onClose={() => setTerbuka(null)} />
         )}
       </AnimatePresence>
     </div>

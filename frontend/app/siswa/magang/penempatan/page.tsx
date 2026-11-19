@@ -146,7 +146,8 @@ export default function SiswaMagangPenempatanPage() {
 
       <DaftarInstansiList list={instansi.list} loading={instansi.loading} judul="Daftar Instansi PKL"
         onPilih={bolehIsi ? (i) => { setDipilih(i); window.scrollTo({ top: 0, behavior: "smooth" }); } : undefined}
-        pilihId={kategori === "penempatan" ? dipilih?.id ?? null : null} />
+        pilihId={kategori === "penempatan" ? dipilih?.id ?? null : null}
+        jenisKelaminSiswa={daftar?.profil.jenisKelamin} />
     </div>
   );
 }
