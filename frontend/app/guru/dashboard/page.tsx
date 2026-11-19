@@ -5,8 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Users, Calendar, GraduationCap,
-  Bell, AlertCircle, RefreshCw, ChevronRight, TrendingUp, Megaphone, Clock, ClipboardCheck,
-} from "lucide-react";
+  Bell, AlertCircle, RefreshCw, ChevronRight, TrendingUp, Megaphone, Clock, ClipboardCheck, } from "lucide-react";
 import GreetingHero from "@/components/dashboard/GreetingHero";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { QuickAccessGrid } from "@/components/dashboard/QuickAccessCard";
