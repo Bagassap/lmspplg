@@ -11,11 +11,11 @@ import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal
 import { pesanError } from "@/components/magang/pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, formatAlamat, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
 
-const TABS: { value: StatusPendaftaran | ""; label: string }[] = [
-  { value: "MENUNGGU", label: "Menunggu" },
-  { value: "DITERIMA", label: "Terverifikasi" },
-  { value: "DITOLAK", label: "Ditolak" },
-  { value: "", label: "Semua" },
+const TABS: { value: StatusPendaftaran | ""; label: string; bg: string; clr: string }[] = [
+  { value: "MENUNGGU", label: "Menunggu", ...STATUS_PENDAFTARAN_CFG.MENUNGGU },
+  { value: "DITERIMA", label: "Terverifikasi", ...STATUS_PENDAFTARAN_CFG.DITERIMA },
+  { value: "DITOLAK", label: "Ditolak", ...STATUS_PENDAFTARAN_CFG.DITOLAK },
+  { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9" },
 ];
 
 const namaSiswa = (p: PendaftaranMagang) => toTitleCase(p.siswa?.user?.nama ?? p.siswa?.nama ?? "—");
@@ -87,13 +87,17 @@ export default function AdminPendaftaranPklPage() {
         </div>
 
         <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
-          {TABS.map((t) => (
-            <button key={t.label} type="button" onClick={() => setTab(t.value)}
-              className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-xs font-bold ${tab === t.value ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"}`}>
-              {t.label}
-              <span className={`rounded-lg px-1.5 text-[10px] ${tab === t.value ? "bg-white/20" : "bg-white dark:bg-slate-800"}`}>{hitung[t.value]}</span>
-            </button>
-          ))}
+          {TABS.map((t) => {
+            const aktif = tab === t.value;
+            return (
+              <button key={t.label} type="button" onClick={() => setTab(t.value)}
+                className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-xs font-bold transition-colors"
+                style={aktif ? { background: t.clr, color: "#fff" } : { background: t.bg, color: t.clr }}>
+                {t.label}
+                <span className="rounded-lg px-1.5 text-[10px]" style={{ background: aktif ? "rgba(255,255,255,0.22)" : "#fff" }}>{hitung[t.value]}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="relative mb-3">
@@ -127,12 +131,12 @@ export default function AdminPendaftaranPklPage() {
                     {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{p.noWa}</a> : p.noWa}
                   </p>
                   <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#0EA5E9]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
-                  {p.status === "DITOLAK" && p.alasanTolak && <p className="font-semibold text-[#E8562B]">Alasan ditolak: {p.alasanTolak}</p>}
+                  {p.status === "DITOLAK" && p.alasanTolak && <p className="font-semibold text-[#DC2626]">Alasan ditolak: {p.alasanTolak}</p>}
                 </div>
                 {p.status === "MENUNGGU" && (
                   <div className="mt-2.5 flex gap-2">
                     <button type="button" onClick={() => setTolakTarget(p)} disabled={busy}
-                      className="flex h-9 items-center gap-1.5 rounded-xl bg-[#FFE9E2] px-3.5 text-xs font-bold text-[#E8562B] disabled:opacity-50">
+                      className="flex h-9 items-center gap-1.5 rounded-xl bg-[#FEE2E2] px-3.5 text-xs font-bold text-[#DC2626] disabled:opacity-50">
                       <XCircle size={13} /> Tolak
                     </button>
                     <button type="button" onClick={() => aksi(p, "terima")} disabled={busy}

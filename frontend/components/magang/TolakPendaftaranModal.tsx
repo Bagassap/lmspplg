@@ -24,7 +24,7 @@ export function TolakPendaftaranModal({ nama, onClose, onTolak }: {
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="mb-3 flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFE9E2] text-[#E8562B]"><XCircle size={20} /></span>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FEE2E2] text-[#DC2626]"><XCircle size={20} /></span>
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tolak pendaftaran</h2>
             <p className="truncate text-xs text-slate-600 dark:text-slate-300">{nama}</p>
@@ -38,7 +38,7 @@ export function TolakPendaftaranModal({ nama, onClose, onTolak }: {
           <button type="button" onClick={onClose} disabled={saving}
             className="h-12 flex-1 rounded-xl bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
           <button type="button" onClick={kirim} disabled={saving || !alasan.trim()}
-            className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#E8562B] text-sm font-bold text-white disabled:opacity-50">
+            className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#DC2626] text-sm font-bold text-white disabled:opacity-50">
             {saving && <Loader2 size={15} className="animate-spin" />} Tolak
           </button>
         </div>
