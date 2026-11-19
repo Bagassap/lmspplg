@@ -361,7 +361,7 @@ export default function GuruDashboardPage() {
           {[
             { href: "/guru/materi", label: "Materi", icon: BookOpen, tone: "indigo" as const },
             { href: "/guru/data-siswa", label: "Data Siswa", icon: Users, tone: "emerald" as const },
-            { href: "/guru/magang/penempatan", label: "PKL", icon: Briefcase, tone: "amber" as const },
+            { href: "/guru/magang", label: "PKL", icon: Briefcase, tone: "amber" as const },
             { href: "/guru/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "violet" as const },
             { href: "/guru/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "sky" as const, badge: data.pengumuman.length },
           ].map((s, i) => (

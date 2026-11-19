@@ -635,3 +635,5 @@ html.dark [class*="bg-[#E5E7EB]"]:not([class*="dark:bg-"]), html.dark [style*="b
   main :is(.h-16.w-16, .h-14.w-14) > svg { width: 1.375rem !important; height: 1.375rem !important; }
   header :is(.h-10.w-10) > img, header img.h-10 { height: 2rem !important; width: 2rem !important; }
 }
+
+.pkl-embed [data-pkl-header] { display: none !important; }

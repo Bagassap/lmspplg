@@ -500,7 +500,7 @@ export default function GuruMagangAbsensiPage() {
           </div>
         ) : (
         <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
-          <div className="relative flex items-center px-4 pb-3 pt-4">
+          <div data-pkl-header className="relative flex items-center px-4 pb-3 pt-4">
             <button type="button" onClick={() => router.push("/guru/dashboard")}
               className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
               <ChevronLeft size={18} />
@@ -723,11 +723,11 @@ export default function GuruMagangAbsensiPage() {
       <div className={appMode ? "hidden" : "contents"}>
       <div className="relative -m-4 lg:hidden" style={{ background: "#3E03B3" }}>
         <div className="relative flex items-center justify-between px-4 pb-3 pt-4">
-          <button type="button" onClick={() => router.push("/guru/dashboard")}
+          <button data-pkl-header type="button" onClick={() => router.push("/guru/dashboard")}
             className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
             <ChevronLeft size={18} />
           </button>
-          <h1 className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
+          <h1 data-pkl-header className="absolute inset-x-0 text-center text-base font-bold text-white">Absensi PKL</h1>
           <MobileDatePicker value={tanggal} onChange={setTanggal} light />
         </div>
 

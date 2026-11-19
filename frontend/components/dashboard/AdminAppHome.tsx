@@ -41,7 +41,7 @@ const QUICK = [
   { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "amber" as const },
   { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: "violet" as const },
   { href: "/admin/catatan-siswa", label: "Catatan", icon: NotebookPen, tone: "sky" as const },
-  { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "amber" as const },
+  { href: "/admin/magang", label: "PKL", icon: Briefcase, tone: "amber" as const },
   { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "violet" as const },
   { href: "/admin/pengaturan", label: "Pengaturan", icon: Settings, tone: "emerald" as const },
 ];

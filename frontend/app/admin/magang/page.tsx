@@ -1,6 +1,5 @@
-import { Briefcase } from "lucide-react";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import { PklHub } from "@/components/magang/PklHub";
 
 export default function AdminMagangPage() {
-  return <PlaceholderPage title="PKL" badge="Kelola" badgeVariant="kelola" icon={Briefcase} />;
+  return <PklHub role="admin" />;
 }

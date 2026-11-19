@@ -111,7 +111,7 @@ export function useSiswaFitur(enabled = true) {
     kelasXII,
     magangAktif: pengaturan.magangAktif,
     ukkAktif: pengaturan.ukkAktif,
-    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/penempatan" : "/siswa/magang",
+    magangHref: "/siswa/magang",
     ukkHref: kelasXII && pengaturan.ukkAktif ? "/siswa/ujian-ukk/jadwal-soal" : "/siswa/ujian-ukk",
   };
 }

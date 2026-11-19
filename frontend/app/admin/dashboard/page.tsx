@@ -415,7 +415,7 @@ export default function AdminDashboardPage() {
           {[
             { href: "/admin/materi", label: "Materi", icon: BookOpen, tone: "indigo" as const },
             { href: "/admin/data-siswa", label: "Data Siswa", icon: Users, tone: "emerald" as const },
-            { href: "/admin/magang/penempatan", label: "PKL", icon: Briefcase, tone: "amber" as const },
+            { href: "/admin/magang", label: "PKL", icon: Briefcase, tone: "amber" as const },
             { href: "/admin/ujian-ukk/jadwal-soal", label: "UKK", icon: FileText, tone: "violet" as const },
             { href: "/admin/pengumuman", label: "Pengumuman", icon: Megaphone, tone: "sky" as const, badge: data.pengumuman.length },
           ].map((s, i) => (

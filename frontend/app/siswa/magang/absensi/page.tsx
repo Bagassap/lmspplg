@@ -238,7 +238,7 @@ export default function SiswaMagangAbsensiPage() {
           )}
           <div className={appMode ? "hidden" : "contents"}>
           <div className="relative isolate -m-4 overflow-hidden lg:hidden" style={{ background: BRAND_GRADIENT }}>
-            <div className="relative flex items-center px-4 pb-3 pt-4">
+            <div data-pkl-header className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
                 className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
@@ -440,7 +440,7 @@ export default function SiswaMagangAbsensiPage() {
           )}
           <div className={appMode ? "hidden" : "contents"}>
           <div className="relative isolate -m-4 lg:hidden" style={{ background: BRAND_GRADIENT }}>
-            <div className="relative flex items-center px-4 pb-3 pt-4">
+            <div data-pkl-header className="relative flex items-center px-4 pb-3 pt-4">
               <button type="button" onClick={() => router.push("/siswa/dashboard")}
                 className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
                 <ChevronLeft size={18} />
