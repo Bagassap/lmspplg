@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CheckCircle2, Search, Users, X } from "lucide-react";
-import type { Instansi } from "./types";
+import { Building2, CheckCircle2, MapPin, Search, Users, X } from "lucide-react";
+import { formatAlamat, type Instansi } from "./types";
 
 export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
   list: Instansi[];
@@ -24,14 +24,21 @@ export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
     onClose();
   }
 
-  const opsi = (id: string, nama: string, aktif: boolean, kanan?: React.ReactNode, redup?: boolean) => (
+  const opsi = (id: string, nama: string, aktif: boolean, kanan?: React.ReactNode, redup?: boolean, alamat?: string) => (
     <button key={id || "lain"} type="button" onClick={() => pilih(id)}
       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${aktif ? "bg-[#E4F5EC] ring-2 ring-[#22A06B]" : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"}`}>
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
         style={redup ? { background: "#FFF4E0", color: "#D97706" } : { background: "#FFE9E2", color: "#E8562B" }}>
         <Building2 size={15} />
       </span>
-      <p className={`min-w-0 flex-1 truncate text-sm font-bold ${redup ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{nama}</p>
+      <div className="min-w-0 flex-1">
+        <p className={`truncate text-sm font-bold ${redup ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{nama}</p>
+        {alamat && (
+          <p className="flex items-start gap-1 text-xs text-slate-600 dark:text-slate-300">
+            <MapPin size={11} className="mt-0.5 shrink-0 text-[#E8562B]" /><span className="line-clamp-2">{alamat}</span>
+          </p>
+        )}
+      </div>
       {kanan}
       {aktif && <CheckCircle2 size={16} className="shrink-0 text-[#22A06B]" />}
     </button>
@@ -69,7 +76,7 @@ export function PilihTempatModal({ list, nilai, onPilih, onClose }: {
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>Sisa {i.sisa}</span>
               )}
             </span>
-          )))}
+          ), false, formatAlamat(i) !== "-" ? formatAlamat(i) : undefined))}
           {tampil.length === 0 && q && (
             <p className="py-6 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Tidak ada instansi yang cocok</p>
           )}

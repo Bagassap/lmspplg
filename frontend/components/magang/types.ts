@@ -54,7 +54,7 @@ export type PendaftaranMagang = Alamat & {
   id: string;
   noWa: string;
   tempatMagangId: string | null;
-  tempatMagang?: { id: string; namaTempat: string } | null;
+  tempatMagang?: ({ id: string; namaTempat: string; alamat?: string | null } & Partial<Record<keyof Alamat, string | null>>) | null;
   status: StatusPendaftaran;
   alasanTolak: string | null;
   diverifikasiAt: string | null;

@@ -7,6 +7,17 @@ const INCLUDE_COUNT = {
   _count: { select: { penempatan: { where: { status: { in: ['MENUNGGU', 'AKTIF'] as ('MENUNGGU' | 'AKTIF')[] } } } } },
 } as const;
 
+const KOLOM_ALAMAT = ['dukuh', 'rt', 'rw', 'desa', 'kecamatan', 'kabupaten'] as const;
+type KolomAlamat = (typeof KOLOM_ALAMAT)[number];
+
+function susunAlamat(src: Record<KolomAlamat, string>) {
+  const b = Object.fromEntries(KOLOM_ALAMAT.map((k) => [k, (src[k] ?? '').trim()])) as Record<KolomAlamat, string>;
+  return {
+    bagian: b,
+    teks: `Dukuh ${b.dukuh} RT ${b.rt}/RW ${b.rw}, Desa ${b.desa}, Kec. ${b.kecamatan}, Kab. ${b.kabupaten}`,
+  };
+}
+
 @Injectable()
 export class TempatMagangService {
   constructor(private readonly prisma: PrismaService) {}
@@ -26,6 +37,7 @@ export class TempatMagangService {
     return list.map((t) => ({
       id: t.id,
       namaTempat: t.namaTempat,
+      alamat: t.alamat,
       kuota: t.kuota,
       terisi: t._count.penempatan,
       sisa: Math.max(0, t.kuota - t._count.penempatan),
@@ -85,19 +97,25 @@ export class TempatMagangService {
   }
 
   create(dto: CreateTempatMagangDto) {
+    const alamat = susunAlamat(dto);
     return this.prisma.tempatMagang.create({
-      data: { namaTempat: dto.namaTempat.trim(), kuota: dto.kuota ?? 1 },
+      data: { namaTempat: dto.namaTempat.trim(), kuota: dto.kuota ?? 1, ...alamat.bagian, alamat: alamat.teks },
       include: INCLUDE_COUNT,
     });
   }
 
   async update(id: string, dto: UpdateTempatMagangDto) {
-    await this.findOne(id);
+    const lama = await this.findOne(id);
+    const adaAlamat = KOLOM_ALAMAT.some((k) => dto[k] !== undefined);
+    const alamat = adaAlamat
+      ? susunAlamat(Object.fromEntries(KOLOM_ALAMAT.map((k) => [k, dto[k] ?? lama[k] ?? ''])) as Record<KolomAlamat, string>)
+      : null;
     return this.prisma.tempatMagang.update({
       where: { id },
       data: {
         ...(dto.namaTempat !== undefined ? { namaTempat: dto.namaTempat.trim() } : {}),
         ...(dto.kuota !== undefined ? { kuota: dto.kuota } : {}),
+        ...(alamat ? { ...alamat.bagian, alamat: alamat.teks } : {}),
       },
       include: INCLUDE_COUNT,
     });

@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Building2, ChevronRight, ClipboardList, Search, Users } from "lucide-react";
+import { ClipboardList, Search, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { PendaftarTempatModal, namaPendaftar } from "@/components/magang/PendaftarTempatModal";
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
 import { pesanError } from "@/components/magang/pkl-form-ui";
-import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
+import { STATUS_PENDAFTARAN_CFG, formatAlamat, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
 
 const TABS: { value: StatusPendaftaran | ""; label: string; bg: string; clr: string }[] = [
   { value: "MENUNGGU", label: "Menunggu", bg: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, clr: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr },
@@ -19,6 +19,7 @@ const TABS: { value: StatusPendaftaran | ""; label: string; bg: string; clr: str
 
 const namaSiswa = namaPendaftar;
 const TANPA = "__tanpa__";
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 9.5rem";
 
 export default function AdminPendaftaranPklPage() {
   const toast = useToast();
@@ -73,7 +74,7 @@ export default function AdminPendaftaranPklPage() {
 
   const grup = useMemo(() => {
     const k = q.trim().toLowerCase();
-    const map = new Map<string, { key: string; nama: string; rows: PendaftaranMagang[] }>();
+    const map = new Map<string, { key: string; nama: string; alamat: string; rows: PendaftaranMagang[] }>();
     list
       .filter((p) => (tab ? p.status === tab : true))
       .filter((p) => !k
@@ -83,7 +84,7 @@ export default function AdminPendaftaranPklPage() {
         || (p.tempatMagang?.namaTempat ?? "").toLowerCase().includes(k))
       .forEach((p) => {
         const key = p.tempatMagang?.id ?? TANPA;
-        const g = map.get(key) ?? { key, nama: p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL", rows: [] };
+        const g = map.get(key) ?? { key, nama: p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL", alamat: p.tempatMagang ? formatAlamat(p.tempatMagang) : "-", rows: [] };
         g.rows.push(p);
         map.set(key, g);
       });
@@ -124,31 +125,58 @@ export default function AdminPendaftaranPklPage() {
         </div>
 
 
-        <div className="space-y-1.5">
-          {loading ? (
-            [0, 1, 2].map((i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)
-          ) : grup.length === 0 ? (
-            <p className="rounded-2xl bg-slate-50 px-4 py-10 text-center text-sm font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-300">Tidak ada pendaftaran</p>
-          ) : grup.map((g) => {
-            const menunggu = g.rows.filter((r) => r.status === "MENUNGGU").length;
-            return (
-              <button key={g.key} type="button" onClick={() => setBukaKey(g.key)}
-                className="flex w-full items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                  style={g.key === TANPA ? { background: "#FFF4E0", color: "#D97706" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
-                  <Building2 size={15} />
-                </span>
-                <p className={`min-w-0 flex-1 truncate text-sm font-bold ${g.key === TANPA ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{g.nama}</p>
-                {menunggu > 0 && (
-                  <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, color: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr }}>{menunggu} menunggu</span>
-                )}
-                <span className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
-                  <Users size={11} /> {g.rows.length}
-                </span>
-                <ChevronRight size={16} className="shrink-0 text-[#F26A3D]" />
-              </button>
-            );
-          })}
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
+          <div className="overflow-x-auto">
+            <div className="min-w-[720px]">
+              <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
+                <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Alamat</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
+                <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Siswa</span>
+              </div>
+              {loading ? (
+                <div className="space-y-2 p-4">
+                  {[0, 1, 2].map((i) => <div key={i} className="h-10 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)}
+                </div>
+              ) : grup.length === 0 ? (
+                <p className="px-4 py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada pendaftaran</p>
+              ) : (
+                <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
+                  {grup.map((g, idx) => {
+                    const jumlah = (st: StatusPendaftaran) => g.rows.filter((r) => r.status === st).length;
+                    const tanpa = g.key === TANPA;
+                    return (
+                      <div key={g.key} className="grid items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                        style={{ gridTemplateColumns: GRID_COLS }}>
+                        <span className="text-center text-xs font-bold text-slate-400">{idx + 1}</span>
+                        <p className={`truncate text-sm font-bold ${tanpa ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`} title={g.nama}>{g.nama}</p>
+                        <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(["MENUNGGU", "DITERIMA", "DITOLAK"] as StatusPendaftaran[]).map((st) => {
+                            const n = jumlah(st);
+                            if (!n) return null;
+                            const cfg = STATUS_PENDAFTARAN_CFG[st];
+                            return (
+                              <span key={st} className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>
+                                {n} {st === "MENUNGGU" ? "menunggu" : st === "DITERIMA" ? "terverifikasi" : "ditolak"}
+                              </span>
+                            );
+                          })}
+                        </div>
+                        <div className="flex justify-end">
+                          <button type="button" onClick={() => setBukaKey(g.key)}
+                            className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
+                            <Users size={13} /> Lihat siswa ({g.rows.length})
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 

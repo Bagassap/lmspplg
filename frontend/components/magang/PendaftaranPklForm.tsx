@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, Send, XCircle } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, MapPin, Send, XCircle } from "lucide-react";
 import { PilihTempatModal } from "./PilihTempatModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
-import { STATUS_PENDAFTARAN_CFG, type Alamat, type Instansi, type PendaftaranSaya } from "./types";
+import { STATUS_PENDAFTARAN_CFG, formatAlamat, type Alamat, type Instansi, type PendaftaranSaya } from "./types";
 
 function ambilAlamat(src: Alamat): Alamat {
   return { dukuh: src.dukuh ?? "", rt: src.rt ?? "", rw: src.rw ?? "", desa: src.desa ?? "", kecamatan: src.kecamatan ?? "", kabupaten: src.kabupaten ?? "" };
@@ -29,6 +29,8 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
   const p = data.pendaftaran;
   const terkunci = p?.status === "DITERIMA";
   const status = p ? STATUS_PENDAFTARAN_CFG[p.status] : null;
+  const instansiTerpilih = instansi.find((i) => i.id === tempatId);
+  const alamatTempat = instansiTerpilih && formatAlamat(instansiTerpilih) !== "-" ? formatAlamat(instansiTerpilih) : null;
   const tempatTerpilih = instansi.find((i) => i.id === tempatId) ?? (tempatId && p?.tempatMagang?.id === tempatId ? { namaTempat: p.tempatMagang.namaTempat } : null);
 
   async function kirim() {
@@ -112,6 +114,11 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
               </span>
               {!terkunci && <ChevronRight size={16} className="shrink-0 text-[#F26A3D]" />}
             </button>
+            {alamatTempat && (
+              <p className="mt-1.5 flex items-start gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+                <MapPin size={12} className="mt-0.5 shrink-0 text-[#E8562B]" /> {alamatTempat}
+              </p>
+            )}
           </div>
 
           {!terkunci && (

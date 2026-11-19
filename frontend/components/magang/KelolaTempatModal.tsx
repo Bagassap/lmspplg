@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import type { TempatMagang } from "./types";
+import type { Alamat, TempatMagang } from "./types";
+import { ALAMAT_KOSONG, AlamatFields, alamatLengkap, pesanError } from "./pkl-form-ui";
 
 const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
@@ -15,26 +16,29 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   const [editing, setEditing] = useState<TempatMagang | { id: "" } | null>(null);
   const [namaTempat, setNamaTempat] = useState("");
   const [kuota, setKuota] = useState("1");
+  const [alamat, setAlamat] = useState<Alamat>(ALAMAT_KOSONG);
   const [saving, setSaving] = useState(false);
 
   function startCreate() {
     setEditing({ id: "" });
-    setNamaTempat(""); setKuota("1");
+    setNamaTempat(""); setKuota("1"); setAlamat(ALAMAT_KOSONG);
   }
   function startEdit(t: TempatMagang) {
     setEditing(t);
     setNamaTempat(t.namaTempat); setKuota(String(t.kuota));
+    setAlamat({ dukuh: t.dukuh ?? "", rt: t.rt ?? "", rw: t.rw ?? "", desa: t.desa ?? "", kecamatan: t.kecamatan ?? "", kabupaten: t.kabupaten ?? "" });
   }
 
   async function save() {
     if (!namaTempat.trim()) { toast.error("Nama tempat wajib diisi", ""); return; }
+    if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat tempat", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
     setSaving(true);
     try {
       const isNew = !editing?.id;
       const res = await fetch(isNew ? "/api/magang/tempat" : `/api/magang/tempat/${editing!.id}`, {
         method: isNew ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ namaTempat: namaTempat.trim(), kuota: Math.max(1, Number(kuota) || 1) }),
+        body: JSON.stringify({ namaTempat: namaTempat.trim(), kuota: Math.max(1, Number(kuota) || 1), ...alamat }),
       });
       if (res.ok) {
         toast.success(isNew ? "Tempat magang ditambahkan" : "Tempat magang diperbarui", "");
@@ -42,7 +46,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
         onSaved();
       } else {
         const d = await res.json().catch(() => null);
-        toast.error(d?.message ?? "Gagal menyimpan tempat magang", "");
+        toast.error(pesanError(d, "Gagal menyimpan tempat magang"), "");
       }
     } finally {
       setSaving(false);
@@ -80,10 +84,14 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
           {editing ? (
-            <div className="space-y-3 rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-800">
+            <div className="space-y-3 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-800">
               <div>
                 <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Nama tempat</label>
                 <input value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} placeholder="Contoh: PT Maju Jaya Digital" className={`${INPUT_CLS} !bg-white dark:!bg-slate-900`} />
+              </div>
+              <div>
+                <p className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Alamat tempat</p>
+                <AlamatFields value={alamat} onChange={setAlamat} />
               </div>
               <div>
                 <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Kuota siswa</label>

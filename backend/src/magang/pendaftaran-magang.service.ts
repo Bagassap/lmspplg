@@ -14,7 +14,9 @@ const INCLUDE_SISWA = {
       user: { select: { id: true, nama: true, fotoProfil: true } },
     },
   },
-  tempatMagang: { select: { id: true, namaTempat: true } },
+  tempatMagang: {
+    select: { id: true, namaTempat: true, alamat: true, dukuh: true, rt: true, rw: true, desa: true, kecamatan: true, kabupaten: true },
+  },
 } as const;
 
 type StatusD = 'MENUNGGU' | 'DITERIMA' | 'DITOLAK';
