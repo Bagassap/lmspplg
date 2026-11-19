@@ -4,8 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, X, XCircle } from "lucide-react";
 
-export function TolakPendaftaranModal({ nama, onClose, onTolak }: {
-  nama: string; onClose: () => void; onTolak: (alasan: string) => Promise<void>;
+export function TolakPendaftaranModal({ onClose, onTolak }: {
+  onClose: () => void; onTolak: (alasan: string) => Promise<void>;
 }) {
   const [alasan, setAlasan] = useState("");
   const [saving, setSaving] = useState(false);
@@ -27,7 +27,6 @@ export function TolakPendaftaranModal({ nama, onClose, onTolak }: {
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FEE2E2] text-[#DC2626]"><XCircle size={20} /></span>
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tolak pendaftaran</h2>
-            <p className="truncate text-xs text-slate-600 dark:text-slate-300">{nama}</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
         </div>

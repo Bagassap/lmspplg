@@ -104,7 +104,7 @@ function DetailModal({
   const app = useIsAppMode();
   if (app) {
     return (
-      <AppSheet open onClose={onClose} title={title} subtitle={`${items.length} siswa dalam daftar ini`}>
+      <AppSheet open onClose={onClose} title={title}>
         {items.length === 0 ? (
           <p className="py-10 text-center text-sm font-semibold text-slate-600">{emptyMessage}</p>
         ) : (

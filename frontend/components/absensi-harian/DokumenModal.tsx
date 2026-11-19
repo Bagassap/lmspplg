@@ -170,7 +170,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   if (h.app as boolean) {
     return createPortal(
       <>
-        <AppSheet open onClose={onClose} title={siswa.nama} subtitle={`${kelas} · ${formatTgl(tanggal)}`}
+        <AppSheet open onClose={onClose} title={siswa.nama}
           footer={<button onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
           <div className="mb-3 flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
             <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={44} fallbackBg={ac} textClassName="text-sm font-extrabold" />

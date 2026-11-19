@@ -18,25 +18,25 @@ import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
 const PAGE_TITLES: Record<string, [string, string]> = {
-  dashboard:      ["Dashboard",          "Ringkasan aktivitas Anda"],
-  "absensi-harian": ["Absensi Harian",   "Presensi kehadiran harian siswa"],
-  pengumuman:     ["Pengumuman",         "Informasi dan pengumuman terkini"],
-  "data-siswa":   ["Data Siswa",         "Kelola data seluruh siswa"],
-  notifikasi:     ["Notifikasi",         "Pemberitahuan terbaru"],
-  menu:           ["Menu",               "Profil dan semua menu"],
-  profil:         ["Profil Saya",        "Informasi dan pengaturan akun"],
+  dashboard:      ["Dashboard",          ""],
+  "absensi-harian": ["Absensi Harian",   ""],
+  pengumuman:     ["Pengumuman",         ""],
+  "data-siswa":   ["Data Siswa",         ""],
+  notifikasi:     ["Notifikasi",         ""],
+  menu:           ["Menu",               ""],
+  profil:         ["Profil Saya",        ""],
   penempatan:     ["Penempatan PKL",     ""],
   pendaftaran:    ["Pendaftaran PKL",    ""],
-  absensi:        ["Absensi",            "Data kehadiran"],
-  monitoring:     ["Monitoring PKL",     "Pantau perkembangan PKL siswa"],
-  rekap:          ["Rekap & Laporan",    "Rekapitulasi dan laporan data PKL"],
-  jadwal:         ["Jadwal UKK",         "Jadwal ujian kompetensi keahlian"],
-  soal:           ["Soal UKK",           "Berkas soal ujian kompetensi"],
-  penilaian:      ["Penilaian UKK",      "Data nilai ujian kompetensi"],
-  "nilai-saya":   ["Nilai Saya",         "Hasil ujian kompetensi Anda"],
-  magang:         ["PKL",                "Program praktik kerja lapangan"],
-  "ujian-ukk":    ["UKK",               "Ujian Kompetensi Keahlian"],
-  "jadwal-soal":  ["UKK",   "Kelola jadwal, soal, dan pantau pengumpulan siswa"],
+  absensi:        ["Absensi",            ""],
+  monitoring:     ["Monitoring PKL",     ""],
+  rekap:          ["Rekap & Laporan",    ""],
+  jadwal:         ["Jadwal UKK",         ""],
+  soal:           ["Soal UKK",           ""],
+  penilaian:      ["Penilaian UKK",      ""],
+  "nilai-saya":   ["Nilai Saya",         ""],
+  magang:         ["PKL",                ""],
+  "ujian-ukk":    ["UKK",               ""],
+  "jadwal-soal":  ["UKK",   ""],
 };
 
 function jakartaGreetingWord(): string {
@@ -50,8 +50,8 @@ function jakartaGreetingWord(): string {
 function getPageInfo(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
   const last = segments[segments.length - 1] ?? "";
-  if (segments[1] === "tugas" && segments.length > 2) return { title: "Submisi Tugas", subtitle: "Pengumpulan per kelas" };
-  if (segments[1] === "pengumuman" && segments.length > 2) return { title: "Pengumuman", subtitle: "Isi dan diskusi" };
+  if (segments[1] === "tugas" && segments.length > 2) return { title: "Submisi Tugas", subtitle: "" };
+  if (segments[1] === "pengumuman" && segments.length > 2) return { title: "Pengumuman", subtitle: "" };
   const info = PAGE_TITLES[last];
   return info
     ? { title: info[0], subtitle: info[1] }
@@ -155,7 +155,7 @@ function hasPurpleMobileHeader(pathname: string): boolean {
 export function Topbar({ user }: { user: UserPayload }) {
   const router   = useRouter();
   const pathname = usePathname();
-  const { title, subtitle } = getPageInfo(pathname);
+  const { title } = getPageInfo(pathname);
   const appMode = useIsAppMode();
   const appHome = appMode && (pathname === "/siswa/dashboard" || pathname === "/guru/dashboard" || pathname === "/admin/dashboard");
   const purpleMobile = hasPurpleMobileHeader(pathname) || appMode;
@@ -345,9 +345,6 @@ export function Topbar({ user }: { user: UserPayload }) {
 
         <div className="hidden xl:block">
           <h1 className="mb-0.5 text-lg font-bold text-slate-800 dark:text-slate-200">{title}</h1>
-          {subtitle && (
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{subtitle}</p>
-          )}
         </div>
 
         <div className="flex-1" />

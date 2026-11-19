@@ -69,9 +69,6 @@ function SubmitPraktikModal({
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-base font-extrabold text-black">{tugas.judul}</h2>
-            <p className="flex items-center gap-1.5 text-xs text-black/70">
-              <CalendarClock size={11} /> Deadline {formatTgl(tugas.deadline)}
-            </p>
           </div>
           <button onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-black transition-colors hover:bg-slate-200">
@@ -251,7 +248,6 @@ function SubmitSoalModal({
     }
   }
 
-  const answeredCount = soalList.filter((s) => (jawaban[s.id] ?? "").trim()).length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
@@ -267,9 +263,6 @@ function SubmitSoalModal({
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-base font-extrabold">{tugas.judul}</h2>
-            <p className="flex items-center gap-1.5 text-xs" style={{ opacity: 0.75 }}>
-              <CalendarClock size={11} /> Deadline {formatTgl(tugas.deadline)} · {answeredCount}/{soalList.length} terjawab
-            </p>
           </div>
           <button onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors hover:opacity-80"

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FileUp, BarChart3, ChevronLeft } from "lucide-react";
 import { GuruLaporDiriPanel } from "@/components/magang/GuruLaporDiriPanel";
 import { GuruLaporanPanel } from "@/components/magang/GuruLaporanPanel";
-import type { LaporanAkhirRow } from "@/components/magang/laporan-akhir-types";
 import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
@@ -16,19 +15,6 @@ export default function GuruMagangRekapPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
   const [category, setCategory] = useState<Category>("lapor-diri");
-  const [summary, setSummary] = useState({ sudahLapor: 0, belumLapor: 0, total: 0 });
-  const [laporanRows, setLaporanRows] = useState<LaporanAkhirRow[]>([]);
-  const [, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/magang/lapor-diri").then((r) => r.json()).catch(() => null),
-      fetch("/api/magang/laporan-akhir").then((r) => r.json()).catch(() => null),
-    ]).then(([lapor, laporan]) => {
-      if (lapor?.summary) setSummary(lapor.summary);
-      if (Array.isArray(laporan)) setLaporanRows(laporan);
-    }).finally(() => setLoading(false));
-  }, []);
 
   return (
     <div className="space-y-6">
@@ -52,7 +38,6 @@ export default function GuruMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Lapor Diri</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{summary.sudahLapor} sudah · {summary.belumLapor} belum mengumpulkan</p>
                 </div>
               </button>
 
@@ -70,7 +55,6 @@ export default function GuruMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Laporan</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{laporanRows.filter((r) => r.laporan).length} sudah · {laporanRows.filter((r) => !r.laporan).length} belum mengumpulkan</p>
                 </div>
               </button>
             </div>

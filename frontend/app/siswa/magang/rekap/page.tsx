@@ -1,46 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FileUp, BarChart3, ChevronLeft } from "lucide-react";
 import { SiswaLaporDiriPanel } from "@/components/magang/SiswaLaporDiriPanel";
 import { SiswaLaporanPanel } from "@/components/magang/SiswaLaporanPanel";
-import type { LaporDiriStatusSaya } from "@/components/magang/lapor-diri-types";
-import type { LaporanAkhirStatusSaya } from "@/components/magang/laporan-akhir-types";
 import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
 type Category = "lapor-diri" | "laporan";
 
-const LAPORAN_AKHIR_LABEL: Record<string, string> = {
-  TERKIRIM: "Menunggu review",
-  DITERIMA: "Laporan diterima",
-  REVISI: "Perlu direvisi",
-};
-
 export default function SiswaMagangRekapPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
   const [category, setCategory] = useState<Category>("lapor-diri");
-  const [status, setStatus] = useState<LaporDiriStatusSaya | null>(null);
-  const [laporanAkhir, setLaporanAkhir] = useState<LaporanAkhirStatusSaya | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/magang/lapor-diri/saya").then((r) => r.json()).catch(() => null),
-      fetch("/api/magang/laporan-akhir/saya").then((r) => r.json()).catch(() => null),
-    ]).then(([lapor, laporan]) => {
-      setStatus(lapor);
-      setLaporanAkhir(laporan);
-    }).finally(() => setLoading(false));
-  }, []);
-
-  const sudahLapor = status?.hasPenempatan ? status.sudahLapor : false;
-  const laporanAkhirSubtitle = laporanAkhir?.hasPenempatan
-    ? laporanAkhir.laporan ? LAPORAN_AKHIR_LABEL[laporanAkhir.laporan.status] : "Belum kirim laporan akhir"
-    : "Kirim laporan akhir PKL-mu";
 
   return (
     <div className="space-y-6">
@@ -64,9 +38,6 @@ export default function SiswaMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Lapor Diri</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">
-                    {status?.hasPenempatan ? (sudahLapor ? "Sudah lapor bulan ini" : "Belum lapor bulan ini") : "Unggah laporan bulananmu"}
-                  </p>
                 </div>
               </button>
 
@@ -84,7 +55,6 @@ export default function SiswaMagangRekapPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Laporan</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{loading ? "…" : laporanAkhirSubtitle}</p>
                 </div>
               </button>
             </div>

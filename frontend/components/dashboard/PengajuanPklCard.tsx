@@ -20,7 +20,6 @@ export function PengajuanPklCard({ list }: { list: PengajuanPkl[] }) {
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-[15px] font-extrabold text-slate-900 dark:text-white">Pengajuan PKL menunggu guru pembimbing</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">{groups.length} pengajuan dari siswa perlu ditetapkan guru pembimbingnya</p>
         </div>
         <span className="rounded-xl bg-[#E8562B] px-2.5 py-1 text-xs font-bold text-white">{groups.length}</span>
       </div>

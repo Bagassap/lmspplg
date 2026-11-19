@@ -362,7 +362,6 @@ export default function SiswaMagangAbsensiPage() {
                 transition={{ duration: 0.4, delay: 0.25 }}
                 className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-5">
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-slate-700">
                     <Briefcase size={18} style={{ color: "#3E03B3" }} />
@@ -484,7 +483,6 @@ export default function SiswaMagangAbsensiPage() {
                 transition={{ duration: 0.4, delay: 0.25 }}
                 className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white">Tempat PKL</h2>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Lokasi penempatan magangmu saat ini</p>
                 <div className="mt-4 flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-900/40">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] dark:bg-slate-700">
                     <Briefcase size={18} style={{ color: "#3E03B3" }} />
@@ -780,11 +778,6 @@ function FormAbsen({
           <h2 className="text-base font-extrabold text-slate-800 dark:text-white">
             {activeTipe === "PULANG" ? "Absen Pulang" : `Absen ${STATUS_CFG[activeTipe].label}`}
           </h2>
-          <p className="text-xs text-slate-400 dark:text-slate-500">
-            {activeTipe === "PULANG" ? "Catat waktu pulang PKL-mu untuk hari ini" :
-             activeTipe === "HADIR" ? "Catat kehadiran PKL-mu untuk hari ini" :
-             `Laporkan ${STATUS_CFG[activeTipe].label.toLowerCase()} untuk hari ini`}
-          </p>
         </div>
       </div>
 

@@ -534,7 +534,6 @@ export default function AdminMagangAbsensiPage() {
               </span>
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -832,7 +831,6 @@ export default function AdminMagangAbsensiPage() {
                     </span>
                     <div>
                       <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Unduh Laporan</h3>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setLaporanOpen(false)}

@@ -149,7 +149,6 @@ export default function AdminDataSiswaPage() {
                 </span>
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">Naikkan siswa antar kelas, atau luluskan satu kelas sekaligus (akhir tahun ajaran)</p>
                 </div>
               </div>
               <ChevronRight size={16} className="shrink-0 text-slate-300" />

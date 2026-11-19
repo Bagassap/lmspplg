@@ -39,7 +39,6 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Password siswa</p>
             <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{nama}</h2>
-            {data && <p className="text-xs text-slate-500">NIS {data.nis}</p>}
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>

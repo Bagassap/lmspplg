@@ -172,12 +172,12 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
 
       <TugasPraktikViewerModal
         open={!!codeT} onClose={() => setCodeT(null)}
-        title={codeT ? namaOf(codeT) : "Siswa"} subtitle={tugas?.judul}
+        title={codeT ? namaOf(codeT) : "Siswa"}
         html={codeT?.submittedHtml ?? ""} css={codeT?.submittedCss ?? ""} js={codeT?.submittedJs ?? ""}
       />
       <TugasFileViewerModal
         open={!!fileT} onClose={() => setFileT(null)}
-        title={fileT ? namaOf(fileT) : "Siswa"} subtitle={tugas?.judul}
+        title={fileT ? namaOf(fileT) : "Siswa"}
         fileUrl={fileT?.fileUrl ?? null} fileName={fileT?.fileName ?? null} catatan={fileT?.catatan ?? null}
         submittedAt={fileT?.submittedAt}
       />

@@ -135,7 +135,6 @@ export function MateriFormModal({
                 <h2 className={`text-base font-extrabold ${h.title}`}>
                   {isEdit ? "Edit Materi" : "Tambah Materi"}
                 </h2>
-                <p className={`text-xs ${h.sub}`}>{isEdit ? "Ubah detail materi pembelajaran" : "Unggah modul pembelajaran baru"}</p>
               </div>
               <button
                 onClick={onClose}

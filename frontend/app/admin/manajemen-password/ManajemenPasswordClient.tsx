@@ -145,7 +145,6 @@ export default function ManajemenPasswordClient() {
           <div className="mx-4 mt-4 hidden items-center gap-4 rounded-2xl bg-[#F1EDFA] p-3 lg:flex">
             <div className="min-w-0 flex-1 pl-1">
               <p className="text-sm font-extrabold text-slate-900 dark:text-white">Aksi akun</p>
-              <p className="text-xs text-slate-600 dark:text-slate-300">Kelola guru, impor siswa massal, atau buat akun baru</p>
             </div>
             <div className="grid shrink-0 grid-cols-4 gap-2.5">
               {([

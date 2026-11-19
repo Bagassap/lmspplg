@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen, ChevronLeft, ClipboardList, Clock, FileText, Search, Paperclip,
-  User as UserIcon, Users, CheckCircle2,
+  Users, CheckCircle2,
 } from "lucide-react";
 import { icon3dStyle, TONE_ORDER } from "@/components/shared/Icon3D";
 import {
@@ -270,7 +270,6 @@ function DetailScreen({ selected, onBack, onBuka, onKumpulkan, onLihatSubmisi }:
   const judul = (m ?? t)!.judul;
   const mapel = (m ?? t)!.mapel;
   const deskripsi = (m ?? t)!.deskripsi;
-  const guru = (m ?? t)!.createdBy?.nama;
   const submisi = t?.submisi?.[0];
   const aktif = t ? isTugasActive(t) : true;
 
@@ -306,11 +305,6 @@ function DetailScreen({ selected, onBack, onBuka, onKumpulkan, onLihatSubmisi }:
 
       <div className="relative -mt-6 flex-1 rounded-t-[28px] bg-white px-5 pb-32 pt-6 dark:bg-[#0F172A]">
         <h1 className="text-lg font-extrabold leading-tight text-slate-900 dark:text-white">{judul}</h1>
-        {guru && (
-          <p className="mt-2 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <UserIcon size={14} /> {guru}
-          </p>
-        )}
         {infoLine && <p className="mt-2 text-lg font-extrabold" style={{ color: "#F26A3D" }}>{infoLine}</p>}
 
         <h2 className="mt-6 text-base font-extrabold text-slate-900 dark:text-white">Deskripsi</h2>

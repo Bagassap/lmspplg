@@ -24,14 +24,15 @@ export function RiwayatAbsenSheet({
   const box = "rounded-2xl bg-[#F1EDFA] p-3";
   const cap = "mb-2 flex items-center gap-1.5 text-xs font-bold text-slate-800";
   return (
-    <AppSheet open onClose={onClose} title={title} subtitle={tanggalLabel}
+    <AppSheet open onClose={onClose} title={title}
       footer={<button type="button" onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
       <div className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white" style={{ color: statusColor }}>
           <CheckCircle2 size={22} />
         </span>
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
           <span className="inline-flex rounded-xl px-2.5 py-0.5 text-[11px] font-bold" style={{ background: statusBg, color: statusColor }}>{statusLabel}</span>
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{tanggalLabel}</span>
         </div>
         <p className="font-digital text-xl font-bold tracking-wider text-[#3E03B3]">{waktu ?? "—"}</p>
       </div>

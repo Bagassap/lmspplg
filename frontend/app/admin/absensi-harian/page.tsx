@@ -828,7 +828,6 @@ export default function AdminAbsensiHarianPage() {
                     </span>
                     <div>
                       <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Unduh Laporan</h3>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi ke PDF/Excel</p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setLaporanOpen(false)}

@@ -128,7 +128,6 @@ export function SiswaLaporDiriPanel() {
         <h2 className="text-sm font-bold text-slate-800 dark:text-white">
           {status.sudahLapor ? "Unggah Ulang Laporan" : "Unggah Laporan Bulan Ini"}
         </h2>
-        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">File presentasi PDF atau PPT/PPTX, maks. 20MB</p>
 
         <div className="mt-4">
           <label className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-3 transition-colors dark:border-slate-600 dark:bg-slate-700 ${app ? "hover:border-[#3E03B3]/50 hover:bg-[#F1EDFA]" : "hover:border-[#3E03B3]/40 hover:bg-slate-100"}`}>

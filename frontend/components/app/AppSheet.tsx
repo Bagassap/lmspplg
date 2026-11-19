@@ -5,12 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
 export function AppSheet({
-  open, onClose, title, subtitle, children, footer,
+  open, onClose, title, children, footer,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
-  subtitle?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
 }) {
@@ -28,7 +27,6 @@ export function AppSheet({
             <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-base font-extrabold text-slate-900 dark:text-white">{title}</p>
-                {subtitle && <p className="truncate text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
               <button type="button" onClick={onClose} aria-label="Tutup"
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">

@@ -13,7 +13,6 @@ import { AppTabs } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { TugasSubmisiPage } from "@/components/tugas/TugasSubmisiPage";
 
-type MateriRef = { id: string };
 type Category = "materi" | "tugas";
 
 export function MateriTugasGuruPage() {
@@ -22,7 +21,6 @@ export function MateriTugasGuruPage() {
   const appMode = useIsAppMode();
   const [submisiTugasId, setSubmisiTugasId] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const [materiList, setMateriList] = useState<MateriRef[]>([]);
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
   const [submisiList, setSubmisiList] = useState<TugasSubmisiItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,12 +39,10 @@ export function MateriTugasGuruPage() {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [m, t, s] = await Promise.all([
-        fetch("/api/materi").then((r) => r.json()),
+      const [t, s] = await Promise.all([
         fetch("/api/tugas").then((r) => r.json()),
         fetch("/api/tugas/submisi").then((r) => r.json()),
       ]);
-      setMateriList(Array.isArray(m) ? m : []);
       setTugasList(Array.isArray(t) ? t : []);
       setSubmisiList(Array.isArray(s) ? s : []);
     } finally {
@@ -114,7 +110,6 @@ export function MateriTugasGuruPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Materi</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{materiList.length} materi tersedia</p>
                 </div>
               </button>
 
@@ -132,9 +127,6 @@ export function MateriTugasGuruPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Tugas</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">
-                    {tugasList.length} tugas · {perluReview > 0 ? `${perluReview} perlu review` : "semua direview"}
-                  </p>
                 </div>
               </button>
             </div>

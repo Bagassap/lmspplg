@@ -110,12 +110,12 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
 }
 
 function RingkasanKehadiranCard({
-  tempatList, selectedId, onSelectTempat, tempatStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, tempatNama, tanggal,
+  tempatList, selectedId, onSelectTempat, tempatStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, tanggal,
 }: {
   tempatList: TempatMagang[]; selectedId: string; onSelectTempat: (id: string) => void;
   tempatStat: (t: TempatMagang) => { hd: number; tt: number; pct: number };
   siswaList: SiswaAbsensi[];
-  rekap: RekapTempat["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number; tempatNama?: string;
+  rekap: RekapTempat["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number;
   tanggal: string;
 }) {
   const segments = [
@@ -139,9 +139,6 @@ function RingkasanKehadiranCard({
         </span>
         <div className="min-w-0">
           <p className="text-sm font-bold text-slate-800 dark:text-white">Ringkasan Kehadiran</p>
-          <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">
-            Distribusi status siswa bimbingan hari ini{tempatNama ? ` · ${tempatNama}` : ""}
-          </p>
         </div>
       </div>
 
@@ -535,7 +532,7 @@ export default function GuruMagangAbsensiPage() {
               <RingkasanKehadiranCard
                 tempatList={tempatList} selectedId={selectedId} onSelectTempat={setSelectedId} tempatStat={tempatStat}
                 siswaList={siswaList} rekap={rekap} hadirPct={hadirPct} total={total}
-                pulangCount={pulangCount} belumAbsen={total - sudahAbsen} tempatNama={selectedTempat?.namaTempat}
+                pulangCount={pulangCount} belumAbsen={total - sudahAbsen}
                 tanggal={tanggal} />
             </div>
 
@@ -632,7 +629,6 @@ export default function GuruMagangAbsensiPage() {
               </span>
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -881,7 +877,6 @@ export default function GuruMagangAbsensiPage() {
                     </span>
                     <div>
                       <h3 className="text-base font-extrabold text-slate-800 dark:text-white">Unduh Laporan</h3>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor rekap absensi PKL ke PDF/Excel</p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setLaporanOpen(false)}

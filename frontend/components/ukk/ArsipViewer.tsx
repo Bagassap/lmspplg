@@ -13,7 +13,7 @@ const BISA_DILIHAT = /\.(pdf)$/i;
 const bisaDilihat = (p: string) => TEKS.test(p) || GAMBAR.test(p) || BISA_DILIHAT.test(p) || !/\.[^/]+$/.test(p);
 const ukuran = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : n >= 1024 ? `${Math.round(n / 1024)} KB` : `${n} B`);
 
-export function ArsipViewer({ submisiId, nama, siswa, onClose }: { submisiId: string; nama: string; siswa: string; onClose: () => void }) {
+export function ArsipViewer({ submisiId, siswa, onClose }: { submisiId: string; siswa: string; onClose: () => void }) {
   const [entri, setEntri] = useState<Entri[] | null>(null);
   const [galat, setGalat] = useState("");
   const [pilih, setPilih] = useState<string | null>(null);
@@ -73,7 +73,6 @@ export function ArsipViewer({ submisiId, nama, siswa, onClose }: { submisiId: st
           )}
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-sm font-extrabold text-slate-900 dark:text-white sm:text-base">{siswa}</h2>
-            <p className="truncate text-xs text-slate-500">{pilih ?? nama}</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>

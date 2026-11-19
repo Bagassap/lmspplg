@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Send, Loader2, CalendarClock, Download } from "lucide-react";
+import { ChevronLeft, Send, Loader2, Download } from "lucide-react";
 import { CodePracticeCanvas } from "@/components/materi/CodePracticeCanvas";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { TugasItem } from "./types";
-import { formatTgl } from "./types";
 
 export function TugasPraktikPage({ tugasId }: { tugasId: string }) {
   const router = useRouter();
@@ -74,11 +73,6 @@ export function TugasPraktikPage({ tugasId }: { tugasId: string }) {
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Praktik</p>
           <h1 className="truncate text-base font-extrabold text-slate-900 dark:text-white sm:text-lg">{tugas?.judul ?? "Memuat…"}</h1>
-          {tugas && (
-            <p className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-              <CalendarClock size={11} /> Deadline {formatTgl(tugas.deadline)}
-            </p>
-          )}
         </div>
       </div>
 

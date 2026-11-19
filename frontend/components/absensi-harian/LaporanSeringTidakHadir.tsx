@@ -105,9 +105,6 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-[15px] font-extrabold text-slate-900 dark:text-white">Siswa Bermasalah</p>
-            <p className="truncate text-xs font-semibold text-slate-600 dark:text-slate-300">
-              {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
-            </p>
           </div>
           <ArrowRight size={16} className="shrink-0 text-slate-400" />
         </button>
@@ -119,9 +116,6 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-[12.5px] font-bold" style={{ color: "#3E03B3" }}>Siswa Bermasalah</p>
-            <p className="truncate text-[10px] font-semibold" style={{ color: "#3E03B3" }}>
-              {loading ? "Memuat..." : totalBermasalah > 0 ? `${totalBermasalah} siswa jarang absen · alpa tertinggi ${alpaTertinggi}x` : "Tidak ada catatan alpa"}
-            </p>
           </div>
           <ArrowRight size={14} className="shrink-0" style={{ color: "#3E03B3" }} />
         </button>
@@ -134,7 +128,6 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
             </span>
             <div>
               <p className="text-sm font-bold text-slate-800 dark:text-white">Siswa Bermasalah</p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500">Jarang absen{kelasNama ? ` di ${kelasNama}` : ""}</p>
             </div>
           </div>
           <div className="flex rounded-lg bg-slate-100 p-1 dark:bg-slate-700">
@@ -195,7 +188,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
 
       {app && (
         <AppSheet open={showModal} onClose={() => setShowModal(false)} title="Siswa Sering Tidak Hadir"
-          subtitle={data ? `${kelasNama ? `${kelasNama} · ` : ""}${formatTgl(data.tanggalMulai)} – ${formatTgl(data.tanggalSelesai)}` : "Memuat..."}>
+         >
           <div className="flex gap-2">
             {([
               { key: "mingguan", label: "7 Hari" },

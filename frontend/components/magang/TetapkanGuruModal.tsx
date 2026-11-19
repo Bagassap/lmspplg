@@ -73,7 +73,6 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]"><UserCheck size={20} /></span>
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tetapkan Guru Pembimbing</h2>
-            <p className="truncate text-xs text-slate-600 dark:text-slate-300">{t.namaTempat}</p>
           </div>
           <button onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>
         </div>

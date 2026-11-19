@@ -313,7 +313,6 @@ export default function SiswaJadwalSoalPage() {
                         <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
@@ -358,7 +357,6 @@ export default function SiswaJadwalSoalPage() {
                         <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
@@ -396,7 +394,6 @@ export default function SiswaJadwalSoalPage() {
                 </div>
                 <div className="relative min-w-0 lg:flex-1">
                   <p className="truncate text-sm font-black leading-tight lg:text-xl">Jadwal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{jadwalFiles.length} file jadwal · TA 2026/2027</p>
                 </div>
               </button>
 
@@ -409,7 +406,6 @@ export default function SiswaJadwalSoalPage() {
                 </div>
                 <div className="relative min-w-0 lg:flex-1">
                   <p className="truncate text-sm font-black leading-tight lg:text-xl">Soal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[9px] font-medium text-white/75 lg:text-[11px]">{totalSoal} soal tersedia · TA 2026/2027</p>
                 </div>
               </button>
                 </div>

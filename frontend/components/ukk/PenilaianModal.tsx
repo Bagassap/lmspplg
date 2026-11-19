@@ -6,9 +6,9 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { ASPEK_NILAI, hitungRata, type PenilaianUkk } from "@/lib/ukkAspek";
 
 export function PenilaianModal({
-  submisiId, nama, awal, onClose, onSaved,
+  submisiId, awal, onClose, onSaved,
 }: {
-  submisiId: string; nama: string; awal?: PenilaianUkk | null; onClose: () => void; onSaved: (p: PenilaianUkk) => void;
+  submisiId: string; awal?: PenilaianUkk | null; onClose: () => void; onSaved: (p: PenilaianUkk) => void;
 }) {
   const toast = useToast();
   const [skor, setSkor] = useState<Record<string, string>>(() => {
@@ -61,7 +61,6 @@ export function PenilaianModal({
         <div className="flex shrink-0 items-start gap-3 px-5 pb-3 pt-5">
           <div className="min-w-0 flex-1">
             <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Penilaian UKK</h3>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">{nama}</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:text-[#C4B5FD]"><X size={16} /></button>
         </div>

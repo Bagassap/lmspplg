@@ -94,7 +94,7 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onLihatPasswo
       { icon: Users, label: "Orang tua", value: siswa.namaOrtu },
     ];
     return (
-      <AppSheet open onClose={onClose} title={displayNama} subtitle={`NIS ${siswa.nis} · ${kelasShort(siswa.kelas.nama)}`}>
+      <AppSheet open onClose={onClose} title={displayNama}>
         <div className="flex items-center gap-3">
           <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={56} fallbackBg="#3E03B3" textClassName="text-base font-extrabold" />
           <div className="min-w-0 flex-1 space-y-1.5">
@@ -188,7 +188,6 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onLihatPasswo
               </div>
               <div className="min-w-0">
                 <h2 className="break-words text-[19px] font-extrabold leading-tight text-white">{displayNama}</h2>
-                <p className="mt-1 font-mono text-xs text-white/70">NIS: {siswa.nis}</p>
                 <span className="mt-2 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                   {kelasShort(siswa.kelas.nama)}
                 </span>
@@ -346,7 +345,6 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onLihatPasswo
             <Avatar src={siswa.user?.fotoProfil} nama={displayNama} sizePx={64} fallbackBg="rgba(255,255,255,0.22)" textClassName="text-lg font-extrabold" />
           </div>
           <h2 className={`relative mt-3 break-words text-lg font-extrabold ${h.title}`}>{displayNama}</h2>
-          <p className={`relative mt-1 font-mono text-xs ${h.app ? "text-slate-500" : "text-white/70"}`}>NIS: {siswa.nis}</p>
           <span className={`relative mt-2 inline-flex items-center rounded-lg px-2.5 py-1 text-[11px] font-bold backdrop-blur-sm ${h.chip}`}>
             {kelasShort(siswa.kelas.nama)}
           </span>

@@ -161,13 +161,12 @@ export function useSheetHeader(defaultBg: string) {
 type SheetAction = { label: string; icon?: React.ElementType; onClick?: () => void; href?: string; danger?: boolean };
 
 export function AppDetailSheet({
-  onClose, icon: Icon, tone = "indigo", title, subtitle, rows, chips, primary, secondary = [],
+  onClose, icon: Icon, tone = "indigo", title, rows, chips, primary, secondary = [],
 }: {
   onClose: () => void;
   icon: React.ElementType;
   tone?: "indigo" | "emerald" | "amber" | "violet" | "sky";
   title: string;
-  subtitle?: string;
   rows: { label: string; value: React.ReactNode }[];
   chips?: { label: string; values: string[] };
   primary?: SheetAction;
@@ -180,7 +179,6 @@ export function AppDetailSheet({
           <Icon size={28} color="#fff" />
         </span>
         <h2 className="mt-3 text-lg font-extrabold text-slate-900">{title}</h2>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
       </div>
       <div className="mx-auto max-w-md space-y-2 px-6 pt-3 text-left">
         {rows.map((r) => (

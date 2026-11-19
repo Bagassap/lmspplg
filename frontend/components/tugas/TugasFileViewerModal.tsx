@@ -6,12 +6,11 @@ import { formatTglJam } from "./types";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 
 export function TugasFileViewerModal({
-  open, onClose, title, subtitle, fileUrl, fileName, catatan, submittedAt,
+  open, onClose, title, fileUrl, fileName, catatan, submittedAt,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
-  subtitle?: string;
   fileUrl: string | null;
   fileName: string | null;
   catatan: string | null;
@@ -37,7 +36,6 @@ export function TugasFileViewerModal({
               </span>
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{title}</h2>
-                {subtitle && <p className="truncate text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
               </div>
               <button onClick={onClose} aria-label="Tutup"
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">

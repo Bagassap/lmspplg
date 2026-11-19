@@ -93,7 +93,6 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
                 <div>
                   <p className="text-[9px] font-bold uppercase tracking-widest text-white/55">Edit Data Siswa</p>
                   <h2 className="text-base font-extrabold leading-tight text-white">{displayNama}</h2>
-                  <p className="text-[10px] text-white/60">NIS: {siswa.nis}</p>
                 </div>
               </div>
               <button onClick={onClose}

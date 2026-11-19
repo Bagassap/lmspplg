@@ -21,7 +21,6 @@ export function TugasJawabanViewerModal({
 }) {
   const isPg = tipe === "PILIHAN_GANDA";
   const sorted = [...jawaban].sort((a, b) => (a.soal?.urutan ?? 0) - (b.soal?.urutan ?? 0));
-  const benar = sorted.filter((j) => j.soal?.jawabanBenar && j.jawabanPilihan === j.soal.jawabanBenar).length;
   const nilaiAkhir = isPg ? nilaiPilihanGanda({ nilai, jawaban: sorted }) : null;
   const nilaiAwal = nilai ?? nilaiAkhir;
 
@@ -59,9 +58,6 @@ export function TugasJawabanViewerModal({
               </span>
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{judul}</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {isPg ? `${benar} dari ${sorted.length} soal benar` : `${sorted.length} soal esai`}
-                </p>
               </div>
               {(isPg ? nilaiAkhir : nilai) != null && (
                 <div className="shrink-0 rounded-2xl bg-[#F1EDFA] px-5 py-2 text-center">

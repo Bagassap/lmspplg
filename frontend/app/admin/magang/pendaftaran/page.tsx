@@ -163,7 +163,7 @@ export default function AdminPendaftaranPklPage() {
       </AnimatePresence>
       <AnimatePresence>
         {tolakTarget && (
-          <TolakPendaftaranModal nama={namaSiswa(tolakTarget)} onClose={() => setTolakTarget(null)}
+          <TolakPendaftaranModal onClose={() => setTolakTarget(null)}
             onTolak={async (alasan) => { if (await aksi(tolakTarget, "tolak", { alasan })) setTolakTarget(null); }} />
         )}
       </AnimatePresence>

@@ -278,7 +278,6 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                 <FileText size={24} className="text-white" />
               </div>
               <h2 className="relative mt-3 text-lg font-extrabold text-white">{detailItem.judul}</h2>
-              <p className="relative mt-1 text-sm text-white/80">{detailItem.mapel}</p>
             </div>
 
             <div className="relative mx-auto max-w-md space-y-2 px-6 text-left">

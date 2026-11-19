@@ -128,7 +128,6 @@ export function PengumumanFormModal({
                 <h2 className="text-base font-extrabold text-white">
                   {isEdit ? "Edit Pengumuman" : "Buat Pengumuman"}
                 </h2>
-                <p className="text-xs text-white">{isEdit ? "Ubah isi pengumuman" : "Tulis pengumuman baru untuk semua civitas"}</p>
               </div>
               <button
                 onClick={onClose}

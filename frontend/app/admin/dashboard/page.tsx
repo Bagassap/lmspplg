@@ -230,7 +230,6 @@ export default function AdminDashboardPage() {
         >
           <div className="mb-1">
             <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi kehadiran hari ini</p>
           </div>
           <StatisticRainbow
             hadir={hadirCount} sakit={sakit} izin={izin} alpha={alpha}
@@ -246,7 +245,6 @@ export default function AdminDashboardPage() {
           <div className="mb-2 flex items-start justify-between">
             <div>
               <h2 className="text-base font-bold text-slate-800 dark:text-white">Overview Kehadiran</h2>
-              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Tren mingguan — hadir vs total siswa</p>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-slate-100 px-3 py-1.5 text-[11px] dark:border-slate-700/40">
               <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
@@ -322,7 +320,6 @@ export default function AdminDashboardPage() {
           className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-7"
         >
           <h2 className="mb-1 text-base font-bold text-slate-800 dark:text-white">Kehadiran Per Kelas</h2>
-          <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">Hadir vs tidak hadir per kelas</p>
           {kelasData.length === 0 ? (
             <p className="py-14 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data absensi</p>
           ) : (
@@ -473,7 +470,6 @@ export default function AdminDashboardPage() {
 
       <div className="rounded-3xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1E293B]">
         <h2 className="text-sm font-bold text-slate-800 dark:text-white">Statistik Kehadiran</h2>
-        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Distribusi kehadiran hari ini</p>
         <StatisticRainbow
           hadir={hadirCount} sakit={sakit} izin={izin} alpha={alpha}
           total={data.kehadiran.total}
@@ -485,7 +481,6 @@ export default function AdminDashboardPage() {
           className="flex w-full items-center justify-between px-5 py-5">
           <div className="min-w-0 text-left">
             <h2 className="text-sm font-bold text-slate-800 dark:text-white">Kehadiran Per Kelas</h2>
-            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{kelasData.length} kelas · ketuk untuk lihat rincian</p>
           </div>
           <motion.span animate={{ rotate: kelasExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-300">

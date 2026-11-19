@@ -131,7 +131,7 @@ export function SubmisiSayaModal({
         open={viewCode}
         onClose={() => setViewCode(false)}
         title={judul ?? "Tugas"}
-        subtitle="Kode yang kamu kirimkan"
+       
         html={target.submittedHtml ?? ""}
         css={target.submittedCss ?? ""}
         js={target.submittedJs ?? ""}

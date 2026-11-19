@@ -146,7 +146,6 @@ export function KelolaGuruModal({
               <div className="relative min-w-0 flex-1">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Superadmin</p>
                 <h2 className="truncate text-base font-extrabold text-white">Kelola Guru</h2>
-                <p className="truncate text-[11px] text-white/70">Mapel yang diampu, wali kelas, & status akun</p>
               </div>
               <button onClick={() => setKelolaKelasOpen(true)}
                 className="relative flex shrink-0 items-center gap-1.5 rounded-xl bg-white/15 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/25">

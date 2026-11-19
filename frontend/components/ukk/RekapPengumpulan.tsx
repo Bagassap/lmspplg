@@ -246,12 +246,12 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
         </div>
       )}
       {nilai && (
-        <PenilaianModal submisiId={nilai.id} nama={nilai.nama}
+        <PenilaianModal submisiId={nilai.id}
           awal={(() => { const r = semua.find((x) => x.id === nilai.id); return r ? penilaianOf(r) : null; })()}
           onClose={() => setNilai(null)}
           onSaved={(p) => setNilaiLokal((m) => ({ ...m, [nilai.id]: p }))} />
       )}
-      {arsip && <ArsipViewer submisiId={arsip.id} nama={arsip.nama} siswa={arsip.siswa} onClose={() => setArsip(null)} />}
+      {arsip && <ArsipViewer submisiId={arsip.id} siswa={arsip.siswa} onClose={() => setArsip(null)} />}
     </>
   );
 }

@@ -34,7 +34,6 @@ export function UnduhDataSiswaCard({
         </span>
         <div>
           <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">Ekspor data siswa ke PDF/Excel</p>
         </div>
       </div>
 

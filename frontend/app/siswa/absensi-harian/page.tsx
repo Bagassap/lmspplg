@@ -415,7 +415,6 @@ export default function SiswaAbsensiHarianPage() {
                 transition={{ duration: 0.4, delay: 0.25 }}
                 className="col-span-12 rounded-2xl bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.07)] dark:bg-[#1E293B] xl:col-span-5">
                 <h2 className="text-base font-bold text-slate-800 dark:text-white">Statistik Absensi</h2>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Rekap kehadiran sejak absen pertama di LMS</p>
                 <StatisticRainbow
                   hadir={summary.hadir} sakit={summary.sakit}
                   izin={summary.izin} alpha={summary.alpa}
@@ -478,7 +477,6 @@ export default function SiswaAbsensiHarianPage() {
                   <h2 className="text-sm font-bold text-slate-800 dark:text-white">
                     Riwayat Absen {selectedRiwayatTab === "DATANG" ? "Datang" : "Pulang"}
                   </h2>
-                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">Catatan hari ini</p>
                 </div>
               </div>
               <div className="mt-3 space-y-2.5">
@@ -906,11 +904,6 @@ function FormAbsen({
           <h2 className="text-base font-extrabold text-slate-800 dark:text-white">
             {activeTipe === "PULANG" ? "Absen Pulang" : `Absen ${STATUS_CFG[activeTipe].label}`}
           </h2>
-          <p className="text-xs text-slate-400 dark:text-slate-500">
-            {activeTipe === "PULANG" ? "Catat waktu pulangmu untuk hari ini" :
-             activeTipe === "HADIR" ? "Catat kehadiranmu untuk hari ini" :
-             `Laporkan ${STATUS_CFG[activeTipe].label.toLowerCase()} untuk hari ini`}
-          </p>
         </div>
       </div>
 

@@ -122,7 +122,6 @@ export default function GuruJadwalSoalPage() {
                         <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Jadwal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? (allSoal.length===0 ? "Belum ada file jadwal" : `${allSoal.length} info UKK`)}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
@@ -175,7 +174,6 @@ export default function GuruJadwalSoalPage() {
                         <h2 className={`text-base font-extrabold leading-snug line-clamp-2 text-slate-900 dark:text-white`}>
                           {curSoal ? curSoal.judul : "Soal UKK"}
                         </h2>
-                        <p className={`mt-0.5 text-sm text-slate-500`}>{curSoal?.fileName ?? `${totalSoal} soal tersedia`}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {allSoal.length > 1 && (<>
@@ -224,7 +222,6 @@ export default function GuruJadwalSoalPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Nilai<span className="text-white/70"> Siswa</span></p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">Lihat dan unduh nilai</p>
                 </div>
               </button>
 
@@ -237,7 +234,6 @@ export default function GuruJadwalSoalPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Soal<span className="text-white/70"> UKK</span></p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{totalSoal} soal diunggah · TA 2026/2027</p>
                 </div>
               </button>
                 </div>
@@ -289,7 +285,6 @@ export default function GuruJadwalSoalPage() {
                       </div>
                       <div className="relative min-w-0">
                         <p className="truncate text-sm font-black leading-tight">Nilai Siswa</p>
-                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">Lihat dan unduh nilai</p>
                       </div>
                     </button>
                     <button type="button" onClick={() => { setSoalSoalIdx(0); setOpenSoalModal(true); }}
@@ -301,7 +296,6 @@ export default function GuruJadwalSoalPage() {
                       </div>
                       <div className="relative min-w-0">
                         <p className="truncate text-sm font-black leading-tight">Soal UKK</p>
-                        <p className="mt-0.5 truncate text-[9px] font-medium text-white/75">{totalSoal} soal diunggah</p>
                       </div>
                     </button>
                   </div>

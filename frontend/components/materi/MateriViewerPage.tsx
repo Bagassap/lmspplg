@@ -77,7 +77,6 @@ export function MateriViewerPage({ materiId, backHref }: { materiId: string; bac
       </div>
       <div className="relative min-w-0 flex-1">
         <h2 className={`truncate text-base font-extrabold ${app ? "text-slate-900" : "text-white"}`}>{materi.judul}</h2>
-        <p className={`text-xs ${app ? "text-slate-500" : "text-white/70"}`}>{materi.mapel}</p>
       </div>
       {fileUrl && (
         <a href={fileUrl} target="_blank" rel="noopener noreferrer"

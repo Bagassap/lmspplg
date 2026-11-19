@@ -23,7 +23,6 @@ export function MateriTugasSiswaPage() {
   const searchParams = useSearchParams();
   const appMode = useIsAppMode();
   const [materiList, setMateriList] = useState<MateriItem[]>([]);
-  const materiCount = materiList.length;
   const [tugasList, setTugasList] = useState<TugasItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category>(() => (searchParams.get("tab") === "tugas" ? "tugas" : "materi"));
@@ -105,7 +104,6 @@ export function MateriTugasSiswaPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Materi</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{materiCount} materi tersedia</p>
                 </div>
               </button>
 
@@ -123,9 +121,6 @@ export function MateriTugasSiswaPage() {
                 </div>
                 <div className="relative min-w-0 flex-1">
                   <p className="truncate text-xl font-black leading-tight">Tugas</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">
-                    {tugasList.length} tugas · {perluDikerjakan > 0 ? `${perluDikerjakan} belum dikerjakan` : "semua sudah dikumpulkan"}
-                  </p>
                 </div>
               </button>
             </div>
