@@ -13,10 +13,19 @@ function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-function Baris({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: React.ReactNode }) {
+const WARNA = {
+  ungu: ["#F1EDFA", "#3E03B3"],
+  oranye: ["#FFE9E2", "#E8562B"],
+  hijau: ["#F6FEE8", "#5D900F"],
+  biru: ["#E0F2FE", "#0EA5E9"],
+  amber: ["#FFF4E0", "#D97706"],
+} as const;
+
+function Baris({ icon: Icon, label, value, warna = "ungu" }: { icon: typeof MapPin; label: string; value: React.ReactNode; warna?: keyof typeof WARNA }) {
+  const [bg, fg] = WARNA[warna];
   return (
-    <div className="flex items-start gap-2.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700">
-      <Icon size={15} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
+    <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: bg, color: fg }}><Icon size={15} /></span>
       <div className="min-w-0">
         <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</p>
         <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{value}</p>
@@ -61,15 +70,15 @@ export function StatusPenempatanSiswa({ p, onChanged }: { p: PenempatanMagang; o
       </div>
 
       <div className="space-y-2 p-5 pt-0">
-        {!aktif && <Baris icon={Building2} label="Instansi" value={t.namaTempat} />}
-        {t.namaPimpinan && <Baris icon={User} label="Kepala instansi" value={t.namaPimpinan} />}
-        <Baris icon={MapPin} label="Alamat" value={formatAlamat(t)} />
-        {(t.noWaUsaha ?? t.kontak) && <Baris icon={Phone} label="WA instansi" value={t.noWaUsaha ?? t.kontak} />}
+        {!aktif && <Baris warna="oranye" icon={Building2} label="Instansi" value={t.namaTempat} />}
+        {t.namaPimpinan && <Baris warna="biru" icon={User} label="Kepala instansi" value={t.namaPimpinan} />}
+        <Baris warna="oranye" icon={MapPin} label="Alamat" value={formatAlamat(t)} />
+        {(t.noWaUsaha ?? t.kontak) && <Baris warna="hijau" icon={Phone} label="WA instansi" value={t.noWaUsaha ?? t.kontak} />}
         {aktif && <Baris icon={UserCheck} label="Guru pembimbing" value={toTitleCase(p.guruPembimbing?.user.nama ?? "-")} />}
-        <Baris icon={CalendarDays} label={aktif ? "Mulai PKL" : "Diajukan"} value={fmt(aktif ? p.tanggalMulai : p.createdAt)} />
+        <Baris warna="amber" icon={CalendarDays} label={aktif ? "Mulai PKL" : "Diajukan"} value={fmt(aktif ? p.tanggalMulai : p.createdAt)} />
         {p.suratKeteranganUrl && (
           <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
+            className="flex items-center gap-2 rounded-2xl bg-[#E0F2FE] p-3 text-xs font-bold text-[#0369A1] dark:bg-slate-700 dark:text-[#7DD3FC]">
             <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat instansi: {p.suratKeteranganNama ?? "Lihat berkas"}</span>
           </a>
         )}

@@ -89,9 +89,9 @@ export type Instansi = {
 };
 
 export const STATUS_PENDAFTARAN_CFG: Record<StatusPendaftaran, { label: string; bg: string; clr: string }> = {
-  MENUNGGU: { label: "Menunggu verifikasi", bg: "#FFE9E2", clr: "#E8562B" },
-  DITERIMA: { label: "Terverifikasi", bg: "#F1EDFA", clr: "#3E03B3" },
-  DITOLAK: { label: "Ditolak", bg: "#F2F2F2", clr: "#0F172A" },
+  MENUNGGU: { label: "Menunggu verifikasi", bg: "#FFF4E0", clr: "#D97706" },
+  DITERIMA: { label: "Terverifikasi", bg: "#F6FEE8", clr: "#5D900F" },
+  DITOLAK: { label: "Ditolak", bg: "#FFE9E2", clr: "#E8562B" },
 };
 
 export function formatAlamat(a: Partial<Record<keyof Alamat, string | null>> & { alamat?: string | null }): string {

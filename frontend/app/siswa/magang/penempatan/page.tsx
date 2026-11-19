@@ -65,7 +65,7 @@ export default function SiswaMagangPenempatanPage() {
         <StatusPenempatanSiswa p={berjalan} onChanged={reload} />
       ) : !terverifikasi ? (
         <div className="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center shadow-sm dark:bg-slate-800">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><Lock size={24} /></span>
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "#FFF4E0", color: "#D97706" }}><Lock size={24} /></span>
           <p className="text-base font-extrabold text-slate-900 dark:text-white">Penempatan belum bisa diisi</p>
           <p className="max-w-sm text-xs text-slate-600 dark:text-slate-300">
             {!daftar?.pendaftaran
@@ -85,7 +85,7 @@ export default function SiswaMagangPenempatanPage() {
           <p className="mb-2 text-sm font-bold text-slate-800 dark:text-white">Riwayat Penempatan</p>
           <div className="space-y-2">
             {riwayat.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-2 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5 dark:bg-slate-700">
+              <div key={p.id} className="flex items-center justify-between gap-2 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-700">
                 <p className="min-w-0 truncate text-sm font-bold text-slate-900 dark:text-white">{p.tempatMagang.namaTempat}</p>
                 <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG[p.status].bg, color: STATUS_PENEMPATAN_CFG[p.status].clr }}>
                   {STATUS_PENEMPATAN_CFG[p.status].label}

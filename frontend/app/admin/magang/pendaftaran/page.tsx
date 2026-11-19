@@ -82,7 +82,7 @@ export default function AdminPendaftaranPklPage() {
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_17rem] xl:grid-cols-[minmax(0,1fr)_20rem] lg:p-1">
       <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
         <div className="mb-3 flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><ClipboardList size={18} /></span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><ClipboardList size={18} /></span>
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Pendaftaran PKL</p>
         </div>
 
@@ -112,31 +112,31 @@ export default function AdminPendaftaranPklPage() {
             const wa = waLink(p.noWa);
             const busy = busyId === p.id;
             return (
-              <div key={p.id} className="rounded-2xl bg-[#F1EDFA] p-3.5 dark:bg-slate-700">
+              <div key={p.id} className="rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-700">
                 <div className="flex items-center gap-2.5">
                   <Avatar src={p.siswa?.user?.fotoProfil} nama={namaSiswa(p)} sizePx={36} fallbackBg={avatarColorFor(namaSiswa(p))} textClassName="text-[11px] font-extrabold" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-extrabold text-slate-900 dark:text-white">{namaSiswa(p)}</p>
                     <p className="truncate text-xs text-slate-600 dark:text-slate-300">{p.siswa?.kelas?.nama ?? "-"} · NIS {p.siswa?.nis ?? "-"}</p>
                   </div>
-                  <span className="shrink-0 rounded-xl bg-white px-2.5 py-1 text-[10px] font-bold dark:bg-slate-800" style={{ color: cfg.clr }}>{cfg.label}</span>
+                  <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                 </div>
                 <div className="mt-2 space-y-1 text-xs text-slate-700 dark:text-slate-200">
-                  <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {formatAlamat(p)}</p>
-                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
+                  <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#E8562B]" /> {formatAlamat(p)}</p>
+                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#5D900F]" />
                     {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{p.noWa}</a> : p.noWa}
                   </p>
-                  <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
+                  <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#0EA5E9]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
                   {p.status === "DITOLAK" && p.alasanTolak && <p className="font-semibold text-[#E8562B]">Alasan ditolak: {p.alasanTolak}</p>}
                 </div>
                 {p.status === "MENUNGGU" && (
                   <div className="mt-2.5 flex gap-2">
                     <button type="button" onClick={() => setTolakTarget(p)} disabled={busy}
-                      className="flex h-9 items-center gap-1.5 rounded-xl bg-white px-3.5 text-xs font-bold text-[#E8562B] disabled:opacity-50 dark:bg-slate-800">
+                      className="flex h-9 items-center gap-1.5 rounded-xl bg-[#FFE9E2] px-3.5 text-xs font-bold text-[#E8562B] disabled:opacity-50">
                       <XCircle size={13} /> Tolak
                     </button>
                     <button type="button" onClick={() => aksi(p, "terima")} disabled={busy}
-                      className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-50">
+                      className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#5D900F] text-xs font-bold text-white disabled:opacity-50">
                       {busy ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />} Verifikasi
                     </button>
                   </div>

@@ -69,7 +69,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
             </p>
             {p.status === "DITERIMA" && (
               <button type="button" onClick={onLanjut}
-                className="mt-2.5 inline-flex h-10 items-center gap-2 rounded-xl bg-[#3E03B3] px-4 text-xs font-bold text-white">
+                className="mt-2.5 inline-flex h-10 items-center gap-2 rounded-xl bg-[#5D900F] px-4 text-xs font-bold text-white">
                 Isi penempatan <ArrowRight size={14} />
               </button>
             )}
@@ -79,7 +79,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
 
       <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
         <div className="mb-4 flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><ClipboardList size={18} /></span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><ClipboardList size={18} /></span>
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Formulir Pendaftaran PKL</p>
         </div>
 
