@@ -29,7 +29,9 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
                 ? { background: t.clr, color: "#fff" }
                 : { background: t.bg, color: t.clr }}>
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-                style={{ background: "#FFFFFF", color: t.clr, ["--icon-tile-color" as string]: t.clr }}>
+                style={aktif
+                  ? { background: "rgba(255,255,255,0.22)", color: "#fff", ["--icon-tile-color" as string]: "#fff" }
+                  : { background: `${t.clr}24`, color: t.clr, ["--icon-tile-color" as string]: t.clr }}>
                 <t.icon size={14} />
               </span>
               <span className="min-w-0 flex-1 truncate text-sm font-bold">{t.label}</span>
