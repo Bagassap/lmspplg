@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import { SuratPermohonanService } from './surat-permohonan.service';
 import { TempatMagangService } from './tempat-magang.service';
@@ -66,7 +66,7 @@ export class TempatMagangController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  remove(@Param('id') id: string, @Query('paksa') paksa?: string) {
+    return this.service.remove(id, paksa === '1');
   }
 }

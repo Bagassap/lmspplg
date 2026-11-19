@@ -32,7 +32,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   if (!token) return NextResponse.json({ message: "Tidak terautentikasi" }, { status: 401 });
 
   try {
-    const res = await fetch(`${BACKEND}/api/magang/tempat/${id}`, {
+    const qs = new URL(request.url).searchParams.get("paksa") === "1" ? "?paksa=1" : "";
+    const res = await fetch(`${BACKEND}/api/magang/tempat/${id}${qs}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

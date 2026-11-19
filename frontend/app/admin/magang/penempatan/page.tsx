@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { ChevronLeft, FileDown, Loader2, Users } from "lucide-react";
+import { Building2, CheckCircle2, ChevronLeft, Clock, FileDown, Flag, Loader2, Search, Trash2, Users, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
@@ -11,7 +11,8 @@ import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
 import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal";
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
-import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
+import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
+import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
@@ -24,7 +25,15 @@ const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: st
   { value: "BATAL", label: "batal", bg: "#FEE2E2", clr: "#DC2626" },
 ];
 
-const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 12rem";
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(11rem,1.4fr) minmax(8rem,auto) 18rem";
+
+const STATUS_FILTER: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
+  { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
+  { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2 },
+  { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag },
+  { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle },
+  { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users },
+];
 
 
 export default function AdminMagangPenempatanPage() {
@@ -44,6 +53,7 @@ export default function AdminMagangPenempatanPage() {
   const [bukaTempat, setBukaTempat] = useState<string | null>(null);
   const [terverifikasi, setTerverifikasi] = useState<PendaftaranMagang[]>([]);
   const [unduhId, setUnduhId] = useState<string | null>(null);
+  const [hapusId, setHapusId] = useState<string | null>(null);
 
   const loadTempat = useCallback(async () => {
     const res = await fetch("/api/magang/tempat", { cache: "no-store" });
@@ -56,6 +66,27 @@ export default function AdminMagangPenempatanPage() {
     const list = await res.json().catch(() => []);
     setTerverifikasi(Array.isArray(list) ? list : []);
   }, []);
+
+  async function hapusInstansi(g: { id: string; nama: string; rows: PenempatanMagang[]; terdaftar: number }) {
+    const ket = g.rows.length > 0
+      ? `"${g.nama}" beserta ${g.rows.length} data penempatan siswa di dalamnya akan dihapus permanen.`
+      : `"${g.nama}" akan dihapus permanen.`;
+    const ok = await toast.confirm("Hapus instansi ini?", ket);
+    if (!ok) return;
+    setHapusId(g.id);
+    try {
+      const res = await fetch(`/api/magang/tempat/${g.id}?paksa=1`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Instansi dihapus", g.nama);
+        loadPenempatan(); loadTempat(); loadTerverifikasi();
+      } else {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ?? "Gagal menghapus instansi", "");
+      }
+    } finally {
+      setHapusId(null);
+    }
+  }
 
   async function unduhSurat(id: string) {
     setUnduhId(id);
@@ -194,29 +225,37 @@ export default function AdminMagangPenempatanPage() {
         <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
 
-      <div className="mt-0 space-y-5 lg:mt-5">
-      <PenempatanFilterBar
-        search={search} onSearch={setSearch}
-        statusFilter={statusFilter} onStatusFilter={setStatusFilter}
-        total={penempatanList.length}
-        menungguCount={penempatanList.filter((p) => p.status === "MENUNGGU").length}
-        aktifCount={penempatanList.filter((p) => p.status === "AKTIF").length}
-        selesaiCount={penempatanList.filter((p) => p.status === "SELESAI").length}
-        batalCount={penempatanList.filter((p) => p.status === "BATAL").length}
-        displayedCount={displayList.length}
-        onKelolaTempat={() => setShowKelolaTempat(true)}
-        mobileNative
-      />
+      <div className="mt-0 grid items-start gap-5 lg:mt-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
+      <StatusFilterCard
+        items={STATUS_FILTER.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
+        value={statusFilter} onChange={setStatusFilter} />
 
-      <div className="card-pisah overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="card-pisah min-w-0 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={18} /></span>
+          <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">
+            Daftar Penempatan <span className="font-medium text-slate-400 dark:text-slate-500">({grup.length})</span>
+          </p>
+          <button type="button" onClick={() => setShowKelolaTempat(true)}
+            className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Building2 size={14} /> Kelola Tempat
+          </button>
+          <div className="relative w-full sm:w-64">
+            <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari tempat, siswa, NIS…"
+              className="h-10 w-full rounded-xl border-0 bg-slate-50 pl-9 pr-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
+          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
         <div className="overflow-x-auto">
-          <div className="min-w-[720px]">
+          <div className="min-w-[860px]">
             <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
               <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Alamat</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
-              <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Siswa</span>
+              <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
             </div>
             {loading ? (
               <div className="space-y-2 p-4">
@@ -250,13 +289,18 @@ export default function AdminMagangPenempatanPage() {
                     </div>
                     <div className="flex justify-end gap-1.5">
                       <button type="button" onClick={() => unduhSurat(g.id)} disabled={unduhId === g.id}
-                        title="Unduh surat permohonan (Word)" aria-label="Unduh surat permohonan"
-                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] disabled:opacity-50">
-                        {unduhId === g.id ? <Loader2 size={14} className="animate-spin" /> : <FileDown size={14} />}
+                        title="Unduh surat permohonan (Word)"
+                        className="flex h-8 items-center gap-1.5 rounded-lg bg-[#22A06B] px-3 text-xs font-bold text-white disabled:opacity-50">
+                        {unduhId === g.id ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />} Unduh surat
                       </button>
                       <button type="button" onClick={() => setBukaTempat(g.id)} disabled={g.rows.length === 0}
                         className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-40">
-                        <Users size={13} /> Lihat siswa ({g.rows.length})
+                        <Users size={13} /> Siswa ({g.rows.length})
+                      </button>
+                      <button type="button" onClick={() => hapusInstansi(g)} disabled={hapusId === g.id}
+                        title="Hapus instansi" aria-label="Hapus instansi"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] disabled:opacity-50">
+                        {hapusId === g.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
                       </button>
                     </div>
                   </div>
@@ -264,6 +308,7 @@ export default function AdminMagangPenempatanPage() {
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
       </div>

@@ -84,24 +84,6 @@ function p(
   });
 }
 
-function arab(
-  text: string,
-  align: (typeof AlignmentType)[keyof typeof AlignmentType],
-) {
-  return new Paragraph({
-    alignment: align,
-    spacing: { before: 60, after: 60 },
-    children: [
-      new TextRun({
-        text,
-        font: 'Traditional Arabic',
-        size: 28,
-        rightToLeft: true,
-      }),
-    ],
-  });
-}
-
 function garisGanda() {
   return new Paragraph({
     spacing: { after: 80 },
@@ -152,7 +134,7 @@ function tabelPeserta(peserta: Peserta[]) {
   const baris = Array.from({ length: jumlah }, (_, i) => {
     const s = peserta[i];
     return new TableRow({
-      height: { value: 300, rule: 'atLeast' },
+      height: { value: 270, rule: 'atLeast' },
       children: [
         sel([p(`${i + 1}.`)], lebar[0]),
         sel([p(s ? [t(s.nama, { size: 11 })] : '')], lebar[1], {
@@ -189,8 +171,24 @@ function tabelPeserta(peserta: Peserta[]) {
   });
 }
 
+function aset(nama: string): Buffer | null {
+  const path = join(process.cwd(), 'assets', nama);
+  return existsSync(path) ? readFileSync(path) : null;
+}
+
+function gambar(
+  data: Buffer | null,
+  type: 'png' | 'jpg',
+  width: number,
+  height: number,
+) {
+  return data
+    ? [new ImageRun({ type, data, transformation: { width, height } })]
+    : [];
+}
+
 function kop() {
-  return [
+  const tengah = [
     p([t("LEMBAGA PENDIDIKAN MA'ARIF NU", { bold: true, size: 12 })], {
       align: AlignmentType.CENTER,
     }),
@@ -221,8 +219,64 @@ function kop() {
       ],
       { align: AlignmentType.CENTER },
     ),
+  ];
+  const selLogo = (
+    children: ImageRun[],
+    width: number,
+    align: (typeof AlignmentType)[keyof typeof AlignmentType],
+  ) =>
+    new TableCell({
+      width: { size: width, type: WidthType.DXA },
+      borders: TANPA_GARIS,
+      verticalAlign: VerticalAlign.CENTER,
+      children: [new Paragraph({ alignment: align, children })],
+    });
+  return [
+    new Table({
+      width: { size: 9100, type: WidthType.DXA },
+      columnWidths: [1250, 6600, 1250],
+      borders: TANPA_GARIS,
+      rows: [
+        new TableRow({
+          children: [
+            selLogo(
+              gambar(aset('logo-lp-maarif.jpg'), 'jpg', 78, 69),
+              1250,
+              AlignmentType.LEFT,
+            ),
+            new TableCell({
+              width: { size: 6600, type: WidthType.DXA },
+              borders: TANPA_GARIS,
+              verticalAlign: VerticalAlign.CENTER,
+              children: tengah,
+            }),
+            selLogo(
+              gambar(aset('logo-smk.png'), 'png', 68, 73),
+              1250,
+              AlignmentType.RIGHT,
+            ),
+          ],
+        }),
+      ],
+    }),
     garisGanda(),
   ];
+}
+
+function salam(nama: string, teks: string, w: number, h: number) {
+  const img = aset(nama);
+  return img
+    ? new ImageRun({
+        type: 'png',
+        data: img,
+        transformation: { width: w, height: h },
+      })
+    : new TextRun({
+        text: teks,
+        font: 'Traditional Arabic',
+        size: 28,
+        rightToLeft: true,
+      });
 }
 
 function barisLabel(label: string, isi: TextRun[], kanan?: string) {
@@ -249,12 +303,7 @@ function blokTtdKepala(ttd: Buffer | null) {
       spacing: { before: 60, after: 0 },
       tabStops: [{ type: TabStopType.LEFT, position: KIRI_TTD }],
       children: [
-        new TextRun({
-          text: SALAM_TUTUP,
-          font: 'Traditional Arabic',
-          size: 28,
-          rightToLeft: true,
-        }),
+        salam('salam-penutup.png', SALAM_TUTUP, 175, 28),
         new TextRun({ text: '\t', font: FONT }),
         t('Kepala Sekolah,'),
       ],
@@ -403,7 +452,10 @@ export class SuratPermohonanService {
       p([t(instansi, { bold: true })]),
       p('Di'),
       p([t('Tempat', { underline: true })], { indent: 720, after: 0 }),
-      arab(SALAM_BUKA, AlignmentType.LEFT),
+      new Paragraph({
+        spacing: { before: 60, after: 60 },
+        children: [salam('salam-pembuka.png', SALAM_BUKA, 170, 26)],
+      }),
       p(
         `Berdasarkan Program Kerja Sekolah Menengah Kejuruan (SMK) Ma'arif NU 01 Limpung Tahun Pelajaran ${SURAT.tahunPelajaran} tentang pelaksanaan Praktik Kerja Lapangan (PKL) pada Institusi pasangan/ Instansi terkait sesuai dengan Program Keahlian masing-masing.`,
         { align: AlignmentType.JUSTIFIED, indent: 720, line: 320 },
@@ -495,7 +547,7 @@ export class SuratPermohonanService {
           properties: {
             page: {
               size: { width: 11906, height: 16838 },
-              margin: { top: 720, bottom: 600, left: 1400, right: 1400 },
+              margin: { top: 480, bottom: 480, left: 1400, right: 1400 },
             },
           },
           children: [...halaman1, ...halaman2],

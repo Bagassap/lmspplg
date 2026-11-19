@@ -141,12 +141,27 @@ export class TempatMagangService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, paksa = false) {
     const tempat = await this.prisma.tempatMagang.findUnique({
       where: { id },
       include: { _count: { select: { penempatan: true } } },
     });
     if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
+    if (paksa && tempat._count.penempatan > 0) {
+      const penempatan = await this.prisma.penempatanMagang.findMany({
+        where: { tempatMagangId: id },
+        select: { id: true, _count: { select: { absensi: true, izin: true, laporDiri: true } }, laporanAkhir: { select: { id: true } } },
+      });
+      const berriwayat = penempatan.filter((p) => p._count.absensi + p._count.izin + p._count.laporDiri > 0 || p.laporanAkhir);
+      if (berriwayat.length > 0) {
+        throw new BadRequestException(`${berriwayat.length} siswa di instansi ini sudah punya riwayat absensi/laporan PKL, ubah status penempatannya menjadi Selesai/Batal daripada menghapus`);
+      }
+      await this.prisma.$transaction([
+        this.prisma.penempatanMagang.deleteMany({ where: { tempatMagangId: id } }),
+        this.prisma.tempatMagang.delete({ where: { id } }),
+      ]);
+      return { id };
+    }
     if (tempat._count.penempatan > 0) {
       throw new BadRequestException('Tempat ini masih memiliki riwayat penempatan siswa, tidak dapat dihapus');
     }
