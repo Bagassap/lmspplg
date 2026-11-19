@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, ClipboardList, Clock, Loader2, Send, XCircle } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, Send, XCircle } from "lucide-react";
+import { PilihTempatModal } from "./PilihTempatModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, type Alamat, type Instansi, type PendaftaranSaya } from "./types";
@@ -22,10 +24,12 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
   const [noWa, setNoWa] = useState(data.pendaftaran?.noWa ?? data.profil.noHp ?? "");
   const [tempatId, setTempatId] = useState(data.pendaftaran?.tempatMagangId ?? "");
   const [saving, setSaving] = useState(false);
+  const [modalTempat, setModalTempat] = useState(false);
 
   const p = data.pendaftaran;
   const terkunci = p?.status === "DITERIMA";
   const status = p ? STATUS_PENDAFTARAN_CFG[p.status] : null;
+  const tempatTerpilih = instansi.find((i) => i.id === tempatId) ?? (tempatId && p?.tempatMagang?.id === tempatId ? { namaTempat: p.tempatMagang.namaTempat } : null);
 
   async function kirim() {
     if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
@@ -100,16 +104,14 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
 
           <div>
             <label className={PKL_CAP}>Tempat PKL</label>
-            <select value={tempatId} disabled={terkunci || instansiLoading} onChange={(e) => setTempatId(e.target.value)} className={PKL_FIELD}>
-              <option value="">{instansiLoading ? "Memuat daftar instansi…" : "Belum ada / instansi lain"}</option>
-              {instansi
-                .filter((i) => i.id === tempatId || i.sisa === null || i.sisa > 0)
-                .map((i) => (
-                  <option key={i.id} value={i.id}>
-                    {i.namaTempat}{i.sisa !== null ? ` (sisa kuota ${i.sisa})` : ""}
-                  </option>
-                ))}
-            </select>
+            <button type="button" onClick={() => setModalTempat(true)} disabled={terkunci || instansiLoading}
+              className={`${PKL_FIELD} flex items-center gap-2 text-left`}>
+              <Building2 size={16} className="shrink-0 text-[#E8562B]" />
+              <span className={`min-w-0 flex-1 truncate ${tempatTerpilih ? "" : "text-slate-500 dark:text-slate-400"}`}>
+                {instansiLoading ? "Memuat daftar instansi…" : tempatTerpilih?.namaTempat ?? "Belum ada / instansi lain"}
+              </span>
+              {!terkunci && <ChevronRight size={16} className="shrink-0 text-[#F26A3D]" />}
+            </button>
           </div>
 
           {!terkunci && (
@@ -121,6 +123,12 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
           )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {modalTempat && (
+          <PilihTempatModal list={instansi} nilai={tempatId} onPilih={setTempatId} onClose={() => setModalTempat(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
