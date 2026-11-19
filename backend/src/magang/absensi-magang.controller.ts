@@ -276,6 +276,13 @@ export class AbsensiMagangController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
+  @Get('saya/riwayat')
+  getRiwayatSaya(@Query('tipe') tipe: string, @Request() req: any) {
+    return this.service.getRiwayatSaya(req.user.id, tipe === 'PULANG' ? 'PULANG' : 'HADIR');
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.SISWA)
   @Get('saya')
   getStatusSaya(@Query('tanggal') tanggal: string, @Request() req: any) {
     return this.service.getStatusSaya(req.user.id, tanggal);

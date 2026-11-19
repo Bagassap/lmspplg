@@ -379,7 +379,7 @@ export default function SiswaMagangAbsensiPage() {
 
           {appMode && (
             <div className="space-y-6 lg:hidden">
-              <div>
+              <div data-pkl-header>
                 <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
                 <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Absensi PKL</h1>
               </div>

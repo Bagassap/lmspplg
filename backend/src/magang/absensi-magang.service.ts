@@ -453,6 +453,24 @@ export class AbsensiMagangService {
     return siswa;
   }
 
+  async getRiwayatSaya(userId: string, tipe: 'HADIR' | 'PULANG') {
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, select: { id: true } });
+    if (!siswa) return [];
+    return this.prisma.absensiMagang.findMany({
+      where: {
+        siswaId: siswa.id,
+        ...(tipe === 'HADIR' ? { waktuAbsen: { not: null } } : { waktuPulang: { not: null } }),
+      },
+      orderBy: { tanggal: 'desc' },
+      take: 30,
+      select: {
+        tanggal: true, status: true,
+        waktuAbsen: true, lokasi: true, foto: true, ttd: true, catatan: true,
+        waktuPulang: true, lokasiPulang: true, fotoPulang: true, ttdPulang: true, catatanPulang: true,
+      },
+    });
+  }
+
   async resolveOwnSiswaId(userId: string): Promise<string> {
     const siswa = await this.prisma.siswa.findUnique({ where: { userId }, select: { id: true } });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');

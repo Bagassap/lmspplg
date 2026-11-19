@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
-  CheckCircle2, FileSignature, Thermometer, XCircle, Clock, LogIn, LogOut, Moon, ChevronRight,
+  Clock, LogIn, LogOut, Moon, ChevronRight,
 } from "lucide-react";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { STATUS_CFG, formatTgl } from "@/components/absensi-harian/shared";
@@ -10,7 +10,6 @@ import type { StatusAbsensi, AbsenWindow } from "@/components/absensi-harian/typ
 import { APP_HERO } from "@/components/app/AppUI";
 
 const ACCENT = "#3E03B3";
-const ACCENT_SOFT = "#F1EDFA";
 
 type Tab = "DATANG" | "PULANG";
 
@@ -26,7 +25,7 @@ type StatusLite = { sudahAbsen: boolean; sudahPulang: boolean } | null;
 type Summary = { hadir: number; izin: number; sakit: number; alpa: number } | null;
 
 export function AbsensiAppMobile<R extends RowLite>({
-  today, jam, data, summary, window_, needsActionDatang, needsActionPulang,
+  today, jam, data, window_, needsActionDatang, needsActionPulang,
   selectedRiwayatTab, setSelectedRiwayatTab, riwayatData, riwayatLoading, onDetail, onOpenWizard,
 }: {
   today: string;
@@ -63,13 +62,6 @@ export function AbsensiAppMobile<R extends RowLite>({
       ? "Sudah absen datang, menunggu pulang"
       : "Belum absen hari ini";
 
-  const rekap = summary ? [
-    { label: "Hadir", value: summary.hadir, icon: CheckCircle2, tone: "emerald" as const },
-    { label: "Izin", value: summary.izin, icon: FileSignature, tone: "sky" as const },
-    { label: "Sakit", value: summary.sakit, icon: Thermometer, tone: "amber" as const },
-    { label: "Alpa", value: summary.alpa, icon: XCircle, tone: "violet" as const },
-  ] : [];
-
   return (
     <div className="space-y-6 lg:hidden">
       <div>
@@ -104,27 +96,6 @@ export function AbsensiAppMobile<R extends RowLite>({
         {mainTab === "DATANG" ? <LogIn size={18} /> : <LogOut size={18} />}
         {ctaLabel}
       </motion.button>
-
-      {summary && (
-        <section>
-          <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Rekap Kehadiran</h2>
-          <div className="mt-4 grid grid-cols-4 gap-3">
-            {rekap.map((r, i) => (
-              <motion.div
-                key={r.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.1 + i * 0.05 }}
-                className="flex flex-col items-center gap-2"
-              >
-                <span className="flex h-16 w-16 items-center justify-center rounded-[22px]" style={icon3dStyle(r.tone)}>
-                  <r.icon size={26} color="#fff" />
-                </span>
-                <span className="text-lg font-extrabold leading-none text-slate-900 dark:text-white">{r.value}</span>
-                <span className="-mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{r.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
 
       <section>
         <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Riwayat Absen</h2>

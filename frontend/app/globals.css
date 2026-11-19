@@ -639,3 +639,6 @@ html.dark [class*="bg-[#E5E7EB]"]:not([class*="dark:bg-"]), html.dark [style*="b
 .pkl-embed [data-pkl-header] { display: none !important; }
 .pkl-embed :is([class*="-m-4"], [class*="-mx-4"])[style*="background"] { background: transparent !important; }
 .pkl-embed .bg-surface { background: transparent !important; }
+.pkl-inline [data-pkl-header] { display: none !important; }
+.pkl-inline :is([class*="-m-4"], [class*="-mx-4"])[style*="background"] { background: transparent !important; margin: 0 !important; }
+.pkl-inline .rounded-t-\[28px\] { padding: 0 !important; background: transparent !important; }
