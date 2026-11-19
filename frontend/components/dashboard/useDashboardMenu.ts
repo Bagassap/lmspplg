@@ -67,7 +67,6 @@ export const MENUS: Record<string, MenuItem[]> = {
     {
       key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
-        { href: "/siswa/magang/daftar",     label: "Daftar",     icon: ClipboardList },
         { href: "/siswa/magang/penempatan", label: "Penempatan", icon: Building2 },
         { href: "/siswa/magang/absensi",    label: "Absensi",    icon: ClipboardCheck },
         { href: "/siswa/magang/rekap",      label: "Rekap",      icon: FileBarChart },
@@ -112,7 +111,7 @@ export function useSiswaFitur(enabled = true) {
     kelasXII,
     magangAktif: pengaturan.magangAktif,
     ukkAktif: pengaturan.ukkAktif,
-    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/daftar" : "/siswa/magang",
+    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/penempatan" : "/siswa/magang",
     ukkHref: kelasXII && pengaturan.ukkAktif ? "/siswa/ujian-ukk/jadwal-soal" : "/siswa/ujian-ukk",
   };
 }

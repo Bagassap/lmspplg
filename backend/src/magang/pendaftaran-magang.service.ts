@@ -146,7 +146,7 @@ export class PendaftaranMagangService {
         title: 'Pendaftaran PKL ditolak',
         message: `Pendaftaran PKL kamu ditolak admin. Alasan: ${alasan.trim()} Silakan perbaiki dan kirim ulang.`,
         type: NotificationType.MAGANG,
-        link: '/magang/daftar',
+        link: '/magang/penempatan',
       });
     }
     return this.findAll();
