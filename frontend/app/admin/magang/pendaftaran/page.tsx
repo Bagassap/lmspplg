@@ -99,9 +99,14 @@ export default function AdminPendaftaranPklPage() {
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_17rem] xl:grid-cols-[minmax(0,1fr)_20rem] lg:p-1">
       <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
-        <div className="mb-3 flex items-center gap-3">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><ClipboardList size={18} /></span>
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Pendaftaran PKL</p>
+          <div className="relative w-full sm:w-72">
+            <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari tempat, siswa, NIS, kelas…"
+              className="h-10 w-full rounded-xl border-0 bg-slate-50 pl-9 pr-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
+          </div>
         </div>
 
         <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
@@ -118,11 +123,6 @@ export default function AdminPendaftaranPklPage() {
           })}
         </div>
 
-        <div className="relative mb-3">
-          <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari tempat PKL, nama siswa, NIS, atau kelas…"
-            className="h-10 w-full rounded-2xl border-0 bg-[#F1EDFA] pl-9 pr-4 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
-        </div>
 
         <div className="space-y-1.5">
           {loading ? (
