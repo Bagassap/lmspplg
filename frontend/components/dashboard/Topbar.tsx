@@ -14,7 +14,6 @@ import type { UserPayload } from "@/lib/auth";
 import { timeAgo } from "@/components/dashboard/ActivityList";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
-import { LiveClock } from "@/components/shared/LiveClock";
 import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
@@ -352,8 +351,6 @@ export function Topbar({ user }: { user: UserPayload }) {
         </div>
 
         <div className="flex-1" />
-
-        <LiveClock variant="topbar" />
 
         <div className="flex items-center gap-2">
 
