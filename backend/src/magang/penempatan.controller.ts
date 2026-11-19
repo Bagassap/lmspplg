@@ -54,30 +54,22 @@ export class PenempatanController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
-  @Get('rekan')
-  cariRekan(@Request() req: any, @Query('q') q?: string) {
-    return this.service.cariRekan(req.user.id, q);
-  }
-
-  @UseGuards(RolesGuard)
-  @Roles(Role.SISWA)
   @Post('ajukan')
   @UseInterceptors(FileInterceptor('surat', { storage: suratStorage, ...suratUploadOptions }))
   async ajukan(@Body() body: Record<string, string>, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
-    if (!file) throw new BadRequestException('Bukti surat keterangan PKL wajib diunggah');
+    if (!file) throw new BadRequestException('Bukti surat instansi wajib diunggah');
     let raw: Record<string, unknown>;
     try {
       raw = {
         tempatMagangId: body.tempatMagangId || undefined,
         tempatBaru: body.tempatBaru ? JSON.parse(body.tempatBaru) : undefined,
-        rekanSiswaIds: body.rekanSiswaIds ? JSON.parse(body.rekanSiswaIds) : undefined,
       };
     } catch {
       throw new BadRequestException('Data pengajuan tidak valid');
     }
     const dto = plainToInstance(AjukanPenempatanDto, raw);
     const errors = await validate(dto);
-    if (errors.length > 0) throw new BadRequestException('Data pengajuan tidak lengkap');
+    if (errors.length > 0) throw new BadRequestException('Data instansi belum lengkap atau nomor WA tidak valid');
     return this.service.ajukan(req.user.id, dto, { url: `/uploads/surat-pkl/${file.filename}`, nama: file.originalname });
   }
 

@@ -21,6 +21,12 @@ enum StatusPenempatan {
   BATAL
 }
 
+enum StatusPendaftaranMagang {
+  MENUNGGU
+  DITERIMA
+  DITOLAK
+}
+
 enum StatusIzin {
   PENDING
   DISETUJUI
@@ -145,6 +151,7 @@ model Siswa {
   updatedAt DateTime @updatedAt
 
   penempatan        PenempatanMagang[]
+  pendaftaranMagang PendaftaranMagang?
   absensiMagang     AbsensiMagang[]
   izinMagang        IzinMagang[]
   laporDiriMagang   LaporDiriMagang[]
@@ -426,6 +433,8 @@ model TempatMagang {
   bidangUsaha String?
   kuota       Int     @default(1)
   dukuh       String?
+  rt          String?
+  rw          String?
   desa        String?
   kecamatan   String?
   kabupaten   String?
@@ -442,6 +451,28 @@ model TempatMagang {
   laporanAkhir LaporanAkhirMagang[]
 
   @@map("tempat_magang")
+}
+
+model PendaftaranMagang {
+  id             String                  @id @default(cuid())
+  siswaId        String                  @unique
+  siswa          Siswa                   @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  noWa           String
+  dukuh          String
+  rt             String
+  rw             String
+  desa           String
+  kecamatan      String
+  kabupaten      String
+  status         StatusPendaftaranMagang @default(MENUNGGU)
+  alasanTolak    String?
+  diverifikasiAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("pendaftaran_magang")
 }
 
 model PenempatanMagang {

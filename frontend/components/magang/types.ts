@@ -8,6 +8,8 @@ export type TempatMagang = {
   bidangUsaha: string | null;
   kuota: number;
   dukuh?: string | null;
+  rt?: string | null;
+  rw?: string | null;
   desa?: string | null;
   kecamatan?: string | null;
   kabupaten?: string | null;
@@ -43,3 +45,61 @@ export const STATUS_PENEMPATAN_CFG: Record<StatusPenempatan, { label: string; bg
   SELESAI: { label: "Selesai", bg: "#F1EDFA", clr: "#3E03B3" },
   BATAL: { label: "Batal", bg: "#F2F2F2", clr: "#0F172A" },
 };
+
+export type StatusPendaftaran = "MENUNGGU" | "DITERIMA" | "DITOLAK";
+
+export type Alamat = { dukuh: string; rt: string; rw: string; desa: string; kecamatan: string; kabupaten: string };
+
+export type PendaftaranMagang = Alamat & {
+  id: string;
+  noWa: string;
+  status: StatusPendaftaran;
+  alasanTolak: string | null;
+  diverifikasiAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  siswa?: PenempatanMagang["siswa"];
+};
+
+export type PendaftaranSaya = {
+  profil: Alamat & { nama: string; nis: string; kelas: string; noHp: string };
+  pendaftaran: PendaftaranMagang | null;
+  sudahPenempatan: boolean;
+};
+
+export type Instansi = {
+  id: string;
+  namaTempat: string;
+  namaPimpinan: string | null;
+  dukuh: string | null;
+  rt: string | null;
+  rw: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
+  alamat: string | null;
+  noWaUsaha: string | null;
+  dibuatSiswa: boolean;
+  kuota: number;
+  terisi: number;
+  sisa: number | null;
+  siswa: { id: string; nama: string; kelas: string }[];
+};
+
+export const STATUS_PENDAFTARAN_CFG: Record<StatusPendaftaran, { label: string; bg: string; clr: string }> = {
+  MENUNGGU: { label: "Menunggu verifikasi", bg: "#FFE9E2", clr: "#E8562B" },
+  DITERIMA: { label: "Terverifikasi", bg: "#F1EDFA", clr: "#3E03B3" },
+  DITOLAK: { label: "Ditolak", bg: "#F2F2F2", clr: "#0F172A" },
+};
+
+export function formatAlamat(a: Partial<Record<keyof Alamat, string | null>> & { alamat?: string | null }): string {
+  const isi = (v?: string | null) => (v ?? "").trim();
+  if (!isi(a.desa) && !isi(a.kecamatan) && !isi(a.kabupaten)) return isi(a.alamat) || "-";
+  const rtRw = [isi(a.rt) && `RT ${isi(a.rt)}`, isi(a.rw) && `RW ${isi(a.rw)}`].filter(Boolean).join("/");
+  return [
+    [isi(a.dukuh) && `Dukuh ${isi(a.dukuh)}`, rtRw].filter(Boolean).join(" "),
+    isi(a.desa) && `Desa ${isi(a.desa)}`,
+    isi(a.kecamatan) && `Kec. ${isi(a.kecamatan)}`,
+    isi(a.kabupaten) && `Kab. ${isi(a.kabupaten)}`,
+  ].filter(Boolean).join(", ");
+}

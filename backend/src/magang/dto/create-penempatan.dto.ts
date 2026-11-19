@@ -1,29 +1,41 @@
-import { IsArray, IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class TempatBaruDto {
   @IsString()
+  @IsNotEmpty()
   namaTempat!: string;
 
   @IsString()
-  dukuh!: string;
-
-  @IsString()
-  desa!: string;
-
-  @IsString()
-  kecamatan!: string;
-
-  @IsString()
-  kabupaten!: string;
-
-  @IsString()
-  bidangUsaha!: string;
-
-  @IsString()
+  @IsNotEmpty()
   namaPimpinan!: string;
 
   @IsString()
+  @IsNotEmpty()
+  dukuh!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rt!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rw!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  desa!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  kecamatan!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  kabupaten!: string;
+
+  @IsString()
+  @Matches(/^[0-9+\s-]{8,20}$/)
   noWaUsaha!: string;
 }
 
@@ -36,11 +48,6 @@ export class AjukanPenempatanDto {
   @Type(() => TempatBaruDto)
   @IsOptional()
   tempatBaru?: TempatBaruDto;
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  rekanSiswaIds?: string[];
 }
 
 export class TolakPenempatanDto {

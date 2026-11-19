@@ -6,7 +6,7 @@ import { X, Briefcase, Building2, FileText, Loader2, MapPin, Phone, User, UserCh
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
-import type { PenempatanMagang } from "./types";
+import { formatAlamat, type PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -24,10 +24,10 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   const surat = rows.find((r) => r.suratKeteranganUrl);
 
   const info = [
-    { icon: MapPin, label: "Alamat", value: t.alamat },
+    { icon: User, label: "Kepala instansi", value: t.namaPimpinan },
+    { icon: MapPin, label: "Alamat", value: formatAlamat(t) },
     { icon: Briefcase, label: "Bidang usaha", value: t.bidangUsaha },
-    { icon: User, label: "Pimpinan", value: t.namaPimpinan },
-    { icon: Phone, label: "WA usaha", value: t.noWaUsaha },
+    { icon: Phone, label: "WA instansi", value: t.noWaUsaha ?? t.kontak },
   ].filter((x) => x.value);
 
   async function kirim(url: string, body: object, okMsg: [string, string]) {
@@ -104,11 +104,11 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           {surat?.suratKeteranganUrl ? (
             <a href={`/api/uploads${surat.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
-              <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat keterangan: {surat.suratKeteranganNama ?? "Lihat berkas"}</span>
+              <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat instansi: {surat.suratKeteranganNama ?? "Lihat berkas"}</span>
             </a>
           ) : (
             <p className="flex items-center gap-2 rounded-2xl bg-[#FFE9E2] p-3 text-xs font-bold text-[#E8562B]">
-              <FileText size={14} className="shrink-0" /> Siswa belum mengunggah surat keterangan. Pengajuan belum bisa diterima.
+              <FileText size={14} className="shrink-0" /> Siswa belum mengunggah surat instansi. Pengajuan belum bisa diterima.
             </p>
           )}
 

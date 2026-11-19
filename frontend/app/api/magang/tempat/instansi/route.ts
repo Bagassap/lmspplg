@@ -19,7 +19,6 @@ async function proxy(method: string, path: string, body?: string) {
   }
 }
 
-export async function GET(req: Request) {
-  const q = new URL(req.url).searchParams.get("q") ?? "";
-  return proxy("GET", `magang/penempatan/rekan?q=${encodeURIComponent(q)}`);
+export async function GET() {
+  return proxy("GET", "magang/tempat/instansi");
 }

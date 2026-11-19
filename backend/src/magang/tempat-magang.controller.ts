@@ -19,6 +19,11 @@ export class TempatMagangController {
     return this.service.findAll();
   }
 
+  @Get('instansi')
+  findInstansi() {
+    return this.service.findInstansi();
+  }
+
   @UseGuards(RolesGuard)
   @Roles(Role.SISWA)
   @Get('pilihan')

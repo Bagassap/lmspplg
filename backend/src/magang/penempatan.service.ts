@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
@@ -62,40 +61,20 @@ export class PenempatanService {
     });
   }
 
-  async cariRekan(userId: string, q?: string) {
-    const me = await this.prisma.siswa.findUnique({ where: { userId } });
-    const key = (q ?? '').trim();
-    return this.prisma.siswa.findMany({
-      where: {
-        id: { not: me?.id },
-        penempatan: { none: { status: { in: AKTIF_ATAU_MENUNGGU } } },
-        ...(key ? { OR: [{ nama: { contains: key, mode: 'insensitive' } }, { nis: { contains: key } }, { user: { nama: { contains: key, mode: 'insensitive' } } }] } : {}),
-      },
-      select: { id: true, nis: true, nama: true, kelas: { select: { id: true, nama: true } }, user: { select: { nama: true } } },
-      orderBy: { nama: 'asc' },
-      take: 15,
-    });
-  }
-
   async ajukan(userId: string, dto: AjukanPenempatanDto, surat: { url: string; nama: string }) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { user: { select: { nama: true } } } });
-    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
-
-    const rekan = Array.from(new Set((dto.rekanSiswaIds ?? []).filter((id) => id && id !== siswa.id)));
-    const ids = [siswa.id, ...rekan];
-
-    const bentrok = await this.prisma.penempatanMagang.findMany({
-      where: { siswaId: { in: ids }, status: { in: AKTIF_ATAU_MENUNGGU } },
-      include: { siswa: { select: { nama: true, user: { select: { nama: true } } } } },
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { userId },
+      include: { user: { select: { nama: true } }, pendaftaranMagang: { select: { status: true } } },
     });
-    if (bentrok.length > 0) {
-      const nama = bentrok.map((b) => b.siswa.user?.nama ?? b.siswa.nama ?? 'Siswa').join(', ');
-      throw new BadRequestException(`Sudah memiliki pengajuan/penempatan PKL: ${nama}`);
+    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+    if (siswa.pendaftaranMagang?.status !== 'DITERIMA') {
+      throw new BadRequestException('Pendaftaran PKL kamu belum diverifikasi admin');
     }
-    if (rekan.length > 0) {
-      const ada = await this.prisma.siswa.count({ where: { id: { in: rekan } } });
-      if (ada !== rekan.length) throw new BadRequestException('Ada rekan yang tidak ditemukan');
-    }
+
+    const bentrok = await this.prisma.penempatanMagang.findFirst({
+      where: { siswaId: siswa.id, status: { in: AKTIF_ATAU_MENUNGGU } },
+    });
+    if (bentrok) throw new BadRequestException('Kamu sudah memiliki pengajuan/penempatan PKL');
 
     let tempatId: string;
     let namaTempat: string;
@@ -104,54 +83,58 @@ export class PenempatanService {
         where: { id: dto.tempatMagangId },
         include: { _count: { select: { penempatan: { where: { status: { in: AKTIF_ATAU_MENUNGGU } } } } } },
       });
-      if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
-      const sisa = tempat.kuota - tempat._count.penempatan;
-      if (sisa < ids.length) {
-        throw new BadRequestException(`Sisa kuota "${tempat.namaTempat}" hanya ${Math.max(0, sisa)} siswa`);
+      if (!tempat) throw new NotFoundException('Instansi tidak ditemukan');
+      if (tempat.dibuatSiswa) {
+        if (tempat._count.penempatan + 1 > tempat.kuota) {
+          await this.prisma.tempatMagang.update({ where: { id: tempat.id }, data: { kuota: tempat._count.penempatan + 1 } });
+        }
+      } else if (tempat.kuota - tempat._count.penempatan < 1) {
+        throw new BadRequestException(`Kuota "${tempat.namaTempat}" sudah penuh`);
       }
       tempatId = tempat.id;
       namaTempat = tempat.namaTempat;
     } else if (dto.tempatBaru) {
       const t = dto.tempatBaru;
+      const v = {
+        dukuh: t.dukuh.trim(), rt: t.rt.trim(), rw: t.rw.trim(),
+        desa: t.desa.trim(), kecamatan: t.kecamatan.trim(), kabupaten: t.kabupaten.trim(),
+      };
       const baru = await this.prisma.tempatMagang.create({
         data: {
           namaTempat: t.namaTempat.trim(),
-          alamat: `Dukuh ${t.dukuh.trim()}, Desa ${t.desa.trim()}, Kec. ${t.kecamatan.trim()}, Kab. ${t.kabupaten.trim()}`,
-          dukuh: t.dukuh.trim(),
-          desa: t.desa.trim(),
-          kecamatan: t.kecamatan.trim(),
-          kabupaten: t.kabupaten.trim(),
-          bidangUsaha: t.bidangUsaha.trim(),
+          alamat: `Dukuh ${v.dukuh} RT ${v.rt}/RW ${v.rw}, Desa ${v.desa}, Kec. ${v.kecamatan}, Kab. ${v.kabupaten}`,
+          ...v,
           namaPimpinan: t.namaPimpinan.trim(),
           noWaUsaha: t.noWaUsaha.trim(),
           kontak: t.noWaUsaha.trim(),
-          kuota: ids.length,
+          kuota: 1,
           dibuatSiswa: true,
         },
       });
       tempatId = baru.id;
       namaTempat = baru.namaTempat;
     } else {
-      throw new BadRequestException('Pilih tempat magang atau isi tempat baru');
+      throw new BadRequestException('Pilih instansi dari daftar atau isi data instansi');
     }
 
-    const kelompokId = ids.length > 1 ? randomUUID() : null;
+    const lama = await this.prisma.penempatanMagang.findUnique({
+      where: { siswaId_tempatMagangId: { siswaId: siswa.id, tempatMagangId: tempatId } },
+    });
     const tanggalMulai = new Date(todayJakarta());
-    try {
-      await this.prisma.penempatanMagang.createMany({
-        data: ids.map((siswaId) => ({
-          siswaId, tempatMagangId: tempatId, kelompokId, tanggalMulai, status: 'MENUNGGU' as const,
-          suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama,
-        })),
-      });
-    } catch {
-      throw new BadRequestException('Pengajuan ke tempat ini sudah pernah dibuat sebelumnya');
+    const data = {
+      kelompokId: null, tanggalMulai, tanggalSelesai: null, guruPembimbingId: null, status: 'MENUNGGU' as const,
+      suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama,
+    };
+    if (lama) {
+      await this.prisma.penempatanMagang.update({ where: { id: lama.id }, data });
+    } else {
+      await this.prisma.penempatanMagang.create({ data: { siswaId: siswa.id, tempatMagangId: tempatId, ...data } });
     }
 
     const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
     await this.notificationService.createMany(admins.map((a) => a.id), {
-      title: 'Pengajuan PKL baru',
-      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'}${ids.length > 1 ? ` dan ${ids.length - 1} rekan` : ''} mengajukan PKL di ${namaTempat}. Tetapkan guru pembimbing.`,
+      title: 'Pengajuan penempatan PKL baru',
+      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} mengajukan penempatan PKL di ${namaTempat}. Verifikasi dan tetapkan guru pembimbing.`,
       type: NotificationType.MAGANG,
       link: '/magang/penempatan',
     });

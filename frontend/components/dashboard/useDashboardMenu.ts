@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Megaphone, Users, Briefcase,
   FileText, KeyRound,
   Building2, ClipboardCheck, FileBarChart,
-  CalendarDays, Trophy, NotebookPen, BookOpen, Settings,
+  CalendarDays, Trophy, NotebookPen, BookOpen, Settings, ClipboardList,
 } from "lucide-react";
 import type { UserPayload } from "@/lib/auth";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/constants";
@@ -32,6 +32,7 @@ export const MENUS: Record<string, MenuItem[]> = {
     {
       key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
+        { href: "/admin/magang/pendaftaran", label: "Pendaftaran",  icon: ClipboardList },
         { href: "/admin/magang/penempatan", label: "Penempatan",    icon: Building2 },
         { href: "/admin/magang/absensi",    label: "Absensi",       icon: ClipboardCheck },
         { href: "/admin/magang/rekap",      label: "Rekap & Laporan", icon: FileBarChart },
@@ -66,6 +67,7 @@ export const MENUS: Record<string, MenuItem[]> = {
     {
       key: "magang", label: "PKL", icon: Briefcase,
       submenu: [
+        { href: "/siswa/magang/daftar",     label: "Daftar",     icon: ClipboardList },
         { href: "/siswa/magang/penempatan", label: "Penempatan", icon: Building2 },
         { href: "/siswa/magang/absensi",    label: "Absensi",    icon: ClipboardCheck },
         { href: "/siswa/magang/rekap",      label: "Rekap",      icon: FileBarChart },
@@ -110,7 +112,7 @@ export function useSiswaFitur(enabled = true) {
     kelasXII,
     magangAktif: pengaturan.magangAktif,
     ukkAktif: pengaturan.ukkAktif,
-    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/penempatan" : "/siswa/magang",
+    magangHref: kelasXII && pengaturan.magangAktif ? "/siswa/magang/daftar" : "/siswa/magang",
     ukkHref: kelasXII && pengaturan.ukkAktif ? "/siswa/ujian-ukk/jadwal-soal" : "/siswa/ujian-ukk",
   };
 }
