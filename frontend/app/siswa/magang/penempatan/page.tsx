@@ -99,7 +99,7 @@ export default function SiswaMagangPenempatanPage() {
   );
 
   return (
-    <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 lg:grid-cols-[240px_minmax(0,1.6fr)_minmax(0,1fr)] lg:p-1">
+    <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem] lg:p-1">
       <div>
         <div className="hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800 lg:block">
           <p className="mb-4 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kategori</p>
