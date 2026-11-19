@@ -12,9 +12,9 @@ import { pesanError } from "@/components/magang/pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, formatAlamat, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
 
 const TABS: { value: StatusPendaftaran | ""; label: string; bg: string; clr: string }[] = [
-  { value: "MENUNGGU", label: "Menunggu", ...STATUS_PENDAFTARAN_CFG.MENUNGGU },
-  { value: "DITERIMA", label: "Terverifikasi", ...STATUS_PENDAFTARAN_CFG.DITERIMA },
-  { value: "DITOLAK", label: "Ditolak", ...STATUS_PENDAFTARAN_CFG.DITOLAK },
+  { value: "MENUNGGU", label: "Menunggu", bg: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, clr: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr },
+  { value: "DITERIMA", label: "Terverifikasi", bg: STATUS_PENDAFTARAN_CFG.DITERIMA.bg, clr: STATUS_PENDAFTARAN_CFG.DITERIMA.clr },
+  { value: "DITOLAK", label: "Ditolak", bg: STATUS_PENDAFTARAN_CFG.DITOLAK.bg, clr: STATUS_PENDAFTARAN_CFG.DITOLAK.clr },
   { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9" },
 ];
 
