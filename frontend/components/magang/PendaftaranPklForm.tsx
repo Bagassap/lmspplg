@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, MapPin, Send, XCircle } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, MapPin, Phone, Send, User, XCircle } from "lucide-react";
 import { PilihTempatModal } from "./PilihTempatModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
@@ -55,6 +55,39 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
     }
   }
 
+  if (p?.status === "MENUNGGU") {
+    const baris = [
+      { icon: User, label: "Nama", value: `${data.profil.nama} · ${data.profil.kelas} · NIS ${data.profil.nis}`, bg: "#F1EDFA", fg: "#3E03B3" },
+      { icon: MapPin, label: "Alamat", value: formatAlamat(p), bg: "#FFE9E2", fg: "#E8562B" },
+      { icon: Phone, label: "WA aktif", value: p.noWa, bg: "#E4F5EC", fg: "#22A06B" },
+      { icon: Building2, label: "Tempat PKL", value: p.tempatMagang?.namaTempat ?? "Belum ada / instansi lain", bg: "#E0F2FE", fg: "#0EA5E9" },
+    ];
+    return (
+      <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
+        <div className="flex flex-col items-center gap-3 py-4 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-3xl" style={{ background: "#F1EDFA", color: "#3E03B3" }}>
+            <Clock size={30} />
+          </span>
+          <p className="text-lg font-extrabold text-slate-900 dark:text-white">Menunggu verifikasi admin</p>
+          <span className="rounded-xl px-3 py-1 text-[11px] font-bold" style={{ background: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, color: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr }}>
+            {STATUS_PENDAFTARAN_CFG.MENUNGGU.label}
+          </span>
+        </div>
+        <div className="mt-2 space-y-2">
+          {baris.map((x) => (
+            <div key={x.label} className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: x.bg, color: x.fg }}><x.icon size={15} /></span>
+              <div className="min-w-0">
+                <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{x.label}</p>
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{x.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {p && status && (
@@ -71,7 +104,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
                 ? "Lanjutkan dengan mengisi data instansi di kategori Penempatan."
                 : p.status === "DITOLAK"
                   ? `Alasan: ${p.alasanTolak ?? "-"}. Perbaiki data lalu kirim ulang.`
-                  : "Data masih bisa diperbarui selama belum diverifikasi."}
+                  : ""}
             </p>
             {p.status === "DITERIMA" && (
               <button type="button" onClick={onLanjut}
