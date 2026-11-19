@@ -19,7 +19,7 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
   return (
     <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <p className="mb-2 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
-      <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-1">
+      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-1">
         {items.map((t) => {
           const aktif = value === t.value;
           return (

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { CheckCircle2, Clock, Flag, ChevronLeft, Users, XCircle } from "lucide-react";
+import { ChevronLeft, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
@@ -12,17 +12,16 @@ import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
-import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-const STATUS_WARNA: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
-  { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
-  { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2 },
-  { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag },
-  { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle },
-  { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users },
+
+const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: string }[] = [
+  { value: "MENUNGGU", label: "menunggu", bg: "#F1EDFA", clr: "#3E03B3" },
+  { value: "AKTIF", label: "aktif", bg: "#E4F5EC", clr: "#22A06B" },
+  { value: "SELESAI", label: "selesai", bg: "#FFF4E0", clr: "#D97706" },
+  { value: "BATAL", label: "batal", bg: "#FEE2E2", clr: "#DC2626" },
 ];
 
 const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 9.5rem";
@@ -154,13 +153,14 @@ export default function AdminMagangPenempatanPage() {
       </div>
 
       <div className="mt-0 space-y-5 lg:mt-5">
-      <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
-      <StatusFilterCard
-        items={STATUS_WARNA.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
-        value={statusFilter} onChange={setStatusFilter} />
-      <div className="min-w-0 space-y-5">
       <PenempatanFilterBar
         search={search} onSearch={setSearch}
+        statusFilter={statusFilter} onStatusFilter={setStatusFilter}
+        total={penempatanList.length}
+        menungguCount={penempatanList.filter((p) => p.status === "MENUNGGU").length}
+        aktifCount={penempatanList.filter((p) => p.status === "AKTIF").length}
+        selesaiCount={penempatanList.filter((p) => p.status === "SELESAI").length}
+        batalCount={penempatanList.filter((p) => p.status === "BATAL").length}
         displayedCount={displayList.length}
         onKelolaTempat={() => setShowKelolaTempat(true)}
         mobileNative
@@ -191,12 +191,12 @@ export default function AdminMagangPenempatanPage() {
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-white" title={g.nama}>{g.nama}</p>
                     <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
                     <div className="flex flex-wrap gap-1">
-                      {STATUS_WARNA.filter((w) => w.value).map((w) => {
+                      {CHIP_STATUS.map((w) => {
                         const n = g.rows.filter((r) => r.status === w.value).length;
                         if (!n) return null;
                         return (
                           <span key={w.value} className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: w.bg, color: w.clr }}>
-                            {n} {w.label.toLowerCase()}
+                            {n} {w.label}
                           </span>
                         );
                       })}
@@ -213,8 +213,6 @@ export default function AdminMagangPenempatanPage() {
             )}
           </div>
         </div>
-      </div>
-      </div>
       </div>
       </div>
 
