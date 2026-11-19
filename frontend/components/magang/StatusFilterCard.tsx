@@ -28,8 +28,8 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
               style={aktif
                 ? { background: t.clr, color: "#fff", boxShadow: `0 8px 20px -8px ${t.clr}` }
                 : { background: t.bg, color: t.clr }}>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                style={aktif ? { background: "rgba(255,255,255,0.22)", color: "#fff" } : { background: "rgba(255,255,255,0.7)", color: t.clr }}>
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${aktif ? "" : "bg-white/70 dark:bg-slate-900/40"}`}
+                style={aktif ? { background: "rgba(255,255,255,0.22)", color: "#fff" } : { color: t.clr }}>
                 <t.icon size={17} />
               </span>
               <span className="min-w-0 flex-1 truncate text-sm font-bold">{t.label}</span>
