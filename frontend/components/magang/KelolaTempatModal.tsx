@@ -71,10 +71,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]">
             <Building2 size={20} />
           </span>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tempat Magang</h2>
-            <p className="text-xs text-slate-600 dark:text-slate-300">Siswa memilih dari daftar ini saat mengajukan PKL</p>
-          </div>
+          <h2 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Tempat Magang</h2>
           <button onClick={onClose} aria-label="Tutup"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]">
             <X size={16} />

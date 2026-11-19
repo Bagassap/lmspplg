@@ -44,7 +44,6 @@ export function PenempatanFilterBar({
             </span>
             Daftar Penempatan <span className="font-medium text-slate-400 dark:text-slate-500">({displayedCount})</span>
           </p>
-          <p className="mt-1 ml-9 text-xs text-slate-500 dark:text-slate-400">Cari dan saring status penempatan siswa</p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
