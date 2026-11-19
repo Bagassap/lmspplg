@@ -1,24 +1,25 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Building2, FileText, Loader2, MapPin, Pencil, Phone, Send, Upload, User, X } from "lucide-react";
+import { Building2, FileText, Loader2, Send, Upload, X } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ALAMAT_KOSONG, AlamatFields, PklInput, PKL_CAP, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
-import { formatAlamat, type Alamat, type Instansi } from "./types";
+import type { Alamat, Instansi } from "./types";
 
 const MAKS_SURAT = 10 * 1024 * 1024;
 const ACCEPT = ".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp";
 
-export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
-  dipilih: Instansi | null;
-  onBatalPilih: () => void;
+export function FormInstansiPkl({ awal, onTerkirim }: {
+  awal: Instansi | null;
   onTerkirim: () => void;
 }) {
   const toast = useToast();
-  const [namaTempat, setNamaTempat] = useState("");
-  const [namaPimpinan, setNamaPimpinan] = useState("");
-  const [alamat, setAlamat] = useState<Alamat>(ALAMAT_KOSONG);
-  const [noWa, setNoWa] = useState("");
+  const [namaTempat, setNamaTempat] = useState(awal?.namaTempat ?? "");
+  const [namaPimpinan, setNamaPimpinan] = useState(awal?.namaPimpinan ?? "");
+  const [alamat, setAlamat] = useState<Alamat>(() => awal
+    ? { dukuh: awal.dukuh ?? "", rt: awal.rt ?? "", rw: awal.rw ?? "", desa: awal.desa ?? "", kecamatan: awal.kecamatan ?? "", kabupaten: awal.kabupaten ?? "" }
+    : ALAMAT_KOSONG);
+  const [noWa, setNoWa] = useState(awal?.noWaUsaha ?? "");
   const [surat, setSurat] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
@@ -29,17 +30,14 @@ export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
   }
 
   async function kirim() {
-    if (!dipilih) {
-      if (!namaTempat.trim() || !namaPimpinan.trim()) { toast.error("Lengkapi data instansi", "Nama instansi dan nama kepala instansi wajib diisi."); return; }
-      if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat instansi", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
-      if (!WA_VALID.test(noWa.trim())) { toast.error("Nomor WA instansi tidak valid", "Contoh: 081234567890."); return; }
-    }
+    if (!namaTempat.trim() || !namaPimpinan.trim()) { toast.error("Lengkapi data instansi", "Nama instansi dan nama kepala instansi wajib diisi."); return; }
+    if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat instansi", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
+    if (!WA_VALID.test(noWa.trim())) { toast.error("Nomor WA instansi tidak valid", "Contoh: 081234567890."); return; }
     if (!surat) { toast.error("Upload bukti surat instansi", "Berkas ini wajib diunggah."); return; }
     setSaving(true);
     try {
       const fd = new FormData();
-      if (dipilih) fd.append("tempatMagangId", dipilih.id);
-      else fd.append("tempatBaru", JSON.stringify({ namaTempat: namaTempat.trim(), namaPimpinan: namaPimpinan.trim(), ...alamat, noWaUsaha: noWa.trim() }));
+      fd.append("tempatBaru", JSON.stringify({ namaTempat: namaTempat.trim(), namaPimpinan: namaPimpinan.trim(), ...alamat, noWaUsaha: noWa.trim() }));
       fd.append("surat", surat);
       const res = await fetch("/api/magang/penempatan/ajukan", { method: "POST", body: fd });
       if (res.ok) {
@@ -61,31 +59,14 @@ export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
       </div>
 
       <div className="space-y-3">
-        {dipilih ? (
-          <div className="flex items-start gap-3 rounded-2xl bg-[#E4F5EC] p-3.5 ring-1 ring-[#22A06B]/30 dark:bg-slate-700">
-            <div className="min-w-0 flex-1 space-y-1 text-xs text-slate-700 dark:text-slate-200">
-              <p className="text-sm font-extrabold text-slate-900 dark:text-white">{dipilih.namaTempat}</p>
-              {dipilih.namaPimpinan && <p className="flex items-start gap-1.5"><User size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {dipilih.namaPimpinan}</p>}
-              <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {formatAlamat(dipilih)}</p>
-              {dipilih.noWaUsaha && <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {dipilih.noWaUsaha}</p>}
-            </div>
-            <button type="button" onClick={onBatalPilih}
-              className="flex h-8 shrink-0 items-center gap-1 rounded-xl bg-white px-2.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]">
-              <Pencil size={12} /> Isi manual
-            </button>
-          </div>
-        ) : (
-          <>
-            <PklInput label="Nama instansi" wajib placeholder="Nama perusahaan / instansi" value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} />
-            <PklInput label="Nama kepala instansi" wajib value={namaPimpinan} onChange={(e) => setNamaPimpinan(e.target.value)} />
-            <div>
-              <p className={PKL_CAP}>Alamat instansi</p>
-              <AlamatFields value={alamat} onChange={setAlamat} />
-            </div>
-            <PklInput label="Nomor WA instansi aktif" wajib inputMode="tel" placeholder="08xxxxxxxxxx" value={noWa}
-              onChange={(e) => setNoWa(e.target.value.replace(/[^0-9+\s-]/g, ""))} />
-          </>
-        )}
+        <PklInput label="Nama instansi" wajib placeholder="Nama perusahaan / instansi" value={namaTempat} onChange={(e) => setNamaTempat(e.target.value)} />
+        <PklInput label="Nama kepala instansi" wajib value={namaPimpinan} onChange={(e) => setNamaPimpinan(e.target.value)} />
+        <div>
+          <p className={PKL_CAP}>Alamat instansi</p>
+          <AlamatFields value={alamat} onChange={setAlamat} />
+        </div>
+        <PklInput label="Nomor WA instansi aktif" wajib inputMode="tel" placeholder="08xxxxxxxxxx" value={noWa}
+          onChange={(e) => setNoWa(e.target.value.replace(/[^0-9+\s-]/g, ""))} />
 
         <div>
           <label className={PKL_CAP}>Upload bukti surat instansi <span className="text-[#E8562B]">*</span></label>

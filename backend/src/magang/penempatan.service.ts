@@ -99,20 +99,43 @@ export class PenempatanService {
         dukuh: t.dukuh.trim(), rt: t.rt.trim(), rw: t.rw.trim(),
         desa: t.desa.trim(), kecamatan: t.kecamatan.trim(), kabupaten: t.kabupaten.trim(),
       };
-      const baru = await this.prisma.tempatMagang.create({
-        data: {
-          namaTempat: t.namaTempat.trim(),
-          alamat: `Dukuh ${v.dukuh} RT ${v.rt}/RW ${v.rw}, Desa ${v.desa}, Kec. ${v.kecamatan}, Kab. ${v.kabupaten}`,
-          ...v,
-          namaPimpinan: t.namaPimpinan.trim(),
-          noWaUsaha: t.noWaUsaha.trim(),
-          kontak: t.noWaUsaha.trim(),
-          kuota: 1,
-          dibuatSiswa: true,
-        },
+      const alamat = `Dukuh ${v.dukuh} RT ${v.rt}/RW ${v.rw}, Desa ${v.desa}, Kec. ${v.kecamatan}, Kab. ${v.kabupaten}`;
+      const ada = await this.prisma.tempatMagang.findFirst({
+        where: { namaTempat: { equals: t.namaTempat.trim(), mode: 'insensitive' } },
+        include: { _count: { select: { penempatan: { where: { status: { in: AKTIF_ATAU_MENUNGGU } } } } } },
       });
-      tempatId = baru.id;
-      namaTempat = baru.namaTempat;
+      if (ada) {
+        if (!ada.dibuatSiswa && ada.kuota - ada._count.penempatan < 1) {
+          throw new BadRequestException(`Kuota "${ada.namaTempat}" sudah penuh`);
+        }
+        const kosong = !ada.desa || !ada.kecamatan || !ada.kabupaten;
+        await this.prisma.tempatMagang.update({
+          where: { id: ada.id },
+          data: {
+            ...(kosong ? { ...v, alamat } : {}),
+            ...(!ada.namaPimpinan ? { namaPimpinan: t.namaPimpinan.trim() } : {}),
+            ...(!ada.noWaUsaha ? { noWaUsaha: t.noWaUsaha.trim(), kontak: ada.kontak ?? t.noWaUsaha.trim() } : {}),
+            ...(ada.dibuatSiswa && ada._count.penempatan + 1 > ada.kuota ? { kuota: ada._count.penempatan + 1 } : {}),
+          },
+        });
+        tempatId = ada.id;
+        namaTempat = ada.namaTempat;
+      } else {
+        const baru = await this.prisma.tempatMagang.create({
+          data: {
+            namaTempat: t.namaTempat.trim(),
+            alamat,
+            ...v,
+            namaPimpinan: t.namaPimpinan.trim(),
+            noWaUsaha: t.noWaUsaha.trim(),
+            kontak: t.noWaUsaha.trim(),
+            kuota: 1,
+            dibuatSiswa: true,
+          },
+        });
+        tempatId = baru.id;
+        namaTempat = baru.namaTempat;
+      }
     } else {
       throw new BadRequestException('Pilih instansi dari daftar atau isi data instansi');
     }

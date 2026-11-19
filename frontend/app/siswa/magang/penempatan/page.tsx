@@ -77,7 +77,7 @@ export default function SiswaMagangPenempatanPage() {
           </button>
         </div>
       ) : (
-        <FormInstansiPkl dipilih={dipilih} onBatalPilih={() => setDipilih(null)} onTerkirim={terkirim} />
+        <FormInstansiPkl key={dipilih?.id ?? "manual"} awal={dipilih} onTerkirim={terkirim} />
       )}
 
       {riwayat.length > 0 && (
