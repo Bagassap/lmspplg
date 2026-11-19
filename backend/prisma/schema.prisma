@@ -446,6 +446,7 @@ model TempatMagang {
   updatedAt DateTime @updatedAt
 
   penempatan   PenempatanMagang[]
+  pendaftaran  PendaftaranMagang[]
   absensi      AbsensiMagang[]
   laporDiri    LaporDiriMagang[]
   laporanAkhir LaporanAkhirMagang[]
@@ -464,6 +465,8 @@ model PendaftaranMagang {
   desa           String
   kecamatan      String
   kabupaten      String
+  tempatMagangId String?
+  tempatMagang   TempatMagang?           @relation(fields: [tempatMagangId], references: [id], onDelete: SetNull)
   status         StatusPendaftaranMagang @default(MENUNGGU)
   alasanTolak    String?
   diverifikasiAt DateTime?

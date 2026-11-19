@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Building2, CheckCircle2, MapPin, Phone, Search, User, Users } from "lucide-react";
-import { toTitleCase, waLink } from "@/components/data-siswa/shared";
-import { formatAlamat, type Instansi } from "./types";
+import { Building2, CheckCircle2, ChevronDown, Search, Users } from "lucide-react";
+import { toTitleCase } from "@/components/data-siswa/shared";
+import type { Instansi } from "./types";
 
 export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId }: {
   list: Instansi[];
@@ -13,12 +13,12 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
   pilihId?: string | null;
 }) {
   const [q, setQ] = useState("");
+  const [terbuka, setTerbuka] = useState<string | null>(null);
   const tampil = useMemo(() => {
     const k = q.trim().toLowerCase();
     if (!k) return list;
     return list.filter((i) =>
       i.namaTempat.toLowerCase().includes(k)
-      || formatAlamat(i).toLowerCase().includes(k)
       || i.siswa.some((s) => s.nama.toLowerCase().includes(k)));
   }, [list, q]);
 
@@ -31,7 +31,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
 
       <div className="relative mb-3">
         <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari instansi, alamat, atau nama siswa…"
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari instansi atau nama siswa…"
           className="h-10 w-full rounded-2xl border-0 bg-[#F1EDFA] pl-9 pr-4 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
       </div>
 
@@ -44,42 +44,37 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{q ? "Tidak ada instansi yang cocok" : "Belum ada instansi terverifikasi"}</p>
           </div>
         ) : tampil.map((i) => {
-          const wa = waLink(i.noWaUsaha);
           const penuh = i.sisa !== null && i.sisa <= 0;
           const dipilih = pilihId === i.id;
+          const buka = terbuka === i.id;
           return (
-            <div key={i.id} className={`rounded-2xl p-3.5 transition-colors ${dipilih ? "bg-[#E7E0F7] ring-2 ring-[#3E03B3] dark:bg-slate-600" : "bg-[#F1EDFA] dark:bg-slate-700"}`}>
-              <div className="flex items-start gap-2">
-                <p className="min-w-0 flex-1 text-sm font-extrabold text-slate-900 dark:text-white">{i.namaTempat}</p>
-                {i.sisa !== null && (
-                  <span className={`shrink-0 rounded-xl px-2 py-0.5 text-[10px] font-bold ${penuh ? "bg-white text-[#E8562B] dark:bg-slate-800" : "bg-white text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]"}`}>
-                    {penuh ? "Kuota penuh" : `Sisa kuota ${i.sisa}`}
-                  </span>
-                )}
-              </div>
-              <div className="mt-1.5 space-y-1 text-xs text-slate-700 dark:text-slate-200">
-                {i.namaPimpinan && <p className="flex items-start gap-1.5"><User size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {i.namaPimpinan}</p>}
-                <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {formatAlamat(i)}</p>
-                {i.noWaUsaha && (
-                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
-                    {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{i.noWaUsaha}</a> : i.noWaUsaha}
-                  </p>
-                )}
-              </div>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {i.siswa.length === 0 ? (
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Belum ada siswa terverifikasi</span>
-                ) : i.siswa.map((s) => (
-                  <span key={s.id} className="rounded-xl bg-white px-2 py-0.5 text-[11px] font-bold text-slate-800 dark:bg-slate-800 dark:text-slate-100">
-                    {toTitleCase(s.nama)}{s.kelas && <span className="font-medium text-slate-500 dark:text-slate-400"> · {s.kelas}</span>}
-                  </span>
-                ))}
-              </div>
-              {onPilih && !penuh && (
-                <button type="button" onClick={() => onPilih(i)}
-                  className={`mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-xl text-xs font-bold ${dipilih ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]"}`}>
-                  {dipilih ? <><CheckCircle2 size={13} /> Dipilih</> : "Pilih instansi ini"}
-                </button>
+            <div key={i.id} className={`overflow-hidden rounded-2xl transition-colors ${dipilih ? "bg-[#E7E0F7] ring-2 ring-[#3E03B3] dark:bg-slate-600" : "bg-[#F1EDFA] dark:bg-slate-700"}`}>
+              <button type="button" onClick={() => setTerbuka(buka ? null : i.id)} aria-expanded={buka}
+                className="flex w-full items-center gap-2 px-3.5 py-3 text-left">
+                <p className="min-w-0 flex-1 truncate text-sm font-extrabold text-slate-900 dark:text-white">{i.namaTempat}</p>
+                <span className="flex shrink-0 items-center gap-1 rounded-xl bg-white px-2 py-0.5 text-[11px] font-bold text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]">
+                  <Users size={11} /> {i.siswa.length}
+                </span>
+                <ChevronDown size={16} className={`shrink-0 text-[#3E03B3] transition-transform dark:text-[#C4B5FD] ${buka ? "rotate-180" : ""}`} />
+              </button>
+              {buka && (
+                <div className="space-y-1.5 px-3.5 pb-3.5">
+                  {i.siswa.length === 0 ? (
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Belum ada siswa terverifikasi</p>
+                  ) : i.siswa.map((s, n) => (
+                    <div key={s.id} className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 dark:bg-slate-800">
+                      <span className="w-5 shrink-0 text-xs font-bold text-slate-400">{n + 1}.</span>
+                      <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-slate-100">{toTitleCase(s.nama)}</p>
+                      {s.kelas && <span className="shrink-0 text-xs text-slate-500 dark:text-slate-400">{s.kelas}</span>}
+                    </div>
+                  ))}
+                  {onPilih && !penuh && (
+                    <button type="button" onClick={() => onPilih(i)}
+                      className={`flex h-9 w-full items-center justify-center gap-1.5 rounded-xl text-xs font-bold ${dipilih ? "bg-[#3E03B3] text-white" : "bg-white text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]"}`}>
+                      {dipilih ? <><CheckCircle2 size={13} /> Dipilih</> : "Pilih instansi ini"}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           );

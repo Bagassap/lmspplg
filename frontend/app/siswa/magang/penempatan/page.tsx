@@ -13,7 +13,7 @@ export default function SiswaMagangPenempatanPage() {
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [daftar, setDaftar] = useState<PendaftaranSaya | null>(null);
   const [loading, setLoading] = useState(true);
-  const [dipilih, setDipilih] = useState<Instansi | null>(null);
+  const [pilihanManual, setDipilih] = useState<Instansi | null | undefined>(undefined);
 
   const reload = useCallback(() => {
     Promise.all([
@@ -27,6 +27,9 @@ export default function SiswaMagangPenempatanPage() {
   const riwayat = list.filter((p) => p.status === "SELESAI" || p.status === "BATAL");
   const terverifikasi = daftar?.pendaftaran?.status === "DITERIMA";
   const bolehIsi = !berjalan && terverifikasi;
+  const rencanaId = daftar?.pendaftaran?.tempatMagangId ?? null;
+  const rencana = instansi.list.find((x) => x.id === rencanaId && (x.sisa === null || x.sisa > 0)) ?? null;
+  const dipilih = pilihanManual === undefined ? rencana : pilihanManual;
 
   function terkirim() {
     setDipilih(null);

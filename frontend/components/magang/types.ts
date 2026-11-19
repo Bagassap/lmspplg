@@ -53,6 +53,8 @@ export type Alamat = { dukuh: string; rt: string; rw: string; desa: string; keca
 export type PendaftaranMagang = Alamat & {
   id: string;
   noWa: string;
+  tempatMagangId: string | null;
+  tempatMagang?: { id: string; namaTempat: string } | null;
   status: StatusPendaftaran;
   alasanTolak: string | null;
   diverifikasiAt: string | null;

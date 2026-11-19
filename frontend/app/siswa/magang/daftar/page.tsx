@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, ClipboardList, Clock, Loader2, Send, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
-import { ALAMAT_KOSONG, AlamatFields, PklInput, PKL_CAP, WA_VALID, alamatLengkap, pesanError } from "@/components/magang/pkl-form-ui";
+import { ALAMAT_KOSONG, AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "@/components/magang/pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, type Alamat, type PendaftaranSaya } from "@/components/magang/types";
 
 function ambilAlamat(src: Alamat): Alamat {
@@ -19,6 +19,7 @@ export default function SiswaDaftarPklPage() {
   const [loading, setLoading] = useState(true);
   const [alamat, setAlamat] = useState<Alamat>(ALAMAT_KOSONG);
   const [noWa, setNoWa] = useState("");
+  const [tempatId, setTempatId] = useState("");
   const [saving, setSaving] = useState(false);
 
   const isi = useCallback((d: PendaftaranSaya) => {
@@ -26,6 +27,7 @@ export default function SiswaDaftarPklPage() {
     const sumber = d.pendaftaran ?? d.profil;
     setAlamat(ambilAlamat(sumber));
     setNoWa(d.pendaftaran?.noWa ?? d.profil.noHp ?? "");
+    setTempatId(d.pendaftaran?.tempatMagangId ?? "");
   }, []);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function SiswaDaftarPklPage() {
       const res = await fetch("/api/magang/pendaftaran", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...alamat, noWa: noWa.trim() }),
+        body: JSON.stringify({ ...alamat, noWa: noWa.trim(), tempatMagangId: tempatId || null }),
       });
       const d = await res.json().catch(() => null);
       if (res.ok && d?.profil) {
@@ -117,6 +119,20 @@ export default function SiswaDaftarPklPage() {
 
               <PklInput label="Nomor WA aktif" wajib inputMode="tel" placeholder="08xxxxxxxxxx" value={noWa} disabled={terkunci}
                 onChange={(e) => setNoWa(e.target.value.replace(/[^0-9+\s-]/g, ""))} />
+
+              <div>
+                <label className={PKL_CAP}>Tempat PKL</label>
+                <select value={tempatId} disabled={terkunci || instansi.loading} onChange={(e) => setTempatId(e.target.value)} className={PKL_FIELD}>
+                  <option value="">{instansi.loading ? "Memuat daftar instansi…" : "Belum ada / instansi lain"}</option>
+                  {instansi.list
+                    .filter((i) => i.id === tempatId || i.sisa === null || i.sisa > 0)
+                    .map((i) => (
+                      <option key={i.id} value={i.id}>
+                        {i.namaTempat}{i.sisa !== null ? ` (sisa kuota ${i.sisa})` : ""}
+                      </option>
+                    ))}
+                </select>
+              </div>
 
               {!terkunci && (
                 <button type="button" onClick={kirim} disabled={saving}

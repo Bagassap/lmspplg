@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { CheckCircle2, ClipboardList, Loader2, MapPin, Phone, RotateCcw, Search, XCircle } from "lucide-react";
+import { Building2, CheckCircle2, ClipboardList, Loader2, MapPin, Phone, RotateCcw, Search, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase, waLink } from "@/components/data-siswa/shared";
@@ -126,6 +126,7 @@ export default function AdminPendaftaranPklPage() {
                   <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
                     {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{p.noWa}</a> : p.noWa}
                   </p>
+                  <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
                   {p.status === "DITOLAK" && p.alasanTolak && <p className="font-semibold text-[#E8562B]">Alasan ditolak: {p.alasanTolak}</p>}
                 </div>
                 {p.status === "MENUNGGU" && (

@@ -14,6 +14,7 @@ const INCLUDE_SISWA = {
       user: { select: { id: true, nama: true, fotoProfil: true } },
     },
   },
+  tempatMagang: { select: { id: true, namaTempat: true } },
 } as const;
 
 type StatusD = 'MENUNGGU' | 'DITERIMA' | 'DITOLAK';
@@ -31,7 +32,7 @@ export class PendaftaranMagangService {
       include: {
         kelas: { select: { nama: true } },
         user: { select: { nama: true } },
-        pendaftaranMagang: true,
+        pendaftaranMagang: { include: { tempatMagang: { select: { id: true, namaTempat: true } } } },
         _count: { select: { penempatan: true } },
       },
     });
@@ -64,7 +65,14 @@ export class PendaftaranMagangService {
       throw new BadRequestException('Pendaftaran PKL kamu sudah diverifikasi admin');
     }
 
+    const tempatMagangId = dto.tempatMagangId?.trim() || null;
+    if (tempatMagangId) {
+      const ada = await this.prisma.tempatMagang.count({ where: { id: tempatMagangId } });
+      if (!ada) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
+    }
+
     const data = {
+      tempatMagangId,
       noWa: dto.noWa.trim(),
       dukuh: dto.dukuh.trim(),
       rt: dto.rt.trim(),
