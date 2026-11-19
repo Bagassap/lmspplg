@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, FileText, Pencil, Search, Trash2, UserCheck, X } from "lucide-react";
+import { Building2, CalendarDays, FileText, Pencil, Trash2, UserCheck, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, type PenempatanMagang, type StatusPenempatan } from "./types";
@@ -58,9 +58,14 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                   {p.status === "MENUNGGU" ? (
                     <button type="button" onClick={() => onPeriksa(p)} disabled={busy}
                       className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-50">
-                      <Search size={13} /> Periksa
+                      <FileText size={13} /> Lihat dokumen
                     </button>
                   ) : (
+                    <>
+                    <button type="button" onClick={() => onPeriksa(p)} title="Lihat dokumen" aria-label="Lihat dokumen"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
+                      <FileText size={13} />
+                    </button>
                     <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus(p, e.target.value as StatusPenempatan)}
                       className="h-8 shrink-0 rounded-lg border-0 px-2 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                       style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
@@ -68,6 +73,7 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                       <option value="SELESAI">Selesai</option>
                       <option value="BATAL">Batal</option>
                     </select>
+                    </>
                   )}
                   <button type="button" onClick={() => onEdit(p)} disabled={busy} title="Edit" aria-label="Edit"
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] disabled:opacity-50">

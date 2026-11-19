@@ -2,15 +2,31 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Briefcase, Building2, FileText, Loader2, MapPin, Phone, User, UserCheck, Users } from "lucide-react";
+import { Building2, CalendarDays, CheckCircle2, ExternalLink, FileText, Loader2, MapPin, Phone, User, UserCheck, X, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
-import { formatAlamat, type PenempatanMagang } from "./types";
+import { avatarColorFor, toTitleCase, waLink } from "@/components/data-siswa/shared";
+import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
-const FIELD = "h-11 w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100";
+const FIELD = "h-11 w-full rounded-2xl border-0 bg-slate-50 px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-800 dark:text-slate-100";
+
+function fmt(iso: string) {
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
+}
+
+function Baris({ icon: Icon, label, children, bg, fg }: { icon: typeof MapPin; label: string; children: React.ReactNode; bg: string; fg: string }) {
+  return (
+    <div className="flex items-start gap-2.5 rounded-2xl bg-slate-50 p-3 dark:bg-slate-800">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: bg, color: fg }}><Icon size={15} /></span>
+      <div className="min-w-0">
+        <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</p>
+        <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">{children}</div>
+      </div>
+    </div>
+  );
+}
 
 export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
@@ -20,15 +36,14 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   const [tolakMode, setTolakMode] = useState(false);
   const [alasan, setAlasan] = useState("");
   const [saving, setSaving] = useState(false);
-  const t = rows[0].tempatMagang;
-  const surat = rows.find((r) => r.suratKeteranganUrl);
-
-  const info = [
-    { icon: User, label: "Kepala instansi", value: t.namaPimpinan },
-    { icon: MapPin, label: "Alamat", value: formatAlamat(t) },
-    { icon: Briefcase, label: "Bidang usaha", value: t.bidangUsaha },
-    { icon: Phone, label: "WA instansi", value: t.noWaUsaha ?? t.kontak },
-  ].filter((x) => x.value);
+  const p = rows[0];
+  const t = p.tempatMagang;
+  const menunggu = p.status === "MENUNGGU";
+  const cfg = STATUS_PENEMPATAN_CFG[p.status];
+  const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+  const suratUrl = p.suratKeteranganUrl ? `/api/uploads${p.suratKeteranganUrl}` : null;
+  const suratGambar = !!p.suratKeteranganUrl && /\.(png|jpe?g|webp)$/i.test(p.suratKeteranganUrl);
+  const wa = waLink(t.noWaUsaha ?? t.kontak);
 
   async function kirim(url: string, body: object, okMsg: [string, string]) {
     setSaving(true);
@@ -40,110 +55,109 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
         onClose();
       } else {
         const d = await res.json().catch(() => null);
-        toast.error(d?.message ? String(Array.isArray(d.message) ? d.message[0] : d.message) : "Gagal memproses pengajuan", "");
+        toast.error(d?.message ? String(Array.isArray(d.message) ? d.message[0] : d.message) : "Gagal memproses penempatan", "");
       }
     } finally {
       setSaving(false);
     }
   }
 
-  function terima() {
-    if (!guruId) { toast.error("Pilih guru pembimbing", ""); return; }
-    return kirim(`/api/magang/penempatan/${rows[0].id}/tetapkan-guru`, { guruPembimbingId: guruId },
-      ["Pengajuan diterima", `${rows.length} siswa di ${t.namaTempat} kini punya guru pembimbing.`]);
+  function verifikasi() {
+    return kirim(`/api/magang/penempatan/${p.id}/tetapkan-guru`, guruId ? { guruPembimbingId: guruId } : {},
+      ["Penempatan diverifikasi", `${nama} di ${t.namaTempat}`]);
   }
 
   function tolak() {
-    if (!alasan.trim()) { toast.error("Isi alasan penolakan", "Siswa perlu tahu mengapa pengajuannya ditolak."); return; }
-    return kirim(`/api/magang/penempatan/${rows[0].id}/tolak`, { alasan: alasan.trim() },
-      ["Pengajuan ditolak", "Siswa diberi tahu dan bisa mengajukan ulang."]);
+    if (!alasan.trim()) { toast.error("Isi alasan penolakan", "Siswa perlu tahu bagian mana yang harus diperbaiki."); return; }
+    return kirim(`/api/magang/penempatan/${p.id}/tolak`, { alasan: alasan.trim() },
+      ["Penempatan ditolak", "Siswa diberi tahu dan perlu mengisi ulang form penempatan."]);
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><Building2 size={20} /></span>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Pengajuan Penempatan PKL</h2>
-          </div>
-          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><FileText size={20} /></span>
+          <h2 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Dokumen Penempatan</h2>
+          <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><X size={16} /></button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
-          <div className="rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700">
-            <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200"><Users size={13} /> Siswa yang mengajukan ({rows.length})</p>
-            <div className="space-y-1">
-              {rows.map((r) => (
-                <div key={r.id} className="flex items-center gap-2.5 py-0.5">
-                  <Avatar src={r.siswa.user?.fotoProfil} nama={r.siswa.nama ?? r.siswa.user?.nama ?? "—"} sizePx={32} fallbackBg={avatarColorFor(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} textClassName="text-[10px] font-extrabold" />
-                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">
-                    {toTitleCase(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600 dark:text-slate-300">· {r.siswa.kelas?.nama}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
+            <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-xs font-extrabold" />
+            <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">
+              {nama} <span className="font-medium text-slate-600 dark:text-slate-300">· {p.siswa.kelas?.nama} · NIS {p.siswa.nis}</span>
+            </p>
+            <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
           </div>
 
-          {info.length > 0 && (
-            <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-700">
-              {info.map((x) => (
-                <p key={x.label} className="flex items-start gap-2 text-xs text-slate-800 dark:text-slate-200">
-                  <x.icon size={13} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
-                  <span><span className="font-bold">{x.label}:</span> {x.value}</span>
-                </p>
-              ))}
-            </div>
+          <p className="pt-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Form penempatan siswa</p>
+          <Baris icon={Building2} label="Nama instansi" bg="#FFE9E2" fg="#E8562B">{t.namaTempat}</Baris>
+          <Baris icon={User} label="Kepala instansi" bg="#E0F2FE" fg="#0EA5E9">{t.namaPimpinan || "-"}</Baris>
+          <Baris icon={MapPin} label="Alamat instansi" bg="#FFE9E2" fg="#E8562B">{formatAlamat(t)}</Baris>
+          <Baris icon={Phone} label="WA instansi" bg="#E4F5EC" fg="#22A06B">
+            {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="underline">{t.noWaUsaha ?? t.kontak}</a> : (t.noWaUsaha ?? t.kontak ?? "-")}
+          </Baris>
+          <Baris icon={CalendarDays} label="Diajukan" bg="#FFF4E0" fg="#D97706">{fmt(p.createdAt)}</Baris>
+          {!menunggu && (
+            <Baris icon={UserCheck} label="Guru pembimbing" bg="#F1EDFA" fg="#3E03B3">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</Baris>
           )}
 
-          {surat?.suratKeteranganUrl ? (
-            <a href={`/api/uploads${surat.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
-              <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat instansi: {surat.suratKeteranganNama ?? "Lihat berkas"}</span>
-            </a>
-          ) : (
-            <p className="flex items-center gap-2 rounded-2xl bg-[#FFE9E2] p-3 text-xs font-bold text-[#E8562B]">
-              <FileText size={14} className="shrink-0" /> Siswa belum mengunggah surat instansi. Pengajuan belum bisa diterima.
-            </p>
-          )}
-
-          {tolakMode ? (
+          <p className="pt-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Bukti surat instansi</p>
+          {suratUrl ? (
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan <span className="text-[#E8562B]">*</span></label>
-              <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Contoh: surat tidak terbaca, mohon unggah ulang"
-                className="w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              {suratGambar && (
+                <a href={suratUrl} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
+                  <img src={suratUrl} alt="Bukti surat instansi" className="max-h-72 w-full object-contain bg-slate-50 dark:bg-slate-800" />
+                </a>
+              )}
+              <a href={suratUrl} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-2xl bg-[#E0F2FE] p-3 text-xs font-bold text-[#0369A1] dark:bg-slate-800 dark:text-[#7DD3FC]">
+                <FileText size={14} className="shrink-0" /> <span className="min-w-0 flex-1 truncate">{p.suratKeteranganNama ?? "Lihat bukti surat"}</span>
+                <ExternalLink size={13} className="shrink-0" />
+              </a>
+            </div>
+          ) : (
+            <p className="rounded-2xl bg-[#FEE2E2] p-3 text-xs font-bold text-[#DC2626]">Siswa belum mengunggah bukti surat instansi.</p>
+          )}
+
+          {menunggu && (tolakMode ? (
+            <div className="space-y-2 pt-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan <span className="text-[#DC2626]">*</span></label>
+              <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} autoFocus placeholder="Contoh: nama kepala instansi tidak sesuai surat, mohon perbaiki"
+                className="w-full rounded-2xl border-0 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#DC2626] dark:bg-slate-800 dark:text-slate-100" />
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(false)} disabled={saving}
                   className="h-12 flex-1 rounded-xl bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
                 <button type="button" onClick={tolak} disabled={saving || !alasan.trim()}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#E8562B] text-sm font-bold text-white disabled:opacity-50">
-                  {saving && <Loader2 size={15} className="animate-spin" />} Tolak pengajuan
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#DC2626] text-sm font-bold text-white disabled:opacity-50">
+                  {saving ? <Loader2 size={15} className="animate-spin" /> : <XCircle size={15} />} Tolak
                 </button>
               </div>
             </div>
           ) : (
-            <>
-              <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Guru pembimbing</label>
-                <select value={guruId} onChange={(e) => setGuruId(e.target.value)} className={FIELD}>
-                  <option value="">Pilih guru…</option>
-                  {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
-                </select>
-              </div>
+            <div className="space-y-2 pt-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Guru pembimbing (opsional)</label>
+              <select value={guruId} onChange={(e) => setGuruId(e.target.value)} className={FIELD}>
+                <option value="">Tetapkan nanti</option>
+                {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
+              </select>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(true)} disabled={saving}
-                  className="h-12 rounded-xl bg-[#FFE9E2] px-5 text-sm font-bold text-[#E8562B] disabled:opacity-50">Tolak</button>
-                <button type="button" onClick={terima} disabled={saving || !guruId || !surat}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
-                  {saving ? <Loader2 size={15} className="animate-spin" /> : <UserCheck size={15} />} Terima &amp; tetapkan guru
+                  className="flex h-12 items-center gap-1.5 rounded-xl bg-[#FEE2E2] px-5 text-sm font-bold text-[#DC2626] disabled:opacity-50">
+                  <XCircle size={15} /> Tolak
+                </button>
+                <button type="button" onClick={verifikasi} disabled={saving || !suratUrl}
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#22A06B] text-sm font-bold text-white disabled:opacity-50">
+                  {saving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Verifikasi
                 </button>
               </div>
-            </>
-          )}
+            </div>
+          ))}
         </div>
       </motion.div>
     </div>

@@ -58,7 +58,8 @@ export class TolakPenempatanDto {
 
 export class TetapkanGuruDto {
   @IsString()
-  guruPembimbingId!: string;
+  @IsOptional()
+  guruPembimbingId?: string;
 
   @IsDateString()
   @IsOptional()

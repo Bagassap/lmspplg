@@ -188,9 +188,10 @@ export default function AdminMagangPenempatanPage() {
       map.set(p.tempatMagang.id, g);
     });
     const q = search.trim().toLowerCase();
+    const sudahIsi = new Set(penempatanList.filter((p) => p.status === "MENUNGGU" || p.status === "AKTIF").map((p) => p.siswa.id));
     terverifikasi.forEach((d) => {
       const t = d.tempatMagang;
-      if (!t) return;
+      if (!t || (d.siswa && sudahIsi.has(d.siswa.id))) return;
       if (!map.has(t.id)) {
         if (statusFilter) return;
         if (q && !t.namaTempat.toLowerCase().includes(q)) return;
@@ -204,7 +205,7 @@ export default function AdminMagangPenempatanPage() {
       .map((g) => ({ ...g, rows: [...g.rows].sort((a, b) => urut[a.status] - urut[b.status]) }))
       .sort((a, b) => Number(b.rows.some((r) => r.status === "MENUNGGU")) - Number(a.rows.some((r) => r.status === "MENUNGGU"))
         || a.nama.localeCompare(b.nama, "id", { sensitivity: "base" }));
-  }, [displayList, terverifikasi, search, statusFilter]);
+  }, [displayList, terverifikasi, search, statusFilter, penempatanList]);
 
   const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
 
@@ -265,7 +266,7 @@ export default function AdminMagangPenempatanPage() {
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-1">
                 {g.terdaftar > 0 && (
-                  <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>{g.terdaftar} terverifikasi</span>
+                  <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFF4E0", color: "#D97706" }}>{g.terdaftar} menunggu form</span>
                 )}
                 {CHIP_STATUS.map((w) => {
                   const n = g.rows.filter((r) => r.status === w.value).length;
@@ -313,8 +314,8 @@ export default function AdminMagangPenempatanPage() {
                     <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
                     <div className="flex flex-wrap gap-1">
                       {g.terdaftar > 0 && (
-                        <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
-                          {g.terdaftar} terverifikasi
+                        <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFF4E0", color: "#D97706" }}>
+                          {g.terdaftar} menunggu form
                         </span>
                       )}
                       {CHIP_STATUS.map((w) => {

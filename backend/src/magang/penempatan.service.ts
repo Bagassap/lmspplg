@@ -206,8 +206,10 @@ export class PenempatanService {
   async tetapkanGuru(id: string, dto: TetapkanGuruDto) {
     const target = await this.prisma.penempatanMagang.findUnique({ where: { id } });
     if (!target) throw new NotFoundException('Pengajuan tidak ditemukan');
-    const guru = await this.prisma.guru.findUnique({ where: { id: dto.guruPembimbingId }, include: { user: { select: { id: true, nama: true } } } });
-    if (!guru) throw new NotFoundException('Guru pembimbing tidak ditemukan');
+    const guru = dto.guruPembimbingId
+      ? await this.prisma.guru.findUnique({ where: { id: dto.guruPembimbingId }, include: { user: { select: { id: true, nama: true } } } })
+      : null;
+    if (dto.guruPembimbingId && !guru) throw new NotFoundException('Guru pembimbing tidak ditemukan');
 
     const rows = await this.prisma.penempatanMagang.findMany({
       where: target.kelompokId ? { kelompokId: target.kelompokId, status: 'MENUNGGU' } : { id, status: 'MENUNGGU' },
@@ -215,13 +217,13 @@ export class PenempatanService {
     });
     if (rows.length === 0) throw new BadRequestException('Pengajuan ini sudah diproses');
     if (rows.some((r) => !r.suratKeteranganUrl)) {
-      throw new BadRequestException('Pengajuan belum disertai surat keterangan PKL. Minta siswa mengunggahnya dulu.');
+      throw new BadRequestException('Penempatan belum disertai bukti surat instansi. Minta siswa mengunggahnya dulu.');
     }
 
     await this.prisma.penempatanMagang.updateMany({
       where: { id: { in: rows.map((r) => r.id) } },
       data: {
-        guruPembimbingId: guru.id,
+        ...(guru ? { guruPembimbingId: guru.id } : {}),
         status: 'AKTIF',
         ...(dto.tanggalMulai ? { tanggalMulai: new Date(dto.tanggalMulai) } : {}),
         ...(dto.tanggalSelesai ? { tanggalSelesai: new Date(dto.tanggalSelesai) } : {}),
@@ -231,12 +233,14 @@ export class PenempatanService {
     const tempat = rows[0].tempatMagang.namaTempat;
     const userIds = rows.map((r) => r.siswa.userId).filter((u): u is string => !!u);
     await this.notificationService.createMany(userIds, {
-      title: 'PKL kamu disetujui',
-      message: `Penempatan PKL di ${tempat} sudah ditetapkan. Guru pembimbing: ${guru.user?.nama ?? '-'}.`,
+      title: 'Penempatan PKL diverifikasi',
+      message: guru
+        ? `Penempatan PKL di ${tempat} sudah diverifikasi. Guru pembimbing: ${guru.user?.nama ?? '-'}.`
+        : `Penempatan PKL di ${tempat} sudah diverifikasi admin.`,
       type: NotificationType.MAGANG,
       link: '/magang/penempatan',
     });
-    if (guru.user?.id) {
+    if (guru?.user?.id) {
       await this.notificationService.create({
         userId: guru.user.id,
         title: 'Siswa bimbingan PKL baru',
