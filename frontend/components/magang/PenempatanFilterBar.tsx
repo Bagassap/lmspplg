@@ -9,24 +9,13 @@ const REF_PRIMARY = "#3E03B3";
 export type PenempatanStatusFilter = StatusPenempatan | "";
 
 export function PenempatanFilterBar({
-  search, onSearch, statusFilter, onStatusFilter,
-  total, aktifCount, selesaiCount, batalCount, displayedCount,
-  onKelolaTempat, mobileNative = false, menungguCount = 0,
+  search, onSearch, displayedCount, onKelolaTempat, mobileNative = false,
 }: {
   search: string; onSearch: (v: string) => void;
-  statusFilter: PenempatanStatusFilter; onStatusFilter: (v: PenempatanStatusFilter) => void;
-  total: number; aktifCount: number; selesaiCount: number; batalCount: number; displayedCount: number;
+  displayedCount: number;
   onKelolaTempat: () => void;
   mobileNative?: boolean;
-  menungguCount?: number;
 }) {
-  const STATUS_PILLS: { value: PenempatanStatusFilter; label: string; count: number; bg: string; clr: string }[] = [
-    { value: "MENUNGGU", label: "Menunggu", count: menungguCount, bg: "#F1EDFA", clr: "#3E03B3" },
-    { value: "AKTIF", label: "Aktif", count: aktifCount, bg: "#E4F5EC", clr: "#22A06B" },
-    { value: "SELESAI", label: "Selesai", count: selesaiCount, bg: "#FFF4E0", clr: "#D97706" },
-    { value: "BATAL", label: "Batal", count: batalCount, bg: "#FEE2E2", clr: "#DC2626" },
-    { value: "", label: "Semua", count: total, bg: "#E0F2FE", clr: "#0EA5E9" },
-  ];
 
   return (
     <div className="relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
@@ -89,19 +78,6 @@ export function PenempatanFilterBar({
         </div>
       </div>
 
-      <div className="relative mt-4 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-4 dark:border-slate-700/50">
-        {STATUS_PILLS.map((opt) => {
-          const active = statusFilter === opt.value;
-          return (
-            <button key={opt.value || "semua"} type="button" onClick={() => onStatusFilter(opt.value)}
-              className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-xs font-bold transition-colors"
-              style={active ? { background: opt.clr, color: "#fff" } : { background: opt.bg, color: opt.clr }}>
-              {opt.label}
-              <span className="rounded-lg px-1.5 text-[10px]" style={{ background: active ? "rgba(255,255,255,0.22)" : "#fff" }}>{opt.count}</span>
-            </button>
-          );
-        })}
-      </div>
     </div>
   );
 }

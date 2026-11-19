@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft, ChevronRight as ChevronRightIcon, Users } from "lucide-react";
+import { Briefcase, Building2, CheckCircle2, ClipboardList, Clock, Flag, Wallet, ChevronLeft, ChevronRight as ChevronRightIcon, Users, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import StatsCard from "@/components/dashboard/StatsCard";
@@ -13,6 +13,7 @@ import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
+import { StatusFilterCard } from "@/components/magang/StatusFilterCard";
 import { STATUS_PENEMPATAN_CFG, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -180,13 +181,21 @@ export default function AdminMagangPenempatanPage() {
       </div>
       </div>
 
+      <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
+      <StatusFilterCard
+        items={[
+          { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock, count: jumlahMenunggu },
+          { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2, count: jumlahAktif },
+          { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag, count: jumlahSelesai },
+          { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle, count: jumlahBatal },
+          { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users, count: penempatanList.length },
+        ]}
+        value={statusFilter} onChange={setStatusFilter} />
+      <div className="min-w-0 space-y-5">
       <PenempatanFilterBar
         search={search} onSearch={setSearch}
-        statusFilter={statusFilter} onStatusFilter={setStatusFilter}
-        total={penempatanList.length} aktifCount={jumlahAktif} selesaiCount={jumlahSelesai} batalCount={jumlahBatal}
         displayedCount={displayList.length}
         onKelolaTempat={() => setShowKelolaTempat(true)}
-        menungguCount={jumlahMenunggu}
         mobileNative
       />
 
@@ -216,6 +225,8 @@ export default function AdminMagangPenempatanPage() {
             </button>
           );
         })}
+      </div>
+      </div>
       </div>
       </div>
 

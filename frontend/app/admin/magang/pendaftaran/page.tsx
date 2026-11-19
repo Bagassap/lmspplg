@@ -6,11 +6,12 @@ import { CheckCircle2, ClipboardList, Clock, Search, Users, XCircle } from "luci
 import { useToast } from "@/components/shared/ToastSystem";
 import { PendaftarTempatModal, namaPendaftar } from "@/components/magang/PendaftarTempatModal";
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
+import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
 import { pesanError } from "@/components/magang/pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, formatAlamat, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
 
-const TABS: { value: StatusPendaftaran | ""; label: string; bg: string; clr: string; icon: typeof Users }[] = [
+const TABS: Omit<StatusFilterItem<StatusPendaftaran | "">, "count">[] = [
   { value: "MENUNGGU", label: "Menunggu", bg: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, clr: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr, icon: Clock },
   { value: "DITERIMA", label: "Terverifikasi", bg: STATUS_PENDAFTARAN_CFG.DITERIMA.bg, clr: STATUS_PENDAFTARAN_CFG.DITERIMA.clr, icon: CheckCircle2 },
   { value: "DITOLAK", label: "Ditolak", bg: STATUS_PENDAFTARAN_CFG.DITOLAK.bg, clr: STATUS_PENDAFTARAN_CFG.DITOLAK.clr, icon: XCircle },
@@ -99,27 +100,7 @@ export default function AdminPendaftaranPklPage() {
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
-      <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <p className="mb-3 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
-          {TABS.map((t) => {
-            const aktif = tab === t.value;
-            return (
-              <button key={t.label} type="button" onClick={() => setTab(t.value)}
-                className="flex items-center gap-2.5 rounded-2xl border-l-4 px-3 py-2.5 text-left transition-colors"
-                style={aktif
-                  ? { background: t.bg, borderColor: t.clr }
-                  : { background: "transparent", borderColor: "transparent" }}>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: t.bg, color: t.clr }}>
-                  <t.icon size={17} />
-                </span>
-                <span className={`min-w-0 flex-1 truncate text-sm font-bold ${aktif ? "" : "text-slate-600 dark:text-slate-300"}`} style={aktif ? { color: t.clr } : undefined}>{t.label}</span>
-                <span className="shrink-0 text-lg font-extrabold tabular-nums" style={{ color: t.clr }}>{hitung[t.value]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} />
 
       <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
         <div className="mb-3 flex flex-wrap items-center gap-3">
