@@ -18,22 +18,22 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
 }) {
   return (
     <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <p className="mb-3 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
+      <p className="mb-2 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
+      <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-1">
         {items.map((t) => {
           const aktif = value === t.value;
           return (
             <button key={t.label} type="button" onClick={() => onChange(t.value)}
-              className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-left transition-all"
+              className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-left transition-all"
               style={aktif
                 ? { background: t.clr, color: "#fff", boxShadow: `0 8px 20px -8px ${t.clr}` }
                 : { background: t.bg, color: t.clr }}>
-              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${aktif ? "" : "bg-white/70 dark:bg-slate-900/40"}`}
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${aktif ? "" : "bg-white/70 dark:bg-slate-900/40"}`}
                 style={aktif ? { background: "rgba(255,255,255,0.22)", color: "#fff" } : { color: t.clr }}>
-                <t.icon size={17} />
+                <t.icon size={14} />
               </span>
               <span className="min-w-0 flex-1 truncate text-sm font-bold">{t.label}</span>
-              <span className="shrink-0 text-lg font-extrabold tabular-nums">{t.count}</span>
+              <span className="shrink-0 text-base font-extrabold tabular-nums">{t.count}</span>
             </button>
           );
         })}
