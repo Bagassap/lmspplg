@@ -3,18 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft } from "lucide-react";
+import { Briefcase, Building2, ClipboardList, Wallet, ChevronLeft, ChevronRight as ChevronRightIcon, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
-import { PengajuanMenungguPanel } from "@/components/magang/PengajuanMenungguPanel";
+import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal";
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
-import { PenempatanTable } from "@/components/magang/PenempatanTable";
-import type { TempatMagang, PenempatanMagang, StatusPenempatan } from "@/components/magang/types";
+import { STATUS_PENEMPATAN_CFG, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
@@ -37,6 +36,7 @@ export default function AdminMagangPenempatanPage() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<PenempatanStatusFilter>("");
+  const [bukaTempat, setBukaTempat] = useState<string | null>(null);
 
   const loadTempat = useCallback(async () => {
     const res = await fetch("/api/magang/tempat", { cache: "no-store" });
@@ -122,6 +122,22 @@ export default function AdminMagangPenempatanPage() {
         || cmp(nm(a), nm(b)));
   }, [penempatanList, search, statusFilter]);
 
+  const grup = useMemo(() => {
+    const map = new Map<string, { id: string; nama: string; rows: PenempatanMagang[] }>();
+    displayList.forEach((p) => {
+      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, rows: [] };
+      g.rows.push(p);
+      map.set(p.tempatMagang.id, g);
+    });
+    const urut: Record<string, number> = { MENUNGGU: 0, AKTIF: 1, SELESAI: 2, BATAL: 3 };
+    return [...map.values()]
+      .map((g) => ({ ...g, rows: [...g.rows].sort((a, b) => urut[a.status] - urut[b.status]) }))
+      .sort((a, b) => Number(b.rows.some((r) => r.status === "MENUNGGU")) - Number(a.rows.some((r) => r.status === "MENUNGGU"))
+        || a.nama.localeCompare(b.nama, "id", { sensitivity: "base" }));
+  }, [displayList]);
+
+  const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
+
   return (
     <div className="lg:p-1">
 
@@ -164,8 +180,6 @@ export default function AdminMagangPenempatanPage() {
       </div>
       </div>
 
-      <PengajuanMenungguPanel list={penempatanList} onBuka={setPengajuanRows} />
-
       <PenempatanFilterBar
         search={search} onSearch={setSearch}
         statusFilter={statusFilter} onStatusFilter={setStatusFilter}
@@ -176,18 +190,43 @@ export default function AdminMagangPenempatanPage() {
         mobileNative
       />
 
-      <PenempatanTable
-        loading={loading}
-        list={displayList}
-        busyId={busyId}
-        onUbahStatus={ubahStatus}
-        onEdit={setEditTarget}
-        onHapus={hapus}
-        onTetapkanTempat={setTetapkanRows}
-        mobileNative
-      />
+      <div className="card-pisah space-y-1.5 rounded-3xl border border-slate-100 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-4">
+        {loading ? (
+          [0, 1, 2].map((i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-700" />)
+        ) : grup.length === 0 ? (
+          <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
+        ) : grup.map((g) => {
+          const menunggu = g.rows.filter((r) => r.status === "MENUNGGU").length;
+          const aktif = g.rows.filter((r) => r.status === "AKTIF").length;
+          return (
+            <button key={g.id} type="button" onClick={() => setBukaTempat(g.id)}
+              className="flex w-full items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={15} /></span>
+              <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white">{g.nama}</p>
+              {menunggu > 0 && (
+                <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: STATUS_PENEMPATAN_CFG.MENUNGGU.bg, color: STATUS_PENEMPATAN_CFG.MENUNGGU.clr }}>{menunggu} menunggu</span>
+              )}
+              {aktif > 0 && (
+                <span className="hidden shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold sm:inline" style={{ background: "#E4F5EC", color: "#22A06B" }}>{aktif} aktif</span>
+              )}
+              <span className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>
+                <Users size={11} /> {g.rows.length}
+              </span>
+              <ChevronRightIcon size={16} className="shrink-0 text-[#F26A3D]" />
+            </button>
+          );
+        })}
+      </div>
       </div>
 
+      <AnimatePresence>
+        {grupBuka && (
+          <PenempatanTempatModal judul={grupBuka.nama} rows={grupBuka.rows} busyId={busyId}
+            onPeriksa={(p) => setPengajuanRows([p])} onTetapkanGuru={setTetapkanRows}
+            onUbahStatus={ubahStatus} onEdit={setEditTarget} onHapus={hapus}
+            onClose={() => setBukaTempat(null)} />
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {showKelolaTempat && (
           <KelolaTempatModal
