@@ -7,7 +7,7 @@ import { BarChart3, Building2, ClipboardCheck, ClipboardList } from "lucide-reac
 
 type Role = "admin" | "guru" | "siswa";
 
-const WARNA = ["#3E03B3", "#F26A3D", "#22A06B", "#0EA5E9"];
+const WARNA = ["#3E03B3"];
 
 export function PklMobileTabs({ role }: { role: Role }) {
   const pathname = usePathname();
