@@ -17,7 +17,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, onPilih, onClose }: 
     { icon: User, label: "Kepala instansi", value: i.namaPimpinan, bg: "#E0F2FE", fg: "#0EA5E9" },
     { icon: MapPin, label: "Alamat", value: formatAlamat(i), bg: "#FFE9E2", fg: "#E8562B" },
     {
-      icon: Phone, label: "WA instansi", bg: "#F6FEE8", fg: "#5D900F",
+      icon: Phone, label: "WA instansi", bg: "#E4F5EC", fg: "#22A06B",
       value: i.noWaUsaha ? (wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="underline">{i.noWaUsaha}</a> : i.noWaUsaha) : null,
     },
   ].filter((x) => x.value && x.value !== "-");
@@ -58,8 +58,8 @@ export function InstansiDetailModal({ instansi: i, dipilih, onPilih, onClose }: 
 
           <div>
             <p className="mb-2 flex items-center gap-1.5 text-sm font-bold text-slate-800 dark:text-white">
-              <Users size={15} className="text-[#5D900F]" /> Siswa PKL di sini
-              <span className="rounded-lg px-1.5 text-[11px]" style={{ background: "#F6FEE8", color: "#5D900F" }}>{i.siswa.length}</span>
+              <Users size={15} className="text-[#22A06B]" /> Siswa PKL di sini
+              <span className="rounded-lg px-1.5 text-[11px]" style={{ background: "#E4F5EC", color: "#22A06B" }}>{i.siswa.length}</span>
             </p>
             {i.siswa.length === 0 ? (
               <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400">Belum ada siswa terverifikasi</p>
@@ -78,7 +78,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, onPilih, onClose }: 
 
           {onPilih && !penuh && (
             <button type="button" onClick={() => { onPilih(i); onClose(); }}
-              className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white ${dipilih ? "bg-[#5D900F]" : "bg-[#F26A3D]"}`}>
+              className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white ${dipilih ? "bg-[#22A06B]" : "bg-[#F26A3D]"}`}>
               {dipilih ? <><CheckCircle2 size={16} /> Instansi dipilih</> : "Pilih instansi ini"}
             </button>
           )}

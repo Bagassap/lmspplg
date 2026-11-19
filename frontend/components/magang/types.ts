@@ -90,7 +90,7 @@ export type Instansi = {
 
 export const STATUS_PENDAFTARAN_CFG: Record<StatusPendaftaran, { label: string; bg: string; clr: string }> = {
   MENUNGGU: { label: "Menunggu verifikasi", bg: "#F1EDFA", clr: "#3E03B3" },
-  DITERIMA: { label: "Terverifikasi", bg: "#F6FEE8", clr: "#5D900F" },
+  DITERIMA: { label: "Terverifikasi", bg: "#E4F5EC", clr: "#22A06B" },
   DITOLAK: { label: "Ditolak", bg: "#FEE2E2", clr: "#DC2626" },
 };
 

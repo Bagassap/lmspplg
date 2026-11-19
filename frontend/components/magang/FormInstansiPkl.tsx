@@ -62,7 +62,7 @@ export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
 
       <div className="space-y-3">
         {dipilih ? (
-          <div className="flex items-start gap-3 rounded-2xl bg-[#F6FEE8] p-3.5 ring-1 ring-[#5D900F]/30 dark:bg-slate-700">
+          <div className="flex items-start gap-3 rounded-2xl bg-[#E4F5EC] p-3.5 ring-1 ring-[#22A06B]/30 dark:bg-slate-700">
             <div className="min-w-0 flex-1 space-y-1 text-xs text-slate-700 dark:text-slate-200">
               <p className="text-sm font-extrabold text-slate-900 dark:text-white">{dipilih.namaTempat}</p>
               {dipilih.namaPimpinan && <p className="flex items-start gap-1.5"><User size={12} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" /> {dipilih.namaPimpinan}</p>}
@@ -92,7 +92,7 @@ export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
           <input ref={fileRef} type="file" accept={ACCEPT} className="hidden" onChange={(e) => pilihBerkas(e.target.files?.[0])} />
           <button type="button" onClick={() => fileRef.current?.click()}
             className="flex min-h-11 w-full items-center gap-3 rounded-2xl border-2 border-dashed border-[#0EA5E9]/40 bg-[#E0F2FE]/60 px-4 py-2.5 text-left dark:bg-slate-700">
-            {surat ? <FileText size={16} className="shrink-0 text-[#5D900F]" /> : <Upload size={16} className="shrink-0 text-[#0EA5E9]" />}
+            {surat ? <FileText size={16} className="shrink-0 text-[#22A06B]" /> : <Upload size={16} className="shrink-0 text-[#0EA5E9]" />}
             <span className={`min-w-0 flex-1 truncate text-sm font-semibold ${surat ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"}`}>
               {surat ? surat.name : "Pilih berkas surat (PDF, Word, atau foto)"}
             </span>

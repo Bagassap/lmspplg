@@ -106,15 +106,9 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
 
           <div className="mt-3 space-y-2">
             {tempatList.map((t) => {
-              const terisi = t._count?.penempatan ?? 0;
               return (
                 <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3.5 py-2.5">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-900">{t.namaTempat}</p>
-                    <p className="truncate text-xs text-slate-600">
-                      Kuota {terisi}/{t.kuota}{t.dibuatSiswa ? " · diajukan siswa" : ""}
-                    </p>
-                  </div>
+                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">{t.namaTempat}</p>
                   <div className="flex shrink-0 gap-1.5">
                     <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#3E03B3]">
                       <Pencil size={13} />

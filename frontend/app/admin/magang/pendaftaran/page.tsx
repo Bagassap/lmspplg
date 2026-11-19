@@ -127,7 +127,7 @@ export default function AdminPendaftaranPklPage() {
                 </div>
                 <div className="mt-2 space-y-1 text-xs text-slate-700 dark:text-slate-200">
                   <p className="flex items-start gap-1.5"><MapPin size={12} className="mt-0.5 shrink-0 text-[#E8562B]" /> {formatAlamat(p)}</p>
-                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#5D900F]" />
+                  <p className="flex items-center gap-1.5"><Phone size={12} className="shrink-0 text-[#22A06B]" />
                     {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold underline">{p.noWa}</a> : p.noWa}
                   </p>
                   <p className="flex items-center gap-1.5"><Building2 size={12} className="shrink-0 text-[#0EA5E9]" /> {p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL"}</p>
@@ -140,7 +140,7 @@ export default function AdminPendaftaranPklPage() {
                       <XCircle size={13} /> Tolak
                     </button>
                     <button type="button" onClick={() => aksi(p, "terima")} disabled={busy}
-                      className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#5D900F] text-xs font-bold text-white disabled:opacity-50">
+                      className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#22A06B] text-xs font-bold text-white disabled:opacity-50">
                       {busy ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />} Verifikasi
                     </button>
                   </div>

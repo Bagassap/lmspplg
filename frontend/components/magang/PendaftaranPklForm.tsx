@@ -69,7 +69,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
             </p>
             {p.status === "DITERIMA" && (
               <button type="button" onClick={onLanjut}
-                className="mt-2.5 inline-flex h-10 items-center gap-2 rounded-xl bg-[#5D900F] px-4 text-xs font-bold text-white">
+                className="mt-2.5 inline-flex h-10 items-center gap-2 rounded-xl bg-[#22A06B] px-4 text-xs font-bold text-white">
                 Isi penempatan <ArrowRight size={14} />
               </button>
             )}

@@ -16,7 +16,7 @@ function fmt(iso: string) {
 const WARNA = {
   ungu: ["#F1EDFA", "#3E03B3"],
   oranye: ["#FFE9E2", "#E8562B"],
-  hijau: ["#F6FEE8", "#5D900F"],
+  hijau: ["#E4F5EC", "#22A06B"],
   biru: ["#E0F2FE", "#0EA5E9"],
   amber: ["#FFF4E0", "#D97706"],
 } as const;
