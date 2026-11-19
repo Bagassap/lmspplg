@@ -1,4 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
+import { SuratPermohonanService } from './surat-permohonan.service';
 import { TempatMagangService } from './tempat-magang.service';
 import { CreateTempatMagangDto } from './dto/create-tempat-magang.dto';
 import { UpdateTempatMagangDto } from './dto/update-tempat-magang.dto';
@@ -10,7 +12,23 @@ import { Role } from '../../generated/prisma/client';
 @UseGuards(JwtAuthGuard)
 @Controller('magang/tempat')
 export class TempatMagangController {
-  constructor(private readonly service: TempatMagangService) {}
+  constructor(
+    private readonly service: TempatMagangService,
+    private readonly surat: SuratPermohonanService,
+  ) {}
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get(':id/surat-permohonan')
+  async suratPermohonan(@Param('id') id: string, @Res() res: Response) {
+    const { buffer, filename } = await this.surat.buat(id);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
+  }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)

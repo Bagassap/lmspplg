@@ -128,7 +128,7 @@ export class PendaftaranMagangService {
       await this.notificationService.create({
         userId: row.siswa.userId,
         title: 'Pendaftaran PKL diverifikasi',
-        message: 'Pendaftaran PKL kamu sudah diverifikasi. Silakan isi data instansi di menu Penempatan.',
+        message: 'Pendaftaran PKL kamu sudah diverifikasi. Ambil surat permohonan PKL di Gedung G Lab PPLG, lalu isi data instansi di menu Penempatan.',
         type: NotificationType.MAGANG,
         link: '/magang/penempatan',
       });

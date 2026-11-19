@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { ChevronLeft, Users } from "lucide-react";
+import { ChevronLeft, FileDown, Loader2, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
@@ -12,7 +12,7 @@ import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import { PenempatanFilterBar, type PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
-import { formatAlamat, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
+import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -24,7 +24,7 @@ const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: st
   { value: "BATAL", label: "batal", bg: "#FEE2E2", clr: "#DC2626" },
 ];
 
-const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 9.5rem";
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 12rem";
 
 
 export default function AdminMagangPenempatanPage() {
@@ -42,12 +42,42 @@ export default function AdminMagangPenempatanPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<PenempatanStatusFilter>("");
   const [bukaTempat, setBukaTempat] = useState<string | null>(null);
+  const [terverifikasi, setTerverifikasi] = useState<PendaftaranMagang[]>([]);
+  const [unduhId, setUnduhId] = useState<string | null>(null);
 
   const loadTempat = useCallback(async () => {
     const res = await fetch("/api/magang/tempat", { cache: "no-store" });
     const list = await res.json().catch(() => []);
     setTempatList(Array.isArray(list) ? list : []);
   }, []);
+
+  const loadTerverifikasi = useCallback(async () => {
+    const res = await fetch("/api/magang/pendaftaran?status=DITERIMA", { cache: "no-store" });
+    const list = await res.json().catch(() => []);
+    setTerverifikasi(Array.isArray(list) ? list : []);
+  }, []);
+
+  async function unduhSurat(id: string) {
+    setUnduhId(id);
+    try {
+      const res = await fetch(`/api/magang/tempat/${id}/surat-permohonan`, { cache: "no-store" });
+      if (!res.ok) {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ?? "Gagal membuat surat permohonan", "");
+        return;
+      }
+      const blob = await res.blob();
+      const nama = /filename="([^"]+)"/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "Surat_Permohonan_PKL.docx";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nama;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setUnduhId(null);
+    }
+  }
 
   const loadPenempatan = useCallback(async () => {
     const res = await fetch("/api/magang/penempatan", { cache: "no-store" });
@@ -63,8 +93,8 @@ export default function AdminMagangPenempatanPage() {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([loadTempat(), loadPenempatan(), loadGuru()]).finally(() => setLoading(false));
-  }, [loadTempat, loadPenempatan, loadGuru]);
+    Promise.all([loadTempat(), loadPenempatan(), loadGuru(), loadTerverifikasi()]).finally(() => setLoading(false));
+  }, [loadTempat, loadPenempatan, loadGuru, loadTerverifikasi]);
 
   async function ubahStatus(p: PenempatanMagang, status: StatusPenempatan) {
     setBusyId(p.id);
@@ -123,18 +153,30 @@ export default function AdminMagangPenempatanPage() {
   }, [penempatanList, search, statusFilter]);
 
   const grup = useMemo(() => {
-    const map = new Map<string, { id: string; nama: string; alamat: string; rows: PenempatanMagang[] }>();
+    const map = new Map<string, { id: string; nama: string; alamat: string; rows: PenempatanMagang[]; terdaftar: number }>();
     displayList.forEach((p) => {
-      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, alamat: formatAlamat(p.tempatMagang), rows: [] };
+      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, alamat: formatAlamat(p.tempatMagang), rows: [], terdaftar: 0 };
       g.rows.push(p);
       map.set(p.tempatMagang.id, g);
+    });
+    const q = search.trim().toLowerCase();
+    terverifikasi.forEach((d) => {
+      const t = d.tempatMagang;
+      if (!t) return;
+      if (!map.has(t.id)) {
+        if (statusFilter) return;
+        if (q && !t.namaTempat.toLowerCase().includes(q)) return;
+      }
+      const g = map.get(t.id) ?? { id: t.id, nama: t.namaTempat, alamat: formatAlamat(t), rows: [], terdaftar: 0 };
+      g.terdaftar += 1;
+      map.set(t.id, g);
     });
     const urut: Record<string, number> = { MENUNGGU: 0, AKTIF: 1, SELESAI: 2, BATAL: 3 };
     return [...map.values()]
       .map((g) => ({ ...g, rows: [...g.rows].sort((a, b) => urut[a.status] - urut[b.status]) }))
       .sort((a, b) => Number(b.rows.some((r) => r.status === "MENUNGGU")) - Number(a.rows.some((r) => r.status === "MENUNGGU"))
         || a.nama.localeCompare(b.nama, "id", { sensitivity: "base" }));
-  }, [displayList]);
+  }, [displayList, terverifikasi, search, statusFilter]);
 
   const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
 
@@ -191,6 +233,11 @@ export default function AdminMagangPenempatanPage() {
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-white" title={g.nama}>{g.nama}</p>
                     <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
                     <div className="flex flex-wrap gap-1">
+                      {g.terdaftar > 0 && (
+                        <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
+                          {g.terdaftar} terverifikasi
+                        </span>
+                      )}
                       {CHIP_STATUS.map((w) => {
                         const n = g.rows.filter((r) => r.status === w.value).length;
                         if (!n) return null;
@@ -201,9 +248,14 @@ export default function AdminMagangPenempatanPage() {
                         );
                       })}
                     </div>
-                    <div className="flex justify-end">
-                      <button type="button" onClick={() => setBukaTempat(g.id)}
-                        className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
+                    <div className="flex justify-end gap-1.5">
+                      <button type="button" onClick={() => unduhSurat(g.id)} disabled={unduhId === g.id}
+                        title="Unduh surat permohonan (Word)" aria-label="Unduh surat permohonan"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] disabled:opacity-50">
+                        {unduhId === g.id ? <Loader2 size={14} className="animate-spin" /> : <FileDown size={14} />}
+                      </button>
+                      <button type="button" onClick={() => setBukaTempat(g.id)} disabled={g.rows.length === 0}
+                        className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-40">
                         <Users size={13} /> Lihat siswa ({g.rows.length})
                       </button>
                     </div>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Building2, ClipboardList, Lock } from "lucide-react";
+import { ArrowRight, Building2, ClipboardList, FileText, Lock } from "lucide-react";
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
 import { FormInstansiPkl } from "@/components/magang/FormInstansiPkl";
 import { PendaftaranPklForm } from "@/components/magang/PendaftaranPklForm";
@@ -77,7 +77,18 @@ export default function SiswaMagangPenempatanPage() {
           </button>
         </div>
       ) : (
+        <>
+        <div className="flex items-start gap-3 rounded-3xl p-4" style={{ background: "#FFF4E0" }}>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-[#D97706] dark:bg-slate-800"><FileText size={20} /></span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-extrabold text-[#B45309] dark:text-[#FBBF24]">Ambil surat permohonan PKL</p>
+            <p className="text-xs leading-relaxed text-slate-700 dark:text-slate-200">
+              Pendaftaranmu sudah diverifikasi. Ambil surat permohonan PKL di <b>Gedung G Lab PPLG</b>, serahkan ke instansi, lalu isi form penempatan di bawah ini beserta bukti surat dari instansi.
+            </p>
+          </div>
+        </div>
         <FormInstansiPkl key={dipilih?.id ?? "manual"} awal={dipilih} onTerkirim={terkirim} />
+        </>
       )}
 
       {riwayat.length > 0 && (

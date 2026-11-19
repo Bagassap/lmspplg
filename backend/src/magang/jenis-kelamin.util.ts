@@ -6,6 +6,8 @@ export function pastikanJenisKelaminCocok(
 ) {
   if (!tempat.jenisKelamin || !siswa.jenisKelamin) return;
   if (tempat.jenisKelamin !== siswa.jenisKelamin) {
-    throw new BadRequestException(`"${tempat.namaTempat}" hanya menerima siswa ${tempat.jenisKelamin.toLowerCase()}`);
+    throw new BadRequestException(
+      `"${tempat.namaTempat}" hanya menerima siswa ${tempat.jenisKelamin.toLowerCase()}`,
+    );
   }
 }
