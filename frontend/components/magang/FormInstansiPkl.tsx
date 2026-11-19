@@ -55,12 +55,9 @@ export function FormInstansiPkl({ dipilih, onBatalPilih, onTerkirim }: {
 
   return (
     <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
-      <div className="mb-4 flex items-start gap-3">
+      <div className="mb-4 flex items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><Building2 size={18} /></span>
-        <div className="min-w-0 flex-1">
-          <p className="text-base font-extrabold text-slate-900 dark:text-white">Formulir Penempatan PKL</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">Isi data instansi tempat PKL, atau pilih instansi yang sudah ada di daftar.</p>
-        </div>
+        <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Formulir Penempatan PKL</p>
       </div>
 
       <div className="space-y-3">

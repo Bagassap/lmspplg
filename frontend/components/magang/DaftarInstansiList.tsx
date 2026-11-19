@@ -5,11 +5,10 @@ import { Building2, CheckCircle2, MapPin, Phone, Search, User, Users } from "luc
 import { toTitleCase, waLink } from "@/components/data-siswa/shared";
 import { formatAlamat, type Instansi } from "./types";
 
-export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", keterangan, onPilih, pilihId }: {
+export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId }: {
   list: Instansi[];
   loading: boolean;
   judul?: string;
-  keterangan?: string;
   onPilih?: (i: Instansi) => void;
   pilihId?: string | null;
 }) {
@@ -25,12 +24,9 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
 
   return (
     <div className="flex min-h-0 flex-col rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
-      <div className="mb-3 flex items-start gap-3">
+      <div className="mb-3 flex items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><Building2 size={18} /></span>
-        <div className="min-w-0 flex-1">
-          <p className="text-base font-extrabold text-slate-900 dark:text-white">{judul} <span className="font-medium text-slate-500 dark:text-slate-400">({list.length})</span></p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">{keterangan ?? "Instansi yang sudah terdaftar dan diverifikasi beserta siswa yang PKL di sana."}</p>
-        </div>
+        <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">{judul} <span className="font-medium text-slate-500 dark:text-slate-400">({list.length})</span></p>
       </div>
 
       <div className="relative mb-3">

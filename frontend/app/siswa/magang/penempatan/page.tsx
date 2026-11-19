@@ -35,7 +35,7 @@ export default function SiswaMagangPenempatanPage() {
   }
 
   return (
-    <div className="grid items-start gap-5 lg:grid-cols-2 lg:p-1">
+    <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:p-1">
       <div className="space-y-4">
         {loading ? (
           <div className="h-72 animate-pulse rounded-3xl bg-white dark:bg-slate-800" />

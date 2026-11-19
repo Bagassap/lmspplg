@@ -64,7 +64,7 @@ export default function SiswaDaftarPklPage() {
   const status = p ? STATUS_PENDAFTARAN_CFG[p.status] : null;
 
   return (
-    <div className="grid items-start gap-5 lg:grid-cols-2 lg:p-1">
+    <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:p-1">
       <div className="space-y-4">
         {p && status && (
           <div className="flex items-start gap-3 rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-800">
@@ -93,12 +93,9 @@ export default function SiswaDaftarPklPage() {
         )}
 
         <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
-          <div className="mb-4 flex items-start gap-3">
+          <div className="mb-4 flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><ClipboardList size={18} /></span>
-            <div className="min-w-0 flex-1">
-              <p className="text-base font-extrabold text-slate-900 dark:text-white">Formulir Pendaftaran PKL</p>
-              <p className="text-xs text-slate-600 dark:text-slate-300">Isi data diri dengan benar. Setelah diverifikasi admin, kamu bisa mengisi penempatan.</p>
-            </div>
+            <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Formulir Pendaftaran PKL</p>
           </div>
 
           {loading ? (

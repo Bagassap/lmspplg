@@ -55,12 +55,7 @@ export function StatusPenempatanSiswa({ p, onChanged }: { p: PenempatanMagang; o
         <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${aktif ? "bg-white/20 text-white" : "bg-[#FFE9E2] text-[#E8562B]"}`}>
           {aktif ? <Building2 size={22} /> : <Clock size={22} />}
         </span>
-        <div className="min-w-0 flex-1">
-          <p className={`text-base font-extrabold ${aktif ? "text-white" : "text-slate-900 dark:text-white"}`}>{aktif ? t.namaTempat : "Penempatan terkirim"}</p>
-          <p className={`text-xs ${aktif ? "text-white/80" : "text-slate-600 dark:text-slate-300"}`}>
-            {aktif ? "Penempatan PKL kamu sudah diverifikasi." : "Menunggu admin memverifikasi dan menetapkan guru pembimbing."}
-          </p>
-        </div>
+        <p className={`min-w-0 flex-1 text-base font-extrabold ${aktif ? "text-white" : "text-slate-900 dark:text-white"}`}>{aktif ? t.namaTempat : "Penempatan terkirim"}</p>
         <span className={`shrink-0 rounded-xl px-3 py-1 text-[11px] font-bold ${aktif ? "bg-white/20 text-white" : ""}`}
           style={aktif ? undefined : { background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
       </div>
