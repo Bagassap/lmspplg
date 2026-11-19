@@ -26,7 +26,7 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
             <button key={t.label} type="button" onClick={() => onChange(t.value)}
               className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-left transition-all"
               style={aktif
-                ? { background: t.clr, color: "#fff", boxShadow: `0 8px 20px -8px ${t.clr}` }
+                ? { background: t.clr, color: "#fff" }
                 : { background: t.bg, color: t.clr }}>
               <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${aktif ? "" : "bg-white/70 dark:bg-slate-900/40"}`}
                 style={aktif ? { background: "rgba(255,255,255,0.22)", color: "#fff" } : { color: t.clr }}>
