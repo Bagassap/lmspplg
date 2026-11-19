@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 export type StatusFilterItem<T extends string> = {
   value: T;
@@ -11,10 +11,11 @@ export type StatusFilterItem<T extends string> = {
   count: number;
 };
 
-export function StatusFilterCard<T extends string>({ items, value, onChange }: {
+export function StatusFilterCard<T extends string>({ items, value, onChange, aksi }: {
   items: StatusFilterItem<T>[];
   value: T;
   onChange: (v: T) => void;
+  aksi?: ReactNode;
 }) {
   return (
     <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -40,6 +41,7 @@ export function StatusFilterCard<T extends string>({ items, value, onChange }: {
           );
         })}
       </div>
+      {aksi && <div className="mt-3 border-t border-slate-100 pt-3 dark:border-slate-700">{aksi}</div>}
     </div>
   );
 }

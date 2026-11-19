@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { Building2, CheckCircle2, ChevronLeft, Clock, FileDown, Flag, Loader2, Search, Trash2, Users, XCircle } from "lucide-react";
+import { Building2, ChevronLeft, Clock, FileDown, Loader2, Search, Trash2, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
@@ -28,10 +28,7 @@ const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: st
 const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(11rem,1.4fr) minmax(8rem,auto) 18rem";
 
 const STATUS_FILTER: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
-  { value: "MENUNGGU", label: "Menunggu", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
-  { value: "AKTIF", label: "Aktif", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2 },
-  { value: "SELESAI", label: "Selesai", bg: "#FFF4E0", clr: "#D97706", icon: Flag },
-  { value: "BATAL", label: "Batal", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle },
+  { value: "MENUNGGU", label: "Perlu diproses", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
   { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users },
 ];
 
@@ -228,7 +225,13 @@ export default function AdminMagangPenempatanPage() {
       <div className="mt-0 grid items-start gap-5 lg:mt-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
       <StatusFilterCard
         items={STATUS_FILTER.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
-        value={statusFilter} onChange={setStatusFilter} />
+        value={statusFilter} onChange={setStatusFilter}
+        aksi={
+          <button type="button" onClick={() => setShowKelolaTempat(true)}
+            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-[#FFE9E2] text-xs font-bold text-[#E8562B]">
+            <Building2 size={14} /> Kelola Tempat
+          </button>
+        } />
 
       <div className="card-pisah min-w-0 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center gap-3">
@@ -236,10 +239,6 @@ export default function AdminMagangPenempatanPage() {
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">
             Daftar Penempatan <span className="font-medium text-slate-400 dark:text-slate-500">({grup.length})</span>
           </p>
-          <button type="button" onClick={() => setShowKelolaTempat(true)}
-            className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
-            <Building2 size={14} /> Kelola Tempat
-          </button>
           <div className="relative w-full sm:w-64">
             <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari tempat, siswa, NIS…"
