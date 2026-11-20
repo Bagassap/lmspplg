@@ -4,18 +4,17 @@ import { useEffect, useMemo, useState, type ComponentType } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { BarChart3, Building2, ChevronDown, ChevronLeft, ClipboardCheck, ClipboardList, Loader2, Lock, LogIn, LogOut, MoreVertical } from "lucide-react";
+import { BarChart3, Building2, ChevronDown, ChevronLeft, ClipboardCheck, ClipboardList, Lock, LogIn, LogOut, MoreVertical } from "lucide-react";
 import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
 import { RiwayatAbsenPkl } from "./RiwayatAbsenPkl";
+import { LoadingState } from "@/components/shared/LoadingState";
 import { LaporDiriSiswaList } from "./LaporDiriSiswaList";
 
 type Role = "admin" | "guru" | "siswa";
 
 type Sub = { key: string; label: string; href: string; icon: typeof Building2; tone: Tone3D; Comp: ComponentType };
 
-const memuat = () => (
-  <div className="flex justify-center py-16"><Loader2 size={22} className="animate-spin text-[#3E03B3]" /></div>
-);
+const memuat = () => <LoadingState />;
 
 const HALAMAN: Record<Role, Omit<Sub, "href">[]> = {
   admin: [

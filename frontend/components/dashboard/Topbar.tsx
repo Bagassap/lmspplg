@@ -310,6 +310,7 @@ export function Topbar({ user }: { user: UserPayload }) {
 
   async function handleLogout() {
     sessionStorage.removeItem("lms_session");
+    sessionStorage.removeItem("lms_siswa_fitur");
     try { localStorage.removeItem("lms_last_path"); } catch {}
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.replace("/login");

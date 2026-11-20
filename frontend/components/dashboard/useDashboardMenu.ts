@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   LayoutDashboard, Megaphone, Users, Briefcase,
   FileText, KeyRound,
@@ -82,9 +82,31 @@ export const MENUS: Record<string, MenuItem[]> = {
   ],
 };
 
+const FITUR_KEY = "lms_siswa_fitur";
+type FiturCache = { kelasXII: boolean; magangAktif: boolean; ukkAktif: boolean };
+
+const tanpaLangganan = () => () => {};
+
+function bacaCacheFitur(): string | null {
+  try { return sessionStorage.getItem(FITUR_KEY); } catch { return null; }
+}
+
+function parseFitur(v: string | null): FiturCache | null {
+  try {
+    const d = JSON.parse(v ?? "null");
+    return d && typeof d === "object" ? d : null;
+  } catch {
+    return null;
+  }
+}
+
 export function useSiswaFitur(enabled = true) {
-  const [kelasXII, setKelasXII] = useState(false);
-  const [pengaturan, setPengaturan] = useState({ magangAktif: false, ukkAktif: false });
+  const cacheMentah = useSyncExternalStore(tanpaLangganan, bacaCacheFitur, () => null);
+  const cache = useMemo(() => parseFitur(cacheMentah), [cacheMentah]);
+  const [kelasXIIFetch, setKelasXII] = useState<boolean | null>(null);
+  const [aturFetch, setPengaturan] = useState<{ magangAktif: boolean; ukkAktif: boolean } | null>(null);
+  const [meSiap, setMeSiap] = useState(false);
+  const [aturSiap, setAturSiap] = useState(false);
 
   useEffect(() => {
     if (!enabled) return;
@@ -96,18 +118,30 @@ export function useSiswaFitur(enabled = true) {
         const namaKelas = me?.siswa?.kelas?.nama?.trim().toUpperCase() ?? "";
         setKelasXII(namaKelas.startsWith("XII") || /^12(?!\d)/.test(namaKelas));
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setMeSiap(true); });
     fetch("/api/pengaturan", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d: { magangAktif?: boolean; ukkAktif?: boolean } | null) => {
         if (cancelled || !d) return;
         setPengaturan({ magangAktif: !!d.magangAktif, ukkAktif: !!d.ukkAktif });
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setAturSiap(true); });
     return () => { cancelled = true; };
   }, [enabled]);
 
+  const kelasXII = kelasXIIFetch ?? cache?.kelasXII ?? false;
+  const pengaturan = aturFetch ?? { magangAktif: cache?.magangAktif ?? false, ukkAktif: cache?.ukkAktif ?? false };
+  const siap = (meSiap && aturSiap) || !!cache;
+
+  useEffect(() => {
+    if (!enabled || !meSiap || !aturSiap) return;
+    try { sessionStorage.setItem(FITUR_KEY, JSON.stringify({ kelasXII, magangAktif: pengaturan.magangAktif, ukkAktif: pengaturan.ukkAktif })); } catch {}
+  }, [enabled, meSiap, aturSiap, kelasXII, pengaturan.magangAktif, pengaturan.ukkAktif]);
+
   return {
+    siap,
     kelasXII,
     magangAktif: pengaturan.magangAktif,
     ukkAktif: pengaturan.ukkAktif,

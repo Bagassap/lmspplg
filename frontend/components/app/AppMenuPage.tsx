@@ -66,7 +66,7 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
 
   async function logout() {
     setOut(true);
-    try { sessionStorage.removeItem("lms_session"); } catch {}
+    try { sessionStorage.removeItem("lms_session"); sessionStorage.removeItem("lms_siswa_fitur"); } catch {}
     try { localStorage.removeItem("lms_last_path"); } catch {}
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.replace("/login");

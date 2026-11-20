@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import LockedFeature from "@/components/shared/LockedFeature";
 import { PklHub } from "@/components/magang/PklHub";
+import { LoadingState } from "@/components/shared/LoadingState";
 
 export default function GuruMagangPage() {
   const [adaBimbingan, setAdaBimbingan] = useState<boolean | null>(null);
@@ -16,7 +17,7 @@ export default function GuruMagangPage() {
     return () => { batal = true; };
   }, []);
 
-  if (adaBimbingan === null) return null;
+  if (adaBimbingan === null) return <LoadingState className="min-h-[60dvh]" />;
   if (adaBimbingan) return <PklHub role="guru" />;
   return <LockedFeature role="guru" type="magang" />;
 }

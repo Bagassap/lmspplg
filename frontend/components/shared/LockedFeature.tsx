@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, Clock, Lock, Sparkles } from "lucide-react";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
+import { LoadingState } from "@/components/shared/LoadingState";
 
 type FeatureType = "magang" | "ujian-ukk";
 
@@ -39,6 +40,7 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
     if (aktif) router.replace(target);
   }, [aktif, target, router]);
   if (aktif) return null;
+  if (role === "siswa" && !fitur.siap) return <LoadingState className="min-h-[60dvh]" />;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden" style={{ background: app ? "#FFFFFF" : BRAND_GRADIENT }}>
