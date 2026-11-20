@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type ComponentType } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { BarChart3, Building2, ChevronDown, ChevronLeft, ClipboardCheck, ClipboardList, Loader2, MoreVertical } from "lucide-react";
+import { BarChart3, Building2, ChevronDown, ChevronLeft, ClipboardCheck, ClipboardList, Loader2, Lock, LogIn, LogOut, MoreVertical } from "lucide-react";
 import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
 import { RiwayatAbsenPkl } from "./RiwayatAbsenPkl";
 import { LaporDiriSiswaList } from "./LaporDiriSiswaList";
@@ -96,7 +96,26 @@ export function PklHub({ role }: { role: Role }) {
                             <RiwayatAbsenPkl />
                           </>
                         ) : (
-                          <p className="py-4 text-center text-sm text-slate-500 dark:text-slate-400">Absensi terbuka setelah penempatan PKL diverifikasi admin</p>
+                          <>
+                            <div className="grid grid-cols-2 gap-3">
+                              {([["Absen Datang", LogIn], ["Absen Pulang", LogOut]] as const).map(([label, Ikon]) => (
+                                <button key={label} type="button" disabled
+                                  className="flex flex-col items-center gap-2 rounded-2xl bg-slate-100 px-3 py-4 text-slate-400 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-500">
+                                  <span className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
+                                    <Ikon size={20} />
+                                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-slate-400 text-white dark:bg-slate-600">
+                                      <Lock size={10} />
+                                    </span>
+                                  </span>
+                                  <span className="text-xs font-bold">{label}</span>
+                                </button>
+                              ))}
+                            </div>
+                            <p className="flex items-start gap-2 rounded-2xl bg-[#F1EDFA] px-3 py-2.5 text-xs font-semibold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
+                              <Lock size={13} className="mt-0.5 shrink-0" /> Absen terbuka setelah pendaftaran dan penempatan PKL diverifikasi admin
+                            </p>
+                            <RiwayatAbsenPkl />
+                          </>
                         )}
                       </div>
                     </motion.div>
