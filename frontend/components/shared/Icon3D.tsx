@@ -95,8 +95,10 @@ export function OptionCard3D({
       disabled={disabled}
       title={title}
       onClick={onClick}
-      className={`flex min-w-0 ${stack ? "flex-col items-center justify-center gap-1.5 text-center" : "items-center gap-2.5 text-left"} rounded-2xl border bg-white p-2.5 transition-all disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-800 ${
-        active ? "shadow-sm" : "border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600"
+      className={`flex min-w-0 ${stack ? "flex-col items-center justify-center gap-1.5 text-center" : "items-center gap-2.5 text-left"} rounded-2xl border p-2.5 transition-all disabled:cursor-not-allowed disabled:opacity-40 ${
+        active
+          ? "bg-white shadow-sm dark:bg-slate-800"
+          : "border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-700/50 dark:hover:border-slate-500"
       }`}
       style={active ? { borderColor: c1, boxShadow: `0 0 0 1px ${c1}` } : undefined}
     >
