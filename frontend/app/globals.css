@@ -644,3 +644,18 @@ html.dark [class*="bg-[#E5E7EB]"]:not([class*="dark:bg-"]), html.dark [style*="b
 .pkl-inline .rounded-t-\[28px\] { padding: 0 !important; background: transparent !important; }
 
 :is([class*="rounded-3xl"], [class*="rounded-2xl"], [class*="rounded-xl"], [class*="rounded-lg"])[class~="border"]:not(input):not(select):not(textarea):not([class*="border-dashed"]):not([style*="border-color"]) { border-color: transparent !important; }
+
+@media (max-width: 1023px) {
+  html.dark :is([class~="dark:bg-slate-800"], [class~="dark:bg-[#1E293B]"], [class~="dark:bg-[#1e293b]"]) {
+    background-color: #2a3852 !important;
+  }
+  html.dark :is([class~="dark:bg-slate-700"], [class~="dark:bg-slate-700/50"]) {
+    background-color: #3a4a66 !important;
+  }
+  html.dark :is([class~="dark:bg-slate-900"], [class~="dark:bg-[#0F172A]"]) {
+    background-color: #111a2e !important;
+  }
+  html.dark .fixed > :is([class~="bg-black/60"], [class~="bg-black/50"], [class~="bg-black/40"], [class~="bg-slate-900/40"], [class~="bg-slate-900/50"]) {
+    background-color: rgba(0, 0, 0, 0.78) !important;
+  }
+}
