@@ -16,7 +16,7 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
 }) {
   const toast = useToast();
-  const [guruId, setGuruId] = useState("");
+  const [guruId, setGuruId] = useState(rows.length === 1 ? rows[0].guruPembimbing?.id ?? "" : "");
   const [saving, setSaving] = useState(false);
   const t = rows[0].tempatMagang;
   const surat = rows.find((r) => r.suratKeteranganUrl);

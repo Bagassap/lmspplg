@@ -38,8 +38,8 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
           <span className="shrink-0 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>{rows.length} siswa</span>
           {bisaTetapkan.length > 0 && (
             <button type="button" onClick={() => onTetapkanGuru(bisaTetapkan)}
-              className="hidden h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white sm:flex">
-              <UserCheck size={13} /> Ganti guru
+              className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
+              <UserCheck size={13} /> <span className="hidden sm:inline">Pembimbing semua</span><span className="sm:hidden">Semua</span>
             </button>
           )}
           <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><X size={16} /></button>
@@ -87,9 +87,19 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                   </button>
                 </div>
                 <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 pl-[42px] text-xs text-slate-600 dark:text-slate-300">
-                  <span className="flex min-w-0 items-center gap-1"><UserCheck size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
-                    <span className="truncate">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ada pembimbing"}</span>
-                  </span>
+                  {p.status === "AKTIF" ? (
+                    <button type="button" onClick={() => onTetapkanGuru([p])} disabled={busy}
+                      className="flex min-w-0 items-center gap-1 rounded-lg px-2 py-1 font-bold disabled:opacity-50"
+                      style={p.guruPembimbing ? { background: "#F1EDFA", color: "#3E03B3" } : { background: "#3E03B3", color: "#fff" }}>
+                      <UserCheck size={12} className="shrink-0" />
+                      <span className="truncate">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Tetapkan pembimbing"}</span>
+                      {p.guruPembimbing && <Pencil size={10} className="shrink-0" />}
+                    </button>
+                  ) : (
+                    <span className="flex min-w-0 items-center gap-1"><UserCheck size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
+                      <span className="truncate">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ada pembimbing"}</span>
+                    </span>
+                  )}
                   <span className="flex shrink-0 items-center gap-1"><CalendarDays size={12} className="shrink-0 text-[#D97706]" />{fmt(p.status === "MENUNGGU" ? p.createdAt : p.tanggalMulai)}</span>
                   {p.suratKeteranganUrl && (
                     <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
