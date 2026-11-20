@@ -10,6 +10,7 @@ import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/Sta
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
 import { pesanError } from "@/components/magang/pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
+import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
 const TABS: Omit<StatusFilterItem<StatusPendaftaran | "">, "count">[] = [
   { value: "MENUNGGU", label: "Menunggu", bg: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, clr: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr, icon: Clock },
@@ -47,6 +48,7 @@ export default function AdminPendaftaranPklPage() {
       .finally(() => setLoading(false));
   }, []);
   useEffect(() => { load(); }, [load]);
+  useAutoRefresh(load);
 
   async function aksi(p: PendaftaranMagang, jenis: "terima" | "tolak" | "batal-verifikasi", body?: object) {
     setBusyId(p.id);

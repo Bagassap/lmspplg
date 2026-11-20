@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Briefcase, ChevronLeft } from "lucide-react";
 import { PenempatanTable } from "@/components/magang/PenempatanTable";
 import type { PenempatanMagang } from "@/components/magang/types";
 import { AppEmpty } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
 export default function GuruMagangPenempatanPage() {
   const router = useRouter();
@@ -14,13 +15,15 @@ export default function GuruMagangPenempatanPage() {
   const [list, setList] = useState<PenempatanMagang[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const muat = useCallback(() => {
     fetch("/api/magang/penempatan/bimbingan", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setList(Array.isArray(d) ? d : []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+  useEffect(() => { muat(); }, [muat]);
+  useAutoRefresh(muat);
 
   return (
     <div className="lg:p-1">

@@ -8,6 +8,7 @@ import { FormInstansiPkl } from "@/components/magang/FormInstansiPkl";
 import { PendaftaranPklForm } from "@/components/magang/PendaftaranPklForm";
 import { StatusPenempatanSiswa } from "@/components/magang/StatusPenempatanSiswa";
 import { STATUS_PENDAFTARAN_CFG, STATUS_PENEMPATAN_CFG, type Instansi, type PendaftaranSaya, type PenempatanMagang } from "@/components/magang/types";
+import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
 type Kategori = "daftar" | "penempatan";
 
@@ -37,6 +38,8 @@ export default function SiswaMagangPenempatanPage() {
   const terverifikasi = daftar?.pendaftaran?.status === "DITERIMA";
   const kategori: Kategori = kategoriPilihan ?? (berjalan || terverifikasi ? "penempatan" : "daftar");
   const bolehIsi = kategori === "penempatan" && !berjalan && terverifikasi;
+  const menungguAdmin = daftar?.pendaftaran?.status === "MENUNGGU" || berjalan?.status === "MENUNGGU";
+  useAutoRefresh(reload, 15_000, menungguAdmin);
 
   const rencanaId = daftar?.pendaftaran?.tempatMagangId ?? null;
   const rencana = instansi.list.find((x) => x.id === rencanaId && (x.sisa === null || x.sisa > 0)) ?? null;

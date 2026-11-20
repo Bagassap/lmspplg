@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Building2, ChevronLeft, ChevronRight, Search, Users } from "lucide-react";
 import { InstansiDetailModal } from "./InstansiDetailModal";
 import type { Instansi } from "./types";
+import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
 const PER_HALAMAN = 10;
 
@@ -109,5 +110,6 @@ export function useDaftarInstansi() {
       .finally(() => setLoading(false));
   }, []);
   useEffect(() => { reload(); }, [reload]);
+  useAutoRefresh(reload);
   return { list, loading, reload };
 }

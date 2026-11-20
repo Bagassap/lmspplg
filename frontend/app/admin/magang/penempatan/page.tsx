@@ -16,6 +16,7 @@ import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilte
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 import { namaSiswa } from "@/lib/nama";
+import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -124,6 +125,8 @@ export default function AdminMagangPenempatanPage() {
     setLoading(true);
     Promise.all([loadTempat(), loadPenempatan(), loadGuru(), loadTerverifikasi()]).finally(() => setLoading(false));
   }, [loadTempat, loadPenempatan, loadGuru, loadTerverifikasi]);
+  const segarkan = useCallback(() => { loadTempat(); loadPenempatan(); loadTerverifikasi(); }, [loadTempat, loadPenempatan, loadTerverifikasi]);
+  useAutoRefresh(segarkan);
 
   async function ubahStatus(p: PenempatanMagang, status: StatusPenempatan) {
     setBusyId(p.id);
