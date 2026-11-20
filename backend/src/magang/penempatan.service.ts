@@ -5,6 +5,7 @@ import { NotificationType } from '../../generated/prisma/client';
 import { todayJakarta } from '../common/utils/jakarta-date.util';
 import { pastikanJenisKelaminCocok } from './jenis-kelamin.util';
 import { AjukanPenempatanDto, TetapkanGuruDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
+import { pastikanKuotaTersedia } from './kuota.util';
 
 const INCLUDE_DETAIL = {
   siswa: {
@@ -90,8 +91,8 @@ export class PenempatanService {
         if (tempat._count.penempatan + 1 > tempat.kuota) {
           await this.prisma.tempatMagang.update({ where: { id: tempat.id }, data: { kuota: tempat._count.penempatan + 1 } });
         }
-      } else if (tempat.kuota - tempat._count.penempatan < 1) {
-        throw new BadRequestException(`Kuota "${tempat.namaTempat}" sudah penuh`);
+      } else {
+        await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
       }
       tempatId = tempat.id;
       namaTempat = tempat.namaTempat;
@@ -108,9 +109,7 @@ export class PenempatanService {
       });
       if (ada) {
         pastikanJenisKelaminCocok(ada, siswa);
-        if (!ada.dibuatSiswa && ada.kuota - ada._count.penempatan < 1) {
-          throw new BadRequestException(`Kuota "${ada.namaTempat}" sudah penuh`);
-        }
+        await pastikanKuotaTersedia(this.prisma, ada, siswa.id);
         const kosong = !ada.desa || !ada.kecamatan || !ada.kabupaten;
         await this.prisma.tempatMagang.update({
           where: { id: ada.id },
@@ -262,9 +261,7 @@ export class PenempatanService {
         include: { _count: { select: { penempatan: { where: { status: { in: AKTIF_ATAU_MENUNGGU } } } } } },
       });
       if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
-      if (tempat._count.penempatan >= tempat.kuota) {
-        throw new BadRequestException(`Kuota tempat "${tempat.namaTempat}" sudah penuh (${tempat._count.penempatan}/${tempat.kuota})`);
-      }
+      await pastikanKuotaTersedia(this.prisma, { ...tempat, dibuatSiswa: false }, existing.siswaId);
     }
 
     if (dto.status === 'AKTIF' && existing.status !== 'AKTIF') {

@@ -4,6 +4,7 @@ import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 import { DaftarMagangDto } from './dto/pendaftaran-magang.dto';
 import { pastikanJenisKelaminCocok } from './jenis-kelamin.util';
+import { pastikanKuotaTersedia } from './kuota.util';
 
 const INCLUDE_SISWA = {
   siswa: {
@@ -71,9 +72,10 @@ export class PendaftaranMagangService {
 
     const tempatMagangId = dto.tempatMagangId?.trim() || null;
     if (tempatMagangId) {
-      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId }, select: { namaTempat: true, jenisKelamin: true } });
+      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId }, select: { id: true, namaTempat: true, jenisKelamin: true, kuota: true, dibuatSiswa: true } });
       if (!tempat) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
       pastikanJenisKelaminCocok(tempat, siswa);
+      await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
     }
 
     const data = {
@@ -120,6 +122,10 @@ export class PendaftaranMagangService {
     const row = await this.prisma.pendaftaranMagang.findUnique({ where: { id }, include: { siswa: { select: { userId: true } } } });
     if (!row) throw new NotFoundException('Pendaftaran tidak ditemukan');
     if (row.status === 'DITERIMA') throw new BadRequestException('Pendaftaran ini sudah diverifikasi');
+    if (row.tempatMagangId) {
+      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: row.tempatMagangId }, select: { id: true, namaTempat: true, kuota: true, dibuatSiswa: true } });
+      if (tempat) await pastikanKuotaTersedia(this.prisma, tempat, row.siswaId);
+    }
     await this.prisma.pendaftaranMagang.update({
       where: { id },
       data: { status: 'DITERIMA', alasanTolak: null, diverifikasiAt: new Date() },

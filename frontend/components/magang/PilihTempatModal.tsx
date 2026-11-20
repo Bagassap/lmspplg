@@ -66,11 +66,12 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
               </button>
               {tampil.map((i, idx) => {
                 const aktif = nilai === i.id;
-                const terkunci = !aktif && !tempatCocokJenisKelamin(i, jenisKelamin);
+                const penuh = i.sisa !== null && i.sisa <= 0;
+                const terkunci = !aktif && (penuh || !tempatCocokJenisKelamin(i, jenisKelamin));
                 const gender = i.jenisKelamin === "Perempuan" ? "Putri" : i.jenisKelamin === "Laki-laki" ? "Putra" : "Putra/Putri";
                 return (
                   <button key={i.id} type="button" onClick={() => !terkunci && pilih(i.id)} disabled={terkunci}
-                    title={terkunci ? `Khusus ${gender.toLowerCase()}` : i.namaTempat}
+                    title={terkunci ? (penuh ? "Kuota penuh" : `Khusus ${gender.toLowerCase()}`) : i.namaTempat}
                     className={`grid w-full items-center gap-2 px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${aktif ? "bg-[#E4F5EC] dark:bg-[#22A06B]/20" : "hover:bg-slate-50 dark:hover:bg-slate-800"}`}
                     style={{ gridTemplateColumns: KOLOM }}>
                     <span className="flex justify-center text-xs font-bold text-slate-400">
@@ -78,7 +79,7 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
                     </span>
                     <span className="truncate text-sm font-semibold text-slate-800 dark:text-white">{i.namaTempat}</span>
                     <span className="text-center text-xs font-bold tabular-nums text-slate-600 dark:text-slate-300">
-                      {i.sisa !== null ? `${i.sisa}/${i.kuota}` : i.kuota}
+                      {penuh ? "Penuh" : i.sisa !== null ? `${i.sisa}/${i.kuota}` : i.kuota}
                     </span>
                     <span className="flex justify-center">
                       <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"

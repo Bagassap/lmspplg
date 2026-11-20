@@ -76,7 +76,7 @@ export class TempatMagangService {
       orderBy: { namaTempat: 'asc' },
     });
     return list.map((t) => {
-      const terisi = t.penempatan.length;
+      const terisi = new Set([...t.pendaftaran, ...t.penempatan].map((r) => r.siswa.id)).size;
       type SiswaRow = (typeof t.pendaftaran)[number]['siswa'];
       const susun = (rows: { siswa: SiswaRow }[]) => {
         const peta = new Map<string, { id: string; nama: string; kelas: string }>();
