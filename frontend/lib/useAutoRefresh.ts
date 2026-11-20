@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export function useAutoRefresh(muat: () => unknown, intervalMs = 15_000, aktif = true) {
+export function useAutoRefresh(muat: () => unknown, intervalMs = 3_000, aktif = true) {
   const ref = useRef(muat);
   useEffect(() => { ref.current = muat; }, [muat]);
 

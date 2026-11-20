@@ -39,7 +39,7 @@ export default function SiswaMagangPenempatanPage() {
   const kategori: Kategori = kategoriPilihan ?? (berjalan || terverifikasi ? "penempatan" : "daftar");
   const bolehIsi = kategori === "penempatan" && !berjalan && terverifikasi;
   const menungguAdmin = daftar?.pendaftaran?.status === "MENUNGGU" || berjalan?.status === "MENUNGGU";
-  useAutoRefresh(reload, 15_000, menungguAdmin);
+  useAutoRefresh(reload, 3_000, menungguAdmin);
 
   const rencanaId = daftar?.pendaftaran?.tempatMagangId ?? null;
   const rencana = instansi.list.find((x) => x.id === rencanaId && (x.sisa === null || x.sisa > 0)) ?? null;
