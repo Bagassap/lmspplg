@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Briefcase,
   ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Eye, X,
-  Users, TrendingUp, LogOut, FileText, Download, Bell, Check,
+  Users, TrendingUp, FileText, Download, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
@@ -20,7 +20,7 @@ import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
-import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
+import { STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTglSlash, avatarColor } from "@/components/absensi-harian/shared";
 import { OptionCard3D } from "@/components/shared/Icon3D";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi, RekapTempat, TempatMagang } from "@/components/absensi-magang/types";
 import { AppCard, AppSectionTitle } from "@/components/app/AppUI";
@@ -275,6 +275,8 @@ function MobileSiswaCard({
   );
 }
 
+const TEMPAT_WARNA = ["#3E03B3", "#F26A3D"];
+
 export default function AdminMagangAbsensiPage() {
   const appMode = useIsAppMode();
   const router = useRouter();
@@ -372,11 +374,10 @@ export default function AdminMagangAbsensiPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-
-        <div className="mb-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
-            <div className="lg:col-span-2">
-              <div className="mb-3 flex items-center justify-between">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Tempat PKL</p>
                 <div className="flex items-center gap-2">
                   {tempatPageCount > 1 && (
@@ -394,63 +395,43 @@ export default function AdminMagangAbsensiPage() {
               </div>
 
               {tempatList.length === 0 ? (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-2">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+                    <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  {tempatPageSlice.map((t) => {
-                    const s = tempatStat(t);
-                    const isSelected = t.id === selectedId;
+                <div className="flex flex-col gap-3">
+                  {tempatPageSlice.map((k, i) => {
+                    const s = tempatStat(k);
+                    const warna = TEMPAT_WARNA[i % TEMPAT_WARNA.length];
+                    const isSelected = k.id === selectedId;
                     return (
-                      <button type="button" key={t.id} onClick={() => setSelectedId(t.id)}
-                        className={`relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border bg-white px-4 py-4 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] dark:bg-slate-800 ${
-                          isSelected ? "border-[#3E03B3] dark:border-[#8F6DD3]" : "border-slate-100 dark:border-slate-700"
-                        }`}>
-                        <div className="relative flex items-center justify-between">
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.25),0_2px_4px_rgba(62,3,179,0.35)]"
-                            style={{ background: "linear-gradient(145deg, #0EA5E9 0%, #3E03B3 55%, #2D0281 100%)" }}>
-                            <Briefcase size={16} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]" />
-                          </span>
-                          <span className="text-[11px] font-bold tabular-nums text-slate-400 dark:text-slate-500">{s.pct}%</span>
+                      <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                        className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-4 py-4 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        style={{
+                          background: warna,
+                          boxShadow: isSelected ? `0 8px 24px ${warna}59` : "0 8px 24px rgba(0,0,0,0.15)",
+                          outline: isSelected ? `2px solid ${warna}` : "none",
+                          outlineOffset: "3px",
+                        }}>
+                        <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                        <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                          <Briefcase size={16} />
                         </div>
-
-                        <div className="relative">
-                          <p className="truncate text-lg font-black leading-tight text-slate-800 dark:text-white">{t.namaTempat}</p>
-                          <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                            {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                          </p>
+                        <div className="relative min-w-0 flex-1">
+                          <p className="truncate text-base font-black leading-tight">{k.namaTempat}</p>
+                          <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{s.hd}/{s.tt} hadir</p>
                         </div>
                       </button>
                     );
                   })}
                 </div>
               )}
-
-              {rekapAll.length > 0 && (
-                <div className="mt-4">
-                  <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
-                <a href="#status-kehadiran-hari-ini"
-                  className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  More <ArrowRight size={12} />
-                </a>
-              </div>
-              <BelumAbsenPanel siswaList={siswaList} />
             </div>
           </div>
-        </div>
 
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+          <div className="flex min-w-0 flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -467,42 +448,30 @@ export default function AdminMagangAbsensiPage() {
                   className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
               </div>
             </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-1.5 pb-1 sm:gap-2.5">
-              <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {rekapAll.length > 0 ? (
+                <KirimPengingatCard tanggal={tanggal} siswaList={rekapAll.flatMap((r) => r.siswa)} />
+              ) : <span />}
+              <BelumAbsenPanel siswaList={siswaList} inline />
+            </div>
+            <div className="mt-3 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
                 return (
                   <button key={String(opt.key)} type="button"
                     onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                    className="rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-5 sm:py-2.5 sm:text-sm"
+                    className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors"
                     style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
                     <span className={`flex items-center gap-1 sm:gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
-                      <opt.icon size={13} className="sm:hidden" />
-                      <opt.icon size={16} className="hidden sm:block" />
+                      <opt.icon size={13} />
                       {opt.label}
-                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] sm:px-2 sm:text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                         {opt.count}
                       </span>
                     </span>
                   </button>
                 );
               })}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <Users size={12} className="text-[#3E03B3]" />
-                Total {total} siswa
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <TrendingUp size={12} className="text-[#3E03B3]" />
-                Kehadiran {hadirPct}%
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <LogOut size={12} className="text-[#3E03B3]" />
-                Sudah pulang {pulangCount} siswa
-              </span>
             </div>
 
             <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
@@ -527,46 +496,48 @@ export default function AdminMagangAbsensiPage() {
             </div>
           </div>
 
-          <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
-                <FileText size={18} />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="mb-3 flex items-center gap-2.5">
+                <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
+                  <FileText size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {RANGE_MODE_CARDS.map((opt) => (
-                <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
-                  active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
-              ))}
-            </div>
-
-            {exportRange.rangeMode === "mingguan" && (
-              <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
-            )}
-
-            {exportRange.rangeMode === "bulanan" && (
-              <div className="mt-2 flex items-center gap-1.5">
-                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
+              <div className="flex flex-col gap-2">
+                {RANGE_MODE_CARDS.map((opt) => (
+                  <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                    active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
+                ))}
               </div>
-            )}
 
-            <div className="mt-3">
-              <ExportButtons tempatMagangId={selectedId} tempatNama={selected?.tempatMagang.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={siswaList} />
+              {exportRange.rangeMode === "mingguan" && (
+                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+              )}
+
+              {exportRange.rangeMode === "bulanan" && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                  </select>
+                  <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </div>
+              )}
+
+              <div className="mt-3">
+                <ExportButtons tempatMagangId={selectedId} tempatNama={selected?.tempatMagang.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={siswaList} />
+              </div>
+              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+                <Download size={11} className="shrink-0 text-primary" />
+                Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per tempat PKL (semua siswa) atau per siswa.
+              </p>
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={11} className="shrink-0 text-[#3E03B3]" />
-              Pilih rentang waktu, lalu klik salah satu tombol ekspor
-            </p>
           </div>
         </div>
       </div>

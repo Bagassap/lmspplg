@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardCheck, CalendarDays, Briefcase,
   ArrowRight, ChevronLeft, Eye, X,
-  Users, TrendingUp, LogOut, PieChart, FileText, Download, Bell, Check,
+  Users, TrendingUp, FileText, Download, Bell, Check,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
@@ -28,20 +28,6 @@ import { Rocket } from "@/components/app/Rocket";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AppStatusSheet } from "@/components/app/AppUI";
-
-function MiniStat({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
-  return (
-    <div className="flex h-full w-full items-center gap-2 rounded-2xl border-2 border-transparent bg-slate-50 px-3 py-2.5 dark:bg-slate-700">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500">
-        <Icon size={14} />
-      </span>
-      <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{value}</p>
-        <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">{label}</p>
-      </div>
-    </div>
-  );
-}
 
 function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { tempatMagangId: string; tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
   const app = useIsAppMode();
@@ -106,121 +92,6 @@ function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { temp
         </p>
       </div>
     </button>
-  );
-}
-
-function RingkasanKehadiranCard({
-  tempatList, selectedId, onSelectTempat, tempatStat, siswaList, rekap, hadirPct, total, pulangCount, belumAbsen, tanggal,
-}: {
-  tempatList: TempatMagang[]; selectedId: string; onSelectTempat: (id: string) => void;
-  tempatStat: (t: TempatMagang) => { hd: number; tt: number; pct: number };
-  siswaList: SiswaAbsensi[];
-  rekap: RekapTempat["rekap"]; hadirPct: number; total: number; pulangCount: number; belumAbsen: number;
-  tanggal: string;
-}) {
-  const segments = [
-    { key: "HADIR", value: rekap.HADIR, color: "#3E03B3", label: STATUS_CFG.HADIR.label },
-    { key: "IZIN", value: rekap.IZIN, color: "#0EA5E9", label: STATUS_CFG.IZIN.label },
-    { key: "SAKIT", value: rekap.SAKIT, color: "#10B981", label: STATUS_CFG.SAKIT.label },
-    { key: "ALPA", value: rekap.ALPA, color: "#F26A3D", label: STATUS_CFG.ALPA.label },
-  ];
-  const r = 40;
-  const circumference = 2 * Math.PI * r;
-  let cumulative = 0;
-
-  const sudahAbsen = total - belumAbsen;
-  const progresPct = total > 0 ? Math.round((sudahAbsen / total) * 100) : 0;
-
-  return (
-    <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      <div className="flex items-center gap-2.5">
-        <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
-          <PieChart size={18} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-sm font-bold text-slate-800 dark:text-white">Ringkasan Kehadiran</p>
-        </div>
-      </div>
-
-      <p className="mt-2.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-        Sudah <span className="font-bold text-slate-700 dark:text-slate-200">{sudahAbsen}</span> dari <span className="font-bold text-slate-700 dark:text-slate-200">{total}</span> siswa bimbingan tercatat absen hari ini
-        {belumAbsen > 0 ? `, ${belumAbsen} lagi belum absen.` : ", semua siswa sudah absen."}
-      </p>
-
-      <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="flex flex-1 flex-col gap-2.5">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] items-stretch justify-start gap-2.5">
-            {tempatList.map((t) => {
-              const s = tempatStat(t);
-              const isSelected = t.id === selectedId;
-              return (
-                <button type="button" key={t.id} onClick={() => onSelectTempat(t.id)}
-                  className={`flex h-full w-full items-center gap-2 rounded-2xl border-2 px-3 py-2.5 text-left transition-all ${
-                    isSelected
-                      ? "border-[#3E03B3] bg-[#F1EDFA] dark:border-[#8F6DD3] dark:bg-slate-700"
-                      : "border-transparent bg-slate-50 hover:border-slate-200 dark:bg-slate-700 dark:hover:border-slate-600"
-                  }`}>
-                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                    isSelected ? "bg-[#EFE9FD] icon-tile " : "bg-white text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                  }`}>
-                    <Briefcase size={14} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className={`truncate text-sm font-bold ${isSelected ? "text-[#3E03B3] dark:text-[#8F6DD3]" : "text-slate-700 dark:text-slate-200"}`}>
-                      {t.namaTempat}
-                    </p>
-                    <p className="truncate text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                      {s.hd}/{s.tt} hadir · {s.pct}%
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-
-            <MiniStat icon={ClipboardCheck} value={`${sudahAbsen}/${total}`} label={`Progres absen · ${progresPct}%`} />
-            <MiniStat icon={LogOut} value={pulangCount} label="Sudah pulang" />
-          </div>
-
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] justify-start gap-2.5">
-            <div style={{ gridColumn: `1 / span ${tempatList.length + 2}` }}>
-              <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex shrink-0 flex-wrap items-center justify-center gap-6">
-          <div className="flex flex-col gap-2.5">
-            {segments.map((s) => (
-              <div key={s.key} className="flex items-center gap-2 text-left">
-                <span className="h-3 w-3 shrink-0 rounded-xl" style={{ backgroundColor: s.color }} />
-                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{s.label} <span className="font-extrabold text-slate-900 dark:text-white">{s.value}</span> <span className="text-xs text-slate-400">({total > 0 ? Math.round((s.value / total) * 100) : 0}%)</span></span>
-              </div>
-            ))}
-          </div>
-          <div className="relative flex h-44 w-44 shrink-0 items-center justify-center">
-            <svg viewBox="0 0 100 100" className="h-44 w-44 -rotate-90">
-              <circle cx="50" cy="50" r={r} stroke="#E2E8F0" strokeWidth="14" fill="none" />
-              {total > 0 && segments.filter((s) => s.value > 0).map((s) => {
-                const pct = s.value / total;
-                const gap = segments.filter((x) => x.value > 0).length > 1 ? 1.2 : 0;
-                const dash = Math.max(pct * circumference - gap, 0);
-                const offset = circumference * (1 - cumulative);
-                cumulative += pct;
-                return (
-                  <circle key={s.key} cx="50" cy="50" r={r} stroke={s.color} strokeWidth="14" fill="none"
-                    strokeDasharray={`${dash} ${circumference - dash}`} strokeDashoffset={offset} strokeLinecap="butt" />
-                );
-              })}
-            </svg>
-            <div className="absolute flex flex-col items-center">
-              <span className="text-3xl font-black text-slate-900 dark:text-white">{hadirPct}%</span>
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Hadir</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
   );
 }
 
@@ -404,6 +275,8 @@ function MobileSiswaCard({
   );
 }
 
+const TEMPAT_WARNA = ["#3E03B3", "#F26A3D"];
+
 export default function GuruMagangAbsensiPage() {
   const router = useRouter();
   const appMode = useIsAppMode();
@@ -454,7 +327,7 @@ export default function GuruMagangAbsensiPage() {
     const r = rekapAll.find((x) => x.tempatMagangId === t.id);
     const hd = r?.rekap.HADIR ?? 0;
     const tt = r?.siswa.length ?? 0;
-    return { hd, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
+    return { hd, iz: r?.rekap.IZIN ?? 0, sk: r?.rekap.SAKIT ?? 0, al: r?.rekap.ALPA ?? 0, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
   }
 
   const filteredSiswa = !activeFilter
@@ -525,32 +398,40 @@ export default function GuruMagangAbsensiPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-
-        <div className="mb-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-8">
-            <div className="lg:col-span-2">
-              <RingkasanKehadiranCard
-                tempatList={tempatList} selectedId={selectedId} onSelectTempat={setSelectedId} tempatStat={tempatStat}
-                siswaList={siswaList} rekap={rekap} hadirPct={hadirPct} total={total}
-                pulangCount={pulangCount} belumAbsen={total - sudahAbsen}
-                tanggal={tanggal} />
-            </div>
-
-            <div className="flex flex-col">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keterangan Absensi</p>
-                <a href="#status-kehadiran-hari-ini"
-                  className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  More <ArrowRight size={12} />
-                </a>
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-3">
+          <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
+            <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <p className="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Tempat PKL</p>
+              <div className="grid grid-cols-4 gap-2.5">
+                {tempatList.map((k, i) => {
+                  const s = tempatStat(k);
+                  const isSelected = k.id === selectedId;
+                  const warna = TEMPAT_WARNA[i % TEMPAT_WARNA.length];
+                  return (
+                    <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
+                      style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
+                      className="relative flex w-full items-center gap-2.5 overflow-hidden rounded-2xl border-2 px-3 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: `${warna}33`, color: warna }}>
+                        <Briefcase size={17} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-black leading-tight text-slate-800 dark:text-white">{k.namaTempat}</span>
+                        <span className="block truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                          {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-              <BelumAbsenPanel siswaList={siswaList} />
-            </div>
-          </div>
-        </div>
 
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <KirimPengingatCard tempatMagangId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+                <BelumAbsenPanel siswaList={siswaList} inline />
+              </div>
+            </div>
+
+          <div id="status-kehadiran-hari-ini" className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -564,40 +445,24 @@ export default function GuruMagangAbsensiPage() {
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-2.5 pb-1">
-              <span className="mr-1 text-xs font-semibold text-slate-400">Status:</span>
+            <div className="mt-3 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
               {filterOptions.map((opt) => {
                 const active = activeFilter === opt.key;
                 return (
                   <button key={String(opt.key)} type="button"
                     onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                    className="rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors"
+                    className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors"
                     style={active ? { backgroundColor: opt.color, color: "#fff" } : {}}>
                     <span className={`flex items-center gap-2 ${active ? "text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"}`}>
-                      <opt.icon size={16} />
+                      <opt.icon size={13} />
                       {opt.label}
-                      <span className={`rounded-md px-2 py-0.5 text-xs ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                      <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${active ? "bg-white/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                         {opt.count}
                       </span>
                     </span>
                   </button>
                 );
               })}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <Users size={12} className="text-[#3E03B3]" />
-                Total {total} siswa
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <TrendingUp size={12} className="text-[#3E03B3]" />
-                Kehadiran {hadirPct}%
-              </span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300">
-                <LogOut size={12} className="text-[#3E03B3]" />
-                Sudah pulang {pulangCount} siswa
-              </span>
             </div>
 
             <div className="mt-4 -mx-5 -mb-5 overflow-hidden rounded-b-3xl border-t border-slate-100 dark:border-slate-700">
@@ -621,47 +486,50 @@ export default function GuruMagangAbsensiPage() {
               />
             </div>
           </div>
+          </div>
 
-          <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
-                <FileText size={18} />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+          <div className="flex flex-col gap-4">
+            <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <div className="mb-3 flex items-center gap-2.5">
+                <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
+                  <FileText size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {RANGE_MODE_CARDS.map((opt) => (
-                <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
-                  active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
-              ))}
-            </div>
-
-            {exportRange.rangeMode === "mingguan" && (
-              <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
-            )}
-
-            {exportRange.rangeMode === "bulanan" && (
-              <div className="mt-2 flex items-center gap-1.5">
-                <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                  {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                  {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
+              <div className="grid grid-cols-3 gap-2">
+                {RANGE_MODE_CARDS.map((opt) => (
+                  <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                    active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
+                ))}
               </div>
-            )}
 
-            <div className="mt-3">
-              <ExportButtons tempatMagangId={selectedId} tempatNama={selectedTempat?.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={siswaList} />
+              {exportRange.rangeMode === "mingguan" && (
+                <DateInputID value={exportRange.weekAnchor} onChange={(v) => exportRange.setWeekAnchor(v)} className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200" />
+              )}
+
+              {exportRange.rangeMode === "bulanan" && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <select value={exportRange.bulan} onChange={(e) => exportRange.setBulan(Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    {MONTH_NAMES.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                  </select>
+                  <select value={exportRange.tahun} onChange={(e) => exportRange.setTahun(Number(e.target.value))}
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+                    {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((y) => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </div>
+              )}
+
+              <div className="mt-3">
+                <ExportButtons tempatMagangId={selectedId} tempatNama={selectedTempat?.namaTempat ?? "Tempat"} range={exportRange.range} siswaList={siswaList} />
+              </div>
+              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+                <Download size={11} className="shrink-0 text-[#3E03B3]" />
+                Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per tempat PKL (semua siswa) atau per siswa.
+              </p>
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-              <Download size={11} className="shrink-0 text-[#3E03B3]" />
-              Pilih rentang waktu, lalu klik salah satu tombol ekspor
-            </p>
           </div>
         </div>
       </div>
