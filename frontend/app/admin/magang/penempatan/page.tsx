@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { Building2, ChevronLeft, Clock, FileDown, Loader2, Search, Trash2, Users } from "lucide-react";
+import { Building2, ChevronLeft, Clock, FileDown, FileText, Loader2, Search, Trash2, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { toTitleCase } from "@/components/data-siswa/shared";
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
 import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal";
+import { FormSiswaModal } from "@/components/magang/FormSiswaModal";
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
@@ -25,7 +26,7 @@ const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: st
   { value: "BATAL", label: "batal", bg: "#FEE2E2", clr: "#DC2626" },
 ];
 
-const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(11rem,1.4fr) minmax(8rem,auto) 18rem";
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(10rem,1.3fr) minmax(8rem,auto) 24rem";
 
 const STATUS_FILTER: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
   { value: "MENUNGGU", label: "Perlu diproses", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
@@ -51,6 +52,7 @@ export default function AdminMagangPenempatanPage() {
   const [terverifikasi, setTerverifikasi] = useState<PendaftaranMagang[]>([]);
   const [unduhId, setUnduhId] = useState<string | null>(null);
   const [hapusId, setHapusId] = useState<string | null>(null);
+  const [formTempat, setFormTempat] = useState<string | null>(null);
 
   const loadTempat = useCallback(async () => {
     const res = await fetch("/api/magang/tempat", { cache: "no-store" });
@@ -64,7 +66,7 @@ export default function AdminMagangPenempatanPage() {
     setTerverifikasi(Array.isArray(list) ? list : []);
   }, []);
 
-  async function hapusInstansi(g: { id: string; nama: string; rows: PenempatanMagang[]; terdaftar: number }) {
+  async function hapusInstansi(g: { id: string; nama: string; rows: PenempatanMagang[]; terdaftar: number; belum: PendaftaranMagang[] }) {
     const ket = g.rows.length > 0
       ? `"${g.nama}" beserta ${g.rows.length} data penempatan siswa di dalamnya akan dihapus permanen.`
       : `"${g.nama}" akan dihapus permanen.`;
@@ -181,9 +183,9 @@ export default function AdminMagangPenempatanPage() {
   }, [penempatanList, search, statusFilter]);
 
   const grup = useMemo(() => {
-    const map = new Map<string, { id: string; nama: string; alamat: string; rows: PenempatanMagang[]; terdaftar: number }>();
+    const map = new Map<string, { id: string; nama: string; alamat: string; rows: PenempatanMagang[]; terdaftar: number; belum: PendaftaranMagang[] }>();
     displayList.forEach((p) => {
-      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, alamat: formatAlamat(p.tempatMagang), rows: [], terdaftar: 0 };
+      const g = map.get(p.tempatMagang.id) ?? { id: p.tempatMagang.id, nama: p.tempatMagang.namaTempat, alamat: formatAlamat(p.tempatMagang), rows: [], terdaftar: 0, belum: [] };
       g.rows.push(p);
       map.set(p.tempatMagang.id, g);
     });
@@ -196,8 +198,9 @@ export default function AdminMagangPenempatanPage() {
         if (statusFilter) return;
         if (q && !t.namaTempat.toLowerCase().includes(q)) return;
       }
-      const g = map.get(t.id) ?? { id: t.id, nama: t.namaTempat, alamat: formatAlamat(t), rows: [], terdaftar: 0 };
+      const g = map.get(t.id) ?? { id: t.id, nama: t.namaTempat, alamat: formatAlamat(t), rows: [], terdaftar: 0, belum: [] };
       g.terdaftar += 1;
+      g.belum.push(d);
       map.set(t.id, g);
     });
     const urut: Record<string, number> = { MENUNGGU: 0, AKTIF: 1, SELESAI: 2, BATAL: 3 };
@@ -207,6 +210,7 @@ export default function AdminMagangPenempatanPage() {
         || a.nama.localeCompare(b.nama, "id", { sensitivity: "base" }));
   }, [displayList, terverifikasi, search, statusFilter, penempatanList]);
 
+  const grupForm = formTempat ? grup.find((g) => g.id === formTempat) ?? null : null;
   const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
 
   return (
@@ -283,6 +287,10 @@ export default function AdminMagangPenempatanPage() {
                   className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-40">
                   <Users size={13} /> Siswa ({g.rows.length})
                 </button>
+                <button type="button" onClick={() => setFormTempat(g.id)}
+                  className="col-span-2 flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#E0F2FE] text-xs font-bold text-[#0369A1] dark:text-[#7DD3FC]">
+                  <FileText size={13} /> Lihat form
+                </button>
               </div>
             </div>
           ))}
@@ -290,13 +298,13 @@ export default function AdminMagangPenempatanPage() {
 
         <div className="hidden overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700 md:block">
         <div className="overflow-x-auto">
-          <div className="min-w-[860px]">
+          <div className="min-w-[960px]">
             <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
               <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Alamat</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
-              <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white">Aksi</span>
             </div>
             {loading ? (
               <div className="space-y-2 p-4">
@@ -328,7 +336,7 @@ export default function AdminMagangPenempatanPage() {
                         );
                       })}
                     </div>
-                    <div className="flex justify-end gap-1.5">
+                    <div className="flex flex-wrap items-center justify-start gap-1.5">
                       <button type="button" onClick={() => unduhSurat(g.id)} disabled={unduhId === g.id}
                         title="Unduh surat permohonan (Word)"
                         className="flex h-8 items-center gap-1.5 rounded-lg bg-[#22A06B] px-3 text-xs font-bold text-white disabled:opacity-50">
@@ -337,6 +345,10 @@ export default function AdminMagangPenempatanPage() {
                       <button type="button" onClick={() => setBukaTempat(g.id)} disabled={g.rows.length === 0}
                         className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-40">
                         <Users size={13} /> Siswa ({g.rows.length})
+                      </button>
+                      <button type="button" onClick={() => setFormTempat(g.id)}
+                        className="flex h-8 items-center gap-1.5 rounded-lg bg-[#E0F2FE] px-3 text-xs font-bold text-[#0369A1] dark:text-[#7DD3FC]">
+                        <FileText size={13} /> Lihat form
                       </button>
                       <button type="button" onClick={() => hapusInstansi(g)} disabled={hapusId === g.id}
                         title="Hapus instansi" aria-label="Hapus instansi"
@@ -354,6 +366,12 @@ export default function AdminMagangPenempatanPage() {
       </div>
       </div>
 
+      <AnimatePresence>
+        {grupForm && (
+          <FormSiswaModal judul={grupForm.nama} terkirim={grupForm.rows} belum={grupForm.belum}
+            onLihat={(p) => setPengajuanRows([p])} onClose={() => setFormTempat(null)} />
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {grupBuka && (
           <PenempatanTempatModal judul={grupBuka.nama} rows={grupBuka.rows} busyId={busyId}
