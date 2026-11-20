@@ -112,20 +112,27 @@ export function PklHub({ role }: { role: Role }) {
 
       <AnimatePresence>
         {buka && (
-          <motion.div key={buka.key} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
-            transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="pkl-embed fixed inset-0 z-[70] flex flex-col bg-surface dark:bg-[#0F172A]">
-            <div className="flex shrink-0 items-center gap-3 bg-[#3E03B3] px-4 pb-3 pt-4">
-              <button type="button" onClick={() => setBuka(null)} aria-label="Tutup"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
-                <ChevronLeft size={18} />
-              </button>
-              <h2 className="min-w-0 flex-1 truncate text-base font-bold text-white">{buka.label}</h2>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden p-4 pb-10">
-              <buka.Comp />
-            </div>
-          </motion.div>
+          <div key={buka.key} className="fixed inset-0 z-[70] flex items-end">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setBuka(null)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="pkl-embed relative z-10 flex h-[88dvh] w-full flex-col overflow-hidden rounded-t-[28px] bg-surface shadow-[0_-12px_40px_-12px_rgba(15,23,42,0.35)] dark:bg-[#0F172A]">
+              <div className="flex shrink-0 justify-center bg-[#3E03B3] pt-2">
+                <span className="h-1.5 w-10 rounded-full bg-white/40" />
+              </div>
+              <div className="flex shrink-0 items-center gap-3 bg-[#3E03B3] px-4 pb-3 pt-2">
+                <button type="button" onClick={() => setBuka(null)} aria-label="Tutup"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25">
+                  <ChevronLeft size={18} />
+                </button>
+                <h2 className="min-w-0 flex-1 truncate text-base font-bold text-white">{buka.label}</h2>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden p-4 pb-10">
+                <buka.Comp />
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
