@@ -56,6 +56,7 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning className={`${satoshi.variable} ${digital.variable} h-full antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: 'try{if(window.matchMedia("(max-width:1023px)").matches)document.documentElement.setAttribute("data-boot-mobile","1")}catch(e){}' }} />
+        <script dangerouslySetInnerHTML={{ __html: 'try{var a=matchMedia("(max-width:1023px)").matches||matchMedia("(display-mode: standalone)").matches||navigator.standalone===true||sessionStorage.getItem("lms_force_app")==="1";if(a)document.documentElement.classList.add("dark")}catch(e){}' }} />
         <script dangerouslySetInnerHTML={{ __html: 'try{var m=function(){try{localStorage.setItem("lms_pwa_ok","2")}catch(e){}};addEventListener("appinstalled",m);if(matchMedia("(display-mode: standalone)").matches&&new URLSearchParams(location.search).get("pwa")==="2")m()}catch(e){}' }} />
       </head>
       <body className="min-h-full flex flex-col bg-white text-black">

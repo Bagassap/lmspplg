@@ -16,6 +16,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
 import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { terapkanTema } from "@/lib/tema";
 import { namaTampil, namaPanggilan } from "@/lib/nama";
 
 const PAGE_TITLES: Record<string, [string, string]> = {
@@ -165,12 +166,12 @@ export function Topbar({ user }: { user: UserPayload }) {
   const [darkMounted, setDarkMounted] = useState(false);
 
   useEffect(() => {
-    const saved       = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const dark        = saved === "dark" || (!saved && prefersDark);
-    setIsDark(dark);
+    setIsDark(terapkanTema());
     setDarkMounted(true);
-    document.documentElement.classList.toggle("dark", dark);
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const ubah = () => setIsDark(terapkanTema());
+    mq.addEventListener("change", ubah);
+    return () => mq.removeEventListener("change", ubah);
   }, []);
 
   function toggleDark() {
@@ -535,13 +536,6 @@ export function Topbar({ user }: { user: UserPayload }) {
                   >
                     <Search size={14} />
                     Cari
-                  </button>
-                  <button
-                    onClick={toggleDark}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-600 lg:hidden"
-                  >
-                    {darkMounted && isDark ? <Sun size={14} /> : <Moon size={14} />}
-                    {darkMounted && isDark ? "Mode Terang" : "Mode Gelap"}
                   </button>
                   <div className="my-1 border-b border-gray-200 dark:border-slate-700 lg:hidden" />
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Lock, LogOut, Moon, Sun, UserCircle, CreditCard, BellRing } from "lucide-react";
+import { ChevronRight, Lock, LogOut, UserCircle, CreditCard, BellRing } from "lucide-react";
 import { useWebPush } from "@/lib/webPush";
 import { useToast } from "@/components/shared/ToastSystem";
 import type { UserPayload } from "@/lib/auth";
@@ -52,7 +52,6 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 
 export function AppMenuPage({ user }: { user: UserPayload }) {
   const { items, pendingResetCount } = useDashboardMenu(user);
-  const [dark, setDark] = useState(false);
   const [out, setOut] = useState(false);
   const push = useWebPush();
   const toast = useToast();
@@ -64,14 +63,6 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
     else toast.success("Notifikasi aktif", "Kamu akan menerima pengingat absen, tugas, dan pengumuman.");
   }
 
-  useEffect(() => { setDark(document.documentElement.classList.contains("dark")); }, []);
-
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
-  }
 
   async function logout() {
     setOut(true);
@@ -98,7 +89,6 @@ export function AppMenuPage({ user }: { user: UserPayload }) {
             hint={push.state === "on" ? "Aktif · ketuk untuk mematikan" : push.state === "denied" ? "Diblokir di pengaturan browser" : push.state === "server-off" ? "Belum tersedia di server" : "Ketuk untuk mengaktifkan"}
             tone={n++} onClick={push.busy || push.state === "denied" ? undefined : togglePush} />
         )}
-        <Row icon={dark ? Sun : Moon} label={dark ? "Mode Terang" : "Mode Gelap"} hint="Ubah tampilan aplikasi" tone={n++} onClick={toggleDark} />
       </Group>
 
       {single.length > 0 && (
