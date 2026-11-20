@@ -66,7 +66,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, o
               <span className="rounded-lg px-1.5 text-[11px]" style={{ background: "#E4F5EC", color: "#22A06B" }}>{i.siswa.length}</span>
             </p>
             {i.siswa.length === 0 ? (
-              <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400">Belum ada siswa terverifikasi</p>
+              <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400">Belum ada siswa</p>
             ) : (
               <div className="space-y-1.5">
                 {i.siswa.map((s, n) => (

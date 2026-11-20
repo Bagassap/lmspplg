@@ -8,18 +8,21 @@ import type { Instansi } from "./types";
 
 const PER_HALAMAN = 10;
 
-export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId, jenisKelaminSiswa }: {
+export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId, jenisKelaminSiswa, mode = "daftar" }: {
   list: Instansi[];
   loading: boolean;
   judul?: string;
   onPilih?: (i: Instansi) => void;
   pilihId?: string | null;
   jenisKelaminSiswa?: string | null;
+  mode?: "daftar" | "ditempati";
 }) {
   const [q, setQ] = useState("");
   const [terbuka, setTerbuka] = useState<Instansi | null>(null);
   const [halaman, setHalaman] = useState(0);
-  const terisi = useMemo(() => list.filter((i) => i.siswa.length > 0), [list]);
+  const terisi = useMemo(() => list
+    .map((i) => ({ ...i, siswa: (mode === "ditempati" ? i.ditempati : i.pendaftar) ?? i.siswa }))
+    .filter((i) => i.siswa.length > 0), [list, mode]);
   const tampil = useMemo(() => {
     const k = q.trim().toLowerCase();
     if (!k) return terisi;
@@ -50,7 +53,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
         ) : tampil.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-6 text-center">
             <Users size={22} className="text-[#F26A3D]" />
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{q ? "Tidak ada instansi yang cocok" : "Belum ada instansi dengan siswa terverifikasi"}</p>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{q ? "Tidak ada instansi yang cocok" : (mode === "ditempati" ? "Belum ada instansi yang ditempati" : "Belum ada instansi dengan pendaftar")}</p>
           </div>
         ) : potong.map((i) => {
           const dipilih = pilihId === i.id;

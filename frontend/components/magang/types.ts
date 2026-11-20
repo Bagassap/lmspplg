@@ -88,6 +88,8 @@ export type Instansi = {
   terisi: number;
   sisa: number | null;
   siswa: { id: string; nama: string; kelas: string }[];
+  pendaftar?: { id: string; nama: string; kelas: string }[];
+  ditempati?: { id: string; nama: string; kelas: string }[];
 };
 
 export const STATUS_PENDAFTARAN_CFG: Record<StatusPendaftaran, { label: string; bg: string; clr: string }> = {

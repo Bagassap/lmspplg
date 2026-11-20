@@ -31,6 +31,7 @@ const HALAMAN: Record<Role, Omit<Sub, "href">[]> = {
   ],
   siswa: [
     { key: "penempatan", label: "Pendaftaran & Penempatan", icon: Building2, tone: "amber", Comp: dynamic(() => import("@/app/siswa/magang/penempatan/page"), { ssr: false, loading: memuat }) },
+    { key: "instansi", label: "Daftar Instansi", icon: ClipboardList, tone: "violet", Comp: dynamic(() => import("./DaftarInstansiPkl"), { ssr: false, loading: memuat }) },
     { key: "absensi", label: "Absensi", icon: ClipboardCheck, tone: "emerald", Comp: dynamic(() => import("@/app/siswa/magang/absensi/page"), { ssr: false, loading: memuat }) },
     { key: "rekap", label: "Rekap", icon: BarChart3, tone: "sky", Comp: dynamic(() => import("@/app/siswa/magang/rekap/page"), { ssr: false, loading: memuat }) },
   ],

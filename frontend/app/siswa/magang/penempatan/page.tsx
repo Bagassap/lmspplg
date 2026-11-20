@@ -155,7 +155,7 @@ export default function SiswaMagangPenempatanPage() {
 
       {kategori === "daftar" ? panelDaftar : panelPenempatan}
 
-      <DaftarInstansiList list={instansi.list} loading={instansi.loading} judul="Daftar Instansi PKL"
+      <DaftarInstansiList list={instansi.list} loading={instansi.loading} judul="Daftar Instansi PKL" mode={kategori === "penempatan" ? "ditempati" : "daftar"}
         onPilih={bolehIsi ? (i) => { setDipilih(i); window.scrollTo({ top: 0, behavior: "smooth" }); } : undefined}
         pilihId={kategori === "penempatan" ? dipilih?.id ?? null : null}
         jenisKelaminSiswa={daftar?.profil.jenisKelamin} />

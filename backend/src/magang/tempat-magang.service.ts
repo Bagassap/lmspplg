@@ -55,6 +55,7 @@ export class TempatMagangService {
         OR: [
           { dibuatSiswa: false },
           { penempatan: { some: { status: { in: ['AKTIF', 'SELESAI'] } } } },
+          { pendaftaran: { some: { status: { in: ['MENUNGGU', 'DITERIMA'] } } } },
         ],
       },
       include: {
@@ -66,7 +67,7 @@ export class TempatMagangService {
           },
         },
         pendaftaran: {
-          where: { status: 'DITERIMA' },
+          where: { status: { in: ['MENUNGGU', 'DITERIMA'] } },
           select: {
             siswa: { select: { id: true, nama: true, kelas: { select: { nama: true } }, user: { select: { nama: true } } } },
           },
@@ -76,11 +77,14 @@ export class TempatMagangService {
     });
     return list.map((t) => {
       const terisi = t.penempatan.length;
-      const peta = new Map<string, { id: string; nama: string; kelas: string }>();
-      [...t.pendaftaran, ...t.penempatan.filter((p) => p.status === 'AKTIF')].forEach(({ siswa: s }) => {
-        peta.set(s.id, { id: s.id, nama: s.user?.nama ?? s.nama ?? 'Siswa', kelas: s.kelas?.nama ?? '' });
-      });
-      const siswa = [...peta.values()].sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
+      type SiswaRow = (typeof t.pendaftaran)[number]['siswa'];
+      const susun = (rows: { siswa: SiswaRow }[]) => {
+        const peta = new Map<string, { id: string; nama: string; kelas: string }>();
+        rows.forEach(({ siswa: s }) => peta.set(s.id, { id: s.id, nama: s.user?.nama ?? s.nama ?? 'Siswa', kelas: s.kelas?.nama ?? '' }));
+        return [...peta.values()].sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' }));
+      };
+      const pendaftar = susun(t.pendaftaran);
+      const ditempati = susun(t.penempatan.filter((p) => p.status === 'AKTIF'));
       return {
         id: t.id,
         namaTempat: t.namaTempat,
@@ -98,7 +102,9 @@ export class TempatMagangService {
         kuota: t.kuota,
         terisi,
         sisa: t.dibuatSiswa ? null : Math.max(0, t.kuota - terisi),
-        siswa,
+        siswa: pendaftar,
+        pendaftar,
+        ditempati,
       };
     });
   }
