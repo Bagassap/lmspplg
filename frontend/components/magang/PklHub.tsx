@@ -101,14 +101,14 @@ export function PklHub({ role }: { role: Role }) {
                             <div className="grid grid-cols-2 gap-3">
                               {([["Absen Datang", LogIn], ["Absen Pulang", LogOut]] as const).map(([label, Ikon]) => (
                                 <button key={label} type="button" disabled
-                                  className="flex flex-col items-center gap-2 rounded-2xl bg-slate-100 px-3 py-4 text-slate-400 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-500">
-                                  <span className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
-                                    <Ikon size={20} />
-                                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-slate-400 text-white dark:bg-slate-600">
-                                      <Lock size={10} />
+                                  className="flex items-center gap-2.5 rounded-2xl bg-slate-100 px-3 py-3 text-slate-400 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-500">
+                                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-800">
+                                    <Ikon size={17} />
+                                    <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-slate-400 text-white dark:bg-slate-600">
+                                      <Lock size={8} />
                                     </span>
                                   </span>
-                                  <span className="text-xs font-bold">{label}</span>
+                                  <span className="min-w-0 truncate text-xs font-bold">{label}</span>
                                 </button>
                               ))}
                             </div>
