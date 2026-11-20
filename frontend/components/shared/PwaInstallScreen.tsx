@@ -53,7 +53,7 @@ export function PwaInstallScreen({ onDone }: { onDone: () => void }) {
       >
         <div className="w-full rounded-3xl bg-white p-6 text-center shadow-2xl">
           <Image
-            src="/logo-pplg.png"
+            src="/logo-pplg-3d.png"
             alt="Logo PPLG"
             width={1214}
             height={1214}

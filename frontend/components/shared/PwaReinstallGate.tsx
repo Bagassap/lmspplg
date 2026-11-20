@@ -38,7 +38,7 @@ export function PwaReinstallGate() {
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-[#3E03B3] p-5">
       <div className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl dark:bg-slate-900">
-        <Image src="/logo-pplg.png" alt="LMS PPLG" width={80} height={80} priority className="mx-auto mb-4 h-20 w-20 rounded-2xl" />
+        <Image src="/logo-pplg-3d.png" alt="LMS PPLG" width={80} height={80} priority className="mx-auto mb-4 h-20 w-20 rounded-2xl" />
         <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">Aplikasi Perlu Dipasang Ulang</h2>
         <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300">
           Versi aplikasi di HP Anda sudah usang dan tidak bisa dibuka lagi. Pasang ulang aplikasinya untuk melanjutkan.

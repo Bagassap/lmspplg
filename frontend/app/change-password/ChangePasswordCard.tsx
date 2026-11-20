@@ -64,12 +64,12 @@ export function ChangePasswordCard({ profileCompleted, bypassIdentityVerificatio
               }}
             />
             <Image
-              src="/logo-pplg.png"
+              src="/logo-pplg-3d.png"
               alt="Logo PPLG"
               width={1214}
               height={1214}
               priority
-              className="relative h-12 w-auto sm:h-27.5"
+              className="relative h-20 w-auto sm:h-27.5"
               style={{
                 filter:
                   "drop-shadow(0 0 22px rgba(62,3,179,0.7)) drop-shadow(0 6px 18px rgba(0,0,0,0.55))",

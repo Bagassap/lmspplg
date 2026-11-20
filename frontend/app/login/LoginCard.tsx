@@ -63,12 +63,12 @@ export function LoginCard() {
               }}
             />
             <Image
-              src="/logo-pplg.png"
+              src="/logo-pplg-3d.png"
               alt="Logo PPLG"
               width={1214}
               height={1214}
               priority
-              className="relative h-16 w-auto sm:h-27.5"
+              className="relative h-28 w-auto sm:h-32"
               style={{
                 filter:
                   "drop-shadow(0 6px 18px rgba(15,23,42,0.35))",
