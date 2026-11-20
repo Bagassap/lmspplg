@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, FileText, Loader2, Upload, X } from "lucide-react"
 import { useToast } from "@/components/shared/ToastSystem";
 import { icon3dStyle, TONE_ORDER } from "@/components/shared/Icon3D";
 import type { LaporDiriFile, LaporDiriStatusSaya } from "./lapor-diri-types";
+import { Portal } from "@/components/shared/Portal";
 
 function periodeLabel(periode: string): string {
   const [y, m] = periode.split("-").map(Number);
@@ -98,11 +99,11 @@ export function LaporDiriSiswaList() {
 
       <AnimatePresence>
         {form && (
-          <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-4">
+          <Portal><div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setForm(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
               transition={{ type: "spring", damping: 26, stiffness: 300 }}
-              className="relative z-10 w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+              className="relative z-10 w-full max-w-md rounded-3xl bg-white p-5 shadow-2xl dark:bg-slate-900">
               <div className="mb-4 flex items-center gap-3">
                 <h3 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Unggah Lapor Diri</h3>
                 <button type="button" onClick={() => setForm(false)} aria-label="Tutup"
@@ -123,7 +124,7 @@ export function LaporDiriSiswaList() {
                 {kirim ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />} Kirim lapor diri
               </button>
             </motion.div>
-          </div>
+          </div></Portal>
         )}
       </AnimatePresence>
     </section>

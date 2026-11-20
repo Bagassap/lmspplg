@@ -8,6 +8,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { PenempatanMagang } from "./types";
 import { namaSiswa, namaOrang } from "@/lib/nama";
+import { Portal } from "@/components/shared/Portal";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -64,12 +65,12 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   ].filter((x) => x.value);
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[90dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]"><UserCheck size={20} /></span>
           <div className="min-w-0 flex-1">
@@ -128,6 +129,6 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
           </button>
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

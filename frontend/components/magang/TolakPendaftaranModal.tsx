@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, X, XCircle } from "lucide-react";
+import { Portal } from "@/components/shared/Portal";
 
 export function TolakPendaftaranModal({ onClose, onTolak }: {
   onClose: () => void; onTolak: (alasan: string) => Promise<void>;
@@ -17,12 +18,12 @@ export function TolakPendaftaranModal({ onClose, onTolak }: {
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 w-full max-w-md rounded-3xl bg-white p-5 shadow-2xl dark:bg-slate-900">
         <div className="mb-3 flex items-center gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FEE2E2] text-[#DC2626]"><XCircle size={20} /></span>
           <div className="min-w-0 flex-1">
@@ -42,6 +43,6 @@ export function TolakPendaftaranModal({ onClose, onTolak }: {
           </button>
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

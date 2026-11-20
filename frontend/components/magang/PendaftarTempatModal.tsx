@@ -5,6 +5,7 @@ import { Building2, CheckCircle2, Loader2, RotateCcw, X, XCircle } from "lucide-
 
 import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang } from "./types";
 import { namaSiswa } from "@/lib/nama";
+import { Portal } from "@/components/shared/Portal";
 
 export const namaPendaftar = (p: PendaftaranMagang) => namaSiswa(p.siswa?.user?.nama ?? p.siswa?.nama ?? "—");
 
@@ -18,12 +19,12 @@ export function PendaftarTempatModal({ judul, rows, busyId, onTerima, onTolak, o
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[92dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><Building2 size={20} /></span>
           <h2 className="min-w-0 flex-1 truncate text-base font-extrabold text-slate-900 dark:text-white">{judul}</h2>
@@ -65,6 +66,6 @@ export function PendaftarTempatModal({ judul, rows, busyId, onTerima, onTolak, o
           )}
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

@@ -8,6 +8,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, waLink } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./types";
 import { namaSiswa, namaOrang } from "@/lib/nama";
+import { Portal } from "@/components/shared/Portal";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -75,12 +76,12 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   }
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><FileText size={20} /></span>
           <h2 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Dokumen Penempatan</h2>
@@ -161,6 +162,6 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           ))}
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

@@ -8,6 +8,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { TempatMagang, PenempatanMagang } from "./types";
 import { namaSiswa, namaOrang } from "@/lib/nama";
+import { Portal } from "@/components/shared/Portal";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -57,12 +58,12 @@ export function EditPenempatanModal({
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="app-sheet-header relative flex shrink-0 items-center gap-3 overflow-hidden bg-[#3E03B3] px-6 py-5">
           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -128,6 +129,6 @@ export function EditPenempatanModal({
           </button>
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

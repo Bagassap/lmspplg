@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, CheckCircle2, Search, X } from "lucide-react";
 import { tempatCocokJenisKelamin, type Instansi } from "./types";
+import { Portal } from "@/components/shared/Portal";
 
 export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }: {
   list: Instansi[];
@@ -28,12 +29,12 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
   const KOLOM = "2rem minmax(0,1fr) 3.25rem 4.75rem";
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div data-plain className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={20} /></span>
           <h2 className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Pilih Tempat PKL</h2>
@@ -95,6 +96,6 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
           )}
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }

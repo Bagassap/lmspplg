@@ -6,6 +6,7 @@ import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { JENIS_KELAMIN_TEMPAT, labelJenisKelaminTempat, type TempatMagang } from "./types";
 import { pesanError } from "./pkl-form-ui";
+import { Portal } from "@/components/shared/Portal";
 
 const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
@@ -64,12 +65,12 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
+    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
-        className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+        className="relative z-10 flex max-h-[85dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFE9E2] text-[#E8562B] dark:bg-[#E8562B]/20">
             <Building2 size={20} />
@@ -143,6 +144,6 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
           </div>
         </div>
       </motion.div>
-    </div>
+    </div></Portal>
   );
 }
