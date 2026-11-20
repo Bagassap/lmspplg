@@ -9,7 +9,7 @@ import { MateriListPage } from "./MateriListPage";
 import { TugasFormModal } from "@/components/tugas/TugasFormModal";
 import { TugasListCard } from "@/components/tugas/TugasListCard";
 import type { TugasItem, TugasSubmisiItem } from "@/components/tugas/types";
-import { AppTabs } from "@/components/app/AppUI";
+import { AppUnderlineTabs } from "./AppMateriTugasUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { TugasSubmisiPage } from "@/components/tugas/TugasSubmisiPage";
 
@@ -146,8 +146,8 @@ export function MateriTugasGuruPage() {
                   placeholder={category === "materi" ? "Cari materi..." : "Cari tugas..."}
                   className="w-full rounded-xl bg-slate-100 py-3.5 pl-11 pr-4 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-[#3E03B3]/30 dark:bg-slate-800 dark:text-slate-200" />
               </div>
-              <AppTabs
-                tabs={[["materi", "Materi"], ["tugas", perluReview > 0 ? `Tugas (${perluReview})` : "Tugas"]] as const}
+              <AppUnderlineTabs
+                tabs={[["materi", "Materi"], ["tugas", "Tugas", perluReview]] as const}
                 value={category} onChange={setCategory} layoutId="app-materi-guru-tab" />
             </div>
           ) : (

@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList, Search, Plus, Pencil, Trash2, Send, CalendarClock, GraduationCap, Code2, ListChecks, PenLine,
   SlidersHorizontal, CheckCircle, X, ChevronRight,
+  Clock, CheckCircle2,
 } from "lucide-react";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { formatTgl, isTugasActive, tipeLabel } from "./types";
 import type { TugasItem, TugasSubmisiItem } from "./types";
-import { AppDetailSheet, AppCard, AppEmpty, AppTabs } from "@/components/app/AppUI";
-import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
+import { AppDetailSheet } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { AppFeaturedRow, AppListItem, relDeadline, type AppItemMeta } from "@/components/materi/AppMateriTugasUI";
 
 function chunkOf4<T>(items: T[]): T[][] {
   const out: T[][] = [];
@@ -71,6 +72,17 @@ export function TugasListCard({
     .filter((t) => !mapelFilter || t.mapel === mapelFilter)
     .filter((t) => t.judul.toLowerCase().includes(search.trim().toLowerCase()) || t.mapel.toLowerCase().includes(search.trim().toLowerCase()));
   const chunked = useMemo(() => chunkOf4(shown), [shown]);
+  const semuaApp = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const cocok = (t: TugasItem) => (!mapelFilter || t.mapel === mapelFilter) && (!q || t.judul.toLowerCase().includes(q) || t.mapel.toLowerCase().includes(q));
+    const aktif = tugasList.filter((t) => isTugasActive(t) && cocok(t)).sort((a, b) => +new Date(a.deadline) - +new Date(b.deadline));
+    const lewat = tugasList.filter((t) => !isTugasActive(t) && cocok(t)).sort((a, b) => +new Date(b.deadline) - +new Date(a.deadline));
+    return [...aktif, ...lewat];
+  }, [tugasList, mapelFilter, search]);
+  const metaApp = (t: TugasItem): AppItemMeta => {
+    const n = submisiList.filter((s) => s.tugasId === t.id).length;
+    return isTugasActive(t) ? { icon: Clock, text: relDeadline(t.deadline) } : { icon: CheckCircle2, text: `Selesai · ${n} terkumpul`, done: true };
+  };
 
   return (
     <div className="min-w-0">
@@ -207,22 +219,7 @@ export function TugasListCard({
     </div>
 
     {mobileNative && appMode && (
-      <div className="space-y-4 lg:hidden">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{shown.length} tugas</span>
-          {canCreate && (
-            <button type="button" onClick={onAddTugas}
-              className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white active:scale-95"
-              style={{ background: "#3E03B3" }}>
-              <Plus size={14} /> Tambah
-            </button>
-          )}
-        </div>
-
-        <AppTabs
-          tabs={[["active", `Aktif (${active.length})`], ["completed", `Selesai (${completed.length})`]] as const}
-          value={tab} onChange={setTab} layoutId="app-tugas-guru-tab" />
-
+      <div className="space-y-5 lg:hidden">
         {uniqueMapel.length > 1 && (
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[null, ...uniqueMapel].map((mp) => (
@@ -236,35 +233,37 @@ export function TugasListCard({
         )}
 
         {loading ? (
-          <div className="space-y-3">{[0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-800" />)}</div>
-        ) : shown.length === 0 ? (
-          <AppEmpty icon={ClipboardList} title={search.trim() ? `Tidak ada tugas dengan nama "${search.trim()}"` : tab === "active" ? "Tidak ada tugas aktif" : "Tidak ada tugas selesai"} />
+          <div className="space-y-4">{[0, 1, 2].map((i) => <div key={i} className="h-20 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />)}</div>
         ) : (
-          <ul className="space-y-3">
-            {shown.map((t, i) => {
-              const cnt = submisiList.filter((s) => s.tugasId === t.id).length;
-              const Icon = TIPE_BADGE[t.tipe]?.icon ?? ClipboardList;
-              return (
-                <li key={t.id}>
-                  <AppCard onClick={() => setDetailItem(t)} className="flex items-center gap-4">
-                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={icon3dStyle(toneAt(i + 2))}>
-                      <Icon size={26} color="#fff" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{t.judul}</p>
-                      <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
-                        <span className="truncate">{t.mapel}</span><span>•</span><span className="shrink-0">{formatTgl(t.deadline)}</span>
-                      </p>
-                    </div>
-                    {cnt > 0 && (
-                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-xl px-2 text-xs font-bold text-white" style={{ backgroundColor: "#3E03B3" }}>{cnt}</span>
-                    )}
-                    <ChevronRight size={18} className="shrink-0 text-slate-300" />
-                  </AppCard>
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            <AppFeaturedRow judul="Tugas Terdekat" items={semuaApp.slice(0, 5)} icon={ClipboardList} meta={metaApp} onOpen={setDetailItem} />
+            <section>
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">Semua Tugas</h2>
+                {canCreate && (
+                  <button type="button" onClick={onAddTugas}
+                    className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white active:scale-95"
+                    style={{ background: "#3E03B3" }}>
+                    <Plus size={14} /> Tambah
+                  </button>
+                )}
+              </div>
+              {semuaApp.length === 0 ? (
+                <p className="py-12 text-center text-sm text-slate-500 dark:text-slate-400">
+                  {search.trim() || mapelFilter ? "Tidak ada hasil" : "Belum ada tugas"}
+                </p>
+              ) : (
+                <ul className="space-y-3">
+                  {semuaApp.map((t, i) => (
+                    <li key={t.id}>
+                      <AppListItem i={i} icon={ClipboardList} judul={t.judul} mapel={t.mapel} tanggal={formatTgl(t.deadline)}
+                        meta={metaApp(t)} badge={submisiList.filter((s) => s.tugasId === t.id).length} onOpen={() => setDetailItem(t)} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </>
         )}
       </div>
     )}
