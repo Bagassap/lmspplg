@@ -26,7 +26,7 @@ export function FilterBarPassword({
   kelasNama, wali, onResetWali,
   search, onSearch,
   statusFilter, onStatusFilter,
-  total, sudahCount, belumCount, displayedCount,
+  total, sudahCount, belumCount, displayedCount, ringkas = false,
 }: {
   kelasList: KelasOption[]; selectedKelasId: string; onSelectKelas: (id: string) => void;
   kelasNama?: string;
@@ -35,6 +35,7 @@ export function FilterBarPassword({
   search: string; onSearch: (v: string) => void;
   statusFilter: StatusFilter; onStatusFilter: (v: StatusFilter) => void;
   total: number; sudahCount: number; belumCount: number; displayedCount: number;
+  ringkas?: boolean;
 }) {
   const STATUS_PILLS: { value: StatusFilter; label: string; icon: typeof Users; count: number }[] = [
     { value: "", label: "Semua", icon: Users, count: total },
@@ -130,7 +131,7 @@ export function FilterBarPassword({
               )}
             </AnimatePresence>
           </div>
-          <div className="relative flex shrink-0 items-center gap-1.5">
+          <div className={`relative shrink-0 items-center gap-1.5 ${ringkas ? "hidden" : "flex"}`}>
             {STATUS_PILLS.map((opt) => {
               const active = statusFilter === opt.value;
               const Icon = opt.icon;
@@ -164,7 +165,7 @@ export function FilterBarPassword({
         </div>
       </div>
 
-      {wali && (
+      {wali && !ringkas && (
         <div className="relative mt-4 flex items-center justify-between gap-2 rounded-2xl border border-slate-200 p-3.5 dark:border-slate-700">
           <div className="flex min-w-0 items-center gap-2.5">
             <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={34} fallbackBg="#3E03B3" textClassName="text-xs font-bold" />
@@ -194,7 +195,7 @@ export function FilterBarPassword({
         </div>
       )}
 
-      <p className="relative mt-4 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500">
+      <p className={`relative mt-4 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-400 dark:border-slate-700/50 dark:text-slate-500 ${ringkas ? "hidden" : ""}`}>
         Menampilkan {displayedCount} dari {total} siswa di kelas ini
       </p>
     </div>

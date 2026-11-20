@@ -5,7 +5,9 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft, ShieldCheck } from "lucide-react";
+import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft, ShieldCheck, Users, CheckCircle2, XCircle, KeyRound } from "lucide-react";
+import { StatusFilterCard } from "@/components/magang/StatusFilterCard";
+import { Avatar } from "@/components/shared/Avatar";
 import { PasswordSiswaModal } from "@/components/shared/PasswordSiswaModal";
 import { KelolaAdminModal } from "./KelolaAdminModal";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
@@ -141,29 +143,18 @@ export default function ManajemenPasswordClient() {
         <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
 
-      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5">
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="mx-4 mt-4 hidden items-center gap-4 rounded-2xl bg-[#F1EDFA] p-3 lg:flex">
-            <div className="min-w-0 flex-1 pl-1">
-              <p className="text-sm font-extrabold text-slate-900 dark:text-white">Aksi akun</p>
-            </div>
-            <div className="grid shrink-0 grid-cols-4 gap-2.5">
-              {([
-                { label: "Kelola Guru", icon: GraduationCap, tone: "sky" as const, onClick: () => setKelolaGuruOpen(true) },
-                { label: "Kelola Admin", icon: ShieldCheck, tone: "violet" as const, onClick: () => setKelolaAdminOpen(true) },
-                { label: "Impor Massal", icon: FileSpreadsheet, tone: "emerald" as const, onClick: () => setImportSiswaOpen(true) },
-                { label: "Buat Akun", icon: UserPlus, tone: "amber" as const, onClick: () => setCreateAccountOpen(true) },
-              ]).map((b) => (
-                <button key={b.label} type="button" onClick={b.onClick}
-                  className="flex h-12 w-40 items-center gap-2.5 rounded-xl bg-white pl-1.5 pr-4 text-sm font-bold text-slate-900 shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={icon3dStyle(b.tone)}>
-                    <b.icon size={16} color="#fff" />
-                  </span>
-                  {b.label}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="mt-0 grid grid-cols-1 items-start gap-4 lg:mt-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] lg:gap-5 xl:grid-cols-[15rem_minmax(0,1fr)_20rem]">
+        <div className="hidden lg:block">
+          <StatusFilterCard<StatusFilter>
+            items={[
+              { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users, count: siswaItems.length },
+              { value: "sudah", label: "Sudah Ganti", bg: "#E4F5EC", clr: "#22A06B", icon: CheckCircle2, count: sudahCount },
+              { value: "belum", label: "Belum Ganti", bg: "#FEE2E2", clr: "#DC2626", icon: XCircle, count: belumCount },
+            ]}
+            value={statusFilter} onChange={setStatusFilter} />
+        </div>
+
+        <div className="min-w-0 overflow-hidden rounded-3xl bg-white shadow-sm dark:bg-slate-800">
           <FilterBarPassword
             kelasList={kelasList}
             selectedKelasId={selectedKelasId}
@@ -174,6 +165,7 @@ export default function ManajemenPasswordClient() {
             search={search} onSearch={setSearch}
             statusFilter={statusFilter} onStatusFilter={setStatusFilter}
             total={siswaItems.length} sudahCount={sudahCount} belumCount={belumCount} displayedCount={displayed.length}
+            ringkas
           />
           <div className="border-t border-slate-100 dark:border-slate-700/50">
             <SiswaPasswordTable
@@ -184,6 +176,48 @@ export default function ManajemenPasswordClient() {
               mobileNative
             />
           </div>
+        </div>
+
+        <div className="hidden space-y-5 lg:block">
+          <div className="card-pisah rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-800">
+            <p className="mb-3 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Aksi Akun</p>
+            <div className="grid grid-cols-1 gap-2.5">
+              {([
+                { label: "Kelola Guru", icon: GraduationCap, tone: "sky" as const, onClick: () => setKelolaGuruOpen(true) },
+                { label: "Kelola Admin", icon: ShieldCheck, tone: "violet" as const, onClick: () => setKelolaAdminOpen(true) },
+                { label: "Impor Massal", icon: FileSpreadsheet, tone: "emerald" as const, onClick: () => setImportSiswaOpen(true) },
+                { label: "Buat Akun", icon: UserPlus, tone: "amber" as const, onClick: () => setCreateAccountOpen(true) },
+              ]).map((b) => (
+                <button key={b.label} type="button" onClick={b.onClick}
+                  className="flex h-12 w-full items-center gap-2.5 rounded-xl bg-slate-50 pl-1.5 pr-4 text-sm font-bold text-slate-900 transition-transform hover:-translate-y-0.5 dark:bg-slate-700 dark:text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={icon3dStyle(b.tone)}>
+                    <b.icon size={16} color="#fff" />
+                  </span>
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {waliAccount && (
+            <div className="card-pisah rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-800">
+              <p className="mb-3 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Wali Kelas</p>
+              <div className="flex items-center gap-2.5 rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+                <Avatar src={waliAccount.fotoProfil} nama={namaOrang(waliAccount.nama)} sizePx={36} fallbackBg="#3E03B3" textClassName="text-xs font-bold" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{namaOrang(waliAccount.nama)}</p>
+                  <span className="mt-0.5 inline-flex rounded-lg px-2 py-0.5 text-[10px] font-bold"
+                    style={waliAccount.mustChangePassword ? { background: "#FEE2E2", color: "#DC2626" } : { background: "#E4F5EC", color: "#22A06B" }}>
+                    {waliAccount.mustChangePassword ? "Belum Ganti" : "Sudah Ganti"}
+                  </span>
+                </div>
+              </div>
+              <button type="button" onClick={() => setResetTarget({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
+                className="mt-2.5 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white">
+                <KeyRound size={13} /> Reset Password Wali
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:hidden">
