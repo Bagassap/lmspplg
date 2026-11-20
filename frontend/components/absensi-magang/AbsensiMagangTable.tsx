@@ -11,7 +11,7 @@ import { STATUS_CFG, PULANG_CFG, avatarColor, parseLokasi } from "@/components/a
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "./types";
 import { namaSiswa } from "@/lib/nama";
 
-const GRID_COLS = "28px 40px 2.2fr 1.3fr 1fr 1fr 1.3fr 60px 60px 116px";
+const GRID_COLS = "20px 32px minmax(0,2fr) minmax(0,1.1fr) minmax(0,1.2fr) 3.5rem minmax(0,1fr) 2rem 2rem 6.5rem";
 
 type Props = {
   loading: boolean;
@@ -103,9 +103,9 @@ export function AbsensiMagangTable({
 
   return (
     <>
-      <div className="flex-1 overflow-x-auto">
-        <div className="min-w-225">
-          <div className="grid items-center gap-3 px-5 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
+      <div className="min-w-0 flex-1">
+        <div className="min-w-0">
+          <div className="grid items-center gap-2 px-3 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
             <span />
             <span />
             <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama</span>
@@ -133,7 +133,7 @@ export function AbsensiMagangTable({
               return (
                 <motion.div key={s.siswaId}
                   initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.02 }}
-                  className="grid items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600"
+                  className="grid items-center gap-2 px-3 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600"
                   style={{ gridTemplateColumns: GRID_COLS }}>
                   <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{tableStart + idx}</span>
                   <Avatar

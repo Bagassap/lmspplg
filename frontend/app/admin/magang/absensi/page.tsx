@@ -13,6 +13,7 @@ import {
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { BelumAbsenPanel } from "@/components/absensi-harian/BelumAbsenPanel";
+import { LaporanSeringTidakHadir } from "@/components/absensi-harian/LaporanSeringTidakHadir";
 import { AbsensiMagangTable } from "@/components/absensi-magang/AbsensiMagangTable";
 import { ExportButtons } from "@/components/absensi-magang/ExportButtons";
 import { useExportRange } from "@/components/absensi-harian/useExportRange";
@@ -498,6 +499,7 @@ export default function AdminMagangAbsensiPage() {
           </div>
 
           <div className="flex min-w-0 flex-col gap-4">
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.tempatMagang.namaTempat} sumber="pkl" />
             <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
@@ -586,6 +588,8 @@ export default function AdminMagangAbsensiPage() {
             <AppSectionTitle>Belum Absen</AppSectionTitle>
             <AppCard><BelumAbsenPanel siswaList={siswaList} compact /></AppCard>
           </section>
+
+          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.tempatMagang.namaTempat} sumber="pkl" cta />
         </div>
       )}
       <div className={appMode ? "hidden" : "contents"}>
@@ -635,6 +639,8 @@ export default function AdminMagangAbsensiPage() {
               <BelumAbsenPanel siswaList={siswaList} compact />
             </div>
           </div>
+
+          <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selected?.tempatMagang.namaTempat} sumber="pkl" cta />
         </div>
       </div>
       </div>

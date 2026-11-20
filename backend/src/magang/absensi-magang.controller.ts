@@ -224,6 +224,17 @@ export class AbsensiMagangController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
+  @Get('laporan-sering-tidak-hadir')
+  getLaporanSeringTidakHadir(
+    @Query('periode') periode: string,
+    @Query('tempatMagangId') tempatMagangId: string,
+    @Request() req: any,
+  ) {
+    return this.service.getLaporanSeringTidakHadir(req.user.id, req.user.role, periode === 'bulanan' ? 'bulanan' : 'mingguan', tempatMagangId || undefined);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.GURU)
   @Get('rekap')
   async getRekap(
     @Query('tempatMagangId') tempatMagangId: string,

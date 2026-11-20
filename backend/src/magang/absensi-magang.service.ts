@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException 
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
-import { todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange } from '../common/utils/jakarta-date.util';
+import { todayJakarta as todayStr, effectiveWeekdaysInRange, monthToDateRange, addDaysUTC } from '../common/utils/jakarta-date.util';
 import { isValidGpsLokasi } from '../common/utils/gps.util';
 
 type BimbinganPenempatan = { id: string; siswaId: string; tempatMagangId: string };
@@ -451,6 +451,56 @@ export class AbsensiMagangService {
       throw new ForbiddenException('Anda hanya bisa mengakses data absensi milik sendiri');
     }
     return siswa;
+  }
+
+  async getLaporanSeringTidakHadir(userId: string, role: string, periode: 'mingguan' | 'bulanan', tempatMagangId?: string) {
+    const end = todayStr();
+    const start = addDaysUTC(end, periode === 'bulanan' ? -29 : -6);
+    const tanggalList = effectiveWeekdaysInRange(start, end);
+
+    let onlySiswaIds: string[] | undefined;
+    if (role === 'GURU') {
+      const bimbingan = await this.getBimbinganAktif(userId);
+      onlySiswaIds = bimbingan.filter((b) => !tempatMagangId || b.tempatMagangId === tempatMagangId).map((b) => b.siswaId);
+      if (onlySiswaIds.length === 0) return { periode, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa: [] };
+    }
+
+    const penempatanList = await this.prisma.penempatanMagang.findMany({
+      where: {
+        status: 'AKTIF',
+        ...(tempatMagangId ? { tempatMagangId } : {}),
+        ...(onlySiswaIds ? { siswaId: { in: onlySiswaIds } } : {}),
+      },
+      include: { siswa: { include: { user: { select: { nama: true, fotoProfil: true } }, kelas: { select: { nama: true } } } } },
+    });
+    if (penempatanList.length === 0 || tanggalList.length === 0) {
+      return { periode, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa: [] };
+    }
+
+    const records = await this.prisma.absensiMagang.findMany({
+      where: { penempatanId: { in: penempatanList.map((p) => p.id) }, tanggal: { in: tanggalList } },
+    });
+    const recMap = new Map(records.map((r) => [`${r.siswaId}|${r.tanggal}`, r]));
+
+    const siswa = penempatanList
+      .map((p) => {
+        const mulai = p.tanggalMulai.toISOString().slice(0, 10);
+        const hari = tanggalList.filter((t) => t >= mulai);
+        const row = this.buildRangeSiswaRow(p.siswaId, p.siswa.user?.nama ?? p.siswa.nama, p.siswa.nis, hari, recMap);
+        return {
+          siswaId: row.siswaId,
+          nama: row.nama,
+          nis: row.nis,
+          fotoProfil: p.siswa.user?.fotoProfil ?? null,
+          kelasId: p.siswa.kelasId,
+          kelasNama: p.siswa.kelas?.nama ?? '-',
+          summary: row.summary,
+        };
+      })
+      .filter((r) => r.summary.ALPA > 0)
+      .sort((a, b) => b.summary.ALPA - a.summary.ALPA || a.summary.persentaseKehadiran - b.summary.persentaseKehadiran);
+
+    return { periode, tanggalMulai: start, tanggalSelesai: end, tanggalList, siswa };
   }
 
   async getRiwayatSaya(userId: string, tipe: 'HADIR' | 'PULANG') {

@@ -68,7 +68,7 @@ function StatPill({
   );
 }
 
-export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { kelasId: string; kelasNama?: string; compact?: boolean; cta?: boolean }) {
+export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta, sumber = "harian" }: { kelasId: string; kelasNama?: string; compact?: boolean; cta?: boolean; sumber?: "harian" | "pkl" }) {
   const [periode, setPeriode] = useState<PeriodeLaporan>("mingguan");
   const [data, setData] = useState<LaporanData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,14 +79,14 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
     if (!kelasId) { setData(null); setLoading(false); return; }
     let cancelled = false;
     setLoading(true);
-    const qs = new URLSearchParams({ periode, kelasId });
-    fetch(`/api/absensi-harian/laporan-sering-tidak-hadir?${qs}`)
+    const qs = new URLSearchParams(sumber === "pkl" ? { periode, tempatMagangId: kelasId } : { periode, kelasId });
+    fetch(sumber === "pkl" ? `/api/magang/absensi/laporan-sering-tidak-hadir?${qs}` : `/api/absensi-harian/laporan-sering-tidak-hadir?${qs}`)
       .then((r) => r.json())
       .then((d) => { if (!cancelled) setData(d && Array.isArray(d.siswa) ? d : null); })
       .catch(() => { if (!cancelled) setData(null); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [periode, kelasId]);
+  }, [periode, kelasId, sumber]);
 
   const rows = data?.siswa ?? [];
   const totalBermasalah = rows.length;
