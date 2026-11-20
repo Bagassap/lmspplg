@@ -64,7 +64,7 @@ export function LengkapiFotoProfilCard() {
               }}
             />
             <Image
-              src="/favicon.png"
+              src="/logo-pplg.png"
               alt="Logo PPLG"
               width={1214}
               height={1214}

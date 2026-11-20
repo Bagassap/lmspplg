@@ -104,11 +104,11 @@ export function Sidebar({
         ].join(" ")}
       >
         {compact ? (
-          <Image src="/favicon.png" alt="LMS PPLG" title="LMS PPLG" width={36} height={36} className="h-9 w-9 shrink-0 rounded-2xl" />
+          <Image src="/logo-pplg.png" alt="LMS PPLG" title="LMS PPLG" width={36} height={36} className="h-9 w-9 shrink-0 rounded-2xl" />
         ) : (
           <>
             <div className="flex items-center gap-2.5">
-              <Image src="/favicon.png" alt="LMS PPLG" width={36} height={36} className="h-9 w-9 shrink-0 rounded-2xl" />
+              <Image src="/logo-pplg.png" alt="LMS PPLG" width={36} height={36} className="h-9 w-9 shrink-0 rounded-2xl" />
               <span className="flex items-baseline gap-1">
                 <span className="text-[17px] font-black tracking-tight text-[#3E03B3]">
                   LMS

@@ -322,14 +322,14 @@ export function Topbar({ user }: { user: UserPayload }) {
       >
         {appMode && (
           <div className="flex min-w-0 items-center gap-3 lg:hidden">
-            <Image src="/favicon.png" alt="LMS PPLG" width={40} height={40} className="h-10 w-10 shrink-0 rounded-xl" />
+            <Image src="/logo-pplg.png" alt="LMS PPLG" width={40} height={40} className="h-10 w-10 shrink-0 rounded-xl" />
             <span className="truncate text-base font-bold text-white">
               {appHome ? `Hi, ${user.nama.split(" ")[0]} 👋` : title}
             </span>
           </div>
         )}
         <div className={`min-w-0 items-center gap-2 lg:hidden ${appMode ? "hidden" : "flex"}`}>
-          <Image src="/favicon.png" alt="LMS PPLG" width={32} height={32} className="h-8 w-8 shrink-0 rounded-xl" />
+          <Image src="/logo-pplg.png" alt="LMS PPLG" width={32} height={32} className="h-8 w-8 shrink-0 rounded-xl" />
           <div className="min-w-0">
             <span className="flex items-baseline gap-1">
               <span className={`text-[15px] font-black tracking-tight ${purpleMobile ? "text-white" : "text-[#3E03B3]"}`}>LMS</span>
