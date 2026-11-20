@@ -236,7 +236,7 @@ export default function AdminMagangPenempatanPage() {
           </button>
         } />
 
-      <div className="card-pisah min-w-0 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-5">
+      <div className="min-w-0 lg:rounded-3xl lg:bg-white lg:p-5 lg:shadow-sm lg:dark:bg-slate-800">
         <div className="mb-3 flex flex-wrap items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={18} /></span>
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">
@@ -255,7 +255,7 @@ export default function AdminMagangPenempatanPage() {
           ) : grup.length === 0 ? (
             <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
           ) : grup.map((g) => (
-            <div key={g.id} className="rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+            <div key={g.id} className="rounded-3xl bg-white p-3.5 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
               <div className="flex items-start gap-2">
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-slate-800 dark:text-white">{g.nama}</p>

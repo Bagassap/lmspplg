@@ -108,7 +108,7 @@ export default function AdminPendaftaranPklPage() {
     <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
       <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} />
 
-      <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
+      <div className="min-w-0 lg:rounded-3xl lg:bg-white lg:p-5 lg:shadow-sm lg:dark:bg-slate-800">
         <div className="mb-3 flex flex-wrap items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#E0F2FE", color: "#0EA5E9" }}><ClipboardList size={18} /></span>
           <p className="min-w-0 flex-1 text-base font-extrabold text-slate-900 dark:text-white">Pendaftaran PKL</p>
@@ -127,7 +127,7 @@ export default function AdminPendaftaranPklPage() {
           ) : grup.length === 0 ? (
             <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada pendaftaran</p>
           ) : grup.map((g) => (
-            <div key={g.key} className="rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
+            <div key={g.key} className="rounded-3xl bg-white p-3.5 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
               <p className={`text-sm font-bold ${g.key === TANPA ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{g.nama}</p>
               <div className="mt-2 flex flex-wrap items-center gap-1">
                 {g.key !== TANPA && <span className="rounded-lg bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-600 dark:text-slate-200">Kuota {g.kuota ?? "-"}</span>}

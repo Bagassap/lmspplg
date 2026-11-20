@@ -26,7 +26,7 @@ export default function GuruMagangPenempatanPage() {
     <div className="lg:p-1">
 
       {appMode ? (
-        <div className="mb-5 lg:hidden">
+        <div data-pkl-header className="mb-5 lg:hidden">
           <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">PKL</p>
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Siswa Bimbingan PKL</h1>
         </div>
