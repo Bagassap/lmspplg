@@ -9,7 +9,7 @@ import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/Dafta
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
 import { pesanError } from "@/components/magang/pkl-form-ui";
-import { STATUS_PENDAFTARAN_CFG, formatAlamat, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
+import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang, type StatusPendaftaran } from "@/components/magang/types";
 
 const TABS: Omit<StatusFilterItem<StatusPendaftaran | "">, "count">[] = [
   { value: "MENUNGGU", label: "Menunggu", bg: STATUS_PENDAFTARAN_CFG.MENUNGGU.bg, clr: STATUS_PENDAFTARAN_CFG.MENUNGGU.clr, icon: Clock },
@@ -20,7 +20,13 @@ const TABS: Omit<StatusFilterItem<StatusPendaftaran | "">, "count">[] = [
 
 const namaSiswa = namaPendaftar;
 const TANPA = "__tanpa__";
-const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(12rem,1.6fr) minmax(8rem,auto) 9.5rem";
+const GRID_COLS = "2.5rem minmax(10rem,1.6fr) 4.5rem 6.5rem minmax(8rem,1fr) 9.5rem";
+
+function GenderChip({ jk }: { jk?: string | null }) {
+  const label = jk === "Perempuan" ? "Putri" : jk === "Laki-laki" ? "Putra" : "Putra/Putri";
+  const style = jk === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : jk === "Laki-laki" ? { background: "#E0F2FE", color: "#0EA5E9" } : { background: "#F1EDFA", color: "#3E03B3" };
+  return <span className="w-fit rounded-lg px-2 py-0.5 text-[10px] font-bold" style={style}>{label}</span>;
+}
 
 export default function AdminPendaftaranPklPage() {
   const toast = useToast();
@@ -75,7 +81,7 @@ export default function AdminPendaftaranPklPage() {
 
   const grup = useMemo(() => {
     const k = q.trim().toLowerCase();
-    const map = new Map<string, { key: string; nama: string; alamat: string; rows: PendaftaranMagang[] }>();
+    const map = new Map<string, { key: string; nama: string; kuota: number | null; jenisKelamin: string | null; rows: PendaftaranMagang[] }>();
     list
       .filter((p) => (tab ? p.status === tab : true))
       .filter((p) => !k
@@ -85,7 +91,7 @@ export default function AdminPendaftaranPklPage() {
         || (p.tempatMagang?.namaTempat ?? "").toLowerCase().includes(k))
       .forEach((p) => {
         const key = p.tempatMagang?.id ?? TANPA;
-        const g = map.get(key) ?? { key, nama: p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL", alamat: p.tempatMagang ? formatAlamat(p.tempatMagang) : "-", rows: [] };
+        const g = map.get(key) ?? { key, nama: p.tempatMagang?.namaTempat ?? "Belum memilih tempat PKL", kuota: p.tempatMagang?.kuota ?? null, jenisKelamin: p.tempatMagang?.jenisKelamin ?? null, rows: [] };
         g.rows.push(p);
         map.set(key, g);
       });
@@ -123,8 +129,9 @@ export default function AdminPendaftaranPklPage() {
           ) : grup.map((g) => (
             <div key={g.key} className="rounded-2xl bg-slate-50 p-3 dark:bg-slate-700">
               <p className={`text-sm font-bold ${g.key === TANPA ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{g.nama}</p>
-              {g.alamat !== "-" && <p className="mt-0.5 line-clamp-2 text-xs text-slate-600 dark:text-slate-300">{g.alamat}</p>}
               <div className="mt-2 flex flex-wrap items-center gap-1">
+                {g.key !== TANPA && <span className="rounded-lg bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-600 dark:text-slate-200">Kuota {g.kuota ?? "-"}</span>}
+                {g.key !== TANPA && <GenderChip jk={g.jenisKelamin} />}
                 {(["MENUNGGU", "DITERIMA", "DITOLAK"] as StatusPendaftaran[]).map((st) => {
                   const n = g.rows.filter((r) => r.status === st).length;
                   if (!n) return null;
@@ -149,10 +156,11 @@ export default function AdminPendaftaranPklPage() {
             <div className="min-w-[720px]">
               <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
                 <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Alamat</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Instansi</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Kuota</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Gender</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-white">Status</span>
-                <span className="text-right text-[10px] font-bold uppercase tracking-wider text-white">Siswa</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Siswa</span>
               </div>
               {loading ? (
                 <div className="space-y-2 p-4">
@@ -170,7 +178,8 @@ export default function AdminPendaftaranPklPage() {
                         style={{ gridTemplateColumns: GRID_COLS }}>
                         <span className="text-center text-xs font-bold text-slate-400">{idx + 1}</span>
                         <p className={`truncate text-sm font-bold ${tanpa ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`} title={g.nama}>{g.nama}</p>
-                        <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{tanpa ? "-" : g.kuota ?? "-"}</span>
+                        {tanpa ? <span className="text-xs text-slate-400">-</span> : <GenderChip jk={g.jenisKelamin} />}
                         <div className="flex flex-wrap gap-1">
                           {(["MENUNGGU", "DITERIMA", "DITOLAK"] as StatusPendaftaran[]).map((st) => {
                             const n = jumlah(st);
@@ -183,7 +192,7 @@ export default function AdminPendaftaranPklPage() {
                             );
                           })}
                         </div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-start">
                           <button type="button" onClick={() => setBukaKey(g.key)}
                             className="flex h-8 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
                             <Users size={13} /> Lihat siswa ({g.rows.length})

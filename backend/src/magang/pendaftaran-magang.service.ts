@@ -16,7 +16,7 @@ const INCLUDE_SISWA = {
     },
   },
   tempatMagang: {
-    select: { id: true, namaTempat: true, alamat: true, dukuh: true, rt: true, rw: true, desa: true, kecamatan: true, kabupaten: true },
+    select: { id: true, namaTempat: true, alamat: true, dukuh: true, rt: true, rw: true, desa: true, kecamatan: true, kabupaten: true, kuota: true, jenisKelamin: true },
   },
 } as const;
 
