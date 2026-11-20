@@ -21,6 +21,7 @@ import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { AdminAppHome } from "@/components/dashboard/AdminAppHome";
 import { PengajuanPklCard, type PengajuanPkl } from "@/components/dashboard/PengajuanPklCard";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 const P = "#3E03B3";   
 const R = "#3E03B3";   
 const B = "#3E03B3";   
@@ -301,7 +302,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
                       <Clock size={9} />
-                      <span>{p.author.nama} · {timeAgo(p.createdAt)}</span>
+                      <span>{namaOrang(p.author.nama)} · {timeAgo(p.createdAt)}</span>
                     </div>
                   </div>
                   <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"
@@ -536,7 +537,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-1 text-[13px] font-semibold text-slate-800 dark:text-white">{p.judul}</p>
-                  <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{p.author.nama} · {timeAgo(p.createdAt)}</p>
+                  <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{namaOrang(p.author.nama)} · {timeAgo(p.createdAt)}</p>
                 </div>
                 <ChevronRight size={15} className="shrink-0 text-slate-300" />
               </li>

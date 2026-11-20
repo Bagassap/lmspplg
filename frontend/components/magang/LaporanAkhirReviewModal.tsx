@@ -4,8 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { LaporanAkhirRow } from "./laporan-akhir-types";
+import { namaSiswa } from "@/lib/nama";
 
 function fmtTgl(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -39,7 +40,7 @@ export function LaporanAkhirReviewModal({ row, onClose, onReview }: {
   }
 
   const laporan = row?.laporan ?? null;
-  const nama = row ? toTitleCase(row.siswa.nama ?? "—") : "";
+  const nama = row ? namaSiswa(row.siswa.nama ?? "—") : "";
 
   return (
     <AnimatePresence>

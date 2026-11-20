@@ -2,10 +2,11 @@
 
 import { Users } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { STATUS_CFG } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, RangeSiswaRow } from "./types";
+import { namaSiswa } from "@/lib/nama";
 
 function EmptyState() {
   return (
@@ -48,7 +49,7 @@ export function RekapMagangHarianTable({ loading, siswa }: { loading: boolean; s
             </thead>
             <tbody>
               {siswa.map((s) => {
-                const nama = toTitleCase(s.nama);
+                const nama = namaSiswa(s.nama);
                 return (
                   <tr key={s.siswaId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                     <td className="whitespace-nowrap px-4 py-3">
@@ -89,7 +90,7 @@ export function RekapMagangRangeTable({ loading, siswa }: { loading: boolean; si
             </thead>
             <tbody>
               {siswa.map((s) => {
-                const nama = toTitleCase(s.nama ?? "—");
+                const nama = namaSiswa(s.nama ?? "—");
                 const pct = s.summary.persentaseKehadiran;
                 const pctColor = pct >= 70 ? STATUS_CFG.HADIR.clr : STATUS_CFG.ALPA.clr;
                 return (

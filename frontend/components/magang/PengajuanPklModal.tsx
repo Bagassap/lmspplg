@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { Building2, CalendarDays, CheckCircle2, ExternalLink, FileText, Loader2, MapPin, Phone, User, UserCheck, X, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase, waLink } from "@/components/data-siswa/shared";
+import { avatarColorFor, waLink } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./types";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -40,7 +41,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   const t = p.tempatMagang;
   const menunggu = p.status === "MENUNGGU";
   const cfg = STATUS_PENEMPATAN_CFG[p.status];
-  const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+  const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
   const suratUrl = p.suratKeteranganUrl ? `/api/uploads${p.suratKeteranganUrl}` : null;
   const suratGambar = !!p.suratKeteranganUrl && /\.(png|jpe?g|webp)$/i.test(p.suratKeteranganUrl);
   const wa = waLink(t.noWaUsaha ?? t.kontak);
@@ -104,7 +105,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           </Baris>
           <Baris icon={CalendarDays} label="Diajukan" bg="#FFF4E0" fg="#D97706">{fmt(p.createdAt)}</Baris>
           {!menunggu && (
-            <Baris icon={UserCheck} label="Guru pembimbing" bg="#F1EDFA" fg="#3E03B3">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</Baris>
+            <Baris icon={UserCheck} label="Guru pembimbing" bg="#F1EDFA" fg="#3E03B3">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</Baris>
           )}
 
           <p className="pt-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Bukti surat instansi</p>

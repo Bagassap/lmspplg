@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, KeyRound, Lock, CheckCircle2, XCircle, Users
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaSiswa } from "@/lib/nama";
 
 const REF_PRIMARY = "#3E03B3";
 const REF_SUCCESS = "#059669";
@@ -18,9 +19,6 @@ export type SiswaPasswordItem = {
   user: { id: string; mustChangePassword: boolean; updatedAt: string; fotoProfil?: string | null } | null;
 };
 
-function toTitleCase(str: string): string {
-  return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
 function daysSince(iso: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
 }
@@ -85,7 +83,7 @@ export function SiswaPasswordTable({
           </div>
           <div className="divide-y divide-slate-50 dark:divide-slate-700/30">
             {pageItems.map((s, idx) => {
-              const displayNama = toTitleCase(s.nama);
+              const displayNama = namaSiswa(s.nama);
               const mustChange = s.user?.mustChangePassword ?? null;
               return (
                 <motion.div key={s.id}
@@ -141,7 +139,7 @@ export function SiswaPasswordTable({
       {mobileNative && (
         <div className={app ? "space-y-2 p-3 lg:hidden" : "divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40"}>
           {pageItems.map((s) => {
-            const displayNama = toTitleCase(s.nama);
+            const displayNama = namaSiswa(s.nama);
             const mustChange = s.user?.mustChangePassword ?? null;
             return (
               <div key={s.id} className={app ? "flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-[#1E293B]" : "flex items-center gap-3 p-3"}>

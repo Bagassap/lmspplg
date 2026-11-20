@@ -5,12 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, X, KeyRound } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
+import { namaOrang } from "@/lib/nama";
 
 type AdminRow = { id: string; nama: string; loginId: string | null; isActive: boolean; mustChangePassword: boolean; fotoProfil?: string | null };
-
-function toTitleCase(str: string): string {
-  return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
 
 export function KelolaAdminModal({ open, onClose, onResetPassword }: {
   open: boolean;
@@ -54,7 +51,7 @@ export function KelolaAdminModal({ open, onClose, onResetPassword }: {
               ) : (
                 <div className="space-y-2.5">
                   {list.map((a) => {
-                    const nama = toTitleCase(a.nama);
+                    const nama = namaOrang(a.nama);
                     return (
                       <div key={a.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-slate-100 p-3 dark:border-slate-700/50">
                         <Avatar src={a.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />

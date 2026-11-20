@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { Briefcase, X } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { TempatMagang, PenempatanMagang } from "./types";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -26,7 +27,7 @@ export function EditPenempatanModal({
   const [guruId, setGuruId] = useState(penempatan.guruPembimbing?.id ?? "");
   const [saving, setSaving] = useState(false);
 
-  const nama = toTitleCase(penempatan.siswa.nama ?? penempatan.siswa.user?.nama ?? "—");
+  const nama = namaSiswa(penempatan.siswa.nama ?? penempatan.siswa.user?.nama ?? "—");
 
   async function save() {
     if (!tempatId || !guruId) {
@@ -110,7 +111,7 @@ export function EditPenempatanModal({
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Guru Pembimbing</label>
             <select value={guruId} onChange={(e) => setGuruId(e.target.value)} className={INPUT_CLS}>
               {guruList.map((g) => (
-                <option key={g.id} value={g.id}>{toTitleCase(g.user.nama)}</option>
+                <option key={g.id} value={g.id}>{namaOrang(g.user.nama)}</option>
               ))}
             </select>
           </div>

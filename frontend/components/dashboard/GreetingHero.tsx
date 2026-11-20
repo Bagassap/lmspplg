@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { namaPanggilan } from "@/lib/nama";
 
 const ROLE_BADGE: Record<string, { label: string; cls: string }> = {
   ADMIN: { label: "Admin",  cls: "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#8F6DD3]" },
@@ -22,7 +23,7 @@ function getGreeting(): { emoji: string; text: string } {
 }
 
 function getFirstName(nama: string) {
-  return nama.trim().split(/\s+/)[0] ?? nama;
+  return namaPanggilan(nama) || nama;
 }
 
 export default function GreetingHero({

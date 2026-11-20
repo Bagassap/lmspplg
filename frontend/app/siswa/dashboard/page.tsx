@@ -19,6 +19,7 @@ import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { SiswaAppHome } from "@/components/dashboard/SiswaAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
+import { namaOrang } from "@/lib/nama";
 
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
@@ -307,7 +308,7 @@ export default function SiswaDashboardPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="line-clamp-1 text-[13px] font-semibold text-slate-800 dark:text-white">{p.judul}</p>
-                    <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{p.author.nama} · {timeAgo(p.createdAt)}</p>
+                    <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{namaOrang(p.author.nama)} · {timeAgo(p.createdAt)}</p>
                   </div>
                   <ChevronRight size={15} className="shrink-0 text-slate-300" />
                 </li>
@@ -389,7 +390,7 @@ export default function SiswaDashboardPage() {
                       </div>
                       <div className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
                         <Clock size={9} />
-                        <span>{p.author.nama} · {timeAgo(p.createdAt)}</span>
+                        <span>{namaOrang(p.author.nama)} · {timeAgo(p.createdAt)}</span>
                       </div>
                     </div>
                     <span className="shrink-0 rounded-lg px-2 py-0.5 text-[9px] font-bold"

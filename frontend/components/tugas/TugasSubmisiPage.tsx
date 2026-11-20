@@ -12,6 +12,7 @@ import { TugasFileViewerModal } from "./TugasFileViewerModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
+import { namaSiswa } from "@/lib/nama";
 
 type Kelas = { id: string; nama: string };
 type BelumSiswa = { id: string; nama: string | null; kelas: Kelas | null; user: { id: string; nama: string; fotoProfil?: string | null } | null };
@@ -83,7 +84,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
     else toast.error("Gagal menyimpan nilai");
   }
 
-  const namaOf = (s: SubmisiRow) => s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
+  const namaOf = (s: SubmisiRow) => namaSiswa(s.siswa?.user?.nama || s.siswa?.nama || "Siswa");
 
   const body = (
     <div className={asModal ? "w-full space-y-5" : "mx-auto w-full max-w-3xl space-y-4 pb-6"}>
@@ -137,7 +138,7 @@ export function TugasSubmisiPage({ tugasId, role, onClose }: { tugasId: string; 
               belumK.length === 0 ? (
                 <p className="py-12 text-center text-xs font-semibold text-slate-600">Semua siswa di kelas ini sudah mengumpulkan</p>
               ) : belumK.map((s) => {
-                const nama = s.user?.nama || s.nama || "Siswa";
+                const nama = namaSiswa(s.user?.nama || s.nama || "Siswa");
                 return (
                   <div key={s.id} className={`flex items-center gap-3 rounded-2xl bg-white shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] dark:bg-slate-800 px-3 py-2.5`}>
                     <Avatar src={s.user?.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-xs font-extrabold" />

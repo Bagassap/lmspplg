@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import type { TugasSubmisiItem } from "./types";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaSiswa } from "@/lib/nama";
 
 export function RevisiFormModal({
   target, onClose, onSend,
@@ -16,7 +17,7 @@ export function RevisiFormModal({
   const app = useIsAppMode();
   const [pesan, setPesan] = useState("");
   const [sending, setSending] = useState(false);
-  const nama = target?.siswa?.user?.nama || target?.siswa?.nama || "Siswa";
+  const nama = namaSiswa(target?.siswa?.user?.nama || target?.siswa?.nama || "Siswa");
 
   async function submit() {
     if (!target || !pesan.trim()) return;

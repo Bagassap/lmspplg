@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { Building2, CalendarDays, FileText, Pencil, Trash2, UserCheck, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, type PenempatanMagang, type StatusPenempatan } from "./types";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -45,7 +46,7 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
 
         <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto px-5 pb-5">
           {rows.map((p) => {
-            const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+            const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
             const cfg = STATUS_PENEMPATAN_CFG[p.status];
             const busy = busyId === p.id;
             return (
@@ -86,7 +87,7 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                 </div>
                 <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 pl-[42px] text-xs text-slate-600 dark:text-slate-300">
                   <span className="flex min-w-0 items-center gap-1"><UserCheck size={12} className="shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
-                    <span className="truncate">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ada pembimbing"}</span>
+                    <span className="truncate">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ada pembimbing"}</span>
                   </span>
                   <span className="flex shrink-0 items-center gap-1"><CalendarDays size={12} className="shrink-0 text-[#D97706]" />{fmt(p.status === "MENUNGGU" ? p.createdAt : p.tanggalMulai)}</span>
                   {p.suratKeteranganUrl && (

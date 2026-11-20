@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CornerUpLeft, Send, Loader2, X, MessageCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
+import { namaTampil } from "@/lib/nama";
 
 export type KomentarItem = {
   id: string;
@@ -120,12 +121,12 @@ export function KomentarSection({
                 <div className={`max-w-[80%] rounded-2xl px-3 py-2 shadow-sm ${mine ? "rounded-br-sm bg-[#3E03B3] text-white" : "rounded-bl-sm bg-white text-slate-800 dark:bg-slate-700 dark:text-slate-100"}`}>
                   {!mine && (
                     <p className="text-[11px] font-bold" style={{ color }}>
-                      {k.author.nama} <span className="font-semibold">· {ROLE_LABEL[k.author.role] ?? "Siswa"}</span>
+                      {namaTampil(k.author.nama, k.author.role)} <span className="font-semibold">· {ROLE_LABEL[k.author.role] ?? "Siswa"}</span>
                     </p>
                   )}
                   {quote && (
                     <div className={`mb-1 mt-0.5 rounded-lg border-l-[3px] border-[#F26A3D] px-2 py-1 text-[11px] ${mine ? "bg-[#2D0281]" : "bg-[#F1EDFA] dark:bg-slate-600"}`}>
-                      <p className="font-bold" style={{ color: mine ? "#FFD2C2" : "#F26A3D" }}>{quote.author.nama}</p>
+                      <p className="font-bold" style={{ color: mine ? "#FFD2C2" : "#F26A3D" }}>{namaTampil(quote.author.nama, quote.author.role)}</p>
                       <p className="line-clamp-2">{quote.konten}</p>
                     </div>
                   )}
@@ -151,7 +152,7 @@ export function KomentarSection({
         {replyTo && (
           <div className="mb-2 flex items-center gap-2 rounded-xl border-l-[3px] border-[#F26A3D] bg-[#F1EDFA] px-3 py-1.5 text-[11px] dark:bg-slate-800">
             <div className="min-w-0 flex-1">
-              <p className="font-bold text-[#F26A3D]">Membalas {replyTo.author.nama}</p>
+              <p className="font-bold text-[#F26A3D]">Membalas {namaTampil(replyTo.author.nama, replyTo.author.role)}</p>
               <p className="truncate text-slate-500 dark:text-slate-400">{replyTo.konten}</p>
             </div>
             <button type="button" onClick={() => setReplyTo(null)} className="text-slate-400" aria-label="Batal balas"><X size={14} /></button>

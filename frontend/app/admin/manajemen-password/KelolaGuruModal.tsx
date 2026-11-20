@@ -10,6 +10,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
 import { KelolaKelasModal, type Guru as GuruRef } from "@/components/absensi-harian/KelolaKelasModal";
 import type { Kelas } from "@/components/absensi-harian/types";
+import { namaOrang } from "@/lib/nama";
 
 type MapelItem = { id: string; nama: string };
 
@@ -28,10 +29,6 @@ type GuruRow = {
     kelasWali: { id: string; nama: string }[];
   } | null;
 };
-
-function toTitleCase(str: string): string {
-  return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
 
 export function KelolaGuruModal({
   open, kelasList, onClose, onResetPassword, onChanged,
@@ -98,7 +95,7 @@ export function KelolaGuruModal({
   }
 
   async function toggleAktif(g: GuruRow) {
-    const nama = toTitleCase(g.nama);
+    const nama = namaOrang(g.nama);
     if (g.isActive) {
       const ok = await toast.confirm(
         "Nonaktifkan akun guru ini?",
@@ -125,7 +122,7 @@ export function KelolaGuruModal({
 
   const guruRefList: GuruRef[] = guruList
     .filter((g) => g.guru)
-    .map((g) => ({ id: g.guru!.id, user: { id: g.id, nama: toTitleCase(g.nama) } }));
+    .map((g) => ({ id: g.guru!.id, user: { id: g.id, nama: namaOrang(g.nama) } }));
 
   return (
     <AnimatePresence>
@@ -169,7 +166,7 @@ export function KelolaGuruModal({
               ) : (
                 <div className="space-y-2.5">
                   {guruList.map((g) => {
-                    const nama = toTitleCase(g.nama);
+                    const nama = namaOrang(g.nama);
                     const busy = busyId === g.id;
                     return (
                       <div key={g.id}

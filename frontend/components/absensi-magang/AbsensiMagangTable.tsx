@@ -9,6 +9,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 import { StatusBadge } from "@/components/absensi-harian/StatusBadge";
 import { STATUS_CFG, PULANG_CFG, avatarColor, parseLokasi } from "@/components/absensi-harian/shared";
 import type { SiswaAbsensi, StatusAbsensi, FilterAbsensi } from "./types";
+import { namaSiswa } from "@/lib/nama";
 
 const GRID_COLS = "28px 40px 2.2fr 1.3fr 1fr 1fr 1.3fr 60px 60px 116px";
 
@@ -142,7 +143,7 @@ export function AbsensiMagangTable({
                     fallbackBg={ac}
                     textClassName="text-[10px] font-extrabold"
                   />
-                  <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama}</p>
+                  <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{namaSiswa(s.nama)}</p>
                   <p className="truncate text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">{s.nis ?? "—"}</p>
                   {isPulangView ? (
                     <span className="inline-flex w-fit items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-bold"

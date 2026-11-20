@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { Clock, FileText, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, type PendaftaranMagang, type PenempatanMagang } from "./types";
+import { namaSiswa } from "@/lib/nama";
 
 export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
   judul: string;
@@ -32,7 +33,7 @@ export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
             <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Belum ada siswa di instansi ini</p>
           )}
           {terkirim.map((p) => {
-            const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+            const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
             const cfg = STATUS_PENEMPATAN_CFG[p.status];
             return (
               <div key={p.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800">
@@ -49,7 +50,7 @@ export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
             );
           })}
           {belum.map((d) => {
-            const nama = toTitleCase(d.siswa?.user?.nama ?? d.siswa?.nama ?? "—");
+            const nama = namaSiswa(d.siswa?.user?.nama ?? d.siswa?.nama ?? "—");
             return (
               <div key={d.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800">
                 <Avatar src={d.siswa?.user?.fotoProfil} nama={nama} sizePx={32} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />

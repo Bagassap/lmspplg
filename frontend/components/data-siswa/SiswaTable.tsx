@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { SiswaTableHead, SiswaTableRow, GRID_COLS } from "./SiswaTableRow";
 import { SiswaDetailModal } from "./SiswaDetailModal";
-import { type SiswaCardData, toTitleCase, getNama, avatarColorFor, completeness } from "./shared";
+import { type SiswaCardData, getNama, avatarColorFor, completeness } from "./shared";
 import { Avatar } from "@/components/shared/Avatar";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { PasswordSiswaModal } from "@/components/shared/PasswordSiswaModal";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaSiswa } from "@/lib/nama";
 
 type ActionProps = {
   onEdit?: (s: SiswaCardData) => void;
@@ -128,7 +129,7 @@ export function SiswaTable({
         {mobileNative && app && (
           <ul className="space-y-2 p-3 lg:hidden">
             {pageItems.map((s, i) => {
-              const displayNama = toTitleCase(getNama(s));
+              const displayNama = namaSiswa(getNama(s));
               const accent = avatarColorFor(s.id || displayNama);
               const pct = completeness(s);
               return (
@@ -156,7 +157,7 @@ export function SiswaTable({
           <div className="p-4 lg:hidden">
             <div className="divide-y divide-slate-100 overflow-hidden rounded-[22px] bg-white shadow-[0_4px_14px_-4px_rgba(0,0,0,0.10)] dark:divide-slate-700/50 dark:bg-slate-800">
               {pageItems.map((s) => {
-                const displayNama = toTitleCase(getNama(s));
+                const displayNama = namaSiswa(getNama(s));
                 const accent = avatarColorFor(s.id || displayNama);
                 const pct = completeness(s);
                 return (
@@ -189,7 +190,7 @@ export function SiswaTable({
     <>
       {content}
       {passwordSiswa?.user && (
-        <PasswordSiswaModal userId={passwordSiswa.user.id} nama={toTitleCase(getNama(passwordSiswa))} onClose={() => setPasswordSiswa(null)}
+        <PasswordSiswaModal userId={passwordSiswa.user.id} nama={namaSiswa(getNama(passwordSiswa))} onClose={() => setPasswordSiswa(null)}
           onReset={onResetPassword ? () => { onResetPassword(passwordSiswa); setPasswordSiswa(null); } : undefined} />
       )}
       {detailSiswa && (

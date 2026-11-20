@@ -2,8 +2,9 @@
 
 import { Users, Eye, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { LaporanAkhirRow } from "./laporan-akhir-types";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 const STATUS_CFG: Record<string, { label: string; bg: string; clr: string; icon: typeof Clock }> = {
   TERKIRIM: { label: "Menunggu Review", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
@@ -47,7 +48,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
               </thead>
               <tbody>
                 {rows.map((r) => {
-                  const nama = toTitleCase(r.siswa.nama ?? "—");
+                  const nama = namaSiswa(r.siswa.nama ?? "—");
                   const cfg = r.laporan ? STATUS_CFG[r.laporan.status] : null;
                   return (
                     <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
@@ -63,7 +64,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                       <td className="px-4 py-3">
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{r.tempatMagang.namaTempat}</p>
                         {showPembimbing && (
-                          <p className="text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? toTitleCase(r.guruPembimbing.nama) : "—"}</p>
+                          <p className="text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? namaOrang(r.guruPembimbing.nama) : "—"}</p>
                         )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
@@ -98,7 +99,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
           {mobileNative && (
             <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
               {rows.map((r) => {
-                const nama = toTitleCase(r.siswa.nama ?? "—");
+                const nama = namaSiswa(r.siswa.nama ?? "—");
                 const cfg = r.laporan ? STATUS_CFG[r.laporan.status] : null;
                 return (
                   <div key={r.penempatanId} className="flex flex-col gap-2.5 p-3">
@@ -119,7 +120,7 @@ export function LaporanAkhirTable({ loading, rows, showPembimbing = false, onOpe
                       )}
                     </div>
                     {showPembimbing && (
-                      <p className="pl-[50px] text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? toTitleCase(r.guruPembimbing.nama) : "—"}</p>
+                      <p className="pl-[50px] text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? namaOrang(r.guruPembimbing.nama) : "—"}</p>
                     )}
                     {r.laporan ? (
                       <button onClick={() => onOpen(r)}

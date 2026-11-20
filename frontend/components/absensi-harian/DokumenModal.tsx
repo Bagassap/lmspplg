@@ -12,6 +12,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useSheetHeader } from "@/components/app/AppUI";
 import { AppSheet } from "@/components/app/AppSheet";
+import { namaSiswa } from "@/lib/nama";
 
 function DocumentCards({ fotoSrc, fotoLabel, ttdSrc, lokasi, rawLokasi, onOpenImg }: {
   fotoSrc: string | null; fotoLabel: string; ttdSrc: string | null;
@@ -170,7 +171,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
   if (h.app as boolean) {
     return createPortal(
       <>
-        <AppSheet open onClose={onClose} title={siswa.nama}
+        <AppSheet open onClose={onClose} title={namaSiswa(siswa.nama)}
           footer={<button onClick={onClose} className="h-12 w-full rounded-xl bg-[#3E03B3] text-sm font-bold text-white">Tutup</button>}>
           <div className="mb-3 flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3">
             <Avatar src={siswa.fotoProfil} nama={siswa.nama} sizePx={44} fallbackBg={ac} textClassName="text-sm font-extrabold" />
@@ -258,7 +259,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
                   <ThemeIcon size={13} className="text-white" />
                 </div>
               </div>
-              <h2 className="mt-4 text-sm font-extrabold leading-tight text-white">{siswa.nama}</h2>
+              <h2 className="mt-4 text-sm font-extrabold leading-tight text-white">{namaSiswa(siswa.nama)}</h2>
               <div className="mt-2 rounded-lg px-3 py-1 text-xs font-extrabold text-white" style={{ background: "#2D0281" }}>
                 {theme.label}
               </div>
@@ -314,7 +315,7 @@ export function DokumenModal({ siswa, tanggal, kelas, onClose, source = "hadir" 
               </div>
             </div>
             <div className="min-w-0 flex-1">
-              <h2 className={`truncate text-base font-extrabold leading-tight ${h.title}`}>{siswa.nama}</h2>
+              <h2 className={`truncate text-base font-extrabold leading-tight ${h.title}`}>{namaSiswa(siswa.nama)}</h2>
               <div className="mt-1 flex flex-wrap items-center gap-1.5">
                 <span className={`rounded-lg px-2 py-0.5 text-[9px] font-extrabold ${h.app ? "text-[#3E03B3]" : "text-white"}`} style={{ background: h.app ? "#FFFFFF" : "rgba(255,255,255,0.22)" }}>
                   {theme.label}

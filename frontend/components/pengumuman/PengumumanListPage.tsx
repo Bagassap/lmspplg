@@ -18,6 +18,7 @@ import { timeAgo as timeAgoShared } from "@/components/dashboard/ActivityList";
 import { AppMobileFrame, AppCard, AppEmpty } from "@/components/app/AppUI";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -240,7 +241,7 @@ function AccordionCard({
                 fallbackBg={gradient}
                 textClassName="text-[9px] font-bold"
               />
-              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{p.author.nama}</span>
+              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{namaOrang(p.author.nama)}</span>
               <span className="text-[10px] text-slate-400 dark:text-slate-500">
                 · <MessageCircle size={9} className="mr-0.5 inline" />{p._count.komentar}
               </span>
@@ -280,7 +281,7 @@ function AccordionCard({
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[13px] font-bold text-slate-800 dark:text-white">{p.author.nama}</p>
+                    <p className="text-[13px] font-bold text-slate-800 dark:text-white">{namaOrang(p.author.nama)}</p>
                     <p className="flex items-center gap-1 text-[10px] text-slate-400 dark:text-slate-500">
                       <Clock size={9} /> {timeAgo(p.createdAt)}
                     </p>
@@ -585,7 +586,7 @@ export function PengumumanListPage({ canManage }: { canManage: boolean }) {
                       </div>
                       <p className="mt-1 line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{p.judul}</p>
                       <p className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
-                        <span className="truncate">{p.author.nama}</span><span>•</span>
+                        <span className="truncate">{namaOrang(p.author.nama)}</span><span>•</span>
                         <span className="shrink-0">{timeAgoShared(p.createdAt)}</span><span>•</span>
                         <span className="flex shrink-0 items-center gap-0.5"><MessageCircle size={10} />{p._count.komentar}</span>
                       </p>

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import type { MateriItem } from "./MateriFormModal";
+import { namaOrang } from "@/lib/nama";
 
 function chunkOf4<T>(items: T[]): T[][] {
   const out: T[][] = [];
@@ -166,7 +167,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
                           <GraduationCap size={10} /> {m.mapel}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{m.createdBy.nama}</td>
+                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{namaOrang(m.createdBy.nama)}</td>
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
                         <span className="flex items-center gap-1"><CalendarDays size={11} />{formatDate(m.createdAt)}</span>
                       </td>
@@ -287,7 +288,7 @@ export function MateriSiswaPage({ embedded = false, search, onSearchChange }: { 
               </div>
               <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
                 <span className="text-xs font-semibold text-white/70">Dibuat Oleh</span>
-                <span className="text-xs font-bold text-white">{detailItem.createdBy.nama}</span>
+                <span className="text-xs font-bold text-white">{namaOrang(detailItem.createdBy.nama)}</span>
               </div>
               {detailItem.deskripsi && (
                 <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">

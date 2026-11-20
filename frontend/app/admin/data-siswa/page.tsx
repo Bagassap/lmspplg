@@ -12,7 +12,8 @@ import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
 import { KenaikanKelasModal } from "@/components/data-siswa/KenaikanKelasModal";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
-import { type SiswaCardData, type KelasRef, getNama, toTitleCase } from "@/components/data-siswa/shared";
+import { type SiswaCardData, type KelasRef, getNama } from "@/components/data-siswa/shared";
+import { namaSiswa } from "@/lib/nama";
 
 export default function AdminDataSiswaPage() {
   const [siswaList, setSiswaList] = useState<SiswaCardData[]>([]);
@@ -76,7 +77,7 @@ export default function AdminDataSiswaPage() {
   }
 
   async function handleKeluarkan(s: SiswaCardData) {
-    const nama = toTitleCase(getNama(s));
+    const nama = namaSiswa(getNama(s));
     const ok = await toast.confirm(
       "Hapus siswa ini secara permanen?",
       `"${nama}" beserta SELURUH riwayatnya (absensi, tugas, PKL, UKK) dan akun login (kalau ada) akan DIHAPUS PERMANEN dari sistem. Aksi ini TIDAK BISA DIBATALKAN.`,
@@ -170,7 +171,7 @@ export default function AdminDataSiswaPage() {
       {resetTarget?.user && (
         <ResetPasswordModal
           userId={resetTarget.user.id}
-          userName={toTitleCase(getNama(resetTarget))}
+          userName={namaSiswa(getNama(resetTarget))}
           nis={resetTarget.nis}
           mustChangePassword={resetTarget.user.mustChangePassword}
           onClose={() => setResetTarget(null)}

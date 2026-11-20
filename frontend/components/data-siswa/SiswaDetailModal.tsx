@@ -6,15 +6,13 @@ import {
   CalendarDays, User, GraduationCap, BookOpen, Phone, UserCheck, Users, Pencil, X, MapPin, CheckCircle2, XCircle, Hash, KeyRound,
   MoreVertical, Eye, Trash2, Lock,
 } from "lucide-react";
-import {
-  type SiswaCardData, toTitleCase, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap,
-  completeness, missingFields, waLink,
-} from "./shared";
+import { type SiswaCardData, getNama, kelasShort, formatTempatTanggalLahir, formatAlamatLengkap, completeness, missingFields, waLink } from "./shared";
 import { ZoomAvatar as Avatar } from "./ZoomAvatar";
 import { ProgressRing } from "./ProgressRing";
 import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useSheetHeader } from "@/components/app/AppUI";
 import { AppSheet } from "@/components/app/AppSheet";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 function MobileRow({ icon: Icon, label, value, href }: {
   icon: React.ElementType; label: string; value: string | null | undefined; href?: string | null;
@@ -74,9 +72,9 @@ export function SiswaDetailModal({ siswa, onEdit, onResetPassword, onLihatPasswo
   const h = useSheetHeader("#3E03B3");
   const [actionsOpen, setActionsOpen] = useState(false);
   const hasMobileActions = !!((onResetPassword || onLihatPassword || onImpersonate) && siswa.user) || !!onKeluarkan;
-  const displayNama = toTitleCase(getNama(siswa));
+  const displayNama = namaSiswa(getNama(siswa));
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
-  const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ?? null;
+  const waliKelas = siswa.kelas.waliKelasGuru?.user.nama ? namaOrang(siswa.kelas.waliKelasGuru.user.nama) : null;
   const alamatLengkap = formatAlamatLengkap(siswa);
   const pct = completeness(siswa);
   const missing = missingFields(siswa);

@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Building2, CheckCircle2, MapPin, Phone, User, Users, X } from "lucide-react";
-import { toTitleCase, waLink } from "@/components/data-siswa/shared";
+import { waLink } from "@/components/data-siswa/shared";
 import { formatAlamat, labelJenisKelaminTempat, tempatCocokJenisKelamin, type Instansi } from "./types";
+import { namaSiswa } from "@/lib/nama";
 
 export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, onPilih, onClose }: {
   instansi: Instansi;
@@ -71,7 +72,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, o
                 {i.siswa.map((s, n) => (
                   <div key={s.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
                     <span className="w-5 shrink-0 text-xs font-bold text-[#F26A3D]">{n + 1}.</span>
-                    <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-100">{toTitleCase(s.nama)}</p>
+                    <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-100">{namaSiswa(s.nama)}</p>
                     {s.kelas && <span className="shrink-0 text-xs text-slate-400">{s.kelas}</span>}
                   </div>
                 ))}

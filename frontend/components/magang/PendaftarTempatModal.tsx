@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Building2, CheckCircle2, Loader2, RotateCcw, X, XCircle } from "lucide-react";
-import { toTitleCase } from "@/components/data-siswa/shared";
-import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang } from "./types";
 
-export const namaPendaftar = (p: PendaftaranMagang) => toTitleCase(p.siswa?.user?.nama ?? p.siswa?.nama ?? "—");
+import { STATUS_PENDAFTARAN_CFG, type PendaftaranMagang } from "./types";
+import { namaSiswa } from "@/lib/nama";
+
+export const namaPendaftar = (p: PendaftaranMagang) => namaSiswa(p.siswa?.user?.nama ?? p.siswa?.nama ?? "—");
 
 export function PendaftarTempatModal({ judul, rows, busyId, onTerima, onTolak, onBatal, onClose }: {
   judul: string;

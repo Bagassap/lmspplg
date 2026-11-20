@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { GuruAppHome } from "@/components/dashboard/GuruAppHome";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 
 interface Pengumuman {
   id: string; judul: string; slug: string; kategori: string;
@@ -461,7 +462,7 @@ export default function GuruDashboardPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-1 text-[13px] font-semibold text-slate-800 dark:text-white">{p.judul}</p>
-                  <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{p.author.nama} · {timeAgo(p.createdAt)}</p>
+                  <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{namaOrang(p.author.nama)} · {timeAgo(p.createdAt)}</p>
                 </div>
                 <ChevronRight size={15} className="shrink-0 text-slate-300" />
               </li>

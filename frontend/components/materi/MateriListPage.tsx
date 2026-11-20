@@ -13,6 +13,7 @@ import { MateriFormModal, type MateriItem } from "./MateriFormModal";
 import { AppDetailSheet, AppCard, AppEmpty } from "@/components/app/AppUI";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -210,7 +211,7 @@ export function MateriListPage({
                           "Semua Kelas"
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{m.createdBy.nama}</td>
+                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">{namaOrang(m.createdBy.nama)}</td>
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
                         <span className="flex items-center gap-1"><CalendarDays size={11} />{formatDate(m.createdAt)}</span>
                       </td>
@@ -431,7 +432,7 @@ export function MateriListPage({
               </div>
               <div className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
                 <span className="text-xs font-semibold text-white/70">Dibuat Oleh</span>
-                <span className="text-xs font-bold text-white">{detailItem.createdBy.nama}</span>
+                <span className="text-xs font-bold text-white">{namaOrang(detailItem.createdBy.nama)}</span>
               </div>
               {detailItem.kelasList.length > 0 && (
                 <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
@@ -482,7 +483,7 @@ export function MateriListPage({
             rows={[
               { label: "Mapel", value: detailItem.mapel },
               { label: "Tanggal Dibuat", value: formatDate(detailItem.createdAt) },
-              { label: "Dibuat Oleh", value: detailItem.createdBy.nama },
+              { label: "Dibuat Oleh", value: namaOrang(detailItem.createdBy.nama) },
             ]}
             chips={{ label: "Kelas Target", values: detailItem.kelasList.map((k) => k.nama) }}
             primary={{ label: "Lihat Materi", icon: Eye, onClick: () => { const id = detailItem.id; setDetailItem(null); router.push(`${rolePrefix}/materi/${id}`); } }}

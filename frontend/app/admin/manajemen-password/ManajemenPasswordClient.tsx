@@ -15,6 +15,7 @@ import { SiswaPasswordTable, type SiswaPasswordItem } from "./SiswaPasswordTable
 import { CreateAccountModal } from "./CreateAccountModal";
 import { ImportSiswaModal } from "./ImportSiswaModal";
 import { KelolaGuruModal } from "./KelolaGuruModal";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 type KelasWithWali = {
   id: string;
@@ -168,8 +169,8 @@ export default function ManajemenPasswordClient() {
             selectedKelasId={selectedKelasId}
             onSelectKelas={setSelectedKelasId}
             kelasNama={selectedKelas?.nama}
-            wali={waliAccount ? { id: waliAccount.id, nama: toTitleCase(waliAccount.nama), fotoProfil: waliAccount.fotoProfil, mustChangePassword: waliAccount.mustChangePassword } : null}
-            onResetWali={() => waliAccount && setResetTarget({ id: waliAccount.id, nama: toTitleCase(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
+            wali={waliAccount ? { id: waliAccount.id, nama: namaOrang(waliAccount.nama), fotoProfil: waliAccount.fotoProfil, mustChangePassword: waliAccount.mustChangePassword } : null}
+            onResetWali={() => waliAccount && setResetTarget({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
             search={search} onSearch={setSearch}
             statusFilter={statusFilter} onStatusFilter={setStatusFilter}
             total={siswaItems.length} sudahCount={sudahCount} belumCount={belumCount} displayedCount={displayed.length}
@@ -178,8 +179,8 @@ export default function ManajemenPasswordClient() {
             <SiswaPasswordTable
               loading={loadingSiswa}
               siswas={displayed}
-              onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
-              onLihat={(s) => s.user && setLihatTarget({ id: s.user.id, nama: toTitleCase(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
+              onReset={(s) => s.user && setResetTarget({ id: s.user.id, nama: namaSiswa(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
+              onLihat={(s) => s.user && setLihatTarget({ id: s.user.id, nama: namaSiswa(s.nama), nis: s.nis, mustChangePassword: s.user.mustChangePassword })}
               mobileNative
             />
           </div>

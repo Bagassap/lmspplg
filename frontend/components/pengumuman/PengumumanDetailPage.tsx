@@ -9,6 +9,7 @@ import { KomentarSection } from "./KomentarSection";
 import type { PengumumanItem } from "./PengumumanFormModal";
 import type { KomentarItem } from "./KomentarSection";
 import { Avatar } from "@/components/shared/Avatar";
+import { namaOrang } from "@/lib/nama";
 
 type PengumumanDetail = PengumumanItem & { komentar: KomentarItem[] };
 
@@ -127,7 +128,7 @@ export function PengumumanDetailPage({
             <h1 className="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">{p.judul}</h1>
             <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
               <Avatar src={p.author.fotoProfil} nama={p.author.nama} sizePx={22} fallbackBg="#3E03B3" textClassName="text-[9px] font-bold" />
-              <span className="font-semibold text-slate-700 dark:text-slate-200">{p.author.nama}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-200">{namaOrang(p.author.nama)}</span>
               <span>· {p.author.role === "ADMIN" ? "Admin" : "Guru"}</span>
             </div>
             <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-slate-700 dark:text-slate-200">{p.konten}</p>

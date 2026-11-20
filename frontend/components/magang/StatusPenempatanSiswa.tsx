@@ -3,9 +3,10 @@
 import { useRef, useState } from "react";
 import { Building2, CalendarDays, Clock, FileText, Loader2, MapPin, Phone, Upload, User, UserCheck } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { toTitleCase } from "@/components/data-siswa/shared";
+
 import { pesanError } from "./pkl-form-ui";
 import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./types";
+import { namaOrang } from "@/lib/nama";
 
 const MAKS_SURAT = 10 * 1024 * 1024;
 
@@ -74,7 +75,7 @@ export function StatusPenempatanSiswa({ p, onChanged }: { p: PenempatanMagang; o
         {t.namaPimpinan && <Baris warna="biru" icon={User} label="Kepala instansi" value={t.namaPimpinan} />}
         <Baris warna="oranye" icon={MapPin} label="Alamat" value={formatAlamat(t)} />
         {(t.noWaUsaha ?? t.kontak) && <Baris warna="hijau" icon={Phone} label="WA instansi" value={t.noWaUsaha ?? t.kontak} />}
-        {aktif && <Baris icon={UserCheck} label="Guru pembimbing" value={toTitleCase(p.guruPembimbing?.user.nama ?? "-")} />}
+        {aktif && <Baris icon={UserCheck} label="Guru pembimbing" value={namaOrang(p.guruPembimbing?.user.nama ?? "-")} />}
         <Baris warna="amber" icon={CalendarDays} label={aktif ? "Mulai PKL" : "Diajukan"} value={fmt(aktif ? p.tanggalMulai : p.createdAt)} />
         {p.suratKeteranganUrl && (
           <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"

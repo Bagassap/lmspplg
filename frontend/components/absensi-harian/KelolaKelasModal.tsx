@@ -6,6 +6,7 @@ import { Settings2, X, Plus, Pencil, Trash2, School, Users } from "lucide-react"
 import { useToast } from "@/components/shared/ToastSystem";
 import { avatarColor } from "./shared";
 import type { Kelas } from "./types";
+import { namaOrang } from "@/lib/nama";
 
 export type Guru = { id: string; user: { id: string; nama: string } };
 
@@ -144,7 +145,7 @@ export function KelolaKelasModal({ kelasList, guruList, onClose, onSaved }: {
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-slate-700 dark:text-slate-200">{k.nama}</p>
                     <p className="truncate text-[11px] text-slate-400">
-                      {k.waliKelasGuru?.user.nama ?? "Belum ada wali kelas"}
+                      {k.waliKelasGuru?.user.nama ? namaOrang(k.waliKelasGuru.user.nama) : "Belum ada wali kelas"}
                     </p>
                   </div>
                 </div>

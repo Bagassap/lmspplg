@@ -3,13 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, ScanEye, KeyRound, Lock, Pencil, Trash2, Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
-import {
-  type SiswaCardData, toTitleCase, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink,
-} from "./shared";
+import { type SiswaCardData, getNama, avatarColorFor, formatTempatTanggalLahir, completeness, waLink } from "./shared";
 import { downloadDataSiswaPdf, downloadDataSiswaExcel } from "./downloadDataSiswa";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { ProgressRing } from "./ProgressRing";
+import { namaSiswa } from "@/lib/nama";
 
 const REF_PRIMARY = "#3E03B3";
 const REF_DANGER = "#F26A3D";
@@ -96,7 +95,7 @@ export function SiswaTableRow({
   onViewDetail: (s: SiswaCardData) => void;
   onKeluarkan?: (s: SiswaCardData) => void;
 }) {
-  const displayNama = toTitleCase(getNama(siswa));
+  const displayNama = namaSiswa(getNama(siswa));
   const accent = avatarColorFor(siswa.id || displayNama);
   const tempatTanggal = formatTempatTanggalLahir(siswa.tempatLahir, siswa.tanggalLahir);
   const pct = completeness(siswa);

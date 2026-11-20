@@ -16,6 +16,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { ProfilSayaModal } from "@/components/shared/ProfilSayaModal";
 import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaTampil, namaPanggilan } from "@/lib/nama";
 
 const PAGE_TITLES: Record<string, [string, string]> = {
   dashboard:      ["Dashboard",          ""],
@@ -324,7 +325,7 @@ export function Topbar({ user }: { user: UserPayload }) {
           <div className="flex min-w-0 items-center gap-3 lg:hidden">
             <Image src="/logo-pplg-3d.png" alt="LMS PPLG" width={40} height={40} className="h-10 w-10 shrink-0 rounded-xl" />
             <span className="truncate text-base font-bold text-white">
-              {appHome ? `Hi, ${user.nama.split(" ")[0]} 👋` : title}
+              {appHome ? `Hi, ${namaPanggilan(user.nama)} 👋` : title}
             </span>
           </div>
         )}
@@ -337,7 +338,7 @@ export function Topbar({ user }: { user: UserPayload }) {
             </span>
             {(pathname === "/siswa/dashboard" || pathname === "/guru/dashboard") && (
               <p className={`truncate text-[10px] font-semibold leading-tight ${purpleMobile ? "text-white/80" : "text-slate-500 dark:text-slate-400"}`}>
-                {jakartaGreetingWord()}, {user.nama.split(" ")[0]} 👋
+                {jakartaGreetingWord()}, {namaPanggilan(user.nama)} 👋
               </p>
             )}
           </div>
@@ -504,7 +505,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                 textClassName="text-[11px] font-bold"
               />
               <span className={`hidden text-sm font-medium sm:block lg:text-gray-700 lg:dark:text-slate-200 ${purpleMobile ? "text-white" : "text-gray-700 dark:text-slate-200"}`}>
-                {user.nama.split(" ")[0]}
+                {namaPanggilan(user.nama)}
               </span>
               <ChevronDown
                 size={13}
@@ -524,7 +525,7 @@ export function Topbar({ user }: { user: UserPayload }) {
                   className={`absolute right-0 top-full mt-2 w-56 overflow-hidden border bg-white py-2 dark:border-slate-700 dark:bg-[#1E293B] dark:shadow-black/30 ${appMode ? "rounded-3xl border-transparent shadow-2xl" : "rounded-[10px] border-gray-200 shadow-xl shadow-gray-200/60"}`}
                 >
                   <div className="mb-1 border-b border-gray-200 px-4 pb-3 pt-1 dark:border-slate-700">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.nama}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{namaTampil(user.nama, user.role)}</p>
                     <p className="text-xs text-gray-400 dark:text-slate-400">{ROLE_LABEL[user.role]}</p>
                   </div>
 

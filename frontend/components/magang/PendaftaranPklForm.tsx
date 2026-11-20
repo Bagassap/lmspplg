@@ -7,6 +7,7 @@ import { PilihTempatModal } from "./PilihTempatModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
 import { STATUS_PENDAFTARAN_CFG, formatAlamat, type Alamat, type Instansi, type PendaftaranSaya } from "./types";
+import { namaSiswa } from "@/lib/nama";
 
 function ambilAlamat(src: Alamat): Alamat {
   return { dukuh: src.dukuh ?? "", rt: src.rt ?? "", rw: src.rw ?? "", desa: src.desa ?? "", kecamatan: src.kecamatan ?? "", kabupaten: src.kabupaten ?? "" };
@@ -57,7 +58,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
 
   if (p?.status === "MENUNGGU") {
     const baris = [
-      { icon: User, label: "Nama", value: `${data.profil.nama} · ${data.profil.kelas} · NIS ${data.profil.nis}`, bg: "#F1EDFA", fg: "#3E03B3" },
+      { icon: User, label: "Nama", value: `${namaSiswa(data.profil.nama)} · ${data.profil.kelas} · NIS ${data.profil.nis}`, bg: "#F1EDFA", fg: "#3E03B3" },
       { icon: MapPin, label: "Alamat", value: formatAlamat(p), bg: "#FFE9E2", fg: "#E8562B" },
       { icon: Phone, label: "WA aktif", value: p.noWa, bg: "#E4F5EC", fg: "#22A06B" },
       { icon: Building2, label: "Tempat PKL", value: p.tempatMagang?.namaTempat ?? "Belum ada / instansi lain", bg: "#E0F2FE", fg: "#0EA5E9" },

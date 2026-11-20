@@ -17,6 +17,7 @@ import { avatarColor } from "@/components/absensi-harian/shared";
 import { downloadCatatanPdf, downloadCatatanExcel } from "./downloadCatatanPdf";
 import { useSheetHeader } from "@/components/app/AppUI";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 const GRID_COLS = "28px 40px 1.9fr 1.6fr 90px 110px 120px";
 
@@ -257,7 +258,7 @@ export function CatatanSiswaClient() {
                         <span className="text-center text-[11px] font-bold text-slate-300 dark:text-slate-600">{start + idx}</span>
                         <Avatar src={null} nama={s.nama ?? "?"} sizePx={36} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-[10px] font-extrabold" />
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama ?? "-"}</p>
+                          <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{namaSiswa(s.nama ?? "-")}</p>
                           <p className="truncate font-mono text-xs text-slate-400 dark:text-slate-500">{s.nis}</p>
                         </div>
                         <div className="min-w-0">
@@ -354,7 +355,7 @@ export function CatatanSiswaClient() {
                           className="flex w-full items-center gap-3 rounded-2xl bg-white px-3 py-2.5 text-left shadow-[0_2px_10px_-3px_rgba(62,3,179,0.14)] active:scale-[0.98] dark:bg-[#1E293B]">
                           <Avatar src={null} nama={s.nama ?? "?"} sizePx={40} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-sm font-extrabold" />
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{s.nama ?? "-"}</p>
+                            <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{namaSiswa(s.nama ?? "-")}</p>
                             <p className="mt-0.5 truncate text-[11px] text-slate-600 dark:text-slate-400">
                               {s.catatanTerakhir ? `${s.catatanTerakhir.judul} · ${formatTgl(s.catatanTerakhir.tanggal)}` : "Belum ada catatan"}
                             </p>
@@ -373,7 +374,7 @@ export function CatatanSiswaClient() {
                       className="flex w-full items-center gap-3 p-4 text-left">
                       <Avatar src={null} nama={s.nama ?? "?"} sizePx={40} fallbackBg={avatarColor(s.nama ?? "?")} textClassName="text-xs font-extrabold" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{s.nama ?? "-"}</p>
+                        <p className="truncate text-sm font-bold text-slate-800 dark:text-white">{namaSiswa(s.nama ?? "-")}</p>
                         {s.catatanTerakhir ? (
                           <p className="truncate text-[11px] text-slate-400 dark:text-slate-500">{s.catatanTerakhir.judul} · {formatTgl(s.catatanTerakhir.tanggal)}</p>
                         ) : (
@@ -537,7 +538,7 @@ function CatatanDetailModal({
           <div className="relative flex items-center justify-between">
             <div className="min-w-0">
               <p className={`text-[10px] font-bold uppercase tracking-widest ${h.sub}`}>Catatan Siswa</p>
-              <p className={`truncate text-lg font-extrabold ${h.title}`}>{data?.siswa.nama ?? "Memuat..."}</p>
+              <p className={`truncate text-lg font-extrabold ${h.title}`}>{data?.siswa.nama ? namaSiswa(data.siswa.nama) : "Memuat..."}</p>
               <p className={`text-xs ${h.app ? "text-slate-500" : "text-white/70"}`}>{data?.siswa.nis}{data ? ` · Total ${data.totalPoin} poin` : ""}</p>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
@@ -618,7 +619,7 @@ function CatatanDetailModal({
                     <div className="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
                       <Calendar size={10} /> {formatTgl(c.tanggal)}
                       <span className="text-slate-300 dark:text-slate-600">·</span>
-                      <span>{c.dicatatOleh.nama}</span>
+                      <span>{namaOrang(c.dicatatOleh.nama)}</span>
                     </div>
                     {(c.dicatatOleh.id === currentUserId || currentUserRole === "ADMIN") && (
                       <div className="flex gap-0.5">

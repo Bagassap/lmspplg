@@ -6,6 +6,7 @@ import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
 import { AppMobileFrame, AppCard, AppEmpty, AppSectionTitle, APP_ACCENT } from "@/components/app/AppUI";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 
 type CatatanItem = {
   id: string;
@@ -88,7 +89,7 @@ export default function SiswaCatatanSayaPage() {
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-slate-400 dark:text-slate-500">
                   <span className="flex items-center gap-1"><Calendar size={11} /> {formatTgl(c.tanggal)}</span>
-                  <span className="flex items-center gap-1"><UserIcon size={11} /> Dicatat oleh {c.dicatatOleh.nama} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
+                  <span className="flex items-center gap-1"><UserIcon size={11} /> Dicatat oleh {namaOrang(c.dicatatOleh.nama)} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
                 </div>
               </div>
             ))}
@@ -132,7 +133,7 @@ export default function SiswaCatatanSayaPage() {
                     <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-500 dark:text-slate-400">{c.catatan}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
                       <span className="flex items-center gap-1"><Calendar size={11} /> {formatTgl(c.tanggal)}</span>
-                      <span className="flex items-center gap-1"><UserIcon size={11} /> {c.dicatatOleh.nama} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
+                      <span className="flex items-center gap-1"><UserIcon size={11} /> {namaOrang(c.dicatatOleh.nama)} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
                     </div>
                   </AppCard>
                 ))
@@ -198,7 +199,7 @@ export default function SiswaCatatanSayaPage() {
                       <p className="mt-2.5 whitespace-pre-wrap text-sm leading-relaxed text-slate-600 dark:text-slate-300">{c.catatan}</p>
                       <div className="mt-3 flex flex-wrap items-center gap-3 text-[10.5px] text-slate-400 dark:text-slate-500">
                         <span className="flex items-center gap-1"><Calendar size={10} /> {formatTgl(c.tanggal)}</span>
-                        <span className="flex items-center gap-1"><UserIcon size={10} /> {c.dicatatOleh.nama} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
+                        <span className="flex items-center gap-1"><UserIcon size={10} /> {namaOrang(c.dicatatOleh.nama)} ({ROLE_LABEL[c.dicatatOleh.role] ?? c.dicatatOleh.role})</span>
                       </div>
                     </div>
                   );

@@ -8,6 +8,7 @@ import type { PenilaianUkk } from "@/lib/ukkAspek";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColor } from "@/components/absensi-harian/shared";
+import { namaSiswa } from "@/lib/nama";
 
 type SubmisiRow = {
   id: string;
@@ -154,7 +155,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
           </p>
         ) : tab === "sudah" ? (
           sudahRows.slice(from, to).map((s) => {
-            const nama = s.siswa?.user?.nama || s.siswa?.nama || "Siswa";
+            const nama = namaSiswa(s.siswa?.user?.nama || s.siswa?.nama || "Siswa");
             return (
               <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
                 <Avatar src={s.siswa?.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />
@@ -196,7 +197,7 @@ export function RekapPengumpulan({ submisi: semua, tahapanId }: { submisi: Submi
           })
         ) : (
           belumList.slice(from, to).map((s) => {
-            const nama = s.user?.nama || s.nama || "Siswa";
+            const nama = namaSiswa(s.user?.nama || s.nama || "Siswa");
             return (
               <div key={s.id} className="flex items-center gap-3 rounded-2xl bg-slate-100 px-4 py-2.5 dark:bg-slate-700/60">
                 <Avatar src={s.user?.fotoProfil} nama={nama} sizePx={36} fallbackBg={avatarColor(nama)} textClassName="text-[11px] font-extrabold" />

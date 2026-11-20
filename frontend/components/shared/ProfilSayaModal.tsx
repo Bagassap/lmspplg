@@ -10,6 +10,7 @@ import { MobileDetailModal } from "@/components/shared/MobileDetailModal";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AppSheet } from "@/components/app/AppSheet";
 import { AppProfileCard } from "@/components/app/AppProfileCard";
+import { namaTampil } from "@/lib/nama";
 
 type MeResponse = {
   id: string;
@@ -130,7 +131,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                   </button>
                 </div>
                 <div className="min-w-0">
-                  <h2 className="truncate text-lg font-extrabold leading-tight text-white">{me.nama}</h2>
+                  <h2 className="truncate text-lg font-extrabold leading-tight text-white">{namaTampil(me.nama, me.role)}</h2>
                   <span className="mt-1 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                     {ROLE_LABEL[me.role] ?? me.role}
                   </span>
@@ -224,7 +225,7 @@ export function ProfilSayaModal({ onClose }: { onClose: () => void }) {
                 </button>
               </div>
               <div className="min-w-0">
-                <h2 className="truncate text-lg font-extrabold leading-tight text-white">{me.nama}</h2>
+                <h2 className="truncate text-lg font-extrabold leading-tight text-white">{namaTampil(me.nama, me.role)}</h2>
                 <span className="mt-1 inline-flex items-center rounded-lg bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                   {ROLE_LABEL[me.role] ?? me.role}
                 </span>

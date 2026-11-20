@@ -15,6 +15,7 @@ import { Rocket } from "@/components/app/Rocket";
 import { AppCard, AppEmpty, AppSectionTitle, APP_HERO, APP_ORANGE } from "@/components/app/AppUI";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { timeAgo } from "@/components/dashboard/ActivityList";
+import { namaOrang } from "@/lib/nama";
 
 type Pengumuman = {
   id: string; judul: string; slug: string; kategori: string; isPinned: boolean; createdAt: string;
@@ -102,7 +103,7 @@ export function GuruAppHome({ data, onOpenPengumuman }: { data: GuruHomeData; on
               </span>
               <div className="min-w-0 flex-1">
                 <p className="line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{p.judul}</p>
-                <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{p.author.nama} • {timeAgo(p.createdAt)}</p>
+                <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{namaOrang(p.author.nama)} • {timeAgo(p.createdAt)}</p>
               </div>
               <ChevronRight size={18} className="shrink-0 text-slate-300" />
             </AppCard>

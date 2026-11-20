@@ -3,11 +3,12 @@
 import { Fragment, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, FileText, Pencil, Trash2, Users, Building2, UserCheck } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG } from "./types";
 import type { PenempatanMagang, StatusPenempatan } from "./types";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 const PAGE_SIZE = 10;
 
@@ -95,7 +96,7 @@ export function PenempatanTable({
               </thead>
               <tbody>
                 {pageItems.map((p, i) => {
-                  const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+                  const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                   const cfg = STATUS_PENEMPATAN_CFG[p.status];
                   const busy = busyId === p.id;
                   return (
@@ -119,7 +120,7 @@ export function PenempatanTable({
                         )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         {canManage ? (
@@ -162,7 +163,7 @@ export function PenempatanTable({
           {mobileNative && app && (
             <ul className="space-y-3 lg:hidden">
               {pageItems.map((p, i) => {
-                const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+                const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                 const cfg = STATUS_PENEMPATAN_CFG[p.status];
                 const busy = busyId === p.id;
                 return (
@@ -179,7 +180,7 @@ export function PenempatanTable({
                     </div>
                     <div className="mt-3 space-y-1.5 rounded-2xl bg-slate-100 px-4 py-3 text-[12px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                       <p className="flex items-center gap-2 font-semibold"><Building2 size={13} className="shrink-0" />{p.tempatMagang.namaTempat}</p>
-                      <p className="flex items-center gap-2"><UserCheck size={13} className="shrink-0" />{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
+                      <p className="flex items-center gap-2"><UserCheck size={13} className="shrink-0" />{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</p>
                       {p.suratKeteranganUrl && (
                         <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-bold text-[#3E03B3] underline dark:text-[#C4B5FD]">
                           <FileText size={13} className="shrink-0" />Surat keterangan
@@ -213,7 +214,7 @@ export function PenempatanTable({
           {mobileNative && !app && (
             <div className="divide-y divide-slate-100 p-2 lg:hidden dark:divide-slate-700/40">
               {pageItems.map((p, i) => {
-                const nama = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+                const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
                 const cfg = STATUS_PENEMPATAN_CFG[p.status];
                 const busy = busyId === p.id;
                 return (
@@ -244,7 +245,7 @@ export function PenempatanTable({
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pl-[50px] text-[11px] text-slate-500 dark:text-slate-400">
                       <span className="flex items-center gap-1"><Building2 size={11} className="shrink-0" />{p.tempatMagang.namaTempat}</span>
-                      <span className="flex items-center gap-1"><UserCheck size={11} className="shrink-0" />{p.guruPembimbing ? toTitleCase(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</span>
+                      <span className="flex items-center gap-1"><UserCheck size={11} className="shrink-0" />{p.guruPembimbing ? namaOrang(p.guruPembimbing.user.nama) : "Belum ditetapkan"}</span>
                     </div>
 
                     {canManage && (

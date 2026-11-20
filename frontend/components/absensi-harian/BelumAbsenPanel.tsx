@@ -12,6 +12,7 @@ import type { SiswaAbsensi } from "./types";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AppSheet } from "@/components/app/AppSheet";
 import { icon3dStyle, type Tone3D } from "@/components/shared/Icon3D";
+import { namaSiswa } from "@/lib/nama";
 
 function formatJam(waktu?: string | null) {
   return waktu && waktu.trim() ? waktu : "-";
@@ -127,7 +128,7 @@ function DetailModal({
                 <div key={s.siswaId} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5">
                   <Avatar src={s.fotoProfil} nama={s.nama} sizePx={36} fallbackBg={avatarColorFor(s.nama)} textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-900">{s.nama}</p>
+                    <p className="truncate text-sm font-bold text-slate-900">{namaSiswa(s.nama)}</p>
                     <p className="truncate text-xs text-slate-600">
                       {mode === "pulang" ? `Hadir pukul ${formatJam(s.waktuAbsen)}` : s.status === "ALPA" ? "Ditandai alpa" : "Belum ada catatan absen"}
                     </p>
@@ -208,7 +209,7 @@ function DetailModal({
                       textClassName="text-[10px] font-extrabold"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{s.nama}</p>
+                      <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{namaSiswa(s.nama)}</p>
                       {mode === "pulang" ? (
                         <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] font-medium text-slate-400 dark:text-slate-500">
                           <Clock size={10} className="shrink-0" /> Hadir pukul {formatJam(s.waktuAbsen)}

@@ -28,6 +28,7 @@ import { Rocket } from "@/components/app/Rocket";
 import { icon3dStyle, MENU_TONE } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AppStatusSheet } from "@/components/app/AppUI";
+import { namaSiswa } from "@/lib/nama";
 
 function KirimPengingatCard({ tempatMagangId, tanggal, siswaList, bold }: { tempatMagangId: string; tanggal: string; siswaList: SiswaAbsensi[]; bold?: boolean }) {
   const app = useIsAppMode();
@@ -209,7 +210,7 @@ function MobileSiswaCard({
     <div className="flex items-center gap-3 px-3 py-3">
       <Avatar src={s.fotoProfil} nama={s.nama} sizePx={38} fallbackBg={ac} textClassName="text-[10px] font-extrabold" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{s.nama}</p>
+        <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{namaSiswa(s.nama)}</p>
         <div className="mt-0.5 flex items-center gap-1.5">
           <span className="text-[10.5px] font-medium tabular-nums text-slate-400 dark:text-slate-500">{s.nis ?? "—"}</span>
           {waktu && <span className="text-[10.5px] font-semibold tabular-nums text-slate-400 dark:text-slate-500">· {waktu}</span>}

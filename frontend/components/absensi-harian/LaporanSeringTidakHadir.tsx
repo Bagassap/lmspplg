@@ -11,6 +11,7 @@ import type { LaporanSeringTidakHadir as LaporanData, PeriodeLaporan } from "./t
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { AppSheet } from "@/components/app/AppSheet";
 import { icon3dStyle } from "@/components/shared/Icon3D";
+import { namaSiswa } from "@/lib/nama";
 
 const INLINE_LIMIT = 5;
 
@@ -167,7 +168,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                   <RankBadge index={i} />
                   <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={32} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                    <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{namaSiswa(r.nama)}</p>
                     <p className="truncate text-[10px] text-slate-400">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
                   </div>
                   <span className="shrink-0 text-xs font-bold" style={{ color: bar }}>{r.summary.persentaseKehadiran}%</span>
@@ -226,7 +227,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-extrabold text-[#3E03B3]">{i + 1}</span>
                   <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={34} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-900">{r.nama}</p>
+                    <p className="truncate text-sm font-bold text-slate-900">{namaSiswa(r.nama)}</p>
                     <p className="truncate text-xs text-slate-600">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
                   </div>
                   <span className="shrink-0 text-sm font-extrabold text-[#3E03B3]">{r.summary.persentaseKehadiran}%</span>
@@ -328,7 +329,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta }: { 
                               textClassName="text-[10px] font-extrabold"
                             />
                             <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{r.nama}</p>
+                              <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{namaSiswa(r.nama)}</p>
                             </div>
                             <p className="truncate text-[11px] text-slate-400">{r.kelasNama} · {r.nis ?? "—"}</p>
                             <span className="mx-auto rounded-lg bg-[#F6FEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#5D900F] dark:text-[#C4B5FD] dark:bg-[#48700B]">

@@ -8,7 +8,8 @@ import {
   User, ChevronDown, GraduationCap, BookOpen, Phone, MapPin, CalendarDays, Sparkles, X,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { type SiswaCardData, type KelasRef, getNama, toTitleCase, formatTglShort } from "./shared";
+import { type SiswaCardData, type KelasRef, getNama, formatTglShort } from "./shared";
+import { namaSiswa } from "@/lib/nama";
 
 const JURUSAN_OPTIONS = [
   "Pengembangan Perangkat Lunak dan Gim",
@@ -73,7 +74,7 @@ export function EditSiswaModal({ siswa, kelasList, onClose, onSave }: {
     } finally { setSaving(false); }
   }
 
-  const displayNama = toTitleCase(getNama(siswa));
+  const displayNama = namaSiswa(getNama(siswa));
   if (typeof document === "undefined") return null;
   return createPortal(
     <AnimatePresence>

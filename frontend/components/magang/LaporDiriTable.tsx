@@ -2,8 +2,9 @@
 
 import { Users, Download, CheckCircle2, XCircle } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
-import { avatarColorFor, toTitleCase } from "@/components/data-siswa/shared";
+import { avatarColorFor } from "@/components/data-siswa/shared";
 import type { LaporDiriRow } from "./lapor-diri-types";
+import { namaSiswa, namaOrang } from "@/lib/nama";
 
 function fmtTgl(iso: string): string {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -45,7 +46,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
               </thead>
               <tbody>
                 {rows.map((r) => {
-                  const nama = toTitleCase(r.siswa.nama ?? "—");
+                  const nama = namaSiswa(r.siswa.nama ?? "—");
                   return (
                     <tr key={r.penempatanId} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-700/40 dark:hover:bg-slate-600">
                       <td className="whitespace-nowrap px-4 py-3">
@@ -60,7 +61,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                       <td className="px-4 py-3">
                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{r.tempatMagang.namaTempat}</p>
                         {showPembimbing && (
-                          <p className="text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? toTitleCase(r.guruPembimbing.nama) : "—"}</p>
+                          <p className="text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? namaOrang(r.guruPembimbing.nama) : "—"}</p>
                         )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
@@ -98,7 +99,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
           {mobileNative && (
             <div className="divide-y divide-slate-100 lg:hidden dark:divide-slate-700/40">
               {rows.map((r) => {
-                const nama = toTitleCase(r.siswa.nama ?? "—");
+                const nama = namaSiswa(r.siswa.nama ?? "—");
                 return (
                   <div key={r.penempatanId} className="flex flex-col gap-2.5 p-3">
                     <div className="flex items-center gap-2.5">
@@ -118,7 +119,7 @@ export function LaporDiriTable({ loading, rows, showPembimbing = false, mobileNa
                       )}
                     </div>
                     {showPembimbing && (
-                      <p className="pl-[50px] text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? toTitleCase(r.guruPembimbing.nama) : "—"}</p>
+                      <p className="pl-[50px] text-[11px] text-slate-400">Pembimbing: {r.guruPembimbing.nama ? namaOrang(r.guruPembimbing.nama) : "—"}</p>
                     )}
                     {r.laporDiri ? (
                       <a href={`/api/uploads${r.laporDiri.fileUrl}`} target="_blank" rel="noopener noreferrer"

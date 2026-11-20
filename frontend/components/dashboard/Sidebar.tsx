@@ -13,6 +13,7 @@ import {
 import type { UserPayload } from "@/lib/auth";
 import { Avatar } from "@/components/shared/Avatar";
 import { useDashboardMenu, type MenuItem } from "./useDashboardMenu";
+import { namaTampil, namaPanggilan } from "@/lib/nama";
 
 const ROLE_LABEL: Record<string, string> = {
   ADMIN: "Administrator",
@@ -133,7 +134,7 @@ export function Sidebar({
 
       <div className="border-b border-slate-100 dark:border-white/6">
         {compact ? (
-          <div className="flex justify-center py-3" title={user.nama}>
+          <div className="flex justify-center py-3" title={namaTampil(user.nama, user.role)}>
             <Avatar
               src={user.fotoProfil}
               nama={user.nama}
@@ -157,7 +158,7 @@ export function Sidebar({
               />
             </div>
             <p className="text-[15px] font-bold text-slate-800 dark:text-white">
-              Hello, {user.nama.split(" ")[0]}
+              Hello, {namaPanggilan(user.nama)}
             </p>
             <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-300">
               {ROLE_LABEL[user.role]} · SMK Ma&apos;arif

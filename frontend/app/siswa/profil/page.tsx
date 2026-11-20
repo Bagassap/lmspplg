@@ -16,6 +16,7 @@ import { AppProfileCard } from "@/components/app/AppProfileCard";
 import { AppMobileFrame, AppBanner, AppInfoRow, AppSectionTitle, AppPillButton } from "@/components/app/AppUI";
 import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaSiswa } from "@/lib/nama";
 
 type SiswaProfil = {
   id: string;
@@ -43,9 +44,6 @@ const ACCENT_ORANGE = "#F26A3D";
 const PROFILE_CARD_GRADIENT = "#3E03B3";
 
 function getNama(s: SiswaProfil): string { return s.nama ?? s.user?.nama ?? "—"; }
-function toTitleCase(str: string): string {
-  return str.toLowerCase().split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
 function kelasShort(kelas: string): string {
   return kelas
     .replace("Pengembangan Perangkat Lunak dan Gim", "PPLG")
@@ -353,7 +351,7 @@ export default function SiswaProfilPage() {
     );
   }
 
-  const nama = toTitleCase(getNama(profil));
+  const nama = namaSiswa(getNama(profil));
   const isP = profil.jenisKelamin === "Perempuan";
   const kelasGrad = PROFILE_CARD_GRADIENT;
   const avatarGrad = isP

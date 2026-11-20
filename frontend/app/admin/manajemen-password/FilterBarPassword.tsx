@@ -5,6 +5,7 @@ import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, S
 import { Avatar } from "@/components/shared/Avatar";
 import { kelasShort } from "@/components/data-siswa/shared";
 import { useIsAppMode } from "@/lib/pwaInstall";
+import { namaOrang } from "@/lib/nama";
 
 const REF_PRIMARY = "#3E03B3";
 const REF_SUCCESS = "#059669";
@@ -72,7 +73,7 @@ export function FilterBarPassword({
           <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-2 dark:bg-slate-700">
             <Avatar src={wali.fotoProfil} nama={wali.nama} sizePx={28} fallbackBg="#3E03B3" textClassName="text-[10px] font-bold" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-bold text-slate-800 dark:text-white">{wali.nama}</p>
+              <p className="truncate text-xs font-bold text-slate-800 dark:text-white">{namaOrang(wali.nama)}</p>
               <p className="text-[10px] text-slate-500">Wali kelas · {wali.mustChangePassword ? "belum ganti" : "sudah ganti"}</p>
             </div>
             <button onClick={onResetWali} className="flex items-center gap-1 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
@@ -171,7 +172,7 @@ export function FilterBarPassword({
               <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 <UserCheck size={11} /> Wali Kelas
               </p>
-              <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{wali.nama}</p>
+              <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{namaOrang(wali.nama)}</p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">

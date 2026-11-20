@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { Building2, ChevronLeft, Clock, FileDown, FileText, Loader2, Search, Trash2, Users } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { toTitleCase } from "@/components/data-siswa/shared";
+
 import { KelolaTempatModal } from "@/components/magang/KelolaTempatModal";
 import { TetapkanGuruModal } from "@/components/magang/TetapkanGuruModal";
 import { PenempatanTempatModal } from "@/components/magang/PenempatanTempatModal";
@@ -15,9 +15,9 @@ import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
+import { namaSiswa } from "@/lib/nama";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
-
 
 const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: string }[] = [
   { value: "MENUNGGU", label: "menunggu", bg: "#F1EDFA", clr: "#3E03B3" },
@@ -32,7 +32,6 @@ const STATUS_FILTER: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] =
   { value: "MENUNGGU", label: "Perlu diproses", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
   { value: "", label: "Semua", bg: "#E0F2FE", clr: "#0EA5E9", icon: Users },
 ];
-
 
 export default function AdminMagangPenempatanPage() {
   const router = useRouter();
@@ -145,10 +144,10 @@ export default function AdminMagangPenempatanPage() {
   }
 
   async function hapus(p: PenempatanMagang) {
-    const namaSiswa = toTitleCase(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+    const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
     const ok = await toast.confirm(
       "Hapus penempatan ini?",
-      `Penempatan ${namaSiswa} di "${p.tempatMagang.namaTempat}" akan dihapus.`,
+      `Penempatan ${nama} di "${p.tempatMagang.namaTempat}" akan dihapus.`,
     );
     if (!ok) return;
     setBusyId(p.id);
@@ -163,7 +162,6 @@ export default function AdminMagangPenempatanPage() {
       setBusyId(null);
     }
   }
-
 
   const displayList = useMemo(() => {
     const q = search.trim().toLowerCase();
