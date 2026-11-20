@@ -130,7 +130,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           {menunggu && (tolakMode ? (
             <div className="space-y-2 pt-1">
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan <span className="text-[#DC2626]">*</span></label>
-              <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} autoFocus placeholder="Contoh: nama kepala instansi tidak sesuai surat, mohon perbaiki"
+              <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Contoh: nama kepala instansi tidak sesuai surat, mohon perbaiki"
                 className="w-full rounded-2xl border-0 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#DC2626] dark:bg-slate-800 dark:text-slate-100" />
               <div className="flex gap-2">
                 <button type="button" onClick={() => setTolakMode(false)} disabled={saving}

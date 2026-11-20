@@ -656,6 +656,8 @@ html.dark [class*="bg-[#E5E7EB]"]:not([class*="dark:bg-"]), html.dark [style*="b
     background-color: #111a2e !important;
   }
   html.dark .fixed > :is([class~="bg-black/60"], [class~="bg-black/50"], [class~="bg-black/40"], [class~="bg-slate-900/40"], [class~="bg-slate-900/50"]) {
-    background-color: rgba(0, 0, 0, 0.78) !important;
+    background-color: rgba(2, 6, 23, 0.35) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(12px) !important;
   }
 }

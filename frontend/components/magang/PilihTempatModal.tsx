@@ -44,7 +44,7 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
         <div className="shrink-0 px-5 pb-3">
           <div className="relative">
             <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari instansi…" autoFocus
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari instansi…"
               className="h-10 w-full rounded-xl border-0 bg-slate-50 pl-9 pr-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400" />
           </div>
         </div>

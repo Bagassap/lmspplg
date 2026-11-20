@@ -32,7 +32,7 @@ export function TolakPendaftaranModal({ onClose, onTolak }: {
           <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700"><X size={16} /></button>
         </div>
         <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">Alasan penolakan <span className="text-[#E8562B]">*</span></label>
-        <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} autoFocus placeholder="Contoh: alamat belum lengkap, nomor WA tidak aktif"
+        <textarea value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} placeholder="Contoh: alamat belum lengkap, nomor WA tidak aktif"
           className="w-full rounded-2xl border-0 bg-[#F1EDFA] px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
         <div className="mt-3 flex gap-2">
           <button type="button" onClick={onClose} disabled={saving}
