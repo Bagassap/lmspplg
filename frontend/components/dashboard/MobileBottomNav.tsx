@@ -9,12 +9,12 @@ import type { UserPayload } from "@/lib/auth";
 import { useDashboardMenu, type MenuItem } from "./useDashboardMenu";
 import { useIsAppMode } from "@/lib/pwaInstall";
 
-const SIDE_KEYS = ["absensi-harian", "materi", "pengumuman"];
+const SIDE_KEYS = ["absensi-harian", "materi", "magang"];
 const PINNED_LABELS: Record<string, string> = {
   dashboard: "Dashboard",
   "absensi-harian": "Absensi",
   materi: "Materi",
-  pengumuman: "Pengumuman",
+  magang: "PKL",
 };
 
 function isItemActive(item: MenuItem, pathname: string): boolean {
@@ -35,7 +35,8 @@ export function MobileBottomNav({ user }: { user: UserPayload }) {
   const dashboardItem = items.find((i) => i.key === "dashboard");
   const side = SIDE_KEYS
     .map((key) => items.find((i) => i.key === key))
-    .filter((i): i is MenuItem => !!i);
+    .filter((i): i is MenuItem => !!i)
+    .map((i) => (i.key === "magang" ? { ...i, href: `/${user.role.toLowerCase()}/magang`, submenu: undefined } : i));
   const leftPinned = side.slice(0, 2);
   const rightPinned = side.slice(2);
   const rest = items.filter((i) => i.key !== "dashboard" && !SIDE_KEYS.includes(i.key));

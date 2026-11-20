@@ -12,7 +12,7 @@ import { KARTU_PELAJAR_URL } from "@/components/shared/KartuPelajarBanner";
 import { useDashboardMenu, type MenuItem } from "@/components/dashboard/useDashboardMenu";
 import { AppCard } from "@/components/app/AppUI";
 
-const SKIP_KEYS = ["dashboard", "absensi-harian", "materi", "pengumuman"];
+const SKIP_KEYS = ["dashboard", "absensi-harian", "materi", "magang"];
 
 function Row({ href, icon: Icon, label, hint, tone, badge, locked, onClick, external }: {
   href?: string; icon: React.ElementType; label: string; hint?: string; tone: number;
