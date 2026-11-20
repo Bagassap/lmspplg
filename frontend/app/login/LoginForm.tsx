@@ -105,7 +105,7 @@ export function LoginForm() {
       className="mt-0 flex flex-col gap-2.5 sm:mt-8 sm:gap-5"
     >
       <motion.div variants={item} className="flex flex-col gap-1.5">
-        <label htmlFor="login" className="text-sm font-medium text-black/70">
+        <label htmlFor="login" className="text-sm font-medium text-black/70 dark:text-white">
           NIS
         </label>
         <div className="relative">
@@ -128,7 +128,7 @@ export function LoginForm() {
       </motion.div>
 
       <motion.div variants={item} className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm font-medium text-black/70">
+        <label htmlFor="password" className="text-sm font-medium text-black/70 dark:text-white">
           Password
         </label>
         <div className="relative">
