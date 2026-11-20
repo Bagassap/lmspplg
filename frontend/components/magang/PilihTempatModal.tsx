@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CheckCircle2, MapPin, Search, Users, X } from "lucide-react";
-import { formatAlamat, tempatCocokJenisKelamin, type Instansi } from "./types";
+import { Building2, CheckCircle2, Search, X } from "lucide-react";
+import { tempatCocokJenisKelamin, type Instansi } from "./types";
 
 export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }: {
   list: Instansi[];
@@ -25,25 +25,7 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
     onClose();
   }
 
-  const opsi = (id: string, nama: string, aktif: boolean, kanan?: React.ReactNode, redup?: boolean, alamat?: string, terkunci?: boolean) => (
-    <button key={id || "lain"} type="button" onClick={() => !terkunci && pilih(id)} disabled={terkunci}
-      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${aktif ? "bg-[#E4F5EC] ring-2 ring-[#22A06B]" : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"}`}>
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-        style={redup ? { background: "#FFF4E0", color: "#D97706" } : { background: "#FFE9E2", color: "#E8562B" }}>
-        <Building2 size={15} />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className={`truncate text-sm font-bold ${redup ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{nama}</p>
-        {alamat && (
-          <p className="flex items-start gap-1 text-xs text-slate-600 dark:text-slate-300">
-            <MapPin size={11} className="mt-0.5 shrink-0 text-[#E8562B]" /><span className="line-clamp-2">{alamat}</span>
-          </p>
-        )}
-      </div>
-      {kanan}
-      {aktif && <CheckCircle2 size={16} className="shrink-0 text-[#22A06B]" />}
-    </button>
-  );
+  const KOLOM = "2rem minmax(0,1fr) 3.25rem 4.75rem";
 
   return (
     <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
@@ -66,23 +48,48 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
           </div>
         </div>
 
-        <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto px-5 pb-5">
-          {opsi("", "Belum ada / instansi lain", nilai === "", undefined, true)}
-          {tampil.map((i) => opsi(i.id, i.namaTempat, nilai === i.id, (
-            <span className="flex shrink-0 items-center gap-2">
-              <span className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
-                <Users size={11} /> {i.siswa.length}
-              </span>
-              {i.jenisKelamin && (
-                <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={i.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
-                  {i.jenisKelamin === "Perempuan" ? "Khusus Putri" : "Khusus Putra"}
-                </span>
-              )}
-              {i.sisa !== null && (
-                <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>Sisa {i.sisa}</span>
-              )}
-            </span>
-          ), false, formatAlamat(i) !== "-" ? formatAlamat(i) : undefined, i.id !== nilai && !tempatCocokJenisKelamin(i, jenisKelamin)))}
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
+          <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
+            <div className="sticky top-0 z-10 grid items-center gap-2 px-3 py-2.5" style={{ gridTemplateColumns: KOLOM, backgroundColor: "#0F172A" }}>
+              <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Instansi</span>
+              <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Kuota</span>
+              <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Gender</span>
+            </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
+              <button type="button" onClick={() => pilih("")}
+                className={`grid w-full items-center gap-2 px-3 py-2.5 text-left transition-colors ${nilai === "" ? "bg-[#E4F5EC] dark:bg-[#22A06B]/20" : "hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                style={{ gridTemplateColumns: KOLOM }}>
+                <span className="flex justify-center">{nilai === "" ? <CheckCircle2 size={14} className="text-[#22A06B]" /> : <span className="text-xs text-slate-400">–</span>}</span>
+                <span className="col-span-3 truncate text-sm font-semibold text-slate-500 dark:text-slate-400">Belum ada / instansi lain</span>
+              </button>
+              {tampil.map((i, idx) => {
+                const aktif = nilai === i.id;
+                const terkunci = !aktif && !tempatCocokJenisKelamin(i, jenisKelamin);
+                const gender = i.jenisKelamin === "Perempuan" ? "Putri" : i.jenisKelamin === "Laki-laki" ? "Putra" : "Putra/Putri";
+                return (
+                  <button key={i.id} type="button" onClick={() => !terkunci && pilih(i.id)} disabled={terkunci}
+                    title={terkunci ? `Khusus ${gender.toLowerCase()}` : i.namaTempat}
+                    className={`grid w-full items-center gap-2 px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${aktif ? "bg-[#E4F5EC] dark:bg-[#22A06B]/20" : "hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                    style={{ gridTemplateColumns: KOLOM }}>
+                    <span className="flex justify-center text-xs font-bold text-slate-400">
+                      {aktif ? <CheckCircle2 size={14} className="text-[#22A06B]" /> : idx + 1}
+                    </span>
+                    <span className="truncate text-sm font-semibold text-slate-800 dark:text-white">{i.namaTempat}</span>
+                    <span className="text-center text-xs font-bold tabular-nums text-slate-600 dark:text-slate-300">
+                      {i.sisa !== null ? `${i.sisa}/${i.kuota}` : i.kuota}
+                    </span>
+                    <span className="flex justify-center">
+                      <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                        style={i.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : i.jenisKelamin === "Laki-laki" ? { background: "#E0F2FE", color: "#0EA5E9" } : { background: "#F1EDFA", color: "#3E03B3" }}>
+                        {gender}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           {tampil.length === 0 && q && (
             <p className="py-6 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Tidak ada instansi yang cocok</p>
           )}
