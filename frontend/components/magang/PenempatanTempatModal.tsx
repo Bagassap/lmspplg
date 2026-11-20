@@ -26,7 +26,7 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
   const bisaTetapkan = rows.filter((r) => r.status === "AKTIF");
 
   return (
-    <Portal><div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}

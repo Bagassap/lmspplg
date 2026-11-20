@@ -29,7 +29,7 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
   const KOLOM = "2rem minmax(0,1fr) 3.25rem 4.75rem";
 
   return (
-    <Portal><div data-plain className="fixed inset-0 z-60 flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
