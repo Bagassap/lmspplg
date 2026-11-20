@@ -17,18 +17,17 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
     const k = q.trim().toLowerCase();
     return list
       .filter((i) => i.id === nilai || i.sisa === null || i.sisa > 0)
-      .filter((i) => i.id === nilai || tempatCocokJenisKelamin(i, jenisKelamin))
       .filter((i) => !k || i.namaTempat.toLowerCase().includes(k));
-  }, [list, q, nilai, jenisKelamin]);
+  }, [list, q, nilai]);
 
   function pilih(id: string) {
     onPilih(id);
     onClose();
   }
 
-  const opsi = (id: string, nama: string, aktif: boolean, kanan?: React.ReactNode, redup?: boolean, alamat?: string) => (
-    <button key={id || "lain"} type="button" onClick={() => pilih(id)}
-      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${aktif ? "bg-[#E4F5EC] ring-2 ring-[#22A06B]" : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"}`}>
+  const opsi = (id: string, nama: string, aktif: boolean, kanan?: React.ReactNode, redup?: boolean, alamat?: string, terkunci?: boolean) => (
+    <button key={id || "lain"} type="button" onClick={() => !terkunci && pilih(id)} disabled={terkunci}
+      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${aktif ? "bg-[#E4F5EC] ring-2 ring-[#22A06B]" : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"}`}>
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
         style={redup ? { background: "#FFF4E0", color: "#D97706" } : { background: "#FFE9E2", color: "#E8562B" }}>
         <Building2 size={15} />
@@ -76,14 +75,14 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
               </span>
               {i.jenisKelamin && (
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={i.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
-                  {i.jenisKelamin === "Perempuan" ? "Putri" : "Putra"}
+                  {i.jenisKelamin === "Perempuan" ? "Khusus Putri" : "Khusus Putra"}
                 </span>
               )}
               {i.sisa !== null && (
                 <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>Sisa {i.sisa}</span>
               )}
             </span>
-          ), false, formatAlamat(i) !== "-" ? formatAlamat(i) : undefined))}
+          ), false, formatAlamat(i) !== "-" ? formatAlamat(i) : undefined, i.id !== nilai && !tempatCocokJenisKelamin(i, jenisKelamin)))}
           {tampil.length === 0 && q && (
             <p className="py-6 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Tidak ada instansi yang cocok</p>
           )}
