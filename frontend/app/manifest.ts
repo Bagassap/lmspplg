@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const ICON_VERSION = 2;
+const ICON_VERSION = 3;
 const PWA_VERSION = "2";
 
 export default function manifest(): MetadataRoute.Manifest {
