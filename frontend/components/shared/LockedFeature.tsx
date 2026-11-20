@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ChevronLeft, Clock, Lock, Sparkles } from "lucide-react";
+import { ChevronLeft, Clock, Hourglass, Lock, Sparkles } from "lucide-react";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { useSiswaFitur } from "@/components/dashboard/useDashboardMenu";
 import { LoadingState } from "@/components/shared/LoadingState";
@@ -41,6 +41,25 @@ export default function LockedFeature({ role = "siswa", type = "magang" }: Props
   }, [aktif, target, router]);
   if (aktif) return null;
   if (role === "siswa" && !fitur.siap) return <LoadingState className="min-h-[60dvh]" />;
+
+  if (app) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-white dark:bg-[#0F172A]">
+        <button type="button" onClick={() => router.push(`/${role}/dashboard`)} aria-label="Kembali"
+          className="absolute left-4 top-[max(1rem,env(safe-area-inset-top))] flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+          <ChevronLeft size={20} />
+        </button>
+        <div className="relative flex h-24 w-24 items-center justify-center">
+          <motion.span className="absolute inset-0 rounded-full border-4 border-[#3E03B3]/15 border-t-[#3E03B3] dark:border-[#C4B5FD]/15 dark:border-t-[#C4B5FD]"
+            animate={{ rotate: 360 }} transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }} />
+          <motion.span animate={{ rotate: [0, 180, 180, 360] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", times: [0, 0.4, 0.5, 0.9] }}>
+            <Hourglass size={30} className="text-[#3E03B3] dark:text-[#C4B5FD]" />
+          </motion.span>
+        </div>
+        <p className="text-lg font-extrabold text-slate-900 dark:text-white">Menu ditutup</p>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden" style={{ background: app ? "#FFFFFF" : BRAND_GRADIENT }}>
