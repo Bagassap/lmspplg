@@ -7,10 +7,11 @@ import { InstansiDetailModal } from "./InstansiDetailModal";
 import { KuotaTerpenuhiChip } from "./KuotaTerpenuhiChip";
 import type { Instansi } from "./types";
 import { useAutoRefresh } from "@/lib/useAutoRefresh";
+import { TablePager, usePagedList } from "@/components/shared/TablePager";
 
 const PER_HALAMAN = 10;
 
-export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId, jenisKelaminSiswa, mode = "daftar" }: {
+export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL", onPilih, pilihId, jenisKelaminSiswa, mode = "daftar", pagerLengkap = false }: {
   list: Instansi[];
   loading: boolean;
   judul?: string;
@@ -18,10 +19,10 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
   pilihId?: string | null;
   jenisKelaminSiswa?: string | null;
   mode?: "daftar" | "ditempati";
+  pagerLengkap?: boolean;
 }) {
   const [q, setQ] = useState("");
   const [terbuka, setTerbuka] = useState<Instansi | null>(null);
-  const [halaman, setHalaman] = useState(0);
   const terisi = useMemo(() => list
     .map((i) => ({ ...i, siswa: (mode === "ditempati" ? i.ditempati : i.pendaftar) ?? i.siswa }))
     .filter((i) => i.siswa.length > 0), [list, mode]);
@@ -32,9 +33,11 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
       i.namaTempat.toLowerCase().includes(k)
       || i.siswa.some((s) => s.nama.toLowerCase().includes(k)));
   }, [terisi, q]);
-  const jumlahHalaman = Math.max(1, Math.ceil(tampil.length / PER_HALAMAN));
-  const hal = Math.min(halaman, jumlahHalaman - 1);
-  const potong = tampil.slice(hal * PER_HALAMAN, (hal + 1) * PER_HALAMAN);
+  const pg = usePagedList(tampil, `${q}|${mode}`);
+  const jumlahHalaman = pg.pageCount;
+  const hal = pg.page;
+  const setHalaman = pg.setPage;
+  const potong = pg.pageItems;
 
   return (
     <div className="card-pisah flex min-h-0 flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -45,7 +48,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
 
       <div className="relative mt-4 mb-2">
         <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-        <input value={q} onChange={(e) => { setQ(e.target.value); setHalaman(0); }} placeholder="Cari instansi atau nama siswa…"
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari instansi atau nama siswa…"
           className="h-9 w-full rounded-xl border-0 bg-slate-50 pl-9 pr-3 text-xs font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400" />
       </div>
 
@@ -73,7 +76,9 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
         })}
       </div>
 
-      {tampil.length > PER_HALAMAN && (
+      {pagerLengkap && !loading && <TablePager pg={pg} className="mt-3" />}
+
+      {!pagerLengkap && tampil.length > PER_HALAMAN && (
         <div className="mt-3 flex items-center justify-between">
           <span className="text-xs text-slate-500 dark:text-slate-400">
             {hal * PER_HALAMAN + 1}–{Math.min((hal + 1) * PER_HALAMAN, tampil.length)} dari {tampil.length}

@@ -6,7 +6,9 @@ import { CheckCircle2, ClipboardList, Clock, Search, Users, XCircle } from "luci
 import { useToast } from "@/components/shared/ToastSystem";
 import { PendaftarTempatModal, namaPendaftar } from "@/components/magang/PendaftarTempatModal";
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
+import { BelumDaftarPklCard } from "@/components/magang/BelumDaftarPklCard";
 import { KuotaTerpenuhiChip } from "@/components/magang/KuotaTerpenuhiChip";
+import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
 import { pesanError } from "@/components/magang/pkl-form-ui";
@@ -106,11 +108,15 @@ export default function AdminPendaftaranPklPage() {
   }, [list, tab, q]);
 
   const grupBuka = bukaKey ? grup.find((g) => g.key === bukaKey) ?? null : null;
+  const pg = usePagedList(grup, `${tab}|${q}`);
   const kuotaPeta = useMemo(() => new Map(instansi.list.map((i) => [i.id, i])), [instansi.list]);
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
-      <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} />
+      <div className="flex min-w-0 flex-col gap-4">
+        <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} />
+        <BelumDaftarPklCard />
+      </div>
 
       <div className="min-w-0 lg:rounded-3xl lg:bg-white lg:p-5 lg:shadow-sm lg:dark:bg-slate-800">
         <div className="mb-3 flex flex-wrap items-center gap-3">
@@ -130,7 +136,7 @@ export default function AdminPendaftaranPklPage() {
             [0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />)
           ) : grup.length === 0 ? (
             <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada pendaftaran</p>
-          ) : grup.map((g) => (
+          ) : pg.pageItems.map((g) => (
             <div key={g.key} className="rounded-3xl bg-white p-3.5 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
               <p className={`text-sm font-bold ${g.key === TANPA ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`}>{g.nama}</p>
               <div className="mt-2 flex flex-wrap items-center gap-1">
@@ -175,13 +181,13 @@ export default function AdminPendaftaranPklPage() {
                 <p className="px-4 py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada pendaftaran</p>
               ) : (
                 <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
-                  {grup.map((g, idx) => {
+                  {pg.pageItems.map((g, idx) => {
                     const jumlah = (st: StatusPendaftaran) => g.rows.filter((r) => r.status === st).length;
                     const tanpa = g.key === TANPA;
                     return (
                       <div key={g.key} className="grid items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
                         style={{ gridTemplateColumns: GRID_COLS }}>
-                        <span className="text-center text-xs font-bold text-slate-400">{idx + 1}</span>
+                        <span className="text-center text-xs font-bold text-slate-400">{pg.start + idx}</span>
                         <p className={`truncate text-sm font-bold ${tanpa ? "text-slate-500 dark:text-slate-400" : "text-slate-800 dark:text-white"}`} title={g.nama}>{g.nama}</p>
                         <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{tanpa ? "-" : kuotaPeta.has(g.key) ? `${kuotaPeta.get(g.key)!.terisi}/${g.kuota ?? "-"}` : g.kuota ?? "-"}</span>
                         {tanpa ? <span className="text-xs text-slate-400">-</span> : <GenderChip jk={g.jenisKelamin} />}
@@ -212,9 +218,10 @@ export default function AdminPendaftaranPklPage() {
             </div>
           </div>
         </div>
+        {!loading && <TablePager pg={pg} className="mt-3" />}
       </div>
 
-      <DaftarInstansiList list={instansi.list} loading={instansi.loading} />
+      <DaftarInstansiList list={instansi.list} loading={instansi.loading} pagerLengkap />
 
       <AnimatePresence>
         {grupBuka && (

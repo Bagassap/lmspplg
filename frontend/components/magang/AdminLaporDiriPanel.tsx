@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { XCircle, Search, Filter } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { LaporDiriTable } from "./LaporDiriTable";
 import type { LaporDiriResponse, LaporDiriRow } from "./lapor-diri-types";
 
@@ -38,6 +39,7 @@ export function AdminLaporDiriPanel() {
       return (r.siswa.nama ?? "").toLowerCase().includes(q) || r.siswa.nis.toLowerCase().includes(q);
     });
   }, [rows, search, onlyBelum]);
+  const pg = usePagedList(filtered, `${search}|${onlyBelum}`);
 
   return (
     <div className="space-y-4">
@@ -64,7 +66,8 @@ export function AdminLaporDiriPanel() {
           </div>
         </div>
 
-        <LaporDiriTable loading={loading} rows={filtered} showPembimbing mobileNative />
+        <LaporDiriTable loading={loading} rows={pg.pageItems} showPembimbing mobileNative />
+        {!loading && <TablePager pg={pg} className="mt-3" />}
       </div>
     </div>
   );

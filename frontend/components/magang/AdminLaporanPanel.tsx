@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Search, Filter } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
+import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { LaporanAkhirTable } from "./LaporanAkhirTable";
 import { LaporanAkhirReviewModal } from "./LaporanAkhirReviewModal";
 import type { LaporanAkhirRow } from "./laporan-akhir-types";
@@ -34,6 +35,8 @@ export function AdminLaporanPanel() {
     if (!q) return true;
     return (r.siswa.nama ?? "").toLowerCase().includes(q) || r.siswa.nis.toLowerCase().includes(q);
   });
+
+  const pg = usePagedList(filtered, search);
 
   async function handleReview(penempatanId: string, status: "DITERIMA" | "REVISI", pesanRevisi?: string) {
     const res = await fetch(`/api/magang/laporan-akhir/${penempatanId}/status`, {
@@ -67,7 +70,8 @@ export function AdminLaporanPanel() {
           </div>
         </div>
 
-        <LaporanAkhirTable loading={loading} rows={filtered} showPembimbing onOpen={setSelected} mobileNative />
+        <LaporanAkhirTable loading={loading} rows={pg.pageItems} showPembimbing onOpen={setSelected} mobileNative />
+        {!loading && <TablePager pg={pg} className="mt-3" />}
       </div>
 
       <LaporanAkhirReviewModal row={selected} onClose={() => setSelected(null)} onReview={handleReview} />

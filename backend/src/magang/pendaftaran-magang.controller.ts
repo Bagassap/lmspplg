@@ -30,6 +30,12 @@ export class PendaftaranMagangController {
   }
 
   @Roles(Role.ADMIN)
+  @Get('belum-daftar')
+  belumDaftar() {
+    return this.service.belumDaftar();
+  }
+
+  @Roles(Role.ADMIN)
   @Get()
   findAll(@Query('status') status?: string) {
     return this.service.findAll(status);

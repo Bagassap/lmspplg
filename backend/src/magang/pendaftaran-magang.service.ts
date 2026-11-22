@@ -163,6 +163,32 @@ export class PendaftaranMagangService {
     return this.findSaya(userId);
   }
 
+  async belumDaftar() {
+    const kelas = await this.prisma.kelas.findMany({
+      where: { OR: [{ nama: { startsWith: 'XII', mode: 'insensitive' } }, { nama: { startsWith: '12' } }] },
+      select: {
+        id: true,
+        nama: true,
+        _count: { select: { siswa: { where: { status: 'AKTIF' } } } },
+        siswa: {
+          where: { status: 'AKTIF', pendaftaranMagang: { is: null }, penempatan: { none: { status: { not: 'BATAL' } } } },
+          select: { id: true, nis: true, nama: true, user: { select: { nama: true, fotoProfil: true } } },
+        },
+      },
+      orderBy: { nama: 'asc' },
+    });
+    return kelas
+      .filter((k) => /^(XII|12)(?![0-9A-Z])/i.test(k.nama.trim()))
+      .map((k) => ({
+        id: k.id,
+        nama: k.nama,
+        total: k._count.siswa,
+        siswa: k.siswa
+          .map((s) => ({ id: s.id, nis: s.nis, nama: s.user?.nama ?? s.nama ?? 'Siswa', fotoProfil: s.user?.fotoProfil ?? null }))
+          .sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' })),
+      }));
+  }
+
   findAll(status?: string) {
     return this.prisma.pendaftaranMagang.findMany({
       where: status ? { status: status as StatusD } : {},

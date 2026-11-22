@@ -14,6 +14,7 @@ import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { KuotaTerpenuhiChip } from "@/components/magang/KuotaTerpenuhiChip";
+import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 import { namaSiswa } from "@/lib/nama";
@@ -214,6 +215,7 @@ export default function AdminMagangPenempatanPage() {
 
   const grupForm = formTempat ? grup.find((g) => g.id === formTempat) ?? null : null;
   const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
+  const pg = usePagedList(grup, `${statusFilter}|${search}`);
   const tempatPenuh = useMemo(() => new Set(tempatList.filter((t) => t.penuh).map((t) => t.id)), [tempatList]);
 
   return (
@@ -259,7 +261,7 @@ export default function AdminMagangPenempatanPage() {
             [0, 1, 2].map((i) => <div key={i} className="h-28 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700" />)
           ) : grup.length === 0 ? (
             <p className="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
-          ) : grup.map((g) => (
+          ) : pg.pageItems.map((g) => (
             <div key={g.id} className="rounded-3xl bg-white p-3.5 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.14)] dark:bg-[#1E293B]">
               <div className="flex items-start gap-2">
                 <div className="min-w-0 flex-1">
@@ -318,10 +320,10 @@ export default function AdminMagangPenempatanPage() {
               <p className="px-4 py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan yang ditemukan</p>
             ) : (
               <div className="divide-y divide-slate-100 dark:divide-slate-700/40">
-                {grup.map((g, idx) => (
+                {pg.pageItems.map((g, idx) => (
                   <div key={g.id} className="grid items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
                     style={{ gridTemplateColumns: GRID_COLS }}>
-                    <span className="text-center text-xs font-bold text-slate-400">{idx + 1}</span>
+                    <span className="text-center text-xs font-bold text-slate-400">{pg.start + idx}</span>
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-white" title={g.nama}>{g.nama}</p>
                     <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
                     <div className="flex flex-wrap gap-1">
@@ -368,6 +370,7 @@ export default function AdminMagangPenempatanPage() {
           </div>
         </div>
         </div>
+        {!loading && <TablePager pg={pg} className="mt-3" />}
       </div>
       </div>
 
