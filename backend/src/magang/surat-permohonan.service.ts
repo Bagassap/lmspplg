@@ -502,7 +502,7 @@ export class SuratPermohonanService {
         { align: AlignmentType.JUSTIFIED, indent: 720, line: 320 },
       ),
       p('Yang bertanda tangan di bawah ini:', { line: 360, after: 120 }),
-      ...['Nama Lengkap', 'Jabatan', 'Instansi'].map(
+      ...['Nama Lengkap', 'Jabatan', 'Instansi', 'Nomor HP'].map(
         (l) =>
           new Paragraph({
             spacing: { after: 80, line: 276 },
