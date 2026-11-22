@@ -119,12 +119,15 @@ export class PendaftaranMagangService {
   }
 
   async terima(id: string) {
-    const row = await this.prisma.pendaftaranMagang.findUnique({ where: { id }, include: { siswa: { select: { userId: true } } } });
+    const row = await this.prisma.pendaftaranMagang.findUnique({ where: { id }, include: { siswa: { select: { userId: true, jenisKelamin: true } } } });
     if (!row) throw new NotFoundException('Pendaftaran tidak ditemukan');
     if (row.status === 'DITERIMA') throw new BadRequestException('Pendaftaran ini sudah diverifikasi');
     if (row.tempatMagangId) {
-      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: row.tempatMagangId }, select: { id: true, namaTempat: true, kuota: true, dibuatSiswa: true } });
-      if (tempat) await pastikanKuotaTersedia(this.prisma, tempat, row.siswaId);
+      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: row.tempatMagangId }, select: { id: true, namaTempat: true, kuota: true, dibuatSiswa: true, jenisKelamin: true } });
+      if (tempat) {
+        pastikanJenisKelaminCocok(tempat, row.siswa);
+        await pastikanKuotaTersedia(this.prisma, tempat, row.siswaId);
+      }
     }
     await this.prisma.pendaftaranMagang.update({
       where: { id },

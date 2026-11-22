@@ -120,6 +120,15 @@ export function labelJenisKelaminTempat(v?: string | null) {
   return v === "Laki-laki" ? "Laki-laki saja" : v === "Perempuan" ? "Perempuan saja" : "Laki-laki & Perempuan";
 }
 
+const JK_LAKI = new Set(["l", "lk", "laki", "laki-laki", "laki laki", "pria", "putra", "cowo", "cowok"]);
+const JK_PEREMPUAN = new Set(["p", "pr", "perempuan", "wanita", "putri", "cewe", "cewek"]);
+
+function normalJenisKelamin(v?: string | null) {
+  const k = (v ?? "").trim().toLowerCase();
+  return JK_LAKI.has(k) ? "Laki-laki" : JK_PEREMPUAN.has(k) ? "Perempuan" : null;
+}
+
 export function tempatCocokJenisKelamin(t: { jenisKelamin?: string | null }, jk?: string | null) {
-  return !t.jenisKelamin || !jk || t.jenisKelamin === jk;
+  const khusus = normalJenisKelamin(t.jenisKelamin);
+  return !khusus || khusus === normalJenisKelamin(jk);
 }

@@ -185,9 +185,10 @@ export class PenempatanService {
     if (!target) throw new NotFoundException('Pengajuan tidak ditemukan');
     const rows = await this.prisma.penempatanMagang.findMany({
       where: target.kelompokId ? { kelompokId: target.kelompokId, status: 'MENUNGGU' } : { id, status: 'MENUNGGU' },
-      include: { siswa: { select: { userId: true } }, tempatMagang: { select: { namaTempat: true } } },
+      include: { siswa: { select: { userId: true, jenisKelamin: true } }, tempatMagang: { select: { namaTempat: true, jenisKelamin: true } } },
     });
     if (rows.length === 0) throw new BadRequestException('Pengajuan ini sudah diproses');
+    rows.forEach((r) => pastikanJenisKelaminCocok(r.tempatMagang, r.siswa));
 
     await this.prisma.penempatanMagang.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
 
@@ -262,6 +263,15 @@ export class PenempatanService {
       });
       if (!tempat) throw new NotFoundException('Tempat magang tidak ditemukan');
       await pastikanKuotaTersedia(this.prisma, { ...tempat, dibuatSiswa: false }, existing.siswaId);
+    }
+
+    const pindah = !!dto.tempatMagangId && dto.tempatMagangId !== existing.tempatMagangId;
+    if (pindah || (dto.status === 'AKTIF' && existing.status !== 'AKTIF')) {
+      const [tujuan, pemilik] = await Promise.all([
+        this.prisma.tempatMagang.findUnique({ where: { id: dto.tempatMagangId ?? existing.tempatMagangId }, select: { namaTempat: true, jenisKelamin: true } }),
+        this.prisma.siswa.findUnique({ where: { id: existing.siswaId }, select: { jenisKelamin: true } }),
+      ]);
+      if (tujuan && pemilik) pastikanJenisKelaminCocok(tujuan, pemilik);
     }
 
     if (dto.status === 'AKTIF' && existing.status !== 'AKTIF') {
