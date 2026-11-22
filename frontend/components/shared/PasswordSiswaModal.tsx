@@ -7,7 +7,7 @@ import { useToast } from "@/components/shared/ToastSystem";
 
 type Hasil = { nama: string; nis: string; password: string | null; masihAwal: boolean; pesan: string | null };
 
-export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId: string; nama: string; onClose: () => void; onReset?: () => void }) {
+export function PasswordSiswaModal({ userId, nama, onClose, onReset, jenis = "siswa" }: { userId: string; nama: string; onClose: () => void; onReset?: () => void; jenis?: "siswa" | "guru" }) {
   const toast = useToast();
   const [data, setData] = useState<Hasil | null>(null);
   const [galat, setGalat] = useState("");
@@ -15,7 +15,7 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
 
   useEffect(() => {
     let batal = false;
-    fetch(`/api/users/${userId}/password-siswa`, { cache: "no-store" })
+    fetch(`/api/users/${userId}/password-${jenis}`, { cache: "no-store" })
       .then(async (r) => {
         const d = await r.json().catch(() => null);
         if (!r.ok) throw new Error(typeof d?.message === "string" ? d.message : "Gagal mengambil password");
@@ -24,7 +24,7 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
       .then((d) => { if (!batal) setData(d); })
       .catch((e) => { if (!batal) setGalat(e.message); });
     return () => { batal = true; };
-  }, [userId]);
+  }, [userId, jenis]);
 
   async function salin() {
     if (!data?.password) return;
@@ -37,7 +37,7 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
       <div className="w-full max-w-md rounded-t-[28px] bg-white p-5 shadow-2xl dark:bg-slate-900 sm:rounded-3xl sm:p-6">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Password siswa</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Password {jenis}</p>
             <h2 className="truncate text-base font-extrabold text-slate-900 dark:text-white">{nama}</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="Tutup"
@@ -59,7 +59,9 @@ export function PasswordSiswaModal({ userId, nama, onClose, onReset }: { userId:
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3E03B3] text-white"><Copy size={15} /></button>
               </div>
               <p className="mt-2 text-[11px] text-slate-500">
-                {data.masihAwal ? "Siswa belum mengganti password — ini password awal (NIS)." : "Password yang diatur siswa sendiri."} Jangan dibagikan ke pihak lain.
+                {jenis === "guru"
+                  ? (data.masihAwal ? "Guru belum mengganti password — ini password awal." : "Password yang diatur guru sendiri.")
+                  : (data.masihAwal ? "Siswa belum mengganti password — ini password awal (NIS)." : "Password yang diatur siswa sendiri.")} Jangan dibagikan ke pihak lain.
               </p>
             </>
           ) : (

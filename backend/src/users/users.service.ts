@@ -61,7 +61,7 @@ export class UsersService {
       data: {
         password: hashed,
         mustChangePassword: true,
-        ...(user.role === Role.SISWA ? { passwordTampil: enkripsiPassword(newPassword) } : {}),
+        ...(user.role === Role.SISWA || user.role === Role.GURU ? { passwordTampil: enkripsiPassword(newPassword) } : {}),
         ...(dto.bypassIdentityVerification ? { bypassIdentityVerification: true } : {}),
       },
     });
@@ -93,6 +93,22 @@ export class UsersService {
       password,
       masihAwal: user.mustChangePassword,
       pesan: password ? null : 'Password siswa ini belum tersimpan (diganti sebelum fitur ini ada). Reset sekali, setelah itu akan terlihat.',
+    };
+  }
+
+  async lihatPasswordGuru(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { nama: true, role: true, loginId: true, passwordTampil: true, mustChangePassword: true },
+    });
+    if (!user || user.role !== Role.GURU) throw new NotFoundException('Guru tidak ditemukan');
+    const password = user.passwordTampil ? dekripsiPassword(user.passwordTampil) : null;
+    return {
+      nama: user.nama,
+      nis: user.loginId ?? '',
+      password,
+      masihAwal: user.mustChangePassword,
+      pesan: password ? null : 'Password guru ini belum tersimpan. Akan terlihat setelah guru login sekali, mengganti password, atau direset.',
     };
   }
 
@@ -140,6 +156,7 @@ export class UsersService {
           nama: dto.nama,
           loginId: dto.loginId,
           password: hashed,
+          ...(dto.role === 'GURU' ? { passwordTampil: enkripsiPassword(dto.password!) } : {}),
           role: dto.role === 'GURU' ? Role.GURU : Role.ADMIN,
           mustChangePassword: true,
           ...(dto.role === 'GURU' ? { guru: { create: { nip: dto.nip || undefined, noWa: dto.noWa } } } : {}),

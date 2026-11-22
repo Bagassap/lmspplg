@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  GraduationCap, X, Plus, KeyRound, Ban, RotateCcw, School, Loader2,
+  GraduationCap, X, Plus, KeyRound, Eye, Ban, RotateCcw, School, Loader2,
 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
@@ -31,12 +31,13 @@ type GuruRow = {
 };
 
 export function KelolaGuruModal({
-  open, kelasList, onClose, onResetPassword, onChanged,
+  open, kelasList, onClose, onResetPassword, onLihatPassword, onChanged,
 }: {
   open: boolean;
   kelasList: Kelas[];
   onClose: () => void;
   onResetPassword: (target: { id: string; nama: string; loginId?: string; mustChangePassword: boolean }) => void;
+  onLihatPassword: (target: { id: string; nama: string; loginId?: string; mustChangePassword: boolean }) => void;
   onChanged: () => void;
 }) {
   const toast = useToast();
@@ -235,6 +236,11 @@ export function KelolaGuruModal({
                         </div>
 
                         <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-slate-50 pt-2.5 dark:border-slate-800">
+                          <button type="button"
+                            onClick={() => onLihatPassword({ id: g.id, nama, loginId: g.loginId ?? undefined, mustChangePassword: g.mustChangePassword })}
+                            className="flex items-center gap-1.5 rounded-lg bg-[#3E03B3] px-2.5 py-1.5 text-[11px] font-bold text-white">
+                            <Eye size={11} /> Lihat Password
+                          </button>
                           <button type="button" disabled={!g.loginId}
                             onClick={() => onResetPassword({ id: g.id, nama, loginId: g.loginId ?? undefined, mustChangePassword: g.mustChangePassword })}
                             className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 text-[11px] font-bold text-slate-600 hover:bg-slate-200 disabled:opacity-40 dark:bg-slate-700 dark:text-slate-300">

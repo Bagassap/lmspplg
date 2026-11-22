@@ -31,6 +31,13 @@ export class ImpersonationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get(':id/password-guru')
+  lihatPasswordGuru(@Param('id') id: string) {
+    return this.service.lihatPasswordGuru(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.GURU)
   @Get(':id/password-siswa')
   lihatPasswordSiswa(@Param('id') id: string, @Request() req: any) {

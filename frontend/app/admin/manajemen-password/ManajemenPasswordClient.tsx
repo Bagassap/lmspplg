@@ -5,7 +5,7 @@ import { icon3dStyle } from "@/components/shared/Icon3D";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft, ShieldCheck, Users, CheckCircle2, XCircle, KeyRound } from "lucide-react";
+import { GraduationCap, FileSpreadsheet, UserPlus, ChevronLeft, ShieldCheck, Users, CheckCircle2, XCircle, KeyRound, Eye } from "lucide-react";
 import { StatusFilterCard } from "@/components/magang/StatusFilterCard";
 import { Avatar } from "@/components/shared/Avatar";
 import { PasswordSiswaModal } from "@/components/shared/PasswordSiswaModal";
@@ -68,6 +68,8 @@ export default function ManajemenPasswordClient() {
   const [kelolaGuruOpen, setKelolaGuruOpen] = useState(false);
   const [kelolaAdminOpen, setKelolaAdminOpen] = useState(false);
   const [lihatTarget, setLihatTarget] = useState<{ id: string; nama: string; nis: string; mustChangePassword: boolean } | null>(null);
+
+  const [lihatGuru, setLihatGuru] = useState<ResetTarget | null>(null);
 
   const fetchHeader = useCallback(async () => {
     setLoadingHeader(true);
@@ -165,6 +167,7 @@ export default function ManajemenPasswordClient() {
             search={search} onSearch={setSearch}
             statusFilter={statusFilter} onStatusFilter={setStatusFilter}
             total={siswaItems.length} sudahCount={sudahCount} belumCount={belumCount} displayedCount={displayed.length}
+            onLihatWali={() => waliAccount && setLihatGuru({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
             ringkas
           />
           <div className="border-t border-slate-100 dark:border-slate-700/50">
@@ -212,10 +215,16 @@ export default function ManajemenPasswordClient() {
                   </span>
                 </div>
               </div>
-              <button type="button" onClick={() => setResetTarget({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
-                className="mt-2.5 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white">
-                <KeyRound size={13} /> Reset Password Wali
-              </button>
+              <div className="mt-2.5 grid grid-cols-2 gap-2">
+                <button type="button" onClick={() => setLihatGuru({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
+                  className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[#F1EDFA] text-xs font-bold text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
+                  <Eye size={13} /> Lihat
+                </button>
+                <button type="button" onClick={() => setResetTarget({ id: waliAccount.id, nama: namaOrang(waliAccount.nama), loginId: waliAccount.loginId ?? undefined, mustChangePassword: waliAccount.mustChangePassword })}
+                  className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] text-xs font-bold text-white">
+                  <KeyRound size={13} /> Reset
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -288,6 +297,16 @@ export default function ManajemenPasswordClient() {
         />
       )}
 
+      {lihatGuru && (
+        <PasswordSiswaModal
+          jenis="guru"
+          userId={lihatGuru.id}
+          nama={lihatGuru.nama}
+          onClose={() => setLihatGuru(null)}
+          onReset={() => { setResetTarget(lihatGuru); setLihatGuru(null); }}
+        />
+      )}
+
       <KelolaAdminModal
         open={kelolaAdminOpen}
         onClose={() => setKelolaAdminOpen(false)}
@@ -312,6 +331,7 @@ export default function ManajemenPasswordClient() {
         kelasList={kelasList}
         onClose={() => setKelolaGuruOpen(false)}
         onResetPassword={(t) => setResetTarget(t)}
+        onLihatPassword={setLihatGuru}
         onChanged={refetchAll}
       />
     </div>

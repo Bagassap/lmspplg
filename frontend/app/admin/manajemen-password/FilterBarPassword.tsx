@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown } from "lucide-react";
+import { Eye, Search, X, Users, CheckCircle2, XCircle, Filter, KeyRound, UserCheck, School, ChevronDown } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { kelasShort } from "@/components/data-siswa/shared";
 import { useIsAppMode } from "@/lib/pwaInstall";
@@ -23,7 +23,7 @@ type KelasOption = { id: string; nama: string };
 
 export function FilterBarPassword({
   kelasList, selectedKelasId, onSelectKelas,
-  kelasNama, wali, onResetWali,
+  kelasNama, wali, onResetWali, onLihatWali,
   search, onSearch,
   statusFilter, onStatusFilter,
   total, sudahCount, belumCount, displayedCount, ringkas = false,
@@ -32,6 +32,7 @@ export function FilterBarPassword({
   kelasNama?: string;
   wali: WaliInfo;
   onResetWali: () => void;
+  onLihatWali: () => void;
   search: string; onSearch: (v: string) => void;
   statusFilter: StatusFilter; onStatusFilter: (v: StatusFilter) => void;
   total: number; sudahCount: number; belumCount: number; displayedCount: number;
@@ -77,6 +78,9 @@ export function FilterBarPassword({
               <p className="truncate text-xs font-bold text-slate-800 dark:text-white">{namaOrang(wali.nama)}</p>
               <p className="text-[10px] text-slate-500">Wali kelas · {wali.mustChangePassword ? "belum ganti" : "sudah ganti"}</p>
             </div>
+            <button type="button" onClick={onLihatWali} aria-label="Lihat password wali kelas" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-600 dark:text-[#C4B5FD]">
+              <Eye size={13} />
+            </button>
             <button onClick={onResetWali} className="flex items-center gap-1 rounded-xl bg-[#3E03B3] px-3 py-1.5 text-[11px] font-bold text-white">
               <KeyRound size={11} /> Reset
             </button>
@@ -186,6 +190,10 @@ export function FilterBarPassword({
                 Sudah Ganti
               </span>
             )}
+            <button type="button" onClick={onLihatWali} aria-label="Lihat password wali kelas"
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]">
+              <Eye size={12} />
+            </button>
             <button onClick={onResetWali}
               className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm transition-colors hover:brightness-95"
               style={{ background: REF_PRIMARY }}>

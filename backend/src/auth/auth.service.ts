@@ -107,7 +107,7 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial tidak valid');
     }
 
-    if (user.role === 'SISWA' && !user.passwordTampil) {
+    if ((user.role === 'SISWA' || user.role === 'GURU') && !user.passwordTampil) {
       this.prisma.user
         .update({ where: { id: user.id }, data: { passwordTampil: enkripsiPassword(dto.password) } })
         .catch(() => {});
@@ -223,7 +223,7 @@ export class AuthService {
       where: { id: userId },
       data: {
         password: hashed, mustChangePassword: false, bypassIdentityVerification: false,
-        ...(user.role === 'SISWA' ? { passwordTampil: enkripsiPassword(dto.newPassword) } : {}),
+        ...(user.role === 'SISWA' || user.role === 'GURU' ? { passwordTampil: enkripsiPassword(dto.newPassword) } : {}),
       },
     });
 
