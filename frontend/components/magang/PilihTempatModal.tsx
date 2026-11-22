@@ -16,10 +16,8 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
   const [q, setQ] = useState("");
   const tampil = useMemo(() => {
     const k = q.trim().toLowerCase();
-    return list
-      .filter((i) => i.id === nilai || i.sisa === null || i.sisa > 0)
-      .filter((i) => !k || i.namaTempat.toLowerCase().includes(k));
-  }, [list, q, nilai]);
+    return list.filter((i) => !k || i.namaTempat.toLowerCase().includes(k));
+  }, [list, q]);
 
   function pilih(id: string) {
     onPilih(id);
@@ -58,12 +56,6 @@ export function PilihTempatModal({ list, nilai, jenisKelamin, onPilih, onClose }
               <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">Gender</span>
             </div>
             <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
-              <button type="button" onClick={() => pilih("")}
-                className={`grid w-full items-center gap-2 px-3 py-2.5 text-left transition-colors ${nilai === "" ? "bg-[#E4F5EC] dark:bg-[#22A06B]/20" : "hover:bg-slate-50 dark:hover:bg-slate-800"}`}
-                style={{ gridTemplateColumns: KOLOM }}>
-                <span className="flex justify-center">{nilai === "" ? <CheckCircle2 size={14} className="text-[#22A06B]" /> : <span className="text-xs text-slate-400">–</span>}</span>
-                <span className="col-span-3 truncate text-sm font-semibold text-slate-500 dark:text-slate-400">Belum ada / instansi lain</span>
-              </button>
               {tampil.map((i, idx) => {
                 const aktif = nilai === i.id;
                 const penuh = i.sisa !== null && i.sisa <= 0;

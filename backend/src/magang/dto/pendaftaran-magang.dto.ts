@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 
 export class DaftarMagangDto {
   @IsString()
@@ -35,9 +35,9 @@ export class DaftarMagangDto {
   @MaxLength(100)
   kabupaten!: string;
 
-  @IsString()
-  @IsOptional()
-  tempatMagangId?: string | null;
+  @IsString({ message: 'Tempat PKL wajib dipilih' })
+  @IsNotEmpty({ message: 'Tempat PKL wajib dipilih' })
+  tempatMagangId!: string;
 }
 
 export class TolakPendaftaranDto {

@@ -70,13 +70,12 @@ export class PendaftaranMagangService {
       throw new BadRequestException('Pendaftaran PKL kamu sudah diverifikasi admin');
     }
 
-    const tempatMagangId = dto.tempatMagangId?.trim() || null;
-    if (tempatMagangId) {
-      const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId }, select: { id: true, namaTempat: true, jenisKelamin: true, kuota: true, dibuatSiswa: true } });
-      if (!tempat) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
-      pastikanJenisKelaminCocok(tempat, siswa);
-      await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
-    }
+    const tempatMagangId = dto.tempatMagangId.trim();
+    if (!tempatMagangId) throw new BadRequestException('Tempat PKL wajib dipilih');
+    const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatMagangId }, select: { id: true, namaTempat: true, jenisKelamin: true, kuota: true, dibuatSiswa: true } });
+    if (!tempat) throw new BadRequestException('Tempat PKL yang dipilih tidak ditemukan');
+    pastikanJenisKelaminCocok(tempat, siswa);
+    await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
 
     const data = {
       tempatMagangId,

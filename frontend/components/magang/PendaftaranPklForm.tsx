@@ -37,12 +37,13 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
   async function kirim() {
     if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
     if (!WA_VALID.test(noWa.trim())) { toast.error("Nomor WA tidak valid", "Isi nomor WA aktif, contoh 081234567890."); return; }
+    if (!tempatId) { toast.error("Pilih tempat PKL", "Tempat PKL wajib dipilih sebelum mengirim pendaftaran."); return; }
     setSaving(true);
     try {
       const res = await fetch("/api/magang/pendaftaran", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...alamat, noWa: noWa.trim(), tempatMagangId: tempatId || null }),
+        body: JSON.stringify({ ...alamat, noWa: noWa.trim(), tempatMagangId: tempatId }),
       });
       const d = await res.json().catch(() => null);
       if (res.ok && d?.profil) {
@@ -61,7 +62,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
       { icon: User, label: "Nama", value: `${namaSiswa(data.profil.nama)} · ${data.profil.kelas} · NIS ${data.profil.nis}`, bg: "#F1EDFA", fg: "#3E03B3" },
       { icon: MapPin, label: "Alamat", value: formatAlamat(p), bg: "#FFE9E2", fg: "#E8562B" },
       { icon: Phone, label: "WA aktif", value: p.noWa, bg: "#E4F5EC", fg: "#22A06B" },
-      { icon: Building2, label: "Tempat PKL", value: p.tempatMagang?.namaTempat ?? "Belum ada / instansi lain", bg: "#E0F2FE", fg: "#0EA5E9" },
+      { icon: Building2, label: "Tempat PKL", value: p.tempatMagang?.namaTempat ?? "Belum memilih", bg: "#E0F2FE", fg: "#0EA5E9" },
     ];
     return (
       <div className="rounded-3xl bg-white p-5 shadow-sm dark:bg-slate-800">
@@ -139,12 +140,12 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
             onChange={(e) => setNoWa(e.target.value.replace(/[^0-9+\s-]/g, ""))} />
 
           <div>
-            <label className={PKL_CAP}>Tempat PKL</label>
+            <label className={PKL_CAP}>Tempat PKL <span className="text-[#DC2626]">*</span></label>
             <button type="button" onClick={() => setModalTempat(true)} disabled={terkunci || instansiLoading}
               className={`${PKL_FIELD} flex items-center gap-2 text-left`}>
               <Building2 size={16} className="shrink-0 text-[#E8562B]" />
               <span className={`min-w-0 flex-1 truncate ${tempatTerpilih ? "" : "text-slate-500 dark:text-slate-400"}`}>
-                {instansiLoading ? "Memuat daftar instansi…" : tempatTerpilih?.namaTempat ?? "Belum ada / instansi lain"}
+                {instansiLoading ? "Memuat daftar instansi…" : tempatTerpilih?.namaTempat ?? "Pilih tempat PKL"}
               </span>
               {!terkunci && <ChevronRight size={16} className="shrink-0 text-[#F26A3D]" />}
             </button>
@@ -156,7 +157,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
           </div>
 
           {!terkunci && (
-            <button type="button" onClick={kirim} disabled={saving}
+            <button type="button" onClick={kirim} disabled={saving || !tempatId}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
               {!p ? "Daftar PKL" : p.status === "DITOLAK" ? "Kirim ulang pendaftaran" : "Perbarui pendaftaran"}
