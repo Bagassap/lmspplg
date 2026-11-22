@@ -41,7 +41,12 @@ export class PendaftaranMagangService {
       },
     });
     if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+    const penempatanTerkunci = await this.prisma.penempatanMagang.count({
+      where: { siswaId: siswa.id, status: { in: ['MENUNGGU', 'AKTIF', 'SELESAI'] } },
+    });
+    const statusDaftar = siswa.pendaftaranMagang?.status;
     return {
+      bisaGantiInstansi: penempatanTerkunci === 0 && (statusDaftar === 'MENUNGGU' || statusDaftar === 'DITERIMA'),
       profil: {
         nama: siswa.user?.nama ?? siswa.nama ?? '',
         nis: siswa.nis,
@@ -105,6 +110,55 @@ export class PendaftaranMagangService {
         link: '/magang/pendaftaran',
       });
     }
+
+    return this.findSaya(userId);
+  }
+
+  async gantiInstansi(userId: string, tempatMagangIdBaru: string) {
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { userId },
+      include: {
+        user: { select: { nama: true } },
+        kelas: { select: { nama: true } },
+        pendaftaranMagang: { include: { tempatMagang: { select: { namaTempat: true } } } },
+      },
+    });
+    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
+    const lama = siswa.pendaftaranMagang;
+    if (!lama || lama.status === 'DITOLAK') {
+      throw new BadRequestException('Ganti instansi hanya bisa dilakukan setelah mendaftar PKL');
+    }
+    const penempatanTerkunci = await this.prisma.penempatanMagang.count({
+      where: { siswaId: siswa.id, status: { in: ['MENUNGGU', 'AKTIF', 'SELESAI'] } },
+    });
+    if (penempatanTerkunci > 0) {
+      throw new BadRequestException('Instansi tidak bisa diganti karena form penempatan sudah dikirim. Hubungi admin.');
+    }
+
+    const tempatMagangId = tempatMagangIdBaru.trim();
+    if (tempatMagangId === lama.tempatMagangId) {
+      throw new BadRequestException('Pilih instansi yang berbeda dari instansi saat ini');
+    }
+    const tempat = await this.prisma.tempatMagang.findUnique({
+      where: { id: tempatMagangId },
+      select: { id: true, namaTempat: true, jenisKelamin: true, kuota: true, dibuatSiswa: true },
+    });
+    if (!tempat) throw new BadRequestException('Instansi yang dipilih tidak ditemukan');
+    pastikanJenisKelaminCocok(tempat, siswa);
+    await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
+
+    await this.prisma.pendaftaranMagang.update({
+      where: { id: lama.id },
+      data: { tempatMagangId, status: 'MENUNGGU', alasanTolak: null, diverifikasiAt: null },
+    });
+
+    const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
+    await this.notificationService.createMany(admins.map((a) => a.id), {
+      title: 'Siswa mengganti instansi PKL',
+      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} (${siswa.kelas?.nama ?? '-'}) pindah dari ${lama.tempatMagang?.namaTempat ?? '-'} ke ${tempat.namaTempat}. Mohon verifikasi ulang.`,
+      type: NotificationType.MAGANG,
+      link: '/magang/pendaftaran',
+    });
 
     return this.findSaya(userId);
   }

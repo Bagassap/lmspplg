@@ -40,6 +40,12 @@ export class DaftarMagangDto {
   tempatMagangId!: string;
 }
 
+export class GantiInstansiDto {
+  @IsString({ message: 'Instansi baru wajib dipilih' })
+  @IsNotEmpty({ message: 'Instansi baru wajib dipilih' })
+  tempatMagangId!: string;
+}
+
 export class TolakPendaftaranDto {
   @IsString()
   @IsNotEmpty({ message: 'Alasan penolakan wajib diisi' })

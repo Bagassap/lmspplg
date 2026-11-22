@@ -56,7 +56,7 @@ export default function SiswaMagangPenempatanPage() {
   ) : !daftar ? (
     <p className="rounded-3xl bg-[#FFE9E2] p-5 text-sm font-bold text-[#E8562B]">Profil siswa tidak ditemukan. Hubungi admin.</p>
   ) : (
-    <PendaftaranPklForm data={daftar} onChange={setDaftar} instansi={instansi.list} instansiLoading={instansi.loading}
+    <PendaftaranPklForm data={daftar} onChange={(d) => { setDaftar(d); setDipilih(undefined); instansi.reload(); }} instansi={instansi.list} instansiLoading={instansi.loading}
       onLanjut={() => setKategori("penempatan")} />
   );
 

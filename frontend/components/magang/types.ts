@@ -71,6 +71,7 @@ export type PendaftaranSaya = {
   profil: Alamat & { nama: string; nis: string; kelas: string; noHp: string; jenisKelamin: string | null };
   pendaftaran: PendaftaranMagang | null;
   sudahPenempatan: boolean;
+  bisaGantiInstansi?: boolean;
 };
 
 export type Instansi = {

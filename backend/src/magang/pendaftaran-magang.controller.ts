@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { PendaftaranMagangService } from './pendaftaran-magang.service';
-import { DaftarMagangDto, TolakPendaftaranDto } from './dto/pendaftaran-magang.dto';
+import { DaftarMagangDto, GantiInstansiDto, TolakPendaftaranDto } from './dto/pendaftaran-magang.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -21,6 +21,12 @@ export class PendaftaranMagangController {
   @Post()
   daftar(@Request() req: any, @Body() dto: DaftarMagangDto) {
     return this.service.daftar(req.user.id, dto);
+  }
+
+  @Roles(Role.SISWA)
+  @Post('ganti-instansi')
+  gantiInstansi(@Request() req: any, @Body() dto: GantiInstansiDto) {
+    return this.service.gantiInstansi(req.user.id, dto.tempatMagangId);
   }
 
   @Roles(Role.ADMIN)

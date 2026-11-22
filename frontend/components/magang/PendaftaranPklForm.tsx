@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, MapPin, Phone, Send, User, XCircle } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock, Loader2, MapPin, Phone, Send, User, XCircle } from "lucide-react";
 import { PilihTempatModal } from "./PilihTempatModal";
 import { useToast } from "@/components/shared/ToastSystem";
 import { AlamatFields, PklInput, PKL_CAP, PKL_FIELD, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
@@ -26,6 +26,8 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
   const [tempatId, setTempatId] = useState(data.pendaftaran?.tempatMagangId ?? "");
   const [saving, setSaving] = useState(false);
   const [modalTempat, setModalTempat] = useState(false);
+  const [modalGanti, setModalGanti] = useState(false);
+  const [mengganti, setMengganti] = useState(false);
 
   const p = data.pendaftaran;
   const terkunci = p?.status === "DITERIMA";
@@ -57,6 +59,49 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
     }
   }
 
+  async function gantiInstansi(id: string) {
+    if (!p || id === p.tempatMagangId) return;
+    const tujuan = instansi.find((i) => i.id === id)?.namaTempat ?? "instansi baru";
+    const ket = p.status === "DITERIMA"
+      ? `Pendaftaranmu pindah ke "${tujuan}" dan harus diverifikasi admin lagi. Surat permohonan untuk instansi lama tidak dipakai lagi.`
+      : `Pendaftaranmu pindah ke "${tujuan}" dan tetap menunggu verifikasi admin.`;
+    const ok = await toast.confirm("Ganti instansi PKL?", ket, "Ya, ganti");
+    if (!ok) return;
+    setMengganti(true);
+    try {
+      const res = await fetch("/api/magang/pendaftaran/ganti-instansi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tempatMagangId: id }),
+      });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d?.profil) {
+        setTempatId(id);
+        onChange(d);
+        toast.success("Instansi diganti", "Menunggu verifikasi admin.");
+      } else {
+        toast.error(pesanError(d, "Gagal mengganti instansi"), "");
+      }
+    } finally {
+      setMengganti(false);
+    }
+  }
+
+  const tombolGanti = data.bisaGantiInstansi ? (
+    <button type="button" onClick={() => setModalGanti(true)} disabled={mengganti || instansiLoading}
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#F1EDFA] px-4 text-xs font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">
+      {mengganti ? <Loader2 size={14} className="animate-spin" /> : <ArrowLeftRight size={14} />} Ganti instansi
+    </button>
+  ) : null;
+
+  const pemilihGanti = (
+    <AnimatePresence>
+      {modalGanti && p && (
+        <PilihTempatModal list={instansi} nilai={p.tempatMagangId ?? ""} jenisKelamin={data.profil.jenisKelamin} onPilih={gantiInstansi} onClose={() => setModalGanti(false)} />
+      )}
+    </AnimatePresence>
+  );
+
   if (p?.status === "MENUNGGU") {
     const baris = [
       { icon: User, label: "Nama", value: `${namaSiswa(data.profil.nama)} · ${data.profil.kelas} · NIS ${data.profil.nis}`, bg: "#F1EDFA", fg: "#3E03B3" },
@@ -86,6 +131,8 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
             </div>
           ))}
         </div>
+        {tombolGanti && <div className="mt-3 grid">{tombolGanti}</div>}
+        {pemilihGanti}
       </div>
     );
   }
@@ -109,10 +156,13 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
                   : ""}
             </p>
             {p.status === "DITERIMA" && (
-              <button type="button" onClick={onLanjut}
-                className="mt-2.5 inline-flex h-10 items-center gap-2 rounded-xl bg-[#22A06B] px-4 text-xs font-bold text-white">
-                Isi penempatan <ArrowRight size={14} />
-              </button>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                <button type="button" onClick={onLanjut}
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#22A06B] px-4 text-xs font-bold text-white">
+                  Isi penempatan <ArrowRight size={14} />
+                </button>
+                {tombolGanti}
+              </div>
             )}
           </div>
         </div>
@@ -171,6 +221,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
           <PilihTempatModal list={instansi} nilai={tempatId} jenisKelamin={data.profil.jenisKelamin} onPilih={setTempatId} onClose={() => setModalTempat(false)} />
         )}
       </AnimatePresence>
+      {pemilihGanti}
     </div>
   );
 }
