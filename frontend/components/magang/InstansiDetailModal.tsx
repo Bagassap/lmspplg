@@ -40,7 +40,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, o
           {i.sisa !== null && (
             <span className="shrink-0 rounded-xl px-2.5 py-1 text-[10px] font-bold"
               style={penuh ? { background: "#FEE2E2", color: "#DC2626" } : { background: "#E0F2FE", color: "#0EA5E9" }}>
-              {penuh ? "Kuota penuh" : `Sisa kuota ${i.sisa}`}
+              {penuh ? "Kuota terpenuhi" : `Sisa kuota ${i.sisa}`}
             </span>
           )}
           <button type="button" onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><X size={16} /></button>
@@ -81,7 +81,7 @@ export function InstansiDetailModal({ instansi: i, dipilih, jenisKelaminSiswa, o
             )}
           </div>
 
-          {onPilih && !penuh && cocok && (
+          {onPilih && (!penuh || dipilih) && cocok && (
             <button type="button" onClick={() => { onPilih(i); onClose(); }}
               className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white ${dipilih ? "bg-[#22A06B]" : "bg-[#F26A3D]"}`}>
               {dipilih ? <><CheckCircle2 size={16} /> Instansi dipilih</> : "Pilih instansi ini"}

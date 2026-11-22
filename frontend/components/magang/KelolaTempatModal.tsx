@@ -6,6 +6,7 @@ import { Building2, X, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { JENIS_KELAMIN_TEMPAT, labelJenisKelaminTempat, type TempatMagang } from "./types";
 import { pesanError } from "./pkl-form-ui";
+import { KuotaTerpenuhiChip } from "./KuotaTerpenuhiChip";
 import { Portal } from "@/components/shared/Portal";
 
 const INPUT_CLS = "w-full rounded-xl border-0 bg-[#F1EDFA] px-3.5 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
@@ -121,6 +122,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
               return (
                 <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-800">
                   <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
+                  {t.penuh && <KuotaTerpenuhiChip />}
                   {t.jenisKelamin && (
                     <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold"
                       style={t.jenisKelamin === "Perempuan" ? { background: "#FEE2E2", color: "#DB2777" } : { background: "#E0F2FE", color: "#0EA5E9" }}>

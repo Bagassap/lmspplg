@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Building2, ChevronLeft, ChevronRight, Search, Users } from "lucide-react";
 import { InstansiDetailModal } from "./InstansiDetailModal";
+import { KuotaTerpenuhiChip } from "./KuotaTerpenuhiChip";
 import type { Instansi } from "./types";
 import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
@@ -62,6 +63,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
             <button key={i.id} type="button" onClick={() => setTerbuka(i)}
               className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-slate-600 ${dipilih ? "bg-[#E4F5EC] ring-2 ring-[#22A06B] dark:bg-slate-600" : "bg-slate-50 dark:bg-slate-700"}`}>
               <p className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{i.namaTempat}</p>
+              {i.sisa !== null && i.sisa <= 0 && <KuotaTerpenuhiChip label="Tutup" />}
               <span className="flex shrink-0 items-center gap-1 rounded-xl px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E4F5EC", color: "#22A06B" }}>
                 <Users size={11} /> {i.siswa.length}
               </span>

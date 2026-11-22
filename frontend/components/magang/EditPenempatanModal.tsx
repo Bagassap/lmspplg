@@ -97,11 +97,11 @@ export function EditPenempatanModal({
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Tempat Magang</label>
             <select value={tempatId} onChange={(e) => setTempatId(e.target.value)} className={INPUT_CLS}>
               {tempatList.map((t) => {
-                const terisi = t._count?.penempatan ?? 0;
-                const penuh = terisi >= t.kuota && t.id !== penempatan.tempatMagang.id;
+                const terisi = t.terisi ?? t._count?.penempatan ?? 0;
+                const penuh = !!t.penuh && t.id !== penempatan.tempatMagang.id;
                 return (
                   <option key={t.id} value={t.id} disabled={penuh}>
-                    {t.namaTempat} ({terisi}/{t.kuota}{penuh ? " · penuh" : ""})
+                    {t.namaTempat} ({terisi}/{t.kuota}{penuh ? " · kuota terpenuhi" : ""})
                   </option>
                 );
               })}

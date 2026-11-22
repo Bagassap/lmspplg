@@ -13,6 +13,7 @@ import { FormSiswaModal } from "@/components/magang/FormSiswaModal";
 import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
+import { KuotaTerpenuhiChip } from "@/components/magang/KuotaTerpenuhiChip";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
 import { namaSiswa } from "@/lib/nama";
@@ -213,6 +214,7 @@ export default function AdminMagangPenempatanPage() {
 
   const grupForm = formTempat ? grup.find((g) => g.id === formTempat) ?? null : null;
   const grupBuka = bukaTempat ? grup.find((g) => g.id === bukaTempat) ?? null : null;
+  const tempatPenuh = useMemo(() => new Set(tempatList.filter((t) => t.penuh).map((t) => t.id)), [tempatList]);
 
   return (
     <div className="lg:p-1">
@@ -270,6 +272,7 @@ export default function AdminMagangPenempatanPage() {
                 </button>
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-1">
+                {tempatPenuh.has(g.id) && <KuotaTerpenuhiChip />}
                 {g.terdaftar > 0 && (
                   <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFF4E0", color: "#D97706" }}>{g.terdaftar} menunggu form</span>
                 )}
@@ -322,6 +325,7 @@ export default function AdminMagangPenempatanPage() {
                     <p className="truncate text-sm font-bold text-slate-800 dark:text-white" title={g.nama}>{g.nama}</p>
                     <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-300" title={g.alamat}>{g.alamat}</p>
                     <div className="flex flex-wrap gap-1">
+                      {tempatPenuh.has(g.id) && <KuotaTerpenuhiChip />}
                       {g.terdaftar > 0 && (
                         <span className="rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFF4E0", color: "#D97706" }}>
                           {g.terdaftar} menunggu form

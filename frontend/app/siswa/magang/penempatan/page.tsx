@@ -42,7 +42,7 @@ export default function SiswaMagangPenempatanPage() {
   useAutoRefresh(reload, 3_000, menungguAdmin);
 
   const rencanaId = daftar?.pendaftaran?.tempatMagangId ?? null;
-  const rencana = instansi.list.find((x) => x.id === rencanaId && (x.sisa === null || x.sisa > 0)) ?? null;
+  const rencana = instansi.list.find((x) => x.id === rencanaId) ?? null;
   const dipilih = pilihanManual === undefined ? rencana : pilihanManual;
 
   function terkirim() {

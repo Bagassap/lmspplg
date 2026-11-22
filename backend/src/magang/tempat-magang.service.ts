@@ -7,6 +7,27 @@ const INCLUDE_COUNT = {
   _count: { select: { penempatan: { where: { status: { in: ['MENUNGGU', 'AKTIF'] as ('MENUNGGU' | 'AKTIF')[] } } } } },
 } as const;
 
+const INCLUDE_KUOTA = {
+  ...INCLUDE_COUNT,
+  penempatan: {
+    where: { status: { in: ['MENUNGGU', 'AKTIF'] as ('MENUNGGU' | 'AKTIF')[] } },
+    select: { siswaId: true },
+  },
+  pendaftaran: {
+    where: { status: { in: ['MENUNGGU', 'DITERIMA'] as ('MENUNGGU' | 'DITERIMA')[] } },
+    select: { siswaId: true },
+  },
+};
+
+function ringkasKuota(t: { kuota: number; dibuatSiswa: boolean; penempatan: { siswaId: string }[]; pendaftaran: { siswaId: string }[] }) {
+  const terisi = new Set([...t.penempatan, ...t.pendaftaran].map((r) => r.siswaId)).size;
+  return {
+    terisi,
+    sisa: t.dibuatSiswa ? null : Math.max(0, t.kuota - terisi),
+    penuh: !t.dibuatSiswa && terisi >= t.kuota,
+  };
+}
+
 const KOLOM_ALAMAT = ['dukuh', 'rt', 'rw', 'desa', 'kecamatan', 'kabupaten'] as const;
 type KolomAlamat = (typeof KOLOM_ALAMAT)[number];
 
@@ -26,16 +47,20 @@ function normalJK(v?: string | null) {
 export class TempatMagangService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.tempatMagang.findMany({
-      include: INCLUDE_COUNT,
+  async findAll() {
+    const list = await this.prisma.tempatMagang.findMany({
+      include: INCLUDE_KUOTA,
       orderBy: { namaTempat: 'asc' },
     });
+    return list.map(({ penempatan, pendaftaran, ...t }) => ({
+      ...t,
+      ...ringkasKuota({ kuota: t.kuota, dibuatSiswa: t.dibuatSiswa, penempatan, pendaftaran }),
+    }));
   }
 
   async findPilihan() {
     const list = await this.prisma.tempatMagang.findMany({
-      include: INCLUDE_COUNT,
+      include: INCLUDE_KUOTA,
       orderBy: { namaTempat: 'asc' },
     });
     return list.map((t) => ({
@@ -44,8 +69,7 @@ export class TempatMagangService {
       alamat: t.alamat,
       jenisKelamin: t.jenisKelamin,
       kuota: t.kuota,
-      terisi: t._count.penempatan,
-      sisa: Math.max(0, t.kuota - t._count.penempatan),
+      ...ringkasKuota(t),
     }));
   }
 
@@ -102,6 +126,7 @@ export class TempatMagangService {
         kuota: t.kuota,
         terisi,
         sisa: t.dibuatSiswa ? null : Math.max(0, t.kuota - terisi),
+        penuh: !t.dibuatSiswa && terisi >= t.kuota,
         siswa: pendaftar,
         pendaftar,
         ditempati,

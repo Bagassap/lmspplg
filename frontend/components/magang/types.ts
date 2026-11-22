@@ -18,6 +18,9 @@ export type TempatMagang = {
   jenisKelamin?: string | null;
   dibuatSiswa?: boolean;
   _count?: { penempatan: number };
+  terisi?: number;
+  sisa?: number | null;
+  penuh?: boolean;
 };
 
 export type PenempatanMagang = {
@@ -87,6 +90,7 @@ export type Instansi = {
   kuota: number;
   terisi: number;
   sisa: number | null;
+  penuh?: boolean;
   siswa: { id: string; nama: string; kelas: string }[];
   pendaftar?: { id: string; nama: string; kelas: string }[];
   ditempati?: { id: string; nama: string; kelas: string }[];
