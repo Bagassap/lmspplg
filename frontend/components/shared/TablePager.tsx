@@ -16,11 +16,33 @@ export function usePagedList<T>(items: T[], resetKey = "") {
   return { pageItems, pageCount, start, end, page, pageSize, total: items.length, setPage, setPageSize };
 }
 
-export function TablePager({ pg, className = "" }: {
+export function TablePager({ pg, className = "", ringkas = false }: {
   pg: Pick<ReturnType<typeof usePagedList>, "pageCount" | "start" | "end" | "page" | "pageSize" | "total" | "setPage" | "setPageSize">;
   className?: string;
+  ringkas?: boolean;
 }) {
   if (pg.total === 0) return null;
+  if (ringkas) {
+    return (
+      <div className={`flex flex-nowrap items-center justify-between gap-1 ${className}`}>
+        <span className="shrink-0 whitespace-nowrap text-[10px] tabular-nums text-slate-400 dark:text-slate-500">{pg.start}–{pg.end}/{pg.total}</span>
+        <PageSizeToggle value={pg.pageSize} onChange={pg.setPageSize} kecil />
+        {pg.pageCount > 1 && (
+          <div className="flex shrink-0 items-center">
+            <button type="button" onClick={() => pg.setPage(Math.max(0, pg.page - 1))} disabled={pg.page === 0} aria-label="Sebelumnya"
+              className="flex h-6 w-5 items-center justify-center rounded-lg text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+              <ChevronLeft size={13} />
+            </button>
+            <span className="whitespace-nowrap text-[10px] font-bold tabular-nums text-slate-500 dark:text-slate-300">{pg.page + 1}/{pg.pageCount}</span>
+            <button type="button" onClick={() => pg.setPage(Math.min(pg.pageCount - 1, pg.page + 1))} disabled={pg.page >= pg.pageCount - 1} aria-label="Berikutnya"
+              className="flex h-6 w-5 items-center justify-center rounded-lg text-slate-400 disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-500">
+              <ChevronRight size={13} />
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
   const nomor = Array.from({ length: pg.pageCount }, (_, i) => i)
     .filter((i) => i === 0 || i === pg.pageCount - 1 || Math.abs(i - pg.page) <= 1);
   return (

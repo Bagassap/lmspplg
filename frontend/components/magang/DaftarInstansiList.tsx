@@ -76,7 +76,7 @@ export function DaftarInstansiList({ list, loading, judul = "Daftar Instansi PKL
         })}
       </div>
 
-      {pagerLengkap && !loading && <TablePager pg={pg} className="mt-3" />}
+      {pagerLengkap && !loading && <TablePager pg={pg} ringkas className="mt-3" />}
 
       {!pagerLengkap && tampil.length > PER_HALAMAN && (
         <div className="mt-3 flex items-center justify-between">

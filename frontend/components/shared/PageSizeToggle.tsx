@@ -6,9 +6,10 @@ function labelFor(size: number) {
   return Number.isFinite(size) ? String(size) : "Semua";
 }
 
-export function PageSizeToggle({ value, onChange }: {
+export function PageSizeToggle({ value, onChange, kecil = false }: {
   value: number;
   onChange: (size: number) => void;
+  kecil?: boolean;
 }) {
   return (
     <div className="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600">
@@ -16,7 +17,7 @@ export function PageSizeToggle({ value, onChange }: {
         const active = value === size;
         return (
           <button key={size} type="button" onClick={() => onChange(size)}
-            className={`px-3 py-1.5 text-xs font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
+            className={`${kecil ? "px-1.5 py-1 text-[10px]" : "px-3 py-1.5 text-xs"} font-bold transition-colors ${i > 0 ? "border-l border-slate-200 dark:border-slate-600" : ""} ${
               active
                 ? "bg-[#3E03B3] text-white"
                 : "bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
