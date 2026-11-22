@@ -1,14 +1,11 @@
 "use client";
 
-import { AppFold } from "@/components/app/AppUI";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { ArrowUpCircle, ChevronRight } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { ResetPasswordModal } from "@/components/shared/ResetPasswordModal";
 import { DataSiswaHeader } from "@/components/data-siswa/DataSiswaHeader";
-import { KartuPelajarBanner } from "@/components/shared/KartuPelajarBanner";
 import { FilterBar } from "@/components/data-siswa/FilterBar";
-import { UnduhDataSiswaCard } from "@/components/data-siswa/UnduhDataSiswaCard";
+import { DataSiswaAksiCard } from "@/components/data-siswa/DataSiswaAksiCard";
 import { KenaikanKelasModal } from "@/components/data-siswa/KenaikanKelasModal";
 import { SiswaTable } from "@/components/data-siswa/SiswaTable";
 import { EditSiswaModal } from "@/components/data-siswa/EditSiswaModal";
@@ -128,35 +125,7 @@ export default function AdminDataSiswaPage() {
           </div>
         </div>
 
-        <div className="flex flex-col rounded-3xl border border-slate-100 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <AppFold title="Kartu pelajar, unduh & kenaikan kelas" hint="Aksi tambahan">
-          <div className="p-5">
-            <KartuPelajarBanner compact />
-          </div>
-
-          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
-            <UnduhDataSiswaCard
-              kelasId={selectedKelasId || undefined}
-              kelasNama={selectedKelas?.nama}
-            />
-          </div>
-
-          <div className="border-t border-slate-100 p-5 dark:border-slate-700/50">
-            <button onClick={() => setKenaikanOpen(true)}
-              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 text-left transition-colors hover:border-[#8F6DD3] hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-600">
-              <div className="flex items-center gap-3">
-                <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
-                  <ArrowUpCircle size={18} />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-white">Kenaikan Kelas &amp; Kelulusan</p>
-                </div>
-              </div>
-              <ChevronRight size={16} className="shrink-0 text-slate-300" />
-            </button>
-          </div>
-          </AppFold>
-        </div>
+        <DataSiswaAksiCard role="admin" kelasId={selectedKelasId || undefined} kelasNama={selectedKelas?.nama} onKenaikan={() => setKenaikanOpen(true)} />
       </div>
 
       <KenaikanKelasModal

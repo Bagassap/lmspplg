@@ -27,7 +27,6 @@ export const MENUS: Record<string, MenuItem[]> = {
     { key: "pengumuman",   href: "/admin/pengumuman",   label: "Pengumuman",  icon: Megaphone },
     { key: "materi",       href: "/admin/materi",       label: "Materi",      icon: BookOpen },
     { key: "data-siswa",   href: "/admin/data-siswa",   label: "Data Siswa",  icon: Users },
-    { key: "catatan-siswa", href: "/admin/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     { key: "manajemen-password", href: "/admin/manajemen-password", label: "Manajemen Password", icon: KeyRound },
     {
       key: "magang", label: "PKL", icon: Briefcase,
@@ -47,7 +46,6 @@ export const MENUS: Record<string, MenuItem[]> = {
     { key: "pengumuman",   href: "/guru/pengumuman",   label: "Pengumuman",  icon: Megaphone },
     { key: "materi",       href: "/guru/materi",       label: "Materi & Tugas", icon: BookOpen },
     { key: "data-siswa",   href: "/guru/data-siswa",   label: "Data Siswa",  icon: Users },
-    { key: "catatan-siswa", href: "/guru/catatan-siswa", label: "Catatan Siswa", icon: NotebookPen },
     {
       key: "magang", label: "PKL", icon: Briefcase,
       submenu: [

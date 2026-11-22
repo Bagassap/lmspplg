@@ -15,7 +15,8 @@ export function DataSiswaHeader({ title }: { title: string; eyebrow?: string }) 
 
   if (!isGuru && !isAdmin) return null;
 
-  const dashboardHref = isGuru ? "/guru/dashboard" : "/admin/dashboard";
+  const akar = isGuru ? "/guru" : "/admin";
+  const dashboardHref = pathname?.includes("/catatan-siswa") ? `${akar}/data-siswa` : `${akar}/dashboard`;
 
   return (
     <>
