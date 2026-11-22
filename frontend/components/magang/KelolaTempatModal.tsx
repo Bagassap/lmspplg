@@ -117,7 +117,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
             </button>
           )}
 
-          <div className="mt-3 space-y-2">
+          {!editing && <div className="mt-3 space-y-2">
             {tempatList.map((t) => {
               return (
                 <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-800">
@@ -143,7 +143,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
             {tempatList.length === 0 && (
               <p className="py-8 text-center text-xs font-semibold text-slate-600">Belum ada tempat magang</p>
             )}
-          </div>
+          </div>}
         </div>
       </motion.div>
     </div></Portal>

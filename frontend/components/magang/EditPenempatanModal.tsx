@@ -31,8 +31,8 @@ export function EditPenempatanModal({
   const nama = namaSiswa(penempatan.siswa.nama ?? penempatan.siswa.user?.nama ?? "—");
 
   async function save() {
-    if (!tempatId || !guruId) {
-      toast.error("Tempat dan guru pembimbing wajib diisi", "");
+    if (!tempatId) {
+      toast.error("Tempat PKL wajib diisi", "");
       return;
     }
     setSaving(true);
@@ -41,7 +41,7 @@ export function EditPenempatanModal({
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          tempatMagangId: tempatId, guruPembimbingId: guruId,
+          tempatMagangId: tempatId, ...(guruId ? { guruPembimbingId: guruId } : {}),
         }),
       });
       if (res.ok) {
@@ -111,6 +111,7 @@ export function EditPenempatanModal({
           <div>
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-400">Guru Pembimbing</label>
             <select value={guruId} onChange={(e) => setGuruId(e.target.value)} className={INPUT_CLS}>
+              {!penempatan.guruPembimbing && <option value="">Belum ada pembimbing</option>}
               {guruList.map((g) => (
                 <option key={g.id} value={g.id}>{namaOrang(g.user.nama)}</option>
               ))}
