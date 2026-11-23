@@ -66,7 +66,7 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
   }
 
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -121,7 +121,9 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
             {tempatList.map((t) => {
               return (
                 <div key={t.id} className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3.5 py-2.5 dark:bg-slate-800">
-                  <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">{t.namaTempat}</p>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+                  <p className="min-w-0 truncate text-sm font-bold text-slate-900 dark:text-white sm:flex-1">{t.namaTempat}</p>
+                  <div className="flex flex-wrap gap-1 empty:hidden sm:shrink-0">
                   {t.penuh && <KuotaTerpenuhiChip />}
                   {t.jenisKelamin && (
                     <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold"
@@ -129,6 +131,8 @@ export function KelolaTempatModal({ tempatList, onClose, onSaved }: {
                       {labelJenisKelaminTempat(t.jenisKelamin)}
                     </span>
                   )}
+                  </div>
+                  </div>
                   <div className="flex shrink-0 gap-1.5">
                     <button onClick={() => startEdit(t)} aria-label="Ubah" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E0F2FE] text-[#0EA5E9] dark:bg-[#0EA5E9]/20">
                       <Pencil size={13} />

@@ -65,30 +65,30 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
   ].filter((x) => x.value);
 
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3]"><UserCheck size={20} /></span>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]"><UserCheck size={20} /></span>
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Tetapkan Guru Pembimbing</h2>
           </div>
-          <button onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3]"><X size={16} /></button>
+          <button onClick={onClose} aria-label="Tutup" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"><X size={16} /></button>
         </div>
 
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pb-5">
-          <div className="rounded-2xl bg-[#F1EDFA] p-3">
-            <p className="mb-1.5 text-xs font-bold text-slate-700">Semua siswa di tempat ini ({rows.length}) otomatis memakai guru yang dipilih</p>
+          <div className="rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
+            <p className="mb-1.5 text-xs font-bold text-slate-700 dark:text-slate-200">Semua siswa di tempat ini ({rows.length}) otomatis memakai guru yang dipilih</p>
             <div className="space-y-1">
               {rows.map((r) => (
                 <div key={r.id} className="flex items-center gap-2.5 py-0.5">
                   <Avatar src={r.siswa.user?.fotoProfil} nama={r.siswa.nama ?? r.siswa.user?.nama ?? "—"} sizePx={32} fallbackBg={avatarColorFor(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} textClassName="text-[10px] font-extrabold" />
-                  <p className="min-w-0 flex-1 text-sm font-bold text-slate-900">
-                  {namaSiswa(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600">· {r.siswa.kelas?.nama}</span>
-                  {r.guruPembimbing && <span className="font-medium text-slate-600"> · {namaOrang(r.guruPembimbing.user.nama)}</span>}
+                  <p className="min-w-0 flex-1 text-sm font-bold text-slate-900 dark:text-white">
+                  {namaSiswa(r.siswa.nama ?? r.siswa.user?.nama ?? "—")} <span className="font-medium text-slate-600 dark:text-slate-300">· {r.siswa.kelas?.nama}</span>
+                  {r.guruPembimbing && <span className="font-medium text-slate-600 dark:text-slate-300"> · {namaOrang(r.guruPembimbing.user.nama)}</span>}
                   </p>
                 </div>
               ))}
@@ -96,10 +96,10 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
           </div>
 
           {info.length > 0 && (
-            <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3">
+            <div className="space-y-1.5 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
               {info.map((x) => (
-                <p key={x.label} className="flex items-start gap-2 text-xs text-slate-800">
-                  <x.icon size={13} className="mt-0.5 shrink-0 text-[#3E03B3]" />
+                <p key={x.label} className="flex items-start gap-2 text-xs text-slate-800 dark:text-slate-200">
+                  <x.icon size={13} className="mt-0.5 shrink-0 text-[#3E03B3] dark:text-[#C4B5FD]" />
                   <span><span className="font-bold">{x.label}:</span> {x.value}</span>
                 </p>
               ))}
@@ -108,15 +108,15 @@ export function TetapkanGuruModal({ rows, guruList, onClose, onSaved }: {
 
           {surat?.suratKeteranganUrl && (
             <a href={`/api/uploads${surat.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3]">
+              className="flex items-center gap-2 rounded-2xl bg-[#F1EDFA] p-3 text-xs font-bold text-[#3E03B3] dark:bg-slate-800 dark:text-[#C4B5FD]">
               <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat keterangan: {surat.suratKeteranganNama ?? "Lihat berkas"}</span>
             </a>
           )}
 
           <div>
-            <label className="mb-1 block text-xs font-bold text-slate-700">Guru pembimbing</label>
+            <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-200">Guru pembimbing</label>
             <select value={guruId} onChange={(e) => setGuruId(e.target.value)}
-              className="h-11 w-full rounded-xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]">
+              className="h-11 w-full rounded-xl border-0 bg-[#F1EDFA] px-4 text-sm font-semibold text-slate-900 focus:outline-none dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-[#3E03B3]">
               <option value="">Pilih guru…</option>
               {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
             </select>

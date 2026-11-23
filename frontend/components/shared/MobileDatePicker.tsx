@@ -70,7 +70,7 @@ export function MobileDatePicker({ value, onChange, light, flat }: { value: stri
       {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {open && (
-            <div className="fixed inset-0 z-[60] flex items-end justify-center">
+            <div data-plain className="fixed inset-0 z-[100] flex items-end justify-center">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={() => setOpen(false)} />

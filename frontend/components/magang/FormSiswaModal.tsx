@@ -17,7 +17,7 @@ export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
 }) {
   const kosong = terkirim.length === 0 && belum.length === 0;
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -37,14 +37,14 @@ export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
             const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
             const cfg = STATUS_PENEMPATAN_CFG[p.status];
             return (
-              <div key={p.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800">
+              <div key={p.id} className="flex flex-wrap items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800 sm:flex-nowrap">
                 <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={32} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
                 <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white">
-                  {nama} <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{p.siswa.kelas.nama}</span>
+                  {nama} <span className="block truncate text-xs font-medium text-slate-500 dark:text-slate-400 sm:inline">{p.siswa.kelas.nama}</span>
                 </p>
                 <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                 <button type="button" onClick={() => onLihat(p)}
-                  className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
+                  className="flex h-8 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white sm:w-auto">
                   <FileText size={13} /> Lihat dokumen
                 </button>
               </div>
@@ -53,12 +53,12 @@ export function FormSiswaModal({ judul, terkirim, belum, onLihat, onClose }: {
           {belum.map((d) => {
             const nama = namaSiswa(d.siswa?.user?.nama ?? d.siswa?.nama ?? "—");
             return (
-              <div key={d.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800">
+              <div key={d.id} className="flex flex-wrap items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800 sm:flex-nowrap">
                 <Avatar src={d.siswa?.user?.fotoProfil} nama={nama} sizePx={32} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
                 <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white">
-                  {nama} <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{d.siswa?.kelas?.nama ?? "-"}</span>
+                  {nama} <span className="block truncate text-xs font-medium text-slate-500 dark:text-slate-400 sm:inline">{d.siswa?.kelas?.nama ?? "-"}</span>
                 </p>
-                <span className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FFF4E0", color: "#D97706" }}>
+                <span className="flex w-full shrink-0 items-center justify-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold sm:w-auto sm:py-0.5" style={{ background: "#FFF4E0", color: "#D97706" }}>
                   <Clock size={11} /> Belum mengirim form
                 </span>
               </div>

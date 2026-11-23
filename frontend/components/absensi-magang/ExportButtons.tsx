@@ -35,19 +35,19 @@ function SiswaPickerModal({ siswaList, title, accent, onPick, onClose }: {
       <AppSheet open onClose={onClose} title={title}>
         <div className="relative">
           <Search size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-          <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari nama atau NIS"
-            className="h-10 w-full rounded-xl border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari nama atau NIS"
+            className="h-10 w-full rounded-xl border-0 bg-[#F1EDFA] pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3E03B3]" />
         </div>
         <div className="mt-3 space-y-2">
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-xs font-semibold text-slate-600">Tidak ada siswa ditemukan</p>
+            <p className="py-8 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">Tidak ada siswa ditemukan</p>
           ) : (
             filtered.map((s) => (
-              <button key={s.siswaId} onClick={() => onPick(s)} className="flex w-full items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5 text-left">
+              <button key={s.siswaId} onClick={() => onPick(s)} className="flex w-full items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5 text-left dark:bg-slate-700">
                 <Avatar src={s.fotoProfil} nama={s.nama} sizePx={36} fallbackBg={avatarColor(s.nama)} textClassName="text-xs font-bold" />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-slate-900">{s.nama}</p>
-                  <p className="text-xs text-slate-600">NIS {s.nis ?? "-"}</p>
+                  <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{s.nama}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">NIS {s.nis ?? "-"}</p>
                 </div>
               </button>
             ))

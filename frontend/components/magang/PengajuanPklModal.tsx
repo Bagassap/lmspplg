@@ -76,7 +76,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   }
 
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -92,7 +92,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           <div className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] p-3 dark:bg-slate-800">
             <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={40} fallbackBg={avatarColorFor(nama)} textClassName="text-xs font-extrabold" />
             <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900 dark:text-white">
-              {nama} <span className="font-medium text-slate-600 dark:text-slate-300">· {p.siswa.kelas?.nama} · NIS {p.siswa.nis}</span>
+              {nama} <span className="block truncate text-xs font-medium text-slate-600 dark:text-slate-300 sm:inline sm:text-sm">· {p.siswa.kelas?.nama} · NIS {p.siswa.nis}</span>
             </p>
             <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
           </div>
@@ -136,7 +136,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
                 <button type="button" onClick={() => setTolakMode(false)} disabled={saving}
                   className="h-12 flex-1 rounded-xl bg-[#F1EDFA] text-sm font-bold text-[#3E03B3] disabled:opacity-50 dark:bg-slate-700 dark:text-[#C4B5FD]">Batal</button>
                 <button type="button" onClick={tolak} disabled={saving || !alasan.trim()}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#DC2626] text-sm font-bold text-white disabled:opacity-50">
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#FEE2E2] text-sm font-bold text-[#DC2626] disabled:opacity-50 lg:bg-[#DC2626] lg:text-white">
                   {saving ? <Loader2 size={15} className="animate-spin" /> : <XCircle size={15} />} Tolak
                 </button>
               </div>
@@ -154,7 +154,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
                   <XCircle size={15} /> Tolak
                 </button>
                 <button type="button" onClick={verifikasi} disabled={saving || !suratUrl}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#22A06B] text-sm font-bold text-white disabled:opacity-50">
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50 lg:bg-[#22A06B]">
                   {saving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Verifikasi
                 </button>
               </div>

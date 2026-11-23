@@ -641,18 +641,18 @@ export default function GuruMagangAbsensiPage() {
           {statusPageOpen && (
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-0 z-50 flex flex-col bg-[#FFFFFF] dark:bg-[#1E293B]">
-              <div className="shrink-0 pb-3 pt-4" style={{ background: appMode ? "#F1EDFA" : "#3E03B3" }}>
+              className="fixed inset-0 z-[100] flex flex-col bg-[#FFFFFF] dark:bg-[#1E293B]">
+              <div className="shrink-0 pb-3 pt-4" style={{ background: "#3E03B3" }}>
                 <div className="relative flex items-center justify-between px-4">
                   <button type="button" onClick={() => setStatusPageOpen(false)}
-                    className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${appMode ? "bg-white text-slate-700" : "bg-white/15 text-white active:bg-white/25"}`}>
+                    className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white active:bg-white/25`}>
                     <ChevronLeft size={18} />
                   </button>
-                  <h1 className={`absolute inset-x-0 text-center text-base font-bold ${appMode ? "text-slate-900" : "text-white"}`}>
-                    Status Kehadiran <span className={`font-medium ${appMode ? "text-slate-500" : "text-white/70"}`}>({total})</span>
+                  <h1 className={`absolute inset-x-0 text-center text-base font-bold text-white`}>
+                    Status Kehadiran <span className={`font-medium text-white/70`}>({total})</span>
                   </h1>
                   <button type="button" onClick={() => setLaporanOpen(true)}
-                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 active:scale-95 ${appMode ? "text-white" : "bg-white"}`} style={appMode ? { background: "#3E03B3" } : { color: "#3E03B3" }}>
+                    className={`relative z-10 flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 active:scale-95 bg-white/15 text-white`}>
                     <Download size={12} />
                     <span className="text-[11px] font-bold">Unduh</span>
                   </button>
@@ -666,8 +666,8 @@ export default function GuruMagangAbsensiPage() {
                     return (
                       <button key={String(opt.key)} type="button"
                         onClick={() => (opt.key === null ? setActiveFilter(null) : toggleFilter(opt.key))}
-                        className="flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors"
-                        style={active ? { backgroundColor: opt.color, color: "#fff" } : { backgroundColor: "#fff" }}>
+                        className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${active ? "" : "bg-white dark:bg-slate-700"}`}
+                        style={active ? { backgroundColor: opt.color, color: "#fff" } : undefined}>
                         <opt.icon size={13} className={active ? "text-white" : "text-slate-400"} />
                         <span className={active ? "text-white" : "text-slate-500 dark:text-slate-300"}>{opt.label}</span>
                         <span className="rounded-md bg-white px-1.5 py-0.5 text-[10px] font-bold dark:bg-slate-700"
@@ -737,13 +737,13 @@ export default function GuruMagangAbsensiPage() {
       {typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {laporanOpen && (
-            <div className="fixed inset-0 z-50 flex items-end justify-center">
+            <div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={() => setLaporanOpen(false)} />
-              <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+              <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
                 transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                className="relative z-10 flex w-full flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-[#1E293B]"
+                className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900"
                 style={{ maxHeight: "88vh" }}>
                 <div className="flex items-center justify-between px-5 pt-5">
                   <div className="flex items-center gap-2.5">

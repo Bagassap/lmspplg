@@ -26,16 +26,16 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
   const bisaTetapkan = rows.filter((r) => r.status === "AKTIF");
 
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         className="relative z-10 flex max-h-[85dvh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
         <div className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={20} /></span>
-          <h2 className="min-w-0 flex-1 truncate text-base font-extrabold text-slate-900 dark:text-white">{judul}</h2>
-          <span className="shrink-0 rounded-lg px-2 py-0.5 text-[11px] font-bold" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>{rows.length} siswa</span>
+          <span className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl sm:flex" style={{ background: "#FFE9E2", color: "#E8562B" }}><Building2 size={20} /></span>
+          <h2 className="min-w-0 flex-1 truncate text-base font-extrabold text-slate-900 dark:text-white">{judul}<span className="ml-1 font-semibold text-slate-400 sm:hidden">({rows.length})</span></h2>
+          <span className="hidden shrink-0 rounded-lg px-2 py-0.5 text-[11px] font-bold sm:inline" style={{ background: "#E0F2FE", color: "#0EA5E9" }}>{rows.length} siswa</span>
           {bisaTetapkan.length > 0 && (
             <button type="button" onClick={() => onTetapkanGuru(bisaTetapkan)}
               className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white">
@@ -52,14 +52,15 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
             const busy = busyId === p.id;
             return (
               <div key={p.id} className="rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800">
-                <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-2.5 sm:flex-nowrap">
                   <Avatar src={p.siswa.user?.fotoProfil} nama={nama} sizePx={32} fallbackBg={avatarColorFor(nama)} textClassName="text-[10px] font-extrabold" />
                   <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white" title={nama}>
-                    {nama} <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{p.siswa.kelas.nama} · NIS {p.siswa.nis}</span>
+                    {nama} <span className="block truncate text-xs font-medium text-slate-500 dark:text-slate-400 sm:inline">{p.siswa.kelas.nama} · NIS {p.siswa.nis}</span>
                   </p>
+                  <div className="flex w-full items-center gap-1.5 sm:w-auto sm:shrink-0">
                   {p.status === "MENUNGGU" ? (
                     <button type="button" onClick={() => onPeriksa(p)} disabled={busy}
-                      className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-50">
+                      className="flex h-8 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-50 sm:flex-none">
                       <FileText size={13} /> Lihat dokumen
                     </button>
                   ) : (
@@ -69,7 +70,7 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                       <FileText size={13} />
                     </button>
                     <select value={p.status} disabled={busy} onChange={(e) => onUbahStatus(p, e.target.value as StatusPenempatan)}
-                      className="h-8 shrink-0 rounded-lg border-0 px-2 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
+                      className="h-8 min-w-0 flex-1 rounded-lg border-0 px-2 sm:flex-none text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-[#3E03B3]/30"
                       style={{ backgroundColor: cfg.bg, color: cfg.clr }}>
                       <option value="AKTIF">Aktif</option>
                       <option value="SELESAI">Selesai</option>
@@ -85,8 +86,9 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] disabled:opacity-50">
                     <Trash2 size={13} />
                   </button>
+                  </div>
                 </div>
-                <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 pl-[42px] text-xs text-slate-600 dark:text-slate-300">
+                <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:pl-[42px] text-slate-600 dark:text-slate-300">
                   {p.status === "AKTIF" ? (
                     <button type="button" onClick={() => onTetapkanGuru([p])} disabled={busy}
                       className="flex min-w-0 items-center gap-1 rounded-lg px-2 py-1 font-bold disabled:opacity-50"

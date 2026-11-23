@@ -19,7 +19,7 @@ export function PendaftarTempatModal({ judul, rows, busyId, onTerima, onTolak, o
   onClose: () => void;
 }) {
   return (
-    <Portal><div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -37,17 +37,17 @@ export function PendaftarTempatModal({ judul, rows, busyId, onTerima, onTolak, o
             const cfg = STATUS_PENDAFTARAN_CFG[p.status];
             const busy = busyId === p.id;
             return (
-              <div key={p.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+              <div key={p.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800 sm:flex-nowrap sm:gap-2.5">
                 <p className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800 dark:text-white" title={namaPendaftar(p)}>{namaPendaftar(p)}</p>
                 <span className="shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold" style={{ background: cfg.bg, color: cfg.clr }}>{cfg.label}</span>
                 {p.status === "MENUNGGU" && (
-                  <div className="flex shrink-0 gap-1.5">
+                  <div className="flex w-full shrink-0 gap-1.5 sm:w-auto">
                     <button type="button" onClick={() => onTolak(p)} disabled={busy} title="Tolak" aria-label="Tolak"
                       className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FEE2E2] text-[#DC2626] disabled:opacity-50">
                       <XCircle size={14} />
                     </button>
                     <button type="button" onClick={() => onTerima(p)} disabled={busy}
-                      className="flex h-8 items-center gap-1.5 rounded-lg bg-[#22A06B] px-3 text-xs font-bold text-white disabled:opacity-50">
+                      className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#3E03B3] px-3 text-xs font-bold text-white disabled:opacity-50 sm:flex-none lg:bg-[#22A06B]">
                       {busy ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />} Verifikasi
                     </button>
                   </div>

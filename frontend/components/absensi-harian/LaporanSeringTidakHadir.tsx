@@ -196,7 +196,7 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta, sumb
               { key: "bulanan", label: "30 Hari" },
             ] as { key: PeriodeLaporan; label: string }[]).map((opt) => (
               <button key={opt.key} type="button" onClick={() => setPeriode(opt.key)}
-                className={`rounded-xl px-4 py-1.5 text-xs font-bold ${periode === opt.key ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3]"}`}>
+                className={`rounded-xl px-4 py-1.5 text-xs font-bold ${periode === opt.key ? "bg-[#3E03B3] text-white" : "bg-[#F1EDFA] text-[#3E03B3] dark:bg-slate-700 dark:text-[#C4B5FD]"}`}>
                 {opt.label}
               </button>
             ))}
@@ -209,28 +209,28 @@ export function LaporanSeringTidakHadir({ kelasId, kelasNama, compact, cta, sumb
             ].map((t) => (
               <div key={t.l} className="rounded-2xl px-2 py-2.5 text-center" style={{ background: t.bg }}>
                 <p className="text-lg font-extrabold leading-none" style={{ color: t.fg }}>{t.v}</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-700">{t.l}</p>
+                <p className="mt-1 text-[10px] font-semibold text-slate-700 dark:text-slate-700">{t.l}</p>
               </div>
             ))}
           </div>
           {loading ? (
-            <p className="py-10 text-center text-xs font-semibold text-slate-600">Memuat data...</p>
+            <p className="py-10 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">Memuat data...</p>
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-10 text-center">
               <ShieldCheck size={22} className="text-[#059669]" />
-              <p className="text-xs font-semibold text-slate-600">Tidak ada siswa dengan catatan alpa pada periode ini</p>
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Tidak ada siswa dengan catatan alpa pada periode ini</p>
             </div>
           ) : (
             <div className="mt-3 space-y-2">
               {rows.map((r, i) => (
-                <div key={r.siswaId} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5">
+                <div key={r.siswaId} className="flex items-center gap-3 rounded-2xl bg-[#F1EDFA] px-3 py-2.5 dark:bg-slate-700">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-extrabold text-[#3E03B3]">{i + 1}</span>
                   <Avatar src={r.fotoProfil} nama={r.nama ?? "-"} sizePx={34} fallbackBg={avatarColorFor(r.nama ?? "-")} textClassName="text-[10px] font-extrabold" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-900">{namaSiswa(r.nama)}</p>
-                    <p className="truncate text-xs text-slate-600">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
+                    <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{namaSiswa(r.nama)}</p>
+                    <p className="truncate text-xs text-slate-600 dark:text-slate-300">{r.nis ?? "—"} · Alpa {r.summary.ALPA}x</p>
                   </div>
-                  <span className="shrink-0 text-sm font-extrabold text-[#3E03B3]">{r.summary.persentaseKehadiran}%</span>
+                  <span className="shrink-0 text-sm font-extrabold text-[#3E03B3] dark:text-[#C4B5FD]">{r.summary.persentaseKehadiran}%</span>
                 </div>
               ))}
             </div>
