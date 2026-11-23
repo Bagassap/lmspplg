@@ -104,10 +104,10 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                   )}
                   <span className="flex shrink-0 items-center gap-1"><CalendarDays size={12} className="shrink-0 text-[#D97706]" />{fmt(p.status === "MENUNGGU" ? p.createdAt : p.tanggalMulai)}</span>
                   {p.suratKeteranganUrl && (
-                    <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
+                    <button type="button" onClick={() => onPeriksa(p)}
                       className="flex shrink-0 items-center gap-1 font-semibold text-[#0EA5E9] underline">
                       <FileText size={12} className="shrink-0" /> Surat
-                    </a>
+                    </button>
                   )}
                 </div>
               </div>

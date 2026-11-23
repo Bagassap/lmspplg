@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, CheckCircle2, ExternalLink, FileText, Loader2, MapPin, Phone, User, UserCheck, X, XCircle } from "lucide-react";
+import { Building2, CalendarDays, CheckCircle2, FileText, Loader2, MapPin, Phone, User, UserCheck, X, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, waLink } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./types";
 import { namaSiswa, namaOrang } from "@/lib/nama";
 import { Portal } from "@/components/shared/Portal";
+import { BuktiSuratViewer } from "./BuktiSuratViewer";
 
 type GuruOption = { id: string; user: { id: string; nama: string } };
 
@@ -43,8 +44,6 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   const menunggu = p.status === "MENUNGGU";
   const cfg = STATUS_PENEMPATAN_CFG[p.status];
   const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
-  const suratUrl = p.suratKeteranganUrl ? `/api/uploads${p.suratKeteranganUrl}` : null;
-  const suratGambar = !!p.suratKeteranganUrl && /\.(png|jpe?g|webp)$/i.test(p.suratKeteranganUrl);
   const wa = waLink(t.noWaUsaha ?? t.kontak);
 
   async function kirim(url: string, body: object, okMsg: [string, string]) {
@@ -110,19 +109,8 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
           )}
 
           <p className="pt-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Bukti surat instansi</p>
-          {suratUrl ? (
-            <div className="space-y-2">
-              {suratGambar && (
-                <a href={suratUrl} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700">
-                  <img src={suratUrl} alt="Bukti surat instansi" className="max-h-72 w-full object-contain bg-slate-50 dark:bg-slate-800" />
-                </a>
-              )}
-              <a href={suratUrl} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-2xl bg-[#E0F2FE] p-3 text-xs font-bold text-[#0369A1] dark:bg-slate-800 dark:text-[#7DD3FC]">
-                <FileText size={14} className="shrink-0" /> <span className="min-w-0 flex-1 truncate">{p.suratKeteranganNama ?? "Lihat bukti surat"}</span>
-                <ExternalLink size={13} className="shrink-0" />
-              </a>
-            </div>
+          {p.suratKeteranganUrl ? (
+            <BuktiSuratViewer key={p.suratKeteranganUrl} path={p.suratKeteranganUrl} nama={p.suratKeteranganNama} />
           ) : (
             <p className="rounded-2xl bg-[#FEE2E2] p-3 text-xs font-bold text-[#DC2626]">Siswa belum mengunggah bukti surat instansi.</p>
           )}
@@ -153,7 +141,7 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
                   className="flex h-12 items-center gap-1.5 rounded-xl bg-[#FEE2E2] px-5 text-sm font-bold text-[#DC2626] disabled:opacity-50">
                   <XCircle size={15} /> Tolak
                 </button>
-                <button type="button" onClick={verifikasi} disabled={saving || !suratUrl}
+                <button type="button" onClick={verifikasi} disabled={saving || !p.suratKeteranganUrl}
                   className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50 lg:bg-[#22A06B]">
                   {saving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Verifikasi
                 </button>
