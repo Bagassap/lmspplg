@@ -33,6 +33,18 @@ function alamat(t: { alamat?: string | null; dukuh?: string | null; rt?: string 
   return bagian.length > 0 ? bagian.join(', ') : t.alamat || '-';
 }
 
+function kunciInstansi(nama: unknown) {
+  return String(nama ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+function urutInstansi<T>(rows: T[], namaInstansi: (r: T) => string | null | undefined, waktu: (r: T) => Date) {
+  return [...rows].sort((a, b) => {
+    const ka = kunciInstansi(namaInstansi(a));
+    const kb = kunciInstansi(namaInstansi(b));
+    return Number(!ka) - Number(!kb) || ka.localeCompare(kb, 'id', { numeric: true }) || waktu(a).getTime() - waktu(b).getTime();
+  });
+}
+
 function tambahSheet(wb: ExcelJS.Workbook, nama: string, kolom: Kolom[], baris: Baris[]) {
   const ws = wb.addWorksheet(nama, { views: [{ state: 'frozen', ySplit: 1 }] });
   ws.columns = kolom;
@@ -41,9 +53,20 @@ function tambahSheet(wb: ExcelJS.Workbook, nama: string, kolom: Kolom[], baris: 
   header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: WARNA_HEADER } };
   header.alignment = { vertical: 'middle' };
   header.height = 22;
+  let kunciAktif: string | null = null;
+  let selang = true;
   baris.forEach((b) => {
     const row = ws.addRow(b);
     row.alignment = { vertical: 'middle', wrapText: true };
+    if ('instansi' in b) {
+      const kunci = kunciInstansi(b.instansi);
+      if (kunci !== kunciAktif) {
+        kunciAktif = kunci;
+        selang = !selang;
+      }
+      if (selang) row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1EDFA' } };
+      row.getCell('instansi').font = { bold: true };
+    }
     if ('status' in b) {
       const warna = WARNA_STATUS[String(b.status)];
       if (warna) row.getCell('status').font = { bold: true, color: { argb: warna } };
@@ -87,6 +110,7 @@ export class RekapPklExcelService {
         penempatan: {
           select: {
             status: true,
+            createdAt: true,
             tanggalMulai: true,
             tanggalSelesai: true,
             tempatMagang: { select: { namaTempat: true, alamat: true, dukuh: true, rt: true, rw: true, desa: true, kecamatan: true, kabupaten: true } },
@@ -161,19 +185,19 @@ export class RekapPklExcelService {
       { header: 'Kelas', key: 'kelas', width: 14 },
       { header: 'Jenis Kelamin', key: 'jk', width: 14 },
     ];
+    const kolomInstansi: Kolom[] = [kolomSiswa[0], { header: 'Instansi', key: 'instansi', width: 32 }, ...kolomSiswa.slice(1)];
     const dasar = (s: (typeof siswa)[number], i: number): Baris => ({
       no: i + 1, nama: s.namaTampil, nis: s.nis, kelas: s.kelas.nama, jk: s.jenisKelamin || '-',
     });
 
     tambahSheet(wb, 'Pendaftaran', [
-      ...kolomSiswa,
+      ...kolomInstansi,
       { header: 'No. WA', key: 'wa', width: 16 },
-      { header: 'Instansi Dipilih', key: 'instansi', width: 32 },
       { header: 'Status', key: 'status', width: 20 },
       { header: 'Tanggal Daftar', key: 'tglDaftar', width: 15 },
       { header: 'Tanggal Verifikasi', key: 'tglVerifikasi', width: 17 },
       { header: 'Alasan Ditolak', key: 'alasan', width: 32 },
-    ], siswa.filter((s) => s.daftar).map((s, i) => ({
+    ], urutInstansi(siswa.filter((s) => s.daftar), (s) => s.daftar!.tempatMagang?.namaTempat, (s) => s.daftar!.createdAt).map((s, i) => ({
       ...dasar(s, i),
       wa: s.daftar!.noWa || '-',
       instansi: s.daftar!.tempatMagang?.namaTempat ?? '-',
@@ -184,8 +208,7 @@ export class RekapPklExcelService {
     })));
 
     const kolomPenempatan: Kolom[] = [
-      ...kolomSiswa,
-      { header: 'Instansi', key: 'instansi', width: 32 },
+      ...kolomInstansi,
       { header: 'Alamat Instansi', key: 'alamat', width: 48 },
       { header: 'Guru Pembimbing', key: 'guru', width: 28 },
       { header: 'Tanggal Mulai', key: 'mulai', width: 14 },
@@ -202,10 +225,12 @@ export class RekapPklExcelService {
     });
 
     tambahSheet(wb, 'Penempatan', kolomPenempatan,
-      siswa.flatMap((s) => s.penempatan.map((p) => ({ s, p }))).map(({ s, p }, i) => ({ ...dasar(s, i), ...isiPenempatan(p) })));
+      urutInstansi(siswa.flatMap((s) => s.penempatan.map((p) => ({ s, p }))), (r) => r.p.tempatMagang.namaTempat, (r) => r.p.createdAt)
+        .map(({ s, p }, i) => ({ ...dasar(s, i), ...isiPenempatan(p) })));
 
     tambahSheet(wb, 'Tercapai', kolomPenempatan,
-      siswa.filter((s) => s.tahap === 'aktif' || s.tahap === 'selesai').map((s, i) => ({ ...dasar(s, i), ...isiPenempatan(s.utama!) })));
+      urutInstansi(siswa.filter((s) => s.tahap === 'aktif' || s.tahap === 'selesai'), (s) => s.utama!.tempatMagang.namaTempat, (s) => s.utama!.createdAt)
+        .map((s, i) => ({ ...dasar(s, i), ...isiPenempatan(s.utama!) })));
 
     tambahSheet(wb, 'Belum Daftar', [...kolomSiswa, { header: 'No. HP', key: 'hp', width: 16 }],
       siswa.filter((s) => s.tahap === 'belum').map((s, i) => ({ ...dasar(s, i), hp: s.noHp || '-' })));
