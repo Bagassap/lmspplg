@@ -149,6 +149,29 @@ export default function AdminMagangPenempatanPage() {
     }
   }
 
+  async function batalVerifikasi(p: PenempatanMagang) {
+    const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
+    const ok = await toast.confirm("Batalkan verifikasi?", `Penempatan ${nama} kembali menunggu verifikasi dan guru pembimbingnya dilepas.`, "Ya, batalkan");
+    if (!ok) return false;
+    setBusyId(p.id);
+    try {
+      const res = await fetch(`/api/magang/penempatan/${p.id}/batal-verifikasi`, { method: "POST" });
+      if (!res.ok) {
+        const d = await res.json().catch(() => null);
+        toast.error(d?.message ?? "Gagal membatalkan verifikasi", "");
+        return false;
+      }
+      toast.success("Verifikasi dibatalkan", nama);
+      loadPenempatan(); loadTempat();
+      return true;
+    } catch {
+      toast.error("Tidak dapat terhubung ke server", "");
+      return false;
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   async function hapus(p: PenempatanMagang) {
     const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
     const ok = await toast.confirm(
@@ -386,7 +409,7 @@ export default function AdminMagangPenempatanPage() {
         {grupBuka && (
           <PenempatanTempatModal judul={grupBuka.nama} rows={grupBuka.rows} busyId={busyId}
             onPeriksa={(p) => setPengajuanRows([p])} onTetapkanGuru={setTetapkanRows}
-            onUbahStatus={ubahStatus} onEdit={setEditTarget} onHapus={hapus}
+            onUbahStatus={ubahStatus} onBatalVerifikasi={batalVerifikasi} onEdit={setEditTarget} onHapus={hapus}
             onClose={() => setBukaTempat(null)} />
         )}
       </AnimatePresence>
@@ -403,6 +426,7 @@ export default function AdminMagangPenempatanPage() {
             rows={pengajuanRows}
             guruList={guruList}
             onClose={() => setPengajuanRows(null)}
+            onBatalVerifikasi={batalVerifikasi}
             onSaved={() => { loadPenempatan(); loadTempat(); }}
           />
         )}

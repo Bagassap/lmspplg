@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, CheckCircle2, FileText, Loader2, MapPin, Phone, User, UserCheck, X, XCircle } from "lucide-react";
+import { Building2, CalendarDays, CheckCircle2, FileText, Loader2, MapPin, Phone, Undo2, User, UserCheck, X, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, waLink } from "@/components/data-siswa/shared";
@@ -31,8 +31,9 @@ function Baris({ icon: Icon, label, children, bg, fg }: { icon: typeof MapPin; l
   );
 }
 
-export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
+export function PengajuanPklModal({ rows, guruList, onClose, onSaved, onBatalVerifikasi }: {
   rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
+  onBatalVerifikasi: (p: PenempatanMagang) => Promise<boolean>;
 }) {
   const toast = useToast();
   const [guruId, setGuruId] = useState("");
@@ -66,6 +67,15 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
   function verifikasi() {
     return kirim(`/api/magang/penempatan/${p.id}/tetapkan-guru`, guruId ? { guruPembimbingId: guruId } : {},
       ["Penempatan diverifikasi", `${nama} di ${t.namaTempat}`]);
+  }
+
+  async function batalkan() {
+    setSaving(true);
+    try {
+      if (await onBatalVerifikasi(p)) onClose();
+    } finally {
+      setSaving(false);
+    }
   }
 
   function tolak() {
@@ -113,6 +123,13 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved }: {
             <BuktiSuratViewer key={p.suratKeteranganUrl} path={p.suratKeteranganUrl} nama={p.suratKeteranganNama} />
           ) : (
             <p className="rounded-2xl bg-[#FEE2E2] p-3 text-xs font-bold text-[#DC2626]">Siswa belum mengunggah bukti surat instansi.</p>
+          )}
+
+          {p.status === "AKTIF" && (
+            <button type="button" onClick={batalkan} disabled={saving}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE2E2] text-sm font-bold text-[#DC2626] disabled:opacity-50">
+              {saving ? <Loader2 size={15} className="animate-spin" /> : <Undo2 size={15} />} Batalkan verifikasi
+            </button>
           )}
 
           {menunggu && (tolakMode ? (

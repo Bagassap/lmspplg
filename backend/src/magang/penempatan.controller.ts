@@ -116,6 +116,13 @@ export class PenempatanController {
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
+  @Post(':id/batal-verifikasi')
+  batalVerifikasi(@Param('id') id: string) {
+    return this.service.batalVerifikasi(id);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdatePenempatanDto) {
     return this.service.update(id, dto);

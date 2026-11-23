@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, FileText, Pencil, Trash2, UserCheck, X } from "lucide-react";
+import { Building2, CalendarDays, FileText, Pencil, Trash2, Undo2, UserCheck, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, type PenempatanMagang, type StatusPenempatan } from "./types";
@@ -12,13 +12,14 @@ function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapkanGuru, onUbahStatus, onEdit, onHapus, onClose }: {
+export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapkanGuru, onUbahStatus, onBatalVerifikasi, onEdit, onHapus, onClose }: {
   judul: string;
   rows: PenempatanMagang[];
   busyId: string | null;
   onPeriksa: (p: PenempatanMagang) => void;
   onTetapkanGuru: (rows: PenempatanMagang[]) => void;
   onUbahStatus: (p: PenempatanMagang, s: StatusPenempatan) => void;
+  onBatalVerifikasi: (p: PenempatanMagang) => void;
   onEdit: (p: PenempatanMagang) => void;
   onHapus: (p: PenempatanMagang) => void;
   onClose: () => void;
@@ -107,6 +108,12 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
                     <button type="button" onClick={() => onPeriksa(p)}
                       className="flex shrink-0 items-center gap-1 font-semibold text-[#0EA5E9] underline">
                       <FileText size={12} className="shrink-0" /> Surat
+                    </button>
+                  )}
+                  {p.status === "AKTIF" && (
+                    <button type="button" onClick={() => onBatalVerifikasi(p)} disabled={busy}
+                      className="flex shrink-0 items-center gap-1 rounded-lg bg-[#FEE2E2] px-2 py-1 font-bold text-[#DC2626] disabled:opacity-50">
+                      <Undo2 size={12} className="shrink-0" /> Batalkan verifikasi
                     </button>
                   )}
                 </div>

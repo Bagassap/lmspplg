@@ -252,6 +252,52 @@ export class PenempatanService {
     return this.findAll({});
   }
 
+  async batalVerifikasi(id: string) {
+    const row = await this.prisma.penempatanMagang.findUnique({
+      where: { id },
+      include: {
+        siswa: { select: { userId: true, nama: true, user: { select: { nama: true } } } },
+        tempatMagang: { select: { namaTempat: true } },
+        guruPembimbing: { select: { userId: true } },
+        laporanAkhir: { select: { id: true } },
+        _count: { select: { absensi: true, izin: true, laporDiri: true } },
+      },
+    });
+    if (!row) throw new NotFoundException('Penempatan tidak ditemukan');
+    if (row.status !== 'AKTIF') throw new BadRequestException('Hanya penempatan aktif yang bisa dibatalkan verifikasinya');
+    const pesanRiwayat = 'Verifikasi tidak bisa dibatalkan karena siswa sudah punya riwayat absensi, izin, atau laporan PKL. Ubah statusnya menjadi Selesai atau Batal.';
+    if (row._count.absensi + row._count.izin + row._count.laporDiri > 0 || row.laporanAkhir) {
+      throw new BadRequestException(pesanRiwayat);
+    }
+
+    const hasil = await this.prisma.penempatanMagang.updateMany({
+      where: { id, status: 'AKTIF', absensi: { none: {} }, izin: { none: {} }, laporDiri: { none: {} }, laporanAkhir: { is: null } },
+      data: { status: 'MENUNGGU', guruPembimbingId: null },
+    });
+    if (hasil.count === 0) throw new BadRequestException(pesanRiwayat);
+
+    const tempat = row.tempatMagang.namaTempat;
+    if (row.siswa.userId) {
+      await this.notificationService.create({
+        userId: row.siswa.userId,
+        title: 'Verifikasi penempatan PKL dibatalkan',
+        message: `Verifikasi penempatan PKL di ${tempat} dibatalkan admin. Status kembali menunggu verifikasi.`,
+        type: NotificationType.MAGANG,
+        link: '/magang/penempatan',
+      });
+    }
+    if (row.guruPembimbing?.userId) {
+      await this.notificationService.create({
+        userId: row.guruPembimbing.userId,
+        title: 'Siswa bimbingan PKL dibatalkan',
+        message: `Verifikasi penempatan ${row.siswa.user?.nama ?? row.siswa.nama ?? 'siswa'} di ${tempat} dibatalkan admin, sehingga siswa ini keluar dari bimbingan Anda.`,
+        type: NotificationType.MAGANG,
+        link: '/magang/penempatan',
+      });
+    }
+    return this.findAll({});
+  }
+
   async update(id: string, dto: UpdatePenempatanDto) {
     const existing = await this.prisma.penempatanMagang.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Penempatan tidak ditemukan');
