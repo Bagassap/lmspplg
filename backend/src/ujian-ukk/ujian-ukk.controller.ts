@@ -213,8 +213,9 @@ export class UjianUkkController {
         const kelas = bersih(r.siswa?.kelas?.nama ?? 'Tanpa Kelas');
         const nama = bersih(r.siswa?.nama ?? 'Siswa');
         const task = bersih(r.tahapan?.judul ?? 'Task');
-        let folder = `${kelas}/${nama} - ${task}`;
-        for (let i = 2; dipakai.has(folder); i++) folder = `${kelas}/${nama} - ${task} (${i})`;
+        const dasar = tahapanId ? `${kelas}/${nama}` : `${kelas}/${nama} - ${task}`;
+        let folder = dasar;
+        for (let i = 2; dipakai.has(folder); i++) folder = `${dasar} (${i})`;
         dipakai.add(folder);
         if (r.fileUrl.startsWith('/uploads/')) {
           const path = join(process.cwd(), r.fileUrl);

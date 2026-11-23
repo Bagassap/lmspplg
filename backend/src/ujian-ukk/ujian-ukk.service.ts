@@ -338,6 +338,10 @@ export class UjianUkkService {
       create: { submisiId: id, skor, rataRata, pesanRevisi: pesan, revisiSelesai, dinilaiOleh: guruUserId },
       update: { skor, rataRata, pesanRevisi: pesan, revisiSelesai, dinilaiOleh: guruUserId },
     });
+    const statusBaru = rataRata !== null && !(pesan && !revisiSelesai) ? 'DITERIMA' : 'TERKIRIM';
+    if (submisi.status !== statusBaru) {
+      await this.prisma.submisiProjectUKK.update({ where: { id }, data: { status: statusBaru } });
+    }
     const judul = submisi.tahapan?.judul ?? 'UKK';
     if (submisi.siswa?.userId) {
       if (pesanBaru) {
@@ -442,7 +446,7 @@ export class UjianUkkService {
     const simpan = ada
       ? await this.prisma.submisiProjectUKK.update({
           where: { id: ada.id },
-          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: kirimRevisi ? ada.status : 'TERKIRIM', pesanRevisi: null, submittedAt: new Date(), updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
+          data: { soalId: dto.soalId, fileUrl, fileName, catatan: dto.catatan, status: kirimRevisi ? (ada.penilaian?.rataRata != null ? 'DITERIMA' : ada.status) : 'TERKIRIM', pesanRevisi: null, submittedAt: new Date(), updatedAt: new Date(), driveFileId: null, driveUrl: null, driveFolderUrl: null },
           include,
         })
       : await this.prisma.submisiProjectUKK.create({

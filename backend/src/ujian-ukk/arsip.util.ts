@@ -44,27 +44,46 @@ export type IsiArsip = { path: string; data: Buffer | NodeJS.ReadableStream };
 const amanPath = (p: string) =>
   norm(p).split('/').filter((s) => s && s !== '.' && s !== '..').join('/');
 
+const kupasAkar = (paths: string[]) => {
+  let buang = '';
+  let sisa = paths;
+  while (sisa.length && sisa.every((p) => p.includes('/'))) {
+    const akar = sisa[0].split('/')[0];
+    if (!sisa.every((p) => p.split('/')[0] === akar)) break;
+    buang += `${akar}/`;
+    sisa = sisa.map((p) => p.slice(akar.length + 1));
+  }
+  return (p: string) => (buang && p.startsWith(buang) ? p.slice(buang.length) : p);
+};
+
 export async function ekstrakArsip(abs: string, jenis: 'zip' | 'rar', aksi: (e: IsiArsip) => Promise<void>): Promise<number> {
   let jumlah = 0;
   try {
     if (jenis === 'zip') {
       const dir = await unzipper.Open.file(abs);
       const berkas = dir.files.filter((f) => f.type === 'File' && amanPath(f.path));
+      const pendek = kupasAkar(berkas.map((f) => amanPath(f.path)));
       for (const f of berkas) {
-        await aksi({ path: amanPath(f.path), data: f.stream() });
+        await aksi({ path: pendek(amanPath(f.path)), data: f.stream() });
         jumlah++;
       }
       return jumlah;
     }
     const ex = await bukaRar(abs);
     const nama = [...ex.getFileList().fileHeaders].filter((h) => !h.flags.directory).map((h) => h.name);
+    const pendek = kupasAkar(nama.map(amanPath).filter(Boolean));
     const hasil = ex.extract({ files: nama });
+    let gagal: unknown = null;
     for (const f of hasil.files) {
-      if (f.extraction && amanPath(f.fileHeader.name)) {
-        await aksi({ path: amanPath(f.fileHeader.name), data: Buffer.from(f.extraction) });
+      if (gagal || !f.extraction || !amanPath(f.fileHeader.name)) continue;
+      try {
+        await aksi({ path: pendek(amanPath(f.fileHeader.name)), data: Buffer.from(f.extraction) });
         jumlah++;
+      } catch (e) {
+        gagal = e;
       }
     }
+    if (gagal) throw gagal;
     return jumlah;
   } catch {
     throw new BadRequestException('Arsip tidak bisa dibaca (rusak atau berpassword)');
@@ -86,10 +105,12 @@ export async function bacaEntri(abs: string, jenis: 'zip' | 'rar', path: string)
     if (!h) throw new BadRequestException('Berkas tidak ada di arsip');
     if (h.unpSize > BATAS_BACA) throw new BadRequestException('Berkas terlalu besar untuk dilihat');
     const hasil = ex.extract({ files: [h.name] });
+    let isi: Buffer | null = null;
     for (const f of hasil.files) {
-      if (f.extraction) return Buffer.from(f.extraction);
+      if (f.extraction && !isi) isi = Buffer.from(f.extraction);
     }
-    throw new BadRequestException('Berkas tidak bisa dibuka');
+    if (!isi) throw new BadRequestException('Berkas tidak bisa dibuka');
+    return isi;
   } catch (e) {
     if (e instanceof BadRequestException) throw e;
     throw new BadRequestException('Arsip tidak bisa dibaca (rusak atau berpassword)');
