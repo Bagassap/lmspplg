@@ -12,6 +12,7 @@ import { LaporanAkhirMagangService } from './laporan-akhir-magang.service';
 import { PendaftaranMagangController } from './pendaftaran-magang.controller';
 import { PendaftaranMagangService } from './pendaftaran-magang.service';
 import { SuratPermohonanService } from './surat-permohonan.service';
+import { RekapPklExcelService } from './rekap-pkl-excel.service';
 import { NotificationModule } from '../notification/notification.module';
 import { AbsensiHarianModule } from '../absensi-harian/absensi-harian.module';
 
@@ -28,6 +29,7 @@ import { AbsensiHarianModule } from '../absensi-harian/absensi-harian.module';
   providers: [
     TempatMagangService,
     SuratPermohonanService,
+    RekapPklExcelService,
     PendaftaranMagangService,
     PenempatanService,
     AbsensiMagangService,

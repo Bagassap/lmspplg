@@ -8,6 +8,7 @@ import { PendaftarTempatModal, namaPendaftar } from "@/components/magang/Pendaft
 import { DaftarInstansiList, useDaftarInstansi } from "@/components/magang/DaftarInstansiList";
 import { BelumDaftarPklCard } from "@/components/magang/BelumDaftarPklCard";
 import { KuotaTerpenuhiChip } from "@/components/magang/KuotaTerpenuhiChip";
+import { UnduhRekapPklButton } from "@/components/magang/UnduhRekapPklButton";
 import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { TolakPendaftaranModal } from "@/components/magang/TolakPendaftaranModal";
@@ -114,7 +115,7 @@ export default function AdminPendaftaranPklPage() {
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
       <div className="flex min-w-0 flex-col gap-4">
-        <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} />
+        <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} aksi={<UnduhRekapPklButton />} />
         <BelumDaftarPklCard />
       </div>
 

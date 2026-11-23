@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Request, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { PendaftaranMagangService } from './pendaftaran-magang.service';
+import { RekapPklExcelService } from './rekap-pkl-excel.service';
 import { DaftarMagangDto, GantiInstansiDto, TolakPendaftaranDto } from './dto/pendaftaran-magang.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -9,7 +11,10 @@ import { Role } from '../../generated/prisma/client';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('magang/pendaftaran')
 export class PendaftaranMagangController {
-  constructor(private readonly service: PendaftaranMagangService) {}
+  constructor(
+    private readonly service: PendaftaranMagangService,
+    private readonly rekapExcel: RekapPklExcelService,
+  ) {}
 
   @Roles(Role.SISWA)
   @Get('saya')
@@ -33,6 +38,19 @@ export class PendaftaranMagangController {
   @Get('belum-daftar')
   belumDaftar() {
     return this.service.belumDaftar();
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('export-excel')
+  async exportExcel(@Res() res: Response) {
+    const buffer = await this.rekapExcel.build();
+    const tgl = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="Rekap_PKL_${tgl}.xlsx"`,
+      'Content-Length': buffer.length,
+    });
+    res.send(buffer);
   }
 
   @Roles(Role.ADMIN)

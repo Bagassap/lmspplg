@@ -14,6 +14,7 @@ import { PengajuanPklModal } from "@/components/magang/PengajuanPklModal";
 import { EditPenempatanModal } from "@/components/magang/EditPenempatanModal";
 import type { PenempatanStatusFilter } from "@/components/magang/PenempatanFilterBar";
 import { KuotaTerpenuhiChip } from "@/components/magang/KuotaTerpenuhiChip";
+import { UnduhRekapPklButton } from "@/components/magang/UnduhRekapPklButton";
 import { TablePager, usePagedList } from "@/components/shared/TablePager";
 import { StatusFilterCard, type StatusFilterItem } from "@/components/magang/StatusFilterCard";
 import { formatAlamat, type PendaftaranMagang, type TempatMagang, type PenempatanMagang, type StatusPenempatan } from "@/components/magang/types";
@@ -236,12 +237,13 @@ export default function AdminMagangPenempatanPage() {
       <StatusFilterCard
         items={STATUS_FILTER.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
         value={statusFilter} onChange={setStatusFilter}
-        aksi={
+        aksi={<>
           <button type="button" onClick={() => setShowKelolaTempat(true)}
             className="flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-[#FFE9E2] text-xs font-bold text-[#E8562B]">
             <Building2 size={14} /> Kelola Tempat
           </button>
-        } />
+          <UnduhRekapPklButton />
+        </>} />
 
       <div className="min-w-0 lg:rounded-3xl lg:bg-white lg:p-5 lg:shadow-sm lg:dark:bg-slate-800">
         <div className="mb-3 flex flex-wrap items-center gap-3">

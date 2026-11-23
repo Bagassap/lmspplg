@@ -32,7 +32,7 @@ export function StatusFilterCard<T extends string>({ items, value, onChange, aks
             </button>
           );
         })}
-        {aksi && <div className="flex shrink-0 items-center [&>button]:h-9 [&>button]:w-auto [&>button]:px-3">{aksi}</div>}
+        {aksi && <div className="flex shrink-0 items-center gap-2 [&>button]:h-9 [&>button]:w-auto [&>button]:px-3">{aksi}</div>}
       </div>
       <div className="card-pisah hidden rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:block">
         <p className="mb-2 px-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
@@ -57,7 +57,7 @@ export function StatusFilterCard<T extends string>({ items, value, onChange, aks
             );
           })}
         </div>
-        {aksi && <div className="mt-3 border-t border-slate-100 pt-3 dark:border-slate-700">{aksi}</div>}
+        {aksi && <div className="mt-3 space-y-2 border-t border-slate-100 pt-3 dark:border-slate-700">{aksi}</div>}
       </div>
     </>
   );
