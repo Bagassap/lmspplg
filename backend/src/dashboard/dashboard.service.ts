@@ -43,17 +43,6 @@ export class DashboardService {
       this.prisma.kelas.findMany({ select: { id: true, nama: true } }),
     ]);
 
-    const pengajuanPklRaw = await this.prisma.penempatanMagang.findMany({
-      where: { status: 'MENUNGGU' },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-      select: {
-        id: true, kelompokId: true, createdAt: true,
-        siswa: { select: { nama: true, kelas: { select: { nama: true } }, user: { select: { nama: true } } } },
-        tempatMagang: { select: { namaTempat: true } },
-      },
-    });
-
     const hadirHariIni = absensiHariIni.filter((a) => a.status === 'HADIR').length;
     const izinHariIni = absensiHariIni.filter((a) => a.status === 'IZIN').length;
     const sakitHariIni = absensiHariIni.filter((a) => a.status === 'SAKIT').length;
@@ -100,14 +89,6 @@ export class DashboardService {
       .sort((a, b) => a.kelas.localeCompare(b.kelas));
 
     return {
-      pengajuanPkl: pengajuanPklRaw.map((p) => ({
-        id: p.id,
-        kelompokId: p.kelompokId,
-        siswa: p.siswa.user?.nama ?? p.siswa.nama ?? 'Siswa',
-        kelas: p.siswa.kelas?.nama ?? '-',
-        tempat: p.tempatMagang.namaTempat,
-        createdAt: p.createdAt,
-      })),
       totalSiswa,
       totalGuru,
       totalKelas,

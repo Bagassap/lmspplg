@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { NotificationType } from '../../generated/prisma/client';
+import { NotificationType, Role } from '../../generated/prisma/client';
 import { PushService } from './push.service';
 
 export interface CreateNotificationInput {
@@ -10,6 +10,10 @@ export interface CreateNotificationInput {
   type?: NotificationType;
   link?: string;
 }
+
+const TANPA_PKL_ADMIN = {
+  NOT: { type: NotificationType.MAGANG, user: { role: Role.ADMIN } },
+};
 
 @Injectable()
 export class NotificationService {
@@ -66,20 +70,21 @@ export class NotificationService {
 
   async findAllForUser(userId: string, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
+    const where = { userId, ...TANPA_PKL_ADMIN };
     const [items, total] = await Promise.all([
       this.prisma.notification.findMany({
-        where: { userId },
+        where,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
       }),
-      this.prisma.notification.count({ where: { userId } }),
+      this.prisma.notification.count({ where }),
     ]);
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async unreadCount(userId: string) {
-    const count = await this.prisma.notification.count({ where: { userId, isRead: false } });
+    const count = await this.prisma.notification.count({ where: { userId, isRead: false, ...TANPA_PKL_ADMIN } });
     return { count };
   }
 

@@ -19,7 +19,6 @@ import { KehadiranBarChart } from "@/components/dashboard/KehadiranBarChart";
 import { StatisticRainbow } from "@/components/dashboard/StatisticRainbow";
 import { icon3dStyle, toneAt } from "@/components/shared/Icon3D";
 import { AdminAppHome } from "@/components/dashboard/AdminAppHome";
-import { PengajuanPklCard, type PengajuanPkl } from "@/components/dashboard/PengajuanPklCard";
 import { useIsAppMode } from "@/lib/pwaInstall";
 import { namaOrang } from "@/lib/nama";
 const P = "#3E03B3";   
@@ -43,7 +42,6 @@ interface DashboardData {
   weeklyAbsensi: WeeklyItem[];
   pengumuman: Pengumuman[];
   kehadiranPerKelas: KehadiranKelas[];
-  pengajuanPkl?: PengajuanPkl[];
 }
 
 function Skeleton({ className = "" }: { className?: string }) {
@@ -211,8 +209,6 @@ export default function AdminDashboardPage() {
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <GreetingHero nama={user.nama} role={user.role} />
       </motion.div>
-
-      <PengajuanPklCard list={data.pengajuanPkl ?? []} />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5 [&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1">
         <StatsCard icon={Users}         label="Total Siswa"  value={data.totalSiswa}           sub="Siswa aktif terdaftar" index={0} delay={0.05} />

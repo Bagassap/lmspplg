@@ -101,16 +101,6 @@ export class PendaftaranMagangService {
       update: data,
     });
 
-    if (!siswa.pendaftaranMagang || siswa.pendaftaranMagang.status === 'DITOLAK') {
-      const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
-      await this.notificationService.createMany(admins.map((a) => a.id), {
-        title: 'Pendaftaran PKL baru',
-        message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} (${siswa.kelas?.nama ?? '-'}) mendaftar PKL. Mohon verifikasi.`,
-        type: NotificationType.MAGANG,
-        link: '/magang/pendaftaran',
-      });
-    }
-
     return this.findSaya(userId);
   }
 
@@ -150,14 +140,6 @@ export class PendaftaranMagangService {
     await this.prisma.pendaftaranMagang.update({
       where: { id: lama.id },
       data: { tempatMagangId, status: 'MENUNGGU', alasanTolak: null, diverifikasiAt: null },
-    });
-
-    const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
-    await this.notificationService.createMany(admins.map((a) => a.id), {
-      title: 'Siswa mengganti instansi PKL',
-      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} (${siswa.kelas?.nama ?? '-'}) pindah dari ${lama.tempatMagang?.namaTempat ?? '-'} ke ${tempat.namaTempat}. Mohon verifikasi ulang.`,
-      type: NotificationType.MAGANG,
-      link: '/magang/pendaftaran',
     });
 
     return this.findSaya(userId);

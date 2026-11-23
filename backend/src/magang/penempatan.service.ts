@@ -89,7 +89,6 @@ export class PenempatanService {
     if (bentrok) throw new BadRequestException('Kamu sudah memiliki pengajuan/penempatan PKL');
 
     let tempatId: string;
-    let namaTempat: string;
     if (dto.tempatMagangId) {
       const tempat = await this.prisma.tempatMagang.findUnique({
         where: { id: dto.tempatMagangId },
@@ -105,7 +104,6 @@ export class PenempatanService {
         await pastikanKuotaTersedia(this.prisma, tempat, siswa.id);
       }
       tempatId = tempat.id;
-      namaTempat = tempat.namaTempat;
     } else if (dto.tempatBaru) {
       const t = dto.tempatBaru;
       const v = {
@@ -131,7 +129,6 @@ export class PenempatanService {
           },
         });
         tempatId = ada.id;
-        namaTempat = ada.namaTempat;
       } else {
         const baru = await this.prisma.tempatMagang.create({
           data: {
@@ -146,7 +143,6 @@ export class PenempatanService {
           },
         });
         tempatId = baru.id;
-        namaTempat = baru.namaTempat;
       }
     } else {
       throw new BadRequestException('Pilih instansi dari daftar atau isi data instansi');
@@ -166,26 +162,17 @@ export class PenempatanService {
       await this.prisma.penempatanMagang.create({ data: { siswaId: siswa.id, tempatMagangId: tempatId, ...data } });
     }
 
-    const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
-    await this.notificationService.createMany(admins.map((a) => a.id), {
-      title: 'Pengajuan penempatan PKL baru',
-      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} mengajukan penempatan PKL di ${namaTempat}. Verifikasi dan tetapkan guru pembimbing.`,
-      type: NotificationType.MAGANG,
-      link: '/magang/penempatan',
-    });
-
     return this.findSaya(userId);
   }
 
   async unggahSurat(userId: string, surat: { url: string; nama: string }) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { user: { select: { nama: true } } } });
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
     if (!siswa) {
       hapusBerkasSurat(surat.url);
       throw new NotFoundException('Profil siswa tidak ditemukan');
     }
     const mine = await this.prisma.penempatanMagang.findFirst({
       where: { siswaId: siswa.id, status: { in: AKTIF_ATAU_MENUNGGU } },
-      include: { tempatMagang: { select: { namaTempat: true } } },
     });
     if (!mine) {
       hapusBerkasSurat(surat.url);
@@ -198,13 +185,6 @@ export class PenempatanService {
     await this.prisma.penempatanMagang.updateMany({
       where: mine.status === 'MENUNGGU' && mine.kelompokId ? { kelompokId: mine.kelompokId, status: 'MENUNGGU' } : { id: mine.id },
       data: { suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama },
-    });
-    const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
-    await this.notificationService.createMany(admins.map((a) => a.id), {
-      title: 'Surat PKL dikirim ulang',
-      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} mengirim surat penempatan PKL di ${mine.tempatMagang.namaTempat}. Mohon periksa.`,
-      type: NotificationType.MAGANG,
-      link: '/magang/penempatan',
     });
     return this.findSaya(userId);
   }
