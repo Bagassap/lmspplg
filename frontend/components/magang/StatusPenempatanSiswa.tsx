@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Building2, CalendarDays, Clock, FileText, Loader2, MapPin, Phone, Upload, User, UserCheck } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 
@@ -42,9 +42,23 @@ export function StatusPenempatanSiswa({ p, onChanged }: { p: PenempatanMagang; o
   const t = p.tempatMagang;
   const aktif = p.status === "AKTIF";
   const cfg = STATUS_PENEMPATAN_CFG[p.status];
+  const suratPath = p.suratKeteranganUrl ?? null;
+  const bisaUnggah = p.status === "MENUNGGU" || aktif;
+  const [hilangPath, setHilangPath] = useState<string | null>(null);
+  const suratHilang = !!suratPath && hilangPath === suratPath;
+
+  useEffect(() => {
+    if (!suratPath || !bisaUnggah) return;
+    let batal = false;
+    fetch(`/api/uploads${suratPath}`, { method: "HEAD", cache: "no-store" })
+      .then((r) => { if (!batal && r.status === 404) setHilangPath(suratPath); })
+      .catch(() => {});
+    return () => { batal = true; };
+  }, [suratPath, bisaUnggah]);
 
   async function unggah(f?: File) {
     if (!f) return;
+    if (f.size === 0) { toast.error("Berkas kosong", "Pilih ulang foto surat instansi."); return; }
     if (f.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }
     setSaving(true);
     try {
@@ -77,19 +91,19 @@ export function StatusPenempatanSiswa({ p, onChanged }: { p: PenempatanMagang; o
         {(t.noWaUsaha ?? t.kontak) && <Baris warna="hijau" icon={Phone} label="WA instansi" value={t.noWaUsaha ?? t.kontak} />}
         {aktif && <Baris icon={UserCheck} label="Guru pembimbing" value={namaOrang(p.guruPembimbing?.user.nama ?? "-")} />}
         <Baris warna="amber" icon={CalendarDays} label={aktif ? "Mulai PKL" : "Diajukan"} value={fmt(aktif ? p.tanggalMulai : p.createdAt)} />
-        {p.suratKeteranganUrl && (
+        {p.suratKeteranganUrl && !suratHilang && (
           <a href={`/api/uploads${p.suratKeteranganUrl}`} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-2xl bg-[#E0F2FE] p-3 text-xs font-bold text-[#0369A1] dark:bg-slate-700 dark:text-[#7DD3FC]">
             <FileText size={14} className="shrink-0" /> <span className="truncate underline">Surat instansi: {p.suratKeteranganNama ?? "Lihat berkas"}</span>
           </a>
         )}
-        {!aktif && !p.suratKeteranganUrl && (
+        {bisaUnggah && (!p.suratKeteranganUrl || suratHilang) && (
           <div className="rounded-2xl bg-[#FFE9E2] p-3.5">
-            <p className="text-xs font-bold text-[#E8562B]">Bukti surat instansi belum diunggah. Admin baru bisa memverifikasi setelah surat terkirim.</p>
+            <p className="text-xs font-bold text-[#E8562B]">{suratHilang ? "Berkas surat kamu tidak ditemukan di server. Mohon unggah ulang foto surat instansi." : "Bukti surat instansi belum diunggah. Admin baru bisa memverifikasi setelah surat terkirim."}</p>
             <input ref={ref} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" className="hidden" onChange={(e) => unggah(e.target.files?.[0])} />
             <button type="button" onClick={() => ref.current?.click()} disabled={saving}
               className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-xs font-bold text-white disabled:opacity-50">
-              {saving ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />} Unggah surat instansi
+              {saving ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />} {suratHilang ? "Unggah ulang surat" : "Unggah surat instansi"}
             </button>
           </div>
         )}

@@ -1,4 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import * as fs from 'fs';
+import { basename, join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
@@ -23,6 +25,14 @@ const INCLUDE_DETAIL = {
 
 type StatusP = 'MENUNGGU' | 'AKTIF' | 'SELESAI' | 'BATAL';
 const AKTIF_ATAU_MENUNGGU: ('MENUNGGU' | 'AKTIF')[] = ['MENUNGGU', 'AKTIF'];
+
+function pathBerkasSurat(url: string) {
+  return join(process.cwd(), 'uploads', 'surat-pkl', basename(url));
+}
+
+function hapusBerkasSurat(url: string) {
+  fs.rmSync(pathBerkasSurat(url), { force: true });
+}
 
 @Injectable()
 export class PenempatanService {
@@ -168,13 +178,33 @@ export class PenempatanService {
   }
 
   async unggahSurat(userId: string, surat: { url: string; nama: string }) {
-    const siswa = await this.prisma.siswa.findUnique({ where: { userId } });
-    if (!siswa) throw new NotFoundException('Profil siswa tidak ditemukan');
-    const mine = await this.prisma.penempatanMagang.findFirst({ where: { siswaId: siswa.id, status: 'MENUNGGU' } });
-    if (!mine) throw new BadRequestException('Tidak ada pengajuan PKL yang menunggu');
+    const siswa = await this.prisma.siswa.findUnique({ where: { userId }, include: { user: { select: { nama: true } } } });
+    if (!siswa) {
+      hapusBerkasSurat(surat.url);
+      throw new NotFoundException('Profil siswa tidak ditemukan');
+    }
+    const mine = await this.prisma.penempatanMagang.findFirst({
+      where: { siswaId: siswa.id, status: { in: AKTIF_ATAU_MENUNGGU } },
+      include: { tempatMagang: { select: { namaTempat: true } } },
+    });
+    if (!mine) {
+      hapusBerkasSurat(surat.url);
+      throw new BadRequestException('Tidak ada penempatan PKL yang bisa dilengkapi suratnya');
+    }
+    if (mine.status === 'AKTIF' && mine.suratKeteranganUrl && fs.existsSync(pathBerkasSurat(mine.suratKeteranganUrl))) {
+      hapusBerkasSurat(surat.url);
+      throw new BadRequestException('Surat penempatan yang sudah diverifikasi tidak bisa diganti');
+    }
     await this.prisma.penempatanMagang.updateMany({
-      where: mine.kelompokId ? { kelompokId: mine.kelompokId, status: 'MENUNGGU' } : { id: mine.id },
+      where: mine.status === 'MENUNGGU' && mine.kelompokId ? { kelompokId: mine.kelompokId, status: 'MENUNGGU' } : { id: mine.id },
       data: { suratKeteranganUrl: surat.url, suratKeteranganNama: surat.nama },
+    });
+    const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } });
+    await this.notificationService.createMany(admins.map((a) => a.id), {
+      title: 'Surat PKL dikirim ulang',
+      message: `${siswa.user?.nama ?? siswa.nama ?? 'Siswa'} mengirim surat penempatan PKL di ${mine.tempatMagang.namaTempat}. Mohon periksa.`,
+      type: NotificationType.MAGANG,
+      link: '/magang/penempatan',
     });
     return this.findSaya(userId);
   }
