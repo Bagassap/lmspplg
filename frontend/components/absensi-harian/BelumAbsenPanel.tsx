@@ -198,7 +198,7 @@ function DetailModal({
             {filtered.length === 0 ? (
               <p className="py-8 text-center text-xs font-semibold text-slate-400">Tidak ada yang cocok dengan &ldquo;{query}&rdquo;</p>
             ) : (
-              <div className="thin-scrollbar flex-1 divide-y divide-slate-100 overflow-y-auto dark:divide-slate-700">
+              <div className="flex-1 divide-y divide-slate-100 overflow-y-auto dark:divide-slate-700">
                 {filtered.map((s) => (
                   <div key={s.siswaId} className="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
                     <Avatar
