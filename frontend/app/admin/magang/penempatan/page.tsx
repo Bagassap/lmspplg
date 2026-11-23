@@ -233,7 +233,7 @@ export default function AdminMagangPenempatanPage() {
         <div className="h-7 rounded-t-[28px] bg-surface dark:bg-[#0F172A]" />
       </div>
 
-      <div className="mt-0 grid items-start gap-5 lg:mt-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
+      <div className="mt-0 grid grid-cols-1 items-start gap-5 lg:mt-5 lg:grid-cols-[13rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)]">
       <StatusFilterCard
         items={STATUS_FILTER.map((w) => ({ ...w, count: w.value ? penempatanList.filter((p) => p.status === w.value).length : penempatanList.length }))}
         value={statusFilter} onChange={setStatusFilter}

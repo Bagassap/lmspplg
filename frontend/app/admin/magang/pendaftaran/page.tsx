@@ -113,7 +113,7 @@ export default function AdminPendaftaranPklPage() {
   const kuotaPeta = useMemo(() => new Map(instansi.list.map((i) => [i.id, i])), [instansi.list]);
 
   return (
-    <div className="grid items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
+    <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_17rem] xl:grid-cols-[15rem_minmax(0,1fr)_20rem] lg:p-1">
       <div className="flex min-w-0 flex-col gap-4">
         <StatusFilterCard items={TABS.map((t) => ({ ...t, count: hitung[t.value] }))} value={tab} onChange={setTab} aksi={<UnduhRekapPklButton />} />
         <BelumDaftarPklCard />

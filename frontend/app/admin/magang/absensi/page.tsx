@@ -376,7 +376,7 @@ export default function AdminMagangAbsensiPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem]">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem]">
           <div className="flex min-w-0 flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

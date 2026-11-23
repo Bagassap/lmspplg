@@ -400,7 +400,7 @@ export default function GuruMagangAbsensiPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-3">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
           <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <p className="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Tempat PKL</p>
