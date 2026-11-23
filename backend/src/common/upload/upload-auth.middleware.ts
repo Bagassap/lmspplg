@@ -107,6 +107,12 @@ export function createUploadAuthMiddleware(
         select: { id: true },
       });
       owned = !!row;
+    } else if (req.path.startsWith('/surat-pkl/')) {
+      const row = await prisma.penempatanMagang.findFirst({
+        where: { siswaId: siswa.id, suratKeteranganUrl: requestedUrl },
+        select: { id: true },
+      });
+      owned = !!row;
     } else if (req.path.startsWith('/laporan-akhir-magang/')) {
       const row = await prisma.laporanAkhirMagang.findFirst({
         where: { siswaId: siswa.id, fileUrl: requestedUrl },
