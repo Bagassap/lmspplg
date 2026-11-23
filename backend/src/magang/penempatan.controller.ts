@@ -57,15 +57,15 @@ export class PenempatanController {
   @Post('ajukan')
   @UseInterceptors(FileInterceptor('surat', { storage: suratStorage, ...suratUploadOptions }))
   async ajukan(@Body() body: Record<string, string>, @UploadedFile() file: Express.Multer.File | undefined, @Request() req: any) {
-    if (!file) throw new BadRequestException('Bukti surat instansi wajib diunggah');
-    let raw: Record<string, unknown>;
+    if (!file || file.size === 0) throw new BadRequestException('Foto surat instansi wajib diunggah');
+    let raw: { tempatBaru?: unknown };
     try {
-      raw = {
-        tempatMagangId: body.tempatMagangId || undefined,
-        tempatBaru: body.tempatBaru ? JSON.parse(body.tempatBaru) : undefined,
-      };
+      raw = { tempatBaru: body.tempatBaru ? JSON.parse(body.tempatBaru) : undefined };
     } catch {
       throw new BadRequestException('Data pengajuan tidak valid');
+    }
+    if (!raw.tempatBaru || typeof raw.tempatBaru !== 'object') {
+      throw new BadRequestException('Semua data form penempatan wajib diisi');
     }
     const dto = plainToInstance(AjukanPenempatanDto, raw);
     const errors = await validate(dto);

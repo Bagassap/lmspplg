@@ -3,11 +3,12 @@
 import { useRef, useState } from "react";
 import { Building2, FileText, Loader2, Send, Upload, X } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
-import { ALAMAT_KOSONG, AlamatFields, PklInput, PKL_CAP, WA_VALID, alamatLengkap, pesanError } from "./pkl-form-ui";
+import { ALAMAT_KOSONG, AlamatFields, PklInput, PKL_CAP, pesanError } from "./pkl-form-ui";
 import type { Alamat, Instansi } from "./types";
 
 const MAKS_SURAT = 10 * 1024 * 1024;
 const ACCEPT = ".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp";
+const WA_INSTANSI = /^(?=(?:\D*\d){8})[0-9+\s-]{8,20}$/;
 
 export function FormInstansiPkl({ awal, onTerkirim }: {
   awal: Instansi | null;
@@ -24,20 +25,38 @@ export function FormInstansiPkl({ awal, onTerkirim }: {
   const fileRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
 
+  const kurang = [
+    !namaTempat.trim() && "nama instansi",
+    !namaPimpinan.trim() && "kepala instansi",
+    !alamat.dukuh.trim() && "dukuh",
+    !alamat.rt.trim() && "RT",
+    !alamat.rw.trim() && "RW",
+    !alamat.desa.trim() && "desa",
+    !alamat.kecamatan.trim() && "kecamatan",
+    !alamat.kabupaten.trim() && "kabupaten",
+    !WA_INSTANSI.test(noWa.trim()) && "nomor WA minimal 8 angka",
+    !surat && "foto surat",
+  ].filter((x): x is string => !!x);
+
   function pilihBerkas(f?: File | null) {
-    if (f && f.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }
-    setSurat(f ?? null);
+    if (fileRef.current) fileRef.current.value = "";
+    if (!f) return;
+    if (f.size === 0) { toast.error("Berkas kosong", "Pilih ulang foto surat instansi."); return; }
+    if (f.size > MAKS_SURAT) { toast.error("Berkas terlalu besar", "Ukuran maksimal 10 MB."); return; }
+    setSurat(f);
   }
 
   async function kirim() {
-    if (!namaTempat.trim() || !namaPimpinan.trim()) { toast.error("Lengkapi data instansi", "Nama instansi dan nama kepala instansi wajib diisi."); return; }
-    if (!alamatLengkap(alamat)) { toast.error("Lengkapi alamat instansi", "Dukuh, RT, RW, desa, kecamatan, dan kabupaten wajib diisi."); return; }
-    if (!WA_VALID.test(noWa.trim())) { toast.error("Nomor WA instansi tidak valid", "Contoh: 081234567890."); return; }
-    if (!surat) { toast.error("Upload bukti surat instansi", "Berkas ini wajib diunggah."); return; }
+    if (kurang.length > 0 || !surat) return;
     setSaving(true);
     try {
       const fd = new FormData();
-      fd.append("tempatBaru", JSON.stringify({ namaTempat: namaTempat.trim(), namaPimpinan: namaPimpinan.trim(), ...alamat, noWaUsaha: noWa.trim() }));
+      fd.append("tempatBaru", JSON.stringify({
+        namaTempat: namaTempat.trim(), namaPimpinan: namaPimpinan.trim(),
+        dukuh: alamat.dukuh.trim(), rt: alamat.rt.trim(), rw: alamat.rw.trim(),
+        desa: alamat.desa.trim(), kecamatan: alamat.kecamatan.trim(), kabupaten: alamat.kabupaten.trim(),
+        noWaUsaha: noWa.trim(),
+      }));
       fd.append("surat", surat);
       const res = await fetch("/api/magang/penempatan/ajukan", { method: "POST", body: fd });
       if (res.ok) {
@@ -85,8 +104,14 @@ export function FormInstansiPkl({ awal, onTerkirim }: {
           <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-400">Surat balasan/keterangan dari instansi. Maksimal 10 MB.</p>
         </div>
 
-        <button type="button" onClick={kirim} disabled={saving || !surat}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50">
+        {kurang.length > 0 && (
+          <p className="rounded-2xl bg-[#FFE9E2] px-3.5 py-2.5 text-xs font-semibold text-[#C2410C] dark:bg-slate-700 dark:text-[#FDBA74]">
+            Belum lengkap: {kurang.join(", ")}
+          </p>
+        )}
+
+        <button type="button" onClick={kirim} disabled={saving || kurang.length > 0}
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50">
           {saving ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} Kirim penempatan
         </button>
       </div>
