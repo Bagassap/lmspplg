@@ -10,7 +10,8 @@ export async function GET(
   const token = (await cookies()).get("token")?.value;
   if (!token) return new NextResponse("Unauthorized", { status: 401 });
 
-  const { path } = await params;
+  const { path: mentah } = await params;
+  const path = mentah?.[0] === "uploads" ? mentah.slice(1) : mentah;
   if (!path?.length || path.some((seg) => seg === ".." || seg.includes("/"))) {
     return new NextResponse("Invalid path", { status: 400 });
   }
