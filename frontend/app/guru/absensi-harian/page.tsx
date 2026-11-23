@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ClipboardCheck, CalendarDays, GraduationCap, BookOpen, ArrowRight, ChevronLeft, Eye, X, Users, TrendingUp, FileText, Download, Bell, Check } from "lucide-react";
+import { ClipboardCheck, CalendarDays, GraduationCap, BookOpen, ArrowRight, ChevronLeft, ChevronRight, Eye, X, Users, TrendingUp, FileText, Download, Bell, Check } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { DokumenModal } from "@/components/absensi-harian/DokumenModal";
 import { ExportButtons } from "@/components/absensi-harian/ExportButtons";
@@ -18,7 +18,7 @@ import { Avatar } from "@/components/shared/Avatar";
 import { MobileDatePicker } from "@/components/shared/MobileDatePicker";
 import { PageSizeToggle, paginate } from "@/components/shared/PageSizeToggle";
 import {
-  STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTgl,
+  STATUS_CFG, PULANG_CFG, MONTH_NAMES, RANGE_MODE_CARDS, todayJakarta, formatTglSlash,
   avatarColor,
 } from "@/components/absensi-harian/shared";
 import { OptionCard3D } from "@/components/shared/Icon3D";
@@ -93,7 +93,8 @@ function KirimPengingatCard({ kelasId, tanggal, siswaList, bold }: { kelasId: st
   );
 }
 
-const KELAS_WARNA = ["#0EA5E9", "#10B981", "#8B5CF6", "#F59E0B"];
+const KELAS_WARNA = ["#3E03B3", "#F26A3D"];
+const KELAS_PER_PAGE = 4;
 
 function KehadiranSlimCard({ hadirPct, kelasNama, onClick }: { hadirPct: number; kelasNama?: string; onClick: () => void }) {
   return (
@@ -292,6 +293,7 @@ export default function GuruAbsensiHarianPage() {
   const [tablePageSize, setTablePageSize] = useState<number>(10);
   const [laporanOpen, setLaporanOpen] = useState(false);
   const [statusPageOpen, setStatusPageOpen] = useState(false);
+  const [kelasPageMentah, setKelasPage] = useState(0);
 
   useEffect(() => {
     fetch("/api/kelas/saya")
@@ -335,6 +337,10 @@ export default function GuruAbsensiHarianPage() {
     const tt = r?.siswa.length ?? k._count?.siswa ?? 0;
     return { hd, iz: r?.rekap.IZIN ?? 0, sk: r?.rekap.SAKIT ?? 0, al: r?.rekap.ALPA ?? 0, tt, pct: tt > 0 ? Math.round((hd / tt) * 100) : 0 };
   }
+
+  const kelasPageCount = Math.max(1, Math.ceil(kelasList.length / KELAS_PER_PAGE));
+  const kelasPage = Math.min(kelasPageMentah, kelasPageCount - 1);
+  const kelasPageSlice = kelasList.slice(kelasPage * KELAS_PER_PAGE, (kelasPage + 1) * KELAS_PER_PAGE);
 
   const filteredSiswa = !activeFilter
     ? siswaList
@@ -404,51 +410,75 @@ export default function GuruAbsensiHarianPage() {
   return (
     <>
       <div className="hidden space-y-5 p-1 lg:block">
-        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-3">
-          <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
+        <div id="status-kehadiran-hari-ini" className="mb-4 grid items-start gap-4 lg:grid-cols-[15rem_minmax(0,1fr)_17rem] xl:grid-cols-[17rem_minmax(0,1fr)_20rem]">
+          <div className="flex min-w-0 flex-col gap-4">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <p className="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
-              <div className="grid grid-cols-4 gap-2.5">
-                {kelasList.map((k, i) => {
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Kelas</p>
+                {kelasPageCount > 1 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-400">{kelasPage + 1} / {kelasPageCount}</span>
+                    <button type="button" onClick={() => setKelasPage(Math.max(0, kelasPage - 1))} disabled={kelasPage === 0} aria-label="Kelas sebelumnya"
+                      className="flex h-6 w-6 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                      <ChevronLeft size={13} />
+                    </button>
+                    <button type="button" onClick={() => setKelasPage(Math.min(kelasPageCount - 1, kelasPage + 1))} disabled={kelasPage + 1 >= kelasPageCount} aria-label="Kelas berikutnya"
+                      className="flex h-6 w-6 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+                      <ChevronRight size={13} />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-3">
+                {kelasPageSlice.map((k, i) => {
                   const s = kelasStat(k);
                   const isSelected = k.id === selectedId;
                   const warna = KELAS_WARNA[i % KELAS_WARNA.length];
                   return (
                     <button type="button" key={k.id} onClick={() => setSelectedId(k.id)}
-                      style={{ borderColor: warna, backgroundColor: `${warna}1F`, ...(isSelected ? { boxShadow: `0 0 0 3px ${warna}55` } : {}) }}
-                      className="relative flex w-full items-center gap-2.5 overflow-hidden rounded-2xl border-2 px-3 py-3 text-left shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: `${warna}33`, color: warna }}>
-                        <BookOpen size={17} />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-black leading-tight text-slate-800 dark:text-white">{k.nama}</span>
-                        <span className="block truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                          {s.hd}/{s.tt} hadir · Izin {s.iz} · Sakit {s.sk} · Alpa {s.al}
-                        </span>
-                      </span>
+                      className="relative flex h-20 items-center gap-3 overflow-hidden rounded-2xl px-4 py-4 text-left text-white transition-all hover:scale-[1.01] active:scale-[0.99]"
+                      style={{
+                        background: warna,
+                        boxShadow: isSelected ? `0 8px 24px ${warna}59` : "0 8px 24px rgba(0,0,0,0.15)",
+                        outline: isSelected ? `2px solid ${warna}` : "none",
+                        outlineOffset: "3px",
+                      }}>
+                      <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+                      <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                        <BookOpen size={16} />
+                      </div>
+                      <div className="relative min-w-0 flex-1">
+                        <p className="truncate text-base font-black leading-tight">{k.nama}</p>
+                        <p className="mt-0.5 truncate text-[11px] font-medium text-white/75">{s.hd}/{s.tt} hadir</p>
+                      </div>
                     </button>
                   );
                 })}
               </div>
-
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
-                <BelumAbsenPanel siswaList={siswaList} inline />
-              </div>
             </div>
+          </div>
 
-          <div id="status-kehadiran-hari-ini" className="flex flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex min-w-0 flex-col self-start rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
                   Status Kehadiran Hari Ini <span className="font-medium text-slate-400">({total})</span>
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{formatTgl(tanggal)}</p>
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700 sm:w-full sm:max-w-xs">
+              <div className="relative flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-600 dark:bg-slate-700 sm:w-full sm:max-w-xs">
                 <CalendarDays size={14} className="shrink-0 text-slate-400" />
-                <DateInputID value={tanggal} onChange={(v) => setTanggal(v)} className="w-full min-w-0 bg-transparent text-sm font-semibold text-slate-700 focus:outline-none dark:text-slate-200" />
+                <span className="pointer-events-none w-full min-w-0 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  {formatTglSlash(tanggal)}
+                </span>
+                <input type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)}
+                  aria-label="Pilih tanggal"
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
               </div>
+            </div>
+
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              <KirimPengingatCard kelasId={selectedId} tanggal={tanggal} siswaList={siswaList} />
+              <BelumAbsenPanel siswaList={siswaList} inline />
             </div>
 
             <div className="mt-3 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
@@ -492,9 +522,9 @@ export default function GuruAbsensiHarianPage() {
               />
             </div>
           </div>
-          </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex min-w-0 flex-col gap-4">
+            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
             <div className="card-pisah rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="icon-tile flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: "#EFE9FD" }}>
@@ -504,9 +534,9 @@ export default function GuruAbsensiHarianPage() {
                   <p className="text-sm font-bold text-slate-800 dark:text-white">Unduh Laporan</p>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="flex flex-col gap-2">
                 {RANGE_MODE_CARDS.map((opt) => (
-                  <OptionCard3D key={opt.key} stack icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
+                  <OptionCard3D key={opt.key} icon={opt.icon} tone={opt.tone} label={opt.label} caption={opt.caption}
                     active={exportRange.rangeMode === opt.key} onClick={() => exportRange.setRangeMode(opt.key)} />
                 ))}
               </div>
@@ -536,8 +566,6 @@ export default function GuruAbsensiHarianPage() {
                 Pilih Harian, Mingguan, atau Bulanan, lalu klik PDF atau Excel — per kelas (semua siswa) atau per siswa.
               </p>
             </div>
-
-            <LaporanSeringTidakHadir kelasId={selectedId} kelasNama={selectedKelas?.nama} />
           </div>
         </div>
       </div>
