@@ -10,7 +10,7 @@ import { avatarColorFor, kelasShort } from "@/components/data-siswa/shared";
 import { namaSiswa } from "@/lib/nama";
 import { useAutoRefresh } from "@/lib/useAutoRefresh";
 
-type SiswaBelum = { id: string; nis: string; nama: string; fotoProfil: string | null };
+type SiswaBelum = { id: string; nis: string; nama: string; fotoProfil: string | null; ditolak?: boolean };
 type KelasBelum = { id: string; nama: string; total: number; siswa: SiswaBelum[] };
 
 const BATAS_KARTU = 5;
@@ -18,6 +18,10 @@ const KOLOM_MODAL = "2.5rem minmax(0,1fr) 7rem";
 
 function labelKelas(nama: string) {
   return kelasShort(nama).replace(/^(XII|12)\s+/i, "");
+}
+
+function ChipDitolak() {
+  return <span className="shrink-0 rounded-lg px-1.5 py-0.5 text-[9.5px] font-bold" style={{ background: "#FEE2E2", color: "#DC2626" }}>Ditolak</span>;
 }
 
 function TabKelas({ list, aktifId, onPilih, layoutId }: { list: KelasBelum[]; aktifId?: string; onPilih: (id: string) => void; layoutId: string }) {
@@ -71,6 +75,7 @@ function ModalBelumDaftar({ list, aktif, onPilih, onClose }: { list: KelasBelum[
                       <span className="flex min-w-0 items-center gap-2">
                         <Avatar src={s.fotoProfil} nama={nama} sizePx={28} fallbackBg={avatarColorFor(nama)} textClassName="text-[9px] font-extrabold" />
                         <span className="truncate text-sm font-semibold text-slate-800 dark:text-white">{nama}</span>
+                        {s.ditolak && <ChipDitolak />}
                       </span>
                       <span className="truncate text-xs tabular-nums text-slate-500 dark:text-slate-400">{s.nis}</span>
                     </div>
@@ -135,6 +140,7 @@ export function BelumDaftarPklCard() {
                   <p className="truncate text-xs font-semibold text-slate-700 dark:text-slate-200" title={nama}>{nama}</p>
                   <p className="truncate text-[10px] text-slate-400">{s.nis}</p>
                 </div>
+                {s.ditolak && <ChipDitolak />}
               </div>
             );
           })}

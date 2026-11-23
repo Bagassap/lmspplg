@@ -153,8 +153,18 @@ export class PendaftaranMagangService {
         nama: true,
         _count: { select: { siswa: { where: { status: 'AKTIF' } } } },
         siswa: {
-          where: { status: 'AKTIF', pendaftaranMagang: { is: null }, penempatan: { none: { status: { not: 'BATAL' } } } },
-          select: { id: true, nis: true, nama: true, user: { select: { nama: true, fotoProfil: true } } },
+          where: {
+            status: 'AKTIF',
+            OR: [{ pendaftaranMagang: { is: null } }, { pendaftaranMagang: { is: { status: 'DITOLAK' } } }],
+            penempatan: { none: { status: { not: 'BATAL' } } },
+          },
+          select: {
+            id: true,
+            nis: true,
+            nama: true,
+            user: { select: { nama: true, fotoProfil: true } },
+            pendaftaranMagang: { select: { status: true } },
+          },
         },
       },
       orderBy: { nama: 'asc' },
@@ -166,7 +176,7 @@ export class PendaftaranMagangService {
         nama: k.nama,
         total: k._count.siswa,
         siswa: k.siswa
-          .map((s) => ({ id: s.id, nis: s.nis, nama: s.user?.nama ?? s.nama ?? 'Siswa', fotoProfil: s.user?.fotoProfil ?? null }))
+          .map((s) => ({ id: s.id, nis: s.nis, nama: s.user?.nama ?? s.nama ?? 'Siswa', fotoProfil: s.user?.fotoProfil ?? null, ditolak: s.pendaftaranMagang?.status === 'DITOLAK' }))
           .sort((a, b) => a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' })),
       }));
   }

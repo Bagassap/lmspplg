@@ -139,7 +139,7 @@ export class RekapPklExcelService {
       .sort((a, b) => a.kelas.nama.localeCompare(b.kelas.nama, 'id', { numeric: true }) || a.namaTampil.localeCompare(b.namaTampil, 'id', { sensitivity: 'base' }));
 
     const perKelas = new Map<string, Record<Tahap | 'total', number>>();
-    siswa.forEach((s) => {
+    siswa.filter((s) => s.wajib || s.tahap !== 'ditolak').forEach((s) => {
       const r = perKelas.get(s.kelas.nama) ?? { total: 0, belum: 0, menunggu: 0, ditolak: 0, terverifikasi: 0, penempatan: 0, aktif: 0, selesai: 0 };
       r.total += 1;
       r[s.tahap] += 1;
@@ -158,9 +158,9 @@ export class RekapPklExcelService {
     const ringkasan = tambahSheet(wb, 'Ringkasan', [
       { header: 'Kelas', key: 'kelas', width: 16 },
       { header: 'Total Siswa', key: 'total', width: 12 },
-      { header: 'Belum Daftar', key: 'belum', width: 13 },
+      { header: 'Belum Pernah Daftar', key: 'belum', width: 14 },
+      { header: 'Ditolak, Belum Daftar Ulang', key: 'ditolak', width: 16 },
       { header: 'Menunggu Verifikasi', key: 'menunggu', width: 20 },
-      { header: 'Ditolak', key: 'ditolak', width: 10 },
       { header: 'Terverifikasi, Belum Isi Penempatan', key: 'terverifikasi', width: 22 },
       { header: 'Penempatan Menunggu', key: 'penempatan', width: 21 },
       { header: 'PKL Aktif', key: 'aktif', width: 10 },
@@ -232,8 +232,17 @@ export class RekapPklExcelService {
       urutInstansi(siswa.filter((s) => s.tahap === 'aktif' || s.tahap === 'selesai'), (s) => s.utama!.tempatMagang.namaTempat, (s) => s.utama!.createdAt)
         .map((s, i) => ({ ...dasar(s, i), ...isiPenempatan(s.utama!) })));
 
-    tambahSheet(wb, 'Belum Daftar', [...kolomSiswa, { header: 'No. HP', key: 'hp', width: 16 }],
-      siswa.filter((s) => s.tahap === 'belum').map((s, i) => ({ ...dasar(s, i), hp: s.noHp || '-' })));
+    tambahSheet(wb, 'Belum Daftar', [
+      ...kolomSiswa,
+      { header: 'No. HP', key: 'hp', width: 16 },
+      { header: 'Keterangan', key: 'status', width: 20 },
+      { header: 'Alasan Ditolak', key: 'alasan', width: 32 },
+    ], siswa.filter((s) => s.wajib && (s.tahap === 'belum' || s.tahap === 'ditolak')).map((s, i) => ({
+      ...dasar(s, i),
+      hp: s.noHp || '-',
+      status: s.tahap === 'ditolak' ? 'Ditolak' : 'Belum pernah daftar',
+      alasan: s.tahap === 'ditolak' ? s.daftar?.alasanTolak || '-' : '-',
+    })));
 
     const buf = await wb.xlsx.writeBuffer();
     return Buffer.from(buf);
