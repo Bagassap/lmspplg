@@ -152,7 +152,7 @@ export function PendaftaranPklForm({ data, onChange, instansi, instansiLoading, 
               {p.status === "DITERIMA"
                 ? "Ambil surat permohonan PKL di Gedung G Lab PPLG, lalu isi data instansi di kategori Penempatan."
                 : p.status === "DITOLAK"
-                  ? `Alasan: ${p.alasanTolak ?? "-"}. Perbaiki data lalu kirim ulang.`
+                  ? p.alasanTolak ? `Alasan: ${p.alasanTolak}. Perbaiki data lalu kirim ulang.` : "Silakan daftar ulang."
                   : ""}
             </p>
             {p.status === "DITERIMA" && (
