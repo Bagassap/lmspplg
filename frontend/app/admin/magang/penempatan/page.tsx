@@ -149,6 +149,29 @@ export default function AdminMagangPenempatanPage() {
     }
   }
 
+  async function verifikasiInstansi(tempatId: string, namaInstansi: string, siap: PenempatanMagang[], guruId: string) {
+    const ok = await toast.confirm("Verifikasi instansi ini?", `${siap.length} siswa di ${namaInstansi} akan diverifikasi sekaligus.`, "Ya, verifikasi");
+    if (!ok) return false;
+    try {
+      const res = await fetch(`/api/magang/penempatan/tempat/${tempatId}/verifikasi`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ penempatanIds: siap.map((r) => r.id), ...(guruId ? { guruPembimbingId: guruId } : {}) }),
+      });
+      const d = await res.json().catch(() => null);
+      if (!res.ok) {
+        toast.error(d?.message ?? "Gagal memverifikasi instansi", "");
+        return false;
+      }
+      toast.success("Instansi diverifikasi", d?.dilewati ? `${d.diverifikasi} siswa diverifikasi, ${d.dilewati} dilewati.` : `${d?.diverifikasi ?? siap.length} siswa di ${namaInstansi}.`);
+      await Promise.all([loadPenempatan(), loadTempat()]);
+      return true;
+    } catch {
+      toast.error("Tidak dapat terhubung ke server", "");
+      return false;
+    }
+  }
+
   async function batalVerifikasi(p: PenempatanMagang) {
     const nama = namaSiswa(p.siswa.nama ?? p.siswa.user?.nama ?? "—");
     const ok = await toast.confirm("Batalkan verifikasi?", `Penempatan ${nama} kembali menunggu verifikasi dan guru pembimbingnya dilepas.`, "Ya, batalkan");
@@ -408,6 +431,9 @@ export default function AdminMagangPenempatanPage() {
       <AnimatePresence>
         {grupBuka && (
           <PenempatanTempatModal judul={grupBuka.nama} rows={grupBuka.rows} busyId={busyId}
+            menunggu={penempatanList.filter((p) => p.tempatMagang.id === grupBuka.id && p.status === "MENUNGGU")}
+            guruList={guruList}
+            onVerifikasiInstansi={(siap, guruId) => verifikasiInstansi(grupBuka.id, grupBuka.nama, siap, guruId)}
             onPeriksa={(p) => setPengajuanRows([p])} onTetapkanGuru={setTetapkanRows}
             onUbahStatus={ubahStatus} onBatalVerifikasi={batalVerifikasi} onEdit={setEditTarget} onHapus={hapus}
             onClose={() => setBukaTempat(null)} />
@@ -424,7 +450,6 @@ export default function AdminMagangPenempatanPage() {
         {pengajuanRows && (
           <PengajuanPklModal
             rows={pengajuanRows}
-            guruList={guruList}
             onClose={() => setPengajuanRows(null)}
             onBatalVerifikasi={batalVerifikasi}
             onSaved={() => { loadPenempatan(); loadTempat(); }}

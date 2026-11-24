@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, CheckCircle2, FileText, Loader2, MapPin, Phone, Undo2, User, UserCheck, X, XCircle } from "lucide-react";
+import { Building2, CalendarDays, FileText, Loader2, MapPin, Phone, Undo2, User, UserCheck, X, XCircle } from "lucide-react";
 import { useToast } from "@/components/shared/ToastSystem";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor, waLink } from "@/components/data-siswa/shared";
@@ -10,10 +10,6 @@ import { STATUS_PENEMPATAN_CFG, formatAlamat, type PenempatanMagang } from "./ty
 import { namaSiswa, namaOrang } from "@/lib/nama";
 import { Portal } from "@/components/shared/Portal";
 import { BuktiSuratViewer } from "./BuktiSuratViewer";
-
-type GuruOption = { id: string; user: { id: string; nama: string } };
-
-const FIELD = "h-11 w-full rounded-2xl border-0 bg-slate-50 px-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-800 dark:text-slate-100";
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
@@ -31,12 +27,11 @@ function Baris({ icon: Icon, label, children, bg, fg }: { icon: typeof MapPin; l
   );
 }
 
-export function PengajuanPklModal({ rows, guruList, onClose, onSaved, onBatalVerifikasi }: {
-  rows: PenempatanMagang[]; guruList: GuruOption[]; onClose: () => void; onSaved: () => void;
+export function PengajuanPklModal({ rows, onClose, onSaved, onBatalVerifikasi }: {
+  rows: PenempatanMagang[]; onClose: () => void; onSaved: () => void;
   onBatalVerifikasi: (p: PenempatanMagang) => Promise<boolean>;
 }) {
   const toast = useToast();
-  const [guruId, setGuruId] = useState("");
   const [tolakMode, setTolakMode] = useState(false);
   const [alasan, setAlasan] = useState("");
   const [saving, setSaving] = useState(false);
@@ -62,11 +57,6 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved, onBatalVer
     } finally {
       setSaving(false);
     }
-  }
-
-  function verifikasi() {
-    return kirim(`/api/magang/penempatan/${p.id}/tetapkan-guru`, guruId ? { guruPembimbingId: guruId } : {},
-      ["Penempatan diverifikasi", `${nama} di ${t.namaTempat}`]);
   }
 
   async function batalkan() {
@@ -147,23 +137,10 @@ export function PengajuanPklModal({ rows, guruList, onClose, onSaved, onBatalVer
               </div>
             </div>
           ) : (
-            <div className="space-y-2 pt-1">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Guru pembimbing (opsional)</label>
-              <select value={guruId} onChange={(e) => setGuruId(e.target.value)} className={FIELD}>
-                <option value="">Tetapkan nanti</option>
-                {guruList.map((g) => <option key={g.id} value={g.id}>{g.user.nama}</option>)}
-              </select>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => setTolakMode(true)} disabled={saving}
-                  className="flex h-12 items-center gap-1.5 rounded-xl bg-[#FEE2E2] px-5 text-sm font-bold text-[#DC2626] disabled:opacity-50">
-                  <XCircle size={15} /> Tolak
-                </button>
-                <button type="button" onClick={verifikasi} disabled={saving || !p.suratKeteranganUrl}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#3E03B3] text-sm font-bold text-white disabled:opacity-50 lg:bg-[#22A06B]">
-                  {saving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Verifikasi
-                </button>
-              </div>
-            </div>
+            <button type="button" onClick={() => setTolakMode(true)} disabled={saving}
+              className="flex h-12 w-full items-center justify-center gap-1.5 rounded-xl bg-[#FEE2E2] text-sm font-bold text-[#DC2626] disabled:opacity-50">
+              <XCircle size={15} /> Tolak siswa ini
+            </button>
           ))}
         </div>
       </motion.div>

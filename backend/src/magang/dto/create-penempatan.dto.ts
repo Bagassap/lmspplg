@@ -1,4 +1,4 @@
-import { IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 const Rapikan = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));
@@ -79,6 +79,17 @@ export class TetapkanGuruDto {
   @IsDateString()
   @IsOptional()
   tanggalSelesai?: string;
+}
+
+export class VerifikasiInstansiDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  penempatanIds!: string[];
+
+  @IsString()
+  @IsOptional()
+  guruPembimbingId?: string;
 }
 
 export class UpdatePenempatanDto {

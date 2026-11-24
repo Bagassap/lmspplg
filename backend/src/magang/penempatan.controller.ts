@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { PenempatanService } from './penempatan.service';
-import { AjukanPenempatanDto, TetapkanGuruDto, TolakPenempatanDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
+import { AjukanPenempatanDto, TetapkanGuruDto, TolakPenempatanDto, UpdatePenempatanDto, VerifikasiInstansiDto } from './dto/create-penempatan.dto';
 import { documentUploadOptions } from '../common/upload/file-filters';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -98,6 +98,13 @@ export class PenempatanController {
     @Query('kelasId') kelasId?: string,
   ) {
     return this.service.findAll({ status, tempatMagangId, kelasId });
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('tempat/:tempatId/verifikasi')
+  verifikasiInstansi(@Param('tempatId') tempatId: string, @Body() dto: VerifikasiInstansiDto) {
+    return this.service.verifikasiInstansi(tempatId, dto);
   }
 
   @UseGuards(RolesGuard)

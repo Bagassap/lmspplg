@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, CalendarDays, FileText, Pencil, Trash2, Undo2, UserCheck, X } from "lucide-react";
+import { Building2, CalendarDays, CheckCircle2, FileText, Loader2, Pencil, Trash2, Undo2, UserCheck, X } from "lucide-react";
 import { Avatar } from "@/components/shared/Avatar";
 import { avatarColorFor } from "@/components/data-siswa/shared";
 import { STATUS_PENEMPATAN_CFG, type PenempatanMagang, type StatusPenempatan } from "./types";
@@ -12,9 +13,12 @@ function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
-export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapkanGuru, onUbahStatus, onBatalVerifikasi, onEdit, onHapus, onClose }: {
+export function PenempatanTempatModal({ judul, rows, menunggu, guruList, onVerifikasiInstansi, busyId, onPeriksa, onTetapkanGuru, onUbahStatus, onBatalVerifikasi, onEdit, onHapus, onClose }: {
   judul: string;
   rows: PenempatanMagang[];
+  menunggu: PenempatanMagang[];
+  guruList: { id: string; user: { id: string; nama: string } }[];
+  onVerifikasiInstansi: (siap: PenempatanMagang[], guruId: string) => Promise<boolean>;
   busyId: string | null;
   onPeriksa: (p: PenempatanMagang) => void;
   onTetapkanGuru: (rows: PenempatanMagang[]) => void;
@@ -25,6 +29,19 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
   onClose: () => void;
 }) {
   const bisaTetapkan = rows.filter((r) => r.status === "AKTIF");
+  const [guruId, setGuruId] = useState("");
+  const [verifikasi, setVerifikasi] = useState(false);
+  const siap = menunggu.filter((r) => r.suratKeteranganUrl);
+  const tanpaSurat = menunggu.length - siap.length;
+
+  async function jalankanVerifikasi() {
+    setVerifikasi(true);
+    try {
+      if (await onVerifikasiInstansi(siap, guruId)) setGuruId("");
+    } finally {
+      setVerifikasi(false);
+    }
+  }
 
   return (
     <Portal><div data-plain className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -124,6 +141,25 @@ export function PenempatanTempatModal({ judul, rows, busyId, onPeriksa, onTetapk
             <p className="py-8 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">Tidak ada penempatan pada filter ini</p>
           )}
         </div>
+
+        {menunggu.length > 0 && (
+          <div className="shrink-0 space-y-2 bg-slate-50 px-5 py-3.5 dark:bg-slate-800">
+            {tanpaSurat > 0 && (
+              <p className="text-xs font-semibold text-[#C2410C] dark:text-[#FDBA74]">{tanpaSurat} siswa belum mengirim surat dan tidak ikut diverifikasi</p>
+            )}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <select value={guruId} onChange={(e) => setGuruId(e.target.value)} disabled={verifikasi} aria-label="Guru pembimbing"
+                className="h-11 min-w-0 flex-1 rounded-xl border-0 bg-white px-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3E03B3] dark:bg-slate-700 dark:text-slate-100">
+                <option value="">Guru pembimbing: tetapkan nanti</option>
+                {guruList.map((g) => <option key={g.id} value={g.id}>{namaOrang(g.user.nama)}</option>)}
+              </select>
+              <button type="button" onClick={jalankanVerifikasi} disabled={verifikasi || siap.length === 0}
+                className="flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#3E03B3] px-4 text-sm font-bold text-white disabled:opacity-50">
+                {verifikasi ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Verifikasi instansi ({siap.length} siswa)
+              </button>
+            </div>
+          </div>
+        )}
       </motion.div>
     </div></Portal>
   );

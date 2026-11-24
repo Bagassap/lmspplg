@@ -6,7 +6,7 @@ import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../generated/prisma/client';
 import { todayJakarta } from '../common/utils/jakarta-date.util';
 import { pastikanJenisKelaminCocok } from './jenis-kelamin.util';
-import { AjukanPenempatanDto, TetapkanGuruDto, UpdatePenempatanDto } from './dto/create-penempatan.dto';
+import { AjukanPenempatanDto, TetapkanGuruDto, UpdatePenempatanDto, VerifikasiInstansiDto } from './dto/create-penempatan.dto';
 import { pastikanKuotaTersedia } from './kuota.util';
 
 const INCLUDE_DETAIL = {
@@ -260,6 +260,55 @@ export class PenempatanService {
       });
     }
     return this.findAll({});
+  }
+
+  async verifikasiInstansi(tempatId: string, dto: VerifikasiInstansiDto) {
+    const tempat = await this.prisma.tempatMagang.findUnique({ where: { id: tempatId }, select: { namaTempat: true } });
+    if (!tempat) throw new NotFoundException('Instansi tidak ditemukan');
+    const guru = dto.guruPembimbingId
+      ? await this.prisma.guru.findUnique({ where: { id: dto.guruPembimbingId }, include: { user: { select: { id: true, nama: true } } } })
+      : null;
+    if (dto.guruPembimbingId && !guru) throw new NotFoundException('Guru pembimbing tidak ditemukan');
+
+    const rows = await this.prisma.penempatanMagang.findMany({
+      where: { id: { in: dto.penempatanIds }, tempatMagangId: tempatId, status: 'MENUNGGU' },
+      include: { siswa: { select: { userId: true } } },
+    });
+    if (rows.length === 0) throw new BadRequestException('Pengajuan di instansi ini sudah diproses');
+    const bersurat = rows.filter((r) => r.suratKeteranganUrl);
+    if (bersurat.length === 0) throw new BadRequestException('Belum ada siswa yang menyertakan bukti surat instansi');
+    const aktifLain = await this.prisma.penempatanMagang.findMany({
+      where: { siswaId: { in: bersurat.map((r) => r.siswaId) }, status: 'AKTIF' },
+      select: { siswaId: true },
+    });
+    const sudahAktif = new Set(aktifLain.map((r) => r.siswaId));
+    const siap = bersurat.filter((r) => !sudahAktif.has(r.siswaId));
+    if (siap.length === 0) throw new BadRequestException('Siswa di instansi ini masih memiliki penempatan aktif lain');
+
+    const hasil = await this.prisma.penempatanMagang.updateMany({
+      where: { id: { in: siap.map((r) => r.id) }, status: 'MENUNGGU' },
+      data: { status: 'AKTIF', ...(guru ? { guruPembimbingId: guru.id } : {}) },
+    });
+
+    const userIds = siap.map((r) => r.siswa.userId).filter((u): u is string => !!u);
+    await this.notificationService.createMany(userIds, {
+      title: 'Penempatan PKL diverifikasi',
+      message: guru
+        ? `Penempatan PKL di ${tempat.namaTempat} sudah diverifikasi. Guru pembimbing: ${guru.user?.nama ?? '-'}.`
+        : `Penempatan PKL di ${tempat.namaTempat} sudah diverifikasi admin.`,
+      type: NotificationType.MAGANG,
+      link: '/magang/penempatan',
+    });
+    if (guru?.user?.id) {
+      await this.notificationService.create({
+        userId: guru.user.id,
+        title: 'Siswa bimbingan PKL baru',
+        message: `${hasil.count} siswa ditempatkan di ${tempat.namaTempat} dan menjadi bimbingan Anda.`,
+        type: NotificationType.MAGANG,
+        link: '/magang/penempatan',
+      });
+    }
+    return { diverifikasi: hasil.count, dilewati: rows.length - siap.length };
   }
 
   async batalVerifikasi(id: string) {
