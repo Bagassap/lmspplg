@@ -30,7 +30,7 @@ const CHIP_STATUS: { value: StatusPenempatan; label: string; bg: string; clr: st
   { value: "BATAL", label: "batal", bg: "#FEE2E2", clr: "#DC2626" },
 ];
 
-const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(10rem,1.3fr) minmax(8rem,auto) 24rem";
+const GRID_COLS = "2.5rem minmax(9rem,1fr) minmax(10rem,1.3fr) 16rem 24rem";
 
 const STATUS_FILTER: Omit<StatusFilterItem<PenempatanStatusFilter>, "count">[] = [
   { value: "MENUNGGU", label: "Perlu diproses", bg: "#F1EDFA", clr: "#3E03B3", icon: Clock },
@@ -352,7 +352,7 @@ export default function AdminMagangPenempatanPage() {
 
         <div className="hidden overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-700 md:block">
         <div className="overflow-x-auto">
-          <div className="min-w-[960px]">
+          <div className="min-w-[1040px]">
             <div className="grid items-center gap-3 px-4 py-3" style={{ gridTemplateColumns: GRID_COLS, backgroundColor: "#0F172A" }}>
               <span className="text-center text-[10px] font-bold uppercase tracking-wider text-white">No</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white">Nama Tempat</span>
